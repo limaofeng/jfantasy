@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="code">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>配置项编码不能为空!</message>
+		</field-validator>
+		<field-validator type="regex">
+			<param name="expression">[A-Za-z0-9%]+</param>
+			<message>配置项编码只能是数字和字母!</message>
+		</field-validator>
+	</field>
+	<field name="name">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>配置项名称不能为空!</message>
+		</field-validator>
+	</field>
+</validators>

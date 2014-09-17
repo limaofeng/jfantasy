@@ -1,0 +1,40 @@
+@Override
+public void afterPropertiesSet() throws Exception {
+    PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
+    DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+    def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+    TransactionStatus status = transactionManager.getTransaction(def);
+    try {
+        // 默认用户初始化
+        User user = findUniqueByUsername("admin");
+        if (user == null) {
+            StringBuffer log = new StringBuffer("初始化系统默认管理员用户信息");
+            user = new User();
+            user.setUsername("admin");
+            user.setPassword("123456");
+            user.setNickName("系统管理员");
+
+            user.setEnabled(true);
+            user.setAccountNonExpired(true);
+            user.setAccountNonLocked(true);
+            user.setCredentialsNonExpired(true);
+
+            UserDetails details = new UserDetails();
+            details.setName("系统管理员");
+            details.setDescription("系统管理员-请勿删除该用户");
+
+            user.setDetails(details);
+
+            List<Role> roles = new ArrayList<Role>();
+            roles.add(roleService.get("SYSTEM"));
+            user.setRoles(roles);
+
+            save(user);
+            logger.debug(log);
+        }
+        // 菜单初始化
+
+    } finally {
+        transactionManager.commit(status);
+    }
+}

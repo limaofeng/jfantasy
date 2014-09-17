@@ -1,0 +1,64 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+        "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+
+    <!--
+    <package name="admin-member" extends="fantasy-default" namespace="/admin/member">
+    <action name="index" class="com.fantasy.member.web.MemberAction" method="index">
+        <result type="freemarker">/template/admin/member/member.ftl</result>
+    </action>
+    <action name="search" class="com.fantasy.member.web.MemberAction" method="search"/>
+    <action name="add">
+        <result type="freemarker">/template/admin/member/member_add.ftl</result>
+    </action>
+    <action name="save" class="com.fantasy.member.web.MemberAction" method="save"/>
+    <action name="edit" class="com.fantasy.member.web.MemberAction" method="edit">
+        <result type="freemarker">/template/admin/member/member_edit.ftl</result>
+    </action>
+    <action name="view" class="com.fantasy.member.web.MemberAction" method="view">
+        <result type="freemarker">/template/admin/member/member_view.ftl</result>
+    </action>
+    <action name="delete" class="com.fantasy.member.web.MemberAction" method="delete"/>
+    <action name="favorite" class="com.fantasy.member.web.MemberAction" method="favorite">
+        <result type="freemarker">/template/admin/member/member_favorite.ftl</result>
+    </action>
+    <action name="point" class="com.fantasy.member.web.PointAction" method="index">
+        <result type="freemarker">/template/admin/member/point.ftl</result>
+    </action>
+    <action name="point_search" class="com.fantasy.member.web.PointAction" method="search"/>
+    <action name="point_add">
+        <result type="freemarker">/template/admin/member/point_add.ftl</result>
+    </action>
+    <action name="point_save" class="com.fantasy.member.web.PointAction" method="save"/>
+    <action name="point_delete" class="com.fantasy.member.web.PointAction" method="delete"/>
+    <action name="cartsearch" class="com.fantasy.member.web.MemberAction" method="cartsearch"/>
+    </package>
+    -->
+
+    <!-- 会员管理 -->
+    <package name="fides-member" extends="fantasy-default" namespace="/member">
+        <action name="index" class="com.fantasy.member.web.MemberAction" method="index">
+            <result type="freemarker">/template/%{pageTheme}/member/member.ftl</result>
+        </action>
+
+        <action name="search" class="com.fantasy.member.web.MemberAction" method="search"/>
+
+        <action name="edit" class="com.fantasy.member.web.MemberAction" method="edit">
+            <result type="freemarker">/template/%{pageTheme}/member/member_edit.ftl</result>
+        </action>
+
+        <action name="add" class="com.fantasy.member.web.MemberAction">
+            <result type="freemarker">/template/%{pageTheme}/member/member_add.ftl</result>
+        </action>
+
+        <action name="view" class="com.fantasy.member.web.MemberAction" method="edit">
+            <result type="freemarker">/template/%{pageTheme}/member/member_view.ftl</result>
+        </action>
+
+        <action name="save" class="com.fantasy.member.web.MemberAction" method="save"/>
+
+        <action name="resetpwd" class="com.fantasy.member.web.MemberAction" method="resetpwd"/>
+
+        <action name="delete" class="com.fantasy.member.web.MemberAction" method="delete"/>
+    </package>
+</struts>

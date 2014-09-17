@@ -1,0 +1,76 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+
+
+    <!--********************************************************************** -->
+    <!--* * -->
+    <!--* 文件管理 * -->
+    <!--* * -->
+    <!--**********************************************************************
+    <package name="admin-file" extends="fantasy-default" namespace="/admin/system/file">
+        <action name="listfiles" class="com.fantasy.file.web.FileAction" method="listFiles"/>
+        <action name="files" class="com.fantasy.file.web.FileAction" method="files">
+            <result type="freemarker">/template/admin/system/file_files.ftl</result>
+        </action>
+        <action name="index" class="com.fantasy.file.web.FileManagerAction" method="index">
+            <result type="freemarker">/template/admin/system/file_filemanager.ftl</result>
+        </action>
+        <action name="search" class="com.fantasy.file.web.FileManagerAction" method="search"/>
+        <action name="add">
+            <result type="freemarker">/template/admin/system/file_filemanager_add.ftl</result>
+        </action>
+        <action name="save" class="com.fantasy.file.web.FileManagerAction" method="save"/>
+        <action name="edit" class="com.fantasy.file.web.FileManagerAction" method="edit">
+            <result type="freemarker">/template/admin/system/file_filemanager_edit.ftl</result>
+        </action>
+        <action name="view" class="com.fantasy.file.web.FileManagerAction" method="view">
+            <result type="freemarker">/template/admin/system/file_filemanager_view.ftl</result>
+        </action>
+        <action name="delete" class="com.fantasy.file.web.FileManagerAction" method="delete"/>
+        <action name="ftp" class="com.fantasy.file.web.FtpConfigAction" method="index">
+            <result type="freemarker">/template/admin/system/file_ftp.ftl</result>
+        </action>
+        <action name="ftp_add">
+            <result type="freemarker">/template/admin/system/file_ftp_add.ftl</result>
+        </action>
+        <action name="ftp_edit" class="com.fantasy.file.web.FtpConfigAction" method="edit">
+            <result type="freemarker">/template/admin/system/file_ftp_edit.ftl</result>
+        </action>
+        <action name="ftp_view" class="com.fantasy.file.web.FtpConfigAction" method="edit">
+            <result type="freemarker">/template/admin/system/file_ftp_view.ftl</result>
+        </action>
+        <action name="ftp_save" class="com.fantasy.file.web.FtpConfigAction" method="save"/>
+    </package>
+    <package name="admin-file-directory" namespace="/admin/system/file/directory" extends="fantasy-default">
+        <action name="index" class="com.fantasy.file.web.DirectoryAction" method="index">
+            <result type="freemarker">/template/admin/system/file_directory.ftl</result>
+        </action>
+        <action name="add">
+            <result type="freemarker">/template/admin/system/file_directory_add.ftl</result>
+        </action>
+        <action name="edit" class="com.fantasy.file.web.DirectoryAction" method="edit">
+            <result type="freemarker">/template/admin/system/file_directory_edit.ftl</result>
+        </action>
+        <action name="search" class="com.fantasy.file.web.DirectoryAction" method="search"/>
+        <action name="save" class="com.fantasy.file.web.DirectoryAction" method="save"/>
+        <action name="update" class="com.fantasy.file.web.DirectoryAction" method="save"/>
+        <action name="delete" class="com.fantasy.file.web.DirectoryAction" method="delete"/>
+    </package>
+    -->
+
+    <!-- 文件管理器 -->
+    <package name="fides-system-fm" extends="fantasy-default" namespace="/system/fm">
+        <action name="index" class="com.fantasy.file.web.FileManagerAction" method="index">
+            <result type="freemarker">/template/%{pageTheme}/system/file_filemanager.ftl</result>
+        </action>
+        <action name="search" class="com.fantasy.file.web.FileManagerAction" method="search"/>
+        <action name="add" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/system/file_filemanager_add.ftl</result>
+        </action>
+        <action name="edit" class="com.fantasy.file.web.FileManagerAction" method="edit">
+            <result type="freemarker">/template/%{pageTheme}/system/file_filemanager_edit.ftl</result>
+        </action>
+    </package>
+
+
+</struts>

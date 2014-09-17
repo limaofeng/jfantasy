@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fantasy.framework.util.generate.ColumnMapper">
+
+	<select id="getTabCommentsByTabName" resultType="java.lang.String">
+		select top 1 CONVERT(nvarchar,ISNULL([value], '')) AS comments from sys.extended_properties 
+		where major_id = 
+		(select object_id from sys.tables where  name = #{value})
+	</select>
+	
+	<select id="getTabColumnsByTabName" resultType="Column">
+		SELECT TOP 100 PERCENT 
+				a.name AS columnName, 
+				CONVERT(nvarchar,ISNULL(g.[value], '')) AS comments,
+				b.name AS dataType,
+		        COLUMNPROPERTY(a.id, a.name, 'PRECISION') AS dataLength, 
+		        ISNULL(e.text, '')	AS dataDefault, 
+		        a.isnullable AS isNull
+		FROM dbo.syscolumns a LEFT OUTER JOIN
+		      dbo.systypes b ON a.xusertype = b.xusertype INNER JOIN
+		      dbo.sysobjects d ON a.id = d.id AND d.xtype = 'U' AND
+		      d.name <![CDATA[ <> ]]>  'dtproperties' LEFT OUTER JOIN
+		      dbo.syscomments e ON a.cdefault = e.id LEFT OUTER JOIN
+		      sys.extended_properties g ON a.id =  g.major_id AND a.colid = g.minor_id
+		WHERE (d.name = #{value})
+		ORDER BY a.id, a.colorder
+	</select>
+	
+</mapper>

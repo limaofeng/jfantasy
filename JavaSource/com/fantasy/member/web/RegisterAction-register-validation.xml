@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="captcha">
+		<field-validator type="captcha">
+			<message>验证码不正确!</message>
+		</field-validator>
+	</field>
+	<field name="username">
+		<field-validator type="memberUsernameUnique">
+			<message>用户名已经被使用</message>
+		</field-validator>
+	</field>
+</validators>

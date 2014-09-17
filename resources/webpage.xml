@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-pages>
+
+	<global-datas>
+		<data type="simple" key="contextPath" value="/front" />
+	</global-datas>
+
+	<page name="首页" template="/index.ftl" freemarkerManager="freemarkerService">
+		<datas>	
+			<!-- 自己实现PageData接口 -->
+			<data key="mydata" class="com.fantasy.framework.webpage.data.MyData"/>
+			<!-- 通过Hibernate-Query查询获取 -->
+			<data type="hibernate-query" key="databasetest">
+				<param name="hql">select * from tableName t where t.name = 'xxx'</param>
+				<param name="resultType">list</param>
+			</data>
+			<!-- 简单的数据 -->
+			<data type="simple" key="contextPath">/front</data>
+		</datas>
+		<!-- 生成配置 -->
+		<writer type="simple" fileManager="localFileManager">
+			<param name="url">
+				<url type="simple">/index.html</url>
+			</param>
+			<param name="query">
+			</param>
+		</writer>
+		<!-- 更新绑定 -->
+		<listener>
+			<bind type="rebuild">
+				<param name=""></param>
+			</bind>
+			<bind type="task" operation="update">
+<!--			<param name="fixedDelay"></param>-->
+<!--			<param name="fixedRate"></param>-->
+				<param name="cron"></param>
+			</bind>
+			<bind type="hiberbate" operation="update">
+				<param name="entity">com.haolue.cms.beans.Article</param>
+				<param name="filter"> issue_flag = 'Y' </param>
+			</bind>
+			<bind type="hiberbate" operation="delete">
+				<param name="entity">com.haolue.cms.beans.Article</param>
+				<param name="filter"> issue_flag = 'Y' </param>
+			</bind>
+		</listener>
+	</page>
+
+</web-pages>

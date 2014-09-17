@@ -1,0 +1,305 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+
+    <constant name="fantasy.page.theme" value="assets"/>
+    <constant name="fantasy.page.templateDir" value="/WEB-INF/classes"/>
+    <constant name="fantasy.freemarker.beanName" value="freemarkerService"/>
+    <!-- 该属性指定视图标签默认的视图主题，该属性的默认值是xhtml。 -->
+    <constant name="struts.ui.theme" value="simple"/>
+    <!-- 该属性指定视图主题所需要模板文件的位置，该属性的默认值是template，即默认加载template路径下的模板文件。 -->
+    <constant name="struts.ui.templateDir" value="WEB-INF/tags/template"/>
+    <constant name="struts.ognl.allowStaticMethodAccess" value="true"/>
+    <!-- 该属性设置Struts 2是否支持动态方法调用，该属性的默认值是true。如果需要关闭动态方法调用，则可设置该属性为false。 -->
+    <constant name="struts.enable.DynamicMethodInvocation" value="true"/>
+    <!-- 该属性设置Struts 2是否允许在Action名中使用斜线，该属性的默认值是false。如果开发者希望允许在Action名中使用斜线，则可设置该属性为true。 -->
+    <constant name="struts.enable.SlashesInActionNames" value="true"/>
+
+    <bean class="com.fantasy.framework.struts2.views.freemarker.FantasyFreemarkerManager" name="fantasy.freemarkermanager"/>
+
+    <bean class="com.fantasy.framework.struts2.validator.FantasyAnnotationActionValidatorManager" name="fantasy.actionValidatorManager" type="com.opensymphony.xwork2.validator.ActionValidatorManager"/>
+
+    <bean class="com.fantasy.framework.struts2.conversion.FantasyXWorkConverter" name="fantasy.struts" type="com.opensymphony.xwork2.conversion.impl.XWorkConverter"/>
+
+    <!--<include file=""file-->
+
+    <package name="fantasy-default" extends="json-default" abstract="true">
+
+        <result-types>
+            <result-type name="json" class="com.fantasy.framework.struts2.result.JSONResult"/>
+            <result-type name="freemarker" class="com.fantasy.framework.struts2.views.freemarker.FantasyFreemarkerResult"/>
+        </result-types>
+
+        <interceptors>
+            <interceptor name="params" class="com.fantasy.framework.struts2.interceptor.ParametersInterceptor"/>
+            <interceptor name="fileUpload" class="com.fantasy.framework.struts2.interceptor.FileUploadInterceptor"/>
+            <interceptor name="scriptValidation" class="com.fantasy.framework.struts2.interceptor.ScriptValidationInterceptor"/>
+            <interceptor name="jsonValidation" class="com.fantasy.framework.struts2.interceptor.JSONValidationInterceptor"/>
+            <interceptor name="exception" class="com.fantasy.framework.struts2.interceptor.ExceptionMappingInterceptor"/>
+            <interceptor name="validation" class="com.fantasy.framework.struts2.interceptor.validation.FantasyAnnotationValidationInterceptor"/>
+            <interceptor name="workflow" class="com.fantasy.framework.struts2.interceptor.FantasyWorkflowInterceptor"/>
+            <interceptor-stack name="defaultStack">
+                <interceptor-ref name="exception"/>
+                <interceptor-ref name="alias"/>
+                <interceptor-ref name="servletConfig"/>
+                <interceptor-ref name="i18n"/>
+                <interceptor-ref name="prepare"/>
+                <interceptor-ref name="chain"/>
+                <interceptor-ref name="debugging"/>
+                <interceptor-ref name="scriptValidation"/>
+                <!-- 生成javascript验证的拦截器 -->
+                <interceptor-ref name="scopedModelDriven"/>
+                <interceptor-ref name="modelDriven"/>
+                <interceptor-ref name="fileUpload"/>
+                <interceptor-ref name="checkbox"/>
+                <interceptor-ref name="multiselect"/>
+                <interceptor-ref name="staticParams"/>
+                <interceptor-ref name="actionMappingParams"/>
+                <interceptor-ref name="params">
+                    <param name="excludeParams">dojo\..*,^struts\..*</param>
+                </interceptor-ref>
+                <interceptor-ref name="conversionError"/>
+                <interceptor-ref name="validation">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+                <interceptor-ref name="jsonValidation"/>
+                <interceptor-ref name="workflow">
+                    <param name="excludeMethods">input,back,cancel,browse</param>
+                </interceptor-ref>
+            </interceptor-stack>
+        </interceptors>
+
+        <global-results>
+            <result name="script" type="freemarker">
+                <param name="contentType">text/javascript</param>
+                <param name="location">/com/fantasy/framework/struts2/interceptor/validata.ftl</param>
+            </result>
+            <result name="jsondata" type="json">
+                <param name="excludeProperties">com.*,_*</param>
+            </result>
+            <result name="text" type="plainText"/>
+            <result name="error" type="freemarker">/template/error/error.ftl</result>
+        </global-results>
+
+        <global-exception-mappings>
+            <exception-mapping exception="java.lang.Exception" result="error"/>
+        </global-exception-mappings>
+
+    </package>
+
+    <package name="highcharts" namespace="/highcharts" extends="fantasy-default">
+
+        <action name="export" class="com.fantasy.framework.web.highcharts.HighchartsAction" method="export">
+            <result type="stream">
+                <param name="contentDisposition">attachment;filename=${filename}</param>
+            </result>
+        </action>
+
+    </package>
+
+    <package name="common" namespace="/common" extends="fantasy-default">
+
+        <action name="*" class="com.fantasy.common.web.CommonAction" method="{1}"/>
+
+        <action name="ajaxValidator" class="com.fantasy.framework.struts2.validator.AjaxValidatorAction" method="ajaxValidator">
+            <result type="json">
+                <param name="ignoreHierarchy">false</param>
+                <param name="includeProperties">success</param>
+            </result>
+        </action>
+
+    </package>
+
+    <!--********************************************************************** -->
+    <!--*                                                                    * -->
+    <!--*                           后台配置                                  * -->
+    <!--*                                                                    * -->
+    <!--********************************************************************** -->
+    <package name="fantasy-admin" extends="fantasy-default" namespace="/">
+        <!-- 登陆页面 -->
+        <action name="login" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/login.ftl</result>
+        </action>
+        <!-- 登陆成功后的首页 -->
+        <action name="index">
+            <result type="redirectAction">
+                <param name="namespace">/</param>
+                <param name="actionName">dashboard</param>
+            </result>
+        </action>
+        <!-- 桌面 -->
+        <action name="dashboard" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/dashboard.ftl</result>
+        </action>
+        <action name="welcome">
+            <result type="freemarker">/template/%{pageTheme}/welcome.ftl</result>
+        </action>
+    </package>
+
+    <!--********************************************************************** -->
+    <!--*                                                                    * -->
+    <!--*                           文件上传接口                              * -->
+    <!--*                                                                    * -->
+    <!--********************************************************************** -->
+    <package name="file" extends="fantasy-default" namespace="/file">
+
+        <action name="uploadimg" class="com.fantasy.file.web.FileAction" method="uploadImg"/>
+
+        <action name="manager" class="com.fantasy.file.web.FileAction" method="manager"/>
+
+        <action name="upload" class="com.fantasy.file.web.FileAction" method="upload">
+            <result name="input" type="json"/>
+        </action>
+
+        <action name="download" class="com.fantasy.file.web.FileAction" method="download"/>
+
+        <action name="online" class="com.fantasy.file.web.FileAction" method="online"/>
+
+    </package>
+
+    <package name="file-upload" extends="fantasy-default" namespace="/file/upload">
+
+        <action name="pass" class="com.fantasy.file.web.FileAction" method="pass"/>
+
+    </package>
+
+
+    <!--********************************************************************** -->
+    <!--*                                                                    * -->
+    <!--*                              通讯录管理                             * -->
+    <!--*                                                                    * -->
+    <!--********************************************************************** -->
+    <package name="contacts" extends="fantasy-default" namespace="/admin/contacts">
+        <action name="mybook">
+            <result>/template/admin/contacts/mybook.jsp</result>
+        </action>
+        <action name="group" class="com.fantasy.contacts.web.ContactsAction" method="group">
+            <result type="freemarker">/template/admin/contacts/group.ftl</result>
+        </action>
+        <action name="linkman_add">
+            <result type="freemarker">/template/admin/contacts/linkman_add.ftl</result>
+        </action>
+        <action name="linkman" class="com.fantasy.contacts.web.ContactsAction" method="linkman">
+            <result type="freemarker">/template/admin/contacts/linkman.ftl</result>
+        </action>
+        <action name="*" class="com.fantasy.contacts.web.ContactsAction" method="{1}">
+            <result name="edit" type="freemarker">/template/admin/contacts/linkman_edit.ftl</result>
+        </action>
+    </package>
+
+    <include file="struts/struts-security.xml"/>
+
+    <include file="struts/struts-mycenter.xml"/>
+
+    <!--********************************************************************** -->
+    <!--*                                                                    * -->
+    <!--*                               系统管理                              * -->
+    <!--*                                                                    * -->
+    <!--********************************************************************** -->
+    <package name="system" extends="fantasy-default" namespace="/system">
+        <action name="dd">
+            <result type="chain">
+                <param name="namespace">/system/dd</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <action name="schedule">
+            <result type="chain">
+                <param name="namespace">/system/schedule</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <action name="fm">
+            <result type="chain">
+                <param name="namespace">/system/fm</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <!-- 地区管理 -->
+        <action name="area">
+            <result type="chain">
+                <param name="namespace">/system/area</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <!-- 支付配置 -->
+        <action name="payconfig">
+            <result type="chain">
+                <param name="namespace">/system/payconfig</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <!-- 文件管理器配置 -->
+        <action name="filemanager">
+            <result type="chain">
+                <param name="namespace">/system/filemanager</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <!-- 文件目录配置 -->
+        <action name="filepath">
+            <result type="chain">
+                <param name="namespace">/system/filepath</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <!-- FTP站点配置 -->
+        <action name="ftp">
+            <result type="chain">
+                <param name="namespace">/system/ftp</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+        <!-- jdbc配置 -->
+        <action name="jdbc">
+            <result type="chain">
+                <param name="namespace">/system/jdbc</param>
+                <param name="actionName">index</param>
+            </result>
+        </action>
+    </package>
+
+    <include file="struts/struts-system.xml"/>
+    <include file="struts/struts-system-fm.xml"/>
+    <include file="struts/struts-payment.xml"/>
+
+    <!--********************************************************************** -->
+    <!--*                                                                    * -->
+    <!--*                           会员管理                                  * -->
+    <!--*                                                                    * -->
+    <!--********************************************************************** -->
+    <include file="struts/struts-member.xml"/>
+
+
+    <!-- 动态属性表 -->
+    <package name="admin-attribute" extends="fantasy-default" namespace="/admin/attribute">
+        <action name="index" class="com.fantasy.attr.web.AttributeAction" method="index">
+            <result type="freemarker">/template/admin/attr/attribute.ftl</result>
+        </action>
+        <action name="search" class="com.fantasy.attr.web.AttributeAction" method="search"/>
+        <action name="add">
+            <result type="freemarker">/template/admin/attr/attribute_add.ftl</result>
+        </action>
+        <action name="save" class="com.fantasy.attr.web.AttributeAction" method="save"/>
+        <action name="edit" class="com.fantasy.attr.web.AttributeAction" method="edit">
+            <result type="freemarker">/template/admin/attr/attribute_edit.ftl</result>
+        </action>
+        <action name="delete" class="com.fantasy.attr.web.AttributeAction" method="delete"/>
+    </package>
+    <!-- 属性类型 -->
+    <package name="admin-attribute-type" extends="fantasy-default" namespace="/admin/attribute/type">
+        <action name="index" class="com.fantasy.attr.web.AttributeTypeAction" method="index">
+            <result type="freemarker">/template/admin/attribute/attribute_type.ftl</result>
+        </action>
+        <action name="search" class="com.fantasy.attr.web.AttributeTypeAction" method="search"/>
+        <action name="add">
+            <result type="freemarker">/template/admin/attribute/attribute_type_add.ftl</result>
+        </action>
+        <action name="save" class="com.fantasy.attr.web.AttributeTypeAction" method="save"/>
+        <action name="edit" class="com.fantasy.attr.web.AttributeTypeAction" method="edit">
+            <result type="freemarker">/template/admin/attribute/attribute_type_edit.ftl</result>
+        </action>
+        <action name="delete" class="com.fantasy.attr.web.AttributeTypeAction" method="delete"/>
+    </package>
+    <!-- 任务调度管理 -->
+    <include file="struts/struts-schedule.xml"/>
+</struts>

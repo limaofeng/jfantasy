@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<tables>
+	<dataType baseType="VARCHAR" javaType="java.lang.String" />
+	<dataType baseType="VARCHAR2" javaType="java.lang.String" />
+	<dataType baseType="NUMBER" javaType="java.lang.Long" />
+	<dataType baseType="CHAR" javaType="java.lang.String" />
+	<dataType baseType="DATE" javaType="java.util.Date" />
+	<dataType baseType="CLOB" javaType="java.lang.String" />
+	<dataType baseType="BIGINT" javaType="java.lang.Long" />
+	<dataType baseType="INT" javaType="java.lang.Integer" />
+	<dataType baseType="BIT" javaType="java.lang.Boolean" />
+	<dataType baseType="DATETIME" javaType="java.util.Date" />
+	<dataType baseType="DECIMAL" javaType="java.lang.Double" />
+	<dataType baseType="TINYINT" javaType="java.lang.Integer" />
+	<dataType baseType="TEXT" javaType="java.lang.String" />
+
+	<module class="com.fantasy.framework.common.file">
+		<table name="file_folder" class="Folder" id="ID" />
+	</module>
+
+</tables>
