@@ -1,7 +1,5 @@
 package com.fantasy.framework.util.jackson.serializer;
 
-import java.io.IOException;
-
 import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonGenerator;
 import org.codehaus.jackson.JsonProcessingException;
@@ -10,10 +8,12 @@ import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.util.CharTypes;
 
+import java.io.IOException;
+
 public class StringUnicodeSerializer extends JsonSerializer<String> {
 
 	private final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
-	private final int[] ESCAPE_CODES = CharTypes.getOutputEscapes();
+	private final int[] ESCAPE_CODES = CharTypes.get7BitOutputEscapes();
 
 	private void writeUnicodeEscape(JsonGenerator gen, char c) throws IOException {
 		gen.writeRaw('\\');
