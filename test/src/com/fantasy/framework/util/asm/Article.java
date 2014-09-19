@@ -2,6 +2,7 @@ package com.fantasy.framework.util.asm;
 
 
 import com.fantasy.attr.bean.AttributeValue;
+import com.fantasy.attr.util.VersionUtil;
 import com.fantasy.framework.lucene.annotations.Indexed;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,7 +22,11 @@ public class Article {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    private List<AttributeValue> attributeValues;
+    protected List<AttributeValue> attributeValues;
+
+    private String testOp;
+
+    private String user;
 
     public List<AttributeValue> getAttributeValues() {
         return attributeValues;
@@ -39,10 +44,23 @@ public class Article {
         this.id = id;
     }
 
-    private String test;
+    public void setTestOp(String test) {
+        this.testOp = (String) VersionUtil.saveValue(this.attributeValues, "testOp", test);
+    }
 
-    public void setTest(String test){
-        AttributeValueUtil.saveValue(attributeValues,"test",test);
+    public String getTestOp() {
+        if (this.testOp != null) {
+            return this.testOp;
+        }
+        return (String) VersionUtil.getValue(this.attributeValues, "testOp");
+    }
+
+    public String getUser() {
+        return user;
+    }
+
+    public void setUser(String user) {
+        this.user = user;
     }
 
 }

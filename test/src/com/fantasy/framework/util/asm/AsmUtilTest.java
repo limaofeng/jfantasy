@@ -3,21 +3,29 @@ package com.fantasy.framework.util.asm;
 import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.framework.util.FantasyClassLoader;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
-import com.fantasy.security.bean.User;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.ognl.OgnlUtil;
 import org.junit.Test;
-import org.objectweb.asm.*;
+import org.objectweb.asm.Label;
+import org.objectweb.asm.MethodVisitor;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.Type;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 
 public class AsmUtilTest implements Opcodes {
 
     @Test
-    public void test() throws IOException, InterruptedException, ClassNotFoundException {
+    public void asmTest(){
+        Article article = new Article();
+        System.out.println(ClassUtil.forName("int"));
+        System.out.println(Type.getDescriptor(Long.class));
+    }
+
+    @Test
+    public void test() throws IOException, InterruptedException, ClassNotFoundException, IllegalAccessException, InstantiationException {
 
         Article article = new Article();
 
@@ -41,110 +49,140 @@ public class AsmUtilTest implements Opcodes {
         attributeValue.setAttribute(attribute);
         attributeValue.setVersion(version);
 
+        List<AttributeValue> attributeValues = Arrays.asList(attributeValue);
+
+
+//        AttributeValueUtil.makeClass(version);
 
         String className = Article.class.getName() + "$" + version.getNumber();
         String superClass = Article.class.getName();
 
-        Property[] properties = new Property[]{new Property(attribute.getCode(),String.class)};
+        Property property = new Property(attribute.getCode(),String.class);
 
-        String relativePath = RegexpUtil.replace(className, "\\.", "/");
-        ClassWriter cw = new ClassWriter(F_FULL);
+        Property[] properties = new Property[]{property};
 
-        Label l0 = new Label();
-        Label l1 = new Label();
-        Label l2 = new Label();
 
-        /**
-         * 注：第一个参数为版本号
-         */
-        cw.visit(V1_7, ACC_PUBLIC, relativePath, null, RegexpUtil.replace(superClass, "\\.", "/"), new String[0]);
+        property.setGetMethodCreator(new MethodCreator() {
 
-        cw.visitSource(RegexpUtil.parseGroup(className, "\\.([A-Za-z0-9_]+)$", 1) + ".java", null);
+            @Override
+            public void execute(MethodVisitor mv) {
 
-        // 构造方法
-        MethodVisitor mv = cw.visitMethod(ACC_PUBLIC, "<init>", Type.getMethodDescriptor(Type.getReturnType("V"), new Type[0]), null, null);
-        mv.visitLabel(l0);
-        mv.visitVarInsn(ALOAD, 0);
-        mv.visitMethodInsn(INVOKESPECIAL, RegexpUtil.replace(superClass, "\\.", "/"), "<init>", Type.getMethodDescriptor(Type.getReturnType("V"), new Type[0]));
-        mv.visitInsn(RETURN);
-        mv.visitLabel(l1);
-        mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l1, 0);
-        mv.visitMaxs(1, 1);
-        mv.visitEnd();
+                String className = AsmContext.getContext().get("className", String.class);
+                String superClassName = AsmContext.getContext().get("superClassName", String.class);
+                Property property = AsmContext.getContext().get("property", Property.class);
 
-        // visitLabel 方法标记行号
-        for (Property property : properties) {
-            String fieldName = property.getName();
-            String descriptor = Type.getDescriptor(property.getType());
-            String signature = AsmUtil.getSignature(property.getType(), property.getGenericTypes());
+                String superClassInternalName = Type.getInternalName(ClassUtil.forName(superClassName));
+                String newClassInternalName = className.replace('.', '/');
 
-            // 属性
-            cw.visitField(ACC_PRIVATE, fieldName, descriptor, signature, null).visitEnd();
-            String methodName, methodDescriptor;
-            int[] loadAndReturnOf = AsmUtil.loadAndReturnOf(descriptor);
+                Label l0 = new Label();
+                Label l1 = new Label();
+                Label l2 = new Label();
 
-            // set方法
-            if (property.isWrite()) {
-                methodName = "set" + StringUtil.upperCaseFirst(fieldName);
-                methodDescriptor = Type.getMethodDescriptor(Type.getReturnType("V"), new Type[] { Type.getType(property.getType()) });
-                signature = property.getGenericTypes().length != 0 ? ("(" + AsmUtil.getSignature(property.getType(), property.getGenericTypes()) + ")V") : null;
-
-                mv = cw.visitMethod(ACC_PUBLIC, methodName, methodDescriptor, signature, new String[] {});
-                mv.visitCode();
                 mv.visitLabel(l0);
                 mv.visitVarInsn(ALOAD, F_FULL);
-                mv.visitVarInsn(ALOAD, F_APPEND);
-                mv.visitFieldInsn(PUTFIELD, relativePath, fieldName, descriptor);
+                mv.visitFieldInsn(GETFIELD, newClassInternalName, property.getName(), Type.getDescriptor(property.getType()));
+                mv.visitJumpInsn(IFNULL,l1);
+
+                mv.visitVarInsn(ALOAD, F_FULL);
+                mv.visitFieldInsn(GETFIELD, newClassInternalName, property.getName(), Type.getDescriptor(property.getType()));
+                mv.visitInsn(ARETURN);
+
                 mv.visitLabel(l1);
-                mv.visitInsn(RETURN);
+
+                mv.visitFrame(F_SAME,0,new Object[0],0,new Object[0]);
+
+                mv.visitVarInsn(ALOAD, F_FULL);
+                mv.visitFieldInsn(GETFIELD, superClassInternalName, "attributeValues", "Ljava/util/List;");
+                mv.visitLdcInsn(property.getName());
+                mv.visitMethodInsn(INVOKESTATIC, "com/fantasy/framework/util/asm/AttributeValueUtil", "getValue", "(Ljava/util/List;Ljava/lang/String;)Ljava/lang/Object;");
+                mv.visitTypeInsn(CHECKCAST,Type.getInternalName(property.getType()));
+                mv.visitInsn(ARETURN);
                 mv.visitLabel(l2);
                 mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
-                mv.visitLocalVariable(fieldName, descriptor, AsmUtil.getSignature(property.getType(), property.getGenericTypes()), l0, l2, 1);
-                // mv.visitVarInsn(loadAndReturnOf[0], F_APPEND);// ALOAD
-                mv.visitMaxs(2, 2);
-                mv.visitEnd();
+                mv.visitMaxs(2, 1);
             }
 
-            // get方法
-            if (property.isRead()) {
-                methodName = "get" + StringUtil.upperCaseFirst(fieldName);
-                methodDescriptor = Type.getMethodDescriptor(Type.getType(property.getType()), new Type[0]);
-                signature = property.getGenericTypes().length != 0 ? ("()" + AsmUtil.getSignature(property.getType(), property.getGenericTypes())) : null;
-                mv = cw.visitMethod(ACC_PUBLIC, methodName, methodDescriptor, signature, null);
-                mv.visitCode();
-                mv.visitLabel(l0);
-                mv.visitVarInsn(ALOAD, 0);
-                mv.visitFieldInsn(GETFIELD, relativePath, fieldName, descriptor);
-                mv.visitInsn(loadAndReturnOf[1]);// ARETURN
-                mv.visitLabel(l1);
-                mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l1, 0);
-                mv.visitMaxs(1, 1);
-                mv.visitEnd();
-            }
+        });
+
+        if(String.class.isAssignableFrom(property.getType())) {
+
+            property.setSetMethodCreator(new MethodCreator() {
+
+                @Override
+                public void execute(MethodVisitor mv) {
+
+                    String className = AsmContext.getContext().get("className", String.class);
+                    String superClassName = AsmContext.getContext().get("superClassName", String.class);
+                    Property property = AsmContext.getContext().get("property", Property.class);
+
+                    String superClassInternalName = Type.getInternalName(ClassUtil.forName(superClassName));
+                    String newClassInternalName = className.replace('.', '/');
+
+                    String fieldName = property.getName();
+                    String descriptor = Type.getDescriptor(property.getType());
+
+                    Label l0 = new Label();
+                    Label l1 = new Label();
+                    Label l2 = new Label();
+
+//                    mv.visitLabel(l0);
+//                    mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
+//                    mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_APPEND);
+//                    mv.visitFieldInsn(Opcodes.PUTFIELD, newClassInternalName, fieldName, descriptor);
+//                    mv.visitLabel(l1);
+//                    mv.visitInsn(Opcodes.RETURN);
+//                    mv.visitLabel(l2);
+//                    mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
+//                    mv.visitLocalVariable(fieldName, descriptor, AsmUtil.getSignature(property.getType(), property.getGenericTypes()), l0, l2, 1);
+//                    mv.visitMaxs(2, 2);
+
+
+
+                    mv.visitLabel(l0);
+                    mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
+                    mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
+                    mv.visitFieldInsn(Opcodes.GETFIELD, superClassInternalName, "attributeValues", "Ljava/util/List;");
+                    mv.visitLdcInsn(property.getName());
+                    mv.visitVarInsn(Opcodes.ALOAD,Opcodes.F_APPEND);
+                    mv.visitMethodInsn(INVOKESTATIC, "com/fantasy/framework/util/asm/AttributeValueUtil", "saveValue", "(Ljava/util/List;Ljava/lang/String;Ljava/lang/String;)Ljava/lang/Object;");
+                    mv.visitTypeInsn(CHECKCAST,Type.getInternalName(property.getType()));
+                    mv.visitFieldInsn(Opcodes.PUTFIELD, newClassInternalName, property.getName(), Type.getDescriptor(property.getType()));
+                    mv.visitLabel(l1);
+                    mv.visitInsn(Opcodes.RETURN);
+                    mv.visitLabel(l2);
+                    mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
+                    mv.visitLocalVariable(fieldName, descriptor, AsmUtil.getSignature(property.getType(), property.getGenericTypes()), l0, l2, 1);
+                    mv.visitMaxs(4, 2);
+
+                }
+
+            });
+
         }
 
-        // toString方法
-        mv = cw.visitMethod(ACC_PUBLIC, "toString", Type.getMethodDescriptor(Type.getType(String.class), new Type[0]), null, null);
-        mv.visitCode();
-        mv.visitLabel(l0);
-        mv.visitLdcInsn(" AsmUtil makeClass !");
-        mv.visitInsn(ARETURN);
-        mv.visitLabel(l1);
-        mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l1, 0);
-        mv.visitMaxs(1, 1);
-        mv.visitEnd();
 
-        cw.visitEnd();
+        Class clzz = AsmUtil.makeClass(className,superClass,properties);
 
-        Class clzz = FantasyClassLoader.getClassLoader().loadClass(cw.toByteArray(), className);
+//        System.out.println(AsmUtil.trace(Article.class));
 
-        System.out.println(User.class.isAssignableFrom(clzz));
+//        System.out.println(AsmUtil.trace(clzz));
 
-        for(Method method : clzz.getDeclaredMethods()){
+
+        for(java.lang.reflect.Method method : clzz.getDeclaredMethods()){
             System.out.println(method.toString());
         }
 
-        System.out.println(clzz);
+        Object o = clzz.newInstance();
+
+        OgnlUtil.getInstance().setValue("attributeValues",o,attributeValues);
+
+        OgnlUtil.getInstance().setValue("test",o,"123");
+
+        System.out.println(o);
+
+        System.out.println(OgnlUtil.getInstance().getValue("test",o));
+
+//       System.out.println(AsmUtil.trace(Article.class));
 
     }
 

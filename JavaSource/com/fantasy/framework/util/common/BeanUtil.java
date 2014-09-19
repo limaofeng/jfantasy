@@ -20,13 +20,16 @@ public class BeanUtil {
 		return ClassUtil.getValue(target, fieldName);
 	}
 
-	public static void copyProperties(Object dest, Object orig) {
+    public static <T> T copyProperties(T dest, T orig) {
         try {
             BeanUtils.copyProperties(dest,orig);
+            return dest;
         } catch (IllegalAccessException e) {
             logger.error(e.getMessage(),e);
+            return null;
         } catch (InvocationTargetException e) {
             logger.error(e.getMessage(),e);
+            return null;
         }
     }
 

@@ -1,5 +1,7 @@
 package com.fantasy.attr.interceptor;
 
+import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
@@ -13,20 +15,29 @@ import java.util.List;
 
 @Component
 @Aspect
-public class AttributeValueInterceptor implements InitializingBean{
+public class AttributeValueInterceptor implements InitializingBean {
 
-	@Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.findPager(..)) && args(pager,filters)", argNames = "pjp,pager,filters")
-	public Object proceed(ProceedingJoinPoint pjp,Pager pager,List<PropertyFilter> filters) throws Throwable {
-        System.out.println(ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass()));
-        System.out.println("==>"+pjp.getStaticPart());
-		for(Object object : pjp.getArgs()){
-			System.out.println(object.getClass());
-		}
+    @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.findPager(..)) && args(pager,filters)", argNames = "pjp,pager,filters")
+    public Object proceed(ProceedingJoinPoint pjp, Pager pager, List<PropertyFilter> filters) throws Throwable {
+        if (!DynaBean.class.isAssignableFrom(ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass()))) {
+            return pjp.proceed();
+        }
+        System.out.println("==>" + pjp.getStaticPart());
+        for (Object object : pjp.getArgs()) {
+            System.out.println(object.getClass());
+        }
         System.out.println("已经记录下操作日志@Around 方法执行前");
-        Object rev = pjp.proceed();
-        System.out.println("已经记录下操作日志@Around 方法执行后");
-        return rev;
-	}
+        pager = (Pager) pjp.proceed();
+        List beans = pager.getPageItems();
+        for (int i = 0, length = beans.size(); i < length; i++) {
+            DynaBean dynaBean = (DynaBean) beans.get(i);
+            if (dynaBean.getVersion() == null) {
+                continue;
+            }
+            beans.set(i, VersionUtil.makeDynaBean(dynaBean));
+        }
+        return pager;
+    }
 
     @Override
     public void afterPropertiesSet() throws Exception {
