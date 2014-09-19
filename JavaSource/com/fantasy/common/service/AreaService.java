@@ -7,63 +7,28 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.common.file.FileUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.Resource;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 @Transactional
-public class AreaService implements InitializingBean {
+public class AreaService{
 
     @Resource
     private AreaDao areaDao;
 
     private static final Log logger = LogFactory.getLog(AreaService.class);
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            int count = areaDao.count();
-            if (count <= 0) {
-                // 加载菜单sql脚本
-                InputStream is = AreaService.class.getResourceAsStream("/file/area.sql");
-                FileUtil.readFile(is, new FileUtil.ReadLineCallback() {
-                    @Override
-                    public boolean readLine(String line) {
-                        for (String sql : StringUtil.tokenizeToStringArray(line, "\n")) {
-                            areaDao.batchSQLExecute(sql);
-                        }
-                        return true;
-                    }
-                });
-                transactionManager.commit(status);
-            }
-        } catch (RuntimeException e) {
-            transactionManager.rollback(status);
-        }
-    }
-
 
     @SuppressWarnings("unchecked")
     @CacheEvict(value = {"fantasy.common.AreaService"}, allEntries = true)

@@ -5,14 +5,9 @@ import com.fantasy.framework.service.FTPService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import org.hibernate.event.spi.*;
 import org.hibernate.persister.entity.EntityPersister;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -31,33 +26,12 @@ import java.util.concurrent.ConcurrentMap;
 @Service
 @Transactional
 @Lazy(false)
-public class FtpServiceFactory implements InitializingBean {
+public class FtpServiceFactory {
 
 	@Resource
 	private FtpConfigService ftpConfigService;
 
 	private final static ConcurrentMap<Long, FTPService> ftpServiceCache = new ConcurrentHashMap<Long, FTPService>();
-
-	/**
-	 * 应用启动时加载并初始化全部的FtpService
-	 * 
-	 * @功能描述
-	 * @throws Exception
-	 */
-	public void afterPropertiesSet() throws Exception {
-		PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-		def.setReadOnly(true);
-		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_NOT_SUPPORTED);
-		TransactionStatus status = transactionManager.getTransaction(def);
-		try {
-			for (FtpConfig config : ftpConfigService.getAll()) {
-				this.initialize(config);
-			}
-		} finally {
-			transactionManager.commit(status);
-		}
-	}
 
 	public static String getFtpServiceBeanId(Long configId) {
 		return "ftpService-" + configId;
