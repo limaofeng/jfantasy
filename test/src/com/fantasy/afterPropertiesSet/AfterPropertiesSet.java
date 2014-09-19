@@ -2,21 +2,28 @@ package com.fantasy.afterPropertiesSet;
 
 import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.Converter;
+import com.fantasy.attr.dao.AttributeTypeDao;
+import com.fantasy.attr.dao.ConverterDao;
 import com.fantasy.attr.typeConverter.PrimitiveTypeConverter;
 import com.fantasy.common.bean.FtpConfig;
+import com.fantasy.common.dao.AreaDao;
+import com.fantasy.common.service.AreaService;
+import com.fantasy.common.service.FtpConfigService;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
-import com.fantasy.payment.product.*;
-import com.fantasy.payment.service.TestPaymentOrderService;
 import com.fantasy.security.bean.Menu;
 import com.fantasy.security.bean.Role;
+import com.fantasy.security.dao.MenuDao;
+import com.fantasy.security.service.MenuService;
 import com.fantasy.swp.bean.*;
 import com.fantasy.system.bean.DataDictionaryType;
 import com.fantasy.system.bean.Setting;
 import com.fantasy.system.bean.Website;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
@@ -29,10 +36,13 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by hebo on 2014/9/19.
- */
+* Created by hebo on 2014/9/19.
+*/
 public class AfterPropertiesSet {
 
+    private static final Log logger = LogFactory.getLog(AfterPropertiesSet.class);
+
+    private AttributeTypeDao attributeTypeDao;
 
     public void AttributeTypeService() throws Exception {
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
@@ -61,6 +71,8 @@ public class AfterPropertiesSet {
         }
     }
 
+    private ConverterDao converterDao;
+
     public void ConverterService() throws Exception {
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
@@ -86,6 +98,7 @@ public class AfterPropertiesSet {
         }
     }
 
+    private AreaDao areaDao;
 
     public void AreaService() throws Exception {
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
@@ -113,6 +126,7 @@ public class AfterPropertiesSet {
         }
     }
 
+    private FtpConfigService ftpConfigService;
 
     /**
      * 应用启动时加载并初始化全部的FtpService
@@ -135,95 +149,11 @@ public class AfterPropertiesSet {
         }
     }
 
-
-    public void PaymentConfiguration() throws Exception {
-
-        //支付宝即时交易
-        if (ObjectUtil.find(this.paymentProducts, "id", "alipayDirect") == null) {
-            AlipayDirect alipayDirect = new AlipayDirect();
-            alipayDirect.setId("alipayDirect");
-            alipayDirect.setName("支付宝（即时交易）");
-            alipayDirect.setBargainorIdName("合作身份者ID");
-            alipayDirect.setBargainorKeyName("安全校验码");
-            alipayDirect.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            alipayDirect.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
-            alipayDirect.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-            this.paymentProducts.add(alipayDirect);
-        }
-
-        //支付宝担保交易
-        if (ObjectUtil.find(this.paymentProducts, "id", "alipayPartner") == null) {
-            AlipayPartner alipayPartner = new AlipayPartner();
-            alipayPartner.setId("alipayPartner");
-            alipayPartner.setName("支付宝（担保交易）");
-            alipayPartner.setBargainorIdName("合作身份者ID");
-            alipayPartner.setBargainorKeyName("安全校验码");
-            alipayPartner.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            alipayPartner.setLogoPath("/template/tocer/images/payment/alipay_partner_icon.gif");
-            alipayPartner.setDescription("支付宝担保交易，买家先付款到支付宝，支付宝收到买家付款后即时通知卖家发货，买家收到货物满意后通知支付宝付款给卖家。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-            this.paymentProducts.add(alipayPartner);
-        }
-
-        //财付通即时交易
-        if (ObjectUtil.find(this.paymentProducts, "id", "tenpayDirect") == null) {
-            TenpayDirect tenpayDirect = new TenpayDirect();
-            tenpayDirect.setId("tenpayDirect");
-            tenpayDirect.setName("财付通（即时交易）");
-            tenpayDirect.setBargainorIdName("商户号");
-            tenpayDirect.setBargainorKeyName("安全校验码");
-            tenpayDirect.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            tenpayDirect.setLogoPath("/template/tocer/images/payment/tenpay_direct_icon.gif");
-            tenpayDirect.setDescription("中国领先的在线支付平台，致力于为互联网用户和企业提供安全、便捷、专业的在线支付服务。 <a href=\"http://union.tenpay.com/mch/mch_register.shtml?sp_suggestuser=admin@shopxx.net\" class=\"red\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-            this.paymentProducts.add(tenpayDirect);
-        }
-
-        //财付通（担保交易）
-        if (ObjectUtil.find(this.paymentProducts, "id", "tenpayPartner") == null) {
-            TenpayPartner tenpayPartner = new TenpayPartner();
-            tenpayPartner.setId("tenpayPartner");
-            tenpayPartner.setName("财付通（担保交易）");
-            tenpayPartner.setBargainorIdName("商户号");
-            tenpayPartner.setBargainorKeyName("安全校验码");
-            tenpayPartner.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            tenpayPartner.setLogoPath("/template/tocer/images/payment/tenpay_partner_icon.gif");
-            tenpayPartner.setDescription("中国领先的在线支付平台，致力于为互联网用户和企业提供安全、便捷、专业的在线支付服务。 <a href=\"http://union.tenpay.com/mch/mch_register.shtml?sp_suggestuser=admin@shopxx.net\" class=\"red\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-            this.paymentProducts.add(tenpayPartner);
-        }
-
-        //易宝支付
-        if (ObjectUtil.find(this.paymentProducts, "id", "yeepay") == null) {
-            Yeepay yeepay = new Yeepay();
-            yeepay.setId("yeepay");
-            yeepay.setName("易宝支付");
-            yeepay.setBargainorIdName("商户编号");
-            yeepay.setBargainorKeyName("密钥");
-            yeepay.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            yeepay.setLogoPath("/template/tocer/images/payment/yeepay_icon.gif");
-            yeepay.setDescription("中国领先的独立第三方支付平台，致力于为广大商家和消费者提供“安全、简单、快乐”的专业电子支付解决方案和服务。");
-            this.paymentProducts.add(yeepay);
-        }
-
-        //快钱
-        if (ObjectUtil.find(this.paymentProducts, "id", "pay99bill") == null) {
-            Pay99bill pay99bill = new Pay99bill();
-            pay99bill.setId("pay99bill");
-            pay99bill.setName("快钱");
-            pay99bill.setBargainorIdName("账户号");
-            pay99bill.setBargainorKeyName("密钥");
-            pay99bill.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            pay99bill.setLogoPath("/template/tocer/images/payment/pay99bill_icon.gif");
-            pay99bill.setDescription("快钱是国内领先的独立第三方支付企业，旨在为各类企业及个人 提供安全、便捷和保密的综合电子支付服务。");
-            this.paymentProducts.add(pay99bill);
-        }
-
-        //支付订单service
-        if(!this.paymentOrderServices.containsKey("test")){
-            this.paymentOrderServices.put("test", SpringContextUtil.createBean(TestPaymentOrderService.class,SpringContextUtil.AUTOWIRE_BY_TYPE));
-        }
+    private void initialize(FtpConfig config) {
 
     }
 
-
+    private MenuDao menuDao;
 
     /**
      * 初始化菜单
@@ -255,7 +185,6 @@ public class AfterPropertiesSet {
     }
 
 
-    @Override
     public void RoleService() throws Exception {
         StringBuffer log = new StringBuffer("初始化系统默认系统管理员角色信息");
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
@@ -263,14 +192,14 @@ public class AfterPropertiesSet {
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
-            Role role = get("SYSTEM");
+            Role role = null;//get("SYSTEM");
             if (role == null) {
                 role = new Role();
                 role.setCode("SYSTEM");
                 role.setName("系统管理员");
                 role.setEnabled(true);
                 role.setDescription("系统默认管理员");
-                save(role);
+                //save(role);
             }
         } finally {
             transactionManager.commit(status);
@@ -337,13 +266,13 @@ public class AfterPropertiesSet {
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
-            DataDictionaryType ddt = getDataDictionaryType("root");
+            DataDictionaryType ddt = null;//getDataDictionaryType("root");
             if (ddt == null) {
                 StringBuffer log = new StringBuffer("初始化数据字典分类跟目录");
                 ddt = new DataDictionaryType();
                 ddt.setCode("root");
                 ddt.setName("数据字典分类");
-                save(ddt);
+                //save(ddt);
                 logger.debug(log);
             }
         } finally {
@@ -361,7 +290,7 @@ public class AfterPropertiesSet {
         try {
             // 初始化商品根目录
             StringBuffer log = new StringBuffer("初始化默认站点");
-            Website webSite = this.findUniqueByKey("haolue");
+            Website webSite = null;//this.findUniqueByKey("haolue");
             if (webSite == null) {
                 webSite = new Website();
                 webSite.setKey("haolue");
@@ -369,20 +298,20 @@ public class AfterPropertiesSet {
                 webSite.setWeb("http://haolue.jfantasy.org");
             }
             // 添加默认文件管理器
-            FileManagerConfig config = fileManagerService.get(webSite.getKey() + "-default");
+            FileManagerConfig config = null;//fileManagerService.get(webSite.getKey() + "-default");
             if (config == null) {
-                fileManagerService.save(config = FileManagerConfig.newInstance(webSite.getKey() + "-default", "默认文件管理器", "/home/" + webSite.getKey(), "默认文件管理器,请勿删除"));
+                //fileManagerService.save(config = FileManagerConfig.newInstance(webSite.getKey() + "-default", "默认文件管理器", "/home/" + webSite.getKey(), "默认文件管理器,请勿删除"));
             }
             webSite.setDefaultFileManager(config);
 
             // 添加上传文件管理器
-            FileManagerConfig ufm = fileManagerService.get(webSite.getKey() + "-upload");
+            FileManagerConfig ufm = null;//fileManagerService.get(webSite.getKey() + "-upload");
             if (ufm == null) {
-                fileManagerService.save(ufm = FileManagerConfig.newInstance(webSite.getKey() + "-upload", "默认文件上传管理器", FileManagerConfig.newInstance(webSite.getKey() + "-default"), "默认文件上传管理器"));
+                //fileManagerService.save(ufm = FileManagerConfig.newInstance(webSite.getKey() + "-upload", "默认文件上传管理器", FileManagerConfig.newInstance(webSite.getKey() + "-default"), "默认文件上传管理器"));
             }
             webSite.setDefaultUploadFileManager(ufm);
 
-            this.websiteDao.save(webSite);
+//            this.websiteDao.save(webSite);
             // 初始化参数
             List<Setting> settings = new ArrayList<Setting>();
             settings.add(Setting.newInstance(webSite, "网站头部标题", "title", "昊略信息技术有限公司网站", ""));
@@ -396,7 +325,7 @@ public class AfterPropertiesSet {
 
             for (Setting setting : settings) {
                 if (webSite.getSettings() == null || ObjectUtil.find(webSite.getSettings(), "key", setting.getKey()) == null) {
-                    settingDao.save(setting);
+//                    settingDao.save(setting);
                 }
             }
 
