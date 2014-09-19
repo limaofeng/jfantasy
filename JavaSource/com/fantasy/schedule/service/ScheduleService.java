@@ -46,13 +46,15 @@ public class ScheduleService {
      * @param jobKey   key
      * @param jobClass JobClass
      */
-    public void addJob(JobKey jobKey, Class<? extends Job> jobClass) {
+    public JobDetail addJob(JobKey jobKey, Class<? extends Job> jobClass) {
         try {
             JobDetail job = newJob(jobClass).withIdentity(jobKey.getName(), jobKey.getGroup()).build();
             scheduler.addJob(job, true);
             scheduler.resumeJob(jobKey);
+            return job;
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
+            return null;
         }
     }
 
@@ -64,7 +66,7 @@ public class ScheduleService {
      * @param cron       任务表达式
      * @param args       参数
      */
-    public void addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron, Map<String, Object> args) {
         try {
             Trigger trigger = TriggerBuilder.newTrigger().withIdentity(triggerKey.getName(), triggerKey.getGroup()).withSchedule(cronSchedule(cron).withMisfireHandlingInstructionFireAndProceed()).build();
             JobDataMap map = trigger.getJobDataMap();
@@ -72,8 +74,11 @@ public class ScheduleService {
                 map.putAll(args);
             }
             scheduler.scheduleJob(scheduler.getJobDetail(jobKey), trigger);
+            scheduler.resumeTrigger(trigger.getKey());
+            return trigger;
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
+            return null;
         }
     }
 
