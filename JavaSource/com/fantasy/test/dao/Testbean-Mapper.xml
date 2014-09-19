@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fantasy.test.dao.TestDao">
+
+	<resultMap type="com.fantasy.test.bean.Testbean" id="TestResultMap">
+		<id property="key" column="T_KEY" />
+		<result property="value" column="T_VALUE" />
+	</resultMap>
+
+	<select id="findUniqueByKey" parameterType="java.lang.String" resultMap="TestResultMap" flushCache="true">
+		SELECT T_KEY,T_VALUE FROM testbean WHERE T_KEY = #{value}
+	</select>
+
+    <select id="selectAll" resultMap="TestResultMap" flushCache="true">
+        SELECT * FROM testbean
+    </select>
+    
+    
+	<insert id="insert" parameterType="com.fantasy.test.bean.Testbean">
+		INSERT INTO [testbean]
+           (T_KEY
+           ,T_VALUE)
+     	VALUES
+           (
+        <if test="key != null"> #{key},</if>
+        <if test="value != null"> #{value}</if>
+           )
+	</insert>
+
+	<update id="update" parameterType="com.fantasy.test.bean.Testbean">
+		UPDATE [testbean]
+		<set>
+			<if test=" value != null ">T_VALUE = #{value},</if>
+		</set>
+		WHERE T_KEY = #{key} and T_VALUE = #{originalValue}
+	</update>
+
+</mapper>
