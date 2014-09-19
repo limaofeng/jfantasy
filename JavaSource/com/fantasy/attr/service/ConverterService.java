@@ -1,9 +1,7 @@
 package com.fantasy.attr.service;
 
-import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.Converter;
 import com.fantasy.attr.dao.ConverterDao;
-import com.fantasy.attr.typeConverter.PrimitiveTypeConverter;
 import com.fantasy.attr.typeConverter.UserIdTypeConverter;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -13,13 +11,8 @@ import com.fantasy.security.bean.User;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
@@ -27,38 +20,12 @@ import java.util.List;
 
 @Service
 @Transactional
-public class ConverterService implements InitializingBean {
+public class ConverterService{
 
 	private static final Log logger = LogFactory.getLog(ConverterService.class);
 
 	@Resource
 	private ConverterDao converterDao;
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-		DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-		def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-		TransactionStatus status = transactionManager.getTransaction(def);
-		try {
-			// 初始化基础分类
-			Class<?>[] defaultClass = new Class[] { PrimitiveTypeConverter.class };
-			for (Class<?> clazz : defaultClass) {
-				Converter converter = converterDao.findUniqueBy("typeConverter", clazz.getName());
-				if (converter == null) {
-					StringBuffer log = new StringBuffer("初始化基本数据类型转换器:" + clazz);
-					converter = new Converter();
-					converter.setName("int converter");
-					converter.setTypeConverter(clazz.getName());
-					converter.setDescription("基本数据类型转换器:" + clazz);
-					converterDao.save(converter);
-					logger.debug(log);
-				}
-			}
-		} finally {
-			transactionManager.commit(status);
-		}
-	}
 
     /**
      * 分页查询转换器

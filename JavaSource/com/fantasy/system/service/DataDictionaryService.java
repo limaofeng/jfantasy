@@ -27,7 +27,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class DataDictionaryService implements InitializingBean {
+public class DataDictionaryService{
 
     private static final Log logger = LogFactory.getLog(DataDictionaryService.class);
 
@@ -37,25 +37,6 @@ public class DataDictionaryService implements InitializingBean {
     @Resource
     private DataDictionaryDao dataDictionaryDao;
 
-    public void afterPropertiesSet() throws Exception {
-        PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            DataDictionaryType ddt = getDataDictionaryType("root");
-            if (ddt == null) {
-                StringBuffer log = new StringBuffer("初始化数据字典分类跟目录");
-                ddt = new DataDictionaryType();
-                ddt.setCode("root");
-                ddt.setName("数据字典分类");
-                save(ddt);
-                logger.debug(log);
-            }
-        } finally {
-            transactionManager.commit(status);
-        }
-    }
 
     public List<DataDictionaryType> allTypes() {
         return dataDictionaryTypeDao.getAll();

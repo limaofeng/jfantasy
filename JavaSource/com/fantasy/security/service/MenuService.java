@@ -5,7 +5,6 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.security.bean.Menu;
 import com.fantasy.security.bean.enums.MenuType;
 import com.fantasy.security.dao.MenuDao;
@@ -13,17 +12,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -31,42 +24,13 @@ import java.util.Map;
 
 @Service("fantasy.auth.MenuService")
 @Transactional
-public class MenuService implements InitializingBean {
+public class MenuService{
 
     @Resource
     private MenuDao menuDao;
 
     private static final Log logger = LogFactory.getLog(MenuService.class);
 
-    /**
-     * 初始化菜单
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        List<Menu> menus = menuDao.find();
-        if (menus == null || menus.size() <= 0) {
-            PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-            DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-            def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-            TransactionStatus status = transactionManager.getTransaction(def);
-            try {
-                // 加载菜单sql脚本
-                InputStream is = MenuService.class.getResourceAsStream("/file/auth_menu.sql");
-                FileUtil.readFile(is, new FileUtil.ReadLineCallback() {
-                    @Override
-                    public boolean readLine(String line) {
-                        for (String sql : StringUtil.tokenizeToStringArray(line, "\n")) {
-                            menuDao.batchSQLExecute(sql);
-                        }
-                        return true;
-                    }
-                });
-                transactionManager.commit(status);
-            } catch (RuntimeException e) {
-                transactionManager.rollback(status);
-            }
-        }
-    }
 
     public List<Menu> loadMenus(Long parentId) {
         List<Menu> menus = tree();
