@@ -82,46 +82,19 @@ public class VersionUtil {
         return attributeVersionService;
     }
 
-    private static Class makeClass(AttributeVersion version) {
-        String className = version.getClassName() + "$" + version.getNumber();
+    public static Class makeClass(AttributeVersion version) {
+        String className = version.getClassName() + "_" + version.getNumber();
         if (!dynaBeanClassCache.containsKey(className)) {
             String superClass = version.getClassName();
             List<Property> properties = new ArrayList<Property>();
             List<MethodInfo> methodInfos = new ArrayList<MethodInfo>();
             for (Attribute attribute : version.getAttributes()) {
-                final Property property = new Property(attribute.getCode(), String.class);
+                final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
                 property.setGetMethodCreator(getMethodCreator);
                 if (String.class.isAssignableFrom(property.getType())) {
                     property.setSetMethodCreator(setMethodCreator);
                 } else {
-                    methodInfos.add(new MethodInfo("set" + StringUtil.upperCaseFirst(property.getName()), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(property.getType())}), property.getGenericTypes().length != 0 ? ("(" + AsmUtil.getSignature(property.getType(), property.getGenericTypes()) + ")V") : null, new MethodCreator() {
-                        @Override
-                        public void execute(MethodVisitor mv) {
-                            String className = AsmContext.getContext().get("className", String.class);
-
-                            String newClassInternalName = className.replace('.', '/');
-
-                            String fieldName = property.getName();
-                            String descriptor = Type.getDescriptor(property.getType());
-                            int[] loadAndReturnOf = AsmUtil.loadAndReturnOf(descriptor);
-
-                            Label l0 = new Label();
-                            Label l1 = new Label();
-                            Label l2 = new Label();
-
-                            mv.visitLabel(l0);
-                            mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
-                            mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_APPEND);
-                            mv.visitFieldInsn(Opcodes.PUTFIELD, newClassInternalName, fieldName, descriptor);
-                            mv.visitLabel(l1);
-                            mv.visitInsn(Opcodes.RETURN);
-                            mv.visitLabel(l2);
-                            mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
-                            mv.visitLocalVariable(fieldName, descriptor, AsmUtil.getSignature(property.getType(), property.getGenericTypes()), l0, l2, 1);
-                            mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND);// ALOAD
-                            mv.visitMaxs(2, 2);
-                        }
-                    }));
+                    methodInfos.add(new MethodInfo("set" + StringUtil.upperCaseFirst(property.getName()), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(String.class)}), null, setMethodCreator));
                 }
                 properties.add(property);
             }
@@ -145,29 +118,34 @@ public class VersionUtil {
             Label l0 = new Label();
             Label l1 = new Label();
             Label l2 = new Label();
+            Label l3 = new Label();
 
             mv.visitLabel(l0);
             mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
             mv.visitFieldInsn(Opcodes.GETFIELD, newClassInternalName, property.getName(), Type.getDescriptor(property.getType()));
             mv.visitJumpInsn(Opcodes.IFNULL, l1);
 
+            mv.visitLabel(l2);
             mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
             mv.visitFieldInsn(Opcodes.GETFIELD, newClassInternalName, property.getName(), Type.getDescriptor(property.getType()));
             mv.visitInsn(Opcodes.ARETURN);
 
             mv.visitLabel(l1);
-
             mv.visitFrame(Opcodes.F_SAME, 0, new Object[0], 0, new Object[0]);
 
             mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
+            mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
+
             mv.visitFieldInsn(Opcodes.GETFIELD, superClassInternalName, "attributeValues", "Ljava/util/List;");
             mv.visitLdcInsn(property.getName());
             mv.visitMethodInsn(Opcodes.INVOKESTATIC, "com/fantasy/attr/util/VersionUtil", "getValue", "(Ljava/util/List;Ljava/lang/String;)Ljava/lang/Object;");
             mv.visitTypeInsn(Opcodes.CHECKCAST, Type.getInternalName(property.getType()));
+            mv.visitInsn(Opcodes.DUP_X1);
+            mv.visitFieldInsn(Opcodes.PUTFIELD, newClassInternalName, property.getName(), Type.getDescriptor(property.getType()));
             mv.visitInsn(Opcodes.ARETURN);
-            mv.visitLabel(l2);
-            mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
-            mv.visitMaxs(2, 1);
+            mv.visitLabel(l3);
+            mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l3, 0);
+            mv.visitMaxs(3, 1);
         }
 
     };
@@ -223,7 +201,13 @@ public class VersionUtil {
     public static Object getValue(List<AttributeValue> attributeValues, String test) {
         AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", test);
         System.out.println("getValue==>" + attributeValue.getValue());
-        return attributeValue.getValue();
+        Class<?> clazz = ClassUtil.forName(attributeValue.getAttribute().getAttributeType().getDataType());
+        if (ClassUtil.isPrimitiveOrWrapper(clazz)) {
+            return ClassUtil.newInstance(clazz, attributeValue.getValue());
+        } else if (String.class.isAssignableFrom(clazz)) {
+            return attributeValue.getValue();
+        }
+        throw new RuntimeException("暂时不支持基本数据类型以外的类型");
     }
 
 }
