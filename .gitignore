@@ -1,3 +1,9 @@
-# Created by .gitignore support plugin (hsz.mobi)
-fantasy-core.iml
+*.class
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+*.iml
 target
