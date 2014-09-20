@@ -4,7 +4,7 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-core</artifactId>
     <packaging>jar</packaging>
-    <version>2.3.0</version>
+    <version>2.3.1</version>
 
     <distributionManagement>
         <repository>
@@ -21,6 +21,7 @@
         <org.apache.struts-version>2.3.8</org.apache.struts-version>
         <org.hibernate-version>4.3.5.Final</org.hibernate-version>
         <org.quartz-scheduler-version>2.2.1</org.quartz-scheduler-version>
+        <org.codehaus.jackson-version>1.9.9</org.codehaus.jackson-version>
     </properties>
 
     <build>
@@ -367,13 +368,12 @@
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-core-asl</artifactId>
-            <version>1.9.9</version>
+            <version>${org.codehaus.jackson-version}</version>
         </dependency>
-
         <dependency>
             <groupId>org.codehaus.jackson</groupId>
             <artifactId>jackson-mapper-asl</artifactId>
-            <version>1.7.4</version>
+            <version>${org.codehaus.jackson-version}</version>
         </dependency>
         <dependency>
             <groupId>org.tuckey</groupId>
