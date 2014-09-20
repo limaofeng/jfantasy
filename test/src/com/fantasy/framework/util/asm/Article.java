@@ -52,7 +52,7 @@ public class Article {
         if (this.testOp != null) {
             return this.testOp;
         }
-        return (String) VersionUtil.getValue(this.attributeValues, "testOp");
+        return this.testOp = (String) VersionUtil.getValue(this.attributeValues, "testOp");
     }
 
     public String getUser() {

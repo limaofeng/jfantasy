@@ -7,6 +7,8 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
+
 /**
  * Created by hebo on 2014/9/18.
  */
@@ -14,7 +16,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @ContextConfiguration(locations={"classpath:spring/applicationContext.xml"})
 public class TestMybatis {
 
-    private TestService testService = new TestService();
+    @Resource
+    private TestService testService;
     @Test
     public void insert()
     {
