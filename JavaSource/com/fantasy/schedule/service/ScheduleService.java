@@ -200,6 +200,28 @@ public class ScheduleService {
     }
 
     /**
+     * 暂停调度中所有的job任务
+     */
+    public void pauseAll() {
+        try {
+            scheduler.pauseAll();
+        } catch (SchedulerException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 恢复调度中所有的job的任务
+     */
+    public void resumeAll() {
+        try {
+            scheduler.resumeAll();
+        } catch (SchedulerException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
+    /**
      * 中断TASK执行 job
      *
      * @param jobName   触发器名称
