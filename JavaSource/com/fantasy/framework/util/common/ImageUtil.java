@@ -6,7 +6,6 @@ import com.sun.imageio.plugins.bmp.BMPImageReader;
 import com.sun.imageio.plugins.gif.GIFImageReader;
 import com.sun.imageio.plugins.jpeg.JPEGImageReader;
 import com.sun.imageio.plugins.png.PNGImageReader;
-import magick.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import sun.awt.image.ToolkitImage;
@@ -50,17 +49,6 @@ public final class ImageUtil {
 
     };
 
-    private static boolean isImageMagickEnable = false;
-
-    static {
-        try {
-            System.setProperty("jmagick.systemclassloader", "no");
-            new Magick();
-            isImageMagickEnable = true;
-        } catch (Throwable e) {
-            isImageMagickEnable = false;
-        }
-    }
 
     /**
      * 获取图片文件格式
@@ -108,7 +96,7 @@ public final class ImageUtil {
     public static String getFormatName(BufferedImage image) {
         if (image.getType() >= BufferedImage.TYPE_INT_ARGB && image.getType() <= BufferedImage.TYPE_4BYTE_ABGR) {
             return PNG_FORMAT_NAME;
-        }else{
+        } else {
             return "JPEG";
         }
     }
@@ -187,43 +175,6 @@ public final class ImageUtil {
      */
     public static BufferedImage watermark(File press, File target, int x, int y, int alpha) throws IOException {
         return watermark(ImageIO.read(press), ImageIO.read(target), x, y, alpha);
-    }
-
-    /**
-     * 添加图片水印(ImageMagick)
-     *
-     * @param srcMagickImage 需要处理的MagickImage
-     * @param watermarkFile  水印图片文件
-     * @param x              坐标 x
-     * @param y              坐标 y
-     * @param alpha          水印图片透明度
-     * @return {MagickImage}
-     */
-    public static MagickImage watermark(MagickImage srcMagickImage, File watermarkFile, int x, int y, int alpha) {
-        MagickImage watermarkMagickImage = null;
-        try {
-            if (watermarkFile != null && watermarkFile.exists()) {
-                // Dimension dimension = srcMagickImage.getDimension();
-                // int srcWidth = (int) dimension.getWidth();
-                // int srcHeight = (int) dimension.getHeight();
-                watermarkMagickImage = new MagickImage(new ImageInfo(watermarkFile.getAbsolutePath()));
-                // Dimension watermarkDimension = watermarkMagickImage.getDimension();
-                // int watermarkImageWidth = (int) watermarkDimension.getWidth();
-                // int watermarkImageHeight = (int) watermarkDimension.getHeight();
-                watermarkMagickImage.transparentImage(PixelPacket.queryColorDatabase("white"), 655 * alpha);
-                srcMagickImage.compositeImage(CompositeOperator.AtopCompositeOp, watermarkMagickImage, x, y);
-                watermarkMagickImage.destroyImages();
-            }
-        } catch (MagickException e) {
-            if (srcMagickImage != null) {
-                srcMagickImage.destroyImages();
-            }
-        } finally {
-            if (watermarkMagickImage != null) {
-                watermarkMagickImage.destroyImages();
-            }
-        }
-        return srcMagickImage;
     }
 
     /**
@@ -307,7 +258,7 @@ public final class ImageUtil {
     }
 
     public static void write(BufferedImage image, String filePath) throws FileNotFoundException {
-        write(image,new FileOutputStream(filePath));
+        write(image, new FileOutputStream(filePath));
     }
 
     public static void write(BufferedImage image, String formatName, String filePath) throws FileNotFoundException {
@@ -461,7 +412,7 @@ public final class ImageUtil {
                 newWidth = realWidth * newHeight / realHeight;
             }
             Image image = imageOriginal.getScaledInstance(newWidth, newHeight, Image.SCALE_SMOOTH);
-            BufferedImage tag = new BufferedImage(newWidth, newHeight,imageOriginal.getType());
+            BufferedImage tag = new BufferedImage(newWidth, newHeight, imageOriginal.getType());
             Graphics2D g = tag.createGraphics();
             g.drawImage(image, 0, 0, imageObserver);
             g.dispose();

@@ -4,7 +4,7 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-core</artifactId>
     <packaging>jar</packaging>
-    <version>2.3.1</version>
+    <version>2.4.0</version>
 
     <distributionManagement>
         <repository>
@@ -16,12 +16,15 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
-        <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
-        <org.apache.struts-version>2.3.8</org.apache.struts-version>
+        <org.aspectj-version>1.8.2</org.aspectj-version>
+        <org.mybatis-version>3.2.7</org.mybatis-version>
         <org.hibernate-version>4.3.5.Final</org.hibernate-version>
+        <org.apache.struts-version>2.3.8</org.apache.struts-version>
+        <org.apache.lucene-version>3.6.2</org.apache.lucene-version>
         <org.quartz-scheduler-version>2.2.1</org.quartz-scheduler-version>
         <org.codehaus.jackson-version>1.9.9</org.codehaus.jackson-version>
+        <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
+        <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
     </properties>
 
     <build>
@@ -133,24 +136,9 @@
             <version>1.0</version>
         </dependency>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>jpingyin</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mobicents.external.freetts</groupId>
-            <artifactId>freetts</artifactId>
-            <version>1.0</version>
-        </dependency>
-        <dependency>
             <groupId>com.ckfinder</groupId>
             <artifactId>apache-ant-zip</artifactId>
             <version>2.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.jhlabs</groupId>
-            <artifactId>imaging</artifactId>
-            <version>01012005</version>
         </dependency>
         <dependency>
             <groupId>com.cloudhopper.proxool</groupId>
@@ -441,17 +429,16 @@
                     <groupId>org.slf4j</groupId>
                 </exclusion>
             </exclusions>
-
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-core</artifactId>
-            <version>3.6.2</version>
+            <version>${org.apache.lucene-version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.lucene</groupId>
             <artifactId>lucene-highlighter</artifactId>
-            <version>3.6.2</version>
+            <version>${org.apache.lucene-version}</version>
         </dependency>
         <dependency>
             <groupId>eu.medsea.mimeutil</groupId>
@@ -480,7 +467,7 @@
         <dependency>
             <groupId>org.mybatis</groupId>
             <artifactId>mybatis</artifactId>
-            <version>3.2.7</version>
+            <version>${org.mybatis-version}</version>
         </dependency>
         <dependency>
             <groupId>org.mybatis</groupId>
@@ -490,12 +477,12 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.5.4</version>
+            <version>${org.aspectj-version}</version>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.5.4</version>
+            <version>${org.aspectj-version}</version>
         </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
@@ -522,11 +509,6 @@
                     <groupId>commons-codec</groupId>
                 </exclusion>
             </exclusions>
-        </dependency>
-        <dependency>
-            <groupId>aopalliance</groupId>
-            <artifactId>aopalliance</artifactId>
-            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -569,16 +551,6 @@
             <groupId>asm</groupId>
             <artifactId>asm-commons</artifactId>
             <version>3.3</version>
-        </dependency>
-        <dependency>
-            <groupId>com.belerweb</groupId>
-            <artifactId>pinyin4j</artifactId>
-            <version>2.5.0</version>
-        </dependency>
-        <dependency>
-            <groupId>jmagick</groupId>
-            <artifactId>jmagick</artifactId>
-            <version>6.6.9</version>
         </dependency>
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
@@ -633,6 +605,30 @@
             <artifactId>javax.servlet.jsp-api</artifactId>
             <version>2.3.1</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mobicents.external.freetts</groupId>
+            <artifactId>freetts</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jmagick</groupId>
+            <artifactId>jmagick</artifactId>
+            <version>6.6.9</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>jpingyin</artifactId>
+            <version>1.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.belerweb</groupId>
+            <artifactId>pinyin4j</artifactId>
+            <version>2.5.0</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
