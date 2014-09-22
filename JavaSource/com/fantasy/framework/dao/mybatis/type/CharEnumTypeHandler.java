@@ -1,17 +1,16 @@
 package com.fantasy.framework.dao.mybatis.type;
 
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.Converter;
 import org.apache.ibatis.type.BaseTypeHandler;
 import org.apache.ibatis.type.JdbcType;
 
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.StringUtil;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * 枚举转字符的Handler
@@ -30,7 +29,7 @@ public class CharEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
 	public CharEnumTypeHandler() {
 		this.enumClass = ClassUtil.getSuperClassGenricType(getClass());
-		this.enums = (Enum[]) ClassUtil.getMethod(this.enumClass, "values").invoke(null, new Object[0]);
+		this.enums = (Enum[]) ClassUtil.getMethodProxy(this.enumClass, "values").invoke(null);
 		ConvertUtils.register(new Converter() {
 
 			public Object convert(Class classes, Object value) {

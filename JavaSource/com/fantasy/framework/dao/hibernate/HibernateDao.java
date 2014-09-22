@@ -587,7 +587,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     @SuppressWarnings("unchecked")
     private void changePropertyName(Criteria criteria, Set<String> alias, Criterion c) {
         if (c instanceof Disjunction) {
-            List<Criterion> criterions = (List<Criterion>) ReflectionUtils.getFieldValue(c, "criteria");
+            List<Criterion> criterions = (List<Criterion>) ReflectionUtils.getFieldValue(c, "conditions");
             for (Criterion criterion : criterions) {
                 changePropertyName(criteria, alias, criterion);
             }

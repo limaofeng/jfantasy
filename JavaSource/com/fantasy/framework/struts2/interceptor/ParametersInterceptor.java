@@ -355,7 +355,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
 	protected Method getActionMethod(Class<?> actionClass, String methodName) throws NoSuchMethodException {
 		Method method;
 		try {
-			MethodProxy methodProxy = ClassUtil.getMethod(actionClass, methodName);
+			MethodProxy methodProxy = ClassUtil.getMethodProxy(actionClass, methodName);
 			if (methodProxy == null) {
 				throw new NoSuchMethodException();
 			}

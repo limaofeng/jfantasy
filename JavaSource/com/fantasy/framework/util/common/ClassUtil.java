@@ -186,7 +186,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 		}
 	}
 
-	public static MethodProxy getMethod(Class<?> clazz, String method) {
+	public static MethodProxy getMethodProxy(Class<?> clazz, String method) {
 		try {
 			return classFactory.getClass(getRealClass(clazz)).getMethod(method);
 		} catch (Exception e) {
@@ -194,6 +194,15 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 		}
 		return null;
 	}
+
+    public static MethodProxy getMethodProxy(Class<?> clazz, String method, Class<?>... paramTypes) {
+        try {
+            return classFactory.getClass(getRealClass(clazz)).getMethod(method,paramTypes);
+        } catch (Exception e) {
+            logger.error(clazz + "." + method + "-" + e.getMessage());
+        }
+        return null;
+    }
 
 	public static boolean isBasicType(Class<?> type) {
 		return isPrimitiveOrWrapper(type);
@@ -392,7 +401,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 	}
 
 	public static Method getDeclaredMethod(Class<?> clazz, String methodName) {
-		MethodProxy proxy = getMethod(clazz, methodName);
+		MethodProxy proxy = getMethodProxy(clazz, methodName);
 		return ObjectUtil.isNull(proxy) ? null : proxy.getMethod();
 	}
 
@@ -411,7 +420,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 		for (StackTraceElement stack : stacks) {
 			Class<?> clasz = forName(stack.getClassName(), FantasyClassLoader.getClassLoader());
 			if ((ObjectUtil.isNotNull(clasz)) && (!ClassUtil.class.isAssignableFrom(clasz))) {
-				MethodProxy methodProxy = getMethod(clasz, stack.getMethodName());
+				MethodProxy methodProxy = getMethodProxy(clasz, stack.getMethodName());
 				if (ObjectUtil.isNotNull(methodProxy)) {
 					Annotation annotation = getMethodAnno(methodProxy.getMethod(), annotClass);
 					if (ObjectUtil.isNotNull(annotation)) {

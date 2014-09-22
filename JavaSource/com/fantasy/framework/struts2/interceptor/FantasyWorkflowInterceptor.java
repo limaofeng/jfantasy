@@ -1,7 +1,5 @@
 package com.fantasy.framework.struts2.interceptor;
 
-import java.lang.reflect.Method;
-
 import com.fantasy.framework.struts2.context.ActionConstants;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.reflect.MethodProxy;
@@ -14,6 +12,8 @@ import com.opensymphony.xwork2.interceptor.ValidationWorkflowAware;
 import com.opensymphony.xwork2.interceptor.annotations.InputConfig;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+
+import java.lang.reflect.Method;
 
 public class FantasyWorkflowInterceptor extends MethodFilterInterceptor {
 
@@ -58,7 +58,7 @@ public class FantasyWorkflowInterceptor extends MethodFilterInterceptor {
 	protected Method getActionMethod(Class<?> actionClass, String methodName) throws NoSuchMethodException {
 		Method method;
 		try {
-			MethodProxy methodProxy = ClassUtil.getMethod(actionClass, methodName);
+			MethodProxy methodProxy = ClassUtil.getMethodProxy(actionClass, methodName);
 			if (methodProxy == null) {
 				throw new NoSuchMethodException();
 			}

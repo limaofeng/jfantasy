@@ -1,11 +1,11 @@
 package com.fantasy.framework.struts2.interceptor.validation;
 
-import java.lang.reflect.Method;
-
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.reflect.MethodProxy;
 import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
+
+import java.lang.reflect.Method;
 
 @SuppressWarnings("rawtypes")
 public class FantasyAnnotationValidationInterceptor extends org.apache.struts2.interceptor.validation.AnnotationValidationInterceptor {
@@ -23,7 +23,7 @@ public class FantasyAnnotationValidationInterceptor extends org.apache.struts2.i
 	protected Method getActionMethod(Class actionClass, String methodName) throws NoSuchMethodException {
 		Method method;
 		try {
-			MethodProxy methodProxy = ClassUtil.getMethod(actionClass, methodName);
+			MethodProxy methodProxy = ClassUtil.getMethodProxy(actionClass, methodName);
 			if (methodProxy == null) {
 				throw new NoSuchMethodException();
 			}

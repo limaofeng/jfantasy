@@ -1,5 +1,11 @@
 package com.fantasy.framework.util.reflect;
 
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
+import net.sf.cglib.reflect.FastClass;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.beans.BeanInfo;
 import java.beans.PropertyDescriptor;
 import java.lang.annotation.Annotation;
@@ -11,14 +17,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.sf.cglib.reflect.FastClass;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
 
 public class FastClasses<T> implements IClass<T> {
 	private static final Log logger = LogFactory.getLog(FastClasses.class);
@@ -154,13 +152,13 @@ public class FastClasses<T> implements IClass<T> {
 			}
 		}
 		if (this.clazz.getSuperclass() != Object.class) {
-			return ClassUtil.getMethod(this.clazz.getSuperclass(), methodName);
+			return ClassUtil.getMethodProxy(this.clazz.getSuperclass(), methodName);
 		}
 		return null;
 	}
 
-	public MethodProxy getMethod(String methodName, Class<?>[] parameterTypes) {
-		if (parameterTypes.length == 0) {
+	public MethodProxy getMethod(String methodName, Class<?>... parameterTypes) {
+		if (parameterTypes.length != 0) {
 			for (int i = 0; i < parameterTypes.length; i++) {
 				methodName = methodName + (i == 0 ? "(" : "") + parameterTypes[i].getName() + (i + 1 == parameterTypes.length ? ")" : ",");
 			}

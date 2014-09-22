@@ -411,7 +411,7 @@ public class DefaultActionInvocation implements ActionInvocation {
             Object methodResult = null;
             Method method = null;
             try {
-                MethodProxy methodProxy = ClassUtil.getMethod(getAction().getClass(), methodName);
+                MethodProxy methodProxy = ClassUtil.getMethodProxy(getAction().getClass(), methodName);
                 if (methodProxy == null) {
                     throw new NoSuchMethodException();
                 }

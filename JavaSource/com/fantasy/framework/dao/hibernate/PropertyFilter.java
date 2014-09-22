@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
@@ -124,21 +125,20 @@ public class PropertyFilter {
         return this.propertyValue;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
     public <T> T getPropertyValue(Class<T> clazz) {
         if (this.getPropertyType().isAssignableFrom(Enum.class)) {
             AtomicReference<Class> enumClass = new AtomicReference<Class>(clazz);
-            if(propertyValue instanceof String) {
-                return (T) Enum.valueOf(enumClass.get(), (String) propertyValue);
-            }else if(propertyValue instanceof String[]){
+            if (propertyValue instanceof String) {
+                return clazz.cast(Enum.valueOf(enumClass.get(), (String) propertyValue));
+            } else if (propertyValue instanceof String[]) {
                 Object array = ClassUtil.newInstance(clazz, Array.getLength(propertyValue));
                 for (int i = 0; i < Array.getLength(propertyValue); i++) {
-                    Array.set(array, i,Enum.valueOf(enumClass.get(), (String) Array.get(propertyValue, i)));
+                    Array.set(array, i, Enum.valueOf(enumClass.get(), (String) Array.get(propertyValue, i)));
                 }
-                return (T)array;
+                return clazz.cast(array);
             }
         }
-        return (T) this.propertyValue;
+        return clazz.cast(ConvertUtils.convert(this.getPropertyValue(),clazz));
     }
 
     public Class<?> getPropertyType() {
