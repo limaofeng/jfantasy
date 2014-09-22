@@ -27,7 +27,7 @@
             _$gridPanel.triggerHandler('resize');
         };
         $(window).resize(_resize);
-        $page$.on('destroy',function(){
+        $page$.one('destroy',function(){
             $(window).unbind('resize',_resize);
         });
         var $advsearch = $('.propertyFilter').advsearch({
