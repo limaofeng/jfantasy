@@ -33,6 +33,15 @@ public class VersionUtil {
         return createDynaBean(bean.getVersion().getId(), bean);
     }
 
+    public static DynaBean makeDynaBean(Long id) {
+        try {
+            return createDynaBean(id);
+        }catch (Exception ex){
+            ex.printStackTrace();
+            return null;
+        }
+    }
+
     private static DynaBean createDynaBean(Long id, DynaBean bean) {
         AttributeVersion version = getVersion(id);
         DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
@@ -80,6 +89,10 @@ public class VersionUtil {
             attributeVersionService = SpringContextUtil.getBeanByType(AttributeVersionService.class);
         }
         return attributeVersionService;
+    }
+
+    public static Class makeClass(Long versionId) {
+        return makeClass(getVersion(versionId));
     }
 
     public static Class makeClass(AttributeVersion version) {
