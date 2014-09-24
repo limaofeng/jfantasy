@@ -33,13 +33,17 @@ public class MethodProxy {
             this.parameterTypes = new Class[]{parameterType};
     }
 
+    public Object invoke(Object object, Object param) {
+        return invoke(object, new Object[]{param});
+    }
+
     public Object invoke(Object object, Object... params) {
         try {
             if ((this.method instanceof FastMethod)) {
                 if (params.length > 0) {
                     return ((FastMethod) this.method).invoke(object, params);
                 }
-                return ((FastMethod) this.method).invoke(object,params);
+                return ((FastMethod) this.method).invoke(object, params);
             }
 
             if (params.length > 0) {

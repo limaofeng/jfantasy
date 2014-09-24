@@ -1,36 +1,48 @@
 package com.fantasy.framework.util.common;
 
-import org.apache.commons.beanutils.BeanUtils;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Array;
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class BeanUtil {
 
-	private static final Log logger = LogFactory.getLog(BeanUtil.class);
+    private static final Log logger = LogFactory.getLog(BeanUtil.class);
 
-	public static void setValue(Object target, String fieldName, Object value) {
-		ClassUtil.setValue(target, fieldName, value);
-	}
+    public static void setValue(Object target, String fieldName, Object value) {
+        ClassUtil.setValue(target, fieldName, value);
+    }
 
-	public static Object getValue(Object target, String fieldName) {
-		return ClassUtil.getValue(target, fieldName);
-	}
+    public static Object getValue(Object target, String fieldName) {
+        return ClassUtil.getValue(target, fieldName);
+    }
 
-    public static <T> T copyProperties(T dest, T orig) {
-        try {
-            BeanUtils.copyProperties(dest,orig);
+    public static <T> T copyProperties(T dest, Object orig) {
+        if (dest == null || orig == null) {
             return dest;
-        } catch (IllegalAccessException e) {
-            logger.error(e.getMessage(),e);
-            return null;
-        } catch (InvocationTargetException e) {
-            logger.error(e.getMessage(),e);
-            return null;
         }
+        Class destClass = dest.getClass();
+        Property[] properties = ClassUtil.getPropertys(orig);
+        for (Property property : properties) {
+            if (!property.isRead()) {
+                continue;
+            }
+            Property setProperty = ClassUtil.getProperty(destClass, property.getName());
+            if (setProperty == null || !setProperty.isWrite()) {
+                continue;
+            }
+            if (!property.getPropertyType().equals(setProperty.getPropertyType())) {
+                continue;
+            }
+            Object o = property.getValue(orig);
+            if (o == null) {
+                continue;
+            }
+            setProperty.setValue(dest, o);
+        }
+        return dest;
     }
 
     /*
@@ -88,21 +100,21 @@ public class BeanUtil {
 	}
 	*/
 
-	private static int length(Object value) {
-		if (ClassUtil.isArray(value))
-			return Array.getLength(value);
-		if (ClassUtil.isList(value)) {
-			return ((List<?>) value).size();
-		}
-		return 0;
-	}
+    private static int length(Object value) {
+        if (ClassUtil.isArray(value))
+            return Array.getLength(value);
+        if (ClassUtil.isList(value)) {
+            return ((List<?>) value).size();
+        }
+        return 0;
+    }
 
-	private static Object get(Object value, int i) {
-		if (ClassUtil.isArray(value))
-			return Array.get(value, i);
-		if (ClassUtil.isList(value)) {
-			return ((List<?>) value).get(i);
-		}
-		return null;
-	}
+    private static Object get(Object value, int i) {
+        if (ClassUtil.isArray(value))
+            return Array.get(value, i);
+        if (ClassUtil.isList(value)) {
+            return ((List<?>) value).get(i);
+        }
+        return null;
+    }
 }

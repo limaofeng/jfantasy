@@ -30,7 +30,7 @@ public class Property {
 	}
 
 	public void setValue(Object target, Object value) {
-		this.writeMethodProxy.invoke(target, new Object[] { value });
+		this.writeMethodProxy.invoke(target, value);
 	}
 
 	public Class<?> getPropertyType() {

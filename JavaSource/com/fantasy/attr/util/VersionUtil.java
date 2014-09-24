@@ -96,7 +96,7 @@ public class VersionUtil {
     }
 
     public static Class makeClass(AttributeVersion version) {
-        String className = version.getClassName() + "_" + version.getNumber();
+        String className = version.getClassName() + "$v" + version.getNumber();
         if (!dynaBeanClassCache.containsKey(className)) {
             String superClass = version.getClassName();
             List<Property> properties = new ArrayList<Property>();
