@@ -1,27 +1,17 @@
 package com.fantasy.sms.service;
 
-import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import javax.annotation.Resource;
-
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.member.bean.Member;
-import com.fantasy.sms.bean.Captcha;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fantasy.sms.bean.CaptchaConfig;
 import com.fantasy.sms.dao.CaptchaConfigDao;
 import com.octo.captcha.component.word.wordgenerator.RandomWordGenerator;
 import com.octo.captcha.component.word.wordgenerator.WordGenerator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-@Service
-@Transactional
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 public class CaptchaConfigService {
 
 	private static final Log logger = LogFactory.getLog(CaptchaConfigService.class);

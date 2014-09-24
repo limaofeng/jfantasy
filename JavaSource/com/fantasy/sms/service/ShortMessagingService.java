@@ -36,7 +36,6 @@ import java.util.Map;
  * @since 2013-7-4 上午10:27:34
  * @version 1.0
  */
-@Transactional
 public class ShortMessagingService {
 
 	/**
