@@ -43,15 +43,12 @@
         }
     </style>
     <script>
-        jQuery(window).load(
-                function(){
-
-                    var wait_loading = window.setTimeout( function(){
-                                $('#loading').slideUp('fast');
-                                jQuery('body').css('overflow','auto');
-                            },1);
-
-                });
+        jQuery(window).load(function(){
+            var wait_loading = window.setTimeout( function(){
+                $('#loading').slideUp('fast');
+                jQuery('body').css('overflow','auto');
+            },1);
+        });
         var add_loader = function(){
             var d = '<div id="loader-overlay" class="ui-front hide loader ui-widget-overlay ui-state-default opacity-60"><img src="${request.contextPath}/assets/images/loader-dark.gif" alt="" /></div>';
             $("#loader-overlay").remove();
@@ -760,7 +757,7 @@
         <@s.set name="menuUrl" value="'javascript:;'"/>
     </@s.else>
     <li>
-        <a title="<@s.property value="#menu.name" />" href="<@s.property value="#menuUrl" />" <@s.if test=" 'javascript:;' != #menuUrl "> target="html:#page-content-wrapper"</@s.if>>
+        <a title="<@s.property value="#menu.name" />" href="<@s.property value="#menuUrl" />" <@s.if test=" 'javascript:;' != #menuUrl "> target="top:#page-content-wrapper"</@s.if>>
             <i class="glyph-icon <@s.property value="#menu.icon" />"></i>
             <@s.property value="#menu.name" />
         </a>
@@ -770,7 +767,7 @@
                     <@s.set name="cmenuUrl" value="@com.fantasy.framework.util.regexp.RegexpUtil@replaceFirst(#cmenu.value,'%\\\\{contextPath\\\\}',@org.apache.struts2.ServletActionContext@getRequest().getContextPath())"/>
                     <@s.set name="cmenuUrl" value="#cmenuUrl == '' ? 'javascript:;' : #cmenuUrl "/>
                     <li>
-                        <a title="<@s.property value="#cmenu.name" />" href="<@s.property value="#cmenuUrl" />" target="html:#page-content-wrapper">
+                        <a title="<@s.property value="#cmenu.name" />" href="<@s.property value="#cmenuUrl" />" target="top:#page-content-wrapper">
                             <i class="glyph-icon <@s.property value="#cmenu.icon" />"></i>
                             <@s.property value="#cmenu.name" />
                         </a>

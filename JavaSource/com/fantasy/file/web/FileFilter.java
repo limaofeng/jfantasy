@@ -46,6 +46,7 @@ public class FileFilter extends GenericFilterBean {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 		String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
+        FileManager webrootFileManager = FileManagerFactory.getInstance().getFileManager("WEBROOT");
 		if (RegexpUtil.find(url, ".do$") || noInFileManagerCache.contains(url)) {
 			chain.doFilter(request, response);
 			return;
@@ -91,10 +92,10 @@ public class FileFilter extends GenericFilterBean {
 				// 创建临时文件
 				File tmp = FileUtil.tmp();
 				ImageUtil.write(image, tmp);
-				fileManager.writeFile(url, tmp);
+                webrootFileManager.writeFile(url, tmp);
 				// 删除临时文件
 				FileUtil.delFile(tmp);
-				fileCache.put(url, fileItem = fileManager.getFileItem(url));
+				fileCache.put(url, fileItem = webrootFileManager.getFileItem(url));
 				writeFile(request, response, fileItem);
 				return;
 			}

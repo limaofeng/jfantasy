@@ -371,11 +371,12 @@ public final class ImageUtil {
     /**
      * 缩放图片
      *
-     * @param imageOriginal
-     * @param realWidth
-     * @param realHeight
-     * @param width
-     * @param heigth        java.awt.image.BufferedImage <br/>
+     * @param imageOriginal 图片
+     * @param realWidth     真实宽度
+     * @param realHeight    真实高度
+     * @param width         压缩到的宽度
+     * @param heigth        压缩到的高度
+     *                      java.awt.image.BufferedImage <br/>
      *                      TYPE_CUSTOM 没有识别出图像类型，因此它必定是一个自定义图像。<br/>
      *                      TYPE_INT_RGB 表示一个图像，它具有合成整数像素的8位RGB颜色分量。<br/>
      *                      TYPE_INT_ARGB 表示一个图像，它具有合成整数像素的8位RGBA颜色分量。<br/>
