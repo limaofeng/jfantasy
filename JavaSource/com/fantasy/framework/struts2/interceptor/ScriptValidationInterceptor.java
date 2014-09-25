@@ -1,11 +1,5 @@
 package com.fantasy.framework.struts2.interceptor;
 
-import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
-
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.web.WebUtil;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -13,10 +7,14 @@ import com.opensymphony.xwork2.inject.Inject;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.validator.ActionValidatorManager;
 import com.opensymphony.xwork2.validator.Validator;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.struts2.ServletActionContext;
+
+import java.util.List;
 
 public class ScriptValidationInterceptor extends MethodFilterInterceptor {
 	private static final long serialVersionUID = -7982343807547662775L;
-	private final String SCRIPT = "script";
 	private transient ActionValidatorManager actionValidatorManager;
 	private static final Log logger = LogFactory.getLog(ScriptValidationInterceptor.class);
 
@@ -35,7 +33,7 @@ public class ScriptValidationInterceptor extends MethodFilterInterceptor {
 			ServletActionContext.getRequest().setAttribute("iErrorClass", StringUtil.defaultValue(ServletActionContext.getRequest().getParameter("iErrorClass"), null));
 			ServletActionContext.getRequest().setAttribute("errorClass", StringUtil.defaultValue(ServletActionContext.getRequest().getParameter("errorClass"), null));
 			ServletActionContext.getRequest().setAttribute("correctClass", StringUtil.defaultValue(ServletActionContext.getRequest().getParameter("correctClass"), null));
-			return SCRIPT;
+			return "script";
 		}
 		return invocation.invoke();
 	}
