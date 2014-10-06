@@ -4,7 +4,7 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-core</artifactId>
     <packaging>jar</packaging>
-    <version>2.4.0</version>
+    <version>${com.fantasy-version}</version>
 
     <distributionManagement>
         <repository>
@@ -61,6 +61,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
+                <version>1.9</version>
                 <executions>
                     <execution>
                         <id>add-source</id>
@@ -631,12 +632,20 @@
             <version>2.5.0</version>
             <scope>test</scope>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.ow2.jotm</groupId>
             <artifactId>jotm-core</artifactId>
             <version>2.2.3</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
             <scope>test</scope>
         </dependency>
+        -->
         <dependency>
             <groupId>javax.resource</groupId>
             <artifactId>javax.resource-api</artifactId>
