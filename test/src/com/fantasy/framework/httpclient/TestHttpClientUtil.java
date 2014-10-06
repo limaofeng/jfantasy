@@ -43,9 +43,9 @@ public class TestHttpClientUtil {
 
     @Test
     public void testUpload2() {
-        // TODO 指定URL
+        // 指定URL
         String targetURL = "http://180.153.176.78:8082/bth/file/upload.do";
-        // TODO 指定上传文件
+        //指定上传文件
         File targetFile = new File("C:/log.png");
         PostMethod filePost = new PostMethod(targetURL);
         try {
