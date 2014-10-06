@@ -225,6 +225,18 @@ public class ScheduleService {
         }
     }
 
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, int times, String triggerDescription, Map<String, Object> args) {
+        try {
+            Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).withRepeatCount(times)).build();
+            this.scheduler.scheduleJob(trigger);
+            this.scheduler.resumeTrigger(triggerKey);
+            return trigger;
+        } catch (SchedulerException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
     public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, TimeOfDay timeOfDay, int times, String triggerDescription, Map<String, Object> args) {
         try {
             Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).startingDailyAt(timeOfDay).withRepeatCount(times)).build();

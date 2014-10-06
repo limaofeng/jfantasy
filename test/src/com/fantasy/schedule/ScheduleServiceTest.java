@@ -10,6 +10,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,27 +36,48 @@ public class ScheduleServiceTest {
     }
 
     @Test
-    public void runTask() throws InterruptedException {
-//        this.addJob();
-//        this.addTrigger();
+    public void runTask() throws InterruptedException, IOException {
+        this.addJob();
+        this.addCronTrigger();
         this.print();
 
-//        do {
-//            Thread.sleep(1000 * 5 * 5);
-//        } while (true);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
+
+        do{
+            Thread.sleep(1000 * 5 * 5);
+        }while (!"exit".equals(reader.readLine()));
+
+        this.print();
+
+        this.scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));
+        this.scheduleService.deleteJob(JobKey.jobKey("test"));
 
     }
 
     @Test
     public void addTrigger() {
-        if (scheduleService.checkExists(TriggerKey.triggerKey("test"))) {
-            return;
-        }
         System.out.println("-==========为job添加触发器===========-");
-//        this.scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));
+        this.scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("name", "limaofeng-1");
         this.scheduleService.addTrigger(JobKey.jobKey("test"), TriggerKey.triggerKey("test"), 1000 * 10, 10, data);
+    }
+
+    @Test
+    public void addCronTrigger() {
+        System.out.println("-==========为job添加触发器===========-");
+        this.scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));
+        Map<String, Object> data = new HashMap<String, Object>();
+        data.put("name", "limaofeng-1");
+        this.scheduleService.addTrigger(JobKey.jobKey("test"), TriggerKey.triggerKey("test"), DateUtil.format(DateUtil.add(DateUtil.now(), java.util.Calendar.SECOND, 10), "ss mm HH dd MM ? yyyy"), data);
+    }
+
+    @Test
+    public void testCron() {
+        String expression = DateUtil.format("ss mm HH dd MM ? yyyy");
+//        String expression = "44 17 11 06 17 ? 2014";
+//        String expression = "00 15 10 02 08 ? 2002";
+        System.out.println(expression + " : " + CronExpression.isValidExpression(expression));
     }
 
     @Test
@@ -87,7 +111,6 @@ public class ScheduleServiceTest {
                     System.out.println("timesTriggered:" + simpleTrigger.getTimesTriggered());
                 }
                 System.out.println("TriggerState:" + this.scheduleService.getTriggerState(trigger.getKey()));
-
             }
             System.out.println("-=============================-");
         }

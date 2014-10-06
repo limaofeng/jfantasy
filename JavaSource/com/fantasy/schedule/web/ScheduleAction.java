@@ -32,7 +32,7 @@ public class ScheduleAction extends ActionSupport {
     }
 
 
-    public String search()throws Exception {
+    public String search() throws Exception {
         List<JobInfo> jobInfos = new ArrayList<JobInfo>();
         Map<String, String> executingJobsMap = new HashMap<String, String>();
         for (JobExecutionContext context : scheduler.getCurrentlyExecutingJobs()) {
@@ -60,10 +60,10 @@ public class ScheduleAction extends ActionSupport {
         }
         this.attrs.put(ROOT, jobInfos);
         /**
-        this.attrs.put("jobs", jobInfos);
-        this.attrs.put("scheduler", scheduler);
-        this.attrs.put("groups", scheduler.getJobGroupNames());
-        */
+         this.attrs.put("jobs", jobInfos);
+         this.attrs.put("scheduler", scheduler);
+         this.attrs.put("groups", scheduler.getJobGroupNames());
+         */
         return JSONDATA;
     }
 
@@ -107,11 +107,11 @@ public class ScheduleAction extends ActionSupport {
      *
      * @throws org.quartz.SchedulerException
      */
-    public String addSave(JobInfo jobInfo,Map<String,String> args) throws SchedulerException {
-        Trigger trigger = TriggerType.cron == jobInfo.getType() ? TriggerType.cron.newTrigger(jobInfo.getName(), jobInfo.getGroup(),jobInfo.getCronExpression()) : TriggerType.simple.newTrigger(jobInfo.getName(), jobInfo.getGroup(),jobInfo.getRate(),jobInfo.getTimes());
+    public String addSave(JobInfo jobInfo, Map<String, String> args) throws SchedulerException {
+        Trigger trigger = TriggerType.cron == jobInfo.getType() ? TriggerType.cron.newTrigger(jobInfo.getName(), jobInfo.getGroup(), jobInfo.getCronExpression()) : TriggerType.simple.newTrigger(jobInfo.getName(), jobInfo.getGroup(), jobInfo.getRate(), jobInfo.getTimes());
         JobDetail job = newJob(jobInfo.getJobClass()).withIdentity(jobInfo.getName(), jobInfo.getGroup()).build();
         JobDataMap map = job.getJobDataMap();
-        if(args!=null){
+        if (args != null) {
             map.putAll(args);
         }
         scheduler.resumeAll();
@@ -291,17 +291,15 @@ public class ScheduleAction extends ActionSupport {
     /**
      * 删除TASK
      *
-     * @throws org.quartz.SchedulerException
-
-        public String deleteJob(String jobKey) throws SchedulerException {
-            String[] keyArray = jobKey.split("\\.");
-            scheduler.deleteJob(JobKey.jobKey(keyArray[1], keyArray[0]));
-            return JSONDATA;
-        }
+     * @throws org.quartz.SchedulerException public String deleteJob(String jobKey) throws SchedulerException {
+     *                                       String[] keyArray = jobKey.split("\\.");
+     *                                       scheduler.deleteJob(JobKey.jobKey(keyArray[1], keyArray[0]));
+     *                                       return JSONDATA;
+     *                                       }
      */
 
     public String deleteJob(String[] ids) throws SchedulerException {
-        for(String jobKey:ids) {
+        for (String jobKey : ids) {
             String[] keyArray = jobKey.split("\\.");
             scheduler.deleteJob(JobKey.jobKey(keyArray[1], keyArray[0]));
         }

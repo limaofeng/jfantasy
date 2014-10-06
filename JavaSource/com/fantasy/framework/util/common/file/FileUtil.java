@@ -368,7 +368,7 @@ public class FileUtil {
             throw new RuntimeException("创建文件" + parentFile.getAbsolutePath() + "失败");
         FileInputStream fis = new FileInputStream(sourceFile);
         FileOutputStream fos = new FileOutputStream(targetFile);
-        StreamUtil.copyThenClose(fis,fos);
+        StreamUtil.copyThenClose(fis, fos);
     }
 
     public static URL generate(URL url, File file) throws IOException {
@@ -560,60 +560,14 @@ public class FileUtil {
 
     }
 
-    public static void main(String[] args) {
-        // final FTPFileManager fileManager = new FTPFileManager();
-        // FTPService ftpService = new FTPService();
-        // ftpService.setHostname("192.168.199.1");
-        // ftpService.setUsername("lmf");
-        // ftpService.setPassword("123456");
-        // fileManager.setFtpService(ftpService);
-
-        // getMagicMatch accepts Files or byte[],
-        // which is nice if you want to test streams
-
-        System.out.println(System.getProperty("java.io.tmpdir"));
-//		System.out.println(s.replaceAll("[\\]", "/"));
-
-        // System.out.println(File.pathSeparator);
-        //
-        // System.out.println(File.separator);
-        //
-        // System.out.println(File.pathSeparatorChar);
-        //
-        // System.out.println(File.separatorChar);
-
-        // File file = new File("C:/workspace/website/JavaSource/template/index.ftl");
-
-        // File file = new File("C:/home/website/files/2014-03-07/076e3caed758a1c18c91a0e9cae3368f.pdf");
-
-        // System.out.println("==============");
-        // ;
-        // long start = System.currentTimeMillis();
-        // Collection<?> mimeTypes = MimeUtil.getMimeTypes(file);
-        // for(Object o : mimeTypes){
-        // System.out.println(o.getClass());
-        // }
-        // System.out.println(System.currentTimeMillis() - start);
-
-        // final LocalFileManager fileManager = new LocalFileManager();
-        // fileManager.setDefaultDir("C:/files");
-        //
-        // final List<String> errorFiles = new ArrayList<String>();
-        // String path = "C:/Users/Administrator/Desktop/发布文件/upload.zip";
-        // FileUtil.decompress(new File(path), new FileUtil.UnZipCallBack() {
-        //
-        // public void execute(String fileName, InputStream in) {
-        // try {
-        // fileManager.writeFile("/" + fileName, in);
-        // } catch (IOException e) {
-        // errorFiles.add(fileName);
-        // }
-        // }
-        // });
-        // System.out.println("上传失败的文件：" + errorFiles.size());
-        // for (String errorFile : errorFiles) {
-        // System.out.println(errorFile);
-        // }
+    public static String fileSize(long length) {
+        String[] units = {"B", "KB", "MB", "GB", "TB"};
+        int i = 0;
+        while (length >= 1024 && i < 4) {
+            length /= 1024;
+            i++;
+        }
+        return Math.round(length) + units[i];
     }
 
 }
