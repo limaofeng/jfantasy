@@ -1,11 +1,11 @@
 package com.fantasy.member.web;
 
-import javax.annotation.Resource;
-
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
-import com.fantasy.system.service.ConfigService;
+import com.fantasy.system.service.DataDictionaryService;
+
+import javax.annotation.Resource;
 
 /**
  * @Author lsz
@@ -47,7 +47,7 @@ public class FindPwdAction extends ActionSupport {
 	 */
 	public String findpwdsend(String username) {
 		Member member = this.memberService.findUniqueByUsername(username);
-		String title = ConfigService.get("website", "findpwd").getName();
+		String title = DataDictionaryService.get("website", "findpwd").getName();
 		String url = "/findpwd/findpwdv3.do?username=" + member.getUsername();
 		String ftl = "/template/reg/send_email.ftl";
 		this.memberService.sendemail(member, url, title, ftl);
@@ -69,7 +69,7 @@ public class FindPwdAction extends ActionSupport {
 	/**
 	 * 密码修改成功
 	 * 
-	 * @param username
+	 * @param member
 	 * @return
 	 */
 	public String findpwdv4(Member member) {

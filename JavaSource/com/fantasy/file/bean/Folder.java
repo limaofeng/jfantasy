@@ -192,7 +192,7 @@ public class Folder extends BaseBusEntity {
         return parentFolder;
     }
 
-    public void setParentFolder(Folder parentFolder) {
+    public synchronized void setParentFolder(Folder parentFolder) {
         this.parentFolder = parentFolder;
     }
 

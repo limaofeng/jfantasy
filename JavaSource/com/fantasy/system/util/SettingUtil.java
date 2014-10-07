@@ -12,10 +12,10 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.User;
 import com.fantasy.security.userdetails.AdminUser;
-import com.fantasy.system.bean.Config;
+import com.fantasy.system.bean.DataDictionary;
 import com.fantasy.system.bean.Setting;
 import com.fantasy.system.bean.Website;
-import com.fantasy.system.service.ConfigService;
+import com.fantasy.system.service.DataDictionaryService;
 import com.fantasy.system.service.WebsiteService;
 import org.htmlcleaner.TagNode;
 
@@ -67,7 +67,7 @@ public class SettingUtil {
                 return value;
             }
         }
-        Config config = ConfigService.get(type, key);
+        DataDictionary config = DataDictionaryService.get(type, key);
         if (config != null) {
             return config.getName();
         }
@@ -81,7 +81,7 @@ public class SettingUtil {
                 return value;
             }
         }
-        Config config = ConfigService.get(type, key);
+        DataDictionary config = DataDictionaryService.get(type, key);
         if (config != null) {
             return config.getName();
         }

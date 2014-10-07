@@ -1,12 +1,13 @@
 package com.fantasy.system.interceptor;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import javax.annotation.Resource;
-
+import com.fantasy.file.FileManager;
+import com.fantasy.file.service.FileManagerFactory;
+import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
+import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.system.service.DataDictionaryService;
+import freemarker.template.Configuration;
+import freemarker.template.Template;
 import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -17,22 +18,18 @@ import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.file.service.FileManagerFactory;
-import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.system.service.ConfigService;
-
-import freemarker.template.Configuration;
-import freemarker.template.Template;
+import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Aspect
 @Lazy(false)
-public class ConfigChangeInterceptor implements InitializingBean {
+public class DataDictionaryChangeInterceptor implements InitializingBean {
 
-	private static final Logger logger = Logger.getLogger(ConfigChangeInterceptor.class);
+	private static final Logger logger = Logger.getLogger(DataDictionaryChangeInterceptor.class);
 
 	@Resource
 	private transient Configuration configuration;
@@ -43,7 +40,7 @@ public class ConfigChangeInterceptor implements InitializingBean {
 		runJavaScript = new Runnable() {
 			public void run() {
 				try {
-					ConfigChangeInterceptor.this.javaScript();
+                    DataDictionaryChangeInterceptor.this.javaScript();
 				} catch (IOException e) {
 					logger.error(e.getMessage(), e);
 				}
@@ -51,12 +48,12 @@ public class ConfigChangeInterceptor implements InitializingBean {
 		};
 	}
 
-	@After("execution(public * com.fantasy.system.service.ConfigService.save(..))")
+	@After("execution(public * com.fantasy.system.service.DataDictionaryService.save(..))")
 	public void onSaveOrUpdate(JoinPoint point) {
 		this.runJavaScript();
 	}
 
-	@After("execution(public * com.fantasy.system.service.ConfigService.delete*(..))")
+	@After("execution(public * com.fantasy.system.service.DataDictionaryService.delete*(..))")
 	public void onDelete(JoinPoint point) {
 		this.runJavaScript();
 	}
@@ -68,11 +65,11 @@ public class ConfigChangeInterceptor implements InitializingBean {
 
 	@Scheduled(fixedDelay = 1000 * 60 * 60 * 24)
 	public void javaScript() throws IOException {
-		ConfigService configService = SpringContextUtil.getBeanByType(ConfigService.class);
+        DataDictionaryService configService = SpringContextUtil.getBeanByType(DataDictionaryService.class);
 		Template template = this.configuration.getTemplate("com/fantasy/system/interceptor/template/config.ftl");
 		Map<String, Object> data = new HashMap<String, Object>();
 		data.put("types", JSON.serialize(configService.allTypes()));
-		data.put("configs", JSON.serialize(configService.allConfigs()));
+		data.put("configs", JSON.serialize(configService.allDataDicts()));
 		FreeMarkerTemplateUtils.writer(data, template, getFileManager().writeFile("/static/js/config.js"));
 	}
 

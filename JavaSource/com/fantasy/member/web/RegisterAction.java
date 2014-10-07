@@ -6,6 +6,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.fantasy.system.service.DataDictionaryService;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -17,7 +18,6 @@ import com.fantasy.member.bean.MemberDetails;
 import com.fantasy.member.service.MemberService;
 import com.fantasy.member.userdetails.MemberUser;
 import com.fantasy.security.SpringSecurityUtils;
-import com.fantasy.system.service.ConfigService;
 
 /**
  * @Author lsz
@@ -63,7 +63,7 @@ public class RegisterAction extends ActionSupport {
 	public String sucemail(){
 		MemberUser memberUser = SpringSecurityUtils.getCurrentUser(MemberUser.class);
 		Member member = this.memberService.get(memberUser.getUser().getId());
-		String title = ConfigService.get("website", "sendeamiltitle").getName();
+		String title = DataDictionaryService.get("website", "sendeamiltitle").getName();
 		String url ="/reg/emailv3.do?memberId=" + member.getId();
 		String ftl="/template/reg/send_email.ftl";
 		this.memberService.sendemail(member,url,title,ftl);
@@ -80,7 +80,7 @@ public class RegisterAction extends ActionSupport {
 		MemberUser memberUser = SpringSecurityUtils.getCurrentUser(MemberUser.class);
 		Member member = this.memberService.get(memberUser.getUser().getId());
 		member.getDetails().setEmail(email);
-		String title = ConfigService.get("website", "sendeamiltitle").getName();
+		String title = DataDictionaryService.get("website", "sendeamiltitle").getName();
 		String url ="itsm/reg/emailv3.do?memberId=" + member.getId();
 		String ftl="/template/reg/send_email.ftl";
 		this.memberService.sendemail(member,url,title,ftl);

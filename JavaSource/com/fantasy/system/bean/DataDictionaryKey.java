@@ -56,8 +56,8 @@ public class DataDictionaryKey implements Serializable {
 
     @Override
     public boolean equals(Object o) {
-        if (o instanceof ConfigKey) {
-            ConfigKey key = (ConfigKey) o;
+        if (o instanceof DataDictionaryKey) {
+            DataDictionaryKey key = (DataDictionaryKey) o;
             return new EqualsBuilder().appendSuper(super.equals(o)).append(this.getType(), key.getType()).append(this.getCode(), key.getCode()).isEquals();
         }
         return false;
