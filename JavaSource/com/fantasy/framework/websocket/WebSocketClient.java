@@ -1,12 +1,13 @@
 package com.fantasy.framework.websocket;
 
-import com.fantasy.framework.mc.AbstractClient;
-import com.fantasy.framework.websocket.data.Frame;
-import com.fantasy.framework.websocket.http.WebSocketRequest;
-import com.fantasy.framework.websocket.http.WebSocketResponse;
 import com.fantasy.framework.util.LinkedBlockingQueue;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.framework.websocket.data.Frame;
+import com.fantasy.framework.websocket.http.WebSocketRequest;
+import com.fantasy.framework.websocket.http.WebSocketResponse;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +18,9 @@ import java.net.Socket;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class WebSocketClient extends AbstractClient {
+public class WebSocketClient {
+
+    private static Log logger = LogFactory.getLog(WebSocketClient.class);
 
     // 握手信息-请求信息;
     private HttpServletRequest request;
@@ -30,7 +33,6 @@ public class WebSocketClient extends AbstractClient {
 
     private WebSocketObservable observable = new WebSocketObservable(this);
 
-    private Socket socket;
     /**
      * 线程池
      */
@@ -40,12 +42,8 @@ public class WebSocketClient extends AbstractClient {
      */
     private ScheduledExecutorService scheduler;
 
-    public WebSocketClient() {
-    }
-
     public WebSocketClient(Socket socket) throws TimeoutException {
         try {
-            this.socket = socket;
             WebSocketRequest request = new WebSocketRequest(socket);
             this.response = new WebSocketResponse(socket.getOutputStream(), request, socket);
             // 构建connection
@@ -204,7 +202,7 @@ public class WebSocketClient extends AbstractClient {
         if (_ping == -1) {
             throw new TimeoutException(" Request timeout ");
         }
-        fireEvent("ping",_ping);
+        fireEvent("ping", _ping);
         return _ping;
     }
 
@@ -256,12 +254,12 @@ public class WebSocketClient extends AbstractClient {
         }
 
         public void update(Observable observable, Object o) {
-            String eventName = (String)OgnlUtil.getInstance().getValue("eventName",o);
-            Object[] args = (Object[])OgnlUtil.getInstance().getValue("args",o);
+            String eventName = (String) OgnlUtil.getInstance().getValue("eventName", o);
+            Object[] args = (Object[]) OgnlUtil.getInstance().getValue("args", o);
             if ("close".equalsIgnoreCase(eventName)) {
                 this.onClose();
             } else if ("ping".equalsIgnoreCase(eventName)) {
-                this.onPing((Long)args[0]);
+                this.onPing((Long) args[0]);
             }
         }
 
@@ -315,40 +313,6 @@ public class WebSocketClient extends AbstractClient {
 
     public void setScheduler(ScheduledExecutorService scheduler) {
         this.scheduler = scheduler;
-    }
-
-
-    public static void main(String args[]) {
-        WebSocketClient s = new WebSocketClient();
-
-        s.addObserver(new WebSocketEventListener() {
-
-            @Override
-            public void onClose() {
-                System.out.println("onClose");
-            }
-
-        });
-
-        s.addObserver(new WebSocketEventListener() {
-
-            @Override
-            public void onClose() {
-                System.out.println("onClose123123");
-            }
-
-        });
-
-        s.addObserver(new WebSocketEventListener() {
-
-            @Override
-            public void onClose() {
-                System.out.println("123123");
-            }
-
-        });
-
-        s.fireEvent("close");
     }
 
 }
