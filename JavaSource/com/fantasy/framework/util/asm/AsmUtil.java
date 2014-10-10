@@ -100,7 +100,7 @@ public class AsmUtil implements Opcodes {
 
     protected static Class loadClass(String className, byte[] bytes) {
         try {
-            FileUtil.writeFile(bytes, PathUtil.classes() + "/" + RegexpUtil.replace(className, "\\.", File.separator) + ".class");
+            FileUtil.writeFile(bytes, PathUtil.classes() + "/" + className.replace(".", File.separator) + ".class");
             return FantasyClassLoader.getClassLoader().loadClass(PathUtil.classes(), className);
         } catch (IOException e) {
             try {
