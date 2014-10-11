@@ -16,7 +16,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <com.fantasy-version>2.4.0.Alphal</com.fantasy-version>
+        <com.fantasy-version>2.4.1.Alphal</com.fantasy-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
         <org.mybatis-version>3.2.7</org.mybatis-version>
         <org.hibernate-version>4.3.5.Final</org.hibernate-version>
