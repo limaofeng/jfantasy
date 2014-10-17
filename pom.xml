@@ -80,16 +80,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <includes>
-                        <include>**/*.ftl</include>
-                        <include>**/*.jpg</include>
-                        <include>**/*.class</include>
-                        <include>**/*.xml</include>
-                        <include>**/*.sql</include>
-                        <include>**/*.properties</include>
-                    </includes>
-                </configuration>
                 <executions>
                     <execution>
                         <id>attach-jar</id>
