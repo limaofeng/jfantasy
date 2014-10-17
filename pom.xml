@@ -84,6 +84,10 @@
                     <includes>
                         <include>**/*.ftl</include>
                         <include>**/*.jpg</include>
+                        <include>**/*.class</include>
+                        <include>**/*.xml</include>
+                        <include>**/*.sql</include>
+                        <include>**/*.properties</include>
                     </includes>
                 </configuration>
                 <executions>
