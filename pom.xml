@@ -80,6 +80,12 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <includes>
+                        <include>**/*.ftl</include>
+                        <include>**/*.jpg</include>
+                    </includes>
+                </configuration>
                 <executions>
                     <execution>
                         <id>attach-jar</id>
@@ -630,6 +636,12 @@
             <groupId>com.belerweb</groupId>
             <artifactId>pinyin4j</artifactId>
             <version>2.5.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>jfree</groupId>
+            <artifactId>jfreechart</artifactId>
+            <version>1.0.13</version>
             <scope>test</scope>
         </dependency>
         <!--
