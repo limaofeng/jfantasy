@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+
+    <display-name>appName</display-name>
+
+    <context-param>
+        <param-name>webAppRootKey</param-name>
+        <param-value>webapp.root</param-value>
+    </context-param>
+    <!-- 加载Spring配置文件 -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>classpath:spring/applicationContext.xml</param-value>
+    </context-param>
+    <!-- 由Sprng载入的Log4j配置文件位置 -->
+    <context-param>
+        <param-name>log4jConfigLocation</param-name>
+        <param-value>classpath:log4j/log4j.xml</param-value>
+    </context-param>
+    <!-- fresh once every minutes -->
+    <context-param>
+        <param-name>log4jRefreshInterval</param-name>
+        <param-value>60000</param-value>
+    </context-param>
+    <!-- 应用是否可以通过System.getProperties(“webAppRootKey”)得到当前应用名。 -->
+    <context-param>
+        <param-name>log4jExposeWebAppRoot</param-name>
+        <param-value>true</param-value>
+    </context-param>
+
+    <!-- 定义Log4j监听器 -->
+    <listener>
+        <listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+    </listener>
+    <!-- 定义Spring监听器 -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- Spring 刷新Introspector防止内存泄露 -->
+    <listener>
+        <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+    </listener>
+
+    <!-- proxool 数据库连接池 -->
+    <servlet>
+        <servlet-name>proxool</servlet-name>
+        <servlet-class>org.logicalcobwebs.proxool.admin.servlet.AdminServlet</servlet-class>
+    </servlet>
+    <!-- Freemarker 模板中使用struts2标签 -->
+    <servlet>
+        <servlet-name>JspSupportServlet</servlet-name>
+        <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    <!-- axis 配置 -->
+    <servlet>
+        <servlet-name>AxisServlet</servlet-name>
+        <servlet-class>org.apache.axis2.transport.http.AxisServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <!-- UrlRewrite Filter -->
+    <filter>
+        <filter-name>urlRewriteFilter</filter-name>
+        <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
+        <init-param>
+            <param-name>confReloadCheckInterval</param-name>
+            <param-value>30</param-value>
+        </init-param>
+        <init-param>
+            <param-name>logLevel</param-name>
+            <param-value>ERROR</param-value>
+        </init-param>
+    </filter>
+    <!-- 提供 Spring security 访问 HttpServletRequest -->
+    <filter>
+        <filter-name>actionContextFilter</filter-name>
+        <filter-class>com.fantasy.framework.util.web.filter.ActionContextFilter</filter-class>
+    </filter>
+    <!-- Spring security Filter -->
+    <filter>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+    </filter>
+    <!-- 解决session关闭导致的延迟加载问题(有部分性能问题) -->
+    <filter>
+        <filter-name>hibernateOpenSessionInViewFilter</filter-name>
+        <filter-class>org.springframework.orm.hibernate4.support.OpenSessionInViewFilter</filter-class>
+        <init-param>
+            <param-name>flushMode</param-name>
+            <param-value>COMMIT</param-value>
+        </init-param>
+    </filter>
+    <filter>
+        <filter-name>struts-prepare</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter</filter-class>
+    </filter>
+    <!--org.apache.struts2.sitemesh.FreemarkerPageFilter struts2装饰器 -->
+    <!-- sitemesh 装饰器
+    <filter>
+        <filter-name>sitemesh</filter-name>
+        <filter-class>com.opensymphony.module.sitemesh.filter.PageFilter</filter-class>
+    </filter>
+    -->
+    <filter>
+        <filter-name>struts2</filter-name>
+        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter</filter-class>
+    </filter>
+    <!-- GZIPFilter 设置自己想要压缩的文件类型 -->
+    <filter>
+        <filter-name>GZIPFilter</filter-name>
+        <filter-class>com.tacitknowledge.filters.gzipfilter.GZIPFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>CacheFilter</filter-name>
+        <filter-class>com.tacitknowledge.filters.cache.CacheHeaderFilter</filter-class>
+    </filter>
+    <!-- 验证码验证的配置 -->
+    <filter>
+        <filter-name>jcaptchaFilter</filter-name>
+        <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <init-param>
+            <param-name>targetFilterLifecycle</param-name>
+            <param-value>true</param-value>
+        </init-param>
+    </filter>
+    <!-- 自动登陆
+    <filter>
+        <filter-name>autoLoginFilter</filter-name>
+        <filter-class>com.fantasy.security.web.filter.AutoLoginFilter</filter-class>
+        <init-param>
+            <param-name>defaultUserName</param-name>
+            <param-value>lisi</param-value>
+        </init-param>
+        <init-param>
+            <param-name>userDetailsServiceBeanName</param-name>
+            <param-value>memberUserDetailsService</param-value>
+        </init-param>
+        <init-param>
+            <param-name>successHandlersBeanName</param-name>
+            <param-value>memberSuccessHandlers</param-value>
+        </init-param>
+        <init-param>
+            <param-name>enabled</param-name>
+            <param-value>false</param-value>
+        </init-param>
+    </filter>
+    -->
+    <filter>
+        <filter-name>fileFilter</filter-name>
+        <filter-class>com.fantasy.file.web.FileFilter</filter-class>
+    </filter>
+    <filter>
+        <filter-name>pageCacheFilter</filter-name>
+        <filter-class>com.fantasy.framework.web.filter.PageCacheFilter</filter-class>
+        <init-param>
+            <param-name>groups</param-name>
+            <param-value>all</param-value>
+        </init-param>
+        <init-param>
+            <param-name>parameterKeys</param-name>
+            <param-value>pager.pageSize,pager.pageNumber</param-value>
+        </init-param>
+        <init-param>
+            <param-name>time</param-name>
+            <param-value>86400</param-value>
+        </init-param>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>GZIPFilter</filter-name>
+        <url-pattern>*.js</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>GZIPFilter</filter-name>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+    <!-- CacheFilter 设置自己想要缓存的文件类型 -->
+    <filter-mapping>
+        <filter-name>CacheFilter</filter-name>
+        <url-pattern>*.gif</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CacheFilter</filter-name>
+        <url-pattern>*.jpg</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CacheFilter</filter-name>
+        <url-pattern>*.png</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CacheFilter</filter-name>
+        <url-pattern>*.js</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>CacheFilter</filter-name>
+        <url-pattern>*.css</url-pattern>
+    </filter-mapping>
+    <!-- jcaptcha图片生成URL. -->
+    <filter-mapping>
+        <filter-name>jcaptchaFilter</filter-name>
+        <url-pattern>/jcaptcha.jpg</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>jcaptchaFilter</filter-name>
+        <url-pattern>/jcaptcha.mpeg</url-pattern>
+    </filter-mapping>
+    <!--
+    <filter-mapping>
+        <filter-name>pageCacheFilter</filter-name>
+        <url-pattern>*.html</url-pattern>
+    </filter-mapping>
+    -->
+    <filter-mapping>
+        <filter-name>urlRewriteFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>actionContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    <filter-mapping>
+        <filter-name>hibernateOpenSessionInViewFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <!--
+    <filter-mapping>
+        <filter-name>autoLoginFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    -->
+    <filter-mapping>
+        <filter-name>springSecurityFilterChain</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <!-- 提供上传图片显示的控制(后台)-->
+    <filter-mapping>
+        <filter-name>fileFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <!-- struts2 过滤器 -->
+    <filter-mapping>
+        <filter-name>struts-prepare</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    <!--
+    <filter-mapping>
+        <filter-name>sitemesh</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+    -->
+    <filter-mapping>
+        <filter-name>struts2</filter-name>
+        <url-pattern>/*</url-pattern>
+        <dispatcher>REQUEST</dispatcher>
+        <dispatcher>FORWARD</dispatcher>
+        <dispatcher>INCLUDE</dispatcher>
+    </filter-mapping>
+
+    <servlet-mapping>
+        <servlet-name>proxool</servlet-name>
+        <url-pattern>/proxool</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/servlet/AxisServlet</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>*.jws</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AxisServlet</servlet-name>
+        <url-pattern>/services/*</url-pattern>
+    </servlet-mapping>
+
+    <jsp-config>
+        <taglib id="TagLibRef_struts">
+            <taglib-uri>http://www.fantasy.com/tags/struts-tags</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/struts-tags.tld</taglib-location>
+        </taglib>
+        <taglib id="TagLibRef_fantasy">
+            <taglib-uri>http://www.fantasy.com.cn/tags/fantasy</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/fantasy.tld</taglib-location>
+        </taglib>
+        <taglib id="TagLibRef_fantasy_util">
+            <taglib-uri>http://www.fantasy.com.cn/util</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/util.tld</taglib-location>
+        </taglib>
+        <taglib id="TagLibRef_fantasy_config">
+            <taglib-uri>http://www.fantasy.com.cn/tags/config</taglib-uri>
+            <taglib-location>/WEB-INF/tlds/config.tld</taglib-location>
+        </taglib>
+    </jsp-config>
+    <!--
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error/404.jsp</location>
+    </error-page>
+    <error-page>
+        <error-code>500</error-code>
+        <location>/error/500.jsp</location>
+    </error-page>
+    -->
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
+
+</web-app>

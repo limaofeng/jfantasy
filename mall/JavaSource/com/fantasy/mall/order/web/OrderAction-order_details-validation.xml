@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="sn">
+		<field-validator type="orderMember">
+			<message>用户只能查看自己的订单!</message>
+		</field-validator>
+	</field>
+</validators>

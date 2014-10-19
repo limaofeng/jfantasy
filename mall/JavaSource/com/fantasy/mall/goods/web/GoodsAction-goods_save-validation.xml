@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="name">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>名称不能为空!</message>
+		</field-validator>
+	</field>
+	<!-- 
+	<field name="year">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>年份不能为空!</message>
+		</field-validator>
+	</field>
+	 -->
+	<field name="price">
+		<field-validator type="required">
+			<param name="trim">true</param>
+			<message>销售价不能为空!</message>
+		</field-validator>
+		<field-validator type="double">
+			<param name="min">1.00</param>
+			<message>销售价不能小于${min}!</message>
+		</field-validator>
+	</field>
+	<field name="cost">
+		<field-validator type="required">
+			<param name="trim">true</param>
+			<message>成本价不能为空!</message>
+		</field-validator>
+	</field>
+	<field name="marketPrice">
+		<field-validator type="required">
+			<param name="trim">true</param>
+			<message>市场价不能为空!</message>
+		</field-validator>
+	</field>
+	<field name="weight">
+		<field-validator type="required">
+			<param name="trim">true</param>
+			<message>重量不能为空!</message>
+		</field-validator>
+	</field>
+</validators>

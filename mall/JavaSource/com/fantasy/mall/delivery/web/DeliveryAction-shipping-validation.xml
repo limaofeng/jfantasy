@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE validators PUBLIC "-//Apache Struts//XWork Validator 1.0.3//EN" "http://struts.apache.org/dtds/xwork-validator-1.0.3.dtd">
+<validators>
+	<field name="deliverySn">
+		<field-validator type="requiredstring">
+			<param name="trim">true</param>
+			<message>物流单号不能为空!</message>
+		</field-validator>
+	</field>
+	<field name="deliveryFee">
+		<field-validator type="required">
+			<param name="trim">true</param>
+			<message>物流费用不能为空!</message>
+		</field-validator>
+	</field>
+</validators>

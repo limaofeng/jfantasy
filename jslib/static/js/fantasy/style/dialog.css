@@ -1,0 +1,505 @@
+a[href ^="#"]:focus,a[href ^="javascript"]:focus {
+	outline: 0 none;
+}
+
+a.zInputBtn input:focus* {
+	outline: 0;
+	zoom: 1;
+}
+
+a.zInputBtn *::-moz-focus-inner {
+	border-color: transparent !important;
+}
+
+/*clear:both;*/ /*------dialog------*/
+.dialog {
+	-moz-border-radius: 6px;
+	-webkit-border-radius: 6px;
+	-moz-box-shadow: 0px 0px 4px #696969;
+	-webkit-box-shadow: 0px 0px 4px #696969;
+	font:12px 'Î¢ÈíÑÅºÚ',Arial,sans-serif;
+	text-align:left;
+	text-indent:5px;
+	line-height:normal;
+	position:absolute;
+	z-index:1000;
+	color: #333333;
+}
+
+.box-max {
+	left: 0px;
+	right: 0px;
+	top: 0px;
+	bottom: 0px;
+	width: auto;
+	height: auto;
+}
+
+.dialog-opacity {
+}
+
+.dialog .dialog-content {
+	left: 7px;
+	top: 36px;
+	bottom: 7px;
+	right: 7px;
+	background-color: #F6F9FE;
+	position: absolute;
+	padding : 3px;
+	/*
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	*/
+}
+
+.gridTable{
+	width: 100%;
+	font-size:1em;
+}
+table.gridTable td, table.gridTable th {
+	color:#555555;
+	line-height:16px;
+	white-space:nowrap;
+}
+table.gridTable tr th .gridTable-resizeable {
+	background:url("dialog.images/th.png") no-repeat scroll right top transparent;
+	border:0 none;
+	cursor:e-resize;
+	float:right;
+	height:25px;
+	margin:0 0;
+	text-align:right;
+	width:3px;
+}
+table.gridTable {
+	background:url("dialog.images/thbg.png") repeat-x scroll left top #FFFFFF;
+	border:1px solid #C6C6C6;
+	border-collapse:collapse;
+	table-layout:fixed;
+}
+table.gridTable tr th a {
+	color:#555555;
+}
+table.gridTable tr th {
+	border:0 none;
+	color:#445055;
+	font-weight:bold;
+	height:27px;
+	line-height:27px;
+	padding:0 0 0 6px;
+	word-wrap:break-word;
+}
+table.gridTable td, table.gridTable th {
+	border-bottom:1px solid #E3E8EE;
+	/*border-right:1px solid #DDDDDD;*/
+	color:#555555;
+	line-height:16px;
+	overflow:hidden;
+	padding:3px 7px 3px 6px;
+	white-space:nowrap;
+}
+
+.dialog .dialog-content .content-up-bg {
+	background: url("dialog.images/content-up-bg.png") repeat-x scroll left top transparent;
+	position: absolute;
+	bottom: -17px;
+	padding: 8px 20px;
+	height: 43px;
+	left: 0px;
+	right: 0px;
+}
+
+.dialog .top {
+	background: url("dialog.images/dialog-top.png") repeat-x scroll left top transparent;
+	left: 9px;
+	right: 9px;
+	height: 36px;
+	width: auto;
+	margin: 0 9px -36px;
+	/*cursor:move;*/
+}
+
+.dialog .menu-group {
+	height: 25px;
+	float:left;
+	list-style-type: none;
+	margin-top: 11px;
+	/*margin-left: 7px;*/	
+	margin-left: -30px;
+	position: absolute;
+}
+
+.dialog .menu-group .menu-title {
+	/*text-shadow: #FFF 0 0 4px;*/
+}
+
+.dialog .menu-group .menu {
+	height: 25px;
+	position: relative;
+	cursor: pointer;
+	color: #555555;
+	margin-right: -15px;
+	display:block;
+	float:left;
+}
+
+.dialog .menu-group .menu-selected {
+	cursor : default;
+	color: #000000;
+}
+
+.dialog .menu-group .menu .menu-left {
+	background-image: url("dialog.images/dialog-menu-left-hou.png");
+	background-repeat: no-repeat;
+	width: 15px;
+	height: 25px;
+	left: 0px;
+	bottom: 0px;
+	/*top:expression(Fantasy.Browser.isMsie?-0.1:0);*/
+	position: absolute;
+}
+
+.dialog .menu-group .menu-selected .menu-left {
+	background:url("dialog.images/dialog-menu-left.png") no-repeat !important;
+}
+
+.dialog .menu-group .menu .menu-right {
+	background-image: url("dialog.images/dialog-menu-right-hou.png");
+	background-repeat: no-repeat;
+	width: 15px;
+	height: 25px;
+	right: 0px;
+	bottom: 0px;
+	position: absolute;
+}
+
+.dialog .menu-group .menu-selected .menu-right {
+	background-image: url("dialog.images/dialog-menu-right.png");
+}
+
+.dialog .menu-group .menu .menu-content {
+	background: url("dialog.images/dialog-menu-hou.png") repeat-x scroll top transparent;
+	height: 25px;
+	left: 15px;
+	right: 15px;
+	position: absolute;
+	font-size: 11px;
+	display: block;
+}
+
+.dialog .menu-group .menu-selected .menu-content {
+	background: url("dialog.images/dialog-menu.png") repeat-x scroll 0 0 transparent;
+	overflow: hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	font-size: 12px;
+}
+
+.dialog .menu-group .menu-content img{
+	height:16px;
+	top: 5px;
+	width:16px;	
+	position:absolute;
+}
+
+.dialog .menu-group .menu .menu-content span {
+	position: absolute;
+    top: 6px;
+    overflow: hidden;
+	text-overflow:ellipsis;
+	white-space:nowrap;
+	display: block;
+}
+
+.dialog .menu-group .menu-close a {
+	width: 12px;
+	height: 12px;
+	right: 17px;
+	top: 7px;
+	position: absolute;
+}
+
+.dialog .menu-group .menu .menu-close a {
+	background: url("dialog.images/dialog-menu-close-hou.png") no-repeat;
+}
+
+.dialog .menu-group .menu-selected .menu-close a {
+	background: url("dialog.images/dialog-menu-close.png") no-repeat;
+}
+
+.dialog .menu-group .menu-selected .menu-close a:hover {
+	background-image: url("dialog.images/dialog-meun-close-hover.png");
+}
+.dialog .menu-group .menu .menu-close a:hover {
+	background-image: url("dialog.images/dialog-meun-close-hover.png");
+}
+.dialog .operatingBut {
+	width: 105px;
+	height: 20px;
+	right: 5px;
+	top: 0px;
+	position: absolute;
+	z-index: 102;
+}
+
+.dialog .operatingBut .minimize a {
+	background:url("dialog.images/but-test.png") no-repeat 0px 0px;
+	left: 0px;
+	height: 20px;
+	width: 29px;
+	position: absolute;
+}
+
+.dialog .operatingBut .minimize a:hover {
+	background-image: url("dialog.images/but-test-hover.png");
+}
+
+.dialog .operatingBut .maximize a {
+	background-image: url("dialog.images/but-test.png");
+	background-repeat: no-repeat;
+	background-position: -29px 0px;
+	left: 29px;
+	height: 20px;
+	width: 27px;
+	position: absolute;
+}
+
+.dialog .operatingBut .maximize a:hover {
+	background-image: url("dialog.images/but-test-hover.png");
+	background-repeat: no-repeat;
+	background-position: -29px 0px;
+	left: 28px;
+}
+
+.dialog.box-max .operatingBut .maximize a {
+	background-image: url("dialog.images/box-max.png");
+	background-repeat: no-repeat;
+	background-position: top;
+	left: 29px;
+	height: 20px;
+	width: 27px;
+	position: absolute;
+}
+
+.dialog.box-max .operatingBut .maximize a:hover {
+	background-image: url("dialog.images/box-max-hover.png");
+	background-repeat: no-repeat;
+	background-position: left;
+	left: 28px;
+}
+
+.dialog .operatingBut .dialog-close a {
+	background-image: url("dialog.images/but-test.png");
+	background-repeat: no-repeat;
+	background-position: -56px 0px;
+	left: 56px;
+	height: 20px;
+	width: 47px;
+	position: absolute;
+}
+.dialog .operatingBut .dialog-close-one a {
+	background-image: url("dialog.images/close.png");
+	background-position:0px 0px;
+}
+.dialog .operatingBut .dialog-close a:hover {
+	background-image: url("dialog.images/but-test-hover.png");
+	background-repeat: no-repeat;
+	background-position: -57px 0px;
+	left: 55px;
+	width: 48px;
+}
+.dialog .operatingBut .dialog-close-one a:hover {
+	background-image: url("dialog.images/close-hover.png");
+	background-position:0px 0px;
+	left: 56px;
+	width: 47px;
+}
+.dialog .top-left {
+	background-image: url("dialog.images/dialog-top-left.png");
+	background-repeat: no-repeat;
+	left: 0px;
+	top: 0px;
+	width: 9px;
+	height: 36px;
+	position: absolute;
+}
+
+.dialog .top-right {
+	width: 9px;
+	height: 36px;
+	background-image: url("dialog.images/dialog-top-right.png");
+	background-repeat: no-repeat;
+	right: 0;
+	display: block;
+	position: absolute;
+	z-index: 102;
+}
+
+.dialog .left {
+	position: absolute;
+	width: 7px;
+	bottom: 8px;
+	background-image: url("dialog.images/dialog-left.png");
+	background-repeat: repeat-y;
+	top: 36px;
+	left: 0px;
+}
+
+.dialog .right {
+	position: absolute;
+	background-image: url("dialog.images/dialog-right.png");
+	background-repeat: repeat-y;
+	background-position: left center;
+	top: 36px;
+	right: 0px;
+	width: 7px;
+	bottom: 8px;
+}
+
+.dialog .down {
+	background: url("dialog.images/dialog-down.png") repeat-x scroll 0 0
+		transparent;
+	height: 7px;
+	left: 8px;
+	right: 8px;
+	bottom: 0;
+	position: absolute;
+}
+
+.dialog .down-left {
+	background-image: url("dialog.images/dialog-down-left.png");
+	background-repeat: no-repeat;
+	bottom: 0px;
+	left: 0px;
+	width: 8px;
+	height: 8px;
+	position: absolute;
+}
+
+.dialog .down-right {
+	background-image: url("dialog.images/dialog-down-right.png");
+	background-repeat: no-repeat;
+	bottom: 0;
+	right: 0px;
+	width: 8px;
+	height: 8px;
+	position: absolute;
+}
+
+.dialog a.zInputBtn {
+	background: url("dialog.images/but-1.png") no-repeat scroll 0 0 transparent;
+	display: inline-block;
+	height: 20px;
+	margin-right: 6px;
+	padding-left: 2px;
+	vertical-align: middle;
+	text-decoration: none;
+}
+
+.dialog a.zInputBtn:HOVER {
+	background-image: url("dialog.images/but-2.png");
+	text-decoration: none;
+}
+
+.dialog .dialog-button {
+	background: url("dialog.images/but-1.png") no-repeat scroll right top transparent;
+	border: 0 none;
+	color: #000000;
+	text-shadow: 0 0 2px #C0C0C0;
+	cursor: pointer;
+	height: 20px;
+	left: 2px;
+	line-height: 20px;
+	outline: medium none;
+	padding: 0 11px 2px 0px;
+	/*position: relative;*/
+	vertical-align: middle;
+}
+
+.dialog .dialog-button:HOVER {
+	background-image: url("dialog.images/but-2.png");
+}
+
+* html .dialog div {
+	overflow: hidden !important;
+}
+.dialog .dialog-content div {
+	overflow-y : auto;
+}
+* html .dialog.ie-box-max .operatingBut .maximize a {
+	background-image: url("dialog.images/box-max.png");
+	background-repeat: no-repeat;
+	background-position: left;
+	left: 29px;
+	height: 20px;
+	width: 27px;
+	position: absolute;
+}
+
+* html .dialog .operatingBut .maximize a:hover {
+	background-image: url("dialog.images/but-test-hover.png");
+	background-repeat: no-repeat;
+	background-position: -31px 0px center;
+	left: 30px;
+}
+
+* html .dialog.ie-box-max .operatingBut .maximize a:hover {
+	background-image: url("dialog.images/box-max-hover.png");
+	background-repeat: no-repeat;
+	background-position: center;
+	left: 29px;
+	height: 20px;
+	width: 27px;
+	position: absolute;
+}
+* html .dialog .menu-group {
+}
+/*
+* html .dialog .content{
+	width:auto;
+	height:auto;
+}
+
+* html .dialog .left {
+	height:100%;
+}
+* html .dialog .right {
+	height:100%;
+}
+* html .dialog .down {
+	width:100%;
+}
+*/ /*-----------jQuery css----------------*/
+.ui-resizable-helper{
+	z-index: 99999;
+}
+.ui-resizable-e {
+	cursor: e-resize;
+	height: 100%;
+	right: -5px;
+	top: 0;
+	width: 7px;
+}
+
+.ui-resizable-handle {
+	display: block;
+	font-size: 0.1px;
+	position: absolute;
+	z-index: 99999;
+}
+
+.ui-resizable-s {
+	bottom: -5px;
+	cursor: s-resize;
+	height: 7px;
+	left: 0;
+	width: 100%;
+}
+
+.ui-resizable-se {
+	bottom: 1px;
+	cursor: se-resize;
+	height: 12px;
+	right: 1px;
+	width: 12px;
+}

@@ -1,0 +1,55 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+		<title>Insert title here</title>
+		<script src="http://localhost:8080/static/js/jquery.js" type="text/javascript" charset="UTF-8"></script>
+		<script type="text/javascript">
+		$(function(){
+
+			//var socket = new WebSocket('ws://211.100.41.186:9999');//http://211.100.41.186:9999/-
+			var socket = new WebSocket('ws://localhost:8080/websocket_v');
+			// 打开Socket
+			socket.onerror = function(event){
+				console.log(event);
+			};
+			socket.onopen = function(event) {
+
+                console.log(event);
+
+				// 发送一个初始化消息
+				socket.send('I am the client and I\'m listening!');
+
+				// 监听消息
+				socket.onmessage = function(event) {
+					console.log(event);
+					$('#msglist').html($('#msglist').html() + event.type + ":" + event.data + "<br/>");
+				};
+				// 监听Socket的关闭
+				socket.onclose = function(event) {
+					console.log('Client notified socket has closed', event);
+				};
+				// 关闭Socket....
+				//socket.close()
+			};
+			
+			$("#sendMsg").click(function(){
+				socket.send($("#msg").val());
+			});
+			$("#close").click(function(){
+				socket.close();
+			});
+			
+		});
+		</script>
+	</head>
+	<body>
+		<h1>web socket 测试&amp;</h1>
+		<textarea id="msg" style="width: 200px;height: 80px;"></textarea>
+		<button id="sendMsg">发送</button>
+		<button id="close">关闭连接</button>
+		<div id="msglist">
+			
+		</div>
+	</body>
+</html>

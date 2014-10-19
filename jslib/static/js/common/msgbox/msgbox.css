@@ -1,0 +1,71 @@
+/*消息提示样式
+.ts_msgbox_layer_wrap {
+	width: 100%;
+	position: fixed;
+	top: 46%;
+	left: 0;
+	text-align: center;
+	z-index: 65533;
+}
+
+.ts_msgbox_layer {
+	margin: 0 auto;
+	position: relative;
+}
+
+.ts_msgbox_layer .gtl_ico_success {
+	left: -45px;
+	top: 0;
+	width: 45px;
+	position: absolute;
+}
+
+.ts_msgbox_layer .gtl_end {
+	position: absolute;
+	right: -6px;
+	top: 0;
+	width: 6px;
+}
+
+.ts_msgbox_layer .gtl_ico_fail {
+	background-position: -6px -108px;
+	position: absolute;
+	left: -45px;
+	top: 0;
+	width: 45px;
+}
+
+.ts_msgbox_layer .gtl_ico_hits {
+	position: absolute;
+	left: -45px;
+	top: 0;
+	width: 45px;
+}
+
+.ts_msgbox_layer .gtl_ico_clear {
+	left: -5px;
+	width: 5px;
+	position: absolute;
+	top: 0;
+}
+
+.ts_msgbox_layer .gtl_ico_error {
+	position: absolute;
+	left: -45px;
+	top: 0;
+	width: 45px;
+}
+
+.ts_msgbox_layer .gtl_ico_warning {
+	position: absolute;
+	left: -45px;
+	top: 0;
+	width: 45px;
+}
+
+.ts_msgbox_layer .gtl_ico_info {
+	left: -5px;
+	width: 5px;
+	position: absolute;
+	top: 0;
+}*/

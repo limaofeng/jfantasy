@@ -10,5 +10,19 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>core</module>
+        <module>core-ws</module>
+        <module>core-ws-server</module>
+        <module>core-ws-client</module>
+        <module>mall</module>
+        <module>mall-ws</module>
+        <module>mall-ws-server</module>
+        <module>mall-ws-client</module>
+        <module>cms</module>
+        <module>cms-ws</module>
+        <module>cms-ws-server</module>
+        <module>cms-ws-client</module>
+        <module>websocket</module>
+        <module>weixin</module>
+        <module>javaweb</module>
     </modules>
 </project>

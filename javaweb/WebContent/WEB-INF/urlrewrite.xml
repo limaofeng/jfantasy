@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN" "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
+<!--
+
+    Configuration file for UrlRewriteFilter
+    http://tuckey.org/urlrewrite/
+
+-->
+<urlrewrite>
+
+	<!-- 抓取页面时生成的链接中带链接 -->
+	<outbound-rule encodefirst="false">
+		<from>^(.*);jsessionid=.*$</from>
+		<to>$1</to>
+	</outbound-rule>
+    
+    <rule>
+        <from>/payment/payreturn/(.*)</from>
+        <to>/payment/payreturn.do?sn=$1</to>
+    </rule>
+    <outbound-rule>
+        <from>^/payment/payreturn.do\?sn=([a-zA-Z0-9_-]+)$</from>
+        <to>/payment/payreturn/$1</to>
+    </outbound-rule>
+    <rule>
+        <from>/payment/paynotify/(.*)</from>
+        <to>/payment/paynotify.do?sn=$1</to>
+    </rule>
+    <outbound-rule>
+        <from>^/payment/paynotify.do\?sn=([a-zA-Z0-9_-]+)$</from>
+        <to>/payment/paynotify/$1</to>
+    </outbound-rule>
+    <rule>
+        <from>/payment/([a-zA-Z0-9_-]+).html</from>
+        <to>/payment.do?sn=$1</to>
+    </rule>
+    <outbound-rule>
+        <from>^/payment.do\?sn=([a-zA-Z0-9_-]+)$</from>
+        <to>/payment/$1.html</to>
+    </outbound-rule>
+
+    <outbound-rule>
+        <note>
+            The outbound-rule specifies that when response.encodeURL is called (if you are using JSTL c:url)
+            the url /rewrite-status will be rewritten to /test/status/.
+
+            The above rule and this outbound-rule means that end users should never see the
+            url /rewrite-status only /test/status/ both in thier location bar and in hyperlinks
+            in your pages.
+        </note>
+        <from>/rewrite-status</from>
+        <to>/test/status/</to>
+    </outbound-rule>
+
+</urlrewrite>
+
