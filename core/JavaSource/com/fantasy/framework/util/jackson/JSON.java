@@ -71,11 +71,13 @@ public class JSON {
 
                 CustomSerializerFactory serializerFactory = new HibernateAwareSerializerFactory();
                 serializerFactory.addSpecificMapping(String.class, new StringUnicodeSerializer());
-
                 objectMapper.setSerializerFactory(serializerFactory);
 
-                objectMapper.getDeserializationConfig().withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                objectMapper.getSerializationConfig().withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
+                SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
+
+                objectMapper.setDeserializationConfig(deserializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                objectMapper.setSerializationConfig(serializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
             }
         });
         // text 显示时不采用 unicode 中文的方式
@@ -91,8 +93,11 @@ public class JSON {
                 // 失败在未知属性
                 objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
 
-                objectMapper.getDeserializationConfig().withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                objectMapper.getSerializationConfig().withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+                DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
+                SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
+
+                objectMapper.setDeserializationConfig(deserializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                objectMapper.setSerializationConfig(serializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
             }
         });
     }
