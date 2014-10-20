@@ -214,4 +214,12 @@
         <module>weixin</module>
         <module>javaweb</module>
     </modules>
+
+    <developers>
+        <developer>
+            <name>limaofeng</name>
+            <email>limaofeng@msn.com</email>
+        </developer>
+    </developers>
+
 </project>
