@@ -43,7 +43,7 @@
                     msg: " <@s.text name="system.setting.save.success"/>",
                     type: "success"
                 });
-                $('.back-page').backpage();
+                $page$.backpage();
             }
         });
     });

@@ -6,7 +6,7 @@
                 data.isParent = true;
                 categoryTree.addNodes(categoryTree.getNodeByParam("code", data.parentCode), data);
                 var node = categoryTree.getNodeByParam("code", data.code);
-                $(".back-page").backpage();
+                $page$.backpage();
                 $('#' + node.tId + '_span').click();
                 $.msgbox({
                     msg: "保存成功",

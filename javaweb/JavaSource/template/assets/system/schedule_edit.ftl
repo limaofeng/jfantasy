@@ -35,7 +35,7 @@
                     msg : "保存成功",
                     type : "success"
                 });
-                $(".back-page").backpage();
+                $page$.backpage();
             }
         });
     });

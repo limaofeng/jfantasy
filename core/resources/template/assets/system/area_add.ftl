@@ -8,7 +8,7 @@
                     msg: "<@s.text name="common.area.save.success"/>",
                     type: "success"
                 });
-                $('.back-page').backpage();
+                $page$.backpage();
             }
         });
     });

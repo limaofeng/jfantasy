@@ -8,7 +8,7 @@
                     msg: "<@s.text name="file.directory.save.success"/>",
                     type: "success"
                 });
-                $('.back-page').backpage();
+                $page$.backpage();
             }
         });
     });

@@ -58,7 +58,7 @@
                     msg: "<@s.text name="mall.brand.save.success"/>",
                     type: "success"
                 });
-                $(".back-page", $("#saveForm")).backpage();
+                $page$.backpage();
             }
         });
     });

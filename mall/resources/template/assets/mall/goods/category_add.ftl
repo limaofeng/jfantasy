@@ -16,7 +16,7 @@
                     categoryTree.addNodes(null,data);
                 }
                 var node = categoryTree.getNodeByParam("id", data.id);
-                $(".back-page").backpage();
+                $page$.backpage();
                 $('#' + node.tId + '_span').click();
                 $.msgbox({
                     msg: "保存成功",

@@ -6,7 +6,7 @@
                 data.isParent = true;
                 var node = categoryTree.getNodeByParam("code", data.code);
                 categoryTree.updateNode(Fantasy.copy(node, categoryFilter(data)), false);
-                $(".back-page").backpage();
+                $page$.backpage();
                 $('#' + node.tId + '_span').click();
                 $.msgbox({
                     msg: "保存成功",

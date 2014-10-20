@@ -17,7 +17,7 @@
                     msg: "保存成功",
                     type: "success"
                 });
-                $(".back-page", $("#saveForm")).backpage();
+                $page$.backpage();
             }
         });
     });

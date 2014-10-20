@@ -8,7 +8,7 @@
                     msg: "<@s.text name="mall.delivery.type.save.success"/>",
                     type: "success"
                 });
-                $('.back-page').backpage();
+                $page$.backpage();
             }
         });
     });

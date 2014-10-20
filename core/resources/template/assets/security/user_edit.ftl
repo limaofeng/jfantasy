@@ -17,7 +17,7 @@
                     msg: "<@s.text name="security.user.save.success"/>",
                     type: "success"
                 });
-                $(".back-page", $("#saveForm")).backpage();
+                $page$.backpage();
             }
         });
     });

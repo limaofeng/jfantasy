@@ -20,7 +20,7 @@
                     msg : " <@s.text name="schedule.save.success"/>",
                     type : "success"
                 });
-                $(".back-page").backpage();
+                $page$.backpage();
             }
         });
     });

@@ -10,7 +10,7 @@
                 msg: "<@s.text name="payment.config.save.success"/>",
                 type: "success"
             });
-            $(".back-page", $("#saveForm")).backpage();
+            $page$.backpage();
         });
     });
 </script>

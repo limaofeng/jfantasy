@@ -8,7 +8,7 @@
                     msg: "<@s.text name="security.role.save.success"/>",
                     type: "success"
                 });
-                $('.back-page').backpage();
+                $page$.backpage();
             }
         });
     });

@@ -17,7 +17,7 @@
                     msg : "<@s.text name="member.save.success"/>",
                     type : "success"
                 });
-                $(".back-page").backpage();
+                $page$.backpage();
             }
         });
 
