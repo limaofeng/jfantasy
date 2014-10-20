@@ -3,13 +3,15 @@ package com.fantasy.mall.goods.ws.server;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.framework.ws.util.WebServiceUtil;
-import com.fantasy.mall.goods.bean.Brand;
 import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.service.BrandService;
 import com.fantasy.mall.goods.service.GoodsService;
 import com.fantasy.mall.goods.ws.IGoodsService;
-import com.fantasy.mall.goods.ws.dto.*;
+import com.fantasy.mall.goods.ws.dto.GoodsCategoryDTO;
+import com.fantasy.mall.goods.ws.dto.GoodsDTO;
+import com.fantasy.mall.goods.ws.dto.GoodsImageDTO;
+import com.fantasy.mall.goods.ws.dto.GoodsParameterValueDTO;
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 
@@ -39,12 +41,6 @@ public class GoodsWebService implements IGoodsService {
 		return dto;
 	}
 
-	@Override
-	public BrandDTO[] brands() {
-		List<Brand> brands = brandService.getBrands();
-		return WebServiceUtil.toArray(brands, BrandDTO.class);
-	}
-	
 	@Override
 	public GoodsCategoryDTO[] categories() {
 		List<GoodsCategory> categories = goodsService.getCategories();

@@ -58,7 +58,7 @@ public class UserInfoAction extends ActionSupport {
 
     public String refresh(String appid) throws JobExecutionException, InterruptedException {
         StartWeiXin startWeiXin = SpringContextUtil.getBeanByType(StartWeiXin.class);
-        startWeiXin.initWeiXin();
+//        startWeiXin.initWeiXin();
         userInfoService.refresh(appid);
         return JSONDATA;
     }

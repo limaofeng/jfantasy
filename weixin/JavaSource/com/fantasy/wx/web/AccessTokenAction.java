@@ -5,7 +5,6 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.wx.bean.pojo.AccessToken;
-import com.fantasy.wx.job.StartWeiXin;
 import com.fantasy.wx.service.AccessTokenService;
 import org.quartz.JobExecutionException;
 
@@ -45,7 +44,7 @@ public class AccessTokenAction extends ActionSupport {
     }
 
     public String save(AccessToken at) throws JobExecutionException {
-        StartWeiXin.reloadAccessToken(at);
+//        StartWeiXin.reloadAccessToken(at);
         this.attrs.put(ROOT, tokenService.save(at));
         return JSONDATA;
     }
