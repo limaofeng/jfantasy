@@ -11,12 +11,6 @@
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
 
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <com.fantasy-version>2.4.3.Alphal</com.fantasy-version>
-        <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -76,6 +70,11 @@
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cms</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-weixin</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>

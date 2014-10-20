@@ -1,5 +1,6 @@
 package org.springframework.context.annotation;
 
+import junit.framework.Assert;
 import org.junit.Test;
 
 public class ConfigurationClassEnhancerTesr {
@@ -7,7 +8,7 @@ public class ConfigurationClassEnhancerTesr {
     @Test
     public void test(){
         ConfigurationClassEnhancer enhancer = new ConfigurationClassEnhancer();
-        System.out.println(enhancer);
+        Assert.assertNotNull(enhancer);
     }
 
 }

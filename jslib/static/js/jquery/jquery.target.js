@@ -82,11 +82,14 @@ $.target('after', {
         });
         this.on('loadComplete', function ($html) {
             $html.initialize();
+            this.backpage = function(){
+                this.destroy();
+                this.getElement().show().next().remove();
+                $(window).resize();
+            };
             $('.back-page', $html).click(function (zhis) {
                 return function () {
-                    zhis.destroy();
-                    zhis.getElement().show().next().remove();
-                    $(window).resize();
+                    zhis.backpage();
                 }
             }(this));
         });

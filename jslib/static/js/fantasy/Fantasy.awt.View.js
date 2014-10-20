@@ -92,7 +92,7 @@ Fantasy.util.jClass(Fantasy.util.Observable, (function () {
         },
 
         setTemplateDefault: function (tname) {
-            var _template=this.getTemplate(this.templateDefault = tname);
+            var _template = this.getTemplate(this.templateDefault = tname);
             this.elements.each(function () {
                 this.setTemplate(_template);
             });
@@ -313,6 +313,13 @@ Fantasy.util.jClass(Fantasy.util.Observable, (function () {
             return typeof this.templates == 'undefined' ? null : this.templates.get(name);
         },
 
+        /**
+         * 改变行的模板
+         * @param index 下标
+         * @param name 模板名称
+         * @param data 需要更新的数据(选填)
+         * @returns {*}
+         */
         setTemplate: function (index, name, data) {
             var element = this.get(index);
             element.setTemplate(this.getTemplate(name), data);
@@ -375,11 +382,11 @@ Fantasy.util.jClass(Fantasy.util.Observable, (function () {
             }
         },
 
-        refresh: function(){
-            this.elements.sort(function(a,b){
+        refresh: function () {
+            this.elements.sort(function (a, b) {
                 return a.target.index() > b.target.index() ? 1 : -1;
             });
-            this.each(function(_index){
+            this.each(function (_index) {
                 this.setIndex(_index);
                 this.refresh();
             });
