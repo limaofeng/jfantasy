@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <com.fantasy-version>2.4.4.Alphal</com.fantasy-version>
+        <com.fantasy-version>2.4.5.Alphal</com.fantasy-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
         <org.mybatis-version>3.2.7</org.mybatis-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
@@ -22,7 +22,7 @@
         <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
         <com.fasterxml.jackson.core-version>2.3.0</com.fasterxml.jackson.core-version>
         <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
-        <clover.licenseLocation>${project.basedir}/clover.license</clover.licenseLocation>
+        <clover.licenseLocation>/Users/lmf/framework/clover.license</clover.licenseLocation>
     </properties>
 
     <distributionManagement>
@@ -45,6 +45,15 @@
         <resources>
             <resource>
                 <directory>resources</directory>
+            </resource>
+            <resource>
+                <directory>JavaSource</directory>
+                <includes>
+                    <include>**/*.ftl</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.properties</include>
+                </includes>
             </resource>
         </resources>
         <testSourceDirectory>test/src</testSourceDirectory>
@@ -139,6 +148,7 @@
                 <artifactId>maven-clover2-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
+                    <skip>true</skip>
                     <targetPercentage>1%</targetPercentage>
                     <jdk>1.6</jdk>
                     <encoding>utf-8</encoding>
@@ -178,7 +188,6 @@
                     <showSuccess>false</showSuccess>
                 </configuration>
             </plugin>
-            <!--
             <plugin>
                 <groupId>com.atlassian.maven.plugins</groupId>
                 <artifactId>maven-clover2-plugin</artifactId>
@@ -191,7 +200,6 @@
                     <licenseLocation>${clover.licenseLocation}</licenseLocation>
                 </configuration>
             </plugin>
-            -->
         </plugins>
     </reporting>
 

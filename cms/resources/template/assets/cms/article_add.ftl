@@ -29,7 +29,7 @@
         <p><i class="glyph-icon icon-exclamation mrg10R"></i>To view the available grid system options &amp; configurations you can visit the <a title="Fides Admin Grid System documentation" target="_blank" href="grid.html">Fides Admin Grid System documentation</a> page.</p>
     </div>
     -->
-
+    <#--
     <div class="ie_jf_left">
 
         <div class="form-row">
@@ -180,8 +180,8 @@
             </div>
         </div>
     </div>
-
-    <div class="example-box" style="display: none;">
+    -->
+    <div class="example-box">
     <@s.form id="saveForm" namespace="/cms/article" action="article_save" method="post" cssClass="center-margin">
         <@s.hidden name="category.code" value="%{category.code}"/>
         <a href="javascript:;" class="btn small hover-black float-right back-page" title="" style="margin-top: -30px;margin-right: 30px">
