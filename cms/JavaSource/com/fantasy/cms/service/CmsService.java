@@ -185,7 +185,11 @@ public class CmsService extends BuguSearcher<Article> {
      * @return Article
      */
     public Article get(Long id) {
-        return this.articleDao.get(id);
+        Article article = this.articleDao.get(id);
+        Hibernate.initialize(article.getCategory());
+        Hibernate.initialize(article.getContent());
+       // Hibernate.initialize(article.getAttributeValues());
+        return article;
     }
 
     /**
