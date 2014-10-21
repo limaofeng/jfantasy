@@ -1,12 +1,12 @@
 package com.fantasy.cms.ws.client;
 
-import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
 import com.fantasy.cms.ws.dto.ArticlePagerResult;
 import com.fantasy.com.ws.client.ArticleService;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.uitl.Constants;
+import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -34,27 +34,28 @@ public class ArticleServiceTest {
         filters.add(new PropertyFilterDTO("EQS_category.code", "abcd"));
         // 调用接口查询
         ArticlePagerResult pagination = articleService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
-        if(null!=pagination.getPageItems()){
-            for (ArticleDTO a : pagination.getPageItems()) {
-                System.out.println(a.getTitle());
-                System.out.println(a.getContent());
-            }
-        }
+        Assert.assertNotNull(pagination);
     }
 
     @Test
     public void testFindcategory() {
-        // 直接调用无参数接口
-        for (ArticleCategoryDTO articleCategory : articleService.categorys()) {
-            System.out.println(articleCategory.getCode()+"----"+articleCategory.getName()+"\n");
-        }
+        Assert.assertNotNull(articleService.categorys());
 
     }
 
     @Test
     public  void  testqueryArtcleById(){
-        ArticleDTO articleDTO = this.articleService.findArticleById(Long.valueOf("1"));
-        System.out.print(articleDTO.getContent());
+        PagerDTO pager = new PagerDTO();// 设置每页显示的数据条数
+        List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
+        ArticlePagerResult pagination = articleService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
+        if (pagination.getPageItems().length!=0){
+            for(ArticleDTO dto:pagination.getPageItems()){
+                ArticleDTO articleDTO = this.articleService.findArticleById(dto.getId());
+                Assert.assertNotNull(articleDTO);
+            }
+        }
+
+
     }
 
 
