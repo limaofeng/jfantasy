@@ -17,6 +17,7 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -182,7 +183,11 @@ public class CmsService extends BuguSearcher<Article> {
      * @return Article
      */
     public Article get(Long id) {
-        return this.articleDao.get(id);
+        Article article = this.articleDao.get(id);
+        Hibernate.initialize(article.getCategory());
+        Hibernate.initialize(article.getContent());
+       // Hibernate.initialize(article.getAttributeValues());
+        return article;
     }
 
     /**

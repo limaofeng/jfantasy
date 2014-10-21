@@ -50,7 +50,7 @@ public class ArticleWebService implements IArticleService {
     public ArticleDTO findArticleById(Long id) {
         Article article = this.cmsService.get(id);
         ArticleDTO articleDTO = WebServiceUtil.toBean(article, ArticleDTO.class);
-        articleDTO.setSummary(article.getSummary().toString());
+        articleDTO.setSummary(article.getSummary());
         articleDTO.setContent(article.getContent().toString());
         return articleDTO;
     }
