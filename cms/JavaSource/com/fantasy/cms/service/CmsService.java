@@ -17,6 +17,7 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -68,7 +69,9 @@ public class CmsService extends BuguSearcher<Article> {
      * @return string
      */
     public Pager<Article> findPager(Pager<Article> pager, List<PropertyFilter> filters) {
-        return articleDao.findPager(pager, filters);
+        Pager<Article> articlePager = articleDao.findPager(pager, filters);
+        Hibernate.initialize(articlePager.getPageItems());
+        return articlePager;
     }
 
     /**

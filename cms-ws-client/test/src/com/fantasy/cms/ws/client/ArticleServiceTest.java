@@ -31,9 +31,15 @@ public class ArticleServiceTest {
     public void testFindPager(){
         PagerDTO pager = new PagerDTO();// 设置每页显示的数据条数
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
-        filters.add(new PropertyFilterDTO("EQS_category.code", "x"));
+        filters.add(new PropertyFilterDTO("EQS_category.code", "abcd"));
         // 调用接口查询
         ArticlePagerResult pagination = articleService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
+        if(null!=pagination.getPageItems()){
+            for (ArticleDTO a : pagination.getPageItems()) {
+                System.out.println(a.getTitle());
+                System.out.println(a.getContent());
+            }
+        }
     }
 
     @Test
