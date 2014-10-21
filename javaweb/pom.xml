@@ -74,6 +74,11 @@
         </dependency>
         <dependency>
             <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-cms-ws-server</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
             <artifactId>fantasy-weixin</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
