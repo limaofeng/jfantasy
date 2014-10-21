@@ -1,0 +1,14 @@
+<service name="ArticleService">
+    <parameter name="ServiceClass">com.fantasy.cms.ws.IArticleService</parameter>
+    <parameter name="ServiceObjectSupplier">org.apache.axis2.extensions.spring.receivers.SpringServletContextObjectSupplier</parameter>
+    <parameter name="SpringBeanName">articleWebService</parameter>
+    <operation name="findPager">
+        <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+    </operation>
+    <operation name="findArticleById">
+        <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+    </operation>
+    <operation name="categorys">
+        <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+    </operation>
+</service>

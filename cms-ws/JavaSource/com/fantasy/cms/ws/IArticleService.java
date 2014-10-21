@@ -2,6 +2,7 @@ package com.fantasy.cms.ws;
 
 import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
+import com.fantasy.cms.ws.dto.ArticlePagerResult;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 
@@ -14,10 +15,10 @@ public interface IArticleService {
 	 *            分页对象(每页显示条数，最大数据条数，当前页码，总页数..具体看pager对象)
 	 * @param filters
 	 *            过滤条件(比较符+该字段类型+字段名称..具体看PropertyFilter对象)
-	 * @return pager对象(pager中PageItems是返回数据)
+	 * @return ArticlePagerResult对象(ArticlePagerResult中PageItems是返回数据)
 	 */
 
-	public PagerDTO findPager(PagerDTO pager, PropertyFilterDTO[] filters);
+	public ArticlePagerResult findPager(PagerDTO pager, PropertyFilterDTO[] filters);
 
 	/**
 	 * 文章栏目信息
@@ -40,5 +41,13 @@ public interface IArticleService {
 	 * @return {ArticleDTO}
 	 */
 	public ArticleDTO[] find(PropertyFilterDTO[] filters, String orderBy, String order, int size);
+
+
+    /**
+     * 根据ID查询单篇文章
+     * @param id  文章ID
+     * @return  文章对象ArticleDTO
+     */
+    public ArticleDTO findArticleById(Long id);
 
 }

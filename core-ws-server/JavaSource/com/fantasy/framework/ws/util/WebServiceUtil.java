@@ -13,7 +13,14 @@ public class WebServiceUtil {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> Pager<T> toPager(com.fantasy.framework.ws.util.PagerDTO pager, Class<T> clazz) {
-        return null;
+        Pager page= new Pager();
+        page.setPageSize(pager.getPageSize());
+        page.setOrderBy(pager.getOrderBy());
+        page.setCurrentPage(pager.getCurrentPage());
+        // page.setTotalCount(pager.getTotalCount());
+        // page.setTotalPage(pager.getTotalPage());
+        page.setOrder(pager.getOrder());
+        return  page;
         //TODO ObjectUtil.copy(new Pager(), pager, "pageItems");
     }
 
