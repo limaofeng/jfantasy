@@ -10,7 +10,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <com.fantasy-version>2.4.5.Alphal</com.fantasy-version>
+        <com.fantasy-version>2.4.6.Alphal</com.fantasy-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
         <org.mybatis-version>3.2.7</org.mybatis-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
