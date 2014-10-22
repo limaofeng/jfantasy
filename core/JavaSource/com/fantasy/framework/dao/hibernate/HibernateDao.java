@@ -3,6 +3,7 @@ package com.fantasy.framework.dao.hibernate;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
+import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -230,6 +231,33 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                     ognlUtil.setValue(field.getName(), oldEntity, addObjects);
                 }
             }
+            // 一对多关联关系的表
+            Field[] oneToManyFields = ClassUtil.getDeclaredFields(this.entityClass, OneToMany.class);
+            for (Field field : oneToManyFields) {
+                OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+                Class targetEntityClass = oneToMany.targetEntity();
+                if (void.class == targetEntityClass) {
+                    targetEntityClass = ClassUtil.getFieldGenericType(field);
+                }
+                if (oneToMany.cascade().length != 0 && !(ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.MERGE) > -1)) {
+                    continue;
+                }
+                Object fks = ognlUtil.getValue(field.getName(), entity);
+                if (ClassUtil.isList(fks)) {
+                    List<Object> objects = (List<Object>) fks;
+                    List<Object> addObjects = new ArrayList<Object>();
+                    for (Object fk : objects) {
+                        Serializable fkId = getIdValue(targetEntityClass, fk);
+                        Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
+                        if (fkObj != null) {
+                            addObjects.add(BeanUtil.copyProperties(fkObj, fk));
+                        }else{
+                            addObjects.add(fk);
+                        }
+                    }
+                    ognlUtil.setValue(field.getName(), oldEntity, addObjects);
+                }
+            }
             // 用于回显
             fields = ClassUtil.getDeclaredFields(this.entityClass);
             for (Field field : fields) {
@@ -270,6 +298,33 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                         }
                     }
                     ognlUtil.setValue(field.getName(), entity, addObjects);
+                }
+            }
+            // 一对多关联关系的表
+            Field[] oneToManyFields = ClassUtil.getDeclaredFields(this.entityClass, OneToMany.class);
+            for (Field field : oneToManyFields) {
+                OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+                Class targetEntityClass = oneToMany.targetEntity();
+                if (void.class == targetEntityClass) {
+                    targetEntityClass = ClassUtil.getFieldGenericType(field);
+                }
+                if (oneToMany.cascade().length != 0 && !(ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.MERGE) > -1)) {
+                    continue;
+                }
+                Object fks = ognlUtil.getValue(field.getName(), entity);
+                if (ClassUtil.isList(fks)) {
+                    List<Object> objects = (List<Object>) fks;
+                    List<Object> addObjects = new ArrayList<Object>();
+                    for (Object fk : objects) {
+                        Serializable fkId = getIdValue(targetEntityClass, fk);
+                        Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
+                        if (fkObj != null) {
+                            addObjects.add(BeanUtil.copyProperties(fkObj, fk));
+                        }else{
+                            addObjects.add(fk);
+                        }
+                    }
+                    ognlUtil.setValue(field.getName(), oldEntity, addObjects);
                 }
             }
             return entity;

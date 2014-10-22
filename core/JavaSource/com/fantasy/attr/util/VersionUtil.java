@@ -11,6 +11,8 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Opcodes;
@@ -23,6 +25,8 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.atomic.AtomicReference;
 
 public class VersionUtil {
+
+    private static final Log logger = LogFactory.getLog(VersionUtil.class);
 
     private static final ConcurrentMap<String, Class> dynaBeanClassCache = new ConcurrentHashMap<String, Class>();
     private static final ConcurrentMap<Long, AttributeVersion> versionCache = new ConcurrentHashMap<Long, AttributeVersion>();
@@ -37,7 +41,7 @@ public class VersionUtil {
         try {
             return createDynaBean(id);
         }catch (Exception ex){
-            ex.printStackTrace();
+            logger.error(ex.getMessage(),ex);
             return null;
         }
     }

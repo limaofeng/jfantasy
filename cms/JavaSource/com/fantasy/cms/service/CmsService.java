@@ -168,13 +168,13 @@ public class CmsService extends BuguSearcher<Article> {
         if (logger.isDebugEnabled()) {
             logger.debug("保存文章 > " + JSON.serialize(article));
         }
-        if ("".equals(article.getSummary())) {
+        this.articleDao.save(article);
+        if (StringUtil.isBlank(article.getSummary()) && StringUtil.isNotBlank(article.getContent())) {
             TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent().getContent());
             String content = node.getText().toString().trim().replace("\n", "");
             String summary = content.substring(0, 10);
             article.setSummary(summary);
         }
-        this.articleDao.save(article);
         return article;
     }
 
@@ -188,7 +188,8 @@ public class CmsService extends BuguSearcher<Article> {
         Article article = this.articleDao.get(id);
         Hibernate.initialize(article.getCategory());
         Hibernate.initialize(article.getContent());
-       // Hibernate.initialize(article.getAttributeValues());
+        Hibernate.initialize(article.getVersion());
+        Hibernate.initialize(article.getAttributeValues());
         return article;
     }
 
