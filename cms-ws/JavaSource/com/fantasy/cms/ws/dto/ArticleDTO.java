@@ -44,6 +44,11 @@ public class ArticleDTO implements Serializable {
 	 */
 	private ArticleCategoryDTO category;
 
+    /**
+     * 动态属性
+     */
+    private AttributeValueDTO[] attributeValueDTOs;
+
 	public Long getId() {
 		return id;
 	}
@@ -108,4 +113,11 @@ public class ArticleDTO implements Serializable {
 		this.category = category;
 	}
 
+    public AttributeValueDTO[] getAttributeValueDTOs() {
+        return attributeValueDTOs;
+    }
+
+    public void setAttributeValueDTOs(AttributeValueDTO[] attributeValueDTOs) {
+        this.attributeValueDTOs = attributeValueDTOs;
+    }
 }
