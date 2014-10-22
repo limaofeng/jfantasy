@@ -27,13 +27,13 @@ public class AttributeValue extends BaseBusEntity {
      * 属性对象
      */
     @JoinColumn(name = "ATTRIBUTE_ID", foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VALUE_ATTRIBUTE"))
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Attribute attribute;
     /**
      * 数据版本
      */
     @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VALUE_VERSION"))
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private AttributeVersion version;
     /**
      * 关联对象对应的id

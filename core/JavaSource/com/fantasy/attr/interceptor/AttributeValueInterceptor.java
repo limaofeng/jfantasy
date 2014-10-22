@@ -1,6 +1,7 @@
 package com.fantasy.attr.interceptor;
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.HibernateDao;
@@ -27,6 +28,7 @@ public class AttributeValueInterceptor {
     private final static MethodProxy _method_buildPropertyFilterCriterions = ClassUtil.getMethodProxy(HibernateDao.class, "buildPropertyFilterCriterions");
     private final static MethodProxy _method_buildPropertyFilterCriterion = ClassUtil.getMethodProxy(HibernateDao.class, "buildPropertyFilterCriterion");
     private final static MethodProxy _method_findPager = ClassUtil.getMethodProxy(HibernateDao.class, "findPager", Pager.class, Criterion[].class);
+    private final static MethodProxy _method_getIdValue = ClassUtil.getMethodProxy(HibernateDao.class, "getIdValue", Class.class, Object.class);
 
     /**
      * findPager 时，对动态Bean 添加代理
@@ -60,7 +62,6 @@ public class AttributeValueInterceptor {
             criterions = ObjectUtil.join(criterions, criterion);
         }
         pager = (Pager) _method_findPager.invoke(dao, pager, criterions);
-
         List<DynaBean> beans = pager.getPageItems();
         for (int i = 0, length = beans.size(); i < length; i++) {
             DynaBean dynaBean = beans.get(i);
@@ -82,14 +83,33 @@ public class AttributeValueInterceptor {
      */
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.save(..)) && args(entity)", argNames = "pjp,entity")
     public Object save(ProceedingJoinPoint pjp, Object entity) throws Throwable {
+        HibernateDao dao = (HibernateDao) pjp.getTarget();
         Class entityClass = (Class) ClassUtil.getValue(pjp.getTarget(), "entityClass");
         if (entity != null && entity instanceof DynaBean && entity.getClass().getSimpleName().contains("$v") && entityClass.equals(entity.getClass().getSuperclass())) {
             DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(entityClass);
             BeanUtil.copyProperties(dynaBean, entity);
             dynaBean.setAttributeValues(((DynaBean) entity).getAttributeValues());
+            for (AttributeValue attributeValue : ((DynaBean) entity).getAttributeValues()) {
+                if (attributeValue.getTargetId() == null) {
+                    attributeValue.setTargetId((Long) _method_getIdValue.invoke(dao, entityClass, dynaBean));
+                }
+            }
             entity = dynaBean;
         }
         return pjp.proceed(new Object[]{entity});
+    }
+
+    @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.get(..)) && args(id)", argNames = "pjp,id")
+    public Object get(ProceedingJoinPoint pjp, Object id) throws Throwable {
+        Class entityClass = (Class) ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        Object entity = pjp.proceed();
+        if (!DynaBean.class.isAssignableFrom(entityClass)) {
+            return entity;
+        }
+        if (entity != null && entity instanceof DynaBean && !entity.getClass().getSimpleName().contains("$v")) {
+            return VersionUtil.makeDynaBean((DynaBean) entity);
+        }
+        return entity;
     }
 
 }

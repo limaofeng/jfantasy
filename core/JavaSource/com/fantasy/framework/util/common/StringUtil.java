@@ -199,6 +199,10 @@ public class StringUtil {
         return (s == null) || (nullValue(s).trim().length() == 0);
     }
 
+    public static boolean isNotBlank(Object s) {
+        return !isBlank(s);
+    }
+
     public static boolean isNotBlank(String s) {
         return !isBlank(s);
     }

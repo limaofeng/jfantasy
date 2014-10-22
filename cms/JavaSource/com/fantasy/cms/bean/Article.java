@@ -1,5 +1,6 @@
 package com.fantasy.cms.bean;
 
+import com.fantasy.attr.DynaBean;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
@@ -22,7 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_ARTICLE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "content", "keywords", "version", "attributeValues"})
-public class Article extends BaseBusEntity /*implements DynaBean*/ {
+public class Article extends BaseBusEntity implements DynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;
 
@@ -88,9 +89,8 @@ public class Article extends BaseBusEntity /*implements DynaBean*/ {
     /**
      * 动态属性集合。 * 注意访问修饰符为 protected
      */
-    @Transient
-//    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
-//    @JoinColumns(value = {@JoinColumn(name = "ID", referencedColumnName = "TARGET_ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
     protected List<AttributeValue> attributeValues;
 
     public Long getId() {
