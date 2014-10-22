@@ -50,4 +50,12 @@ public interface IArticleService {
      */
     public ArticleDTO findArticleById(Long id);
 
+
+    /**
+     * 根据分类code查询当前分类的下级
+     * @param code  分类编码 code
+     * @return   分类对象数组
+     */
+    public ArticleCategoryDTO[] getArticleCategoryDtoByCode(String code);
+
 }

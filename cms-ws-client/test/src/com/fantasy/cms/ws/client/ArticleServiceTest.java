@@ -1,5 +1,6 @@
 package com.fantasy.cms.ws.client;
 
+import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
 import com.fantasy.cms.ws.dto.ArticlePagerResult;
 import com.fantasy.com.ws.client.ArticleService;
@@ -54,8 +55,13 @@ public class ArticleServiceTest {
                 Assert.assertNotNull(articleDTO);
             }
         }
+    }
 
 
+    @Test
+    public void getArticleCategoryDtoByCode(){
+        ArticleCategoryDTO[] articleCategoryDTOs = this.articleService.getArticleCategoryDtoByCode("root");
+        Assert.assertNotNull(articleCategoryDTOs.length);
     }
 
 

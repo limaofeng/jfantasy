@@ -37,4 +37,9 @@ public class ArticleService extends WebServiceClient implements IArticleService 
     public ArticleDTO findArticleById(Long id) {
         return super.invokeOption("findArticleById",new Object[] { id },ArticleDTO.class);
     }
+
+    @Override
+    public ArticleCategoryDTO[] getArticleCategoryDtoByCode(String code) {
+        return super.invokeOption("getArticleCategoryDtoByCode",new Object[] { code },ArticleCategoryDTO[].class);
+    }
 }

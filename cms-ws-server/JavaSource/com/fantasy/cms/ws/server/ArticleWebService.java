@@ -54,4 +54,10 @@ public class ArticleWebService implements IArticleService {
         articleDTO.setContent(article.getContent().toString());
         return articleDTO;
     }
+
+    @Override
+    public ArticleCategoryDTO[] getArticleCategoryDtoByCode(String code) {
+        ArticleCategory articleCategory = this.cmsService.get(code);
+        return WebServiceUtil.toArray(articleCategory.getChildren(),ArticleCategoryDTO.class);
+    }
 }

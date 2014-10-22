@@ -11,4 +11,8 @@
     <operation name="categorys">
         <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
+    <operation name="getArticleCategoryDtoByCode">
+        <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+    </operation>
+
 </service>
