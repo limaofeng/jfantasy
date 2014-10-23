@@ -8,7 +8,7 @@
                     msg : "保存成功",
                     type : "success"
                 });
-                $page$.backpage();
+                $(".back-page").backpage();
             }
         });
 

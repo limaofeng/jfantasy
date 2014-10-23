@@ -28,6 +28,15 @@
         <action name="save" class="com.fantasy.wx.web.AccessTokenAction" method="save"/>
         <action name="delete" class="com.fantasy.wx.web.AccessTokenAction" method="delete"/>
     </package>
+    <package name="weixin-message" extends="fantasy-default" namespace="/weixin/message">
+        <action name="index" class="com.fantasy.wx.web.MessageAction" method="index">
+            <result type="freemarker">/template/%{pageTheme}/weixin/message.ftl</result>
+        </action>
+        <action name="searchUserInfo" class="com.fantasy.wx.web.MessageAction" method="searchUserInfo"/>
+
+        <action name="search" class="com.fantasy.wx.web.MessageAction" method="search"/>
+        <action name="send" class="com.fantasy.wx.web.MessageAction" method="sendMessage"/>
+    </package>
     <package name="weixin-client" extends="fantasy-default" namespace="/weixin/client">
         <action name="core" class="com.fantasy.wx.web.WeixinAction" method="operationUrl" />
     </package>

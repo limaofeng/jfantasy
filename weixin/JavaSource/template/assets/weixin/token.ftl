@@ -48,7 +48,7 @@
 <@override name="pageContent">
 <div id="searchFormPanel" class="button-panel pad5A">
     <@s.form id="searchForm" namespace="/weixin/token" action="search" method="post">
-        <a title="添加" class="btn medium primary-bg dd-add" href="<@s.url namespace="/weixin/token" action="add"/>" ajax="{type:'html',target:'closest(\'#page-content\')'}">
+        <a title="添加" class="btn medium primary-bg dd-add" href="<@s.url namespace="/weixin/token" action="add"/>" target="after:closest('#page-content')">
             <span class="button-content">
                 <i class="glyph-icon icon-plus float:left"></i>
                 添加
@@ -100,13 +100,13 @@
                         </a>
                         <ul class="dropdown-menu float-right">
                             <li>
-                                <a title="详情" class="view" href="<@s.url namespace="/weixin/token" action="view?id={id}"/>" ajax="{type:'html',target:'closest(\'#page-content\')'}">
+                                <a title="详情" class="view" href="<@s.url namespace="/weixin/token" action="view?id={id}"/>" target="after:closest('#page-content')">
                                     <i class="glyph-icon icon-external-link-sign mrg5R"></i>
                                     详情
                                 </a>
                             </li>
                             <li>
-                                <a title="编辑" class="edit" href="<@s.url namespace="/weixin/token" action="edit?id={id}"/>" ajax="{type:'html',target:'closest(\'#page-content\')'}">
+                                <a title="编辑" class="edit" href="<@s.url namespace="/weixin/token" action="edit?id={id}"/>" target="after:closest('#page-content')">
                                     <i class="glyph-icon icon-edit mrg5R"></i>
                                     编辑
                                 </a>

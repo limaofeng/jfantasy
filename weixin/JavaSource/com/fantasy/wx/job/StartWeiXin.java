@@ -1,5 +1,6 @@
 package com.fantasy.wx.job;
 
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.schedule.service.ScheduleService;
 import com.fantasy.wx.bean.pojo.AccessToken;
 import com.fantasy.wx.service.AccessTokenService;
@@ -19,7 +20,7 @@ import java.util.List;
  * Created by zzzhong on 2014/9/19.
  */
 @Component
-@Lazy
+@Lazy(false)
 public class StartWeiXin implements InitializingBean {
 
     @Resource
@@ -29,16 +30,21 @@ public class StartWeiXin implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        JobDetail jobDetail = this.scheduleService.addJob(JobKey.jobKey("weixing", "accessToken"), AccessTokenJob.class);
+
         List<AccessToken> list = accessTokenService.getAll();
         for (final AccessToken accessToken : list) {
-            // 每天中午12点触发
-            this.scheduleService.addTrigger(jobDetail.getKey(), TriggerKey.triggerKey("accessToken-" + accessToken.getAppid()), "0 0 12 * * ?", new HashMap<String, Object>() {
-                {
-                    this.put("accessToken", accessToken);
-                }
-            });
+            startAccessToken(accessToken);
         }
+    }
+    public void startAccessToken(final AccessToken at){
+        JobDetail jobDetail = this.scheduleService.addJob(JobKey.jobKey("weixing", "accessToken"), AccessTokenJob.class);
+        // 整点触发
+        this.scheduleService.removeTrigdger(TriggerKey.triggerKey("accessToken-" + at.getAppid()));
+        this.scheduleService.addTrigger(jobDetail.getKey(), TriggerKey.triggerKey("accessToken-" + at.getAppid()), 1000*60*60*2,1000000000, new HashMap<String, Object>() {
+            {
+                this.put("accessToken", JSON.serialize(at));//at
+            }
+        });
     }
 
 }

@@ -1,39 +1,34 @@
 package com.fantasy.wx.service;
 
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.wx.bean.req.EventMessage;
-import com.fantasy.wx.bean.req.TextMessage;
-import com.fantasy.wx.dao.EventMessageDao;
-import com.fantasy.wx.dao.TextMessageDao;
+import com.fantasy.wx.bean.pojo.UserInfo;
+import com.fantasy.wx.bean.req.Message;
+import com.fantasy.wx.dao.MessageDao;
 import com.fantasy.wx.util.WeixinUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.io.IOException;
 
 /**
- * Created by zzzhong on 2014/6/30.
+ * 响应微信事件
  */
 @Service
 @Transactional
-public class EventService {
+public class EventService implements IEventService {
 
     //微信工具类
     private WeixinUtil weixinUtil=new WeixinUtil();
     @Resource
-    private TextMessageDao textMessageDao;
+    private MessageDao messageDao;
     @Resource
-    private EventMessageDao eventMessageDao;
+    private UserInfoService userInfoService;
 
-    public String focusOnEven(EventMessage em) throws IOException {
+    public String focusOnEven(Message em) {
+        UserInfo ui= weixinUtil.getUserInfo(em.getFromUserName(), WeixinUtil.firstAccessToken());
+        userInfoService.save(ui);
         return weixinUtil.textMessage(em.getFromUserName(), em.getToUserName(), "欢迎关注！");
     }
-    public String textMessage(TextMessage tm){
-        textMessageDao.save(tm);
-        return weixinUtil.textMessage(tm.getFromUserName(), tm.getToUserName(), "输入的是文字！");
-    }
-    public void saveEventMessage(EventMessage em){
-        eventMessageDao.save(em);
+    public String textMessage(Message tm){
+        return null;
     }
 }

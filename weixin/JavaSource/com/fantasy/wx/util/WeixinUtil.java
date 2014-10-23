@@ -1,13 +1,13 @@
 package com.fantasy.wx.util;
 
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.bean.pojo.code.QCode;
 import com.fantasy.wx.bean.pojo.AccessToken;
 import com.fantasy.wx.bean.pojo.Menu;
 import com.fantasy.wx.bean.pojo.UserInfo;
 import com.fantasy.wx.bean.pojo.WatchUserList;
-import com.fantasy.wx.bean.pojo.group.Material;
+import com.fantasy.wx.bean.pojo.code.QCode;
 import com.fantasy.wx.bean.pojo.group.GroupMessage;
+import com.fantasy.wx.bean.pojo.group.Material;
 import com.fantasy.wx.bean.resp.ArticleMessage;
 import com.fantasy.wx.bean.resp.Code;
 import com.fantasy.wx.bean.resp.NewsMessage;
@@ -37,6 +37,7 @@ public class WeixinUtil {
      * accessToken = token对象
      */
     public static Map<String,AccessToken> accessToken = new HashMap<String, AccessToken>();
+    private static AccessToken firstAccessToken;
     public final static ObjectMapper objectMapper=new ObjectMapper();
     static{
         // 当找不到对应的序列化器时 忽略此字段
@@ -143,6 +144,9 @@ public class WeixinUtil {
             Map<String,Object> map= (Map<String, Object>) JSON.deserialize(json);
             if(map.containsKey("errcode")){
                 System.out.println("errcode:"+map.get("errcode")+" errmsg:"+map.get("errmsg"));
+                if((Integer)map.get("errcode")==0){
+                    return "0";
+                }
             }else{
                 return json;
             }
@@ -166,7 +170,7 @@ public class WeixinUtil {
         // 调用接口创建菜单
         String json = httpRequest(requestUrl, "POST", jsonCode);
         if (null != json) {
-                code=JSON.deserialize(json, Code.class);
+            code=JSON.deserialize(json, Code.class);
         }else{
             System.out.println("创建二维码失败!");
         }
@@ -274,7 +278,7 @@ public class WeixinUtil {
         // 拼装创建菜单的url
         String url = menu_create_url.replace("ACCESS_TOKEN", accessToken);
         // 将菜单对象转换成json字符串
-        String jsonMenu = JSON.serialize(menu);
+        String jsonMenu = JSON.text().serialize(menu);
         // 调用接口创建菜单
         String json = httpRequest(url, "POST", jsonMenu);
 
@@ -428,24 +432,35 @@ public class WeixinUtil {
 
     }
 
-    /*
+    /**
      * 创建客服回复消息
+     * @param at
+     * @param openId
+     * @param type text,image...
+     * @param param 微信官网各种类型的信息回复格式
      */
-    public void message(AccessToken at,String openId,String type,Map<?,?> param){
+    public boolean message(AccessToken at,String openId,String type,Map<?,?> param){
         Map<String,Object> map=new HashMap<String,Object>();
         map.put("touser",openId);
         map.put("msgtype",type);
         map.put(type,param);
         String requestUrl = messageUrl.replace("ACCESS_TOKEN", at.getToken());
-        // 将菜单对象转换成json字符串
-        String jsonCode = JSON.serialize(map);
-        // 调用接口创建菜单
-        httpRequest(requestUrl, "POST", jsonCode);
+        String jsonCode = JSON.text().serialize(map);
+        String result=httpRequest(requestUrl, "POST", jsonCode);
+        return result!=null;
     }
     public static <T> T toBean(Object obj, Class<T> newClass) {
         if (obj == null)
             return null;
         return (T) JSON.deserialize(JSON.serialize(obj), newClass);
     }
-
+    public static AccessToken firstAccessToken(){
+        if(firstAccessToken!=null) return firstAccessToken;
+        if(WeixinUtil.accessToken!=null){
+            Object[] keys= (Object[]) WeixinUtil.accessToken.keySet().toArray();
+            if(keys.length>=1)
+                firstAccessToken=WeixinUtil.accessToken.get(keys[0]);
+        }
+        return firstAccessToken;
+    }
 }

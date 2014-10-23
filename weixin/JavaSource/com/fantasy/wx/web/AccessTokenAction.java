@@ -2,14 +2,23 @@ package com.fantasy.wx.web;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.schedule.service.ScheduleService;
 import com.fantasy.wx.bean.pojo.AccessToken;
+import com.fantasy.wx.job.AccessTokenJob;
+import com.fantasy.wx.job.StartWeiXin;
 import com.fantasy.wx.service.AccessTokenService;
+import org.quartz.JobDetail;
 import org.quartz.JobExecutionException;
+import org.quartz.JobKey;
+import org.quartz.TriggerKey;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -25,7 +34,8 @@ public class AccessTokenAction extends ActionSupport {
 
     @Resource
     private AccessTokenService tokenService;
-
+    @Resource
+    private ScheduleService scheduleService;
 
     public String index() {
         this.search(new Pager<AccessToken>(), new ArrayList<PropertyFilter>());
@@ -43,8 +53,15 @@ public class AccessTokenAction extends ActionSupport {
         return JSONDATA;
     }
 
-    public String save(AccessToken at) throws JobExecutionException {
-//        StartWeiXin.reloadAccessToken(at);
+    public String save(final AccessToken at) throws JobExecutionException {
+        JobDetail jobDetail = this.scheduleService.addJob(JobKey.jobKey("weixing", "accessToken"), AccessTokenJob.class);
+        this.scheduleService.removeTrigdger(TriggerKey.triggerKey("accessToken-" + at.getAppid()));
+        // 整点触发
+        this.scheduleService.addTrigger(jobDetail.getKey(), TriggerKey.triggerKey("accessToken-" + at.getAppid()), 1000*60*60*2,1000000000, new HashMap<String, Object>() {
+            {
+                this.put("accessToken", JSON.serialize(at));
+            }
+        });
         this.attrs.put(ROOT, tokenService.save(at));
         return JSONDATA;
     }

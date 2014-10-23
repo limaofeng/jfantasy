@@ -1,4 +1,5 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
+<@override name="pageTitle">
 粉丝维护
 </@override>
 <@override name="head">
@@ -36,7 +37,7 @@
         });
         $grid.setJSON(pager);
         $("#refresh").click(function(){
-            $.get("${request.contextPath}/weixin/refresh.do",{"appid":"wx0e7cef7ad73417eb"},function(){
+            $.get("${request.contextPath}/weixin/refresh.do",{"appid":"${appid}"},function(){
                 $('#pager').pager().reload();
             });
         })
@@ -68,7 +69,6 @@
             <th>性别</th>
             <th>是否关注</th>
             <th class="text-center">关注时间</th>
-            <th style="width:160px;" class="text-center">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -83,12 +83,6 @@
             <td>{sex:dict({'0':'未知','1':'男','2':'女'})}</td>
             <td>{subscribe:dict({'0':'未关注','1':'已关注'})}</td>
             <td>{time}</td>
-            <td class="pad0T pad0B text-center">
-                <a title="添加账户信息" class="edit" href="${request.contextPath}/member/add.do?openid={openid}&nickname={nickname}" ajax="{type:'html',target:'closest(\'#page-content\')'}">
-                    <i class="glyph-icon icon-edit mrg5R"></i>
-                    添加账户信息
-                </a>
-            </td>
         </tr>
         </tbody>
     </table>

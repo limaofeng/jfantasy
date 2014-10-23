@@ -1,17 +1,15 @@
 package com.fantasy.wx.service;
 
 
-import com.fantasy.framework.util.common.BeanUtil;
-import com.fantasy.wx.bean.req.BaseMessage;
-import com.fantasy.wx.bean.req.EventMessage;
-import com.fantasy.wx.bean.req.TextMessage;
+import com.fantasy.wx.bean.req.Message;
 import com.fantasy.wx.util.MessageUtil;
+import com.fantasy.wx.util.WeixinUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -26,7 +24,11 @@ import java.util.Map;
 @Transactional
 public class CoreService {
     @Resource
-    public EventService eventService;
+    public IEventService eventService;
+    @Resource
+    private MessageService messageService;
+    //微信工具类
+    private WeixinUtil weixinUtil=new WeixinUtil();
     /**
      * 处理微信发来的请求
      *
@@ -39,37 +41,41 @@ public class CoreService {
         try {
             // xml请求解析
             Map<String, String> requestMap = MessageUtil.parseXml(request);
-            BaseMessage baseMessage=new BaseMessage();
-            // 公众帐号
-            baseMessage.setToUserName(requestMap.get("ToUserName"));
-            // 发送方帐号（open_id）
-            baseMessage.setFromUserName(requestMap.get("FromUserName"));
-            baseMessage.setCreateTime(new Date().getTime());
-            baseMessage.setMsgType(requestMap.get("MsgType"));
+            requestMap=lowerJSON(requestMap);
+            //保存微信触发事件
+            Message baseMessage=new Message();
+            baseMessage=weixinUtil.toBean(requestMap,baseMessage.getClass());
+            messageService.save(baseMessage);
+
+            Message resultMessage=WeixinUtil.toBean(baseMessage,Message.class);
+            resultMessage.setMsgType("transfer_customer_service");
+            respMessage = MessageUtil.objectMessageToXml(baseMessage);
+
+            String result=null;
             // 文本消息
             if (baseMessage.getMsgType().equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-                TextMessage tm=new TextMessage();
-                tm.setContent(requestMap.get("Content").trim());
-                return eventService.textMessage(tm);
+                result=eventService.textMessage(baseMessage);
             }
             // 事件推送
             else if (baseMessage.getMsgType().equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
-                EventMessage eventMessage=BeanUtil.copyProperties(new EventMessage(),baseMessage);
-                // 事件类型
-                eventMessage.setEvnet(requestMap.get("Event"));
-                eventMessage.setEvnetKey(requestMap.get("EventKey"));
-                eventService.saveEventMessage(eventMessage);
                 // 订阅
-                if (eventMessage.getEvnet().equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-                    return eventService.focusOnEven(eventMessage);
+                if (baseMessage.getEvent().equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
+                    result=eventService.focusOnEven(baseMessage);
                 }
             }
-            // 回复多客服消息
-            baseMessage.setMsgType("transfer_customer_service");
-            respMessage = MessageUtil.objectMessageToXml(baseMessage);
+            //返回微信消息
+            if(result!=null)
+                return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return respMessage;
+    }
+    public Map<String,String> lowerJSON(Map<String,String> json){
+        Map<String,String> map=new HashMap<String,String>();
+        for(String key:json.keySet()){
+            map.put(key.replaceFirst(key.substring(0, 1),key.substring(0, 1).toLowerCase()),json.get(key));
+        }
+        return map;
     }
 }

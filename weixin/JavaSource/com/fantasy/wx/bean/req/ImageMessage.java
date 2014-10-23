@@ -1,7 +1,5 @@
 package com.fantasy.wx.bean.req;
 
-import com.fantasy.wx.bean.req.*;
-
 /**
  * 图片消息
  * Created by zzzhong on 2014/6/17.

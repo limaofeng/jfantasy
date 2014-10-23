@@ -51,6 +51,10 @@ public class UserInfo {
     //状态
     @Column(name = "state")
     private String state;
+    //最后消息时间
+    @Column(name = "LAST_MESSAGE_TIME")
+    private Long lastMessageTime;
+
 
     public String getOpenid() {
         return openid;
@@ -152,5 +156,13 @@ public class UserInfo {
 
     public void setState(String state) {
         this.state = state;
+    }
+
+    public Long getLastMessageTime() {
+        return lastMessageTime;
+    }
+
+    public void setLastMessageTime(Long lastMessageTime) {
+        this.lastMessageTime = lastMessageTime;
     }
 }
