@@ -101,6 +101,11 @@ public class SettingUtil {
         });
     }
 
+    public static String getValue(String key,String defaultValue) {
+        Setting setting = ObjectUtil.find(current().getSettings(), "key", key);
+        return setting == null ? defaultValue : setting.getValue();
+    }
+
     public static String getValue(String key) {
         Setting setting = ObjectUtil.find(current().getSettings(), "key", key);
         return setting == null ? get(key) : setting.getValue();

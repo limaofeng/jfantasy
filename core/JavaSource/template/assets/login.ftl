@@ -104,7 +104,7 @@
 <div id="login-page" class="mrg25B">
 
 
-<div class="theme-customizer">
+<div class="theme-customizer" style="display: none;">
     <a href="javascript:;" class="change-theme-btn" title="Change theme">
         <i class="glyph-icon icon-cog"></i>
     </a>
@@ -352,7 +352,7 @@
 
     </div>
 </div>
-<div class="user-profile dropdown">
+<div class="user-profile dropdown" style="display:none;">
     <a href="javascript:;" title="" class="user-ico clearfix" data-toggle="dropdown">
         <img width="36" src="assets/images/gravatar.jpg" alt=""/>
         <span>Horia Simon</span>
@@ -426,7 +426,7 @@
 
     </ul>
 </div>
-<div class="dropdown dash-menu">
+<div class="dropdown dash-menu" style="display:none;">
     <a href="javascript:;" data-toggle="dropdown" data-placement="left"
        class="medium btn primary-bg float-right popover-button-header hidden-mobile tooltip-button"
        title="Example menu">
@@ -519,7 +519,7 @@
         </div>
     </div>
 </div>
-<div class="top-icon-bar">
+<div class="top-icon-bar" style="display: none;">
 <div class="dropdown">
 
     <a data-toggle="dropdown" href="javascript:;" title="">
