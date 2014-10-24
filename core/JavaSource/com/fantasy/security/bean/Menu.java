@@ -38,7 +38,6 @@ public class Menu extends BaseBusEntity {
      * 菜单名称
      */
     @Column(name = "NAME", length = 200)
-    @JsonProperty("text")
     private String name;
     /**
      * 树路径
@@ -49,7 +48,6 @@ public class Menu extends BaseBusEntity {
      * 菜单值
      */
     @Column(name = "VALUE", length = 200)
-    @JsonProperty("url")
     private String value;
     /**
      * 菜单类型

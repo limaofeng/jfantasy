@@ -133,7 +133,7 @@
     <a href="javascript:;" class="tooltip-button hidden" title="Navigation Menu" id="responsive-open-menu">
         <i class="glyph-icon icon-align-justify"></i>
     </a>
-    Fides Admin <i class="opacity-80">1.1</i>
+    <@s.property value="@com.fantasy.system.util.SettingUtil@getValue('system','FIDES ADMIN')"/> <i class="opacity-80"><@s.property value="@com.fantasy.system.util.SettingUtil@getValue('systemVersion','1.2')"/></i>
 </div>
 <#include "about.ftl"/>
 <#--
