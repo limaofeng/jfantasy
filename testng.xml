@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+<suite name="ClientApi" verbose="1" >
+    <test name="functionTest">
+        <groups>
+            <run>
+                <exclude name="g1"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.apple.java.AppleSystemLog"/>
+        </classes>
+    </test>
+</suite>
