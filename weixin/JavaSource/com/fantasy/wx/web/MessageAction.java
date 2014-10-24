@@ -4,7 +4,6 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.wx.bean.pojo.AccessToken;
 import com.fantasy.wx.bean.pojo.UserInfo;
 import com.fantasy.wx.bean.req.Message;
 import com.fantasy.wx.service.MessageService;
@@ -12,12 +11,15 @@ import com.fantasy.wx.service.UserInfoService;
 import com.fantasy.wx.util.WeixinUtil;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zzzhong on 2014/9/23.
  */
-public class MessageAction extends ActionSupport{
+public class MessageAction extends ActionSupport {
     @Resource
     private MessageService messageService;
     @Resource
@@ -35,9 +37,12 @@ public class MessageAction extends ActionSupport{
         this.attrs.put("userPager", pager);
         //查询第一个用户的消息
         List<PropertyFilter> filters=new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_msgType","text"));
         if(pager.getPageItems().size()>0)
             filters.add(new PropertyFilter("EQS_userInfo.openid",pager.getPageItems().get(0).getOpenid()));
-        this.search(new Pager<Message>(), filters);
+        Pager<Message> messagePager=new Pager<Message>();
+        messagePager.setPageSize(3);
+        this.search(messagePager, filters);
         this.attrs.put("messagePager", this.attrs.get(ROOT));
         this.attrs.remove(ROOT);
         return SUCCESS;
@@ -60,8 +65,6 @@ public class MessageAction extends ActionSupport{
             pager.setOrder(Pager.Order.desc);
         }
         pager = messageService.findPager(pager, filters);
-        if(pager.getCurrentPage()==1)
-            Collections.reverse(pager.getPageItems());
         this.attrs.put(ROOT, pager);
         return JSONDATA;
     }
@@ -69,8 +72,7 @@ public class MessageAction extends ActionSupport{
         m.setType("send");
         WeixinUtil weixinUtil=new WeixinUtil();
         Map<String,String> map= new HashMap<String,String>();
-        if(m.getMsgType().equals("text"))
-            map.put("content",m.getContent());
+        map.put("content",m.getContent());
         boolean result=weixinUtil.message(WeixinUtil.firstAccessToken(),m.getUserInfo().getOpenid(),m.getMsgType(),map);
         if(result){
             messageService.save(m);

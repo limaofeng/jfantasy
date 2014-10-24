@@ -127,5 +127,6 @@
     <import resource="classpath:spring/applicationContext-schedule.xml"/>
 
     <import resource="classpath:spring/applicationContext-websocket.xml"/>
-
+    <!--微信实现类-->
+    <bean id="eventService" class="com.fantasy.wx.service.EventService" lazy-init="false"/>
 </beans>

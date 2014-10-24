@@ -21,10 +21,13 @@
         var boolAjax=true;
         var userPager=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(userPager)" escapeHtml="false"/>;
         var messagePager=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(messagePager)" escapeHtml="false"/>;
+        messagePager.pageItems.reverse();
         if(messagePager.pageItems.length==0){
             $('#content').attr("readonly","readonly");
         }
-        if (messagePager.totalPage <= messagePager.currentPage) {
+        if (messagePager.totalCount>3) {
+                $("#moreMessage").data("time",messagePager.pageItems[0].createTime);
+        }else{
             $("#moreMessage").hide();
         }
         var userView=$("#userView").view().on("add",function(data){
@@ -32,14 +35,18 @@
             this.target.data("openId",data.openId);
             $(this.target).click(function(){
                 var zhis=this;
-                $.get("${request.contextPath}/weixin/message/search.do", {"EQS_userInfo.openid":$(this).data("openid")},
+                $.get("${request.contextPath}/weixin/message/search.do", {"pager.pageSize":3,"EQS_userInfo.openid":$(this).data("openid")},
                         function (data) {
                             $(".current_user").removeClass("current_user");
                             $(zhis).addClass("current_user");
                             messagePager=data;
+                            messagePager.pageItems.reverse();
                             messageView.setJSON(data.pageItems);
                             data.pageItems.length==0?$('#content').attr("readonly","readonly"):$('#content').removeAttr("readonly");
                             messagePager.totalPage <= messagePager.currentPage? $("#moreMessage").hide():$("#moreMessage").show();
+                            if(data.pageItems.length>0)
+                                $("#moreMessage").data("time",data.pageItems[0].createTime);
+                            $("#messageScroll").scrollTop($("#messagePager").height());
                         }, "json");
             });
             $(this.target).data("openid",data.openid);
@@ -59,16 +66,23 @@
             }
             //$("#messageScroll").scrollTop($("#messagePager").height());
         });
-        messageView.setJSON(messagePager.pageItems);;
+        messageView.setJSON(messagePager.pageItems);
         $("#moreMessage").click(function(){
-            $.get("${request.contextPath}/weixin/message/search.do", {"EQS_userInfo.openid":$(".current_user").data("openid"),"pager.currentPage": messagePager.currentPage+1},function (data) {
-                messagePager=data;
+            var param={"EQS_userInfo.openid":$(".current_user").data("openid")}
+            if(!!$("#moreMessage").data("time")){
+                param["LTL_createTime"]=$("#moreMessage").data("time");
+            }
+            $.get("${request.contextPath}/weixin/message/search.do",param,function (data) {
+
                 for(var i= 0,count=data.pageItems.length;i<count;i++){
                     messageView.insert(0,data.pageItems[i]);
                 }
-                if (messagePager.totalPage <= messagePager.currentPage) {
+                if (data.totalPage!=data.currentPage) {
+                        $("#moreMessage").data("time",data.pageItems[data.pageItems.length-1].createTime);
+                }else{
                     $("#moreMessage").hide();
                 }
+                messagePager=data;
                 $("#messageScroll").scrollTop($("#messagePager .template:eq(0)").height()*(data.pageItems.length+5));
             }, "json");
         })/*
@@ -138,7 +152,7 @@
                 }
             });
             if(value==""&&ishidden){
-                $("#userView li").show();
+                $("#userView .template").show();
                     return;
             }
             if(bool){
@@ -206,7 +220,7 @@
                     <ul class="notifications-box" id="userView">
                         <li  class="template" name="default">
                             <div class="large btn info-icon float-left mrg5R" style="height:45px;">
-                                <img data-src="holder.js/38x38/simple" class="img-small view-field"/>
+                                <img data-src="holder.js/38x38/simple" style="height: 39px;" class="img-small view-field"/>
                             </div>
                             <p><span class="label bg-purple mrg5R">{nickname}</span></p>
                         </li>
