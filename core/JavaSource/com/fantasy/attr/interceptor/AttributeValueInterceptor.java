@@ -48,7 +48,7 @@ public class AttributeValueInterceptor {
         }
         List<PropertyFilter> removeFilters = new ArrayList<PropertyFilter>();
         for (PropertyFilter filter : filters) {
-            if (ClassUtil.getProperty(entityClass, filter.getPropertyName()) == null) {
+            if (ClassUtil.getProperty(entityClass, filter.getPropertyName().split("\\.")[0]) == null) {
                 removeFilters.add(filter);
             }
         }
@@ -58,9 +58,7 @@ public class AttributeValueInterceptor {
             attrCriterions.add(Restrictions.and(Restrictions.eq("attributeValues.attribute.code", filter.getPropertyName()), (Criterion) _method_buildPropertyFilterCriterion.invoke(dao, "attributeValues.value", filter.getPropertyValue(String.class), filter.getMatchType())));
         }
         Criterion[] criterions = (Criterion[]) _method_buildPropertyFilterCriterions.invoke(dao, filters);
-        for (Criterion criterion : attrCriterions) {
-            criterions = ObjectUtil.join(criterions, criterion);
-        }
+        criterions = ObjectUtil.join(criterions, attrCriterions.toArray(new Criterion[attrCriterions.size()]));
         pager = (Pager) _method_findPager.invoke(dao, pager, criterions);
         List<DynaBean> beans = pager.getPageItems();
         for (int i = 0, length = beans.size(); i < length; i++) {
