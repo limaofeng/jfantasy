@@ -34,6 +34,9 @@ public class VersionUtil {
     private static AttributeVersionService attributeVersionService;
 
     public static DynaBean makeDynaBean(DynaBean bean) {
+        if(bean.getVersion() == null){
+            return bean;
+        }
         return createDynaBean(bean.getVersion().getId(), bean);
     }
 
