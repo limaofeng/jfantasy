@@ -4,29 +4,22 @@ import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.attr.util.VersionUtil;
-import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
+import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.objectweb.asm.Opcodes;
-import org.objectweb.asm.Type;
 
 import java.io.IOException;
 import java.util.Arrays;
 
 public class AsmUtilTest implements Opcodes {
 
-    @Test
-    public void asmTest(){
-        Article article = new Article();
-        System.out.println(ClassUtil.forName("int"));
-        System.out.println(Type.getDescriptor(Long.class));
-    }
+    private final static Log logger = LogFactory.getLog(AsmUtilTest.class);
 
     @Test
     public void test() throws IOException, InterruptedException, ClassNotFoundException, IllegalAccessException, InstantiationException {
-
-        Article article = new Article();
-
         AttributeVersion version = new AttributeVersion();
         version.setNumber("temp");
         version.setClassName(Article.class.getName());
@@ -53,13 +46,11 @@ public class AsmUtilTest implements Opcodes {
 
         Class clzz = VersionUtil.makeClass(version);
 
-        System.out.println(AsmUtil.trace(Article.class));
+        logger.debug(AsmUtil.trace(Article.class));
 
-//        System.out.println(AsmUtil.trace(clzz));
-
-
+        logger.debug(" println method");
         for(java.lang.reflect.Method method : clzz.getDeclaredMethods()){
-            System.out.println(method.toString());
+            logger.debug(method.toString());
         }
 
         Article o = (Article)clzz.newInstance();
@@ -76,15 +67,9 @@ public class AsmUtilTest implements Opcodes {
 
         o.setAttributeValues(Arrays.asList(attributeValue,attributeValue1));
 
-        System.out.println(o);
+        Assert.assertEquals(OgnlUtil.getInstance().getValue("test",o),"test");
 
-        System.out.println(OgnlUtil.getInstance().getValue("test",o));
-
-        System.out.println(OgnlUtil.getInstance().getValue("testInt",o));
-
-        System.out.println(OgnlUtil.getInstance().getValue("testInt",o));
-
-//       System.out.println(AsmUtil.trace(Article.class));
+        Assert.assertEquals(OgnlUtil.getInstance().getValue("testInt",o),12);
 
     }
 

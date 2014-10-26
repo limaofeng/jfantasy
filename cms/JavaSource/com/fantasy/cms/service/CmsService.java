@@ -232,6 +232,10 @@ public class CmsService extends BuguSearcher<Article> {
         }
     }
 
+    public List<Article> getArticles(Criterion[] criterions, int size) {
+        return this.articleDao.find(criterions, 0, size);
+    }
+
     /**
      * 文章分类编码唯一
      *
