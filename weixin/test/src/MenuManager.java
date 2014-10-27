@@ -1,18 +1,13 @@
 import com.fantasy.wx.bean.pojo.AccessToken;
 import com.fantasy.wx.util.WeixinUtil;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by zzzhong on 2014/6/30.
- */
 public class MenuManager {
 
-    public static void main(String[] args) {
-        // 调用接口获取access_token
-        //AccessToken at = WeixinUtil.getAccessToken();
-    }
+    @Test
     public void testMessage(){
         Map<String,String> map=new HashMap<String,String>();
         map.put("content","fayayazehong");
