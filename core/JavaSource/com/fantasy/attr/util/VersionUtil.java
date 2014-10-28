@@ -34,6 +34,9 @@ public class VersionUtil {
     private static AttributeVersionService attributeVersionService;
 
     public static DynaBean makeDynaBean(DynaBean bean) {
+        if(bean.getVersion() == null){
+            return bean;
+        }
         return createDynaBean(bean.getVersion().getId(), bean);
     }
 
@@ -208,16 +211,16 @@ public class VersionUtil {
 
 
     public static Object saveValue(List<AttributeValue> attributeValues, String attributeCode, String value) {
+        logger.debug("saveValue : " + attributeCode +  "==>" + value);
         AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attributeCode);
         AtomicReference<String> saveValue = new AtomicReference<String>(value);//TODO 保存转换之后的值
         attributeValue.setValue(saveValue.get());
-        System.out.println("saveValue==>" + value);
         return value;
     }
 
-    public static Object getValue(List<AttributeValue> attributeValues, String test) {
-        AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", test);
-        System.out.println("getValue==>" + attributeValue.getValue());
+    public static Object getValue(List<AttributeValue> attributeValues, String attributeCode) {
+        AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attributeCode);
+        logger.debug("getValue : " + attributeCode +  "==>" + attributeValue.getValue());
         Class<?> clazz = ClassUtil.forName(attributeValue.getAttribute().getAttributeType().getDataType());
         if (ClassUtil.isPrimitiveOrWrapper(clazz)) {
             return ClassUtil.newInstance(clazz, attributeValue.getValue());
