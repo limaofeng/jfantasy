@@ -6,6 +6,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -20,6 +21,7 @@ import java.util.List;
 @Table(name = "SYS_DD")
 @IdClass(DataDictionaryKey.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "parent", "children"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DataDictionary extends BaseBusEntity {
 
     /**

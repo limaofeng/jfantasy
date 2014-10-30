@@ -6,8 +6,7 @@
 			<param name="ConversionPattern" value="%-d{HH:mm:ss,SSS} %p [%c]%M(line:%L)%m%n" />
 		</layout>
 	</appender>
-	
-	
+
 	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="DatePattern" value=".yyyy-MM-dd" />
 		<param name="Encoding" value="UTF-8" />
@@ -29,7 +28,9 @@
 	-->
  	<category name="com.fantasy.framework">
  		<priority value="DEBUG" />
+        <!--
  		<appender-ref ref="CONSOLE" />
+ 		-->
  	</category>
 	<category name="org.mybatis.spring">
 		<priority value="ERROR" />
