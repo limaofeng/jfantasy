@@ -18,6 +18,8 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.type.TypeReference;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -36,6 +38,7 @@ import java.util.List;
 @Indexed
 @Entity
 @Table(name = "MALL_GOODS")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore", "category"})
 public class Goods extends BaseBusEntity /*implements DynaBean*/ {
 

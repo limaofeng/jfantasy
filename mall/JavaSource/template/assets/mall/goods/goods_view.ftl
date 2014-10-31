@@ -1,4 +1,5 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
+<@s.set name="category" value="%{goods.category}"/>
 <script type="text/javascript">
 $(function(){
     var list = $('#goodsParameter').list($('#goodsParameterForm'),<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(goods.customGoodsParameterValues)" escapeHtml="false" default="[]"/>);

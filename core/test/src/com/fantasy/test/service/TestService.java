@@ -7,9 +7,6 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-/**
- * Created by hebo on 2014/9/18.
- */
 @Repository
 public class TestService {
 

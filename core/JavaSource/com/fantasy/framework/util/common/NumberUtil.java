@@ -231,6 +231,10 @@ public class NumberUtil {
 		return nf.format(num);
 	}
 
+    public static String toChinese(int number) {
+        return toChinese(number+"");
+    }
+
 	public static String toChinese(String number) {
 		return toChinese(number, 0, numberSimplifiedChinese, unitSimplifiedChinese);
 	}

@@ -5,9 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-/**
- * Created by hebo on 2014/9/18.
- */
+
 @Entity
 @Table(name = "TESTBEAN")
 public class Testbean {

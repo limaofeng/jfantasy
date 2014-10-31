@@ -6,7 +6,7 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-framework</artifactId>
     <packaging>pom</packaging>
-    <version>2.5.2.Alphal</version>
+    <version>2.5.8.Alphal</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -16,6 +16,7 @@
         <mysql-version>5.1.22</mysql-version>
         <jmagick-version>6.6.9</jmagick-version>
         <org.slf4j-version>1.5.8</org.slf4j-version>
+        <servlet.api-version>2.5</servlet.api-version>
         <commons-net-version>3.3</commons-net-version>
         <htmlcleaner-version>2.8</htmlcleaner-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
@@ -24,7 +25,7 @@
         <commons-email-version>1.3.2</commons-email-version>
         <mybatis-spring-version>1.2.2</mybatis-spring-version>
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
-        <com.fantasy-version>2.5.2.Alphal</com.fantasy-version>
+        <com.fantasy-version>2.5.8.Alphal</com.fantasy-version>
         <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
         <org.hibernate-version>4.3.5.Final</org.hibernate-version>
@@ -62,6 +63,7 @@
         </extensions>
         <directory>target</directory>
         <finalName>${project.artifactId}-${project.version}</finalName>
+        <sourceDirectory>JavaSource</sourceDirectory>
         <resources>
             <resource>
                 <directory>resources</directory>
@@ -76,12 +78,19 @@
                 </includes>
             </resource>
         </resources>
+        <outputDirectory>target/classes</outputDirectory>
         <testSourceDirectory>test/src</testSourceDirectory>
         <testResources>
             <testResource>
                 <directory>test/config</directory>
             </testResource>
         </testResources>
+        <testOutputDirectory>target/test-classes</testOutputDirectory>
+        <pluginManagement>
+            <plugins>
+
+            </plugins>
+        </pluginManagement>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -171,68 +180,63 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.12</version>
+                <version>2.4.2</version>
                 <configuration>
-                    <suiteXmlFiles>
-                        <suiteXmlFile>testng.xml</suiteXmlFile>
-                    </suiteXmlFiles>
+                    <includes>
+                        <include>**/*Test*.java</include>
+                    </includes>
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-clover2-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <skip>true</skip>
-                    <targetPercentage>1%</targetPercentage>
-                    <jdk>1.6</jdk>
-                    <encoding>utf-8</encoding>
-                    <excludes>
-                        <exclude>**/*Dummy*.java</exclude>
-                    </excludes>
-                    <licenseLocation>${clover.licenseLocation}</licenseLocation>
-                </configuration>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.1</version>
                 <executions>
                     <execution>
-                        <id>main</id>
-                        <phase>verify</phase>
+                        <phase>site</phase>
                         <goals>
-                            <goal>instrument</goal>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                    <execution>
-                        <id>site</id>
-                        <phase>pre-site</phase>
-                        <goals>
-                            <goal>instrument</goal>
+                            <goal>cobertura</goal>
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <check>true</check>
+                    <instrumentation>
+                        <ignores>
+                            <ignore>com.fantasy.**.web.*</ignore>
+                            <ignore>com.fantasy.**.typeConverter.*</ignore>
+                        </ignores>
+                        <excludes>
+                            <exclude>**/*Test.class</exclude>
+                            <exclude>**/Test*.class</exclude>
+                            <exclude>**/web/*.class</exclude>
+                            <exclude>**/bean/typeConverter/*.class</exclude>
+                        </excludes>
+                    </instrumentation>
+                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <reporting>
+        <outputDirectory>target/site</outputDirectory>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jxr-plugin</artifactId>
+                <version>2.4</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>cobertura-maven-plugin</artifactId>
+                <version>2.5.1</version>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-report-plugin</artifactId>
                 <version>2.9</version>
                 <configuration>
                     <showSuccess>false</showSuccess>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>com.atlassian.maven.plugins</groupId>
-                <artifactId>maven-clover2-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <generateHtml>true</generateHtml>
-                    <generatePdf>true</generatePdf>
-                    <generateXml>true</generateXml>
-                    <generateHistorical>true</generateHistorical>
-                    <licenseLocation>${clover.licenseLocation}</licenseLocation>
                 </configuration>
             </plugin>
         </plugins>

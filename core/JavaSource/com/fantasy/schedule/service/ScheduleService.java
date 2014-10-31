@@ -450,4 +450,12 @@ public class ScheduleService {
         }
     }
 
+    public void shutdown(){
+        try {
+            this.scheduler.shutdown();
+        } catch (SchedulerException e) {
+            logger.error(e.getMessage(), e);
+        }
+    }
+
 }

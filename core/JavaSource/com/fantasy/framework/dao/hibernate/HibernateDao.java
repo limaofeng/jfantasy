@@ -251,7 +251,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                         Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
                         if (fkObj != null) {
                             addObjects.add(BeanUtil.copyProperties(fkObj, fk));
-                        }else{
+                        } else {
                             addObjects.add(fk);
                         }
                     }
@@ -320,7 +320,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                         Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
                         if (fkObj != null) {
                             addObjects.add(BeanUtil.copyProperties(fkObj, fk));
-                        }else{
+                        } else {
                             addObjects.add(fk);
                         }
                     }
@@ -541,7 +541,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     }
 
     public Query createQuery(String queryString, Object... values) {
-        Assert.hasText(queryString, "queryString不能为空");
+        Assert.hasText("queryString不能为空", queryString);
         Query query = getSession().createQuery(queryString);
         if (values != null) {
             for (int i = 0; i < values.length; i++) {
@@ -636,6 +636,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         for (String orderBy : orderBys) {
             createAlias(criteria, alias, orderBy);
         }
+        criteria.setCacheable(true);
         return criteria;
     }
 
@@ -672,7 +673,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         return query;
     }
 
-    protected <Q extends Query,C> Q distinct(Q query, Class<C> resultClass) {
+    protected <Q extends Query, C> Q distinct(Q query, Class<C> resultClass) {
         AliasToBeanResultTransformer transformer = new AliasToBeanResultTransformer(resultClass);
         if (query instanceof SQLQuery) {
             transformer.custom((SQLQuery) query);
@@ -1085,11 +1086,11 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Map> find(List<PropertyFilter> filters,Projection[] projections){
+    public List<Map> find(List<PropertyFilter> filters, Projection[] projections) {
         Criterion[] criterions = this.buildPropertyFilterCriterions(filters);
         Criteria c = createCriteria(criterions);
         ProjectionList projectionList = Projections.projectionList();
-        for(Projection projection : projections){
+        for (Projection projection : projections) {
             projectionList.add(projection);
         }
         c.setProjection(projectionList);
@@ -1097,24 +1098,24 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         return c.list();
     }
 
-    public Map findUnique(List<PropertyFilter> filters,Projection[] projections){
+    public Map findUnique(List<PropertyFilter> filters, Projection[] projections) {
         Criterion[] criterions = this.buildPropertyFilterCriterions(filters);
         Criteria c = createCriteria(criterions);
         ProjectionList projectionList = Projections.projectionList();
-        for(Projection projection : projections){
+        for (Projection projection : projections) {
             projectionList.add(projection);
         }
         c.setProjection(projectionList);
         c.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
-        return (Map)c.uniqueResult();
+        return (Map) c.uniqueResult();
     }
 
     @SuppressWarnings("unchecked")
-    public <C> List<C> find(List<PropertyFilter> filters,Projection[] projections,Class<C> resultClass){
+    public <C> List<C> find(List<PropertyFilter> filters, Projection[] projections, Class<C> resultClass) {
         Criterion[] criterions = this.buildPropertyFilterCriterions(filters);
         Criteria c = createCriteria(criterions);
         ProjectionList projectionList = Projections.projectionList();
-        for(Projection projection : projections){
+        for (Projection projection : projections) {
             projectionList.add(projection);
         }
         c.setProjection(projectionList);

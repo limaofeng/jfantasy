@@ -6,8 +6,7 @@
 			<param name="ConversionPattern" value="%-d{HH:mm:ss,SSS} %p [%c]%M(line:%L)%m%n" />
 		</layout>
 	</appender>
-	
-	
+
 	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="DatePattern" value=".yyyy-MM-dd" />
 		<param name="Encoding" value="UTF-8" />
@@ -27,10 +26,12 @@
 		<param name="sql" value="INSERT INTO TBL_CORE_AUDIT_LOG(id,priority,log_date,class_name,method,msg,user_id,url,parameter,ip,module_name,oper_type) VALUES (SEQ_TBL_AUDITLOG_PK.nextval,'%p',to_date('%d{yyyy-MM-dd HH:mm:ss}', 'yyyy-MM-dd HH24:Mi.SS'),'%C','%M','%m','%X{userId}','%X{url}','%X{parameter}','%X{ip}','%X{moduleName}','%X{operType}')" />
 	</appender>
 	-->
-<!-- 	<category name="org.springframework"> -->
-<!-- 		<priority value="ERROR" /> -->
-<!-- 		<appender-ref ref="CONSOLE" /> -->
-<!-- 	</category>	 -->
+ 	<category name="com.fantasy.framework">
+ 		<priority value="DEBUG" />
+        <!--
+ 		<appender-ref ref="CONSOLE" />
+ 		-->
+ 	</category>
 	<category name="org.mybatis.spring">
 		<priority value="ERROR" />
 		<appender-ref ref="CONSOLE" />

@@ -3,7 +3,6 @@ package com.fantasy.cms.ws.client;
 import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
 import com.fantasy.cms.ws.dto.ArticlePagerResult;
-import com.fantasy.com.ws.client.ArticleService;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.uitl.Constants;

@@ -143,7 +143,6 @@ public class GoodsAction extends ActionSupport {
      */
     public String goodsEdit(Long id, Long categoryId) {
         this.attrs.put("goods", goodsService.getGoods(id));
-        this.attrs.put("category", goodsService.getCategory(categoryId));
         return SUCCESS;
     }
 

@@ -173,13 +173,13 @@
                 </a>
                 <ul class="dropdown-menu float-right">
                     <li>
-                        <a href="<@s.url namespace="/mall/goods" action="view?id={id}&categoryId=%{category.id}"/>" class="view" title="" target="after:closest('#page-content')">
+                        <a href="<@s.url namespace="/mall/goods" action="view?id={id}"/>" class="view" title="" target="after:closest('#page-content')">
                             <i class="glyph-icon icon-external-link-sign mrg5R"></i>
                             <@s.text name='mall.goods.view'/>
                         </a>
                     </li>
                     <li>
-                        <a title="" class="edit" href="<@s.url namespace="/mall/goods" action="edit?id={id}&categoryId=%{category.id}"/>" target="after:closest('#page-content')">
+                        <a href="<@s.url namespace="/mall/goods" action="edit?id={id}"/>" class="edit"  title="" target="after:closest('#page-content')">
                             <i class="glyph-icon icon-edit mrg5R"></i>
                         <@s.text name='mall.goods.edit'/>
                         </a>

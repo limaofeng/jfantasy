@@ -1,4 +1,4 @@
-package com.fantasy.com.ws.client;
+package com.fantasy.cms.ws.client;
 
 import com.fantasy.cms.ws.IArticleService;
 import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
@@ -8,9 +8,6 @@ import com.fantasy.framework.ws.axis2.WebServiceClient;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 
-/**
- * Created by hebo on 2014/10/13.
- */
 public class ArticleService extends WebServiceClient implements IArticleService {
 
     public ArticleService(){

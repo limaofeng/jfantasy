@@ -54,6 +54,9 @@
         <action name="edit" class="com.fantasy.security.web.UserAction" method="edit">
             <result type="freemarker">/template/%{pageTheme}/security/user_edit.ftl</result>
         </action>
+        <action name="rpwd" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/security/user_resetpwd.ftl</result>
+        </action>
         <action name="save" class="com.fantasy.security.web.UserAction" method="save"/>
         <action name="resetpwd" class="com.fantasy.security.web.UserAction" method="resetpwd"/>
         <action name="delete" class="com.fantasy.security.web.UserAction" method="delete"/>
