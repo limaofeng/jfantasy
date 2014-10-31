@@ -31,4 +31,7 @@ public class EventService implements IEventService {
     public String textMessage(Message tm){
         return null;
     }
+    public String event(Message em) {
+        return null;
+    }
 }
