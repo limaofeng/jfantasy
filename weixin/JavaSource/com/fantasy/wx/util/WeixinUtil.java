@@ -310,7 +310,7 @@ public class WeixinUtil {
         // 拼装群发信息的url
         String url = message_create_url.replace("ACCESS_TOKEN", accessToken);
         // 将群发信息对象转换成json字符串
-        String gmjson =JSON.serialize(gm);
+        String gmjson =JSON.text().serialize(gm);
         // 调用群发接口
         String json = httpRequest(url, "GET", gmjson);
         if (null == json) {

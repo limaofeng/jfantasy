@@ -35,7 +35,7 @@ public class CoreService {
      * @param request
      * @return
      */
-    public  String processRequest(HttpServletRequest request) {
+    public String processRequest(HttpServletRequest request) {
         String respMessage = null;
         String urlPath=request.getScheme()+"://"+request.getServerName()+request.getContextPath();
         try {
@@ -47,7 +47,7 @@ public class CoreService {
             baseMessage=weixinUtil.toBean(requestMap,baseMessage.getClass());
             messageService.save(baseMessage);
 
-            Message resultMessage=WeixinUtil.toBean(baseMessage,Message.class);
+            Message resultMessage= WeixinUtil.toBean(baseMessage, Message.class);
             resultMessage.setMsgType("transfer_customer_service");
             respMessage = MessageUtil.objectMessageToXml(baseMessage);
 
@@ -61,6 +61,10 @@ public class CoreService {
                 // 订阅
                 if (baseMessage.getEvent().equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
                     result=eventService.focusOnEven(baseMessage);
+                }
+                // 自定义菜单点击事件
+                else if (baseMessage.getEvent().equals(MessageUtil.EVENT_TYPE_CLICK)) {
+                    result= eventService.event(baseMessage);
                 }
             }
             //返回微信消息
