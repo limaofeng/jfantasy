@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<bean id="sqlSessionFactoryBean" class="com.fantasy.framework.dao.mybatis.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="configLocation" value="classpath:mybatis/mybatis-config.xml" />
+		<property name="mybatisProperties">
+			<props>
+				<prop key="mybatis.dialect">com.fantasy.framework.dao.mybatis.dialect.MySQLDialect</prop>
+			</props>
+		</property>
+	</bean>
+
+	<bean class="com.fantasy.framework.dao.mybatis.MapperScannerConfigurer">
+		<property name="basePackage" value="com.fantasy.framework;" />
+		<property name="markerInterface" value="com.fantasy.framework.dao.mybatis.sqlmapper.SqlMapper" />
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean" />
+	</bean>
+
+</beans>
