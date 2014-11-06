@@ -42,6 +42,9 @@ public class AttributeVersionServiceTest {
         version.setClassName(className);
         version.setNumber(number);
         attributeVersionService.save(version);
+
+        logger.debug("new version id = " + version.getId());
+
     }
 
     @Test
