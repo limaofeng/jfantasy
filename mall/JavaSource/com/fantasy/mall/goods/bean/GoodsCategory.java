@@ -94,7 +94,7 @@ public class GoodsCategory extends BaseBusEntity {
     /**
      * 属性版本表
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ARTICLE_VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY_VERSION"))
     private AttributeVersion goodsVersion;
     /**
