@@ -115,7 +115,6 @@ public class PropertiesHelperTest {
     @Test
     public void testGetProperty() throws Exception {
         PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
-        PropertiesHelper.load("props/application.properties");
 
         //普通测试
         logger.debug(helper.getProperty("test"));
@@ -130,9 +129,11 @@ public class PropertiesHelperTest {
         logger.debug("System getProperty by key(username) = " + System.getProperty("username"));
         logger.debug("System getenv by key(username) = " + System.getenv("username"));
         logger.debug(helper.getProperty("testenv"));
+
         Assert.assertEquals(helper.getProperty("testenv"), "username=limaofeng");
         System.setProperty("username", "haolue");
         logger.debug(helper.getProperty("testenv"));
+
         Assert.assertEquals(helper.getProperty("testenv"), "username=haolue");
     }
 
