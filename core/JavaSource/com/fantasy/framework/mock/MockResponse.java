@@ -117,11 +117,6 @@ public class MockResponse implements HttpServletResponse {
     public void setContentLength(int i) {
     }
 
-    @Override
-    public void setContentLengthLong(long len) {
-
-    }
-
     public void setContentType(String s) {
     }
 
@@ -155,16 +150,6 @@ public class MockResponse implements HttpServletResponse {
 
     public String getHeader(String s) {
         return this.responseHeaders.get(s);
-    }
-
-    @Override
-    public Collection<String> getHeaders(String name) {
-        return Arrays.asList(this.getHeader(name));
-    }
-
-    @Override
-    public Collection<String> getHeaderNames() {
-        return null;
     }
 
     public int getStatus() {

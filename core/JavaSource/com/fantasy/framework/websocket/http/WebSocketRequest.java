@@ -5,7 +5,6 @@ import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -126,19 +125,6 @@ public class WebSocketRequest extends MockRequest {
             return inputStream.skip(n);
         }
 
-        @Override
-        public boolean isFinished() {
-            return false;
-        }
-
-        @Override
-        public boolean isReady() {
-            return false;
-        }
-
-        @Override
-        public void setReadListener(ReadListener readListener) {
-        }
     }
 
 }

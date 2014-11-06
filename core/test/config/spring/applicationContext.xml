@@ -122,6 +122,4 @@
 
     <import resource="classpath:spring/applicationContext-hibernate.xml"/>
 
-    <import resource="classpath:spring/applicationContext-schedule.xml"/>
-
 </beans>
