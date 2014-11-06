@@ -19,13 +19,6 @@
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-core</artifactId>
             <version>${com.fantasy-version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <version>${org.springframework-version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax.servlet</groupId>
