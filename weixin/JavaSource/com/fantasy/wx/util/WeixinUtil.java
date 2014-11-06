@@ -50,7 +50,7 @@ public class WeixinUtil {
         objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
     // 菜单创建（POST） 限100（次/天）
-    public  String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
+    public String menu_create_url = "https://api.weixin.qq.com/cgi-bin/menu/create?access_token=ACCESS_TOKEN";
     // 获取access_token的接口地址（GET） 限200（次/天）
     public String access_token_url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=APPID&secret=APPSECRET";
     //获取用户基本信息的接口地址（GET）
@@ -67,6 +67,8 @@ public class WeixinUtil {
     public String qrcode="https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=ACCESS_TOKEN";
     //发送客服消息
     public String messageUrl="https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=ACCESS_TOKEN";
+    //微信请求返回状态码
+    private Integer errcode;
     /**
      * 获取access_token
      *
@@ -92,7 +94,7 @@ public class WeixinUtil {
      * @param requestUrl 请求地址
      * @param requestMethod 请求方式（GET、POST）
      * @param outputStr 提交的数据
-     * @return JSONObject(通过JSONObject.get(key)的方式获取json对象的属性值)
+     * @return null表示请求失败不为空表示请求成功
      */
     public String httpRequest(String requestUrl, String requestMethod, String outputStr) {
         StringBuffer buffer = new StringBuffer();
@@ -144,9 +146,10 @@ public class WeixinUtil {
             Map<String,Object> map= (Map<String, Object>) JSON.deserialize(json);
             if(map.containsKey("errcode")){
                 System.out.println("errcode:"+map.get("errcode")+" errmsg:"+map.get("errmsg"));
-                if((Integer)map.get("errcode")==0){
-                    return "0";
-                }
+                errcode=(Integer)map.get("errcode");
+                if(errcode==0)
+                    return "success";
+                return map.get("errcode").toString();
             }else{
                 return json;
             }
@@ -169,8 +172,8 @@ public class WeixinUtil {
         String jsonCode = JSON.serialize(qcode);
         // 调用接口创建菜单
         String json = httpRequest(requestUrl, "POST", jsonCode);
-        if (null != json) {
-            code=JSON.deserialize(json, Code.class);
+        if (json!=null) {
+            code= JSON.deserialize(json, Code.class);
         }else{
             System.out.println("创建二维码失败!");
         }
@@ -186,7 +189,7 @@ public class WeixinUtil {
         WatchUserList watchUserList=null;
         String json = httpRequest(requestUrl, "GET", null);
         if(json!=null){
-            watchUserList=JSON.deserialize(json, WatchUserList.class);
+            watchUserList= JSON.deserialize(json, WatchUserList.class);
         } else{
             System.out.println("获取WatchUserList失败");
         }
@@ -204,10 +207,10 @@ public class WeixinUtil {
         System.out.println("requestUrl"+requestUrl);
         String json = httpRequest(requestUrl, "GET", null);
         // 如果请求成功
-        if (null == json) {
-            System.out.println("获取userInfo失败");
+        if (json!=null) {
+            ui= JSON.deserialize(json, UserInfo.class);
         }else{
-            ui=JSON.deserialize(json, UserInfo.class);
+            System.out.println("获取userInfo失败");
         }
         return ui;
     }
@@ -221,7 +224,7 @@ public class WeixinUtil {
         System.out.println("getOpenId"+requestUrl);
         String json = httpRequest(requestUrl, "GET", null);
         // 如果请求成功
-        if (null == json) {
+        if (json==null ) {
             System.out.println("获取openId失败");
         }else{
             Map<String,String> map= (Map<String, String>) JSON.deserialize(json);
@@ -284,20 +287,18 @@ public class WeixinUtil {
 
         if (null == json) {
             System.out.println("创建菜单失败");
-            return 1;
         }
-        return 0;
+        return errcode;
     }
     public int deleteMenu(String accessToken){
         String url="https://api.weixin.qq.com/cgi-bin/menu/delete?access_token=ACCESS_TOKEN";
         url = url.replace("ACCESS_TOKEN", accessToken);
         // 调用接口创建菜单
         String json = httpRequest(url, "POST", "");
-        if (null == json) {
+        if (json==null) {
             System.out.println("删除菜单失败");
-            return 1;
         }
-        return 0;
+        return errcode;
     }
     /*
      * 创建群发消息
@@ -310,14 +311,13 @@ public class WeixinUtil {
         // 拼装群发信息的url
         String url = message_create_url.replace("ACCESS_TOKEN", accessToken);
         // 将群发信息对象转换成json字符串
-        String gmjson =JSON.text().serialize(gm);
+        String gmjson = JSON.text().serialize(gm);
         // 调用群发接口
         String json = httpRequest(url, "GET", gmjson);
-        if (null == json) {
+        if (json==null) {
             System.out.println("创建群发消息失败");
-            return 1;
         }
-        return 0;
+        return errcode;
     }
     /*
      * 上传图文消息素材
@@ -428,9 +428,6 @@ public class WeixinUtil {
         }
         return result;
     }
-    public void init(){
-
-    }
 
     /**
      * 创建客服回复消息
@@ -439,7 +436,7 @@ public class WeixinUtil {
      * @param type text,image...
      * @param param 微信官网各种类型的信息回复格式
      */
-    public boolean message(AccessToken at,String openId,String type,Map<?,?> param){
+    public int message(AccessToken at,String openId,String type,Map<?,?> param){
         Map<String,Object> map=new HashMap<String,Object>();
         map.put("touser",openId);
         map.put("msgtype",type);
@@ -447,7 +444,7 @@ public class WeixinUtil {
         String requestUrl = messageUrl.replace("ACCESS_TOKEN", at.getToken());
         String jsonCode = JSON.text().serialize(map);
         String result=httpRequest(requestUrl, "POST", jsonCode);
-        return result!=null;
+        return errcode;
     }
     public static <T> T toBean(Object obj, Class<T> newClass) {
         if (obj == null)
@@ -455,12 +452,15 @@ public class WeixinUtil {
         return (T) JSON.deserialize(JSON.serialize(obj), newClass);
     }
     public static AccessToken firstAccessToken(){
-        if(firstAccessToken!=null) return firstAccessToken;
         if(WeixinUtil.accessToken!=null){
             Object[] keys= (Object[]) WeixinUtil.accessToken.keySet().toArray();
             if(keys.length>=1)
-                firstAccessToken=WeixinUtil.accessToken.get(keys[0]);
+                firstAccessToken= WeixinUtil.accessToken.get(keys[0]);
         }
         return firstAccessToken;
+    }
+    public  static  boolean isListEmpty(List<Object> list){
+
+        return true;
     }
 }

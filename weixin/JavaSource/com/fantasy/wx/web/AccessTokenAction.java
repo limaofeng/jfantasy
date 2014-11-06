@@ -54,7 +54,7 @@ public class AccessTokenAction extends ActionSupport {
     }
 
     public String save(final AccessToken at) throws JobExecutionException {
-        JobDetail jobDetail = this.scheduleService.addJob(JobKey.jobKey("weixing", "accessToken"), AccessTokenJob.class);
+        JobDetail jobDetail = this.scheduleService.addJob(JobKey.jobKey("weixin", "accessToken"), AccessTokenJob.class);
         this.scheduleService.removeTrigdger(TriggerKey.triggerKey("accessToken-" + at.getAppid()));
         // 整点触发
         this.scheduleService.addTrigger(jobDetail.getKey(), TriggerKey.triggerKey("accessToken-" + at.getAppid()), 1000*60*60*2,1000000000, new HashMap<String, Object>() {

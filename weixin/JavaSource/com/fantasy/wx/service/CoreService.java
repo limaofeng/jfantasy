@@ -1,7 +1,8 @@
 package com.fantasy.wx.service;
 
 
-import com.fantasy.wx.bean.req.Message;
+import com.fantasy.framework.util.concurrent.LinkedQueue;
+import com.fantasy.wx.bean.pojo.Message;
 import com.fantasy.wx.util.MessageUtil;
 import com.fantasy.wx.util.WeixinUtil;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,12 @@ public class CoreService {
     public IEventService eventService;
     @Resource
     private MessageService messageService;
+    @Resource
+    private UserInfoService userInfoService;
     //微信工具类
     private WeixinUtil weixinUtil=new WeixinUtil();
+
+    private LinkedQueue<Message> messageQueue = new LinkedQueue();
     /**
      * 处理微信发来的请求
      *
@@ -42,34 +47,34 @@ public class CoreService {
             // xml请求解析
             Map<String, String> requestMap = MessageUtil.parseXml(request);
             requestMap=lowerJSON(requestMap);
+
             //保存微信触发事件
-            Message baseMessage=new Message();
-            baseMessage=weixinUtil.toBean(requestMap,baseMessage.getClass());
+            Message baseMessage=weixinUtil.toBean(requestMap,Message.class);
+            baseMessage.setType("accept");
             messageService.save(baseMessage);
 
-            Message resultMessage= WeixinUtil.toBean(baseMessage, Message.class);
+            //转发消息到多客服
+            Message resultMessage=weixinUtil.toBean(requestMap,Message.class);
             resultMessage.setMsgType("transfer_customer_service");
-            respMessage = MessageUtil.objectMessageToXml(baseMessage);
+            respMessage = MessageUtil.objectMessageToXml(resultMessage);
 
-            String result=null;
             // 文本消息
             if (baseMessage.getMsgType().equals(MessageUtil.REQ_MESSAGE_TYPE_TEXT)) {
-                result=eventService.textMessage(baseMessage);
+                userInfoService.setUnReadSize(baseMessage.getUserInfo());
+                messageQueue.put(baseMessage);
+                return eventService.textMessage(baseMessage);
             }
             // 事件推送
             else if (baseMessage.getMsgType().equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
                 // 订阅
                 if (baseMessage.getEvent().equals(MessageUtil.EVENT_TYPE_SUBSCRIBE)) {
-                    result=eventService.focusOnEven(baseMessage);
+                    return eventService.focusOnEven(baseMessage);
                 }
                 // 自定义菜单点击事件
                 else if (baseMessage.getEvent().equals(MessageUtil.EVENT_TYPE_CLICK)) {
-                    result= eventService.event(baseMessage);
+                    return eventService.event(baseMessage);
                 }
             }
-            //返回微信消息
-            if(result!=null)
-                return result;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -81,5 +86,14 @@ public class CoreService {
             map.put(key.replaceFirst(key.substring(0, 1),key.substring(0, 1).toLowerCase()),json.get(key));
         }
         return map;
+    }
+
+    public Message getMessage(){
+        try {
+            return messageQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

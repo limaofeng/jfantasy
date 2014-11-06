@@ -54,7 +54,11 @@ public class UserInfo {
     //最后消息时间
     @Column(name = "LAST_MESSAGE_TIME")
     private Long lastMessageTime;
-
+    //最后查看消息时间
+    @Column(name = "LAST_LOOK_TIME")
+    private Long lastLookTime;
+    @Column(name = "UN_READ_SIZE")
+    private Integer unReadSize;
 
     public String getOpenid() {
         return openid;
@@ -164,5 +168,21 @@ public class UserInfo {
 
     public void setLastMessageTime(Long lastMessageTime) {
         this.lastMessageTime = lastMessageTime;
+    }
+
+    public Long getLastLookTime() {
+        return lastLookTime;
+    }
+
+    public void setLastLookTime(Long lastLookTime) {
+        this.lastLookTime = lastLookTime;
+    }
+
+    public Integer getUnReadSize() {
+        return unReadSize;
+    }
+
+    public void setUnReadSize(Integer unReadSize) {
+        this.unReadSize = unReadSize;
     }
 }

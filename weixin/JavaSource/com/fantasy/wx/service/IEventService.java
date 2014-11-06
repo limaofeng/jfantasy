@@ -1,6 +1,6 @@
 package com.fantasy.wx.service;
 
-import com.fantasy.wx.bean.req.Message;
+import com.fantasy.wx.bean.pojo.Message;
 
 /**
  * Created by zzzhong on 2014/10/17.

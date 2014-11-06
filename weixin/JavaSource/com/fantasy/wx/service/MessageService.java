@@ -3,9 +3,8 @@ package com.fantasy.wx.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.bean.pojo.UserInfo;
-import com.fantasy.wx.bean.req.Message;
+import com.fantasy.wx.bean.pojo.Message;
 import com.fantasy.wx.dao.MessageDao;
-import com.fantasy.wx.dao.UserInfoDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,7 +21,7 @@ public class MessageService {
     @Resource
     private MessageDao messageDao;
     @Resource
-    private UserInfoDao userInfoDao;
+    private UserInfoService userInfoService;
 
     /**
      * 列表查询
@@ -34,16 +33,24 @@ public class MessageService {
      * @return
      */
     public Pager<Message> findPager(Pager<Message> pager, List<PropertyFilter> filters) {
+        for(PropertyFilter pf:filters){
+            if(pf.getFilterName().equals("EQS_userInfo.openid")){
+                 userInfoService.refreshMessage(pf.getPropertyValue().toString());
+            }
+        }
         return this.messageDao.findPager(pager, filters);
     }
 
     public Message save(Message message){
-        if(message.getUserInfo()!=null&&message.getUserInfo().getOpenid()!=null){
-            UserInfo ui=userInfoDao.get(message.getUserInfo().getOpenid());
-            long createTime=new Date().getTime();
-            message.setCreateTime(createTime);
+        UserInfo ui=userInfoService.getUserInfo(message.getUserInfo().getOpenid());
+        long createTime=new Date().getTime();
+        message.setCreateTime(createTime);
+        if(ui!=null){
             ui.setLastMessageTime(createTime);
-            userInfoDao.save(ui);
+            if(message.getType().equals("send")){
+                ui.setLastLookTime(createTime);
+            }
+            userInfoService.save(ui);
         }
         this.messageDao.save(message);
         return message;

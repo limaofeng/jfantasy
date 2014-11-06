@@ -39,6 +39,11 @@
             <version>${junit-version}</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-websocket</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,7 +1,7 @@
 package com.fantasy.wx.dao;
 
 import com.fantasy.framework.dao.hibernate.HibernateDao;
-import com.fantasy.wx.bean.req.Message;
+import com.fantasy.wx.bean.pojo.Message;
 import org.springframework.stereotype.Repository;
 
 /**
