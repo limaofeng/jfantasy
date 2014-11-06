@@ -137,11 +137,6 @@ public class MockRequest implements HttpServletRequest {
         return null;
     }
 
-    @Override
-    public String changeSessionId() {
-        return null;
-    }
-
     public boolean isRequestedSessionIdValid() {
         return false;
     }
@@ -154,41 +149,8 @@ public class MockRequest implements HttpServletRequest {
         return false;
     }
 
-    /**
-     * @deprecated
-     */
     public boolean isRequestedSessionIdFromUrl() {
         return false;
-    }
-
-    @Override
-    public boolean authenticate(HttpServletResponse response) throws IOException, ServletException {
-        return false;
-    }
-
-    @Override
-    public void login(String username, String password) throws ServletException {
-
-    }
-
-    @Override
-    public void logout() throws ServletException {
-
-    }
-
-    @Override
-    public Collection<Part> getParts() throws IOException, ServletException {
-        return null;
-    }
-
-    @Override
-    public Part getPart(String name) throws IOException, ServletException {
-        return null;
-    }
-
-    @Override
-    public <T extends HttpUpgradeHandler> T upgrade(Class<T> handlerClass) throws IOException, ServletException {
-        return null;
     }
 
     public Object getAttribute(String s) {
@@ -209,11 +171,6 @@ public class MockRequest implements HttpServletRequest {
 
     public int getContentLength() {
         return this.contentLength;
-    }
-
-    @Override
-    public long getContentLengthLong() {
-        return 0;
     }
 
     public String getContentType() {
@@ -292,9 +249,6 @@ public class MockRequest implements HttpServletRequest {
         return null;
     }
 
-    /**
-     * @deprecated
-     */
     public String getRealPath(String s) {
         return null;
     }
@@ -313,41 +267,6 @@ public class MockRequest implements HttpServletRequest {
 
     public int getLocalPort() {
         return this.localPort;
-    }
-
-    @Override
-    public ServletContext getServletContext() {
-        return null;
-    }
-
-    @Override
-    public AsyncContext startAsync() throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public AsyncContext startAsync(ServletRequest servletRequest, ServletResponse servletResponse) throws IllegalStateException {
-        return null;
-    }
-
-    @Override
-    public boolean isAsyncStarted() {
-        return false;
-    }
-
-    @Override
-    public boolean isAsyncSupported() {
-        return false;
-    }
-
-    @Override
-    public AsyncContext getAsyncContext() {
-        return null;
-    }
-
-    @Override
-    public DispatcherType getDispatcherType() {
-        return null;
     }
 
     public void setQueryString(String s) {

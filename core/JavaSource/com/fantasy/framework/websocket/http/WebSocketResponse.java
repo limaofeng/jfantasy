@@ -3,7 +3,6 @@ package com.fantasy.framework.websocket.http;
 import com.fantasy.framework.mock.MockResponse;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -106,13 +105,5 @@ public class WebSocketResponse extends MockResponse {
             outputStream.write(b);
         }
 
-        @Override
-        public boolean isReady() {
-            return false;
-        }
-
-        @Override
-        public void setWriteListener(WriteListener writeListener) {
-        }
     }
 }

@@ -1,7 +1,10 @@
 package com.fantasy.mall.goods.service;
 
+import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.service.AttributeVersionService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.mall.goods.bean.Goods;
+import com.fantasy.mall.goods.bean.GoodsCategory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
@@ -21,6 +24,8 @@ public class GoodsServiceTest {
 
     @Resource
     private GoodsService goodsService;
+    @Resource
+    private AttributeVersionService attributeVersionService;
 
     @Test
     public void testGet() throws Exception {
@@ -28,6 +33,29 @@ public class GoodsServiceTest {
         if (!goodses.isEmpty()) {
             goodsService.get(goodses.get(0).getSn());
         }
+    }
+
+    @Test
+    public void testSave() throws Exception {
+        GoodsCategory category = new GoodsCategory();
+        GoodsCategory goodsCategory = goodsService.getCategory("DSHD8");
+
+        category.setId(goodsCategory.getId());
+        category.setSign(goodsCategory.getSign());
+
+        AttributeVersion attributeVersion = attributeVersionService.get(2L);
+        if (attributeVersion != null) {
+            category.setGoodsVersion(attributeVersion);
+        }
+
+        this.goodsService.save(category);
+        logger.debug("version=" + category.getGoodsVersion());
+    }
+
+    @Test
+    public void testGetCategory() throws Exception {
+        GoodsCategory category = goodsService.getCategory("DSHD8");
+        logger.debug("version=" + category.getGoodsVersion());
     }
 
     @Test
@@ -42,11 +70,6 @@ public class GoodsServiceTest {
 
     @Test
     public void testGetCategories1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetCategory() throws Exception {
 
     }
 
@@ -77,11 +100,6 @@ public class GoodsServiceTest {
 
     @Test
     public void testGetCategoryBySign() throws Exception {
-
-    }
-
-    @Test
-    public void testSave() throws Exception {
 
     }
 
