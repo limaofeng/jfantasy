@@ -104,7 +104,11 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         EventListenerRegistry registry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
         for (Map.Entry<String, List<Object>> event : this.eventListeners.entrySet()) {
             for (Object listener : event.getValue()) {
-                registry.getEventListenerGroup(EventType.resolveEventTypeByName(event.getKey())).appendListener(listener);
+                if(EventType.SAVE_UPDATE.eventName().equals(event.getKey())){
+                    registry.prependListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
+                }else{
+                    registry.getEventListenerGroup(EventType.resolveEventTypeByName(event.getKey())).appendListener(listener);
+                }
             }
         }
 
