@@ -27,25 +27,30 @@ public class LinkedQueueTest {
     @Test
     public void testIterator() throws Exception {
         LinkedQueue<User> queue = new LinkedQueue<User>();
-        //添加数据
-        queue.put(new User(){
+        User _u1 = new User(){
             {
                 this.setNickName("test-1");
             }
-        });
-        queue.put(new User(){
+        };
+        User _u2 = new User(){
             {
                 this.setNickName("test-2");
             }
-        });
-        queue.put(new User(){
+        };
+        User _u3 = new User(){
             {
                 this.setNickName("test-3");
             }
-        });
+        };
+        //添加数据
+        queue.add(_u1);
+        queue.add(_u2);
+        queue.add(_u3);
 
-        queue.remove(2);
-        queue.remove(0);
+        queue.remove(_u3);
+        queue.remove(_u1);
+
+        logger.error("queue size : " + queue.size());
 
         Iterator<User> iterator = queue.iterator();
         while (iterator.hasNext()){
