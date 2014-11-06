@@ -44,7 +44,7 @@ public class AttributeVersionService {
         return version;
     }
 
-    public void delete(Long[] ids) {
+    public void delete(Long... ids) {
         for (Long id : ids) {
             this.attributeVersionDao.delete(id);
         }
