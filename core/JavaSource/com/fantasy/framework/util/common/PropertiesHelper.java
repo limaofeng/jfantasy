@@ -1,12 +1,16 @@
 package com.fantasy.framework.util.common;
 
+import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.SystemPropertyUtils;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -23,7 +27,18 @@ public class PropertiesHelper {
 
     public static PropertiesHelper load(String propertiesPath) {
         try {
-            return new PropertiesHelper(PropertiesLoaderUtils.loadProperties(new ClassPathResource(propertiesPath)));
+            Iterator<URL> urls = ClassLoaderUtil.getResources(propertiesPath, PropertiesHelper.class, true);
+            Properties props = new Properties();
+            while (urls.hasNext()) {
+                URL url = urls.next();
+                Properties _props = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
+                for (Map.Entry entry : _props.entrySet()) {
+                    if (!props.containsKey(entry.getKey())) {
+                        props.put(entry.getKey(), entry.getValue());
+                    }
+                }
+            }
+            return new PropertiesHelper(props);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
             return nullPropertiesHelper;
