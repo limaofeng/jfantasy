@@ -2,28 +2,22 @@ package com.fantasy.schedule.service;
 
 import com.fantasy.framework.util.common.DateUtil;
 import junit.framework.Assert;
-import org.junit.After;
-import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.quartz.CronExpression;
 import org.quartz.JobKey;
 import org.quartz.TriggerKey;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/applicationContext.xml","classpath:spring/applicationContext-schedule.xml"})
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = {"classpath:spring/applicationContext-schedule.xml"})
 public class ScheduleServiceTest {
 
-    @Resource
+//    @Resource
     private ScheduleService scheduleService;
 
-    @Before
+//    @Before
     public void setUp() throws Exception {
 
         Map<String, Object> data = new HashMap<String, Object>();
@@ -37,7 +31,7 @@ public class ScheduleServiceTest {
         scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 20, 5, _data);
     }
 
-    @After
+//    @After
     public void tearDown() throws Exception {
         // 删除 触发器
         scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));

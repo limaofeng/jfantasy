@@ -11,6 +11,7 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,10 @@ public class AttributeVersionService {
         AttributeVersion version = this.attributeVersionDao.get(id);
         ObjectUtil.sort(version.getAttributes(), "id", "asc");
         return version;
+    }
+
+    public AttributeVersion findUnique(Class clazz,String number) {
+        return this.attributeVersionDao.findUnique(Restrictions.eq("className",clazz.getName()),Restrictions.eq("number",number));
     }
 
     public void delete(Long... ids) {

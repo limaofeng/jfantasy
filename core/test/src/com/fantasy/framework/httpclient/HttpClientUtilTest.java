@@ -22,8 +22,8 @@ public class HttpClientUtilTest {
 
     @Test
     public void testDoGet() throws Exception {
-        Response response = HttpClientUtil.doGet("http://www.baidu.com");
-        logger.debug(response);
+//        Response response = HttpClientUtil.doGet("http://www.baidu.com");
+//        logger.debug(response);
     }
 
     @Test

@@ -116,7 +116,6 @@ public class GoodsServiceTest {
         Assert.assertNotNull(this.goodsService.getCategory(category.getId()));
     }
 
-
     public void testDeleteGoods() throws Exception {
         GoodsCategory category = this.goodsService.getCategory("JUnit-TEST");
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
