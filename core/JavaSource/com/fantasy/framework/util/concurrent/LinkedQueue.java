@@ -1,11 +1,6 @@
 package com.fantasy.framework.util.concurrent;
 
-import java.util.AbstractQueue;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -314,7 +309,9 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 			if (removed) {
 				p.item = null;
 				trail.next = p.next;
-				p.next.previous = trail;
+                if(p.next != null) {
+                    p.next.previous = trail;
+                }
 				if (count.getAndDecrement() == capacity)
 					notFull.signalAll();
 			}
@@ -324,7 +321,8 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 		return removed;
 	}
 
-	public Object[] toArray() {
+	@SuppressWarnings("NullableProblems")
+    public Object[] toArray() {
 		fullyLock();
 		try {
 			int size = count.get();
@@ -338,6 +336,7 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 		}
 	}
 
+    @SuppressWarnings("NullableProblems")
 	public <T> T[] toArray(T[] a) {
 		fullyLock();
 		try {
@@ -376,7 +375,7 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 		}
 	}
 
-	public int drainTo(Collection<? super E> c) {
+    public int drainTo(Collection<? super E> c) {
 		if (c == null)
 			throw new NullPointerException();
 		if (c == this)
@@ -431,6 +430,7 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 		}
 	}
 
+    @SuppressWarnings("NullableProblems")
 	public Iterator<E> iterator() {
 		return new Itr();
 	}
@@ -496,7 +496,8 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 					p = p.next;
 				}
 				if (p == node) {
-					p.item = null;
+                    assert p != null;
+                    p.item = null;
 					trail.next = p.next;
 					int c = count.getAndDecrement();
 					if (c == capacity)
@@ -700,6 +701,7 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 			return LinkedQueue.this.isEmpty();
 		}
 
+        @SuppressWarnings("NullableProblems")
 		public Iterator<E> iterator() {
 			return LinkedQueue.this.iterator();
 		}
@@ -708,10 +710,12 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 			throw new RuntimeException("null method");
 		}
 
+        @SuppressWarnings("NullableProblems")
 		public ListIterator<E> listIterator() {
 			throw new RuntimeException("null method");
 		}
 
+        @SuppressWarnings("NullableProblems")
 		public ListIterator<E> listIterator(int index) {
 			throw new RuntimeException("null method");
 		}
@@ -740,14 +744,17 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 			return LinkedQueue.this.size();
 		}
 
+        @SuppressWarnings("NullableProblems")
 		public List<E> subList(int fromIndex, int toIndex) {
 			throw new RuntimeException("null method");
 		}
 
+        @SuppressWarnings("NullableProblems")
 		public Object[] toArray() {
 			return LinkedQueue.this.toArray();
 		}
 
+        @SuppressWarnings({"NullableProblems", "SuspiciousToArrayCall"})
 		public <T> T[] toArray(T[] a) {
 			return LinkedQueue.this.toArray(a);
 		}

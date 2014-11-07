@@ -1,7 +1,6 @@
 package com.fantasy.framework.util.common.file.gzip;
 
 import javax.servlet.ServletOutputStream;
-import javax.servlet.WriteListener;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.zip.GZIPOutputStream;
@@ -38,12 +37,4 @@ public class GZipStream extends ServletOutputStream {
         this.zipStream.close();
     }
 
-    @Override
-    public boolean isReady() {
-        return false;
-    }
-
-    @Override
-    public void setWriteListener(WriteListener writeListener) {
-    }
 }

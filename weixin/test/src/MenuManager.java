@@ -1,4 +1,6 @@
 import com.fantasy.wx.bean.pojo.AccessToken;
+import com.fantasy.wx.bean.pojo.group.GroupMessage;
+import com.fantasy.wx.bean.pojo.group.TextGroupMessage;
 import com.fantasy.wx.util.WeixinUtil;
 import org.junit.Test;
 
@@ -18,5 +20,18 @@ public class MenuManager {
         at=weixinUtil.getAccessToken(at);
         //at.setToken("yMpOiOf4IKdWSm0LS7v73g_d7GZ52KxvNSn7YKRLdCVtM9SoCT5Tive_yqJvD4ivGIH61eQY4dr_3Pm-d2Qkpw");
         //weixinUtil.message(at,"o8W9zt_0puksLdwJlqTGXdH9ViRU","text",map);
+    }
+    @Test
+    public void sendGroupMessage(){
+        WeixinUtil weixinUtil=new WeixinUtil();
+        AccessToken at=new AccessToken();
+        at.setToken("U3Byp1Yz-B9_YBub_nKvu5oKFrN9Oj5ArP7bmTTqGkaamGWesiml-zCDZ2e5521Q7YZRrLNFQUz3TBiOqAbfXdYm2Si4nQMUYkWBv1X5IH8");
+        TextGroupMessage groupMessage=new TextGroupMessage();
+        groupMessage.setTouser(new String[]{"oJ27YtwbWvKhQ8g3QSzj_Tgmg4uw"});
+        TextGroupMessage.Text text=groupMessage.new Text();
+        text.setContent("我来发群发消息啦！接到的有糖果吃");
+        groupMessage.setMsgtype("text");
+        groupMessage.setText(text);
+        weixinUtil.createGroupMessage(groupMessage,at.getToken());
     }
 }

@@ -9,4 +9,5 @@ public interface IEventService {
 
     public String focusOnEven(Message em);
     public String textMessage(Message tm);
+    public String event(Message em);
 }

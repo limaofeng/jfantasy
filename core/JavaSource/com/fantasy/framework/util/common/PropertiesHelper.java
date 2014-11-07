@@ -3,93 +3,50 @@ package com.fantasy.framework.util.common;
 import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.UrlResource;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
+import org.springframework.util.SystemPropertyUtils;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.URL;
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Properties;
 
 /**
- * Properties的操作的工具类,为Properties提供一个代理增加相关工具方法如 getRequiredString(),getInt(),getBoolean()等方法 并可以通过systemPropertiesMode属性指定是否搜索System.getProperty()及System.getenv()来查找值. 默认不搜索系统属性
- * <p/>
- * <pre>
- * 使用1:
- * public class ConnectionUtils {
- *     static Properties properties = new Properties();
- *     // ... do load properties
- *
- *     // delegate to properties
- * 	   static PropertiesHelper props = new PropertiesHelper(properties);
- *     public static Connection getConnection() {
- *     		// use getRequiredProperty()
- *     		DriverManager.getConnection(props.getRequiredString(&quot;jdbc.url&quot;));
- *     }
- * }
- * 指定是否搜索系统属性:
- * new PropertiesHelper(properties,PropertiesHelper.SYSTEM_PROPERTIES_MODE_OVERRIDE)
- * </pre>
- *
- * @author badqiu
+ * Properties的操作的工具类,为Properties提供一个代理增加相关工具方法如
+ * getRequiredString(),getInt(),getBoolean()等方法
  */
 public class PropertiesHelper {
 
     public static final Log logger = LogFactory.getLog(PropertiesHelper.class);
-    /**
-     * Never check system properties.
-     */
-    public static final int SYSTEM_PROPERTIES_MODE_NEVER = 0;
 
-    /**
-     * Check system properties if not resolvable in the specified properties. This is the default.
-     */
-    public static final int SYSTEM_PROPERTIES_MODE_FALLBACK = 1;
-
-    /**
-     * Check system properties first, before trying the specified properties. This allows system properties to override any other property source.
-     */
-    public static final int SYSTEM_PROPERTIES_MODE_OVERRIDE = 2;
+    public static final PropertiesHelper nullPropertiesHelper = new PropertiesHelper(new Properties());
 
     Properties p;
-    private int systemPropertiesMode = SYSTEM_PROPERTIES_MODE_NEVER;
 
-    private static final ConcurrentMap<String, PropertiesHelper> propertiesCache = new ConcurrentHashMap<String, PropertiesHelper>();
-
-    public static PropertiesHelper load(String propertiesName) {
-        if(propertiesCache.containsKey(propertiesName)){
-            return propertiesCache.get(propertiesName);
-        }
-        Properties props = new Properties();
+    public static PropertiesHelper load(String propertiesPath) {
         try {
-            Iterator<URL> urls = ClassLoaderUtil.getResources(propertiesName, PropertiesHelper.class, true);
+            Iterator<URL> urls = ClassLoaderUtil.getResources(propertiesPath, PropertiesHelper.class, true);
+            Properties props = new Properties();
             while (urls.hasNext()) {
                 URL url = urls.next();
-                Properties _props = new Properties();
-                _props.load(url.openStream());
-                for(Map.Entry entry : _props.entrySet()){
-                    if(!props.containsKey(entry.getKey())){
-                        props.put(entry.getKey(),entry.getValue());
+                Properties _props = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
+                for (Map.Entry entry : _props.entrySet()) {
+                    if (!props.containsKey(entry.getKey())) {
+                        props.put(entry.getKey(), entry.getValue());
                     }
                 }
             }
+            return new PropertiesHelper(props);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
+            return nullPropertiesHelper;
         }
-        propertiesCache.put(propertiesName,new PropertiesHelper(props));
-        return propertiesCache.get(propertiesName);
     }
 
     public PropertiesHelper(Properties p) {
         setProperties(p);
-    }
-
-    public PropertiesHelper(Properties p, int systemPropertiesMode) {
-        setProperties(p);
-        if (systemPropertiesMode != SYSTEM_PROPERTIES_MODE_NEVER && systemPropertiesMode != SYSTEM_PROPERTIES_MODE_FALLBACK && systemPropertiesMode != SYSTEM_PROPERTIES_MODE_OVERRIDE) {
-            throw new IllegalArgumentException("error systemPropertiesMode mode:" + systemPropertiesMode);
-        }
-        this.systemPropertiesMode = systemPropertiesMode;
     }
 
     public Properties getProperties() {
@@ -104,7 +61,7 @@ public class PropertiesHelper {
 
     public String getRequiredString(String key) {
         String value = getProperty(key);
-        if (isBlankString(value)) {
+        if (StringUtil.isBlank(value)) {
             throw new IllegalStateException("required property is blank by key=" + key);
         }
         return value;
@@ -112,7 +69,7 @@ public class PropertiesHelper {
 
     public String getNullIfBlank(String key) {
         String value = getProperty(key);
-        if (isBlankString(value)) {
+        if (StringUtil.isBlank(value)) {
             return null;
         }
         return value;
@@ -122,28 +79,6 @@ public class PropertiesHelper {
         String value = getProperty(key);
         if (value == null || "".equals(value)) {
             return null;
-        }
-        return value;
-    }
-
-    /**
-     * 尝试从System.getProperty(key)及System.getenv(key)得到值
-     *
-     * @return {String}
-     */
-    public String getAndTryFromSystem(String key) {
-        String value = getProperty(key);
-        if (isBlankString(value)) {
-            value = getSystemProperty(key);
-        }
-        return value;
-    }
-
-    private String getSystemProperty(String key) {
-        String value;
-        value = System.getProperty(key);
-        if (isBlankString(value)) {
-            value = System.getenv(key);
         }
         return value;
     }
@@ -236,58 +171,18 @@ public class PropertiesHelper {
         return Double.parseDouble(getRequiredString(key));
     }
 
-    /**
-     * setProperty(String key,int value) ... start
-     */
-
-    public Object setProperty(String key, int value) {
+    public Object setProperty(String key, Object value) {
         return setProperty(key, String.valueOf(value));
     }
-
-    public Object setProperty(String key, long value) {
-        return setProperty(key, String.valueOf(value));
-    }
-
-    public Object setProperty(String key, float value) {
-        return setProperty(key, String.valueOf(value));
-    }
-
-    public Object setProperty(String key, double value) {
-        return setProperty(key, String.valueOf(value));
-    }
-
-    public Object setProperty(String key, boolean value) {
-        return setProperty(key, String.valueOf(value));
-    }
-
-	/*
-     * public String[] getStringArray(String key) { String v = p.getProperty(key); if(v == null) { return new String[0]; }else { return StringTokenizerUtils.split(v, ","); } }
-	 */
-
-	/*
-	 * public int[] getIntArray(String key) { String[] array = getStringArray(key); int[] result = new int[array.length]; for(int i = 0; i < array.length; i++) { result[i] = Integer.parseInt(array[i]); } return result; }
-	 */
-
-    /**
-     * delegate method start
-     */
 
     public String getProperty(String key, String defaultValue) {
-        return p.getProperty(key, defaultValue);
+        String value = p.getProperty(key, defaultValue);
+        return StringUtil.isNotBlank(value) ? SystemPropertyUtils.resolvePlaceholders(value, true) : value;
     }
 
     public String getProperty(String key) {
-        String propVal = null;
-        if (systemPropertiesMode == SYSTEM_PROPERTIES_MODE_OVERRIDE) {
-            propVal = getSystemProperty(key);
-        }
-        if (propVal == null) {
-            propVal = p.getProperty(key);
-        }
-        if (propVal == null && systemPropertiesMode == SYSTEM_PROPERTIES_MODE_FALLBACK) {
-            propVal = getSystemProperty(key);
-        }
-        return propVal;
+        String value = p.getProperty(key);
+        return StringUtil.isNotBlank(value) ? SystemPropertyUtils.resolvePlaceholders(value, true) : value;
     }
 
     public Object setProperty(String key, String value) {
@@ -298,104 +193,11 @@ public class PropertiesHelper {
         p.clear();
     }
 
-    public Set<Entry<Object, Object>> entrySet() {
-        return p.entrySet();
-    }
-
-    public Enumeration<?> propertyNames() {
-        return p.propertyNames();
-    }
-
-    public boolean contains(Object value) {
-        return p.contains(value);
-    }
-
-    public boolean containsKey(Object key) {
-        return p.containsKey(key);
-    }
-
-    public boolean containsValue(Object value) {
-        return p.containsValue(value);
-    }
-
-    public Enumeration<Object> elements() {
-        return p.elements();
-    }
-
-    public Object get(Object key) {
-        return p.get(key);
-    }
-
-    public boolean isEmpty() {
-        return p.isEmpty();
-    }
-
-    public Enumeration<Object> keys() {
-        return p.keys();
-    }
-
-    public Set<Object> keySet() {
-        return p.keySet();
-    }
-
-    public void list(PrintStream out) {
-        p.list(out);
-    }
-
-    public void list(PrintWriter out) {
-        p.list(out);
-    }
-
-    public void load(InputStream inStream) throws IOException {
-        p.load(inStream);
-    }
-
-    public void loadFromXML(InputStream in) throws IOException {
-        p.loadFromXML(in);
-    }
-
-    public Object put(Object key, Object value) {
-        return p.put(key, value);
-    }
-
-    public void putAll(Map<Object, Object> t) {
-        p.putAll(t);
-    }
-
-    public Object remove(Object key) {
-        return p.remove(key);
-    }
-
-    @Deprecated
-    public void save(OutputStream out, String comments) {
-        p.save(out, comments);
-    }
-
     public int size() {
         return p.size();
     }
 
-    public void store(OutputStream out, String comments) throws IOException {
-        p.store(out, comments);
-    }
-
-    public void storeToXML(OutputStream os, String comment, String encoding) throws IOException {
-        p.storeToXML(os, comment, encoding);
-    }
-
-    public void storeToXML(OutputStream os, String comment) throws IOException {
-        p.storeToXML(os, comment);
-    }
-
-    public Collection<Object> values() {
-        return p.values();
-    }
-
     public String toString() {
         return p.toString();
-    }
-
-    private static boolean isBlankString(String value) {
-        return value == null || "".equals(value.trim());
     }
 }

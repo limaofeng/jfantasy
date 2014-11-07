@@ -1,5 +1,6 @@
 package com.fantasy.mall.goods.bean;
 
+import com.fantasy.attr.DynaBean;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
@@ -40,7 +41,7 @@ import java.util.List;
 @Table(name = "MALL_GOODS")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore", "category"})
-public class Goods extends BaseBusEntity /*implements DynaBean*/ {
+public class Goods extends BaseBusEntity implements DynaBean {
 
     private static final long serialVersionUID = 7710250000511514557L;
 
@@ -197,9 +198,8 @@ public class Goods extends BaseBusEntity /*implements DynaBean*/ {
     /**
      * 动态属性集合。 * 注意访问修饰符为 protected
      */
-    @Transient
-    //@OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
-    //@JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
     protected List<AttributeValue> attributeValues;
 
     /**

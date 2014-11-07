@@ -15,7 +15,7 @@ import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.id.factory.IdentifierGeneratorFactory;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.Type;
-import org.springframework.orm.hibernate3.LocalSessionFactoryBean;
+import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 
 import javax.persistence.Id;
 import java.io.Serializable;
