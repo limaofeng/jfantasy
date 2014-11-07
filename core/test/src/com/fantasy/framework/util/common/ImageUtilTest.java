@@ -1,6 +1,5 @@
 package com.fantasy.framework.util.common;
 
-import magick.Magick;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +9,7 @@ public class ImageUtilTest {
     @Before
     public void setUp() throws Exception {
         System.setProperty("jmagick.systemclassloader", "no");
-        new Magick();
+        //new Magick();
     }
 
     @After
@@ -24,17 +23,7 @@ public class ImageUtilTest {
     }
 
     @Test
-    public void testGetFormatName1() throws Exception {
-
-    }
-
-    @Test
     public void testToJpegImageFile() throws Exception {
-
-    }
-
-    @Test
-    public void testToJpegImageFile1() throws Exception {
 
     }
 
@@ -44,52 +33,7 @@ public class ImageUtilTest {
     }
 
     @Test
-    public void testWatermark1() throws Exception {
-
-    }
-
-    @Test
-    public void testWatermark2() throws Exception {
-
-    }
-
-    @Test
-    public void testWatermark3() throws Exception {
-
-    }
-
-    @Test
-    public void testWatermark4() throws Exception {
-
-    }
-
-    @Test
-    public void testWatermark5() throws Exception {
-
-    }
-
-    @Test
     public void testWrite() throws Exception {
-
-    }
-
-    @Test
-    public void testWrite1() throws Exception {
-
-    }
-
-    @Test
-    public void testWrite2() throws Exception {
-
-    }
-
-    @Test
-    public void testWrite3() throws Exception {
-
-    }
-
-    @Test
-    public void testWrite4() throws Exception {
 
     }
 
@@ -100,21 +44,6 @@ public class ImageUtilTest {
 
     @Test
     public void testReduce() throws Exception {
-
-    }
-
-    @Test
-    public void testReduce1() throws Exception {
-
-    }
-
-    @Test
-    public void testReduce2() throws Exception {
-
-    }
-
-    @Test
-    public void testReduce3() throws Exception {
 
     }
 
@@ -135,11 +64,6 @@ public class ImageUtilTest {
 
     @Test
     public void testPngReader() throws Exception {
-
-    }
-
-    @Test
-    public void testBmpReader1() throws Exception {
 
     }
 
