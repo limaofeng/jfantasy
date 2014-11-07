@@ -23,4 +23,5 @@ public class TMyBatisbeanServiceTest {
         int count = TMyBatisbeanService.insert(testbean);
         System.out.print("影响行数：" + count + "\n");
     }
+
 }
