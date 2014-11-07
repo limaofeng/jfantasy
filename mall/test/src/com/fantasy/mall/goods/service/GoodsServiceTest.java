@@ -33,13 +33,13 @@ public class GoodsServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        this.testSave();
+        this.save();
     }
 
     @After
     public void tearDown() throws Exception {
-        this.testDeleteGoods();
-        this.testDeleteCategory();
+        this.deleteGoods();
+        this.deleteCategory();
     }
 
     @Test
@@ -59,12 +59,12 @@ public class GoodsServiceTest {
         this.goodsService.calculateStockNumber(id);
     }
 
-    public void testSave() throws Exception {
+    public void save() throws Exception {
         GoodsCategory category = this.goodsService.getCategory("JUnit-TEST");
 
         if (category != null) {
-            this.testDeleteGoods();
-            this.testDeleteCategory();
+            this.deleteGoods();
+            this.deleteCategory();
         }
 
         category = new GoodsCategory();
@@ -116,7 +116,7 @@ public class GoodsServiceTest {
         Assert.assertNotNull(this.goodsService.getCategory(category.getId()));
     }
 
-    public void testDeleteGoods() throws Exception {
+    public void deleteGoods() throws Exception {
         GoodsCategory category = this.goodsService.getCategory("JUnit-TEST");
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQS_category.sign", category.getSign()));
@@ -125,7 +125,7 @@ public class GoodsServiceTest {
         }
     }
 
-    public void testDeleteCategory() throws Exception {
+    public void deleteCategory() throws Exception {
         GoodsCategory category = this.goodsService.getCategory("JUnit-TEST");
 
         this.goodsService.deleteCategory(category.getId());
