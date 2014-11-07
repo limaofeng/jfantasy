@@ -1,8 +1,9 @@
-package com.fantasy.job;
+package com.fantasy.schedule.service;
 
 import com.fantasy.framework.util.common.DateUtil;
-import com.fantasy.schedule.service.ScheduleService;
 import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.quartz.CronExpression;
@@ -16,22 +17,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
+@ContextConfiguration(locations = {"classpath:spring/applicationContext.xml","classpath:spring/applicationContext-schedule.xml"})
 public class ScheduleServiceTest {
 
     @Resource
     private ScheduleService scheduleService;
 
-    @Test
-    public void testCron() {
-        String expression = DateUtil.format("ss mm HH dd MM ? yyyy");
-//        String expression = "44 17 11 06 17 ? 2014";
-//        String expression = "00 15 10 02 08 ? 2002";
-        Assert.assertTrue(CronExpression.isValidExpression(expression));
-    }
+    @Before
+    public void setUp() throws Exception {
 
-    @Test
-    public void addJobAndTrigger() {
         Map<String, Object> data = new HashMap<String, Object>();
         data.put("name", "limaofeng");
         data.put("time", DateUtil.format("yyyy-MM-dd HH:mm:ss"));
@@ -45,10 +39,10 @@ public class ScheduleServiceTest {
             Thread.sleep(1000 * 20);
         }catch (InterruptedException ignored){
         }
-        this.removeJobAndTrigger();
     }
 
-    public void removeJobAndTrigger() {
+    @After
+    public void tearDown() throws Exception {
         // 删除 触发器
         scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));
         // 删除 job
@@ -57,4 +51,70 @@ public class ScheduleServiceTest {
         scheduleService.shutdown();
     }
 
+    @Test
+    public void testCron() {
+        String expression = DateUtil.format("ss mm HH dd MM ? yyyy");
+        Assert.assertTrue(CronExpression.isValidExpression(expression));
+    }
+
+
+    @Test
+    public void testIsStartTimerTisk() throws Exception {
+
+    }
+
+    @Test
+    public void testIsShutDownTimerTisk() throws Exception {
+
+    }
+
+    @Test
+    public void testPauseJob() throws Exception {
+
+    }
+
+    @Test
+    public void testResumeJob() throws Exception {
+
+    }
+
+    @Test
+    public void testDeleteJob() throws Exception {
+
+    }
+
+    @Test
+    public void testPauseTrigger() throws Exception {
+
+    }
+
+    @Test
+    public void testRemoveTrigdger() throws Exception {
+
+    }
+
+    @Test
+    public void testPauseAll() throws Exception {
+
+    }
+
+    @Test
+    public void testResumeAll() throws Exception {
+
+    }
+
+    @Test
+    public void testInterrupt() throws Exception {
+
+    }
+
+    @Test
+    public void testTriggerJob() throws Exception {
+
+    }
+
+    @Test
+    public void testTriggerJob1() throws Exception {
+
+    }
 }
