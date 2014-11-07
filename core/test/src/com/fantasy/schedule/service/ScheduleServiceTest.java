@@ -34,11 +34,7 @@ public class ScheduleServiceTest {
         // 添加触发器
         Map<String, Object> _data = new HashMap<String, Object>();
         _data.put("name", "limaofeng-1");
-        scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 1000, 5, _data);
-        try {
-            Thread.sleep(1000 * 20);
-        }catch (InterruptedException ignored){
-        }
+        scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 20, 5, _data);
     }
 
     @After
@@ -47,8 +43,6 @@ public class ScheduleServiceTest {
         scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));
         // 删除 job
         scheduleService.deleteJob(JobKey.jobKey("junit", "test"));
-
-        scheduleService.shutdown();
     }
 
     @Test
