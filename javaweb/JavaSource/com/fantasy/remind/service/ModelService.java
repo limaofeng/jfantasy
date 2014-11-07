@@ -2,7 +2,9 @@ package com.fantasy.remind.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.remind.bean.Model;
 import com.fantasy.remind.bean.Notice;
+import com.fantasy.remind.dao.ModelDao;
 import com.fantasy.remind.dao.NoticeDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,15 +13,15 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * 提醒 service
+ * 消息模版 service
  */
 
 @Service
 @Transactional
-public class NoticeService {
+public class ModelService {
 
     @Resource
-    private NoticeDao noticeDao;
+    private ModelDao noticeDao;
 
     /**
      * 查看
@@ -27,8 +29,8 @@ public class NoticeService {
      * @param filters
      * @return
      */
-    public Pager<Notice> findPager(Pager<Notice> pager,List<PropertyFilter> filters){
-        return this.noticeDao.findPager(pager,filters);
+    public Pager<Model> findPager(Pager<Model> pager,List<PropertyFilter> filters){
+       return this.noticeDao.findPager(pager,filters);
     }
 
 
@@ -36,7 +38,7 @@ public class NoticeService {
      * 保存
      * @param notice
      */
-    public void save(Notice notice){
+    public void save(Model notice){
         this.noticeDao.save(notice);
     }
 
@@ -46,8 +48,8 @@ public class NoticeService {
      * @param id
      * @return
      */
-    public Notice get(Long id){
-        return this.noticeDao.get(id);
+    public Model get(Long id){
+         return this.noticeDao.get(id);
     }
 
 
@@ -61,7 +63,5 @@ public class NoticeService {
         }
 
     }
-
-
 
 }

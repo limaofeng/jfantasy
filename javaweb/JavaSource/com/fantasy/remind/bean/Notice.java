@@ -1,18 +1,17 @@
 package com.fantasy.remind.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.remind.bean.Model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
-import java.util.List;
 
 /**
- * 公告
+ * 提醒
  */
 
 @Entity
-@Table(name="tbl_notice")
+@Table(name="remind_notice")
 public class Notice extends BaseBusEntity {
 
     @Id
@@ -20,43 +19,25 @@ public class Notice extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
     /**
-     * 公告标题
+     * 提醒
      */
     @Column(name="TITLE",length = 500)
     private String title;
 
 
     /**
-     * 公告内容
+     * 跳转连接
      */
-    @Column(name="CONTENT")
-    private String content;
+    @Column(name="URL")
+    private String url;
 
     /**
-     * 是否失效 (true：(默认未失效) ,flase)
+     * 商品所属分类
      */
-    @Column(name="ISSUE")
-    private boolean issue;
-
-    /**
-     * 公告开始时间
-     */
-    @Column(name="START_DATE")
-    private Date startDate;
-
-    /**
-     * 公告失效时间
-     */
-    @Column(name="END_DATE")
-    private Date endDate;
-
-    /**
-     * 公告推送用户关联表
-     */
-    @OneToMany(mappedBy = "notice", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<NoticeUser> noticeUsers;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MODEL_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_NOTICE_MODEL"))
+    private Model model;
 
     public Long getId() {
         return id;
@@ -74,43 +55,19 @@ public class Notice extends BaseBusEntity {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getUrl() {
+        return url;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
-    public List<NoticeUser> getNoticeUsers() {
-        return noticeUsers;
+    public Model getModel() {
+        return model;
     }
 
-    public void setNoticeUsers(List<NoticeUser> noticeUsers) {
-        this.noticeUsers = noticeUsers;
-    }
-
-    public boolean isIssue() {
-        return issue;
-    }
-
-    public void setIssue(boolean issue) {
-        this.issue = issue;
-    }
-
-    public Date getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(Date startDate) {
-        this.startDate = startDate;
-    }
-
-    public Date getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(Date endDate) {
-        this.endDate = endDate;
+    public void setModel(Model model) {
+        this.model = model;
     }
 }

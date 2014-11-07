@@ -3,35 +3,64 @@
 <struts>
 
 
-    <!-- 订单管理 -->
-    <package name="admin-notice" extends="fantasy-default" namespace="/admin/notice">
+    <!-- 消息查看 -->
+    <package name="admin-notice" extends="fantasy-default" namespace="/notice">
 
         <!-- 首页 -->
-        <action name="index" class="com.fantasy.remind.web.NoticeAction" method="index">
+        <action name="index" class="com.fantasy.remind.notice.web.NoticeAction" method="index">
             <result type="freemarker">/template/%{pageTheme}/remind/notice.ftl</result>
         </action>
 
         <!-- search -->
-        <action name="search" class="com.fantasy.remind.web.NoticeAction" method="search" />
+        <action name="search" class="com.fantasy.remind.notice.web.NoticeAction" method="search" />
 
         <!-- add -->
         <action name="add" class="com.fantasy.framework.struts2.ActionSupport">
             <result type="freemarker">/template/%{pageTheme}/remind/notice_add.ftl</result>
         </action>
         <!-- save -->
-        <action name="save" class="com.fantasy.remind.web.NoticeAction" method="save" />
+        <action name="save" class="com.fantasy.remind.notice.web.NoticeAction" method="save" />
 
         <!-- 修改 -->
-        <action name="edit" class="com.fantasy.remind.web.NoticeAction" method="edit">
+        <action name="edit" class="com.fantasy.remind.notice.web.NoticeAction" method="edit">
             <result type="freemarker">/template/%{pageTheme}/remind/notice_edit.ftl</result>
         </action>
 
         <!-- 查看 -->
-        <action name="view" class="com.fantasy.remind.web.NoticeAction" method="view">
+        <action name="view" class="com.fantasy.remind.notice.web.NoticeAction" method="view">
             <result type="freemarker">/template/%{pageTheme}/remind/notice_view.ftl</result>
         </action>
 
-        <action name="del" class="com.fantasy.remind.web.NoticeAction" method="delete" />
+        <action name="del" class="com.fantasy.remind.notice.web.NoticeAction" method="delete" />
+    </package>
+    <!-- 消息查看 -->
+    <package name="admin-notice" extends="fantasy-default" namespace="/notice/model">
 
+        <!-- 首页 -->
+        <action name="index" class="com.fantasy.remind.model.web.ModelAction" method="index">
+            <result type="freemarker">/template/%{pageTheme}/remind/model.ftl</result>
+        </action>
+
+        <!-- search -->
+        <action name="search" class="com.fantasy.remind.model.web.ModelAction" method="search" />
+
+        <!-- add -->
+        <action name="add" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/remind/model_add.ftl</result>
+        </action>
+        <!-- save -->
+        <action name="save" class="com.fantasy.remind.model.web.ModelAction" method="save" />
+
+        <!-- 修改 -->
+        <action name="edit" class="com.fantasy.remind.model.web.ModelAction" method="edit">
+            <result type="freemarker">/template/%{pageTheme}/remind/model_edit.ftl</result>
+        </action>
+
+        <!-- 查看 -->
+        <action name="view" class="com.fantasy.remind.model.web.ModelAction" method="view">
+            <result type="freemarker">/template/%{pageTheme}/remind/model_view.ftl</result>
+        </action>
+
+        <action name="del" class="com.fantasy.remind.model.web.ModelAction" method="delete" />
     </package>
 </struts>

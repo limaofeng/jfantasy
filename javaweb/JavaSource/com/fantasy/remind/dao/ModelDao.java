@@ -1,12 +1,13 @@
 package com.fantasy.remind.dao;
 
 import com.fantasy.framework.dao.hibernate.HibernateDao;
+import com.fantasy.remind.bean.Model;
 import org.springframework.stereotype.Repository;
 
 /**
- * 推送公告 用户关联表
+ * 公告 Dao
  */
 
 @Repository
-public class NoticeUserDao extends HibernateDao<NoticeUserDao,Long> {
+public class ModelDao extends HibernateDao<Model,Long> {
 }
