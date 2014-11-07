@@ -9,6 +9,7 @@
     <version>2.6.0.Alphal</version>
 
     <properties>
+        <argLine>-Dfile.encoding=UTF-8</argLine>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <asm-version>3.3</asm-version>
         <junit-version>4.9</junit-version>
