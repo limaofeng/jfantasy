@@ -69,7 +69,7 @@ public class Brand extends BaseBusEntity {
      * 商品分类
      */
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "MALL_GOODS_CATEGORY_BRAND", joinColumns = @JoinColumn(name = "BRAND_ID"), inverseJoinColumns = @JoinColumn(name = "GOODS_CATEGORY_ID"),foreignKey =  @ForeignKey(name = "FK_BRAND_GOODS_CATEGORIE"))
+    @JoinTable(name = "MALL_GOODS_CATEGORY_BRAND", joinColumns = @JoinColumn(name = "BRAND_ID"), inverseJoinColumns = @JoinColumn(name = "GOODS_CATEGORY_ID"), foreignKey = @ForeignKey(name = "FK_BRAND_GOODS_CATEGORIE"))
     private List<GoodsCategory> goodsCategories;
 
     public Long getId() {
