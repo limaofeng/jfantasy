@@ -187,7 +187,7 @@ public class Goods extends BaseBusEntity implements DynaBean {
      * 所属店铺信息
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "MALL_SHOP", joinColumns = @JoinColumn(name = "SHOP_ID"), inverseJoinColumns = @JoinColumn(name = "ID"), foreignKey = @ForeignKey(name = "FK_GOODS_SHOP"))
+    @JoinColumn(name = "SHOP_ID", foreignKey = @ForeignKey(name = "FK_GOODS_SHOP"))
     private Shop shop;
     /**
      * 数据版本
