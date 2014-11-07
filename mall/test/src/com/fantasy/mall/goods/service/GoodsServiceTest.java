@@ -63,7 +63,8 @@ public class GoodsServiceTest {
         GoodsCategory category = this.goodsService.getCategory("JUnit-TEST");
 
         if (category != null) {
-            this.goodsService.deleteCategory(category.getId());
+            this.testDeleteGoods();
+            this.testDeleteCategory();
         }
 
         category = new GoodsCategory();
