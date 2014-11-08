@@ -98,7 +98,11 @@
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <pluginManagement>
             <plugins>
-
+                <plugin>
+                    <groupId>org.codehaus.sonar</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>4.3</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -181,11 +185,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.sonar</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>4.3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
