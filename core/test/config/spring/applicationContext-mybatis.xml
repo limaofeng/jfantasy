@@ -13,7 +13,7 @@
     </bean>
 
     <bean class="com.fantasy.framework.dao.mybatis.MapperScannerConfigurer">
-        <property name="basePackage" value="com.fantasy.framework;"/>
+        <property name="basePackage" value="com.fantasy.framework;com.fantasy.test;"/>
         <property name="markerInterface" value="com.fantasy.framework.dao.mybatis.sqlmapper.SqlMapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
     </bean>

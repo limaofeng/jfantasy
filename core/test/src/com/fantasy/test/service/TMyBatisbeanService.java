@@ -1,34 +1,44 @@
 package com.fantasy.test.service;
 
-import com.fantasy.test.bean.TMyBatisbean;
-import com.fantasy.test.dao.TMyBatisbeanDao;
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.test.bean.TyBatisbean;
+import com.fantasy.test.dao.TyBatisbeanDao;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Repository
+@Service
 public class TMyBatisbeanService {
 
     @Autowired
-    private TMyBatisbeanDao testDao;
+    private TyBatisbeanDao tyBatisbeanDao;
 
-    public TMyBatisbean findUniqueByKey(String key){
-        return this.testDao.findUniqueByKey(key);
+    public TyBatisbean findUniqueByKey(String key){
+        return this.tyBatisbeanDao.findUniqueByKey(key);
     }
 
-    public int insert(TMyBatisbean testbean){
-        int count = this.testDao.insert(testbean);
-        return count;
+    public int insert(TyBatisbean testbean){
+        return this.tyBatisbeanDao.insert(testbean);
     }
 
-    public int update(TMyBatisbean testbean){
-        int count = this.testDao.update(testbean);
-        return count;
+    public int update(TyBatisbean testbean){
+        return this.tyBatisbeanDao.update(testbean);
     }
 
-    public List<TMyBatisbean> selectAll(){
-        List<TMyBatisbean> testbeanList = this.testDao.selectAll();
-        return testbeanList;
+    public int delete(String key){
+        return this.tyBatisbeanDao.delete(key);
+    }
+
+    public List<TyBatisbean> selectAll(){
+        return this.tyBatisbeanDao.selectAll();
+    }
+
+    public TyBatisbean get(String test) {
+        return this.tyBatisbeanDao.findUniqueByKey(test);
+    }
+
+    public Pager<TyBatisbean> findPager(Pager<TyBatisbean> pager, TyBatisbean tyBatisbean) {
+        return this.tyBatisbeanDao.findPager(pager,tyBatisbean);
     }
 }

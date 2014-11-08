@@ -85,6 +85,15 @@
             <testResource>
                 <directory>test/config</directory>
             </testResource>
+            <testResource>
+                <directory>test/src</directory>
+                <includes>
+                    <include>**/*.ftl</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </testResource>
         </testResources>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <pluginManagement>
