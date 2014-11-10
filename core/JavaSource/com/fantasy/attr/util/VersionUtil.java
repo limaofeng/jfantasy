@@ -32,7 +32,6 @@ public class VersionUtil {
 
     private static final ConcurrentMap<String, Class> dynaBeanClassCache = new ConcurrentHashMap<String, Class>();
     private static final ConcurrentMap<String, AttributeVersion> versionCache = new ConcurrentHashMap<String, AttributeVersion>();
-    private static final ConcurrentMap<Long, TypeConverter> typeConverterCache = new ConcurrentHashMap<Long, TypeConverter>();
     private static AttributeVersionService attributeVersionService;
 
     public static DynaBean makeDynaBean(DynaBean bean) {

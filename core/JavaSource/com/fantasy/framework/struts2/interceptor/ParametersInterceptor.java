@@ -381,9 +381,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected Object newInstance(Class<?> parameterType, String paramName, Map<String, Object> parameters) {
         if (DynaBean.class.isAssignableFrom(parameterType)) {
             DynaBean bean = (DynaBean) ClassUtil.newInstance(parameterType);
-            Object versionNumber = parameters.get(paramName + ".version.number") != null ? parameters.get(paramName + ".version.number") : parameters.get("version.number");
+            Object parameterObject = parameters.get(paramName + ".version.number") != null ? parameters.get(paramName + ".version.number") : parameters.get("version.number");
+            String versionNumber = parameterObject == null ? null : (ClassUtil.isArray(parameterObject) ? Array.get(parameterObject, 0) : parameterObject).toString();
             if (StringUtil.isNotBlank(versionNumber)) {
-                return VersionUtil.makeDynaBean((Class<DynaBean>)parameterType, versionNumber.toString());
+                return VersionUtil.makeDynaBean((Class<DynaBean>)parameterType, versionNumber);
             } else {
                 return bean;
             }
@@ -404,9 +405,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         for (int i = 0; i < parameterTypes.length; i++) {
             Class parameterType = parameterTypes[i];
             if (DynaBean.class.isAssignableFrom(parameterType)) {
-                Object versionNumber = parameters.get(paramNames[i] + ".version.number") != null ? parameters.get(paramNames[i] + ".version.number") : parameters.get("version.number");
+                Object parameterObject = parameters.get(paramNames[i] + ".version.number") != null ? parameters.get(paramNames[i] + ".version.number") : parameters.get("version.number");
+                String versionNumber = parameterObject == null ? null : (ClassUtil.isArray(parameterObject) ? Array.get(parameterObject, 0) : parameterObject).toString();
                 if (StringUtil.isNotBlank(versionNumber)) {
-                    parameterTypes[0] = VersionUtil.makeClass(parameterType, versionNumber.toString());
+                    parameterTypes[0] = VersionUtil.makeClass(parameterType, versionNumber);
                 }
             }
         }
