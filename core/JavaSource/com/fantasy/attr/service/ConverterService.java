@@ -7,6 +7,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -41,10 +42,14 @@ public class ConverterService{
         return this.converterDao.get(id);
     }
 
-    public void delete(Long[] ids) {
+    public void delete(Long... ids) {
         for(long id : ids){
             this.converterDao.delete(id);
         }
+    }
+
+    public Converter findUnique(Criterion... criterions){
+        return this.converterDao.findUnique(criterions);
     }
 
     public List<Converter> find(){

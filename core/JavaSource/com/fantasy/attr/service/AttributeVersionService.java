@@ -3,6 +3,7 @@ package com.fantasy.attr.service;
 import com.fantasy.attr.bean.Attribute;
 import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.bean.Converter;
 import com.fantasy.attr.dao.AttributeVersionDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -60,6 +61,9 @@ public class AttributeVersionService {
      */
     public AttributeVersion getVersion(Class clazz, String number) {
         AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("className", clazz.getName()), Restrictions.eq("number", number));
+        if(version == null){
+            return null;
+        }
         AttributeVersion _rev = BeanUtil.copyProperties(new AttributeVersion(), version);
         List<Attribute> attributes = new ArrayList<Attribute>();
         for (Attribute attribute : version.getAttributes()) {
@@ -67,7 +71,11 @@ public class AttributeVersionService {
             attributes.add(BeanUtil.copyProperties(new Attribute(), attribute));
             AttributeType attributeType = attribute.getAttributeType();
             Hibernate.initialize(attributeType);
-            attributes.get(attributes.size() - 1).setAttributeType(BeanUtil.copyProperties(new AttributeType(), attributeType));
+            Hibernate.initialize(attributeType.getConverter());
+            Converter converter = BeanUtil.copyProperties(new Converter(), attributeType.getConverter());
+            attributeType = BeanUtil.copyProperties(new AttributeType(), attributeType);
+            attributeType.setConverter(converter);
+            attributes.get(attributes.size() - 1).setAttributeType(attributeType);
         }
         _rev.setAttributes(attributes);
         return _rev;
