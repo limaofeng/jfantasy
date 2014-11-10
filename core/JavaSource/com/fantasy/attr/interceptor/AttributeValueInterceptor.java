@@ -88,6 +88,9 @@ public class AttributeValueInterceptor {
         if (entity != null && entity instanceof DynaBean && entity.getClass().getSimpleName().contains("$v") && entityClass.equals(entity.getClass().getSuperclass())) {
             DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(entityClass);
             BeanUtil.copyProperties(dynaBean, entity);
+            if(dynaBean.getAttributeValues() == null){
+                dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
+            }
             for (Attribute attribute : ((DynaBean) entity).getVersion().getAttributes()) {
                 AttributeValue attributeValue = ObjectUtil.find(dynaBean.getAttributeValues(), "attribute.code", attribute.getCode());
                 if (attributeValue == null) {
