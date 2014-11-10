@@ -463,7 +463,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 if (formbean instanceof DynaBean) {
                     Attribute attribute = ObjectUtil.find(((DynaBean) formbean).getVersion().getAttributes(), "code", name);
                     if (attribute != null) {
-                        com.fantasy.framework.util.ognl.OgnlUtil.getInstance("attr-" + attribute.getAttributeType().getConverter().getId()).setValue(name, formbean, value);
+                        VersionUtil.getOgnlUtil(attribute.getAttributeType()).setValue(name, formbean, value);
                     } else {
                         ognlUtil.setValue(name, ognlValueStack.getContext(), formbean, value);
                     }

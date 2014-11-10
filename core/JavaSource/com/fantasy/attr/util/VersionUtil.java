@@ -48,6 +48,8 @@ public class VersionUtil {
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
         DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
+        ClassUtil.setValue(dynaBean,"version",version);
+        /*
         List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
         for (Attribute attribute : version.getAttributes()) {
             AttributeValue attributeValue = new AttributeValue();
@@ -56,6 +58,7 @@ public class VersionUtil {
             attributeValues.add(attributeValue);
         }
         dynaBean.setAttributeValues(attributeValues);
+        */
         return clazz.cast(dynaBean);
     }
 

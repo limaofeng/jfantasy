@@ -1,6 +1,7 @@
 package com.fantasy.attr.interceptor;
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.bean.Attribute;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
@@ -10,6 +11,7 @@ import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.reflect.MethodProxy;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -86,13 +88,19 @@ public class AttributeValueInterceptor {
         if (entity != null && entity instanceof DynaBean && entity.getClass().getSimpleName().contains("$v") && entityClass.equals(entity.getClass().getSuperclass())) {
             DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(entityClass);
             BeanUtil.copyProperties(dynaBean, entity);
-            dynaBean.setAttributeValues(((DynaBean) entity).getAttributeValues());
-            //OgnlUtil.getInstance("attr-"+attributeValue.getAttribute().getAttributeType().getConverter().getId()).getValue(attributeValue.getAttribute().getCode(),entity,String.class)
-            for (AttributeValue attributeValue : ((DynaBean) entity).getAttributeValues()) {
-                if (attributeValue.getTargetId() == null) {
+            for (Attribute attribute : ((DynaBean) entity).getVersion().getAttributes()) {
+                AttributeValue attributeValue = ObjectUtil.find(dynaBean.getAttributeValues(), "attribute.code", attribute.getCode());
+                if (attributeValue == null) {
+                    attributeValue = new AttributeValue();
                     attributeValue.setTargetId((Long) _method_getIdValue.invoke(dao, entityClass, dynaBean));
+                    attributeValue.setAttribute(attribute);
                 }
-//                attributeValue.setValue();
+                String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), entity, String.class);
+                if (StringUtil.isNotBlank(value)) {
+                    attributeValue.setValue(value);
+                } else {
+                    ObjectUtil.remove(dynaBean.getAttributeValues(), "attribute.code", attribute.getCode());
+                }
             }
             entity = dynaBean;
         }
