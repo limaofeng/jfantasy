@@ -61,11 +61,7 @@ public class Yeepay extends AbstractPaymentProduct {
             return false;
         }
         String r1Code = httpServletRequest.getParameter("r1_Code");
-        if (StringUtils.equals(r1Code, "1")) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.equals(r1Code, "1");
     }
 
     @Override
@@ -86,21 +82,7 @@ public class Yeepay extends AbstractPaymentProduct {
         String key = paymentConfig.getBargainorKey();// 密钥
 
         // 生成签名
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(p0_Cmd);
-        stringBuffer.append(p1_MerId);
-        stringBuffer.append(p2_Order);
-        stringBuffer.append(p3_Amt);
-        stringBuffer.append(p4_Cur);
-        stringBuffer.append(p5_Pid);
-        stringBuffer.append(p6_Pcat);
-        stringBuffer.append(p7_Pdesc);
-        stringBuffer.append(p8_Url);
-        stringBuffer.append(p9_SAF);
-        stringBuffer.append(pa_MP);
-        stringBuffer.append(pd_FrpId);
-        stringBuffer.append(pr_NeedResponse);
-        String hmac = hmacSign(stringBuffer.toString(), key);
+        String hmac = hmacSign(p0_Cmd + p1_MerId + p2_Order + p3_Amt + p4_Cur + p5_Pid + p6_Pcat + p7_Pdesc + p8_Url + p9_SAF + pa_MP + pd_FrpId + pr_NeedResponse, key);
 
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>();
@@ -139,23 +121,7 @@ public class Yeepay extends AbstractPaymentProduct {
         String hmac = httpServletRequest.getParameter("hmac");
 
         // 验证支付签名
-        StringBuffer stringBuffer = new StringBuffer();
-        stringBuffer.append(p1_MerId);
-        stringBuffer.append(r0_Cmd);
-        stringBuffer.append(r1_Code);
-        stringBuffer.append(r2_TrxId);
-        stringBuffer.append(r3_Amt);
-        stringBuffer.append(r4_Cur);
-        stringBuffer.append(r5_Pid);
-        stringBuffer.append(r6_Order);
-        stringBuffer.append(r7_Uid);
-        stringBuffer.append(r8_MP);
-        stringBuffer.append(r9_BType);
-        if (StringUtils.equals(hmac, hmacSign(stringBuffer.toString(), paymentConfig.getBargainorKey()))) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.equals(hmac, hmacSign(p1_MerId + r0_Cmd + r1_Code + r2_TrxId + r3_Amt + r4_Cur + r5_Pid + r6_Order + r7_Uid + r8_MP + r9_BType, paymentConfig.getBargainorKey()));
     }
 
     @Override
@@ -185,7 +151,7 @@ public class Yeepay extends AbstractPaymentProduct {
             k_opad[i] = (byte) (keys[i] ^ 0x5c);
         }
 
-        MessageDigest messageDigest = null;
+        MessageDigest messageDigest;
         try {
             messageDigest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
@@ -201,9 +167,9 @@ public class Yeepay extends AbstractPaymentProduct {
         if (digest == null) {
             return null;
         }
-        StringBuffer stringBuffer = new StringBuffer(digest.length * 2);
-        for (int i = 0; i < digest.length; i++) {
-            int current = digest[i] & 0xff;
+        StringBuilder stringBuffer = new StringBuilder(digest.length * 2);
+        for (byte aDigest : digest) {
+            int current = aDigest & 0xff;
             if (current < 16)
                 stringBuffer.append("0");
             stringBuffer.append(Integer.toString(current, 16));

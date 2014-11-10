@@ -1,4 +1,4 @@
-package com.fantasy.job;
+package com.fantasy.schedule.service;
 
 import com.fantasy.framework.util.common.DateUtil;
 import org.apache.commons.logging.Log;

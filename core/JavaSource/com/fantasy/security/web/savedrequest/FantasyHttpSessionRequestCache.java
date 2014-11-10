@@ -1,24 +1,23 @@
 package com.fantasy.security.web.savedrequest;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.security.web.PortResolver;
-import org.springframework.security.web.PortResolverImpl;
-import org.springframework.security.web.savedrequest.DefaultSavedRequest;
-import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
-import org.springframework.security.web.util.AnyRequestMatcher;
-import org.springframework.security.web.util.RequestMatcher;
-
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.web.WebUtil;
+import org.springframework.security.web.PortResolver;
+import org.springframework.security.web.PortResolverImpl;
+import org.springframework.security.web.savedrequest.DefaultSavedRequest;
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 替换默认的HttpSessionRequestCache
  * 
- * @功能描述 ajax请求的时候不要记录请求地址
+ *  ajax请求的时候不要记录请求地址
  * @author 李茂峰
  * @since 2013-9-10 上午9:07:21
  * @version 1.0
@@ -29,7 +28,7 @@ public class FantasyHttpSessionRequestCache extends HttpSessionRequestCache {
 
 	private PortResolver portResolver = new PortResolverImpl();
 	private boolean createSessionAllowed = true;
-	private RequestMatcher requestMatcher = new AnyRequestMatcher();
+	private RequestMatcher requestMatcher = AnyRequestMatcher.INSTANCE;
 
 	@Override
 	public void saveRequest(HttpServletRequest request, HttpServletResponse response) {
@@ -40,7 +39,7 @@ public class FantasyHttpSessionRequestCache extends HttpSessionRequestCache {
 				logger.debug("DefaultSavedRequest added to Session: " + savedRequest);
 			}
 			if (WebUtil.isAjax(request)) {
-				String refererUrl = (String) savedRequest.getHeaderValues("Referer").get(0);
+				String refererUrl = savedRequest.getHeaderValues("Referer").get(0);
 				if (ObjectUtil.isNotNull(refererUrl)) {
 					ClassUtil.setValue(savedRequest, "requestURL", refererUrl);
 					ClassUtil.setValue(savedRequest, "requestURI", refererUrl.replaceFirst(WebUtil.getRequestUrl(request, ""), ""));
@@ -60,4 +59,18 @@ public class FantasyHttpSessionRequestCache extends HttpSessionRequestCache {
 		}
 	}
 
+    @Override
+    public void setCreateSessionAllowed(boolean createSessionAllowed) {
+        this.createSessionAllowed = createSessionAllowed;
+    }
+
+    @Override
+    public void setRequestMatcher(RequestMatcher requestMatcher) {
+        this.requestMatcher = requestMatcher;
+    }
+
+    @Override
+    public void setPortResolver(PortResolver portResolver) {
+        this.portResolver = portResolver;
+    }
 }

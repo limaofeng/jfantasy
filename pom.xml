@@ -6,9 +6,10 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-framework</artifactId>
     <packaging>pom</packaging>
-    <version>2.5.9.Alphal</version>
+    <version>2.6.0.Alphal</version>
 
     <properties>
+        <argLine>-Dfile.encoding=UTF-8</argLine>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <asm-version>3.3</asm-version>
         <junit-version>4.9</junit-version>
@@ -25,7 +26,7 @@
         <commons-email-version>1.3.2</commons-email-version>
         <mybatis-spring-version>1.2.2</mybatis-spring-version>
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
-        <com.fantasy-version>2.5.9.Alphal</com.fantasy-version>
+        <com.fantasy-version>2.6.0.Alphal</com.fantasy-version>
         <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
         <org.hibernate-version>4.3.5.Final</org.hibernate-version>
@@ -37,7 +38,7 @@
         <eu.medsea.mimeutil-version>2.1.3</eu.medsea.mimeutil-version>
         <org.apache.santuario-version>1.4.6</org.apache.santuario-version>
         <org.quartz-scheduler-version>2.2.1</org.quartz-scheduler-version>
-        <javax.servlet.jsp-api-version>2.3.1</javax.servlet.jsp-api-version>
+        <javax.servlet.jsp-api-version>2.2.1</javax.servlet.jsp-api-version>
         <org.codehaus.jackson-version>1.9.9</org.codehaus.jackson-version>
         <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
         <com.thoughtworks.xstream-version>1.4.2</com.thoughtworks.xstream-version>
@@ -84,11 +85,24 @@
             <testResource>
                 <directory>test/config</directory>
             </testResource>
+            <testResource>
+                <directory>test/src</directory>
+                <includes>
+                    <include>**/*.ftl</include>
+                    <include>**/*.xml</include>
+                    <include>**/*.jpg</include>
+                    <include>**/*.properties</include>
+                </includes>
+            </testResource>
         </testResources>
         <testOutputDirectory>target/test-classes</testOutputDirectory>
         <pluginManagement>
             <plugins>
-
+                <plugin>
+                    <groupId>org.codehaus.sonar</groupId>
+                    <artifactId>sonar-maven-plugin</artifactId>
+                    <version>4.3</version>
+                </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
@@ -171,11 +185,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.sonar</groupId>
-                <artifactId>sonar-maven-plugin</artifactId>
-                <version>4.3</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

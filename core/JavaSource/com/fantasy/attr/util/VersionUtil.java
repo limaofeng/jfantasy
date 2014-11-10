@@ -91,6 +91,20 @@ public class VersionUtil {
         return versionCache.get(id);
     }
 
+    public static <T> T createDynaBean(Class<T> clazz,String number) {
+        AttributeVersion version = getAttributeVersionService().findUnique(clazz,number);
+        DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
+        List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
+        for (Attribute attribute : version.getAttributes()) {
+            AttributeValue attributeValue = new AttributeValue();
+            attributeValue.setAttribute(attribute);
+            attributeValue.setVersion(version);
+            attributeValues.add(attributeValue);
+        }
+        dynaBean.setAttributeValues(attributeValues);
+        return clazz.cast(dynaBean);
+    }
+
     private synchronized static AttributeVersionService getAttributeVersionService() {
         if (attributeVersionService == null) {
             attributeVersionService = SpringContextUtil.getBeanByType(AttributeVersionService.class);

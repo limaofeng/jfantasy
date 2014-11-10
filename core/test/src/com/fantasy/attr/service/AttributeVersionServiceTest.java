@@ -45,30 +45,14 @@ public class AttributeVersionServiceTest {
 
         logger.debug("new version id = " + version.getId());
 
-    }
+        Assert.assertNotNull(attributeVersionService.get(version.getId()));
 
-    @Test
-    public void testGet() throws Exception {
+        Assert.assertNotNull(attributeVersionService.getVersion(version.getId()));
 
-    }
+        Assert.assertNotNull(attributeVersionService.getVersion(version.getId()));
 
-    @Test
-    public void testDelete() throws Exception {
+        attributeVersionService.delete(version.getId());
 
     }
 
-    @Test
-    public void testGetVersion() throws Exception {
-
-    }
-
-    @Test
-    public void testVersion() throws Exception {
-
-    }
-
-    @Test
-    public void testClassAllAttrs() throws Exception {
-
-    }
 }

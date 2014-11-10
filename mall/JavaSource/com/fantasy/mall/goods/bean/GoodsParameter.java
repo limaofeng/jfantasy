@@ -8,7 +8,6 @@ import com.fantasy.framework.util.common.StringUtil;
 /**
  * 商品参数
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2014-4-5 上午8:15:50
  * @version 1.0

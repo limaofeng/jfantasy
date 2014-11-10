@@ -22,7 +22,6 @@ import java.util.List;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-9-21 下午5:46:48
  */
 @Entity
