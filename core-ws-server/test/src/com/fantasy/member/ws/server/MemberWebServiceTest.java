@@ -1,14 +1,23 @@
 package com.fantasy.member.ws.server;
 
+import com.fantasy.common.bean.Area;
+import com.fantasy.framework.util.common.ImageUtil;
+import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
 import com.fantasy.member.ws.IMemberService;
 import com.fantasy.member.ws.dto.MemberDTO;
+import com.fantasy.member.ws.dto.MemberDetailsDTO;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.util.StreamUtils;
 
 import javax.annotation.Resource;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.Date;
 
 import static org.junit.Assert.*;
 
@@ -36,7 +45,7 @@ public class MemberWebServiceTest {
         Member member =  this.memberService.findUniqueByUsername(userName);
         Long[] ids= new Long[1];
         ids[0]=member.getId();
-        this.memberService.delete(ids);
+       // this.memberService.delete(ids);
     }
 
     public void testRegister() throws Exception {
@@ -71,9 +80,15 @@ public class MemberWebServiceTest {
     @org.junit.Test
     public void testUpdate() throws Exception {
         String userName="hebo";
-        MemberDTO member = this.iMemberService.findUniqueByUsername(userName);
-        member.setPassword("124");
-        this.iMemberService.update(member);
-
+        MemberDTO memberDTO = this.iMemberService.findUniqueByUsername(userName);
+        memberDTO.setNickName("木头人123");
+        MemberDetailsDTO detailsDTO =memberDTO.getDetails();
+        detailsDTO.setName("何博");
+        detailsDTO.setBirthday(new Date());
+        detailsDTO.setEmail("393469668@qq.com");
+        detailsDTO.setDescription("何博是个大笨蛋");
+        //图片进行base64位编码
+        detailsDTO.setPortrait(ImageUtil.getImage(new FileInputStream(new File(detailsDTO.getPortrait()))));
+        this.iMemberService.update(memberDTO);
     }
 }
