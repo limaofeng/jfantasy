@@ -45,10 +45,6 @@ public class AttributeVersionService {
         return version;
     }
 
-    public AttributeVersion findUnique(Class clazz,String number) {
-        return this.attributeVersionDao.findUnique(Restrictions.eq("className",clazz.getName()),Restrictions.eq("number",number));
-    }
-
     public void delete(Long... ids) {
         for (Long id : ids) {
             this.attributeVersionDao.delete(id);
@@ -58,11 +54,12 @@ public class AttributeVersionService {
     /**
      * 通过 version id 加载全部版本相关的完整数据
      *
-     * @param id id
+     * @param clazz  版本对应的 class
+     * @param number 版本号
      * @return AttributeVersion
      */
-    public AttributeVersion getVersion(Long id) {
-        AttributeVersion version = this.attributeVersionDao.get(id);
+    public AttributeVersion getVersion(Class clazz, String number) {
+        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("className", clazz.getName()), Restrictions.eq("number", number));
         AttributeVersion _rev = BeanUtil.copyProperties(new AttributeVersion(), version);
         List<Attribute> attributes = new ArrayList<Attribute>();
         for (Attribute attribute : version.getAttributes()) {

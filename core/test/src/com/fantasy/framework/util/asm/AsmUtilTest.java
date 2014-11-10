@@ -1,7 +1,6 @@
 package com.fantasy.framework.util.asm;
 
 import com.fantasy.attr.bean.AttributeType;
-import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.attr.util.VersionUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
@@ -55,21 +54,25 @@ public class AsmUtilTest implements Opcodes {
 
         Article o = (Article)clzz.newInstance();
 
-        AttributeValue attributeValue = new AttributeValue();
-        attributeValue.setAttribute(attribute);
-        attributeValue.setVersion(version);
-        attributeValue.setValue("test");
+        OgnlUtil.getInstance().setValue(attribute.getCode(),o,"test");
 
-        AttributeValue attributeValue1 = new AttributeValue();
-        attributeValue1.setAttribute(attribute1);
-        attributeValue1.setVersion(version);
-        attributeValue1.setValue("12");
+        OgnlUtil.getInstance().setValue(attribute1.getCode(),o,"123");
 
-        o.setAttributeValues(Arrays.asList(attributeValue,attributeValue1));
+//        AttributeValue attributeValue = new AttributeValue();
+//        attributeValue.setAttribute(attribute);
+//        attributeValue.setVersion(version);
+//        attributeValue.setValue("test");
+//
+//        AttributeValue attributeValue1 = new AttributeValue();
+//        attributeValue1.setAttribute(attribute1);
+//        attributeValue1.setVersion(version);
+//        attributeValue1.setValue("12");
+//
+//        o.setAttributeValues(Arrays.asList(attributeValue,attributeValue1));
 
         Assert.assertEquals(OgnlUtil.getInstance().getValue("test",o),"test");
 
-        Assert.assertEquals(OgnlUtil.getInstance().getValue("testInt",o),12);
+        Assert.assertEquals(OgnlUtil.getInstance().getValue("testInt",o),123);
 
     }
 

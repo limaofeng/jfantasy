@@ -4,13 +4,16 @@ import com.fantasy.attr.DynaBean;
 import com.fantasy.attr.bean.Attribute;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.bean.Converter;
+import com.fantasy.attr.dao.ConverterDao;
 import com.fantasy.attr.service.AttributeVersionService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.asm.*;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.ognl.OgnlUtil;
+import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.objectweb.asm.Label;
@@ -29,28 +32,41 @@ public class VersionUtil {
     private static final Log logger = LogFactory.getLog(VersionUtil.class);
 
     private static final ConcurrentMap<String, Class> dynaBeanClassCache = new ConcurrentHashMap<String, Class>();
-    private static final ConcurrentMap<Long, AttributeVersion> versionCache = new ConcurrentHashMap<Long, AttributeVersion>();
-
+    private static final ConcurrentMap<String, AttributeVersion> versionCache = new ConcurrentHashMap<String, AttributeVersion>();
+    private static final ConcurrentMap<Long, TypeConverter> typeConverterCache = new ConcurrentHashMap<Long, TypeConverter>();
     private static AttributeVersionService attributeVersionService;
 
     public static DynaBean makeDynaBean(DynaBean bean) {
-        if(bean.getVersion() == null){
+        if (bean.getVersion() == null) {
             return bean;
         }
-        return createDynaBean(bean.getVersion().getId(), bean);
+        return createDynaBean(ClassUtil.getRealClass(bean), bean.getVersion().getNumber(), bean);
     }
 
-    public static DynaBean makeDynaBean(Long id) {
-        try {
-            return createDynaBean(id);
-        }catch (Exception ex){
-            logger.error(ex.getMessage(),ex);
-            return null;
+    public static Object makeDynaBean(Class<?> clazz, String number) {
+        return createDynaBean(clazz, number);
+    }
+
+    public static DynaBean makeDynaBean(Class<DynaBean> clazz, String number) {
+        return createDynaBean(clazz, number);
+    }
+
+    public static <T> T createDynaBean(Class<T> clazz, String number) {
+        AttributeVersion version = getVersion(clazz, number);
+        DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
+        List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
+        for (Attribute attribute : version.getAttributes()) {
+            AttributeValue attributeValue = new AttributeValue();
+            attributeValue.setAttribute(attribute);
+            attributeValue.setVersion(version);
+            attributeValues.add(attributeValue);
         }
+        dynaBean.setAttributeValues(attributeValues);
+        return clazz.cast(dynaBean);
     }
 
-    private static DynaBean createDynaBean(Long id, DynaBean bean) {
-        AttributeVersion version = getVersion(id);
+    private static DynaBean createDynaBean(Class<?> clazz, String number, DynaBean bean) {
+        AttributeVersion version = getVersion(clazz, number);
         DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
         List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
         for (Attribute attribute : version.getAttributes()) {
@@ -70,39 +86,11 @@ public class VersionUtil {
         return dynaBean;
     }
 
-    private static DynaBean createDynaBean(Long id) {
-        AttributeVersion version = getVersion(id);
-        DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
-        List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
-        for (Attribute attribute : version.getAttributes()) {
-            AttributeValue attributeValue = new AttributeValue();
-            attributeValue.setAttribute(attribute);
-            attributeValue.setVersion(version);
-            attributeValues.add(attributeValue);
+    public static AttributeVersion getVersion(Class<?> clazz, String number) {
+        if (!versionCache.containsKey(clazz.getName() + "$v" + number)) {
+            versionCache.putIfAbsent(clazz.getName() + "$v" + number, getAttributeVersionService().getVersion(clazz, number));
         }
-        dynaBean.setAttributeValues(attributeValues);
-        return dynaBean;
-    }
-
-    public static AttributeVersion getVersion(Long id) {
-        if (!versionCache.containsKey(id)) {
-            versionCache.putIfAbsent(id, getAttributeVersionService().getVersion(id));
-        }
-        return versionCache.get(id);
-    }
-
-    public static <T> T createDynaBean(Class<T> clazz,String number) {
-        AttributeVersion version = getAttributeVersionService().findUnique(clazz,number);
-        DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
-        List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
-        for (Attribute attribute : version.getAttributes()) {
-            AttributeValue attributeValue = new AttributeValue();
-            attributeValue.setAttribute(attribute);
-            attributeValue.setVersion(version);
-            attributeValues.add(attributeValue);
-        }
-        dynaBean.setAttributeValues(attributeValues);
-        return clazz.cast(dynaBean);
+        return versionCache.get(clazz.getName() + "$v" + number);
     }
 
     private synchronized static AttributeVersionService getAttributeVersionService() {
@@ -112,8 +100,8 @@ public class VersionUtil {
         return attributeVersionService;
     }
 
-    public static Class makeClass(Long versionId) {
-        return makeClass(getVersion(versionId));
+    public static Class makeClass(Class<?> clazz, String number) {
+        return makeClass(getVersion(clazz, number));
     }
 
     public static Class makeClass(AttributeVersion version) {
@@ -124,12 +112,12 @@ public class VersionUtil {
             List<MethodInfo> methodInfos = new ArrayList<MethodInfo>();
             for (Attribute attribute : version.getAttributes()) {
                 final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
-                property.setGetMethodCreator(getMethodCreator);
-                if (String.class.isAssignableFrom(property.getType())) {
-                    property.setSetMethodCreator(setMethodCreator);
-                } else {
-                    methodInfos.add(new MethodInfo("set" + StringUtil.upperCaseFirst(property.getName()), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(String.class)}), null, setMethodCreator));
-                }
+//                property.setGetMethodCreator(getMethodCreator);
+//                if (String.class.isAssignableFrom(property.getType())) {
+//                    property.setSetMethodCreator(setMethodCreator);
+//                } else {
+//                    methodInfos.add(new MethodInfo("set" + StringUtil.upperCaseFirst(property.getName()), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(String.class)}), null, setMethodCreator));
+//                }
                 properties.add(property);
             }
             dynaBeanClassCache.putIfAbsent(className, AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()]), methodInfos.toArray(new MethodInfo[methodInfos.size()])));
@@ -223,25 +211,43 @@ public class VersionUtil {
 
     };
 
-
-    public static Object saveValue(List<AttributeValue> attributeValues, String attributeCode, String value) {
-        logger.debug("saveValue : " + attributeCode +  "==>" + value);
+    public static Object saveValue(Object root, List<AttributeValue> attributeValues, String attributeCode, String value) {
+        logger.debug("saveValue : " + attributeCode + "==>" + value);
         AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attributeCode);
+        Converter converter = attributeValue.getAttribute().getAttributeType().getConverter();
         AtomicReference<String> saveValue = new AtomicReference<String>(value);//TODO 保存转换之后的值
         attributeValue.setValue(saveValue.get());
+        getOgnlUtil("attr-" + converter.getId()).setValue(attributeCode, root, value);
         return value;
     }
 
-    public static Object getValue(List<AttributeValue> attributeValues, String attributeCode) {
+    public static Object getValue(Object root, List<AttributeValue> attributeValues, String attributeCode) {
         AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attributeCode);
-        logger.debug("getValue : " + attributeCode +  "==>" + attributeValue.getValue());
+        logger.debug("getValue : " + attributeCode + "==>" + attributeValue.getValue());
+        Converter converter = attributeValue.getAttribute().getAttributeType().getConverter();
         Class<?> clazz = ClassUtil.forName(attributeValue.getAttribute().getAttributeType().getDataType());
         if (ClassUtil.isPrimitiveOrWrapper(clazz)) {
             return ClassUtil.newInstance(clazz, attributeValue.getValue());
         } else if (String.class.isAssignableFrom(clazz)) {
             return attributeValue.getValue();
+        } else {
+            getOgnlUtil("attr-" + converter.getId()).getValue(attributeCode, root);
+//            TypeConverter typeConverter = typeConverterCache.get(attributeValue.getAttribute().getAttributeType().getConverter().getId());
+//            typeConverter.convertValue()
         }
         throw new RuntimeException("暂时不支持基本数据类型以外的类型");
+    }
+
+    private static OgnlUtil ognlUtil;
+
+    public static OgnlUtil getOgnlUtil(String key) {
+        if (ognlUtil == null) {
+            ognlUtil = OgnlUtil.getInstance();
+            for (Converter converter : SpringContextUtil.getBeanByType(ConverterDao.class).find()) {
+                ognlUtil.addTypeConverter(ClassUtil.forName(converter.getClassName()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(converter.getTypeConverter()), SpringContextUtil.AUTOWIRE_BY_TYPE));
+            }
+        }
+        return ognlUtil;
     }
 
 }
