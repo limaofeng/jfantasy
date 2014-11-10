@@ -383,7 +383,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             DynaBean bean = (DynaBean) ClassUtil.newInstance(parameterType);
             Object versionNumber = parameters.get(paramName + ".version.number") != null ? parameters.get(paramName + ".version.number") : parameters.get("version.number");
             if (StringUtil.isNotBlank(versionNumber)) {
-                return VersionUtil.makeDynaBean(parameterType, versionNumber.toString());
+                return VersionUtil.makeDynaBean((Class<DynaBean>)parameterType, versionNumber.toString());
             } else {
                 return bean;
             }

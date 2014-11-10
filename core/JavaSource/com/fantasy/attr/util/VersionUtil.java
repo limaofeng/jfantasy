@@ -42,10 +42,6 @@ public class VersionUtil {
         return createDynaBean(ClassUtil.getRealClass(bean), bean.getVersion().getNumber(), bean);
     }
 
-    public static Object makeDynaBean(Class<?> clazz, String number) {
-        return createDynaBean(clazz, number);
-    }
-
     public static DynaBean makeDynaBean(Class<DynaBean> clazz, String number) {
         return createDynaBean(clazz, number);
     }
