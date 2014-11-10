@@ -87,10 +87,12 @@ public class AttributeValueInterceptor {
             DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(entityClass);
             BeanUtil.copyProperties(dynaBean, entity);
             dynaBean.setAttributeValues(((DynaBean) entity).getAttributeValues());
+            //OgnlUtil.getInstance("attr-"+attributeValue.getAttribute().getAttributeType().getConverter().getId()).getValue(attributeValue.getAttribute().getCode(),entity,String.class)
             for (AttributeValue attributeValue : ((DynaBean) entity).getAttributeValues()) {
                 if (attributeValue.getTargetId() == null) {
                     attributeValue.setTargetId((Long) _method_getIdValue.invoke(dao, entityClass, dynaBean));
                 }
+//                attributeValue.setValue();
             }
             entity = dynaBean;
         }
