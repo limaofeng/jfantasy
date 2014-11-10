@@ -2,10 +2,9 @@ package com.fantasy.attr.util;
 
 import com.fantasy.attr.DynaBean;
 import com.fantasy.attr.bean.Attribute;
+import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.bean.Converter;
-import com.fantasy.attr.dao.ConverterDao;
 import com.fantasy.attr.service.AttributeVersionService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.asm.*;
@@ -214,40 +213,32 @@ public class VersionUtil {
     public static Object saveValue(Object root, List<AttributeValue> attributeValues, String attributeCode, String value) {
         logger.debug("saveValue : " + attributeCode + "==>" + value);
         AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attributeCode);
-        Converter converter = attributeValue.getAttribute().getAttributeType().getConverter();
+        AttributeType attributeType = attributeValue.getAttribute().getAttributeType();
         AtomicReference<String> saveValue = new AtomicReference<String>(value);//TODO 保存转换之后的值
         attributeValue.setValue(saveValue.get());
-        getOgnlUtil("attr-" + converter.getId()).setValue(attributeCode, root, value);
+        getOgnlUtil(attributeType).setValue(attributeCode, root, value);
         return value;
     }
 
     public static Object getValue(Object root, List<AttributeValue> attributeValues, String attributeCode) {
         AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attributeCode);
         logger.debug("getValue : " + attributeCode + "==>" + attributeValue.getValue());
-        Converter converter = attributeValue.getAttribute().getAttributeType().getConverter();
+        AttributeType attributeType = attributeValue.getAttribute().getAttributeType();
         Class<?> clazz = ClassUtil.forName(attributeValue.getAttribute().getAttributeType().getDataType());
         if (ClassUtil.isPrimitiveOrWrapper(clazz)) {
             return ClassUtil.newInstance(clazz, attributeValue.getValue());
         } else if (String.class.isAssignableFrom(clazz)) {
             return attributeValue.getValue();
         } else {
-            getOgnlUtil("attr-" + converter.getId()).getValue(attributeCode, root);
-//            TypeConverter typeConverter = typeConverterCache.get(attributeValue.getAttribute().getAttributeType().getConverter().getId());
-//            typeConverter.convertValue()
+            return getOgnlUtil(attributeType).getValue(attributeCode, root);
         }
-        throw new RuntimeException("暂时不支持基本数据类型以外的类型");
     }
 
-    private static OgnlUtil ognlUtil;
-
-    public static OgnlUtil getOgnlUtil(String key) {
-        if (ognlUtil == null) {
-            ognlUtil = OgnlUtil.getInstance();
-            for (Converter converter : SpringContextUtil.getBeanByType(ConverterDao.class).find()) {
-                ognlUtil.addTypeConverter(ClassUtil.forName(converter.getClassName()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(converter.getTypeConverter()), SpringContextUtil.AUTOWIRE_BY_TYPE));
-            }
+    public static OgnlUtil getOgnlUtil(AttributeType attributeType) {
+        if (!OgnlUtil.containsKey("attr-" + attributeType.getId())) {
+            OgnlUtil.getInstance("attr-" + attributeType.getId()).addTypeConverter(ClassUtil.forName(attributeType.getDataType()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(attributeType.getConverter().getTypeConverter()), SpringContextUtil.AUTOWIRE_BY_TYPE));
         }
-        return ognlUtil;
+        return OgnlUtil.getInstance("attr-" + attributeType.getId());
     }
 
 }

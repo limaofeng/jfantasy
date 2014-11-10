@@ -46,6 +46,10 @@ public class OgnlUtil {
 
     };
 
+    public static boolean containsKey(String key) {
+        return ognlUtilCache.containsKey(key);
+    }
+
     public static OgnlUtil getInstance() {
         return getInstance("default");
     }

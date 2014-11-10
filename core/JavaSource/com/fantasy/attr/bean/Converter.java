@@ -30,11 +30,6 @@ public class Converter extends BaseBusEntity {
     @Column(name = "NAME", length = 200)
     private String name;
     /**
-     * 转换器对应的 className
-     */
-    @Column(name = "CLASS_NAME", length = 200)
-    private String className;
-    /**
      * 转换器本身的 Class
      */
     @Column(name = "TYPE_CONVERTER", length = 200)
@@ -88,11 +83,4 @@ public class Converter extends BaseBusEntity {
         this.attributeTypes = attributeTypes;
     }
 
-    public String getClassName() {
-        return className;
-    }
-
-    public void setClassName(String className) {
-        this.className = className;
-    }
 }
