@@ -45,13 +45,14 @@ public class VersionUtil {
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
         DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
-        ClassUtil.setValue(dynaBean, "version", version);
+        dynaBean.setVersion(version);
         return clazz.cast(dynaBean);
     }
 
     private static DynaBean createDynaBean(Class<?> clazz, String number, DynaBean bean) {
         AttributeVersion version = getVersion(clazz, number);
         DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
+        dynaBean.setVersion(version);
         dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
         for (Attribute attribute : version.getAttributes()) {
             AttributeValue sourceValue = ObjectUtil.find(bean.getAttributeValues(), "attribute.code", attribute.getCode());
