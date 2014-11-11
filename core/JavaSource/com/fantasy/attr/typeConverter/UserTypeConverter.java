@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 import java.lang.reflect.Member;
 import java.util.Map;
 
-public class UserIdTypeConverter extends DefaultTypeConverter {
+public class UserTypeConverter extends DefaultTypeConverter {
 
     @Resource
     private UserService userService;

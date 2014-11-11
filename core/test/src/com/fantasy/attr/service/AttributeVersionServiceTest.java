@@ -2,8 +2,11 @@ package com.fantasy.attr.service;
 
 import com.fantasy.attr.bean.*;
 import com.fantasy.attr.typeConverter.PrimitiveTypeConverter;
+import com.fantasy.attr.typeConverter.UserTypeConverter;
 import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,11 +72,34 @@ public class AttributeVersionServiceTest {
         attribute.setNotTemporary(false);
         attributeService.save(attribute);
 
+        Converter userConverter = new Converter();
+        userConverter.setName("用户对象转换器");
+        userConverter.setTypeConverter(UserTypeConverter.class.getName());
+        userConverter.setDescription("");
+        converterService.save(userConverter);
+
+        AttributeType userAttributeType = new AttributeType();
+        userAttributeType.setName("用户类型");
+        userAttributeType.setDataType(User.class.getName());
+        userAttributeType.setConverter(userConverter);
+        userAttributeType.setDescription("");
+        attributeTypeService.save(userAttributeType);
+
+        Attribute userAttribute = new Attribute();
+        userAttribute.setCode("user");
+        userAttribute.setName("测试Int类型字段");
+        userAttribute.setDescription("");
+        userAttribute.setAttributeType(userAttributeType);
+        userAttribute.setNonNull(true);
+        userAttribute.setNotTemporary(false);
+        attributeService.save(userAttribute);
+
         AttributeVersion version = new AttributeVersion();
         version.setNumber("1.0");
         version.setClassName(Article.class.getName());
         version.setAttributes(new ArrayList<Attribute>());
         version.getAttributes().add(attribute);
+        version.getAttributes().add(userAttribute);
         attributeVersionService.save(version);
 
     }
@@ -107,7 +133,9 @@ public class AttributeVersionServiceTest {
         article.setTitle("测试数据标题");
         article.setSummary("测试数据摘要");
 
-        AttributeType attributeType = article.getVersion().getAttributes().get(0).getAttributeType();
+        AttributeType attributeType = ObjectUtil.find(article.getVersion().getAttributes(),"code","intTest").getAttributeType();
+        AttributeType userAttributeType = ObjectUtil.find(article.getVersion().getAttributes(),"code","user").getAttributeType();
+
         VersionUtil.getOgnlUtil(attributeType).setValue("intTest", article, "456");
 
         logger.debug(article);
@@ -123,6 +151,10 @@ public class AttributeVersionServiceTest {
         Assert.assertEquals(456, OgnlUtil.getInstance().getValue("intTest", article));
 
         VersionUtil.getOgnlUtil(attributeType).setValue("intTest", article, "123");
+
+        VersionUtil.getOgnlUtil(userAttributeType).setValue("user", article, "admin");
+
+        logger.debug(VersionUtil.getOgnlUtil(userAttributeType).getValue("user", article));
 
         Assert.assertEquals(123, OgnlUtil.getInstance().getValue("intTest", article));
 

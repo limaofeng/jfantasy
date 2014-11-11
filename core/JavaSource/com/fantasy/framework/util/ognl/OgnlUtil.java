@@ -36,7 +36,7 @@ public class OgnlUtil {
         public Object convertValue(Map context, Object root, Member member, String name, Object value, Class toType) {
             if (OgnlUtil.this.typeConverters.containsKey(toType)) {
                 return OgnlUtil.this.typeConverters.get(toType).convertValue(context, root, member, name, value, toType);
-            } else if (OgnlUtil.this.typeConverters.containsKey(ClassUtil.getRealClass(value))) {
+            } else if (value != null && OgnlUtil.this.typeConverters.containsKey(ClassUtil.getRealClass(value))) {
                 return OgnlUtil.this.typeConverters.get(ClassUtil.getRealClass(value)).convertValue(context, root, member, name, value, toType);
             } else if ("EMPTY".equals(value) && !ClassUtil.isPrimitiveOrWrapperOrStringOrDate(toType)) {
                 return ClassUtil.newInstance(toType);

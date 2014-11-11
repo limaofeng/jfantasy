@@ -22,7 +22,7 @@ public class UserIdTypeConverterTest {
 
     @Test
     public void testConvertValue() throws Exception {
-        TypeConverter typeConverter = SpringContextUtil.createBean(UserIdTypeConverter.class,SpringContextUtil.AUTOWIRE_BY_TYPE);
+        TypeConverter typeConverter = SpringContextUtil.createBean(UserTypeConverter.class,SpringContextUtil.AUTOWIRE_BY_TYPE);
 
         Object user = typeConverter.convertValue(new HashMap(),null,null,null,"admin",User.class);
 
