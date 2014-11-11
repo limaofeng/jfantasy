@@ -140,4 +140,20 @@ public class MemberDTO implements Serializable {
 		this.details = details;
 	}
 
+    @Override
+    public String toString() {
+        return "MemberDTO{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", enabled=" + enabled +
+                ", accountNonExpired=" + accountNonExpired +
+                ", accountNonLocked=" + accountNonLocked +
+                ", credentialsNonExpired=" + credentialsNonExpired +
+                ", lockTime=" + lockTime +
+                ", lastLoginTime=" + lastLoginTime +
+                ", details=" + details +
+                '}';
+    }
 }

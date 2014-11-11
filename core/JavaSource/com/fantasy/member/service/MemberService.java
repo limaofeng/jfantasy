@@ -161,7 +161,7 @@ public class MemberService {
 	 * 
 	 * @param ids
 	 */
-	public void delete(Long[] ids) {
+	public void delete(Long... ids) {
 		for (Long id : ids) {
 			this.memberDao.delete(id);
 		}

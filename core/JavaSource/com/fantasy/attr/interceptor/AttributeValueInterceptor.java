@@ -20,6 +20,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class AttributeValueInterceptor {
     private final static MethodProxy _method_buildPropertyFilterCriterion = ClassUtil.getMethodProxy(HibernateDao.class, "buildPropertyFilterCriterion");
     private final static MethodProxy _method_findPager = ClassUtil.getMethodProxy(HibernateDao.class, "findPager", Pager.class, Criterion[].class);
     private final static MethodProxy _method_getIdValue = ClassUtil.getMethodProxy(HibernateDao.class, "getIdValue", Class.class, Object.class);
-    private final static MethodProxy _method_get = ClassUtil.getMethodProxy(HibernateDao.class, "get", Long.class);
+    private final static MethodProxy _method_get = ClassUtil.getMethodProxy(HibernateDao.class, "get", Serializable.class);
 
     /**
      * findPager 时，对动态Bean 添加代理
