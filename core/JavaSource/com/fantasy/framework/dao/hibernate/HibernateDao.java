@@ -324,7 +324,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                             addObjects.add(fk);
                         }
                     }
-                    ognlUtil.setValue(field.getName(), oldEntity, addObjects);
+                    ognlUtil.setValue(field.getName(), entity, addObjects);
                 }
             }
             return entity;

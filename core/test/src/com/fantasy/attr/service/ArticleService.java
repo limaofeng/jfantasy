@@ -2,11 +2,15 @@ package com.fantasy.attr.service;
 
 import com.fantasy.attr.bean.Article;
 import com.fantasy.attr.dao.ArticleDao;
+import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
+@Transactional
 public class ArticleService {
 
     @Resource
@@ -18,6 +22,16 @@ public class ArticleService {
 
     public Article get(Long id) {
         return this.articleDao.get(id);
+    }
+
+    public List<Article> find(Criterion... criterions) {
+        return this.articleDao.find(criterions);
+    }
+
+    public void delete(Long... ids) {
+        for(Long id : ids) {
+            this.articleDao.delete(id);
+        }
     }
 
 }

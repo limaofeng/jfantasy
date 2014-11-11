@@ -11,6 +11,7 @@ import com.fantasy.framework.util.asm.*;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
@@ -48,7 +49,7 @@ public class VersionUtil {
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
         DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
-        ClassUtil.setValue(dynaBean,"version",version);
+        ClassUtil.setValue(dynaBean, "version", version);
         /*
         List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
         for (Attribute attribute : version.getAttributes()) {
@@ -65,21 +66,13 @@ public class VersionUtil {
     private static DynaBean createDynaBean(Class<?> clazz, String number, DynaBean bean) {
         AttributeVersion version = getVersion(clazz, number);
         DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
-        List<AttributeValue> attributeValues = new ArrayList<AttributeValue>(version.getAttributes().size());
         for (Attribute attribute : version.getAttributes()) {
-            AttributeValue attributeValue = new AttributeValue();
             AttributeValue sourceValue = ObjectUtil.find(bean.getAttributeValues(), "attribute.code", attribute.getCode());
-            if (sourceValue != null) {
-                attributeValue.setId(sourceValue.getId());
-                attributeValue.setValue(sourceValue.getValue());
-                attributeValue.setTargetId(sourceValue.getTargetId());
+            if (sourceValue != null && StringUtil.isNotBlank(sourceValue.getValue())) {
+                getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), dynaBean, sourceValue.getValue());
             }
-            attributeValue.setAttribute(attribute);
-            attributeValue.setVersion(version);
-            attributeValues.add(attributeValue);
         }
         BeanUtil.copyProperties(dynaBean, bean);
-        dynaBean.setAttributeValues(attributeValues);
         return dynaBean;
     }
 

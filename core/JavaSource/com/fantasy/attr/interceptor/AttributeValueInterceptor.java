@@ -31,6 +31,7 @@ public class AttributeValueInterceptor {
     private final static MethodProxy _method_buildPropertyFilterCriterion = ClassUtil.getMethodProxy(HibernateDao.class, "buildPropertyFilterCriterion");
     private final static MethodProxy _method_findPager = ClassUtil.getMethodProxy(HibernateDao.class, "findPager", Pager.class, Criterion[].class);
     private final static MethodProxy _method_getIdValue = ClassUtil.getMethodProxy(HibernateDao.class, "getIdValue", Class.class, Object.class);
+    private final static MethodProxy _method_get = ClassUtil.getMethodProxy(HibernateDao.class, "get", Long.class);
 
     /**
      * findPager 时，对动态Bean 添加代理
@@ -85,29 +86,44 @@ public class AttributeValueInterceptor {
     public Object save(ProceedingJoinPoint pjp, Object entity) throws Throwable {
         HibernateDao dao = (HibernateDao) pjp.getTarget();
         Class entityClass = (Class) ClassUtil.getValue(pjp.getTarget(), "entityClass");
-        if (entity != null && entity instanceof DynaBean && entity.getClass().getSimpleName().contains("$v") && entityClass.equals(entity.getClass().getSuperclass())) {
-            DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(entityClass);
-            BeanUtil.copyProperties(dynaBean, entity);
-            if(dynaBean.getAttributeValues() == null){
-                dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
-            }
-            for (Attribute attribute : ((DynaBean) entity).getVersion().getAttributes()) {
-                AttributeValue attributeValue = ObjectUtil.find(dynaBean.getAttributeValues(), "attribute.code", attribute.getCode());
-                if (attributeValue == null) {
-                    attributeValue = new AttributeValue();
-                    attributeValue.setTargetId((Long) _method_getIdValue.invoke(dao, entityClass, dynaBean));
-                    attributeValue.setAttribute(attribute);
-                }
-                String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), entity, String.class);
-                if (StringUtil.isNotBlank(value)) {
-                    attributeValue.setValue(value);
-                } else {
-                    ObjectUtil.remove(dynaBean.getAttributeValues(), "attribute.code", attribute.getCode());
-                }
-            }
-            entity = dynaBean;
+        if (!(entity != null && entity instanceof DynaBean && entity.getClass().getName().contains("$v") && entityClass.equals(entity.getClass().getSuperclass()))) {
+            return pjp.proceed(new Object[]{entity});
         }
-        return pjp.proceed(new Object[]{entity});
+        Long entityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
+        DynaBean dynaBean = (DynaBean) (entityId == null ? ClassUtil.newInstance(entityClass) : _method_get.invoke(dao, entityId));
+        BeanUtil.copyProperties(dynaBean, entity, "attributeValues");
+        List<AttributeValue> attributeValues = dynaBean.getAttributeValues() == null ? new ArrayList<AttributeValue>() : dynaBean.getAttributeValues();
+        for (Attribute attribute : ((DynaBean) entity).getVersion().getAttributes()) {
+            AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
+            if (attributeValue == null) {
+                attributeValue = new AttributeValue();
+                attributeValue.setTargetId(entityId);
+                attributeValue.setAttribute(attribute);
+                attributeValue.setVersion(((DynaBean) entity).getVersion());
+            }
+            String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), entity, String.class);
+            if (StringUtil.isNotBlank(value)) {
+                attributeValue.setValue(value);
+                attributeValues.add(attributeValue);
+            } else {
+                ObjectUtil.remove(attributeValues, "attribute.code", attribute.getCode());
+            }
+        }
+        Object oldEntity = entity;
+        entity = dynaBean;
+        Object retval = pjp.proceed(new Object[]{entity});
+        Long newEntityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
+        if (entityId != null || newEntityId == null) {
+            BeanUtil.copyProperties(oldEntity, entity);
+            return retval;
+        }
+        for (AttributeValue attributeValue : attributeValues) {
+            attributeValue.setTargetId(newEntityId);
+        }
+        ((DynaBean) entity).setAttributeValues(attributeValues);
+        retval = pjp.proceed(new Object[]{entity});
+        BeanUtil.copyProperties(oldEntity, entity);
+        return retval;
     }
 
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.get(..)) && args(id)", argNames = "pjp,id")

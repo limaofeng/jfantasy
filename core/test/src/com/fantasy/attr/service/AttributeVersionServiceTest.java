@@ -116,6 +116,16 @@ public class AttributeVersionServiceTest {
 
         this.articleService.save(article);
 
+        article = this.articleService.get(article.getId());
+
+        logger.debug(article);
+
+        Assert.assertEquals(456, OgnlUtil.getInstance().getValue("intTest", article));
+
+        for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
+            this.articleService.delete(art.getId());
+        }
+
     }
 
     //    @Test
