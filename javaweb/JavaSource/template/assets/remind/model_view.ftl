@@ -5,8 +5,8 @@
         <div class="tabs">
             <ul >
                 <li>
-                    <a title="提醒信息" href="#normal-tabs-1">
-                        提醒信息
+                    <a title="模版详情" href="#normal-tabs-1">
+                        模版详情
                     </a>
                 </li>
             </ul>
@@ -17,42 +17,61 @@
                 <div class="form-row">
                     <div class="form-label  col-md-2">
                         <label for="">
+                            模版图片:
+                        </label>
+                    </div>
+                    <div class="form-input col-md-10">
+                    <@s.img src="%{notice.model.avatar.absolutePath}" ratio="160x160" cssClass="img-thumbnail"/>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label  col-md-2">
+                        <label for="">
+                            编码:
+                        </label>
+                    </div>
+                    <div class="form-input col-md-10">
+                    <@s.property value="notice.code" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label  col-md-2">
+                        <label for="">
+                            编码:
+                        </label>
+                    </div>
+                    <div class="form-input col-md-10">
+                        <@s.property value="notice.code" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label  col-md-2">
+                        <label for="">
+                            模版名称:
+                        </label>
+                    </div>
+                    <div class="form-input col-md-10">
+                    <@s.property value="notice.code" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label  col-md-2">
+                        <label class="label-description" for="">
+                            跳转链接:
+                        </label>
+                    </div>
+                    <div class="form-input col-md-10">
+                    <@s.property value="notice.url" />
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-label  col-md-2">
+                        <label class="label-description" for="">
                             内容:
                         </label>
                     </div>
                     <div class="form-input col-md-10">
                         <@s.property value="notice.content" />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label class="label-description" for="">
-                            跳转连接:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                        <@s.property value="notice.url" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label class="label-description" for="">
-                            使用模版:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                    <@s.property value="notice.model.name" />
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label class="label-description" for="">
-                            创建时间:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                    <@s.date name="%{notice.createTime}" format="yyyy-MM-dd hh:mm:ss"/>
                     </div>
                 </div>
 

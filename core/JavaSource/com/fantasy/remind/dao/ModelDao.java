@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
-public class ModelDao extends HibernateDao<Model,Long> {
+public class ModelDao extends HibernateDao<Model,String> {
 }

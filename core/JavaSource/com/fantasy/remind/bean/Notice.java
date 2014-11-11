@@ -1,7 +1,6 @@
 package com.fantasy.remind.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.remind.bean.Model;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -20,10 +19,10 @@ public class Notice extends BaseBusEntity {
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
-     * 提醒
+     * 提醒内容
      */
-    @Column(name="TITLE",length = 500)
-    private String title;
+    @Column(name="CONTENT",length = 500)
+    private String content;
 
 
     /**
@@ -32,12 +31,12 @@ public class Notice extends BaseBusEntity {
     @Column(name="URL")
     private String url;
 
-    /**
-     * 商品所属分类
-     */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MODEL_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_NOTICE_MODEL"))
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "CODE", nullable = false, foreignKey = @ForeignKey(name = "FK_NOTICE_MODEL_CODE"))
     private Model model;
+
+    @Transient
+    private String replaceMap;
 
     public Long getId() {
         return id;
@@ -47,12 +46,12 @@ public class Notice extends BaseBusEntity {
         this.id = id;
     }
 
-    public String getTitle() {
-        return title;
+    public String getContent() {
+        return content;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public void setContent(String content) {
+        this.content = content;
     }
 
     public String getUrl() {
@@ -69,5 +68,13 @@ public class Notice extends BaseBusEntity {
 
     public void setModel(Model model) {
         this.model = model;
+    }
+
+    public String getReplaceMap() {
+        return replaceMap;
+    }
+
+    public void setReplaceMap(String replaceMap) {
+        this.replaceMap = replaceMap;
     }
 }

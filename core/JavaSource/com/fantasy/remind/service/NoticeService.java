@@ -1,0 +1,92 @@
+package com.fantasy.remind.service;
+
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.remind.bean.Model;
+import com.fantasy.remind.bean.Notice;
+import com.fantasy.remind.dao.ModelDao;
+import com.fantasy.remind.dao.NoticeDao;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 提醒 service
+ */
+
+@Service
+@Transactional
+public class NoticeService {
+
+    @Resource
+    private NoticeDao noticeDao;
+    @Resource
+    private ModelDao modelDao;
+
+    /**
+     * 查看
+     * @param pager
+     * @param filters
+     * @return
+     */
+    public Pager<Notice> findPager(Pager<Notice> pager,List<PropertyFilter> filters){
+        return this.noticeDao.findPager(pager,filters);
+    }
+
+
+    /**
+     * 保存
+     * @param notice
+     */
+    public void save(Notice notice) throws Exception{
+        if(notice.getContent()==null&&notice.getModel()!=null&&notice.getModel().getCode()!=null){
+            Model m=modelDao.get(notice.getModel().getCode());
+            if(m==null)
+                throw new RuntimeException("无匹配model项");
+            Map<String,String> replaceMap= JSON.deserialize(notice.getReplaceMap(),new HashMap<String,String>().getClass());
+            if(replaceMap!=null){
+                String content=m.getContent();
+                String url=m.getUrl();
+                for(String s:replaceMap.keySet()){
+                    content=content.replace("${"+s+"}",replaceMap.get(s));
+                    if(StringUtil.isNotNull(url)&&!StringUtil.isNotNull(notice.getUrl())) url=url.replace("${"+s+"}",replaceMap.get(s));
+                }
+                if(!StringUtil.isNotNull(notice.getUrl())) notice.setUrl(url);
+                notice.setContent(content);
+            }
+        }
+
+        this.noticeDao.save(notice);
+    }
+
+
+    /**
+     * 查看
+     * @param id
+     * @return
+     */
+    public Notice get(Long id){
+        return this.noticeDao.get(id);
+    }
+
+
+    /**
+     * 删除
+     * @param ids
+     */
+    public void delete(Long[] ids){
+        for(Long id:ids){
+            this.noticeDao.delete(id);
+        }
+
+    }
+
+
+
+}

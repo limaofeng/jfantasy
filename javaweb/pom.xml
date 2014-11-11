@@ -75,11 +75,13 @@
             <artifactId>fantasy-core-ws-server</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-websocket</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
+        -->
         <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
