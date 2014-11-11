@@ -11,6 +11,7 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,4 +106,22 @@ public class AttributeVersionService {
     }
 
 
+    /**
+     * 获取版本列表
+     *
+     * @return
+     */
+    public List<AttributeVersion> getAttributeVersions() {
+        return this.attributeVersionDao.find(new Criterion[0]);
+    }
+
+    /**
+     * 静态获取版本列表
+     *
+     * @return
+     */
+    public static List<AttributeVersion> listAttributeVersions() {
+        AttributeVersionService versionService = SpringContextUtil.getBeanByType(AttributeVersionService.class);
+        return versionService.getAttributeVersions();
+    }
 }
