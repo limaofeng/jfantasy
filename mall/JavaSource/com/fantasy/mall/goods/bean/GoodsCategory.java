@@ -1,5 +1,7 @@
 package com.fantasy.mall.goods.bean;
 
+import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -27,7 +29,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_GOODS_CATEGORY")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "metaKeywords", "metaDescription", "goodsParameterStore", "brandCustomSort", "goods"})
-public class GoodsCategory extends BaseBusEntity {
+public class GoodsCategory extends BaseBusEntity implements DynaBean {
 
     private static final long serialVersionUID = -5132652107151648662L;
 
@@ -118,6 +120,18 @@ public class GoodsCategory extends BaseBusEntity {
      */
     @Column(name = "GOODS_PARAMETER_STORE", length = 3000)
     private String goodsParameterStore;
+    /**
+     * 数据版本
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_CATEGORY_VERSION"))
+    private AttributeVersion version;
+    /**
+     * 动态属性集合
+     */
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    private List<AttributeValue> attributeValues;
 
     public Long getId() {
         return id;
@@ -202,6 +216,26 @@ public class GoodsCategory extends BaseBusEntity {
             return new String[0];
         }
         return StringUtil.tokenizeToStringArray(this.brandCustomSort);
+    }
+
+    @Override
+    public AttributeVersion getVersion() {
+        return version;
+    }
+
+    @Override
+    public void setVersion(AttributeVersion version) {
+        this.version = version;
+    }
+
+    @Override
+    public List<AttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
+
+    @Override
+    public void setAttributeValues(List<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
     }
 
     public Long[] getBrandIds() {

@@ -1,5 +1,8 @@
 package com.fantasy.mall.goods.bean;
 
+import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.bean.AttributeValue;
+import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -27,7 +30,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_PRODUCT")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "specificationValueStore", "goodsNotifys", "goodsImage", "goodsImageStore", "cartItems", "orderItems", "deliveryItems", "warningSettings"})
-public class Product extends BaseBusEntity {
+public class Product extends BaseBusEntity implements DynaBean {
 
     private static final long serialVersionUID = -4663151563624172169L;
 
@@ -83,7 +86,6 @@ public class Product extends BaseBusEntity {
     private String specificationValueStore;// 商品规格值存储
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GOODS_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_PRODUCT_GOODS"))
-
     private Goods goods;// 商品
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<GoodsNotify> goodsNotifys;// 到货通知
@@ -95,13 +97,23 @@ public class Product extends BaseBusEntity {
     private List<DeliveryItem> deliveryItems;// 物流项
     @Column(name = "GOODS_IMAGE_STORE", length = 3000)
     private String goodsImageStore;
-
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Stock> stocks;// 库存变量
-
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumn(name = "WARNINGSETTINGS_ID", foreignKey = @ForeignKey(name = "FK_PRODUCT_WARNINGSETTINGS"))
     private WarningSettings warningSettings;
+    /**
+     * 数据版本
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_PRODUCT_VERSION"))
+    private AttributeVersion version;
+    /**
+     * 动态属性集合
+     */
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    private List<AttributeValue> attributeValues;
 
     @Transient
     public Integer getSurplusStore() {// 可用库存
@@ -175,6 +187,26 @@ public class Product extends BaseBusEntity {
 
     public Integer getStore() {
         return store;
+    }
+
+    @Override
+    public AttributeVersion getVersion() {
+        return version;
+    }
+
+    @Override
+    public void setVersion(AttributeVersion version) {
+        this.version = version;
+    }
+
+    @Override
+    public List<AttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
+
+    @Override
+    public void setAttributeValues(List<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
     }
 
     public void setStore(Integer store) {
