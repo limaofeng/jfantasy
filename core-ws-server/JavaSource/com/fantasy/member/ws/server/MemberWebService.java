@@ -43,7 +43,7 @@ public class MemberWebService implements IMemberService {
 
     @Override
     public MemberDTO register(MemberDTO member) {
-        return toMemberDTO(memberService.register(WebServiceUtil.toBean(member, Member.class)));
+        return toMemberDTO(memberService.register(toMember(member)));
     }
 
     @Override
@@ -64,31 +64,87 @@ public class MemberWebService implements IMemberService {
 
     @Override
     public MemberDTO update(MemberDTO memberDTO) {
-        MemberDetailsDTO detailsDTO = memberDTO.getDetails();
-        Member member = this.memberService.findUniqueByUsername(memberDTO.getUsername());
-        //昵称
-        member.setNickName(memberDTO.getNickName());
-        //会员详细
+        Member member = toMember(memberDTO);
+        this.memberService.save(member);
+        return toMemberDTO(member);
+    }
+
+    private MemberDTO toMemberDTO(Member member){
+        //memberDTO 对象
+        MemberDTO memberDTO = new MemberDTO();
+        memberDTO.setId(member.getId());
+        memberDTO.setUsername(member.getUsername());
+        memberDTO.setPassword(member.getPassword());
+        memberDTO.setNickName(member.getNickName());
+        memberDTO.setEnabled(member.isEnabled());
+        memberDTO.setAccountNonExpired(member.isAccountNonExpired());
+        memberDTO.setAccountNonLocked(member.isAccountNonLocked());
+        memberDTO.setLockTime(member.getLockTime());
+        memberDTO.setLastLoginTime(member.getLastLoginTime());
+        //详细
+        MemberDetailsDTO detailsDTO = new MemberDetailsDTO();
         MemberDetails details = member.getDetails();
-        //姓名
-        details.setName(detailsDTO.getName());
-        //性别
-        if (Sex.female.toString().equals(detailsDTO.getSex())) {
-            details.setSex(Sex.female);
-        } else {
-            details.setSex(Sex.male);
+        detailsDTO.setMemberId(details.getMemberId());
+        detailsDTO.setName(details.getName());
+        detailsDTO.setSex(details.getSex() == null ? null : details.getSex().toString());
+        detailsDTO.setBirthday(details.getBirthday());
+        detailsDTO.setMobile(details.getMobile());
+        detailsDTO.setTel(details.getTel());
+        detailsDTO.setEmail(details.getEmail());
+        detailsDTO.setMailValid(details.getMailValid());
+        detailsDTO.setMobileValid(details.getMobileValid());
+        detailsDTO.setWebsite(details.getWebsite());
+        detailsDTO.setDescription(details.getDescription());
+        detailsDTO.setVip(details.getVip());
+        detailsDTO.setScore(details.getScore());
+        //会员头像
+        FileDetail fileDetail =  details.getAvatar();
+        if(fileDetail!=null){
+           detailsDTO.setAvatar(fileDetail.getAbsolutePath());
         }
-        //生日
+        memberDTO.setDetails(detailsDTO);
+        return memberDTO;
+    }
+
+    private Member toMember(MemberDTO memberDTO){
+        //memberDTO 对象
+        Member member = this.memberService.findUniqueByUsername(memberDTO.getUsername());
+        if(member==null){
+            member = new Member();
+            member.setUsername(memberDTO.getUsername());
+        }
+        member.setPassword(memberDTO.getPassword());
+        member.setNickName(memberDTO.getNickName());
+        member.setEnabled(memberDTO.isEnabled());
+        member.setAccountNonExpired(memberDTO.isAccountNonExpired());
+        member.setAccountNonLocked(memberDTO.isAccountNonLocked());
+        member.setLockTime(memberDTO.getLockTime());
+        member.setLastLoginTime(memberDTO.getLastLoginTime());
+        //详细
+        MemberDetailsDTO detailsDTO = memberDTO.getDetails();
+        MemberDetails details =member.getDetails();
+        if(details==null){
+            details = new MemberDetails();
+            member.setDetails(details);
+        }
+        details.setName(detailsDTO.getName());
+        if("female".equals(detailsDTO.getSex())){
+            details.setSex(Sex.female);//女
+        }else{
+            details.setSex(Sex.male);//男
+        }
         details.setBirthday(detailsDTO.getBirthday());
-        //移动电话
         details.setMobile(detailsDTO.getMobile());
-        //固定电话
         details.setTel(detailsDTO.getTel());
-        //邮箱
         details.setEmail(detailsDTO.getEmail());
-        //描述信息
+        details.setMailValid(detailsDTO.getMailValid());
+        details.setMobileValid(detailsDTO.getMobileValid());
+        details.setWebsite(detailsDTO.getWebsite());
         details.setDescription(detailsDTO.getDescription());
-        //保存头像
+        details.setVip(detailsDTO.getVip());
+        details.setScore(detailsDTO.getScore());
+        //会员头像
+        // detailsDTO.getAvatar().startsWith("/") 判断文件是否需要上传。有 ‘/’表示 还是原来的图片。不需要重新生成
         if (StringUtil.isNotBlank(detailsDTO.getAvatar()) && !detailsDTO.getAvatar().startsWith("/")) {
             if (logger.isDebugEnabled()) {
                 logger.debug("上传用户头像(base64编码的图片):" + detailsDTO.getAvatar());
@@ -101,19 +157,16 @@ public class MemberWebService implements IMemberService {
                 String fileName = file.getName() + "." + mimeType.replace("image/", "");
                 FileDetail fileDetail = fileUploadService.upload(file, mimeType, fileName, "avatar");
                 logger.debug("头像上传成功:" + fileDetail);
-                details.setAvatarStore(JSON.serialize(fileDetail));
+                details.setAvatarStore(JSON.serialize(new FileDetail[]{fileDetail}));
+                //删除临时文件
+                FileUtil.delFile(file);
             } catch (FileNotFoundException e) {
                 logger.error(e.getMessage(), e);
             } catch (IOException e) {
                 logger.error(e.getMessage(), e);
             }
         }
-        this.memberService.save(member);
-        return toMemberDTO(member);
-    }
-
-    private MemberDTO toMemberDTO(Member member){
-        return WebServiceUtil.toBean(member, MemberDTO.class);
+        return member;
     }
 
 }

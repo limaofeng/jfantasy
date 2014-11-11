@@ -53,10 +53,11 @@ public class MemberWebServiceTest {
         MemberDTO memberDTO = new MemberDTO();
         memberDTO.setUsername("hebo");
         memberDTO.setPassword("123456");
+        MemberDetailsDTO memberDetailsDTO = new MemberDetailsDTO();
+        memberDetailsDTO.setName("何博");
+        memberDTO.setDetails(memberDetailsDTO);
         memberDTO = this.iMemberService.register(memberDTO);
-
         logger.debug(memberDTO);
-
         assertNotNull(memberDTO.getId());
     }
 
@@ -97,6 +98,9 @@ public class MemberWebServiceTest {
         detailsDTO.setBirthday(new Date());
         detailsDTO.setEmail("393469668@qq.com");
         detailsDTO.setDescription("何博是个大笨蛋");
+
+
+
         //图片进行base64位编码
         detailsDTO.setAvatar(ImageUtil.getImage(MemberWebServiceTest.class.getResourceAsStream("avatar.png")));
         logger.debug(memberDTO);

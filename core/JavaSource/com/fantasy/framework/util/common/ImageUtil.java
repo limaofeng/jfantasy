@@ -789,6 +789,11 @@ public final class ImageUtil {
         }
     }
 
+    /**
+     * 获取base64位编码的字符串 转换为图片对象
+     * @param base64
+     * @return BufferedImage
+     */
     public static BufferedImage getImage(String base64) {
         try {
             BASE64Decoder decoder = new BASE64Decoder();
