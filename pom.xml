@@ -91,6 +91,7 @@
                     <include>**/*.ftl</include>
                     <include>**/*.xml</include>
                     <include>**/*.jpg</include>
+                    <include>**/*.png</include>
                     <include>**/*.properties</include>
                 </includes>
             </testResource>

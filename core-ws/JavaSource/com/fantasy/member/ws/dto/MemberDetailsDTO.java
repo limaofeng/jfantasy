@@ -5,255 +5,240 @@ import java.util.Date;
 
 public class MemberDetailsDTO implements Serializable {
 
-	private static final long serialVersionUID = -2371459979188627292L;
+    private static final long serialVersionUID = -2371459979188627292L;
 
-	private Long memberId;
-	/**
-	 * 姓名
-	 */
-	private String name;
-	/**
-	 * 性别
-	 */
-	private String sex;
-	/**
-	 * 生日
-	 */
-	private Date birthday;
-	/**
-	 * 移动电话
-	 */
-	private String mobile;
-	/**
-	 * 固定电话
-	 */
-	private String tel;
-	/**
-	 * E-mail
-	 */
-	private String email;
+    private Long memberId;
+    /**
+     * 姓名
+     */
+    private String name;
+    /**
+     * 性别
+     */
+    private String sex;
+    /**
+     * 生日
+     */
+    private Date birthday;
+    /**
+     * 移动电话
+     */
+    private String mobile;
+    /**
+     * 固定电话
+     */
+    private String tel;
+    /**
+     * E-mail
+     */
+    private String email;
 
-	private Boolean mailValid;
+    private Boolean mailValid;
 
-	private Boolean mobileValid;
+    private Boolean mobileValid;
 
-	/**
-	 * 网址
-	 */
-	private String website;
-	/**
-	 * 描述信息
-	 */
-	private String description;
+    /**
+     * 网址
+     */
+    private String website;
+    /**
+     * 描述信息
+     */
+    private String description;
 
-	/**
-	 * 是否为vip用户
-	 */
-	private Boolean vip;
-	/**
-	 * 用户积分
-	 */
-	private Integer score;
+    /**
+     * 是否为vip用户
+     */
+    private Boolean vip;
+    /**
+     * 用户积分
+     */
+    private Integer score;
 
-	
 
-	/**
-	 * 发票抬头
-	 */
-	private String invoice;
-	
-	/**
-	 * 账单邮寄地址
-	 * 
-	 */
-	private String checkaddress;
-	
+    /**
+     * 发票抬头
+     */
+    private String invoice;
 
-	/**
-	 * qq
-	 * 
-	 */
-	private String qq;
+    /**
+     * 账单邮寄地址
+     */
+    private String checkaddress;
 
-	/**
-	 * 身份证号
-	 * 
-	 */
-	
-	private String cardid;
-	
-	/**
-	 * 住址
-	 * 
-	 */
-	private String address;
-	
-	
-	
-	/**
-	 * 头像
-	 * 
-	 */
-	private String portrait;
-	
-	
-	
-	
-	
-	
-	
-	public String getPortrait() {
-		return portrait;
-	}
 
-	public void setPortrait(String portrait) {
-		this.portrait = portrait;
-	}
+    /**
+     * qq
+     */
+    private String qq;
 
-	public Integer getScore() {
-		return score;
-	}
+    /**
+     * 身份证号
+     */
 
-	public void setScore(Integer score) {
-		this.score = score;
-	}
+    private String cardid;
 
-	public Boolean getVip() {
-		return vip;
-	}
+    /**
+     * 住址
+     */
+    private String address;
 
-	public void setVip(Boolean vip) {
-		this.vip = vip;
-	}
+    /**
+     * 用户头像
+     */
+    private String avatar;
 
-	public String getName() {
-		return name;
-	}
+    public String getAvatar() {
+        return avatar;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
 
-	public String getSex() {
-		return sex;
-	}
+    public Integer getScore() {
+        return score;
+    }
 
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
+    public void setScore(Integer score) {
+        this.score = score;
+    }
 
-	public Date getBirthday() {
-		return birthday;
-	}
+    public Boolean getVip() {
+        return vip;
+    }
 
-	public void setBirthday(Date birthday) {
-		this.birthday = birthday;
-	}
+    public void setVip(Boolean vip) {
+        this.vip = vip;
+    }
 
-	public String getMobile() {
-		return mobile;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setMobile(String mobile) {
-		this.mobile = mobile;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public String getTel() {
-		return tel;
-	}
+    public String getSex() {
+        return sex;
+    }
 
-	public void setTel(String tel) {
-		this.tel = tel;
-	}
+    public void setSex(String sex) {
+        this.sex = sex;
+    }
 
-	public String getEmail() {
-		return email;
-	}
+    public Date getBirthday() {
+        return birthday;
+    }
 
-	public void setEmail(String email) {
-		this.email = email;
-	}
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
+    }
 
-	public String getWebsite() {
-		return website;
-	}
+    public String getMobile() {
+        return mobile;
+    }
 
-	public void setWebsite(String website) {
-		this.website = website;
-	}
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
 
-	public Long getMemberId() {
-		return memberId;
-	}
+    public String getTel() {
+        return tel;
+    }
 
-	public void setMemberId(Long memberId) {
-		this.memberId = memberId;
-	}
+    public void setTel(String tel) {
+        this.tel = tel;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getEmail() {
+        return email;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setEmail(String email) {
+        this.email = email;
+    }
 
-	public Boolean getMailValid() {
-		return mailValid;
-	}
+    public String getWebsite() {
+        return website;
+    }
 
-	public void setMailValid(Boolean mailValid) {
-		this.mailValid = mailValid;
-	}
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
-	public Boolean getMobileValid() {
-		return mobileValid;
-	}
+    public Long getMemberId() {
+        return memberId;
+    }
 
-	public void setMobileValid(Boolean mobileValid) {
-		this.mobileValid = mobileValid;
-	}
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
 
-	public String getInvoice() {
-		return invoice;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setInvoice(String invoice) {
-		this.invoice = invoice;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	public String getCheckaddress() {
-		return checkaddress;
-	}
+    public Boolean getMailValid() {
+        return mailValid;
+    }
 
-	public void setCheckaddress(String checkaddress) {
-		this.checkaddress = checkaddress;
-	}
+    public void setMailValid(Boolean mailValid) {
+        this.mailValid = mailValid;
+    }
 
-	public String getQq() {
-		return qq;
-	}
+    public Boolean getMobileValid() {
+        return mobileValid;
+    }
 
-	public void setQq(String qq) {
-		this.qq = qq;
-	}
+    public void setMobileValid(Boolean mobileValid) {
+        this.mobileValid = mobileValid;
+    }
 
-	public String getCardid() {
-		return cardid;
-	}
+    public String getInvoice() {
+        return invoice;
+    }
 
-	public void setCardid(String cardid) {
-		this.cardid = cardid;
-	}
+    public void setInvoice(String invoice) {
+        this.invoice = invoice;
+    }
 
-	public String getAddress() {
-		return address;
-	}
+    public String getCheckaddress() {
+        return checkaddress;
+    }
 
-	public void setAddress(String address) {
-		this.address = address;
-	}
-	
-	
-	
+    public void setCheckaddress(String checkaddress) {
+        this.checkaddress = checkaddress;
+    }
+
+    public String getQq() {
+        return qq;
+    }
+
+    public void setQq(String qq) {
+        this.qq = qq;
+    }
+
+    public String getCardid() {
+        return cardid;
+    }
+
+    public void setCardid(String cardid) {
+        this.cardid = cardid;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+
 }

@@ -6,6 +6,7 @@ import com.fantasy.member.service.MemberService;
 import com.fantasy.member.ws.IMemberService;
 import com.fantasy.member.ws.dto.MemberDTO;
 import com.fantasy.member.ws.dto.MemberDetailsDTO;
+import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.runner.RunWith;
@@ -13,13 +14,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Date;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * 会员junit测试
@@ -46,10 +43,10 @@ public class MemberWebServiceTest {
     public void tearDown() throws Exception {
         String userName = "hebo";
         Member member = this.memberService.findUniqueByUsername(userName);
-
         logger.debug(member);
-
-        this.memberService.delete(member.getId());
+        if(member != null) {
+            this.memberService.delete(member.getId());
+        }
     }
 
     public void testRegister() throws Exception {
@@ -101,11 +98,11 @@ public class MemberWebServiceTest {
         detailsDTO.setEmail("393469668@qq.com");
         detailsDTO.setDescription("何博是个大笨蛋");
         //图片进行base64位编码
-        detailsDTO.setPortrait(ImageUtil.getImage(new FileInputStream(new File(detailsDTO.getPortrait()))));
-
+        detailsDTO.setAvatar(ImageUtil.getImage(MemberWebServiceTest.class.getResourceAsStream("avatar.png")));
         logger.debug(memberDTO);
-
         this.iMemberService.update(memberDTO);
+
+        Assert.assertNotNull(memberDTO.getDetails().getAvatar());
 
         logger.debug(memberDTO);
     }

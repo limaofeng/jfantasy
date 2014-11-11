@@ -214,4 +214,20 @@ public class FileDetail extends BaseBusEntity {
     public FileDetail clone(){
         return ObjectUtil.clone(this);
     }
+
+    @Override
+    public String toString() {
+        return "FileDetail{" +
+                "absolutePath='" + absolutePath + '\'' +
+                ", fileManagerId='" + fileManagerId + '\'' +
+                ", fileName='" + fileName + '\'' +
+                ", ext='" + ext + '\'' +
+                ", contentType='" + contentType + '\'' +
+                ", description='" + description + '\'' +
+                ", size=" + size +
+                ", md5='" + md5 + '\'' +
+                ", realPath='" + realPath + '\'' +
+                ", folder=" + folder +
+                '}';
+    }
 }
