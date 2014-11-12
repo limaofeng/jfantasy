@@ -32,6 +32,7 @@ public class AttributeValueInterceptor {
     private final static MethodProxy _method_buildPropertyFilterCriterion = ClassUtil.getMethodProxy(HibernateDao.class, "buildPropertyFilterCriterion");
     private final static MethodProxy _method_findPager = ClassUtil.getMethodProxy(HibernateDao.class, "findPager", Pager.class, Criterion[].class);
     private final static MethodProxy _method_getIdValue = ClassUtil.getMethodProxy(HibernateDao.class, "getIdValue", Class.class, Object.class);
+
     private final static MethodProxy _method_get = ClassUtil.getMethodProxy(HibernateDao.class, "get", Serializable.class);
 
     /**
@@ -74,6 +75,33 @@ public class AttributeValueInterceptor {
         }
         return pager;
     }
+
+
+    /**
+     * find 时，对动态Bean 添加代理
+     * @param pjp    ProceedingJoinPoint
+     * @return Object
+     * @throws Throwable
+     */
+
+    @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.find(..))")
+    public Object find(ProceedingJoinPoint pjp) throws Throwable {
+        Class<?> entityClass = ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass());
+        HibernateDao dao = (HibernateDao) pjp.getTarget();
+        if (!DynaBean.class.isAssignableFrom(entityClass)) {
+            return pjp.proceed();
+        }
+        List<DynaBean> beans = (List)pjp.proceed();
+        for (int i = 0, length = beans.size(); i < length; i++) {
+            DynaBean dynaBean = beans.get(i);
+            if (dynaBean.getVersion() == null) {
+                continue;
+            }
+            beans.set(i, VersionUtil.makeDynaBean(dynaBean));
+        }
+        return beans;
+    }
+
 
     /**
      * 保存代理对象时，将代理对象转为原来的类型
