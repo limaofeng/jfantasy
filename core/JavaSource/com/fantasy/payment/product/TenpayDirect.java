@@ -16,7 +16,6 @@ import java.util.Map;
 /**
  * 财付通（即时交易）
  */
-
 public class TenpayDirect extends AbstractPaymentProduct {
 
     public static final String PAYMENT_URL = "http://service.tenpay.com/cgi-bin/v3.0/payservice.cgi";// 支付请求URL
@@ -30,7 +29,6 @@ public class TenpayDirect extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    @Override
     public String getPaymentSn(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -42,7 +40,6 @@ public class TenpayDirect extends AbstractPaymentProduct {
         return spBillno;
     }
 
-    @Override
     public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -54,20 +51,16 @@ public class TenpayDirect extends AbstractPaymentProduct {
         return new BigDecimal(totalFee).divide(new BigDecimal(100));
     }
 
-    public boolean isPaySuccess(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
+    public boolean isPaySuccess(Map<String, String> parameters) {
+        if (parameters == null) {
             return false;
         }
-        String payResult = httpServletRequest.getParameter("pay_result");
-        if (StringUtils.equals(payResult, "0")) {
-            return true;
-        } else {
-            return false;
-        }
+        String payResult = parameters.get("pay_result");
+        return StringUtils.equals(payResult, "0");
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest) {
+    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
         String transactionId = buildTenpayTransactionId(paymentConfig.getBargainorId(), paymentSn);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String dateString = simpleDateFormat.format(new Date());
@@ -85,7 +78,7 @@ public class TenpayDirect extends AbstractPaymentProduct {
         String fee_type = "1";// 支付币种（1：人民币）
         String return_url = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String attach = "s" + "h" + "o" + "p" + "x" + "x";// 商户数据
-        String spbill_create_ip = httpServletRequest.getRemoteAddr();// 客户IP
+        String spbill_create_ip = parameters.get("remoteAddr");// 客户IP
         String key = paymentConfig.getBargainorKey();// 密钥
 
         // 生成签名
@@ -125,17 +118,17 @@ public class TenpayDirect extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest httpServletRequest) {
+    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
         // 财付通（即时交易）
-        String cmdno = httpServletRequest.getParameter("cmdno");
-        String pay_result = httpServletRequest.getParameter("pay_result");
-        String date = httpServletRequest.getParameter("date");
-        String transaction_id = httpServletRequest.getParameter("transaction_id");
-        String sp_billno = httpServletRequest.getParameter("sp_billno");
-        String total_fee = httpServletRequest.getParameter("total_fee");
-        String fee_type = httpServletRequest.getParameter("fee_type");
-        String attach = httpServletRequest.getParameter("attach");
-        String sign = httpServletRequest.getParameter("sign");
+        String cmdno = parameters.get("cmdno");
+        String pay_result = parameters.get("pay_result");
+        String date = parameters.get("date");
+        String transaction_id = parameters.get("transaction_id");
+        String sp_billno = parameters.get("sp_billno");
+        String total_fee = parameters.get("total_fee");
+        String fee_type = parameters.get("fee_type");
+        String attach = parameters.get("attach");
+        String sign = parameters.get("sign");
 
         // 验证支付签名
         Map<String, String> parameterMap = new LinkedHashMap<String, String>();
@@ -148,11 +141,7 @@ public class TenpayDirect extends AbstractPaymentProduct {
         parameterMap.put("fee_type", fee_type);
         parameterMap.put("attach", attach);
         parameterMap.put("key", paymentConfig.getBargainorKey());
-        if (StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase())) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase());
     }
 
     @Override
@@ -171,7 +160,7 @@ public class TenpayDirect extends AbstractPaymentProduct {
         String dateString = simpleDateFormat.format(new Date());
         int count = 10 - paymentSn.length();
         if (count > 0) {
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             for (int i = 0; i < count; i++) {
                 stringBuffer.append("0");
             }

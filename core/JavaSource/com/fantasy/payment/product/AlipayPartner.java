@@ -40,7 +40,6 @@ public class AlipayPartner extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    @Override
     public String getPaymentSn(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -52,7 +51,6 @@ public class AlipayPartner extends AbstractPaymentProduct {
         return outTradeNo;
     }
 
-    @Override
     public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -64,16 +62,16 @@ public class AlipayPartner extends AbstractPaymentProduct {
         return new BigDecimal(totalFee);
     }
 
-    public boolean isPaySuccess(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
+    public boolean isPaySuccess(Map<String, String> parameters) {
+        if (parameters == null) {
             return false;
         }
-        String tradeStatus = httpServletRequest.getParameter("trade_status");
+        String tradeStatus = parameters.get("trade_status");
         return StringUtils.equals(tradeStatus, "WAIT_SELLER_SEND_GOODS");
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest) {
+    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
         HttpServletResponse response = ServletActionContext.getResponse();
         String _input_charset = "UTF-8";// 字符集编码格式（UTF-8、GBK）
         String body = "";// 订单描述
@@ -134,19 +132,11 @@ public class AlipayPartner extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest request) {
+    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
         Map<String, String> params = new HashMap<String, String>();
-        Map requestParams = request.getParameterMap();
-        for (Object o : requestParams.keySet()) {
-            String name = (String) o;
-            String[] values = (String[]) requestParams.get(name);
-            String valueStr = "";
-            for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
-            }
+        for (Map.Entry<String,String> entry : parameters.entrySet()) {
             //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
-            valueStr = WebUtil.transformCoding(valueStr, "ISO-8859-1", "utf-8");
-            params.put(name, valueStr);
+            params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
         }
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
         //商户订单号

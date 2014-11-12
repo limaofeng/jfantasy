@@ -15,10 +15,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * web 工具类
@@ -301,9 +303,9 @@ public class WebUtil {
             osVersion = "Linux";
         else if (useros.indexOf("sunos") > 0) {
             osVersion = "SunOS";
-        }else if(useros.indexOf("iPhone")>0){
+        } else if (useros.indexOf("iPhone") > 0) {
             osVersion = "iPhone";
-        }else if(useros.indexOf("Android")>0){
+        } else if (useros.indexOf("Android") > 0) {
             osVersion = "Android";
         }
         return osVersion;
@@ -384,7 +386,21 @@ public class WebUtil {
         return queryString.replace("&$", "").concat("&sort=" + orderBy + "-asc");
     }
 
-    public static class UserAgent{
+    @SuppressWarnings("unchecked")
+    public static Map<String, String> getParameterMap(HttpServletRequest request) {
+        Map<String, String> parameter = new LinkedHashMap<String, String>();
+        Set<Map.Entry<String, Object>> entries = request.getParameterMap().entrySet();
+        for (Map.Entry<String, Object> entry : entries) {
+            if (ClassUtil.isArray(entry.getValue())) {
+                parameter.put(entry.getKey(), (String) Array.get(entry.getValue(), 0));
+            } else {
+                parameter.put(entry.getKey(), (String) entry.getValue());
+            }
+        }
+        return parameter;
+    }
+
+    public static class UserAgent {
 
     }
 
@@ -399,9 +415,9 @@ public class WebUtil {
         maxthon("Maxthon", "Maxthon \\d+\\W\\d+"),
         msie("MSIE", "msie\\s\\d+\\W\\d+"),
         mozilla("Mozilla", "firefox/\\d+\\W\\d+"),
-        mqqbrowser("MQQBrowser","MQQBrowser/\\d+\\W\\d+"),
-        ucbrowser("UCBrowser","UCBrowser/\\d+\\W\\d+"),
-        baidubrowser("baidubrowser","baidubrowser/\\d+\\W\\d+"),
+        mqqbrowser("MQQBrowser", "MQQBrowser/\\d+\\W\\d+"),
+        ucbrowser("UCBrowser", "UCBrowser/\\d+\\W\\d+"),
+        baidubrowser("baidubrowser", "baidubrowser/\\d+\\W\\d+"),
         unknown("unknown", "version/\\d+\\W\\d+");
 
         private String browser;

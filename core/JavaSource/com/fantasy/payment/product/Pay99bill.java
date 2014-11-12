@@ -28,7 +28,6 @@ public class Pay99bill extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    @Override
     public String getPaymentSn(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -40,7 +39,6 @@ public class Pay99bill extends AbstractPaymentProduct {
         return orderId;
     }
 
-    @Override
     public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -52,16 +50,16 @@ public class Pay99bill extends AbstractPaymentProduct {
         return new BigDecimal(payAmount);
     }
 
-    public boolean isPaySuccess(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
+    public boolean isPaySuccess(Map<String, String> parameters) {
+        if (parameters == null) {
             return false;
         }
-        String payResult = httpServletRequest.getParameter("payResult");
+        String payResult = parameters.get("payResult");
         return StringUtils.equals(payResult, "10");
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest) {
+    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         String dateString = simpleDateFormat.format(new Date());
         String totalAmountString = paymentAmount.multiply(new BigDecimal(100)).setScale(0).toString();
@@ -120,25 +118,25 @@ public class Pay99bill extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest httpServletRequest) {
+    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
         // 获取参数
-        String merchantAcctId = httpServletRequest.getParameter("merchantAcctId");
-        String version = httpServletRequest.getParameter("version");
-        String language = httpServletRequest.getParameter("language");
-        String signType = httpServletRequest.getParameter("signType");
-        String payType = httpServletRequest.getParameter("payType");
-        String bankId = httpServletRequest.getParameter("bankId");
-        String orderId = httpServletRequest.getParameter("orderId");
-        String orderTime = httpServletRequest.getParameter("orderTime");
-        String orderAmount = httpServletRequest.getParameter("orderAmount");
-        String dealId = httpServletRequest.getParameter("dealId");
-        String bankDealId = httpServletRequest.getParameter("bankDealId");
-        String dealTime = httpServletRequest.getParameter("dealTime");
-        String payAmount = httpServletRequest.getParameter("payAmount");
-        String fee = httpServletRequest.getParameter("fee");
-        String payResult = httpServletRequest.getParameter("payResult");
-        String errCode = httpServletRequest.getParameter("errCode");
-        String signMsg = httpServletRequest.getParameter("signMsg");
+        String merchantAcctId = parameters.get("merchantAcctId");
+        String version = parameters.get("version");
+        String language = parameters.get("language");
+        String signType = parameters.get("signType");
+        String payType = parameters.get("payType");
+        String bankId = parameters.get("bankId");
+        String orderId = parameters.get("orderId");
+        String orderTime = parameters.get("orderTime");
+        String orderAmount = parameters.get("orderAmount");
+        String dealId = parameters.get("dealId");
+        String bankDealId = parameters.get("bankDealId");
+        String dealTime = parameters.get("dealTime");
+        String payAmount = parameters.get("payAmount");
+        String fee = parameters.get("fee");
+        String payResult = parameters.get("payResult");
+        String errCode = parameters.get("errCode");
+        String signMsg = parameters.get("signMsg");
 
         // 验证支付签名
         Map<String, String> signMap = new LinkedHashMap<String, String>();

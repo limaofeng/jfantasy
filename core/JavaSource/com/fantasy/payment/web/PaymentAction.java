@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.Payment.PaymentStatus;
 import com.fantasy.payment.error.PaymentException;
@@ -55,7 +56,7 @@ public class PaymentAction extends ActionSupport {
         PaymentProduct paymentProduct = paymentService.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
 
         // 支付参数
-        Map<String, String> parameterMap = paymentProduct.getParameterMap(payment.getPaymentConfig(), payment.getSn(), payment.getTotalAmount(), request);
+        Map<String, String> parameterMap = paymentProduct.getParameterMap(payment.getPaymentConfig(), payment.getSn(), payment.getTotalAmount(), WebUtil.getParameterMap(this.request));
         this.attrs.put("paymentUrl", paymentProduct.getPaymentUrl());
         this.attrs.put("parameterMap", parameterMap);
         return SUCCESS;
@@ -75,9 +76,9 @@ public class PaymentAction extends ActionSupport {
             return ERROR;
         }
 //        BigDecimal totalAmount = paymentProduct.getPaymentAmount(this.request);
-        boolean isSuccess = paymentProduct.isPaySuccess(this.request);
+        boolean isSuccess = paymentProduct.isPaySuccess(WebUtil.getParameterMap(this.request));
 
-        if (!paymentProduct.verifySign(payment.getPaymentConfig(), this.request)) {
+        if (!paymentProduct.verifySign(payment.getPaymentConfig(), WebUtil.getParameterMap(this.request))) {
             addActionError("支付签名错误!");
             this.paymentService.failure(sn);
             return ERROR;

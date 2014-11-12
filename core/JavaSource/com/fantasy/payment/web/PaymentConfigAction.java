@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.product.PaymentProduct;
@@ -37,7 +38,7 @@ public class PaymentConfigAction extends ActionSupport {
         paymentService.ready(payment);
         PaymentProduct paymentProduct = paymentService.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
         // 支付参数
-        Map<String, String> parameterMap = paymentProduct.getParameterMap(payment.getPaymentConfig(), payment.getSn(), amount, ServletActionContext.getRequest());
+        Map<String, String> parameterMap = paymentProduct.getParameterMap(payment.getPaymentConfig(), payment.getSn(), amount, WebUtil.getParameterMap(ServletActionContext.getRequest()));
         this.attrs.put("paymentUrl", paymentProduct.getPaymentUrl());
         this.attrs.put("parameterMap", parameterMap);
         return SUCCESS;

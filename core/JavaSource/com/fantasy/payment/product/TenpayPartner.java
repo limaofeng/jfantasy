@@ -28,7 +28,6 @@ public class TenpayPartner extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    @Override
     public String getPaymentSn(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -40,7 +39,6 @@ public class TenpayPartner extends AbstractPaymentProduct {
         return cftTid;
     }
 
-    @Override
     public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
             return null;
@@ -52,11 +50,11 @@ public class TenpayPartner extends AbstractPaymentProduct {
         return new BigDecimal(totalFee).divide(new BigDecimal(100));
     }
 
-    public boolean isPaySuccess(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
+    public boolean isPaySuccess(Map<String, String> parameters) {
+        if (parameters == null) {
             return false;
         }
-        String status = httpServletRequest.getParameter("status");
+        String status = parameters.get("status");
         if (StringUtils.equals(status, "3")) {
             return true;
         } else {
@@ -65,7 +63,7 @@ public class TenpayPartner extends AbstractPaymentProduct {
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest) {
+    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
         String totalAmountString = paymentAmount.multiply(new BigDecimal(100)).setScale(0).toString();
 
         String attach = "sh" + "op" + "xx";// 商户数据
@@ -130,22 +128,22 @@ public class TenpayPartner extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest httpServletRequest) {
+    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
         // 获取参数
-        String attach = httpServletRequest.getParameter("attach");
-        String buyer_id = httpServletRequest.getParameter("buyer_id");
-        String cft_tid = httpServletRequest.getParameter("cft_tid");
-        String chnid = httpServletRequest.getParameter("chnid");
-        String cmdno = httpServletRequest.getParameter("cmdno");
-        String mch_vno = httpServletRequest.getParameter("mch_vno");
-        String retcode = httpServletRequest.getParameter("retcode");
-        String seller = httpServletRequest.getParameter("seller");
-        String status = httpServletRequest.getParameter("status");
-        String total_fee = httpServletRequest.getParameter("total_fee");
-        String trade_price = httpServletRequest.getParameter("trade_price");
-        String transport_fee = httpServletRequest.getParameter("transport_fee");
-        String version = httpServletRequest.getParameter("version");
-        String sign = httpServletRequest.getParameter("sign");
+        String attach = parameters.get("attach");
+        String buyer_id = parameters.get("buyer_id");
+        String cft_tid = parameters.get("cft_tid");
+        String chnid = parameters.get("chnid");
+        String cmdno = parameters.get("cmdno");
+        String mch_vno = parameters.get("mch_vno");
+        String retcode = parameters.get("retcode");
+        String seller = parameters.get("seller");
+        String status = parameters.get("status");
+        String total_fee = parameters.get("total_fee");
+        String trade_price = parameters.get("trade_price");
+        String transport_fee = parameters.get("transport_fee");
+        String version = parameters.get("version");
+        String sign = parameters.get("sign");
 
         // 验证支付签名
         Map<String, String> parameterMap = new LinkedHashMap<String, String>();

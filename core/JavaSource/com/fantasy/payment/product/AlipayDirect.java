@@ -89,31 +89,6 @@ public class AlipayDirect extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    /*
-    @Override
-    public String getPaymentSn(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String outTradeNo = httpServletRequest.getParameter("out_trade_no");
-        if (StringUtils.isEmpty(outTradeNo)) {
-            return null;
-        }
-        return outTradeNo;
-    }
-
-    @Override
-    public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String totalFee = httpServletRequest.getParameter("total_fee");
-        if (StringUtils.isEmpty(totalFee)) {
-            return null;
-        }
-        return new BigDecimal(totalFee);
-    }*/
-
     public boolean isPaySuccess(Map<String, String> parameters) {
         if (parameters == null) {
             return false;
@@ -183,7 +158,7 @@ public class AlipayDirect extends AbstractPaymentProduct {
         Map<String, String> params = new HashMap<String, String>();
         for (Map.Entry<String,String> entry : parameters.entrySet()) {
             //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
-            params.put(name, WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
+            params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
         }
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
         //商户订单号
