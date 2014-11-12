@@ -12,7 +12,6 @@
                 options.data = _data;
             },
             success: function (data) {
-                $('#pager').pager().reload();
                 top.$.msgbox({
                     msg: "<@s.text name="security.user.save.success"/>",
                     type: "success"
