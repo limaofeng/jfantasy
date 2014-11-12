@@ -2,7 +2,6 @@ package com.fantasy.payment.product;
 
 import com.fantasy.payment.bean.PaymentConfig;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -15,13 +14,13 @@ public interface PaymentProduct {
 
     String getName();
 
-    Map<String, String> getParameterMap(PaymentConfig paymentConfig, String sn, BigDecimal amount, HttpServletRequest request);
+    Map<String, String> getParameterMap(PaymentConfig paymentConfig, String sn, BigDecimal amount, Map<String, String> parameters);
 
-    boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest request);
+    boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters);
 
-    boolean isPaySuccess(HttpServletRequest request);
+    boolean isPaySuccess(Map<String, String> parameters);
 
-    BigDecimal getPaymentAmount(HttpServletRequest request);
+    //BigDecimal getPaymentAmount(Map<String, String> parameters);
 
     String getPayreturnMessage(String sn);
 }

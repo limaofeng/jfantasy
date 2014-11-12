@@ -10,7 +10,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -90,6 +89,7 @@ public class AlipayDirect extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
+    /*
     @Override
     public String getPaymentSn(HttpServletRequest httpServletRequest) {
         if (httpServletRequest == null) {
@@ -112,22 +112,22 @@ public class AlipayDirect extends AbstractPaymentProduct {
             return null;
         }
         return new BigDecimal(totalFee);
-    }
+    }*/
 
-    public boolean isPaySuccess(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
+    public boolean isPaySuccess(Map<String, String> parameters) {
+        if (parameters == null) {
             return false;
         }
-        String tradeStatus = httpServletRequest.getParameter("trade_status");
+        String tradeStatus = parameters.get("trade_status");
         return StringUtils.equals(tradeStatus, "TRADE_FINISHED") || StringUtils.equals(tradeStatus, "TRADE_SUCCESS");
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest request) {
+    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
         HttpServletResponse response = ServletActionContext.getResponse();
         String _input_charset = "UTF-8";// 字符集编码格式（UTF-8、GBK）
         AtomicReference<String> body = new AtomicReference<String>(paymentSn);// 订单描述
-        String defaultbank = request.getParameter("bankNo");// 默认选择银行（当paymethod为bankPay时有效）
+        String defaultbank = parameters.get("bankNo");// 默认选择银行（当paymethod为bankPay时有效）
         String extra_common_param = "";// 商户数据
         String notify_url = SettingUtil.getServerUrl() + response.encodeURL(NOTIFY_URL + "?sn=" + paymentSn);// 消息通知URL
         AtomicReference<String> out_trade_no = new AtomicReference<String>(paymentSn);// 支付编号
@@ -179,19 +179,11 @@ public class AlipayDirect extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest request) {
+    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
         Map<String, String> params = new HashMap<String, String>();
-        Map requestParams = request.getParameterMap();
-        for (Object o : requestParams.keySet()) {
-            String name = (String) o;
-            String[] values = (String[]) requestParams.get(name);
-            String valueStr = "";
-            for (int i = 0; i < values.length; i++) {
-                valueStr = (i == values.length - 1) ? valueStr + values[i] : valueStr + values[i] + ",";
-            }
+        for (Map.Entry<String,String> entry : parameters.entrySet()) {
             //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
-            valueStr = WebUtil.transformCoding(valueStr, "ISO-8859-1", "utf-8");
-            params.put(name, valueStr);
+            params.put(name, WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
         }
         //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
         //商户订单号

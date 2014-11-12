@@ -4,7 +4,6 @@ import com.fantasy.payment.bean.PaymentConfig;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -37,42 +36,44 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
      *
      * @param httpServletRequest httpServletRequest
      * @return 支付编号
-     */
+
     public abstract String getPaymentSn(HttpServletRequest httpServletRequest);
+     */
 
     /**
      * 获取支付金额（单位：元）
      *
      * @param httpServletRequest httpServletRequest
      * @return 支付金额
-     */
+
     public abstract BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest);
+     */
 
     /**
      * 判断是否支付成功
      *
-     * @param httpServletRequest httpServletRequest
+     * @param parameters 请求参数
      * @return 是否支付成功
      */
-    public abstract boolean isPaySuccess(HttpServletRequest httpServletRequest);
+    public abstract boolean isPaySuccess(Map<String, String> parameters);
 
     /**
      * 获取参数
      *
-     * @param paymentSn          支付编号
-     * @param paymentAmount      支付金额
-     * @param httpServletRequest httpServletRequest
+     * @param paymentSn     支付编号
+     * @param paymentAmount 支付金额
+     * @param parameters    请求参数
      * @return 在线支付参数
      */
-    public abstract Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest);
+    public abstract Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters);
 
     /**
      * 验证签名
      *
-     * @param httpServletRequest httpServletRequest
+     * @param parameters 请求参数
      * @return 是否验证通过
      */
-    public abstract boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest httpServletRequest);
+    public abstract boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters);
 
     /**
      * 根据支付编号获取支付返回信息
