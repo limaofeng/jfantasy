@@ -4,6 +4,8 @@ import com.fantasy.attr.bean.*;
 import com.fantasy.attr.typeConverter.PrimitiveTypeConverter;
 import com.fantasy.attr.typeConverter.UserTypeConverter;
 import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.security.bean.User;
@@ -136,33 +138,30 @@ public class AttributeVersionServiceTest {
         AttributeType attributeType = ObjectUtil.find(article.getVersion().getAttributes(),"code","intTest").getAttributeType();
         AttributeType userAttributeType = ObjectUtil.find(article.getVersion().getAttributes(),"code","user").getAttributeType();
 
+        //测试普通数据类型
         VersionUtil.getOgnlUtil(attributeType).setValue("intTest", article, "456");
-
         logger.debug(article);
-
-        Assert.assertEquals(456, OgnlUtil.getInstance().getValue("intTest", article));
-
         this.articleService.save(article);
-
         article = this.articleService.get(article.getId());
-
         logger.debug(article);
-
         Assert.assertEquals(456, OgnlUtil.getInstance().getValue("intTest", article));
 
+        //修改普通数据类型
         VersionUtil.getOgnlUtil(attributeType).setValue("intTest", article, "123");
-
+        //测试对象数据类型
         VersionUtil.getOgnlUtil(userAttributeType).setValue("user", article, "admin");
-
         logger.debug(VersionUtil.getOgnlUtil(userAttributeType).getValue("user", article));
-
         Assert.assertEquals(123, OgnlUtil.getInstance().getValue("intTest", article));
-
         this.articleService.save(article);
-
         logger.debug(article);
-
         Assert.assertEquals(123, OgnlUtil.getInstance().getValue("intTest", article));
+
+        //测试 findPager 中的动态属性
+        for(Article art : this.articleService.findPager(new Pager<Article>(),new ArrayList<PropertyFilter>()).getPageItems()){
+            logger.debug(art);
+            Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
+            Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
+        }
 
         for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
             this.articleService.delete(art.getId());

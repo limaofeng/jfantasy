@@ -2,6 +2,8 @@ package com.fantasy.attr.service;
 
 import com.fantasy.attr.bean.Article;
 import com.fantasy.attr.dao.ArticleDao;
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 
@@ -32,6 +34,10 @@ public class ArticleService {
         for(Long id : ids) {
             this.articleDao.delete(id);
         }
+    }
+
+    public Pager<Article> findPager(Pager<Article> pager,List<PropertyFilter> filters) {
+        return this.articleDao.findPager(pager,filters);
     }
 
 }
