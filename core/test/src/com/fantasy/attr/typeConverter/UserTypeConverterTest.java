@@ -15,10 +15,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import java.util.HashMap;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/applicationContext-schedule.xml"})
-public class UserIdTypeConverterTest {
+@ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
+public class UserTypeConverterTest {
 
-    private final static Log logger = LogFactory.getLog(UserIdTypeConverterTest.class);
+    private final static Log logger = LogFactory.getLog(UserTypeConverterTest.class);
 
     @Test
     public void testConvertValue() throws Exception {
@@ -57,16 +57,5 @@ public class UserIdTypeConverterTest {
         logger.debug(username);
         Assert.assertEquals(username,"admin");
 
-        /*
-		Object obj = ConvertUtils.convert("true", boolean.class);
-
-		System.out.println(obj + "-" + obj.getClass());
-
-		obj = ConvertUtils.convert("12", long.class);
-
-		System.out.println(obj + "-" + obj.getClass());
-        Converter converter = new Converter();
-        converter.setTypeConverter("double");
-        covertIn("15", converter);*/
     }
 }
