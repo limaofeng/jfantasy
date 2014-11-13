@@ -17,6 +17,8 @@ public class Article {
 
     private String user;
 
+    private boolean tflag;
+
     public List<AttributeValue> getAttributeValues() {
         return attributeValues;
     }
@@ -49,4 +51,11 @@ public class Article {
         this.user = user;
     }
 
+    public boolean isTflag() {
+        return tflag;
+    }
+
+    public void setTflag(boolean tflag) {
+        this.tflag = tflag;
+    }
 }
