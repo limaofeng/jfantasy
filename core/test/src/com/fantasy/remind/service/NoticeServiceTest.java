@@ -46,9 +46,9 @@ public class NoticeServiceTest {
     @Test
     public void test() throws Exception {
         Notice notice2=new Notice();
-        notice2.setModel(new Model("testweb"));
+        notice2.setModel(new Model("shuju"));
         Map<String,String> map=new HashMap<String, String>();
-        map.put("key","我的key");
+        map.put("key","警方i额外加分哦微积分我减肥我发金额我问佛脚");
         map.put("content","/web");
         map.put("id","11");
         notice2.setReplaceMap(JSON.serialize(map));

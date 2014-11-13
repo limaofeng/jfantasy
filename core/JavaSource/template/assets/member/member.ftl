@@ -68,7 +68,7 @@
     </@s.form>
 </div>
 <div class="batch">
-    <a title="<@s.text name="member.button.batchdelete"/>" class="btn small primary-bg batchDelete" href="<@s.url namespace="/cms/banner" action="delete"/>">
+    <a title="<@s.text name="member.button.batchdelete"/>" class="btn small primary-bg batchDelete" href="<@s.url namespace="/member" action="delete"/>">
         <span class="button-content">
             <i class="glyph-icon icon-trash float-left"></i>
             <@s.text name="member.button.batchdelete"/>

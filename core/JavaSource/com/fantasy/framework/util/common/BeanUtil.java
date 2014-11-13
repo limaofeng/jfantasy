@@ -19,13 +19,16 @@ public class BeanUtil {
         return ClassUtil.getValue(target, fieldName);
     }
 
-    public static <T> T copyProperties(T dest, Object orig) {
+    public static <T> T copyProperties(T dest, Object orig, String... excludeProperties) {
         if (dest == null || orig == null) {
             return dest;
         }
         Class destClass = dest.getClass();
         Property[] properties = ClassUtil.getPropertys(orig);
         for (Property property : properties) {
+            if(ObjectUtil.indexOf(excludeProperties,property.getName()) != -1){
+                continue;
+            }
             if (!property.isRead()) {
                 continue;
             }

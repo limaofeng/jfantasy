@@ -1,10 +1,5 @@
 package com.fantasy.framework.dao.mybatis;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.util.Map;
-import java.util.Set;
-
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperFactoryBean;
@@ -14,12 +9,7 @@ import org.springframework.beans.PropertyValues;
 import org.springframework.beans.factory.BeanNameAware;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.AnnotatedBeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.BeanDefinitionHolder;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
-import org.springframework.beans.factory.config.PropertyResourceConfigurer;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
-import org.springframework.beans.factory.config.TypedStringValue;
+import org.springframework.beans.factory.config.*;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -35,6 +25,11 @@ import org.springframework.core.type.filter.AssignableTypeFilter;
 import org.springframework.core.type.filter.TypeFilter;
 import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.util.Map;
+import java.util.Set;
 
 public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProcessor, InitializingBean, ApplicationContextAware, BeanNameAware {
 	private String basePackage;
@@ -95,7 +90,6 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 	}
 
 	public void afterPropertiesSet() throws Exception {
-		// TODO 添加需要额外的扫描的文件夹
 		Assert.notNull(this.basePackage, "Property 'basePackage' is required");
 	}
 
@@ -204,7 +198,7 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 					}
 					definition.getPropertyValues().add("mapperInterface", definition.getBeanClassName());
 					definition.setBeanClass(MapperFactoryBean.class);
-					definition.getPropertyValues().add("addToConfig", Boolean.valueOf(MapperScannerConfigurer.this.addToConfig));
+					definition.getPropertyValues().add("addToConfig", MapperScannerConfigurer.this.addToConfig);
 					if (StringUtils.hasLength(MapperScannerConfigurer.this.sqlSessionFactoryBeanName)) {
 						definition.getPropertyValues().add("sqlSessionFactory", new RuntimeBeanReference(MapperScannerConfigurer.this.sqlSessionFactoryBeanName));
 					} else if (MapperScannerConfigurer.this.sqlSessionFactory != null) {

@@ -1,14 +1,8 @@
 package com.fantasy.mall.goods.bean;
 
-import java.math.BigDecimal;
-import java.util.List;
-
-import javax.persistence.*;
-
-import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
-
+import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.bean.AttributeValue;
+import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -18,334 +12,369 @@ import com.fantasy.mall.delivery.bean.DeliveryItem;
 import com.fantasy.mall.order.bean.OrderItem;
 import com.fantasy.mall.stock.bean.Stock;
 import com.fantasy.mall.stock.bean.WarningSettings;
+import org.apache.commons.lang.StringUtils;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 货品表
- * 
- * @功能描述
+ *
  * @author 李茂峰
- * @since 2013-9-21 下午5:04:43
  * @version 1.0
+ * @since 2013-9-21 下午5:04:43
  */
 @Entity
 @Table(name = "MALL_PRODUCT")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "specificationValueStore", "goodsNotifys", "goodsImage", "goodsImageStore", "cartItems", "orderItems", "deliveryItems", "warningSettings" })
-public class Product extends BaseBusEntity {
+@JsonIgnoreProperties({"hibernateLazyInitializer", "specificationValueStore", "goodsNotifys", "goodsImage", "goodsImageStore", "cartItems", "orderItems", "deliveryItems", "warningSettings"})
+public class Product extends BaseBusEntity implements DynaBean {
 
-	private static final long serialVersionUID = -4663151563624172169L;
+    private static final long serialVersionUID = -4663151563624172169L;
 
-	public void initialize(Goods goods) {
-		if (this.getId() == null) {
-			// 默认值字段
-			this.setStore(0);
-			this.setFreezeStore(0);
-			// 关联商品
-			this.setGoods(goods);
-		}
-		// goods相同的属性
-		this.setSn(goods.getSn());
-		this.setName(goods.getName());
-		this.setPrice(goods.getPrice());
-		this.setCost(goods.getCost());
-		this.setMarketPrice(goods.getMarketPrice());
-		this.setMarketable(goods.getMarketable());
-		this.setWeight(goods.getWeight());
-		if (!goods.getGoodsImages().isEmpty()) {// product只保存一张图片
-			this.setGoodsImageStore(JSON.serialize(goods.getGoodsImages().get(0)));
-		}
-	}
+    public void initialize(Goods goods) {
+        if (this.getId() == null) {
+            // 默认值字段
+            this.setStore(0);
+            this.setFreezeStore(0);
+            // 关联商品
+            this.setGoods(goods);
+        }
+        // goods相同的属性
+        this.setSn(goods.getSn());
+        this.setName(goods.getName());
+        this.setPrice(goods.getPrice());
+        this.setCost(goods.getCost());
+        this.setMarketPrice(goods.getMarketPrice());
+        this.setMarketable(goods.getMarketable());
+        this.setWeight(goods.getWeight());
+        if (!goods.getGoodsImages().isEmpty()) {// product只保存一张图片
+            this.setGoodsImageStore(JSON.serialize(goods.getGoodsImages().get(0)));
+        }
+    }
 
-	@Id
-	@Column(name = "ID", insertable = true, updatable = false)
-	@GeneratedValue(generator = "fantasy-sequence")
-	@GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-	private Long id;
-	@Column(name = "SN", nullable = false, unique = true)
-	private String sn;// 货品编号
-	@Column(name = "NAME", nullable = false)
-	private String name;// 名称
-	@Column(name = "PRICE", nullable = false, precision = 15, scale = 5)
-	private BigDecimal price;// 销售价
-	@Column(name = "COST", precision = 15, scale = 5)
-	private BigDecimal cost;// 成本价
-	@Column(name = "MARKET_PRICE", nullable = false, precision = 15, scale = 5)
-	private BigDecimal marketPrice;// 市场价
-	@Column(name = "WEIGHT", nullable = false)
-	private Integer weight;// 商品重量(单位: 克)
-	@Column(name = "STORE", nullable = false)
-	private Integer store;// 库存
-	@Column(name = "FREEZE_STORE", nullable = false)
-	private Integer freezeStore;// 被占用库存数
-	@Column(name = "STORE_PLACE", nullable = true)
-	private String storePlace;// 货位
-	@Column(name = "MARKETABLE", nullable = false)
-	private Boolean marketable;// 是否上架
-	@Column(name = "IS_DEFAULT", nullable = false)
-	private Boolean isDefault;// 是否默认
-	@Column(name = "SPECIFICATION_VALUE_STORE", length = 3000)
-	private String specificationValueStore;// 商品规格值存储
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "GOODS_ID", nullable = false,foreignKey = @ForeignKey(name = "FK_PRODUCT_GOODS"))
+    @Id
+    @Column(name = "ID", insertable = true, updatable = false)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    private Long id;
+    @Column(name = "SN", nullable = false, unique = true)
+    private String sn;// 货品编号
+    @Column(name = "NAME", nullable = false)
+    private String name;// 名称
+    @Column(name = "PRICE", nullable = false, precision = 15, scale = 5)
+    private BigDecimal price;// 销售价
+    @Column(name = "COST", precision = 15, scale = 5)
+    private BigDecimal cost;// 成本价
+    @Column(name = "MARKET_PRICE", nullable = false, precision = 15, scale = 5)
+    private BigDecimal marketPrice;// 市场价
+    @Column(name = "WEIGHT", nullable = false)
+    private Integer weight;// 商品重量(单位: 克)
+    @Column(name = "STORE", nullable = false)
+    private Integer store;// 库存
+    @Column(name = "FREEZE_STORE", nullable = false)
+    private Integer freezeStore;// 被占用库存数
+    @Column(name = "STORE_PLACE", nullable = true)
+    private String storePlace;// 货位
+    @Column(name = "MARKETABLE", nullable = false)
+    private Boolean marketable;// 是否上架
+    @Column(name = "IS_DEFAULT", nullable = false)
+    private Boolean isDefault;// 是否默认
+    @Column(name = "SPECIFICATION_VALUE_STORE", length = 3000)
+    private String specificationValueStore;// 商品规格值存储
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "GOODS_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_PRODUCT_GOODS"))
+    private Goods goods;// 商品
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<GoodsNotify> goodsNotifys;// 到货通知
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<CartItem> cartItems;// 购物车项
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<OrderItem> orderItems;// 订单项
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<DeliveryItem> deliveryItems;// 物流项
+    @Column(name = "GOODS_IMAGE_STORE", length = 3000)
+    private String goodsImageStore;
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<Stock> stocks;// 库存变量
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "WARNINGSETTINGS_ID", foreignKey = @ForeignKey(name = "FK_PRODUCT_WARNINGSETTINGS"))
+    private WarningSettings warningSettings;
+    /**
+     * 数据版本
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_PRODUCT_VERSION"))
+    private AttributeVersion version;
+    /**
+     * 动态属性集合
+     */
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    private List<AttributeValue> attributeValues;
 
-	private Goods goods;// 商品
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
-	private List<GoodsNotify> goodsNotifys;// 到货通知
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
-	private List<CartItem> cartItems;// 购物车项
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
-	private List<OrderItem> orderItems;// 订单项
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
-	private List<DeliveryItem> deliveryItems;// 物流项
-	@Column(name = "GOODS_IMAGE_STORE", length = 3000)
-	private String goodsImageStore;
+    @Transient
+    public Integer getSurplusStore() {// 可用库存
+        int availableStock = store - freezeStore;
+        return availableStock < 0 ? 0 : availableStock;
+    }
 
-	@OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
-	private List<Stock> stocks;// 库存变量
+    public List<Stock> getStocks() {
+        return stocks;
+    }
 
-	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
-	@JoinColumn(name = "WARNINGSETTINGS_ID",foreignKey = @ForeignKey(name = "FK_PRODUCT_WARNINGSETTINGS"))
-	private WarningSettings warningSettings;
+    public void setStocks(List<Stock> stocks) {
+        this.stocks = stocks;
+    }
 
-	@Transient
-	public Integer getSurplusStore() {// 可用库存
-		int availableStock = store - freezeStore;
-		return availableStock < 0 ? 0 : availableStock;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public List<Stock> getStocks() {
-		return stocks;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setStocks(List<Stock> stocks) {
-		this.stocks = stocks;
-	}
+    public String getSn() {
+        return sn;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public String getSn() {
-		return sn;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public void setSn(String sn) {
-		this.sn = sn;
-	}
+    public BigDecimal getPrice() {
+        return price;
+    }
 
-	public String getName() {
-		return name;
-	}
+    public void setPrice(BigDecimal price) {
+        this.price = price;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public BigDecimal getCost() {
+        return cost;
+    }
 
-	public BigDecimal getPrice() {
-		return price;
-	}
+    public void setCost(BigDecimal cost) {
+        this.cost = cost;
+    }
 
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
+    public BigDecimal getMarketPrice() {
+        return marketPrice;
+    }
 
-	public BigDecimal getCost() {
-		return cost;
-	}
+    public void setMarketPrice(BigDecimal marketPrice) {
+        this.marketPrice = marketPrice;
+    }
 
-	public void setCost(BigDecimal cost) {
-		this.cost = cost;
-	}
+    public Integer getWeight() {
+        return weight;
+    }
 
-	public BigDecimal getMarketPrice() {
-		return marketPrice;
-	}
+    public void setWeight(Integer weight) {
+        this.weight = ObjectUtil.defaultValue(weight, 0);
+    }
 
-	public void setMarketPrice(BigDecimal marketPrice) {
-		this.marketPrice = marketPrice;
-	}
+    public Integer getStore() {
+        return store;
+    }
 
-	public Integer getWeight() {
-		return weight;
-	}
+    @Override
+    public AttributeVersion getVersion() {
+        return version;
+    }
 
-	public void setWeight(Integer weight) {
-		this.weight = ObjectUtil.defaultValue(weight, 0);
-	}
+    @Override
+    public void setVersion(AttributeVersion version) {
+        this.version = version;
+    }
 
-	public Integer getStore() {
-		return store;
-	}
+    @Override
+    public List<AttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
 
-	public void setStore(Integer store) {
-		this.store = store;
-	}
+    @Override
+    public void setAttributeValues(List<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
+    }
 
-	public Integer getFreezeStore() {
-		return freezeStore;
-	}
+    public void setStore(Integer store) {
+        this.store = store;
+    }
 
-	public void setFreezeStore(Integer freezeStore) {
-		this.freezeStore = ObjectUtil.defaultValue(freezeStore, 0);
-	}
+    public Integer getFreezeStore() {
+        return freezeStore;
+    }
 
-	public String getStorePlace() {
-		return storePlace;
-	}
+    public void setFreezeStore(Integer freezeStore) {
+        this.freezeStore = ObjectUtil.defaultValue(freezeStore, 0);
+    }
 
-	public void setStorePlace(String storePlace) {
-		this.storePlace = storePlace;
-	}
+    public String getStorePlace() {
+        return storePlace;
+    }
 
-	public Boolean getMarketable() {
-		return marketable;
-	}
+    public void setStorePlace(String storePlace) {
+        this.storePlace = storePlace;
+    }
 
-	public void setMarketable(Boolean marketable) {
-		this.marketable = marketable;
-	}
+    public Boolean getMarketable() {
+        return marketable;
+    }
 
-	public Goods getGoods() {
-		return goods;
-	}
+    public void setMarketable(Boolean marketable) {
+        this.marketable = marketable;
+    }
 
-	public void setGoods(Goods goods) {
-		this.goods = goods;
-	}
+    public Goods getGoods() {
+        return goods;
+    }
 
-	public String getSpecificationValueStore() {
-		return specificationValueStore;
-	}
+    public void setGoods(Goods goods) {
+        this.goods = goods;
+    }
 
-	public void setSpecificationValueStore(String specificationValueStore) {
-		this.specificationValueStore = specificationValueStore;
-	}
+    public String getSpecificationValueStore() {
+        return specificationValueStore;
+    }
 
-	public List<GoodsNotify> getGoodsNotifys() {
-		return goodsNotifys;
-	}
+    public void setSpecificationValueStore(String specificationValueStore) {
+        this.specificationValueStore = specificationValueStore;
+    }
 
-	public void setGoodsNotifys(List<GoodsNotify> goodsNotifys) {
-		this.goodsNotifys = goodsNotifys;
-	}
+    public List<GoodsNotify> getGoodsNotifys() {
+        return goodsNotifys;
+    }
 
-	public Boolean getIsDefault() {
-		return isDefault;
-	}
+    public void setGoodsNotifys(List<GoodsNotify> goodsNotifys) {
+        this.goodsNotifys = goodsNotifys;
+    }
 
-	public void setIsDefault(Boolean isDefault) {
-		this.isDefault = isDefault;
-	}
+    public Boolean getIsDefault() {
+        return isDefault;
+    }
 
-	public List<CartItem> getCartItems() {
-		return cartItems;
-	}
+    public void setIsDefault(Boolean isDefault) {
+        this.isDefault = isDefault;
+    }
 
-	public void setCartItems(List<CartItem> cartItems) {
-		this.cartItems = cartItems;
-	}
+    public List<CartItem> getCartItems() {
+        return cartItems;
+    }
 
-	public List<OrderItem> getOrderItems() {
-		return orderItems;
-	}
+    public void setCartItems(List<CartItem> cartItems) {
+        this.cartItems = cartItems;
+    }
 
-	public void setOrderItems(List<OrderItem> orderItems) {
-		this.orderItems = orderItems;
-	}
+    public List<OrderItem> getOrderItems() {
+        return orderItems;
+    }
 
-	public List<DeliveryItem> getDeliveryItems() {
-		return deliveryItems;
-	}
+    public void setOrderItems(List<OrderItem> orderItems) {
+        this.orderItems = orderItems;
+    }
 
-	public WarningSettings getWarningSettings() {
-		return warningSettings;
-	}
+    public List<DeliveryItem> getDeliveryItems() {
+        return deliveryItems;
+    }
 
-	public void setWarningSettings(WarningSettings warningSettings) {
-		this.warningSettings = warningSettings;
-	}
+    public WarningSettings getWarningSettings() {
+        return warningSettings;
+    }
 
-	public void setDeliveryItems(List<DeliveryItem> deliveryItems) {
-		this.deliveryItems = deliveryItems;
-	}
+    public void setWarningSettings(WarningSettings warningSettings) {
+        this.warningSettings = warningSettings;
+    }
 
-	@Transient
-	public boolean isWarning() {
-		if (this.getWarningSettings() == null) {
-			return false;
-		}
-		return SpELUtil.getExpression(this.getWarningSettings().getExpression()).getValue(SpELUtil.createEvaluationContext(this), Boolean.class);
-	}
+    public void setDeliveryItems(List<DeliveryItem> deliveryItems) {
+        this.deliveryItems = deliveryItems;
+    }
 
-	/**
-	 * 商品图片存储
-	 */
-	public String getGoodsImageStore() {
-		return goodsImageStore;
-	}
+    @Transient
+    public boolean isWarning() {
+        if (this.getWarningSettings() == null) {
+            return false;
+        }
+        return SpELUtil.getExpression(this.getWarningSettings().getExpression()).getValue(SpELUtil.createEvaluationContext(this), Boolean.class);
+    }
 
-	public void setGoodsImageStore(String goodsImageStore) {
-		this.goodsImageStore = goodsImageStore;
-	}
+    /**
+     * 商品图片存储
+     */
+    public String getGoodsImageStore() {
+        return goodsImageStore;
+    }
 
-	/**
-	 * 获取商品图片
-	 * 
-	 * @return
-	 */
-	@Transient
-	public GoodsImage getGoodsImage() {
-		if (StringUtils.isEmpty(this.goodsImageStore)) {
-			return null;
-		}
-		return JSON.deserialize(this.goodsImageStore, GoodsImage.class);
-	}
+    public void setGoodsImageStore(String goodsImageStore) {
+        this.goodsImageStore = goodsImageStore;
+    }
 
-	/**
-	 * 获取默认商品图片（大）
-	 * 
-	 * @return
-	 */
-	@Transient
-	public String getDefaultBigGoodsImagePath() {
-		GoodsImage goodsImage = getGoodsImage();
-		if (goodsImage != null) {
-			return goodsImage.getBigImagePath();
-		} else {
-			return "";
-		}
-	}
+    /**
+     * 获取商品图片
+     *
+     * @return GoodsImage
+     */
+    @Transient
+    public GoodsImage getGoodsImage() {
+        if (StringUtils.isEmpty(this.goodsImageStore)) {
+            return null;
+        }
+        return JSON.deserialize(this.goodsImageStore, GoodsImage.class);
+    }
 
-	/**
-	 * 获取默认商品图片（小）
-	 * 
-	 * @return
-	 */
-	@Transient
-	public String getDefaultSmallGoodsImagePath() {
-		GoodsImage goodsImage = getGoodsImage();
-		if (goodsImage != null) {
-			return goodsImage.getSmallImagePath();
-		} else {
-			return "";
-		}
-	}
+    /**
+     * 获取默认商品图片（大）
+     *
+     * @return String
+     */
+    @Transient
+    public String getDefaultBigGoodsImagePath() {
+        GoodsImage goodsImage = getGoodsImage();
+        if (goodsImage != null) {
+            return goodsImage.getBigImagePath();
+        } else {
+            return "";
+        }
+    }
 
-	/**
-	 * 获取默认商品图片（缩略图）
-	 * 
-	 * @return
-	 */
-	@Transient
-	public String getDefaultThumbnailGoodsImagePath() {
-		GoodsImage goodsImage = getGoodsImage();
-		if (goodsImage != null) {
-			return goodsImage.getThumbnailImagePath();
-		} else {
-			return "";
-		}
-	}
+    /**
+     * 获取默认商品图片（小）
+     *
+     * @return String
+     */
+    @Transient
+    public String getDefaultSmallGoodsImagePath() {
+        GoodsImage goodsImage = getGoodsImage();
+        if (goodsImage != null) {
+            return goodsImage.getSmallImagePath();
+        } else {
+            return "";
+        }
+    }
+
+    /**
+     * 获取默认商品图片（缩略图）
+     *
+     * @return String
+     */
+    @Transient
+    public String getDefaultThumbnailGoodsImagePath() {
+        GoodsImage goodsImage = getGoodsImage();
+        if (goodsImage != null) {
+            return goodsImage.getThumbnailImagePath();
+        } else {
+            return "";
+        }
+    }
 }

@@ -3,6 +3,7 @@ package com.fantasy.attr.service;
 import com.fantasy.attr.bean.Attribute;
 import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.bean.Converter;
 import com.fantasy.attr.dao.AttributeVersionDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -11,6 +12,8 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -53,11 +56,15 @@ public class AttributeVersionService {
     /**
      * 通过 version id 加载全部版本相关的完整数据
      *
-     * @param id id
+     * @param clazz  版本对应的 class
+     * @param number 版本号
      * @return AttributeVersion
      */
-    public AttributeVersion getVersion(Long id) {
-        AttributeVersion version = this.attributeVersionDao.get(id);
+    public AttributeVersion getVersion(Class clazz, String number) {
+        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("className", clazz.getName()), Restrictions.eq("number", number));
+        if(version == null){
+            return null;
+        }
         AttributeVersion _rev = BeanUtil.copyProperties(new AttributeVersion(), version);
         List<Attribute> attributes = new ArrayList<Attribute>();
         for (Attribute attribute : version.getAttributes()) {
@@ -65,7 +72,11 @@ public class AttributeVersionService {
             attributes.add(BeanUtil.copyProperties(new Attribute(), attribute));
             AttributeType attributeType = attribute.getAttributeType();
             Hibernate.initialize(attributeType);
-            attributes.get(attributes.size() - 1).setAttributeType(BeanUtil.copyProperties(new AttributeType(), attributeType));
+            Hibernate.initialize(attributeType.getConverter());
+            Converter converter = BeanUtil.copyProperties(new Converter(), attributeType.getConverter());
+            attributeType = BeanUtil.copyProperties(new AttributeType(), attributeType);
+            attributeType.setConverter(converter);
+            attributes.get(attributes.size() - 1).setAttributeType(attributeType);
         }
         _rev.setAttributes(attributes);
         return _rev;
@@ -103,4 +114,22 @@ public class AttributeVersionService {
     }
 
 
+    /**
+     * 获取版本列表
+     *
+     * @return
+     */
+    public List<AttributeVersion> getAttributeVersions() {
+        return this.attributeVersionDao.find(new Criterion[0]);
+    }
+
+    /**
+     * 静态获取版本列表
+     *
+     * @return
+     */
+    public static List<AttributeVersion> listAttributeVersions() {
+        AttributeVersionService versionService = SpringContextUtil.getBeanByType(AttributeVersionService.class);
+        return versionService.getAttributeVersions();
+    }
 }

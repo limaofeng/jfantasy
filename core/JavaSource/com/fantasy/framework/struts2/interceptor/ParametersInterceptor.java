@@ -1,6 +1,7 @@
 package com.fantasy.framework.struts2.interceptor;
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.bean.Attribute;
 import com.fantasy.attr.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -380,10 +381,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
     protected Object newInstance(Class<?> parameterType, String paramName, Map<String, Object> parameters) {
         if (DynaBean.class.isAssignableFrom(parameterType)) {
             DynaBean bean = (DynaBean) ClassUtil.newInstance(parameterType);
-            Object object = parameters.get(paramName + ".version.id") != null ? parameters.get(paramName + ".version.id") : parameters.get("version.id");
-            Long versionId = object == null ? null : Long.valueOf((ClassUtil.isArray(object) ? Array.get(object, 0) : object).toString());
-            if (versionId != null) {
-                return VersionUtil.makeDynaBean(versionId);
+            Object parameterObject = parameters.get(paramName + ".version.number") != null ? parameters.get(paramName + ".version.number") : parameters.get("version.number");
+            String versionNumber = parameterObject == null ? null : (ClassUtil.isArray(parameterObject) ? Array.get(parameterObject, 0) : parameterObject).toString();
+            if (StringUtil.isNotBlank(versionNumber)) {
+                return VersionUtil.makeDynaBean((Class<DynaBean>)parameterType, versionNumber);
             } else {
                 return bean;
             }
@@ -404,10 +405,10 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         for (int i = 0; i < parameterTypes.length; i++) {
             Class parameterType = parameterTypes[i];
             if (DynaBean.class.isAssignableFrom(parameterType)) {
-                Object object = parameters.get(paramNames[i] + ".version.id") != null ? parameters.get(paramNames[i] + ".version.id") : parameters.get("version.id");
-                Long versionId = object == null ? null : Long.valueOf((ClassUtil.isArray(object) ? Array.get(object, 0) : object).toString());
-                if (versionId != null) {
-                    parameterTypes[0] = VersionUtil.makeClass(versionId);
+                Object parameterObject = parameters.get(paramNames[i] + ".version.number") != null ? parameters.get(paramNames[i] + ".version.number") : parameters.get("version.number");
+                String versionNumber = parameterObject == null ? null : (ClassUtil.isArray(parameterObject) ? Array.get(parameterObject, 0) : parameterObject).toString();
+                if (StringUtil.isNotBlank(versionNumber)) {
+                    parameterTypes[0] = VersionUtil.makeClass(parameterType, versionNumber);
                 }
             }
         }
@@ -459,7 +460,17 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 continue;
             }
             try {
-                ognlUtil.setValue(name, ognlValueStack.getContext(), formbean, value);
+                //如果 bean 为 动态 bean 同时动态数据版本不为 null 时,设置动态属性
+                if (formbean instanceof DynaBean && ((DynaBean) formbean).getVersion() != null) {
+                    Attribute attribute = ObjectUtil.find(((DynaBean) formbean).getVersion().getAttributes(), "code", name);
+                    if (attribute != null) {
+                        VersionUtil.getOgnlUtil(attribute.getAttributeType()).setValue(name, formbean, value);
+                    } else {
+                        ognlUtil.setValue(name, ognlValueStack.getContext(), formbean, value);
+                    }
+                } else {
+                    ognlUtil.setValue(name, ognlValueStack.getContext(), formbean, value);
+                }
             } catch (OgnlException e) {
                 log.error(e.getMessage());
                 if (name.contains(".")) {

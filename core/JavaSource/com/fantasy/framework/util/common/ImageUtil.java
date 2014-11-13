@@ -9,6 +9,7 @@ import com.sun.imageio.plugins.png.PNGImageReader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import sun.awt.image.ToolkitImage;
+import sun.misc.BASE64Decoder;
 import sun.misc.BASE64Encoder;
 
 import javax.imageio.ImageIO;
@@ -782,10 +783,26 @@ public final class ImageUtil {
             return encoder.encode(data);// 返回Base64编码过的字节数组字符串
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
+            return null;
         } finally {
             StreamUtil.closeQuietly(in);
         }
-        return null;
+    }
+
+    /**
+     * 获取base64位编码的字符串 转换为图片对象
+     * @param base64
+     * @return BufferedImage
+     */
+    public static BufferedImage getImage(String base64) {
+        try {
+            BASE64Decoder decoder = new BASE64Decoder();
+            ByteArrayInputStream in = new ByteArrayInputStream(decoder.decodeBuffer(base64));
+            return ImageIO.read(in);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     private static class Position {

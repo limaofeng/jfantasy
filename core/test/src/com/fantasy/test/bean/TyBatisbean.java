@@ -7,8 +7,8 @@ import javax.persistence.Table;
 
 
 @Entity
-@Table(name = "TESTBEAN")
-public class Testbean {
+@Table(name = "TEST_BEAN")
+public class TyBatisbean {
 
     @Id
     @Column(name = "T_KEY")
@@ -31,5 +31,13 @@ public class Testbean {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return "TyBatisbean{" +
+                "key='" + key + '\'' +
+                ", value='" + value + '\'' +
+                '}';
     }
 }

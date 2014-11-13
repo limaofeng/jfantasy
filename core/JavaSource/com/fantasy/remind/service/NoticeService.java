@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.concurrent.LinkedQueue;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.remind.bean.Model;
 import com.fantasy.remind.bean.Notice;
@@ -30,6 +31,7 @@ public class NoticeService {
     private NoticeDao noticeDao;
     @Resource
     private ModelDao modelDao;
+    private LinkedQueue<Notice> noticeQueue = new LinkedQueue<Notice>();
 
     /**
      * 查看
@@ -61,10 +63,11 @@ public class NoticeService {
                 }
                 if(!StringUtil.isNotNull(notice.getUrl())) notice.setUrl(url);
                 if(!StringUtil.isNotNull(notice.getContent()))notice.setContent(content);
+
             }
         }
-
         this.noticeDao.save(notice);
+        noticeQueue.put(notice);
     }
 
 
@@ -99,5 +102,13 @@ public class NoticeService {
         return JSON.serialize(noticeService.findPager(pager, filters));
     }
 
+    public Notice getNotices(){
+        try {
+            return noticeQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

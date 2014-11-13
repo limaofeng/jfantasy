@@ -6,10 +6,6 @@
 </small>
 </@override>
 <@override name="head">
-<script language="javascript" type="text/javascript" src="${request.contextPath}/js/jquery.scroll.js" charset="utf-8"></script>
-<script language="javascript" type="text/javascript">
-
-</script>
 <script type="text/javascript">
 
 $(function() {
@@ -42,6 +38,8 @@ $(function() {
     var modelPager=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(models)" escapeHtml="false"/>;
     window.ajaxScroll=$("#modelDiv").ajaxScroll({
         advanceSize:50,
+        isEmptyInit:true,
+        isShowCurent:true,
         searchOption:{
             title:"消息模版",searchName:"LIKES_name",searchText:"消息模版名称",filter:["name"]
         },
@@ -106,7 +104,7 @@ $(function() {
                         <th class="pad15L" style="width:20px;">
                             <input id="allChecked" class="custom-checkbox bg-white" checkAll=".id" type="checkbox" <#--checktip="{message:'您选中了{num}条记录',tip:'#config_check_info'}"--> />
                         </th>
-                        <th style="width:300px;">内容</th>
+                        <th style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width:300px;">内容</th>
                         <th>创建时间</th>
                         <th>所用模版</th>
                         <th class="text-center">操作</th>
@@ -115,7 +113,9 @@ $(function() {
                     <tbody>
                     <tr class="template" name="default">
                         <td><input class="id custom-checkbox" type="checkbox" value="{id}"/></td>
-                        <td class="font-bold">{content} </td>
+                        <td class="font-bold">
+                            <span  style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;display: block;width:300px;">{content}</span>
+                        </td>
                         <td>{createTime:date('yyyy-MM-dd HH:mm:ss')}</td>
                         <td>
                             <img data-src="holder.js/38x38/simple" class="img-small view-field float-left mrg5R" name="model.avatar"/>

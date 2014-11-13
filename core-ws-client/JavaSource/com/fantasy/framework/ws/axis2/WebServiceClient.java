@@ -1,6 +1,5 @@
 package com.fantasy.framework.ws.axis2;
 
-import junit.framework.Assert;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.addressing.EndpointReference;
@@ -48,9 +47,9 @@ public abstract class WebServiceClient {
     }
 
     public void afterPropertiesSet() throws Exception {
-        Assert.assertNotNull("endPointReference不能为空", this.endPointReference);
-        Assert.assertNotNull("targetNamespace不能为空", this.targetNamespace);
-        Assert.assertNotNull("serviceName不能为空", this.serviceName);
+        assert this.endPointReference != null:"endPointReference不能为空";
+        assert this.targetNamespace != null:"targetNamespace不能为空";
+        assert this.serviceName != null:"serviceName不能为空";
         if (this.axis2xml != null) {
             if (this.axis2xml.startsWith("classpath:")) {
                 this.axis2xml = replace(this.axis2xml, "^classpath:", classes() + "/");
