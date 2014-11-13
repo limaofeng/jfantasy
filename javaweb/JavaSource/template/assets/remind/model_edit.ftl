@@ -1,5 +1,5 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
-<script type="textfield/javascript">
+<script type="text/javascript">
     $(function(){
         var imageUploader = $('#imageUploader').upload({data:{'dir':'brand_logo'},theme:'image',size:'160x160'},<@s.property value="model.modelImageStore" default="[]" escapeHtml="false"/>);
         $("#saveForm").ajaxForm({
@@ -13,12 +13,13 @@
                 }
             },
             success :function(data){
-                $('#page').pager().reload();
+                window.ajaxScroll.load();
+                $page$.backpage();
                 $.msgbox({
                     msg : "保存成功",
                     type : "success"
                 });
-                $page$.backpage();
+
             }
         });
     });
@@ -27,70 +28,57 @@
 <div class="pad10L pad10R">
     <div class="example-box">
     <@s.form id="saveForm" namespace="/notice/model" action="save" method="post" cssClass="center-margin">
-        <div class="tabs">
-            <ul >
-                <li>
-                    <a title="模版详情" href="#normal-tabs-1">
-                        模版详情
-                    </a>
-                </li>
-            </ul>
-            <a href="javascript:;" class="btn small hover-black float-right back-page" title="" style="margin-top: -30px;margin-right: 30px">
-                <i class="glyph-icon icon-reply"></i>
-            </a>
-            <div id="normal-tabs-1">
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label for="">
-                            模版图片:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                        <div id="imageUploader"></div>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label for="">
-                            编码:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                        <@s.textfield name="code" value="%{model.code}" disabled="disabled"/>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label for="">
-                            模版名称:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                        <@s.textfield name="name" value="%{model.name}" disabled="disabled"/>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label for="">
-                            跳转连接模版:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                        <@s.textfield name="url" value="%{model.url}"/>
-                    </div>
-                </div>
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label class="label-description" for="">
-                            内容模版:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                        <@s.textfield name="content" value="%{model.content}" />
-                    </div>
-                </div>
+        <div class="form-row">
+            <div class="form-label  col-md-2">
+                <label for="">
+                    模版图片:
+                </label>
+            </div>
+            <div class="form-input col-md-10">
+                <div id="imageUploader"></div>
             </div>
         </div>
+        <div class="form-row">
+            <div class="form-label  col-md-2">
+                <label for="">
+                    编码:
+                </label>
+            </div>
+            <div class="form-input col-md-10">
+                <@s.textfield name="code" value="%{model.code}"   disabled="true" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label  col-md-2">
+                <label for="">
+                    模版名称:
+                </label>
+            </div>
+            <div class="form-input col-md-10">
+                <@s.textfield name="name" value="%{model.name}"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label  col-md-2">
+                <label for="">
+                    跳转连接模版:
+                </label>
+            </div>
+            <div class="form-input col-md-10">
+                <@s.textfield name="url" value="%{model.url}"/>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-label  col-md-2">
+                <label class="label-description" for="">
+                    内容模版:
+                </label>
+            </div>
+            <div class="form-input col-md-10">
+                <@s.textfield name="content" value="%{model.content}" />
+            </div>
+        </div>
+
         <div class="form-row" style="textfield-align: center;">
             <div>
                 <div style="float: left;padding-right: 50px;padding-left: 27px;">

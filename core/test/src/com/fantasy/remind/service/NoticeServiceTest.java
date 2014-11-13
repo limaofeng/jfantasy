@@ -45,37 +45,14 @@ public class NoticeServiceTest {
     }
     @Test
     public void test() throws Exception {
-        Model model=new Model();
-        model.setCode("shuju");
-        model.setName("数据的name");
-        model.setModelImageStore("[{\"creator\":\"hebo\",\"createTime\":\"2014-07-25 09:36:28\",\"modifier\":\"hebo\",\"modifyTime\":\"2014-07-25 09:36:28\",\"absolutePath\":\"/static/images/brand/Chrysanthemum.jpg\",\"fileManagerId\":\"haolue-upload\",\"fileName\":\"Chrysanthemum.jpg\",\"ext\":null,\"contentType\":\"image/jpeg\",\"description\":\"\",\"size\":879394,\"md5\":\"076e3caed758a1c18c91a0e9cae3368f\"}]");
-        model.setContent("我要提醒content:${content}的key:${key}测试");
-        model.setUrl("http://www.baidu.com?id=${id}");
-        modelService.save(model);
-
-        Notice notice=new Notice();
-        notice.setModel(new Model("shuju"));
-        notice.setContent("数据啊");
-        notice.setUrl("http://www.baidu.com");
-        noticeService.save(notice);
-
         Notice notice2=new Notice();
-        notice2.setModel(new Model("shuju"));
+        notice2.setModel(new Model("testweb"));
         Map<String,String> map=new HashMap<String, String>();
         map.put("key","我的key");
-        map.put("content","mycontent");
-        map.put("id","ggg");
+        map.put("content","/web");
+        map.put("id","11");
         notice2.setReplaceMap(JSON.serialize(map));
         noticeService.save(notice2);
-
-        Notice notice3=new Notice();
-        notice3.setModel(new Model("shuju"));
-        Map<String,String> map3=new HashMap<String, String>();
-        map3.put("key","123");
-        map3.put("content","456");
-        notice3.setUrl("http://www.douban.com");
-        notice3.setReplaceMap(JSON.serialize(map3));
-        noticeService.save(notice3);
     }
 
     @Test

@@ -6,7 +6,7 @@ function ajaxScroll(zhis,settings){
     //滚动内容
     var content=settings.content;
     //过滤方法
-    var filter=settings.searchOption.filter;
+    var filter=!!settings.searchOption?settings.searchOption.filter:undefined;
     //显示的数据字段
     var data=settings.data;
     //提前多少像素加载
@@ -29,18 +29,20 @@ function ajaxScroll(zhis,settings){
     var searchText=!!settings.searchText?settings.searchText:"搜索";
     //view对象
     var view=settings.view;
+    //搜索配置项
+    var searchOption=!!settings.searchOption?settings.searchOption:{searchText:"搜索"};
     //是否启用view.insert插入数据
-    var isViewInsert=!!settings.isViewInsert?settings.isViewInsert:true;
+    var isViewInsert=settings.isViewInsert!=undefined?settings.isViewInsert:true;
     //初始化的时候是否清空子节点
-    var isEmptyInit=!!settings.isEmptyInit?settings.isEmptyInit:true;
+    var isEmptyInit=settings.isEmptyInit!=undefined?settings.isEmptyInit:true;
     //是否显示选中效果
-    var isShowCurent=!!settings.isShowCurent?settings.isShowCurent:true;
+    var isShowCurent=settings.isShowCurent!=undefined?settings.isShowCurent:true;
     //view add方法
     var viewAdd=settings.viewAdd;
     //操作的按钮[{href:"/wp/",ajax:"",name="新增",click=function}]
     var optionBtn=settings.optionBtn;
     //选中样式
-    var currentCss=!!settings.currentCss?settings.currentCss:{current:{"zoom":"1.2","backgroundColor":"#2381e9"},not:{"zoom":"1","backgroundColor":"#fff"}};
+    var currentCss=!!settings.currentCss?settings.currentCss:{current:{"zoom":"1.2"},not:{"zoom":"1"}};
 
     //触发滚动的方法
     var callback=!!settings.callback?settings.callback:function (){
@@ -82,20 +84,30 @@ function ajaxScroll(zhis,settings){
     };
     var showCurrent=function(element){
         $(".scrollView .template").each(function(){
-            $(this).removeClass("curent").css(currentCss.not);
+            $(this).removeClass("curent").removeClass("primary-bg").css(currentCss.not);
         })
-        element.addClass("curent").css(currentCss.current);
+        element.addClass("curent").addClass("primary-bg").css(currentCss.current);
     };
-
+    var load=function(){
+        var param={};
+        param[$(".searchInput").attr("name")]=$(".searchInput").val();
+        $.post(url,param,function (data) {
+            pager=data;
+            view.setJSON(data.pageItems);
+            if(!!notDiv)
+                data.pageItems.length==0?notDiv.show():notDiv.hide();
+        }, "json");
+    }
 
     if(isEmptyInit){
         $(zhis).empty();
-        settings.searchText=searchText;
+        settings.searchOption=searchOption;
         var scroll=window.scrollDiv.theme.html(settings);
         $(zhis).append(scroll);
+        $(zhis).initialize();
     }
-    notDiv=$(zhis).find(".notScroll");
-    loadDiv=$(zhis).find(".loadScroll");
+    if(!notDiv)notDiv=$(zhis).find(".notScroll");
+    if(!loadDiv)loadDiv=$(zhis).find(".loadScroll");
 
     if(!!optionBtn){
         for(var i=0;i< optionBtn.length;i++){
@@ -131,6 +143,8 @@ function ajaxScroll(zhis,settings){
         }).data('_target',true).each(function () {
             $(this).target();
         });
+    }else{
+        $('.optionScrollBtn').remove();
     }
 
     if(!view){
@@ -162,14 +176,7 @@ function ajaxScroll(zhis,settings){
             if(this.target.index()==0&&isShowCurent) this.target.click();
         });
         view.setJSON(pager.pageItems);
-
         zhis.find(".grid-panel").removeClass("grid-panel");
-        $(window).resize(function () {
-            $('.scrollView').each(function(){
-                $(this).css('minHeight', $(window).height() - ( $(this).offset().top + 25));
-                $(this).triggerHandler('resize');
-            });
-        });
     }
     $('.key13').bind('keypress',function(event){
         if(event.keyCode == "13")
@@ -195,10 +202,9 @@ function ajaxScroll(zhis,settings){
             });
             if(result.length!=0){
                 var templates=$(".scrollView .template");
+                $(".scrollView li").hide();
                 for(var i=0;i<result.length;i++){
-                    $(".scrollView li").hide();
                     templates.eq(result[i]).show();
-
                 }
                 showCurrent(templates.eq(result[0]));
                 return;
@@ -215,15 +221,8 @@ function ajaxScroll(zhis,settings){
                 return;
             }
         }
-        var param={};
-        param[$(".searchInput").attr("name")]=value;
-        $.post(url,param,function (data) {
-            pager=data;
-            view.setJSON(data.pageItems);
-            if(!!notDiv)
-                data.pageItems.length==0?notDiv.show():notDiv.hide()
-
-        }, "json");
+        //加载数据
+        load();
     });
 
 
@@ -239,55 +238,44 @@ function ajaxScroll(zhis,settings){
         resultAjax:function(bool){
             if(bool!=undefined) boolAjax=bool;
             else return boolAjax;
-        },
-        setData:function(data){
-
-        },
-        getData:function(){
-
+        },load:function(){
+            load();
         }
+
     };
 }
 window.scrollDiv={theme:{
     html:function(settings){
-        var scroll='<div class="content-box bg-white" style="margin:0px">'+
-            '<h3 class="content-box-header ui-state-default">'+
+        var scroll='<div class="content-box bg-white" style="margin:0px">'+((!settings.searchOption.title)?'':'<h3 class="content-box-header ui-state-default">'+
             '<div class="glyph-icon icon-separator transparent">'+
             '<i class="glyph-icon icon-reorder"></i>'+
             '</div>'+
             '<span class="pad0L">'+settings.searchOption.title+'</span>'+
-            '</h3>'+
+            '</h3>')+
             '<div class="optionScrollBtn" style="background: #F7F9FC!important;padding-top: 10px;padding-left: 10px;"></div>'+
-            '<div class="button-pane button-pane-top pad10A">'+
-            '<div class="form-row pad0B">'+
-            '<div class="form-input col-md-12">'+
-            '<div class="form-input-icon">'+
-            '<i class="glyph-icon icon-search transparent searchScrollBtn"></i>'+
-            '<input type="text" name="'+settings.searchOption.searchName+'"  placeholder="'+settings.searchOption.searchText+'" class="radius-all-100 key13 searchInput" data-class="searchScrollBtn"name="">'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '<div class="content-box-wrapper" style="padding:10px;">'+
-            '<div class="scrollable-content grid-panel scrollViewDiv" tabindex="5005" style="overflow: hidden; outline: none;">'+
-            '<ul class="notifications-box scrollView" style="height:46px;line-height: 46px;">'+
-            '<li  class="template" name="default">'+
-            '<div class="large btn info-icon float-left mrg5R dropdown head" style="width:45px; height: 45px;">'+
-            '<a data-toggle="dropdown" href="javascript:;" title="">'+
-            '<img data-src="holder.js/38x38/simple" class="img-small view-field" style="height: 39px;width: 39px;"/>'+
-            '</a>'+
-            '</div>'+
-            '<p><span class="label bg-purple mrg5R titleName" style="min-width: 0.8em;height: 1.4em;line-height: 1.4em;"></span></p>'+
-            '</li>'+
-            '<li class="loadScroll" style="display:none;">'+
-            '<span class="notification-text" style=" width:100%;text-align: center;">正在加载...</span>'+
-            '</li>'+
-            '<li class="notScroll" style="display:none;">'+
-            '<div class="notification-text" style=" width:100%;text-align: center;">无匹配项</div>'+
-            '</li>'+
-            '</ul>'+
-            '</div>'+
-            '</div>'+
+            (!settings.searchOption.searchName?'':'<div class="button-pane button-pane-top pad10A">'+
+                '<div class="form-row pad0B"><div class="form-input col-md-12"><div class="form-input-icon">'+
+                '<i class="glyph-icon icon-search transparent searchScrollBtn"></i>'+
+                '<input type="text" name="'+settings.searchOption.searchName+'"  placeholder="'+settings.searchOption.searchText+'" class="radius-all-100 key13 searchInput" data-class="searchScrollBtn"name="">'+
+                '</div></div></div></div>')+
+                '<div class="scrollable-content  grid-panel scrollViewDiv" tabindex="5005" style="overflow: hidden; outline: none;">'+
+                    '<ul class="notifications-box scrollView" style="border:0px;">'+
+                        '<li  class="template" name="default" style="height:46px;line-height: 46px;">'+
+                            '<div class="large btn info-icon float-left mrg5R dropdown head" style="width:45px; height: 45px;">'+
+                            '<a data-toggle="dropdown" href="javascript:;" title="">'+
+                            '<img data-src="holder.js/38x38/simple" class="img-small view-field" style="height: 39px;width: 39px;"/>'+
+                            '</a>'+
+                            '</div>'+
+                            '<p><span class="label bg-purple mrg5R titleName" style="min-width: 0.8em;height: 1.4em;line-height: 1.4em;"></span></p>'+
+                        '</li>'+
+                        '<li class="loadScroll" style="display:none;">'+
+                        '<span class="notification-text" style=" width:100%;text-align: center;">正在加载...</span>'+
+                        '</li>'+
+                        '<li class="notScroll" style="display:none;">'+
+                        '<div class="notification-text" style=" width:100%;text-align: center;">无匹配项</div>'+
+                        '</li>'+
+                    '</ul>'+
+                '</div>'+
             '</div>';
         return $(scroll);
     }

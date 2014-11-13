@@ -31,6 +31,12 @@ public class Notice extends BaseBusEntity {
     @Column(name="URL")
     private String url;
 
+    /**
+     * 是否已读
+     */
+    @Column(name="IS_READ")
+    private Boolean isRead=false;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CODE", nullable = false, foreignKey = @ForeignKey(name = "FK_NOTICE_MODEL_CODE"))
     private Model model;
@@ -76,5 +82,13 @@ public class Notice extends BaseBusEntity {
 
     public void setReplaceMap(String replaceMap) {
         this.replaceMap = replaceMap;
+    }
+
+    public Boolean getIsRead() {
+        return isRead;
+    }
+
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
     }
 }

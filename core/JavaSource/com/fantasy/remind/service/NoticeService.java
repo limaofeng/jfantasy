@@ -2,6 +2,7 @@ package com.fantasy.remind.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.remind.bean.Model;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,11 +56,11 @@ public class NoticeService {
                 String content=m.getContent();
                 String url=m.getUrl();
                 for(String s:replaceMap.keySet()){
-                    content=content.replace("${"+s+"}",replaceMap.get(s));
+                    if(StringUtil.isNotNull(content)&&!StringUtil.isNotNull(notice.getContent())) content=content.replace("${"+s+"}",replaceMap.get(s));
                     if(StringUtil.isNotNull(url)&&!StringUtil.isNotNull(notice.getUrl())) url=url.replace("${"+s+"}",replaceMap.get(s));
                 }
                 if(!StringUtil.isNotNull(notice.getUrl())) notice.setUrl(url);
-                notice.setContent(content);
+                if(!StringUtil.isNotNull(notice.getContent()))notice.setContent(content);
             }
         }
 
@@ -87,6 +89,15 @@ public class NoticeService {
 
     }
 
+    public static String findUserNotice(){
+        NoticeService noticeService=SpringContextUtil.getBean("noticeService",NoticeService.class);
+        List<PropertyFilter> filters=new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQB_isRead","false"));
+        Pager pager=new Pager<Notice>();
+        pager.setOrderBy("modifyTime");
+        pager.setOrder(Pager.Order.desc);
+        return JSON.serialize(noticeService.findPager(pager, filters));
+    }
 
 
 }

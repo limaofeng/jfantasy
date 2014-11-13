@@ -4,6 +4,7 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.bean.pojo.Message;
 import com.fantasy.wx.service.CoreService;
 import com.fantasy.wx.service.UserInfoService;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
@@ -17,6 +18,7 @@ import java.util.List;
 /**
  * Created by zzzhong on 2014/10/31.
  */
+@Component
 public class WeixinMessageWebSocket extends TextWebSocketHandler {
 
     @Resource

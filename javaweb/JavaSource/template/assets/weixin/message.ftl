@@ -12,12 +12,7 @@
     $(function() {
         //var socket = new WebSocket('ws://211.100.41.186:9999');//http://211.100.41.186:9999/-
         var socket = new WebSocket('ws://'+window.location.host+request.getContextPath()+'/weixin/msg');
-        // 打开Socket
-        socket.onerror = function(event){
-            console.log(event);
-        };
         socket.onopen = function(event) {
-            console.log(event);
             // 监听消息
             socket.onmessage = function(event) {
                 var data=JSON.parse(event.data);
@@ -35,12 +30,6 @@
                     }
                 });
             };
-            // 监听Socket的关闭
-            socket.onclose = function(event) {
-                console.log('Client notified socket has closed', event);
-            };
-            // 关闭Socket....
-            //socket.close()
         };
 
         $("#sendMsg").click(function(){
@@ -74,8 +63,8 @@
                 var zhis=this,size=$(zhis).find(".unreadSize").text();
                 $.get("${request.contextPath}/weixin/message/search.do", {"pager.pageSize":size==0?3:size,"EQS_userInfo.openid":$(this).data("openid")},
                         function (data) {
-                            $(".current_user").removeClass("current_user");
-                            $(zhis).addClass("current_user");
+                            $(".current_user").removeClass("current_user").removeClass("primary-bg");
+                            $(zhis).addClass("current_user").addClass("primary-bg");
                             messagePager=data;
                             messagePager.pageItems.reverse();
                             messageView.setJSON(data.pageItems);
@@ -89,7 +78,7 @@
             });
             $(this.target).data("openid",data.openid);
             if(this.getIndex()==0){
-                $(this.target).addClass("current_user");
+                $(this.target).addClass("current_user").addClass("primary-bg");
             }
             this.target.find(".unreadSize").text(data.unReadSize);
             if(data.unReadSize==0){
@@ -171,9 +160,11 @@
             content:$("#userView"),
             advanceSize:50,
             loadDiv:$(".loadUser"),
+            notDiv:$(".notUser"),
             pager:userPager,
             url:"${request.contextPath}/weixin/message/searchUserInfo.do",
             param:{"pager.pageSize":6},
+            isEmptyInit:false,
             view:userView,
             ajaxCallback:function(){
                 $(".notUser").hide();
@@ -217,7 +208,7 @@
     .chat-box .popover.left {
         float: right;
     }
-    .notifications-box li{
+    #userView li{
         height:46px;
         line-height: 46px;;
     }
@@ -232,7 +223,6 @@
     }
     .current_user{
         zoom:1.3;
-        background: #2381E9;
     }
     .current_user p span{
         color: #797979;
@@ -247,7 +237,7 @@
         height: 1.4em;
         line-height: 1.4em;
     }
-    .notification-text{width:100%;text-align: center;}
+    #userView .notification-text{width:100%;text-align: center;}
     .loadUser,.notUser{display:none;}
     #userView .head{width:45px; height: 45px;}
     #userView .head img{height: 39px;width: 39px;}

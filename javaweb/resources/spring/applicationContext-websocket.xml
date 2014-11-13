@@ -11,9 +11,10 @@
         <websocket:mapping path="/websocket_v" handler="webSocketEndPoint"/>
     </websocket:handlers>
     <bean id="weixinWebSocketEndPoint" class="com.fantasy.wx.websocket.WeixinMessageWebSocket"/>
-
     <websocket:handlers>
         <websocket:mapping path="/weixin/msg" handler="weixinWebSocketEndPoint"/>
     </websocket:handlers>
-
+    <!--<websocket:handlers>
+        <websocket:mapping path="/notice/msg" handler="noticeWebSocket"/>
+    </websocket:handlers>-->
 </beans>
