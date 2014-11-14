@@ -1,5 +1,8 @@
 package com.fantasy.mall.order.bean;
 
+import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.bean.AttributeValue;
+import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.common.bean.Area;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -32,7 +35,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_ORDER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "shipAreaStore", "memeo", "shippings", "orderItems", "payments"})
-public class Order extends BaseBusEntity {
+public class Order extends BaseBusEntity implements DynaBean {
 
     private static final long serialVersionUID = -8541323033439515148L;
 
@@ -127,11 +130,10 @@ public class Order extends BaseBusEntity {
     @Column(name = "MEMO", nullable = false)
     private String memo;// 买家附言
 
-    @Column(name = "DELIVERY_TYPE_NAME", nullable = false, length = 100)
+    @Column(name = "DELIVERY_TYPE_NAME", nullable = true, length = 100)
     private String deliveryTypeName;// 配送方式名称
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DELIVERY_TYPE_ID",foreignKey =  @ForeignKey(name = "FK_ORDER_DELIVERY_TYPE"))
-
     private DeliveryType deliveryType;// 配送方式
     @Column(name = "DELIVERY_FEE", nullable = false, precision = 15, scale = 5)
     private BigDecimal deliveryFee;// 配送费用
@@ -160,6 +162,19 @@ public class Order extends BaseBusEntity {
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime asc")
     private List<OrderItem> orderItems = new ArrayList<OrderItem>();// 订单支付信息
+
+    /**
+     * 数据版本
+     */
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_GOODS_VERSION"))
+    private AttributeVersion version;
+    /**
+     * 动态属性集合。
+     */
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    private List<AttributeValue> attributeValues;
 
     /**
      * 临时字段，用于订单提交时，保存用户收货地址的id
@@ -400,6 +415,26 @@ public class Order extends BaseBusEntity {
 
     public void setPaymentConfig(PaymentConfig paymentConfig) {
         this.paymentConfig = paymentConfig;
+    }
+
+    @Override
+    public AttributeVersion getVersion() {
+        return version;
+    }
+
+    @Override
+    public void setVersion(AttributeVersion version) {
+        this.version = version;
+    }
+
+    @Override
+    public List<AttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
+
+    @Override
+    public void setAttributeValues(List<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
     }
 
     @Transient
