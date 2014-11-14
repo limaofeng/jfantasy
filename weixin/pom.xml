@@ -14,20 +14,17 @@
 
     <dependencies>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>servlet-api</artifactId>
-            <version>${servlet.api-version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-core</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.thoughtworks.xstream</groupId>
             <artifactId>xstream</artifactId>
-            <version>${com.thoughtworks.xstream-version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
