@@ -166,7 +166,7 @@
 
         <!-- 配送方式首页 -->
         <action name="index" class="com.fantasy.mall.delivery.web.DeliveryTypeAction" method="index">
-            <result type="freemarker">/template/%{pageTheme}/delivery/delivery_type.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/delivery_type.ftl</result>
         </action>
 
         <!-- 配送查询 -->
@@ -174,7 +174,7 @@
 
         <!--配送添加 -->
         <action name="add" class="com.fantasy.mall.delivery.web.DeliveryTypeAction">
-            <result type="freemarker">/template/%{pageTheme}/delivery/delivery_type_add.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/delivery_type_add.ftl</result>
         </action>
 
         <!-- 配送保存 -->
@@ -182,12 +182,12 @@
 
         <!-- 配送编辑 -->
         <action name="edit" class="com.fantasy.mall.delivery.web.DeliveryTypeAction" method="edit">
-            <result type="freemarker">/template/%{pageTheme}/delivery/delivery_type_edit.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/delivery_type_edit.ftl</result>
         </action>
 
         <!-- 配送查看 -->
         <action name="view" class="com.fantasy.mall.delivery.web.DeliveryTypeAction" method="edit">
-            <result type="freemarker">/template/%{pageTheme}/delivery/delivery_type_view.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/delivery_type_view.ftl</result>
         </action>
 
         <!-- 配送删除 -->
@@ -198,13 +198,13 @@
     <!--发货记录 -->
     <package name="fide-shipping" extends="fantasy-default" namespace="/system/shipping">
         <action name="index" class="com.fantasy.mall.delivery.web.ShippingAction" method="index">
-            <result type="freemarker">/template/%{pageTheme}/delivery/shipping.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/shipping.ftl</result>
         </action>
 
         <action name="search" class="com.fantasy.mall.delivery.web.ShippingAction" method="search"/>
 
         <action name="view" class="com.fantasy.mall.delivery.web.ShippingAction" method="view">
-            <result type="freemarker">/template/%{pageTheme}/delivery/shipping_view.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/shipping_view.ftl</result>
         </action>
 
         <action name="delete" class="com.fantasy.mall.delivery.web.ShippingAction" method="delete"/>
@@ -214,13 +214,13 @@
     <!--退货记录 -->
     <package name="fide-reship" extends="fantasy-default" namespace="/system/reship">
         <action name="index" class="com.fantasy.mall.delivery.web.ReshipAction" method="index">
-            <result type="freemarker">/template/%{pageTheme}/delivery/reship.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/reship.ftl</result>
         </action>
 
         <action name="search" class="com.fantasy.mall.delivery.web.ReshipAction" method="search"/>
 
         <action name="view" class="com.fantasy.mall.delivery.web.ReshipAction" method="view">
-            <result type="freemarker">/template/%{pageTheme}/delivery/reship_view.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/mall/delivery/reship_view.ftl</result>
         </action>
 
         <action name="delete" class="com.fantasy.mall.delivery.web.ReshipAction" method="delete"/>
