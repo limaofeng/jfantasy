@@ -90,7 +90,7 @@ public class AsmUtilTest implements Opcodes {
 
         Class clzz = VersionUtil.makeClass(version);
 
-        logger.debug(AsmUtil.trace(Article.class));
+//        logger.debug(AsmUtil.trace(Article.class));
 
         logger.debug(" println method");
         for(java.lang.reflect.Method method : clzz.getDeclaredMethods()){
