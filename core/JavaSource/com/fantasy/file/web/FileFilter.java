@@ -4,6 +4,7 @@ import com.fantasy.file.FileItem;
 import com.fantasy.file.FileManager;
 import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.util.common.ImageUtil;
+import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
@@ -21,10 +22,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URLEncoder;
+import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
@@ -45,6 +45,10 @@ public class FileFilter extends GenericFilterBean {
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
+
+        //通过 referer 判断访问来源，并通过配置 文件管理器 与 host 关联。
+        String host = RegexpUtil.parseFirst(WebUtil.getReferer(request),"(http://|https://)[^/]+");
+
 		String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
         FileManager webrootFileManager = FileManagerFactory.getInstance().getFileManager("WEBROOT");
 		if (RegexpUtil.find(url, ".do$") || noInFileManagerCache.contains(url)) {
@@ -107,7 +111,6 @@ public class FileFilter extends GenericFilterBean {
 		}
 		noInFileManagerCache.add(url);
 		chain.doFilter(request, response);
-		
 	}
 
 	public static void addFileCache(String url, FileItem fileItem) {
@@ -118,7 +121,93 @@ public class FileFilter extends GenericFilterBean {
 		return fileCache.get(url);
 	}
 
-	private void writeFile(HttpServletRequest request, HttpServletResponse response, FileItem fileItem) throws IOException {
+
+
+    public void _doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+
+      /*  System.out.println("==========================");*/
+
+        Enumeration<String> enumeration = request.getHeaderNames();
+        while (enumeration.hasMoreElements()) {
+            String o = enumeration.nextElement();
+//            System.out.println("Header\t" + o + "=" + request.getHeader(o));
+        }
+
+        enumeration = request.getParameterNames();
+
+        while (enumeration.hasMoreElements()) {
+            String o = enumeration.nextElement();
+           /* System.out.println("Parameter\t" + o + "=" + request.getHeader(o));*/
+        }
+
+      /*  System.out.println("Protocol:\t" + request.getProtocol());
+        System.out.println("Method:\t" + request.getMethod());*/
+
+        response.addHeader("Accept-Ranges", "bytes");
+        response.addHeader("Cneonction", "close");
+
+//        ServletUtils.setNoCacheHeader(response);
+
+        String range = request.getHeader("Range");
+        if ("keep-alive".equals(request.getHeader("connection")) && range != null) {
+            File file = new File(PathUtil.root() + request.getRequestURI().replaceAll(request.getContextPath(), ""));
+
+            response.setStatus(206);
+
+            String bytes = WebUtil.parseQuery(range).get("bytes")[0];
+            String[] sf = bytes.split("-");
+            int start = 0;
+            int end = 0;
+            if(sf.length == 2){
+                start = Integer.valueOf(sf[0]);
+                end = Integer.valueOf(sf[1]);
+            }else if(bytes.startsWith("-")){
+                start = 0;
+                end = (int) (file.length() - 1);
+            }else if(bytes.endsWith("-")){
+                start = Integer.valueOf(sf[0]);
+                end = (int) (file.length() - 1);
+            }
+            int contentLength = end - start + 1;
+
+            response.setHeader("Connection", "keep-alive");
+            response.setHeader("Content-Type", FileUtil.getMimeType(file));
+            response.setHeader("Cache-Control", "max-age=1024");
+            ServletUtils.setLastModifiedHeader(response, file.lastModified());
+            response.setHeader("Content-Length", (contentLength > file.length() ? file.length() : contentLength) + "");
+            response.setHeader("Content-Range", "bytes " + start + "-" + (end != 1 && end >= file.length() ? end - 1 : end) + "/" + file.length());
+
+            InputStream in = new FileInputStream(file);
+            OutputStream out = response.getOutputStream();
+
+          /*  System.out.println("start:" + start + "\tend:" + end + "\tcontentLength:" + contentLength);*/
+
+            if (start > 0) {
+                long s = in.skip(start);
+              /*  System.out.println(start + "=" + s);*/
+            }
+
+            int loadLength = contentLength, bufferSize = 2048;
+
+            byte[] buf = new byte[bufferSize];
+
+            int bytesRead = in.read(buf, 0, loadLength > bufferSize ? bufferSize : loadLength);
+            while (bytesRead != -1 && loadLength > 0) {
+                loadLength -= bytesRead;
+                out.write(buf, 0, bytesRead);
+                bytesRead = in.read(buf, 0, loadLength > bufferSize ? bufferSize : loadLength);
+            }
+            StreamUtil.closeQuietly(in);
+            out.flush();
+        } else {
+            filterChain.doFilter(request, response);
+        }
+
+    }
+
+    private void writeFile(HttpServletRequest request, HttpServletResponse response, FileItem fileItem) throws IOException {
 		if ("POST".equalsIgnoreCase(WebUtil.getMethod(request))) {
 			response.setContentType(fileItem.getContentType());
 			response.setCharacterEncoding("UTF-8");

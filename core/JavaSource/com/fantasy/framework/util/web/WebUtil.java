@@ -21,11 +21,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * web 工具类
+ * web 工具类<br/>
+ * web开发中经常使用的方法
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述 web开发中经常使用的方法
  * @since 2013-9-10 上午9:16:01
  */
 public class WebUtil {
@@ -301,9 +301,9 @@ public class WebUtil {
             osVersion = "Linux";
         else if (useros.indexOf("sunos") > 0) {
             osVersion = "SunOS";
-        }else if(useros.indexOf("iPhone")>0){
+        } else if (useros.indexOf("iPhone") > 0) {
             osVersion = "iPhone";
-        }else if(useros.indexOf("Android")>0){
+        } else if (useros.indexOf("Android") > 0) {
             osVersion = "Android";
         }
         return osVersion;
@@ -384,7 +384,7 @@ public class WebUtil {
         return queryString.replace("&$", "").concat("&sort=" + orderBy + "-asc");
     }
 
-    public static class UserAgent{
+    public static class UserAgent {
 
     }
 
@@ -399,9 +399,9 @@ public class WebUtil {
         maxthon("Maxthon", "Maxthon \\d+\\W\\d+"),
         msie("MSIE", "msie\\s\\d+\\W\\d+"),
         mozilla("Mozilla", "firefox/\\d+\\W\\d+"),
-        mqqbrowser("MQQBrowser","MQQBrowser/\\d+\\W\\d+"),
-        ucbrowser("UCBrowser","UCBrowser/\\d+\\W\\d+"),
-        baidubrowser("baidubrowser","baidubrowser/\\d+\\W\\d+"),
+        mqqbrowser("MQQBrowser", "MQQBrowser/\\d+\\W\\d+"),
+        ucbrowser("UCBrowser", "UCBrowser/\\d+\\W\\d+"),
+        baidubrowser("baidubrowser", "baidubrowser/\\d+\\W\\d+"),
         unknown("unknown", "version/\\d+\\W\\d+");
 
         private String browser;
