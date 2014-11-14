@@ -1,0 +1,44 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
+        "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<struts>
+
+
+    <!-- 消息查看 -->
+    <package name="admin-notice" extends="fantasy-default" namespace="/notice">
+        <!-- 首页 -->
+        <action name="index" class="com.fantasy.remind.web.NoticeAction" method="index">
+            <result type="freemarker">/template/%{pageTheme}/remind/notice.ftl</result>
+        </action>
+        <!-- 查看 -->
+        <action name="view" class="com.fantasy.remind.web.NoticeAction" method="view">
+            <result type="freemarker">/template/%{pageTheme}/remind/notice_view.ftl</result>
+        </action>
+        <!-- search -->
+        <action name="search" class="com.fantasy.remind.web.NoticeAction" method="search" />
+        <action name="delete" class="com.fantasy.remind.web.NoticeAction" method="delete" />
+        <!-- 查看 -->
+        <action name="go" class="com.fantasy.remind.web.NoticeAction" method="go">
+            <result type="redirect">%{url}</result>
+        </action>
+    </package>
+    <!-- 模版查看 -->
+    <package name="admin-notice-model" extends="fantasy-default" namespace="/notice/model">
+        <!-- search -->
+        <action name="search" class="com.fantasy.remind.web.NoticeAction" method="searchModel" />
+        <!-- save -->
+        <action name="save" class="com.fantasy.remind.web.NoticeAction" method="saveModel" />
+        <!-- 修改 -->
+        <action name="edit" class="com.fantasy.remind.web.NoticeAction" method="editModel">
+            <result type="freemarker">/template/%{pageTheme}/remind/model_edit.ftl</result>
+        </action>
+        <!-- add -->
+        <action name="add" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/remind/model_add.ftl</result>
+        </action>
+        <!-- 查看 -->
+        <action name="view" class="com.fantasy.remind.web.NoticeAction" method="viewModel">
+            <result type="freemarker">/template/%{pageTheme}/remind/model_view.ftl</result>
+        </action>
+        <action name="delete" class="com.fantasy.remind.web.NoticeAction" method="deleteModel" />
+    </package>
+</struts>

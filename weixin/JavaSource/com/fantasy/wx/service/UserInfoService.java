@@ -70,13 +70,28 @@ public class UserInfoService {
      */
     public void refresh(String appid){
         WeixinUtil wxUtil=new WeixinUtil();
-        AccessToken at=WeixinUtil.accessToken.get(appid);
+        AccessToken at= WeixinUtil.accessToken.get(appid);
         WatchUserList watchUserList=wxUtil.getWatchUserList(at);
         String[] arry=checkOpenId(watchUserList.getData().getOpenid());
         for(int i=0;i<arry.length;i++){
             UserInfo ui=wxUtil.getUserInfo(arry[i],at);
             userInfoDao.save(ui);
         }
+    }
+
+    public void countUnReadSize(List<UserInfo> list){
+        for(UserInfo u:list){
+            setUnReadSize(u);
+        }
+    }
+    public void setUnReadSize(UserInfo u){
+        List query=userInfoDao.createSQLQuery("SELECT COUNT(*) c FROM wx_message WHERE create_time>? and openid=?", u.getLastLookTime(),u.getOpenid()).list();
+        if(query.size()!=0){
+            u.setUnReadSize(Integer.parseInt(query.get(0).toString()));
+        }
+    }
+    public void refreshMessage(String openId){
+        userInfoDao.batchSQLExecute("update wx_user_info set last_look_time=last_message_time  where openid=?",openId);
     }
 
 }

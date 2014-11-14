@@ -42,6 +42,11 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-websocket</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
     </dependencies>
 
 </project>
