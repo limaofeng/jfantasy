@@ -14,7 +14,7 @@
     <websocket:handlers>
         <websocket:mapping path="/weixin/msg" handler="weixinWebSocketEndPoint"/>
     </websocket:handlers>
-    <!--<websocket:handlers>
+    <websocket:handlers>
         <websocket:mapping path="/notice/msg" handler="noticeWebSocket"/>
-    </websocket:handlers>-->
+    </websocket:handlers>
 </beans>

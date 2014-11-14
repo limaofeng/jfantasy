@@ -4,6 +4,8 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-lazy-init="true">
 
+    <import resource="classpath:spring/applicationContext.xml"/>
+
     <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" init-method="start" destroy-method="destroy">
         <property name="autoStartup" value="false"/>
         <property name="waitForJobsToCompleteOnShutdown" value="false"/>

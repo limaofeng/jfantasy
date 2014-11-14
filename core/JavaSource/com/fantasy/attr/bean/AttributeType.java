@@ -25,7 +25,7 @@ public class AttributeType extends BaseBusEntity {
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
-     * 属性类型
+     * 属性类型 (java className)
      */
     @Column(name = "DATA_TYPE", length = 200, unique = true)
     private String dataType;

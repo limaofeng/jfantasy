@@ -2,35 +2,51 @@ package com.fantasy.framework.spring;
 
 import com.fantasy.framework.lucene.annotations.Indexed;
 import ognl.DefaultTypeConverter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.IOException;
 import java.util.Set;
 
 public class ClassPathScannerTest {
 
-    public static void main(String[] args) throws IOException {
+    private static final Log logger = LogFactory.getLog(ClassPathScannerTest.class);
 
-        ClassPathScanner classPathScanner = new ClassPathScanner();
-//
-        Set<Class<?>> classes = classPathScanner.findAnnotationedClasses("", Indexed.class);
+    private ClassPathScanner pathScanner;
 
-        for (Class<?> clazz : classes) {
-            System.out.println(clazz);
-        }
+    @Before
+    public void setUp() throws Exception {
+        pathScanner = new ClassPathScanner();
+    }
 
-        classes = ClassPathScanner.getInstance().findInterfaceClasses("com.fantasy", DefaultTypeConverter.class);
-
-        for (Class<?> clazz : classes) {
-            System.out.println(clazz);
-        }
-
-//		 Iterator<URL> strutsPlugin = ClassLoaderUtil.getResources("struts-plugin.xml", null, false);
-//		 while (strutsPlugin.hasNext()) {
-//			 URL url = strutsPlugin.next();
-//			 // url.openStream();
-//			 System.out.println(url);
-//		 }
+    @After
+    public void tearDown() throws Exception {
 
     }
 
+    @Test
+    public void testFindTargetClassNames() throws Exception {
+        Set<String> classeNames = pathScanner.findTargetClassNames("com.fantasy.framework.spring");
+        for (String clazz : classeNames) {
+            logger.debug(clazz);
+        }
+    }
+
+    @Test
+    public void testFindAnnotationedClasses() throws Exception {
+        Set<Class<?>> classes = pathScanner.findAnnotationedClasses("", Indexed.class);
+        for (Class<?> clazz : classes) {
+            logger.debug(clazz);
+        }
+    }
+
+    @Test
+    public void testFindInterfaceClasses() throws Exception {
+        Set<Class<?>> classes = ClassPathScanner.getInstance().findInterfaceClasses("com.fantasy", DefaultTypeConverter.class);
+        for (Class<?> clazz : classes) {
+            logger.debug(clazz);
+        }
+    }
 }

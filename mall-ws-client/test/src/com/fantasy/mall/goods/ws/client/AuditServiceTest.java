@@ -1,27 +1,19 @@
 package com.fantasy.mall.goods.ws.client;
 
-import com.fantasy.mall.goods.ws.dto.*;
+import com.fantasy.mall.goods.ws.dto.AuditPriceDTO;
+import com.fantasy.mall.goods.ws.dto.SpecialDTO;
 import com.fatnasy.ws.Constants;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 
 /**
  * 商品调价
  */
 public class AuditServiceTest {
 
-    /**
-     * ----------------------------------* 往下为 JUNIT 测试 --------------------------------
-     *
-     */
-
-
-
    private AuditService auditService;
-
 
     @Before
     public void init() throws Exception {

@@ -1,13 +1,12 @@
 package com.fantasy.framework.dao.mybatis;
 
-import java.io.IOException;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.sql.DataSource;
-
+import com.fantasy.framework.dao.mybatis.binding.MyBatisMapperRegistry;
+import com.fantasy.framework.dao.mybatis.interceptors.AutoKeyInterceptor;
+import com.fantasy.framework.dao.mybatis.interceptors.LimitInterceptor;
+import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
@@ -35,13 +34,13 @@ import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
 import org.springframework.util.StringUtils;
 
-import com.fantasy.framework.dao.mybatis.binding.MyBatisMapperRegistry;
-import com.fantasy.framework.dao.mybatis.interceptors.AutoKeyInterceptor;
-import com.fantasy.framework.dao.mybatis.interceptors.LimitInterceptor;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
+import javax.sql.DataSource;
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, InitializingBean, ApplicationListener<ApplicationEvent> {
 	private final Log logger = LogFactory.getLog(getClass());
@@ -129,9 +128,9 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
 		// TODO 添加需要额外的扫描的文件夹
 		this.mapperLocations = ObjectUtil.defaultValue(this.mapperLocations, new Resource[0]);
 		this.mapperLocations = ObjectUtil.join(this.mapperLocations, SpringContextUtil.getResources("classpath:com/fantasy/framework/dao/mybatis/keygen/dao/*-Mapper.xml"));
-//		this.mapperLocations = ObjectUtil.join(this.mapperLocations, SpringContextUtil.getResources("classpath:com/fantasy/**/*-Mapper.xml"));
+		this.mapperLocations = ObjectUtil.join(this.mapperLocations, SpringContextUtil.getResources("classpath:com/fantasy/**/dao/*-Mapper.xml"));
 		// 添加别名注解扫描路径
-		this.typeAliasesPackage = StringUtil.defaultValue(this.typeAliasesPackage, "com.fantasy.framework.dao.mybatis.bean;");
+		this.typeAliasesPackage = StringUtil.defaultValue(this.typeAliasesPackage, "com.fantasy.framework.dao.mybatis.keygen.bean;");
 		// 判断必要元素
 		Assert.notNull(this.dataSource, "Property 'dataSource' is required");
 		Assert.notNull(this.sqlSessionFactoryBuilder, "Property 'sqlSessionFactoryBuilder' is required");
@@ -153,7 +152,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
 			throw e;
 		} catch (Throwable throwable) {
 			if (this.sqlSessionFactory == null)
-				logger.error("sqlSessionFactory 加载失败 : " + throwable + ">" + this + ">" + this.sqlSessionFactory);
+				logger.error("sqlSessionFactory 加载失败 : " + throwable.getMessage(),throwable);
 			throw new Exception(throwable);
 		}
 	}
@@ -178,7 +177,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
 			String[] typeAliasPackageArray = StringUtils.tokenizeToStringArray(this.typeAliasesPackage, ",; \t\n");
 
 			for (String packageToScan : typeAliasPackageArray) {
-				configuration.getTypeAliasRegistry().registerAliases(packageToScan);
+				configuration.getTypeAliasRegistry().registerAliases(packageToScan, Serializable.class);
 				if (this.logger.isDebugEnabled()) {
 					this.logger.debug("Scanned package: '" + packageToScan + "' for aliases");
 				}

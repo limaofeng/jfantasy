@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.concurrent.LinkedQueue;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.remind.bean.Model;
 import com.fantasy.remind.bean.Notice;
@@ -30,6 +31,7 @@ public class NoticeService {
     private NoticeDao noticeDao;
     @Resource
     private ModelDao modelDao;
+    private LinkedQueue<Notice> noticeQueue = new LinkedQueue<Notice>();
 
     /**
      * 查看
@@ -47,7 +49,7 @@ public class NoticeService {
      * @param notice
      */
     public void save(Notice notice) throws Exception{
-        if(notice.getContent()==null&&notice.getModel()!=null&&notice.getModel().getCode()!=null){
+        if(notice.getId()==null&&StringUtil.isNotNull(notice.getReplaceMap())&&notice.getModel()!=null&&notice.getModel().getCode()!=null){
             Model m=modelDao.get(notice.getModel().getCode());
             if(m==null)
                 throw new RuntimeException("无匹配model项");
@@ -61,10 +63,12 @@ public class NoticeService {
                 }
                 if(!StringUtil.isNotNull(notice.getUrl())) notice.setUrl(url);
                 if(!StringUtil.isNotNull(notice.getContent()))notice.setContent(content);
+
             }
         }
-
+        boolean b=notice.getId()==null;
         this.noticeDao.save(notice);
+        if(b)noticeQueue.put(notice);
     }
 
 
@@ -99,5 +103,13 @@ public class NoticeService {
         return JSON.serialize(noticeService.findPager(pager, filters));
     }
 
+    public Notice getNotices(){
+        try {
+            return noticeQueue.take();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

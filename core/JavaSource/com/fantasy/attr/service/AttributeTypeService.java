@@ -8,6 +8,7 @@ import com.fantasy.framework.spring.SpringContextUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -44,11 +45,15 @@ public class AttributeTypeService{
 		return attributeType;
 	}
 
-	public void delete(Long[] ids) {
+	public void delete(Long... ids) {
 		for (Long id : ids) {
 			this.attributeTypeDao.delete(id);
 		}
 	}
+
+    public AttributeType findUnique(Criterion... criterions) {
+        return this.attributeTypeDao.findUnique(criterions);
+    }
 
 	public List<AttributeType> getAll() {
 		return this.attributeTypeDao.getAll();
@@ -63,4 +68,5 @@ public class AttributeTypeService{
 		List<AttributeType> types = SpringContextUtil.getBeanByType(AttributeTypeService.class).getAll();
 		return types;
 	}
+
 }

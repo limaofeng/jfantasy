@@ -85,4 +85,13 @@ public class AttributeValue extends BaseBusEntity {
     public void setVersion(AttributeVersion version) {
         this.version = version;
     }
+
+    @Override
+    public String toString() {
+        return "AttributeValue{" +
+                "attribute=" + attribute +
+                ", value='" + value + '\'' +
+                ", targetId=" + targetId +
+                '}';
+    }
 }

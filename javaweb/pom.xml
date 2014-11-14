@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>2.5.9.Alphal</version>
+        <version>2.7.2.Alphal</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.haolue</groupId>
@@ -29,12 +29,12 @@
                     <webXml>WebContent/WEB-INF/web.xml</webXml>
                     <webResources>
                         <resource>
-                            <directory>${basedir}/../jslib/static</directory>
+                            <directory>${basedir}/../../jslib/static</directory>
                             <filtering>false</filtering>
                             <targetPath>static</targetPath>
                         </resource>
                         <resource>
-                            <directory>${basedir}/../jslib/fides</directory>
+                            <directory>${basedir}/../../jslib/fides</directory>
                             <filtering>false</filtering>
                             <targetPath>assets</targetPath>
                         </resource>

@@ -1,3 +1,41 @@
+window.scrollDiv={theme:{
+    html:function(settings){
+        var scroll='<div class="content-box bg-white" style="margin:0px">'+((!settings.searchOption.title)?'':'<h3 class="content-box-header ui-state-default">'+
+            '<div class="glyph-icon icon-separator transparent">'+
+            '<i class="glyph-icon icon-reorder"></i>'+
+            '</div>'+
+            '<span class="pad0L">'+settings.searchOption.title+'</span>'+
+            '</h3>')+
+            '<div class="optionScrollBtn" style="background: #F7F9FC!important;padding-top: 10px;padding-left: 10px;"></div>'+
+            (!settings.searchOption.searchName?'':'<div class="button-pane button-pane-top pad10A">'+
+                '<div class="form-row pad0B"><div class="form-input col-md-12"><div class="form-input-icon">'+
+                '<i class="glyph-icon icon-search transparent searchScrollBtn"></i>'+
+                '<input type="text" name="'+settings.searchOption.searchName+'"  placeholder="'+settings.searchOption.searchText+'" class="radius-all-100 key13 searchInput" data-class="searchScrollBtn"name="">'+
+                '</div></div></div></div>')+
+                '<div class="scrollable-content  grid-panel scrollViewDiv" tabindex="5005" style="overflow: hidden; outline: none;">'+
+                    '<ul class="notifications-box scrollView" style="border:0px;">'+
+                        '<li  class="template" name="default" style="height:46px;line-height: 46px;">'+
+                            '<div class="large btn info-icon float-left mrg5R dropdown head" style="width:45px; height: 45px;">'+
+                            '<a data-toggle="dropdown" href="javascript:;" title="">'+
+                            '<img data-src="holder.js/38x38/simple" class="img-small view-field" style="height: 39px;width: 39px;"/>'+
+                            '</a>'+
+                            '</div>'+
+                            '<p><span class="label bg-purple mrg5R titleName" style="min-width: 0.8em;height: 1.4em;line-height: 1.4em;"></span></p>'+
+                        '</li>'+
+                        '<li class="loadScroll" style="display:none;">'+
+                        '<span class="notification-text" style=" width:100%;text-align: center;">正在加载...</span>'+
+                        '</li>'+
+                        '<li class="notScroll" style="display:none;">'+
+                        '<div class="notification-text" style=" width:100%;text-align: center;">无匹配项</div>'+
+                        '</li>'+
+                    '</ul>'+
+                '</div>'+
+            '</div>';
+        return $(scroll);
+    }
+}
+}
+
 function ajaxScroll(zhis,settings){
     //是否加载
     var boolAjax=!!settings.boolAjax?settings.boolAjax:true;
@@ -34,9 +72,9 @@ function ajaxScroll(zhis,settings){
     //是否启用view.insert插入数据
     var isViewInsert=settings.isViewInsert!=undefined?settings.isViewInsert:true;
     //初始化的时候是否清空子节点
-    var isEmptyInit=settings.isEmptyInit!=undefined?settings.isEmptyInit:true;
+    var isEmptyInit=settings.isEmptyInit!=undefined?settings.isEmptyInit:false;
     //是否显示选中效果
-    var isShowCurent=settings.isShowCurent!=undefined?settings.isShowCurent:true;
+    var isShowCurent=settings.isShowCurent!=undefined?settings.isShowCurent:false;
     //view add方法
     var viewAdd=settings.viewAdd;
     //操作的按钮[{href:"/wp/",ajax:"",name="新增",click=function}]
@@ -115,34 +153,29 @@ function ajaxScroll(zhis,settings){
             if(i>=3&&optionBtn.length>3){
                 if(i==3){
                     var more=$('<div class="dropdown btn-group">'+
-'            <a href="javascript:;" class="btn medium primary-bg" title="" data-toggle="dropdown">'+
-'                <span class="button-content text-center float-none font-size-11 text-transform-upr">'+
-'                    <i class="glyph-icon icon-caret-down float-right"></i>'+
-'                   更多操作</span>'+
-'            </a>'+
-'            <ul class="dropdown-menu float-right   ">'+
-'            </ul>'+
-'        </div>');
+                        '            <a href="javascript:;" class="btn medium primary-bg" title="" data-toggle="dropdown">'+
+                        '                <span class="button-content text-center float-none font-size-11 text-transform-upr">'+
+                        '                    <i class="glyph-icon icon-caret-down float-right"></i>'+
+                        '                   更多操作</span>'+
+                        '            </a>'+
+                        '            <ul class="dropdown-menu float-right   ">'+
+                        '            </ul>'+
+                        '        </div>');
                     $(".optionScrollBtn").append(more);
                 }
                 btn=$('<li>'+
-'                    <a title="'+item.name+'" class="optionScrollBtn'+i+'" data-href="'+item.href+'"  ajax="'+item.ajax+'">'+
-'                       <i class="glyph-icon icon-plus mrg5R"></i>'+item.name+
-'                   </a>'+
-'                </li>');
-                
+                    '                    <a title="'+item.name+'" class="optionScrollBtn'+i+'" data-href="'+item.href+'"  ajax="'+item.ajax+'">'+
+                    '                       <i class="glyph-icon icon-plus mrg5R"></i>'+item.name+
+                    '                   </a>'+
+                    '                </li>');
+
             }else{
                 btn=$('<a title="'+item.name+'" style="margin-right:10px" class="btn medium primary-bg optionScrollBtn'+i+'" data-href="'+item.href+'" '+(!!item.target?' target="'+item.target+'"':'')+' ><span class="button-content">'+item.name+'</span></a>');
             }
-            
+
             if(!!item.click) btn.on("click",item.click);
             optionBtn.length>3&&i>=3?$(".optionScrollBtn").find(".dropdown-menu").append(btn):$(".optionScrollBtn").append(btn);
         }
-        $('.optionScrollBtn a[target]', $(zhis)).filter(function(){
-            return !$(this).data('_target') && ['_blank','_self','_parent','_top'].indexOf($(this).attr('target')) == -1;
-        }).data('_target',true).each(function () {
-            $(this).target();
-        });
     }else{
         $('.optionScrollBtn').remove();
     }
@@ -173,7 +206,7 @@ function ajaxScroll(zhis,settings){
                 }
                 if(isShowCurent) showCurrent($(this));
             });
-            if(this.target.index()==0&&isShowCurent) this.target.click();
+            if(isShowCurent&&this.target.index()==0) this.target.click();
         });
         view.setJSON(pager.pageItems);
         zhis.find(".grid-panel").removeClass("grid-panel");
@@ -234,55 +267,19 @@ function ajaxScroll(zhis,settings){
             callback();
         }
     });
-    return {
-        resultAjax:function(bool){
-            if(bool!=undefined) boolAjax=bool;
-            else return boolAjax;
-        },load:function(){
-            load();
-        }
-
+    this.resultAjax=function(bool){
+        if(bool!=undefined) boolAjax=bool;
+        else return boolAjax;
+    };
+    this.load=function(){
+        load();
     };
 }
-window.scrollDiv={theme:{
-    html:function(settings){
-        var scroll='<div class="content-box bg-white" style="margin:0px">'+((!settings.searchOption.title)?'':'<h3 class="content-box-header ui-state-default">'+
-            '<div class="glyph-icon icon-separator transparent">'+
-            '<i class="glyph-icon icon-reorder"></i>'+
-            '</div>'+
-            '<span class="pad0L">'+settings.searchOption.title+'</span>'+
-            '</h3>')+
-            '<div class="optionScrollBtn" style="background: #F7F9FC!important;padding-top: 10px;padding-left: 10px;"></div>'+
-            (!settings.searchOption.searchName?'':'<div class="button-pane button-pane-top pad10A">'+
-                '<div class="form-row pad0B"><div class="form-input col-md-12"><div class="form-input-icon">'+
-                '<i class="glyph-icon icon-search transparent searchScrollBtn"></i>'+
-                '<input type="text" name="'+settings.searchOption.searchName+'"  placeholder="'+settings.searchOption.searchText+'" class="radius-all-100 key13 searchInput" data-class="searchScrollBtn"name="">'+
-                '</div></div></div></div>')+
-                '<div class="scrollable-content  grid-panel scrollViewDiv" tabindex="5005" style="overflow: hidden; outline: none;">'+
-                    '<ul class="notifications-box scrollView" style="border:0px;">'+
-                        '<li  class="template" name="default" style="height:46px;line-height: 46px;">'+
-                            '<div class="large btn info-icon float-left mrg5R dropdown head" style="width:45px; height: 45px;">'+
-                            '<a data-toggle="dropdown" href="javascript:;" title="">'+
-                            '<img data-src="holder.js/38x38/simple" class="img-small view-field" style="height: 39px;width: 39px;"/>'+
-                            '</a>'+
-                            '</div>'+
-                            '<p><span class="label bg-purple mrg5R titleName" style="min-width: 0.8em;height: 1.4em;line-height: 1.4em;"></span></p>'+
-                        '</li>'+
-                        '<li class="loadScroll" style="display:none;">'+
-                        '<span class="notification-text" style=" width:100%;text-align: center;">正在加载...</span>'+
-                        '</li>'+
-                        '<li class="notScroll" style="display:none;">'+
-                        '<div class="notification-text" style=" width:100%;text-align: center;">无匹配项</div>'+
-                        '</li>'+
-                    '</ul>'+
-                '</div>'+
-            '</div>';
-        return $(scroll);
-    }
-}
-}
+
 jQuery.fn.extend({
-    ajaxScroll: function (settings) {
-        return new ajaxScroll($(this),settings);
-    }
+    ajaxScroll: (function(_ajaxuScroll){
+        return  function (settings) {
+            return new _ajaxuScroll($(this),settings);
+        }
+     })(ajaxScroll)
 });

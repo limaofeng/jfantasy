@@ -324,7 +324,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                             addObjects.add(fk);
                         }
                     }
-                    ognlUtil.setValue(field.getName(), oldEntity, addObjects);
+                    ognlUtil.setValue(field.getName(), entity, addObjects);
                 }
             }
             return entity;
@@ -368,7 +368,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
      */
     public void delete(PK id) {
         Assert.notNull(id, "id不能为空");
-        T t = get(id);
+        T t = load(id);
         if (t != null) {
             delete(t);
         }

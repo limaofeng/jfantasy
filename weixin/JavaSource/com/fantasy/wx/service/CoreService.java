@@ -33,7 +33,7 @@ public class CoreService {
     //微信工具类
     private WeixinUtil weixinUtil=new WeixinUtil();
 
-    private LinkedQueue<Message> messageQueue = new LinkedQueue();
+    private LinkedQueue<Message> messageQueue = new LinkedQueue<Message>();
     /**
      * 处理微信发来的请求
      *
