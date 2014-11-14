@@ -70,7 +70,7 @@
                     view.remove(zhis.index);
                     notices.totalCount--;
                     refreshNotices();
-                    //location.href= zhis.data.url;
+                    location.href='${request.contextPath}/notice/go.do?id='+ zhis.data.id;
                 })
             });
             view.setJSON(notices.pageItems);

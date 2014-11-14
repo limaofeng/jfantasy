@@ -14,10 +14,9 @@ $(function() {
             $(this).css('minHeight', $(window).height() - ( $(this).offset().top + 15));
             $(this).triggerHandler('resize');
         });
-        $('.scrollViewDiv').each(function(){
-            $(this).css('height', $(window).height() - ( $(this).offset().top + 15));
-            $(this).triggerHandler('resize');
-        });
+    });
+    $page$.on('refresh',function(){
+        $grid.data('grid').pager().reload();
     });
     //列表初始化
     var pager=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(pager)" escapeHtml="false"/>;

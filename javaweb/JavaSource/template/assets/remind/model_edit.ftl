@@ -45,7 +45,7 @@
                 </label>
             </div>
             <div class="form-input col-md-10">
-                <@s.textfield name="code" value="%{model.code}"   disabled="true" />
+                <@s.textfield name="code" value="%{model.code}"   readonly="true" />
             </div>
         </div>
         <div class="form-row">
