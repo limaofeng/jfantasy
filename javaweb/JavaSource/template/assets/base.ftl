@@ -59,19 +59,29 @@
         var remove_loader = function(){
             $("#loader-overlay").fadeOut("fast");
         };
+        Fantasy.apply(Fantasy.util.Format,{},{
+            compareTime : function(value){
+                return Date.parse(value).compareTime();
+            }
+        });
         $(function(){
             setInterval(function(){
                 $(window).resize();
             },1000);
+            setInterval(function(){
+                if(!!view)view.setJSON(view.getData());
+            },60000);
             var notices=<@s.property value="@com.fantasy.remind.service.NoticeService@findUserNotice()" escapeHtml="false"/>;
             var view =$("#noticeBaseView").view().on("add",function(){
                 var zhis=this;
+                if(!!this.data&&!!this.data.model)this.target.find("img").attr("src","${request.contextPath}"+this.data.model.avatar);
                 this.target.on("click",function(d,i){
                     view.remove(zhis.index);
                     notices.totalCount--;
                     refreshNotices();
                     location.href='${request.contextPath}/notice/go.do?id='+ zhis.data.id;
-                })
+                });
+
             });
             view.setJSON(notices.pageItems);
             var refreshNotices=function(){
@@ -87,6 +97,7 @@
                     view.insert(0,data);
                     notices.totalCount++;
                     refreshNotices();
+                    view.setJSON(view.getData());
                 };
             };
         });
@@ -618,10 +629,10 @@
 
             <ul class="no-border notifications-box"  id="noticeBaseView">
                 <li class="template" name="default"  style="height:46px;line-height: 46px;padding:5px;">
-                    <span class="btn float-left"><img data-src="holder.js/38x38/simple" class="img-small view-field float-left mrg5R" name="model.avatar"/></span>
+                    <span class="btn float-left"><img data-src="holder.js/38x38/simple" class="img-small view-field float-left mrg5R"/></span>
                     <span class="notification-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 248px;">{content}</span>
                     <div class="notification-time">
-                        {modifyTime:date('yyyy-MM-dd HH:mm:ss')}
+                        <span>{modifyTime:compareTime()}</span>
                         <span class="glyph-icon icon-time"></span>
                     </div>
                 </li>
