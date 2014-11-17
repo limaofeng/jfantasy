@@ -58,7 +58,7 @@ public class ModelService {
      * 删除
      * @param ids
      */
-    public void delete(String[] ids){
+    public void delete(String... ids){
         for(String id:ids){
             this.modelDao.delete(id);
         }

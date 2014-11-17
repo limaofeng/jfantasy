@@ -86,7 +86,7 @@ public class NoticeService {
      * 删除
      * @param ids
      */
-    public void delete(Long[] ids){
+    public void delete(Long... ids){
         for(Long id:ids){
             this.noticeDao.delete(id);
         }

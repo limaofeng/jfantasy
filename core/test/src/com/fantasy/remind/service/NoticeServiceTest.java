@@ -30,8 +30,6 @@ public class NoticeServiceTest {
     private NoticeService noticeService;
     @Resource
     private ModelService modelService;
-    private String[] models;
-    private Long[] notices;
 
     @Before
     public void setUp() throws Exception {
@@ -43,23 +41,13 @@ public class NoticeServiceTest {
     public void tearDown() throws Exception {
         this.testModelDelete();
     }
-    @Test
-    public void test() throws Exception {
-        Notice notice2=new Notice();
-        notice2.setModel(new Model("shuju"));
-        Map<String,String> map=new HashMap<String, String>();
-        map.put("key","警方i额外加分哦微积分我减肥我发金额我问佛脚");
-        map.put("content","/web");
-        map.put("id","11");
-        notice2.setReplaceMap(JSON.serialize(map));
-        noticeService.save(notice2);
-    }
 
     @Test
     public void testFindPager() throws Exception {
         List<PropertyFilter> modelFilter=new ArrayList<PropertyFilter>();
         modelFilter.add(new PropertyFilter("EQS_code","test"));
         Pager<Model> modelPager=modelService.findPager(new Pager<Model>(),modelFilter);
+        assert modelPager.getPageItems()!=null;
         logger.info("modelPager:" + JSON.serialize(modelPager));
         for(Model m:modelPager.getPageItems()){
             Model logModel=modelService.get(m.getCode());
@@ -67,6 +55,7 @@ public class NoticeServiceTest {
         }
 
         List<Model> list=modelService.findAll();
+        assert list!=null;
         for(Model m:list){
             logger.info("logNotice:" + JSON.serialize(m));
         }
@@ -105,15 +94,13 @@ public class NoticeServiceTest {
         notice3.setModel(new Model("test"));
         Map<String,String> map3=new HashMap<String, String>();
         map3.put("key","1key1");
-        map3.put("content","1content1");
+        map3.put("content", "1content1");
         notice3.setUrl("http://www.douban.com");
         notice3.setReplaceMap(JSON.serialize(map3));
         noticeService.save(notice3);
-        this.notices=new Long[]{notice.getId(),notice2.getId(),notice3.getId()};
     }
 
     public void testModelSave() throws Exception {
-        this.models=new String[1];
         Model model=new Model();
         model.setCode("test");
         model.setName("测试的name");
@@ -121,16 +108,23 @@ public class NoticeServiceTest {
         model.setContent("我要提醒content:${content}的key:${key}测试");
         model.setUrl("http://www.baidu.com?id=${id}");
         modelService.save(model);
-        this.models[0]=model.getCode();
     }
 
-    @Test
     public void testModelDelete() throws Exception {
-        noticeService.delete(notices);
-        modelService.delete(models);
+        List<PropertyFilter> noticeFilter=new ArrayList<PropertyFilter>();
+        noticeFilter.add(new PropertyFilter("EQS_model.code","test"));
+        Pager<Notice> noticePager=noticeService.findPager(new Pager<Notice>(),noticeFilter);
+        Long[] list=new Long[noticePager.getPageItems().size()];
+        for(int i =0;i<noticePager.getPageItems().size();i++){
+            list[i]=noticePager.getPageItems().get(i).getId();
+        }
+        noticeService.delete(list);
+        modelService.delete("test");
     }
+    @Test
     public void testModelGet() throws Exception {
         Model model=modelService.get("test");
+        assert model!=null;
         logger.info("model:"+ JSON.serialize(model));
     }
 }
