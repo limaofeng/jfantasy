@@ -7,7 +7,6 @@ import com.fantasy.framework.util.common.ImageUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.ws.util.WebServiceUtil;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.bean.MemberDetails;
 import com.fantasy.member.service.MemberService;
@@ -147,7 +146,7 @@ public class MemberWebService implements IMemberService {
         // detailsDTO.getAvatar().startsWith("/") 判断文件是否需要上传。有 ‘/’表示 还是原来的图片。不需要重新生成
         if (StringUtil.isNotBlank(detailsDTO.getAvatar()) && !detailsDTO.getAvatar().startsWith("/")) {
             if (logger.isDebugEnabled()) {
-                logger.debug("上传用户头像(base64编码的图片):" + detailsDTO.getAvatar());
+                logger.debug("上传用户头像(base64编码的图片):" + StringUtil.ellipsis(detailsDTO.getAvatar(),20,"..."));
             }
             BufferedImage bufferedImage = ImageUtil.getImage(detailsDTO.getAvatar());
             try {
