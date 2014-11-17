@@ -34,9 +34,11 @@ public class StringUtil {
             return value;
         }
         len -= length(word);
-        do
+        if (value.length() > len) {
+            value = value.substring(0, len);
+        }
+        while (length(value) > len)
             value = value.substring(0, value.length() - 1);
-        while (length(value) > len);
         return value + word;
     }
 

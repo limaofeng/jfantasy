@@ -10,10 +10,6 @@
     <packaging>jar</packaging>
     <version>${com.fantasy-version}</version>
 
-    <reporting>
-        <outputDirectory>../target/site/${project.artifactId}</outputDirectory>
-    </reporting>
-
     <dependencies>
         <dependency>
             <groupId>com.tacitknowledge</groupId>
