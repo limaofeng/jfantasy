@@ -459,8 +459,4 @@ public class WeixinUtil {
         }
         return firstAccessToken;
     }
-    public  static  boolean isListEmpty(List<Object> list){
-
-        return true;
-    }
 }

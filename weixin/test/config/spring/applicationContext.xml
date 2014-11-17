@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       default-lazy-init="true">
+    <!--xmlns:log="http://www.fantasy.com.cn/schema/log"-->
+
+    <!-- 用于非spring托管对象获取spring中的Bean -->
+    <bean id="springContextUtil" class="com.fantasy.framework.spring.SpringContextUtil" lazy-init="false"/>
+
+    <!-- 使用 annotation -->
+    <context:annotation-config/>
+
+    <aop:aspectj-autoproxy/>
+
+    <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
+    <context:component-scan base-package="com.fantasy,com.haolue"/>
+
+    <!-- 可以通过annotation 添加定时任务 @Scheduled(fixedDelay=任务间的延时时间,fixedRate=任务的间隔时间,cron=表达式) -->
+    <task:executor id="spring.executor" pool-size="5"/>
+    <task:scheduler id="spring.scheduler" pool-size="10"/>
+    <!--
+    <task:annotation-driven scheduler="spring.scheduler" executor="spring.executor"/>
+    -->
+
+    <!-- 加载 properties文件 -->
+    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
+
+    <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
+    <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">1</prop>
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="number_format">#</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <!-- <prop key="template_exception_handler">ignore</prop> -->
+            </props>
+        </property>
+        <property name="defaultEncoding" value="utf-8"/>
+        <!--
+        <property name="templateLoaderPath" value="${freemarker.templatePath}" />
+        <property name="preTemplateLoaders">
+            <list>
+                <bean class="com.fantasy.framework.freemarker.loader.FileManagerTemplateLoader">
+                    <property name="fileManagerBeanName" value="freemarker" />
+                </bean>
+            </list>
+        </property>
+        -->
+    </bean>
+
+    <!-- ehcache缓存配置 -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:cache/ehcache.xml"/>
+    <!--
+    <ehcache:annotation-driven cache-manager="cacheManager" />
+     -->
+
+    <!-- 开发中的功能
+    <bean id="logManager" class="com.fantasy.framework.log.DefaultLogManager"/>
+    <log:annotation-driven log-manager="logManager"/>
+    -->
+
+    <!--
+    <bean id="socketServer" class="com.fantasy.framework.websocket.WebSocketServer" lazy-init="false" init-method="start" destroy-method="stop">
+        <constructor-arg name="port" value="9090" />
+    </bean>
+    -->
+
+    <!-- 系统默认缓存 -->
+    <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">
+        <constructor-arg name="id" value="fantasy.default"/>
+    </bean>
+
+    <!-- lucene 配置 -->
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
+        <property name="analyzer">
+            <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
+        </property>
+        <property name="basePackage" value="com.fantasy.cms"/>
+        <property name="directoryPath" value="${buguIndex.directoryPath}"/>
+    </bean>
+
+    <!-- 文件管理器 -->
+    <bean id="fileManagerFactory" class="com.fantasy.file.service.FileManagerFactory" lazy-init="false"/>
+
+    <!-- 邮件服务接口类 -->
+    <bean id="mailSendService" class="com.fantasy.framework.service.MailSendService">
+        <property name="hostname" value="${mail.hostname}"/>
+        <property name="from" value="${mail.from}"/>
+        <property name="displayName" value="${mail.displayName}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="charset" value="${mail.charset}"/>
+        <property name="configuration" ref="freemarkerService"/>
+    </bean>
+
+    <bean id="shortMessagingService" class="com.fantasy.sms.service.ShortMessagingService">
+        <property name="smsService">
+            <bean class="com.fantasy.sms.service.DefaultSMSService"/>
+        </property>
+    </bean>
+
+    <!-- 自定义序列生成器 -->
+    <bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">
+        <property name="poolSize" value="${dataBaseKey.poolSize}"/>
+    </bean>
+
+    <!-- 支付配置 -->
+    <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+
+    <!-- 其他需要加载的spring模块 -->
+    <import resource="classpath:spring/applicationContext-datasource.xml"/>
+
+    <import resource="classpath:spring/applicationContext-transaction.xml"/>
+
+    <import resource="classpath:spring/applicationContext-mybatis.xml"/>
+
+    <import resource="classpath:spring/applicationContext-hibernate.xml"/>
+
+</beans>

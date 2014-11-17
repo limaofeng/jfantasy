@@ -30,7 +30,20 @@ public class StartWeiXin implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
+        List<? extends TriggerKey> triggerKeys=scheduleService.getTriggers();
+        for(TriggerKey key:triggerKeys){
+            if(key.getName().indexOf("accessToken")>=0){
+                scheduleService.pauseTrigger(key);
+                scheduleService.removeTrigdger(key);
+            }
+        }
+        List<JobKey>jobKeys= scheduleService.getJobKeys();
+        for(JobKey key:jobKeys){
+            if(key.getName().indexOf("weixin")>=0){
+                scheduleService.interrupt(key);
+                scheduleService.deleteJob(key);
+            }
+        }
         List<AccessToken> list = accessTokenService.getAll();
         for (final AccessToken accessToken : list) {
             startAccessToken(accessToken);
