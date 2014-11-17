@@ -31,13 +31,21 @@ public class ArticleService {
     }
 
     public void delete(Long... ids) {
-        for(Long id : ids) {
+        for (Long id : ids) {
             this.articleDao.delete(id);
         }
     }
 
-    public Pager<Article> findPager(Pager<Article> pager,List<PropertyFilter> filters) {
-        return this.articleDao.findPager(pager,filters);
+    public Pager<Article> findPager(Pager<Article> pager, List<PropertyFilter> filters) {
+        return this.articleDao.findPager(pager, filters);
+    }
+
+    public Article findUnique(Criterion... criterions) {
+        return this.articleDao.findUnique(criterions);
+    }
+
+    public Article findUniqueBy(String propertyName, Object value) {
+        return this.articleDao.findUniqueBy(propertyName, value);
     }
 
 }

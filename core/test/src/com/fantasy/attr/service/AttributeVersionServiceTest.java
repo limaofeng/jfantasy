@@ -22,6 +22,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
@@ -118,14 +119,12 @@ public class AttributeVersionServiceTest {
         this.attributeVersionService.delete(version.getId());
     }
 
-    //    @Test
-    public void testSearch() throws Exception {
-
-    }
-
-    //    @Test
     public void testFindPager() throws Exception {
-
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("LIKES_title_OR_summary","测试"));
+        for(Article art : this.articleService.findPager(new Pager<Article>(),filters).getPageItems()){
+            this.articleService.delete(art.getId());
+        }
     }
 
     @Test
@@ -163,24 +162,26 @@ public class AttributeVersionServiceTest {
             Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
         }
 
+        this.testGet();
+
+        this.testFindPager();
+
         for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
             this.articleService.delete(art.getId());
         }
 
     }
 
-    //    @Test
     public void testGet() throws Exception {
+        Article article = this.articleService.findUnique(Restrictions.eq("title","测试数据标题"));
 
+        Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
+        Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
+
+        article = this.articleService.findUniqueBy("title","测试数据标题");
+
+        Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
+        Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
     }
 
-    //    @Test
-    public void testDelete() throws Exception {
-
-    }
-
-    //    @Test
-    public void testGetVersion() throws Exception {
-
-    }
 }
