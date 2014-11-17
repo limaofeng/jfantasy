@@ -201,6 +201,9 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <formats>
+                        <format>xml</format>
+                    </formats>
                     <check>true</check>
                     <instrumentation>
                         <ignores>
