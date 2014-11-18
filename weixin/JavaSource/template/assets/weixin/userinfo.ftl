@@ -37,7 +37,7 @@
         });
         $grid.setJSON(pager);
         $("#refresh").click(function(){
-            $.get("${request.contextPath}/weixin/refresh.do",{"appid":"${appid}"},function(){
+            $.get("${request.contextPath}/weixin/refresh.do",function(){
                 $('#pager').pager().reload();
             });
         })
