@@ -18,12 +18,10 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
-import com.fantasy.framework.util.reflect.MethodProxy;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -136,12 +134,14 @@ public class CmsServiceTest {
         for(Converter converter : converterService.find(Restrictions.eq("name", "图片转换器"), Restrictions.eq("typeConverter", FileDetailTypeConverter.class.getName()))){
             this.converterService.delete(converter.getId());
         }
+        AttributeVersion version = this.attributeVersionService.getVersion(Article.class, "1.0");
+        if (version != null) {
+            this.attributeVersionService.delete(version.getId());
+        }
         //添加动态bean定义
         this.addArticleVersion();
 
         Article article = VersionUtil.createDynaBean(Article.class, "1.0");
-
-        MethodProxy proxy = ClassUtil.getMethodProxy(article.getClass(), "setImages");
 
         article.setTitle("测试动态图片");
         article.setSummary("测试动态图片");
@@ -170,7 +170,7 @@ public class CmsServiceTest {
 
         this.cmsService.delete(article.getId());
 
-        AttributeVersion version = attributeVersionService.getVersion(Article.class, "1.0");
+        version = attributeVersionService.getVersion(Article.class, "1.0");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("name", "图片转换器"), Restrictions.eq("typeConverter", FileDetailTypeConverter.class.getName()))){
                 this.converterService.delete(converter.getId());
