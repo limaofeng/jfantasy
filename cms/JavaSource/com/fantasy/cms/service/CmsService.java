@@ -226,7 +226,7 @@ public class CmsService extends BuguSearcher<Article> {
      *
      * @param ids 文章 ids
      */
-    public void delete(Long[] ids) {
+    public void delete(Long... ids) {
         for (Long id : ids) {
             this.articleDao.delete(id);
         }

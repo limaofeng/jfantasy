@@ -66,15 +66,11 @@ public class Content extends BaseBusEntity {
 
         @Override
         public void serialize(Content content, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            try {
                 if (content == null) {
                     jgen.writeString("");
                 } else {
                     jgen.writeString(SettingUtil.toHtml(content.toString()));
                 }
-            } catch (IOException e) {
-                jgen.writeString("");
-            }
         }
 
     }

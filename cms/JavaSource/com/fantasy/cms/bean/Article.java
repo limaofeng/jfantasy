@@ -181,4 +181,18 @@ public class Article extends BaseBusEntity implements DynaBean {
         this.attributeValues = attributeValues;
     }
 
+    @Override
+    public String toString() {
+        return "Article{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", summary='" + summary + '\'' +
+                ", keywords='" + keywords + '\'' +
+                ", author='" + author + '\'' +
+                ", releaseDate='" + releaseDate + '\'' +
+                ", issue=" + issue +
+                ", version=" + version +
+                ", attributeValues=" + attributeValues +
+                '}';
+    }
 }

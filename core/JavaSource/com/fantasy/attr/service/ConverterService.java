@@ -52,6 +52,10 @@ public class ConverterService{
         return this.converterDao.findUnique(criterions);
     }
 
+    public List<Converter> find(Criterion... criterions){
+        return this.converterDao.find(criterions);
+    }
+
     public List<Converter> find(){
         return this.converterDao.find();
     }
