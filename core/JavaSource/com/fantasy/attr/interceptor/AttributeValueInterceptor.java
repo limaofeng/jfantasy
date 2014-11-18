@@ -53,7 +53,8 @@ public class AttributeValueInterceptor {
         }
         List<PropertyFilter> removeFilters = new ArrayList<PropertyFilter>();
         for (PropertyFilter filter : filters) {
-            if (ClassUtil.getProperty(entityClass, filter.getPropertyName().split("\\.")[0]) == null) {
+            //TODO 暂时不考虑 "LIKES_sn_OR_shipName" 这种方式匹配动态属性的查询
+            if (filter.getPropertyNames().length == 1 && ClassUtil.getProperty(entityClass, filter.getPropertyName().split("\\.")[0]) == null) {
                 removeFilters.add(filter);
             }
         }
@@ -76,22 +77,46 @@ public class AttributeValueInterceptor {
         return pager;
     }
 
-
-    /**
-     * find 时，对动态Bean 添加代理
-     * @param pjp    ProceedingJoinPoint
-     * @return Object
-     * @throws Throwable
-     */
-
-    @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.find(..))")
-    public Object find(ProceedingJoinPoint pjp) throws Throwable {
+    @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.findUniqueBy(..))")
+    public Object findUniqueBy(ProceedingJoinPoint pjp) throws Throwable {
         Class<?> entityClass = ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass());
-        HibernateDao dao = (HibernateDao) pjp.getTarget();
         if (!DynaBean.class.isAssignableFrom(entityClass)) {
             return pjp.proceed();
         }
-        List<DynaBean> beans = (List)pjp.proceed();
+        DynaBean dynaBean = (DynaBean) pjp.proceed();
+        if (dynaBean == null || dynaBean.getVersion() == null) {
+            return dynaBean;
+        }
+        return VersionUtil.makeDynaBean(dynaBean);
+    }
+
+    @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.findUnique(..))")
+    public Object findUnique(ProceedingJoinPoint pjp) throws Throwable {
+        Class<?> entityClass = ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass());
+        if (!DynaBean.class.isAssignableFrom(entityClass)) {
+            return pjp.proceed();
+        }
+        DynaBean dynaBean = (DynaBean) pjp.proceed();
+        if (dynaBean == null || dynaBean.getVersion() == null) {
+            return dynaBean;
+        }
+        return VersionUtil.makeDynaBean(dynaBean);
+    }
+
+    /**
+     * find 时，对动态Bean 添加代理
+     *
+     * @param pjp ProceedingJoinPoint
+     * @return Object
+     * @throws Throwable
+     */
+    @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.find(..))")
+    public Object find(ProceedingJoinPoint pjp) throws Throwable {
+        Class<?> entityClass = ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass());
+        if (!DynaBean.class.isAssignableFrom(entityClass)) {
+            return pjp.proceed();
+        }
+        List<DynaBean> beans = (List) pjp.proceed();
         for (int i = 0, length = beans.size(); i < length; i++) {
             DynaBean dynaBean = beans.get(i);
             if (dynaBean.getVersion() == null) {
@@ -101,7 +126,6 @@ public class AttributeValueInterceptor {
         }
         return beans;
     }
-
 
     /**
      * 保存代理对象时，将代理对象转为原来的类型
@@ -157,15 +181,15 @@ public class AttributeValueInterceptor {
 
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.get(..)) && args(id)", argNames = "pjp,id")
     public Object get(ProceedingJoinPoint pjp, Object id) throws Throwable {
-        Class entityClass = (Class) ClassUtil.getValue(pjp.getTarget(), "entityClass");
-        Object entity = pjp.proceed();
+        Class<?> entityClass = ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass());
         if (!DynaBean.class.isAssignableFrom(entityClass)) {
-            return entity;
+            return pjp.proceed();
         }
-        if (entity != null && entity instanceof DynaBean && !entity.getClass().getSimpleName().contains("$v")) {
-            return VersionUtil.makeDynaBean((DynaBean) entity);
+        DynaBean dynaBean = (DynaBean) pjp.proceed();
+        if (dynaBean == null || dynaBean.getVersion() == null) {
+            return dynaBean;
         }
-        return entity;
+        return VersionUtil.makeDynaBean(dynaBean);
     }
 
 }

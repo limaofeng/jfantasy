@@ -2,10 +2,12 @@
 package com.fantasy.framework.io;
 
 public class View extends AbstractBuffer {
+    private static final int access_1 = 1;
+    private static final int access_2 = 2;
     Buffer _buffer;
 
     public View(Buffer buffer, int mark, int get, int put, int access) {
-        super(2, !buffer.isImmutable());
+        super(access, !buffer.isImmutable());
         this._buffer = buffer.buffer();
         setPutIndex(put);
         setGetIndex(get);
@@ -19,26 +21,26 @@ public class View extends AbstractBuffer {
         setPutIndex(buffer.putIndex());
         setGetIndex(buffer.getIndex());
         setMarkIndex(buffer.markIndex());
-        this._access = (buffer.isReadOnly() ? 1 : 2);
+        this._access = (buffer.isReadOnly() ? access_1 : access_2);
     }
 
     public View() {
-        super(2, true);
+        super(access_2, true);
     }
 
     public void update(Buffer buffer) {
-        this._access = 2;
+        this._access = access_2;
         this._buffer = buffer.buffer();
         setGetIndex(0);
         setPutIndex(buffer.putIndex());
         setGetIndex(buffer.getIndex());
         setMarkIndex(buffer.markIndex());
-        this._access = (buffer.isReadOnly() ? 1 : 2);
+        this._access = (buffer.isReadOnly() ? access_1 : access_2);
     }
 
     public void update(int get, int put) {
         int a = this._access;
-        this._access = 2;
+        this._access = access_2;
         setGetIndex(0);
         setPutIndex(put);
         setGetIndex(get);
@@ -65,16 +67,9 @@ public class View extends AbstractBuffer {
         setGetIndex(this._buffer.getIndex());
     }
 
-    public void compact() {
-    }
-
+    @Override
     public boolean equals(Object obj) {
         return (this == obj) || (((obj instanceof Buffer)) && (obj.equals(this))) || (super.equals(obj));
-    }
-
-    @Override
-    public int hashCode() {
-        return super.hashCode();
     }
 
     public boolean isReadOnly() {
@@ -110,8 +105,9 @@ public class View extends AbstractBuffer {
     }
 
     public String toString() {
-        if (this._buffer == null)
+        if (this._buffer == null) {
             return "INVALID";
+        }
         return super.toString();
     }
 
@@ -127,6 +123,7 @@ public class View extends AbstractBuffer {
             super(buffer);
         }
 
+        @Override
         public boolean equals(Object obj) {
             return (this == obj) || (((obj instanceof Buffer)) && (((Buffer) obj).equalsIgnoreCase(this))) || (super.equals(obj));
         }

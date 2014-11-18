@@ -823,6 +823,12 @@
 </div>
 <!-- #page-main -->
 </div><!-- #page-wrapper -->
-
+<script type="text/javascript">
+    $(function(){
+        if (window.$page$) {
+            $page$.load($('body'));
+        }
+    });
+</script>
 </body>
 </html>

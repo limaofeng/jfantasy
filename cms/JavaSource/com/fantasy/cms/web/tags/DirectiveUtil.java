@@ -4,12 +4,16 @@ import freemarker.template.*;
 import freemarker.template.utility.DeepUnwrap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
 public class DirectiveUtil {
+
+    private final static Log logger = LogFactory.getLog(DirectiveUtil.class);
 
 	/**
 	 * 获取String类型的参数值
@@ -23,7 +27,7 @@ public class DirectiveUtil {
 		}
 		if (templateModel instanceof TemplateScalarModel) {
 			return ((TemplateScalarModel) templateModel).getAsString();
-		} else if ((templateModel instanceof TemplateNumberModel)) {
+		} else if (templateModel instanceof TemplateNumberModel) {
 			return ((TemplateNumberModel) templateModel).getAsNumber().toString();
 		} else {
 			throw new TemplateModelException("The \"" + name + "\" parameter " + "must be a string.");
@@ -47,7 +51,7 @@ public class DirectiveUtil {
 			} else {
 				return Integer.parseInt(value);
 			}
-		} else if ((templateModel instanceof TemplateNumberModel)) {
+		} else if (templateModel instanceof TemplateNumberModel) {
 			return ((TemplateNumberModel) templateModel).getAsNumber().intValue();
 		} else {
 			throw new TemplateModelException("The \"" + name + "\" parameter " + "must be a integer.");
@@ -71,7 +75,7 @@ public class DirectiveUtil {
 			} else {
 				return Boolean.valueOf(value);
 			}
-		} else if ((templateModel instanceof TemplateBooleanModel)) {
+		} else if (templateModel instanceof TemplateBooleanModel) {
 			return ((TemplateBooleanModel) templateModel).getAsBoolean();
 		} else {
 			throw new TemplateModelException("The \"" + name + "\" parameter " + "must be a boolean.");
@@ -97,10 +101,10 @@ public class DirectiveUtil {
 				String[] pattern = new String[]{"yyyy-MM","yyyyMM","yyyy/MM", "yyyyMMdd","yyyy-MM-dd","yyyy/MM/dd", "yyyyMMddHHmmss", "yyyy-MM-dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss"};
 				return DateUtils.parseDate(value, pattern);
 			} catch (ParseException e) {
-				e.printStackTrace();
+                logger.error(e.getMessage(),e);
 				return null;
 			}
-		} else if ((templateModel instanceof TemplateDateModel)) {
+		} else if (templateModel instanceof TemplateDateModel) {
 			return ((TemplateDateModel) templateModel).getAsDate();
 		} else {
 			throw new TemplateModelException("The \"" + name + "\" parameter " + "must be a date.");
