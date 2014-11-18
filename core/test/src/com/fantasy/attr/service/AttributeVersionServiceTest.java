@@ -111,6 +111,9 @@ public class AttributeVersionServiceTest {
     public void tearDown() throws Exception {
         AttributeVersion version = attributeVersionService.getVersion(Article.class, "1.0");
         if (version == null) {
+            for(Converter converter : converterService.find(Restrictions.eq("name", "测试转换器"), Restrictions.eq("typeConverter", PrimitiveTypeConverter.class.getName()))){
+                this.converterService.delete(converter.getId());
+            }
             return;
         }
         for (Attribute attribute : version.getAttributes()) {
@@ -122,8 +125,9 @@ public class AttributeVersionServiceTest {
     public void testFindPager() throws Exception {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("LIKES_title_OR_summary","测试"));
+        filters.add(new PropertyFilter("EQS_title","测试"));
         for(Article art : this.articleService.findPager(new Pager<Article>(),filters).getPageItems()){
-            this.articleService.delete(art.getId());
+            logger.debug(art);
         }
     }
 
