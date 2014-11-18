@@ -1,9 +1,9 @@
 package com.fantasy.wx.websocket;
 
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.bean.pojo.Message;
-import com.fantasy.wx.service.CoreService;
-import com.fantasy.wx.service.UserInfoService;
+import com.fantasy.wx.message.bean.Message;
+import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.user.service.UserInfoService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -22,8 +22,7 @@ import java.util.List;
 public class WeixinMessageWebSocket extends TextWebSocketHandler {
 
     @Resource
-    private CoreService coreService;
-
+    private WeixinConfigInit config;
     @Resource
     private UserInfoService userInfoService;
 
@@ -38,7 +37,7 @@ public class WeixinMessageWebSocket extends TextWebSocketHandler {
                 }
                 while (true) {
                     try{
-                        Message message = coreService.getMessage();
+                        Message message = config.getMessage();
                         userInfoService.setUnReadSize(message.getUserInfo());
                         if(message!=null){
                             for (WebSocketSession ws:sessions) {

@@ -11,7 +11,13 @@
     <artifactId>fantasy-weixin</artifactId>
     <packaging>jar</packaging>
     <version>${com.fantasy-version}</version>
-
+    <repositories>
+        <repository>
+            <snapshots />
+            <id>sonatype snapshots</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.fantasy</groupId>
@@ -42,6 +48,11 @@
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-websocket</artifactId>
             <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>me.chanjar</groupId>
+            <artifactId>weixin-java-mp</artifactId>
+            <version>1.0.4</version>
         </dependency>
     </dependencies>
 
