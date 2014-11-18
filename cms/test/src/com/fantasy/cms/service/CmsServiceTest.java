@@ -1,9 +1,8 @@
-package com.fantasy.cms;
+package com.fantasy.cms.service;
 
 
 import com.fantasy.attr.bean.Attribute;
 import com.fantasy.cms.bean.Article;
-import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.DateUtil;
