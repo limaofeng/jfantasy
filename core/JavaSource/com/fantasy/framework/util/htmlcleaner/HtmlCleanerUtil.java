@@ -1,24 +1,19 @@
 package com.fantasy.framework.util.htmlcleaner;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.htmlcleaner.*;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Reader;
 import java.net.URL;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.htmlcleaner.BrowserCompactXmlSerializer;
-import org.htmlcleaner.CleanerProperties;
-import org.htmlcleaner.HtmlCleaner;
-import org.htmlcleaner.TagNode;
-import org.htmlcleaner.XPatherException;
-import org.htmlcleaner.XmlSerializer;
-
 /**
+ * HtmlCleaner是一个开源的Java语言的Html文档解析器。HtmlCleaner能够重新整理HTML文档的每个元素并生成结构良好(Well-Formed)的 HTML 文档。
  * @author 李茂峰
  * @version 1.0
- * @功能描述 HtmlCleaner是一个开源的Java语言的Html文档解析器。HtmlCleaner能够重新整理HTML文档的每个元素并生成结构良好(Well-Formed)的 HTML 文档。
  * @since 2013-8-13 下午01:41:42
  */
 public class HtmlCleanerUtil {

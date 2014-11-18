@@ -40,7 +40,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,6 +63,17 @@ public class CmsServiceTest {
     @Resource
     private FileUploadService fileUploadService;
 
+    public String getText(){
+        try {
+            TagNode root = HtmlCleanerUtil.htmlCleaner(CmsServiceTest.class.getResource("article.xml"), "utf-8");
+            TagNode text = HtmlCleanerUtil.findFristTagNode(root, "//div[@class='feed-text']");
+            return HtmlCleanerUtil.getAsString(text);
+        }catch (Exception ex){
+            logger.error(ex.getMessage(),ex);
+            return "";
+        }
+    }
+
     @Before
     public void setUp() throws Exception{
         ArticleCategory category = new ArticleCategory();
@@ -77,9 +87,7 @@ public class CmsServiceTest {
         article.setTitle("test-测试文章");
         article.setSummary("测试文章摘要");
 
-        TagNode root = HtmlCleanerUtil.htmlCleaner(new URL("http://view.163.com/14/1117/10/AB8E2C1O00012Q9L.html"),"gbk");
-        TagNode text = HtmlCleanerUtil.findFristTagNode(root,"//div[@class='feed-text']");
-        article.setContent(new Content(HtmlCleanerUtil.getAsString(text)));
+        article.setContent(new Content(this.getText()));
 
         article.setCategory(category);
         this.cmsService.save(article);
