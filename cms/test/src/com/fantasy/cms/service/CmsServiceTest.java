@@ -18,12 +18,10 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
-import com.fantasy.framework.util.reflect.MethodProxy;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -42,7 +40,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.lang.reflect.Array;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -66,6 +63,17 @@ public class CmsServiceTest {
     @Resource
     private FileUploadService fileUploadService;
 
+    public String getText(){
+        try {
+            TagNode root = HtmlCleanerUtil.htmlCleaner(CmsServiceTest.class.getResource("article.xml"), "utf-8");
+            TagNode text = HtmlCleanerUtil.findFristTagNode(root, "//div[@class='feed-text']");
+            return HtmlCleanerUtil.getAsString(text);
+        }catch (Exception ex){
+            logger.error(ex.getMessage(),ex);
+            return "";
+        }
+    }
+
     @Before
     public void setUp() throws Exception{
         ArticleCategory category = new ArticleCategory();
@@ -79,9 +87,7 @@ public class CmsServiceTest {
         article.setTitle("test-测试文章");
         article.setSummary("测试文章摘要");
 
-        TagNode root = HtmlCleanerUtil.htmlCleaner(new URL("http://view.163.com/14/1117/10/AB8E2C1O00012Q9L.html"),"gbk");
-        TagNode text = HtmlCleanerUtil.findFristTagNode(root,"//div[@class='feed-text']");
-        article.setContent(new Content(HtmlCleanerUtil.getAsString(text)));
+        article.setContent(new Content(this.getText()));
 
         article.setCategory(category);
         this.cmsService.save(article);
@@ -136,12 +142,14 @@ public class CmsServiceTest {
         for(Converter converter : converterService.find(Restrictions.eq("name", "图片转换器"), Restrictions.eq("typeConverter", FileDetailTypeConverter.class.getName()))){
             this.converterService.delete(converter.getId());
         }
+        AttributeVersion version = this.attributeVersionService.getVersion(Article.class, "1.0");
+        if (version != null) {
+            this.attributeVersionService.delete(version.getId());
+        }
         //添加动态bean定义
         this.addArticleVersion();
 
         Article article = VersionUtil.createDynaBean(Article.class, "1.0");
-
-        MethodProxy proxy = ClassUtil.getMethodProxy(article.getClass(), "setImages");
 
         article.setTitle("测试动态图片");
         article.setSummary("测试动态图片");
@@ -170,7 +178,7 @@ public class CmsServiceTest {
 
         this.cmsService.delete(article.getId());
 
-        AttributeVersion version = attributeVersionService.getVersion(Article.class, "1.0");
+        version = attributeVersionService.getVersion(Article.class, "1.0");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("name", "图片转换器"), Restrictions.eq("typeConverter", FileDetailTypeConverter.class.getName()))){
                 this.converterService.delete(converter.getId());

@@ -1,12 +1,8 @@
 package com.fantasy.remind.websocket;
 
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.remind.bean.Notice;
 import com.fantasy.remind.service.NoticeService;
-import com.fantasy.wx.bean.pojo.Message;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -15,7 +11,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 
