@@ -1,59 +1,1 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <parent>
-        <groupId>com.fantasy</groupId>
-        <artifactId>fantasy-framework</artifactId>
-        <version>2.7.7.Alphal</version>
-    </parent>
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>fantasy-weixin</artifactId>
-    <packaging>jar</packaging>
-    <version>${com.fantasy-version}</version>
-    <repositories>
-        <repository>
-            <snapshots />
-            <id>sonatype snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-        </repository>
-    </repositories>
-    <dependencies>
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-core</artifactId>
-            <version>${com.fantasy-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>dom4j</groupId>
-            <artifactId>dom4j</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-websocket</artifactId>
-            <version>${com.fantasy-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>me.chanjar</groupId>
-            <artifactId>weixin-java-mp</artifactId>
-            <version>1.0.4</version>
-        </dependency>
-    </dependencies>
-
-</project>
+<?xml version="1.0" encoding="UTF-8"?><project xmlns="http://maven.apache.org/POM/4.0.0"         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">    <parent>        <groupId>com.fantasy</groupId>        <artifactId>fantasy-framework</artifactId>        <version>2.7.8.Alphal</version>    </parent>    <modelVersion>4.0.0</modelVersion>    <artifactId>fantasy-weixin</artifactId>    <packaging>jar</packaging>    <version>${com.fantasy-version}</version>    <repositories>        <repository>            <snapshots />            <id>sonatype snapshots</id>            <url>https://oss.sonatype.org/content/repositories/snapshots/</url>        </repository>    </repositories>    <dependencies>        <dependency>            <groupId>com.fantasy</groupId>            <artifactId>fantasy-core</artifactId>            <version>${com.fantasy-version}</version>        </dependency>        <dependency>            <groupId>javax.servlet</groupId>            <artifactId>javax.servlet-api</artifactId>        </dependency>        <dependency>            <groupId>com.thoughtworks.xstream</groupId>            <artifactId>xstream</artifactId>        </dependency>        <dependency>            <groupId>dom4j</groupId>            <artifactId>dom4j</artifactId>        </dependency>        <dependency>            <groupId>junit</groupId>            <artifactId>junit</artifactId>        </dependency>        <dependency>            <groupId>org.springframework</groupId>            <artifactId>spring-test</artifactId>        </dependency>        <dependency>            <groupId>com.fantasy</groupId>            <artifactId>fantasy-websocket</artifactId>            <version>${com.fantasy-version}</version>        </dependency>        <dependency>            <groupId>me.chanjar</groupId>            <artifactId>weixin-java-mp</artifactId>            <version>1.0.4</version>        </dependency>    </dependencies></project>
