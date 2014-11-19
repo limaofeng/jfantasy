@@ -145,7 +145,6 @@ public class Order extends BaseBusEntity implements DynaBean {
     private String paymentConfigName;// 支付方式名称
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAYMENT_CONFIG_ID",foreignKey =  @ForeignKey(name = "FK_ORDER_PAYMENT_CONFIG"))
-
     private PaymentConfig paymentConfig;// 支付方式
     @Column(name = "PAYMENT_FEE", nullable = false, precision = 15, scale = 5)
     private BigDecimal paymentFee;// 支付手续费
