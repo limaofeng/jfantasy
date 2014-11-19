@@ -3,6 +3,7 @@ package com.fantasy.wx.websocket;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.message.bean.Message;
 import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.service.UserInfoService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -74,7 +75,8 @@ public class WeixinMessageWebSocket extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
-        userInfoService.refreshMessage(message.getPayload());
+
+        userInfoService.refreshMessage(new UserInfo(message.getPayload()));
         /*Principal principal = (Principal) OgnlUtil.getInstance().getValue("principal",session);
         UserDetails userDetails = principal instanceof Authentication ? (UserDetails) ((Authentication) principal).getPrincipal() : null;
         TextMessage returnMessage = new TextMessage(userDetails.getUsername() + " : " + message.getPayload() + " received at server");

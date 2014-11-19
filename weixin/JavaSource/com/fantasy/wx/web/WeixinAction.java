@@ -53,7 +53,6 @@ public class WeixinAction   extends ActionSupport{
                 request.getParameter("encrypt_type");
 
         WxMpXmlMessage inMessage = null;
-        //BeanUtil.copyProperties();
         if ("raw".equals(encryptType)) {
             // 明文传输的消息
             inMessage = WxMpXmlMessage.fromXml(request.getInputStream());

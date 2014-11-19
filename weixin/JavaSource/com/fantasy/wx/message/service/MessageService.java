@@ -34,21 +34,32 @@ public class MessageService {
      * @return
      */
     public Pager<Message> findPager(Pager<Message> pager, List<PropertyFilter> filters) {
+        Pager<Message> p=this.messageDao.findPager(pager, filters);
         for(PropertyFilter pf:filters){
             if(pf.getFilterName().equals("EQS_userInfo.openid")){
-                 userInfoService.refreshMessage(pf.getPropertyValue().toString());
+                for(Message m:p.getPageItems()){
+                 userInfoService.refreshMessage(m.getUserInfo());
+                }
+                break;
             }
         }
-        return this.messageDao.findPager(pager, filters);
+        return p;
     }
-
+    public void delete(Long... ids){
+        for(Long id:ids){
+            messageDao.delete(id);
+        }
+    }
+    public Message getMessage(Long id){
+        return messageDao.get(id);
+    }
     public Message save(Message message){
-        UserInfo ui=userInfoService.getUserInfo(message.getUserInfo().getOpenid());
+        UserInfo ui=userInfoService.getUserInfo(message.getUserInfo().getOpenId());
         long createTime=new Date().getTime();
         message.setCreateTime(createTime);
         if(ui!=null){
             ui.setLastMessageTime(createTime);
-            if(message.getType().equals("send")){
+            if(message.getType()!=null&&message.getType().equals("send")){
                 ui.setLastLookTime(createTime);
             }
             userInfoService.save(ui);

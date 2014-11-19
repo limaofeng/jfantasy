@@ -16,7 +16,7 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
-    <context:component-scan base-package="com.fantasy,com.haolue"/>
+    <context:component-scan base-package="com.fantasy.wx,com.fantasy.payment,com.fantasy.common,com.fantasy.file,com.fantasy.member,com.fantasy.system,com.fantasy.security,com.fantasy.framework.dao,com.haolue"/>
 
     <!-- 可以通过annotation 添加定时任务 @Scheduled(fixedDelay=任务间的延时时间,fixedRate=任务的间隔时间,cron=表达式) -->
     <task:executor id="spring.executor" pool-size="5"/>
@@ -121,5 +121,7 @@
     <import resource="classpath:spring/applicationContext-mybatis.xml"/>
 
     <import resource="classpath:spring/applicationContext-hibernate.xml"/>
+
+    <import resource="classpath:spring/applicationContext-weixin.xml"/>
 
 </beans>
