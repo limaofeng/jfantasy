@@ -11,6 +11,7 @@
     <artifactId>fantasy-weixin</artifactId>
     <packaging>jar</packaging>
     <version>${com.fantasy-version}</version>
+
     <repositories>
         <repository>
             <snapshots />
@@ -18,6 +19,20 @@
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
     </repositories>
+
+    <!-- 跳过该模块的测试 -->
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>com.fantasy</groupId>
