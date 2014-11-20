@@ -26,28 +26,26 @@ import java.io.*;
 import java.net.URLEncoder;
 import java.util.Enumeration;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
 @Component("fileFilter")
 public class FileFilter extends GenericFilterBean {
 
-	private final static ConcurrentLinkedQueue<String> noInFileManagerCache = new ConcurrentLinkedQueue<String>();
-	private final static ConcurrentMap<String, FileItem> fileCache = new ConcurrentHashMap<String, FileItem>();
+    private final static ConcurrentMap<String, FileItem> fileCache = new ConcurrentHashMap<String, FileItem>();
 
-	@Override
-	protected void initFilterBean() throws ServletException {
-		super.initFilterBean();
-	}
+    @Override
+    protected void initFilterBean() throws ServletException {
+        super.initFilterBean();
+    }
 
-	private static final String regex = "_(\\d+)x(\\d+)[.]([^.]+)$";
+    private static final String regex = "_(\\d+)x(\\d+)[.]([^.]+)$";
 
-	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		HttpServletResponse response = (HttpServletResponse) servletResponse;
+    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
+        HttpServletRequest request = (HttpServletRequest) servletRequest;
+        HttpServletResponse response = (HttpServletResponse) servletResponse;
 
         String referer = WebUtil.getReferer(request);
-        if(referer == null) {
+        if (referer == null) {
             chain.doFilter(request, response);
             return;
         }
@@ -55,79 +53,76 @@ public class FileFilter extends GenericFilterBean {
         //通过 referer 判断访问来源，并通过配置 文件管理器 与 host 关联。
         String host = RegexpUtil.parseFirst(referer, "(http://|https://)[^/]+");
         logger.debug("host:" + host);
-		String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
+        String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
         FileManager webrootFileManager = FileManagerFactory.getInstance().getFileManager("WEBROOT");
-		if (RegexpUtil.find(url, ".do$") || noInFileManagerCache.contains(url)) {
-			chain.doFilter(request, response);
-			return;
-		}
+        if (RegexpUtil.find(url, ".do$")) {
+            chain.doFilter(request, response);
+            return;
+        }
 
-		if (FileManagerFactory.getInstance().getFileManager("WEBROOT").getFileItem(url) != null) {
-			noInFileManagerCache.add(url);
-			chain.doFilter(request, response);
-			return;
-		}
-		if (fileCache.containsKey(url)) {
-			writeFile(request, response, fileCache.get(url));
-			return;
-		}
-		FileManager fileManager = SettingUtil.getDefaultUploadFileManager();
-		if (fileManager != null) {
-			FileItem fileItem = fileManager.getFileItem(url);
-			if (fileItem == null && RegexpUtil.find(url, regex)) {
-				// 查找源文件
-				String srcUrl = RegexpUtil.replace(url, regex, ".$3");
-				if (fileCache.containsKey(srcUrl)) {
-					fileItem = fileCache.get(srcUrl);
-				} else {
-					fileItem = fileManager.getFileItem(srcUrl);
-					if (fileItem == null) {
+        if (FileManagerFactory.getInstance().getFileManager("WEBROOT").getFileItem(url) != null) {
+            chain.doFilter(request, response);
+            return;
+        }
+        if (fileCache.containsKey(url)) {
+            writeFile(request, response, fileCache.get(url));
+            return;
+        }
+        FileManager fileManager = SettingUtil.getDefaultUploadFileManager();
+        if (fileManager != null) {
+            FileItem fileItem = fileManager.getFileItem(url);
+            if (fileItem == null && RegexpUtil.find(url, regex)) {
+                // 查找源文件
+                String srcUrl = RegexpUtil.replace(url, regex, ".$3");
+                if (fileCache.containsKey(srcUrl)) {
+                    fileItem = fileCache.get(srcUrl);
+                } else {
+                    fileItem = fileManager.getFileItem(srcUrl);
+                    if (fileItem == null) {
 //						noInFileManagerCache.add(url);
-						chain.doFilter(request, response);
-						return;
-					}
-					// 缓存原始路径对应的文件
-					if (!fileCache.containsKey(srcUrl)) {
-						fileCache.put(srcUrl, fileItem);
-					}
-					// 只自动缩放 image/jpeg 格式的图片
-					if (!"image/jpeg".equals(fileItem.getContentType())) {
+                        chain.doFilter(request, response);
+                        return;
+                    }
+                    // 缓存原始路径对应的文件
+                    if (!fileCache.containsKey(srcUrl)) {
+                        fileCache.put(srcUrl, fileItem);
+                    }
+                    // 只自动缩放 image/jpeg 格式的图片
+                    if (!"image/jpeg".equals(fileItem.getContentType())) {
 //						noInFileManagerCache.add(url);
-						chain.doFilter(request, response);
-						return;
-					}
-				}
-				RegexpUtil.Group group = RegexpUtil.parseFirstGroup(url, regex);
-				// 图片缩放
-				BufferedImage image = ImageUtil.reduce(fileItem.getInputStream(), Integer.valueOf(group.$(1)), Integer.valueOf(group.$(2)));
-				// 创建临时文件
-				File tmp = FileUtil.tmp();
-				ImageUtil.write(image, tmp);
+                        chain.doFilter(request, response);
+                        return;
+                    }
+                }
+                RegexpUtil.Group group = RegexpUtil.parseFirstGroup(url, regex);
+                // 图片缩放
+                BufferedImage image = ImageUtil.reduce(fileItem.getInputStream(), Integer.valueOf(group.$(1)), Integer.valueOf(group.$(2)));
+                // 创建临时文件
+                File tmp = FileUtil.tmp();
+                ImageUtil.write(image, tmp);
                 webrootFileManager.writeFile(url, tmp);
-				// 删除临时文件
-				FileUtil.delFile(tmp);
-				fileCache.put(url, fileItem = webrootFileManager.getFileItem(url));
-				writeFile(request, response, fileItem);
-				return;
-			}
-			if (fileItem != null) {
-				fileCache.put(url, fileItem);
-				writeFile(request, response, fileItem);
-				return;
-			}
-		}
-		noInFileManagerCache.add(url);
-		chain.doFilter(request, response);
-	}
+                // 删除临时文件
+                FileUtil.delFile(tmp);
+                fileCache.put(url, fileItem = webrootFileManager.getFileItem(url));
+                writeFile(request, response, fileItem);
+                return;
+            }
+            if (fileItem != null) {
+                fileCache.put(url, fileItem);
+                writeFile(request, response, fileItem);
+                return;
+            }
+        }
+        chain.doFilter(request, response);
+    }
 
-	public static void addFileCache(String url, FileItem fileItem) {
-		fileCache.put(url, fileItem);
-	}
+    public static void addFileCache(String url, FileItem fileItem) {
+        fileCache.put(url, fileItem);
+    }
 
-	public static FileItem getFileCache(String url) {
-		return fileCache.get(url);
-	}
-
+    public static FileItem getFileCache(String url) {
+        return fileCache.get(url);
+    }
 
 
     public void _doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -167,13 +162,13 @@ public class FileFilter extends GenericFilterBean {
             String[] sf = bytes.split("-");
             int start = 0;
             int end = 0;
-            if(sf.length == 2){
+            if (sf.length == 2) {
                 start = Integer.valueOf(sf[0]);
                 end = Integer.valueOf(sf[1]);
-            }else if(bytes.startsWith("-")){
+            } else if (bytes.startsWith("-")) {
                 start = 0;
                 end = (int) (file.length() - 1);
-            }else if(bytes.endsWith("-")){
+            } else if (bytes.endsWith("-")) {
                 start = Integer.valueOf(sf[0]);
                 end = (int) (file.length() - 1);
             }
@@ -215,27 +210,27 @@ public class FileFilter extends GenericFilterBean {
     }
 
     private void writeFile(HttpServletRequest request, HttpServletResponse response, FileItem fileItem) throws IOException {
-		if ("POST".equalsIgnoreCase(WebUtil.getMethod(request))) {
-			response.setContentType(fileItem.getContentType());
-			response.setCharacterEncoding("UTF-8");
-			response.setHeader("Expires", "0");
-			response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
-			response.setHeader("Pragma", "public");
-			response.setContentLength((int) fileItem.getSize());
+        if ("POST".equalsIgnoreCase(WebUtil.getMethod(request))) {
+            response.setContentType(fileItem.getContentType());
+            response.setCharacterEncoding("UTF-8");
+            response.setHeader("Expires", "0");
+            response.setHeader("Cache-Control", "must-revalidate, post-check=0, pre-check=0");
+            response.setHeader("Pragma", "public");
+            response.setContentLength((int) fileItem.getSize());
 
-			String fileName = (Browser.mozilla == WebUtil.browser(request) ? new String(fileItem.getName().getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(fileItem.getName(), "UTF-8"));
-			response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
-		} else {
-			ServletUtils.setExpiresHeader(response, 1000 * 60 * 5);
-			ServletUtils.setLastModifiedHeader(response, fileItem.lastModified().getTime());
-		}
-		if (ServletUtils.checkIfModifiedSince(request, response, fileItem.lastModified().getTime())) {
-			try{
-				StreamUtil.copy(fileItem.getInputStream(), response.getOutputStream());
-			}catch (FileNotFoundException e) {
-				response.sendError(404);
-			}
-		}
-	}
+            String fileName = (Browser.mozilla == WebUtil.browser(request) ? new String(fileItem.getName().getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(fileItem.getName(), "UTF-8"));
+            response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
+        } else {
+            ServletUtils.setExpiresHeader(response, 1000 * 60 * 5);
+            ServletUtils.setLastModifiedHeader(response, fileItem.lastModified().getTime());
+        }
+        if (ServletUtils.checkIfModifiedSince(request, response, fileItem.lastModified().getTime())) {
+            try {
+                StreamUtil.copy(fileItem.getInputStream(), response.getOutputStream());
+            } catch (FileNotFoundException e) {
+                response.sendError(404);
+            }
+        }
+    }
 
 }
