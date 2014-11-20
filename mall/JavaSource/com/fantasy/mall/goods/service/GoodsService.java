@@ -304,19 +304,8 @@ public class GoodsService implements InitializingBean {
             goods.setMarketable(false);
         }
         this.goodsDao.save(goods);
-        if(goods.getProducts()!=null){
-            for(Product product:goods.getProducts()){
-                product.setGoods(goods);
-                product.setMarketPrice(goods.getMarketPrice());
-                product.setName(goods.getName());
-                product.setCost(goods.getCost());
-                product.setSn(goods.getSn()+"-"+SequenceInfo.nextValue("PRODUCT_SN"+goods.getSn()));
-                product.setWeight(goods.getWeight());
-                this.productService.save(product);
-            }
-        }
         if (!goods.getSpecificationEnabled()) {// 如果未启用商品规格
-            Product product = goods.getProducts()==null ? null : goods.getProducts().get(0);
+            Product product = goods.getProducts() == null ? null : goods.getProducts().get(0);
             if (product == null) {
                 product = new Product();
             }
@@ -324,6 +313,17 @@ public class GoodsService implements InitializingBean {
             product.getGoodsNotifys();
             product.getStocks();
             productService.save(product);
+        } else {
+            List<Product> products = goods.getProducts() == null ? new ArrayList<Product>() : goods.getProducts();
+            for (Product product : products) {
+                product.setGoods(goods);
+                product.setMarketPrice(goods.getMarketPrice());
+                product.setName(goods.getName());
+                product.setCost(goods.getCost());
+                product.setSn(goods.getSn() + "-" + SequenceInfo.nextValue("PRODUCT_SN" + goods.getSn()));
+                product.setWeight(goods.getWeight());
+                this.productService.save(product);
+            }
         }
         return goods;
     }
