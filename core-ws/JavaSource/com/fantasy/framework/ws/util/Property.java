@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Mapping {
+public @interface Property {
 
     public abstract String value() default "";
 }

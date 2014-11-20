@@ -3,10 +3,10 @@ package com.fantasy.framework.ws.util;
 
 public class MappingDTO {
 
-    @Mapping("name")
+    @Property("name")
     private String username;
 
-    @Mapping("pwd")
+    @Property("pwd")
     private String password;
 
     public String getUsername() {
