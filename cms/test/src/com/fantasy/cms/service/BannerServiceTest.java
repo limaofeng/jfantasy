@@ -91,7 +91,7 @@ public class BannerServiceTest {
         item2.setSummary("测试摘要-2");
         item2.setUrl("http://test.jfantasy.org/static/banner/2.html");
         try {
-            File file = new File(BannerServiceTest.class.getResource("banner_2.jpg").getFile());
+            File file = new File(BannerServiceTest.class.getResource("banner_2.png").getFile());
             String mimeType = FileUtil.getMimeType(file);
             FileDetail fileDetail = fileUploadService.upload(file, mimeType, file.getName(), "test");
             item2.setBannerImageStore(JSON.serialize(new FileDetail[]{fileDetail}));
