@@ -73,7 +73,7 @@ public class WebServiceUtil {
                 if (field == null) {
                     continue;
                 }
-                Property mapping = ClassUtil.getDeclaredField(clazz, propertyName).getAnnotation(Property.class);
+                Mapping mapping = ClassUtil.getDeclaredField(clazz, propertyName).getAnnotation(Mapping.class);
                 if (mapping == null || StringUtil.isBlank(mapping.value())) {
                     continue;
                 }
