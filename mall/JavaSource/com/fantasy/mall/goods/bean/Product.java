@@ -4,8 +4,10 @@ import com.fantasy.attr.DynaBean;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.dao.mybatis.keygen.util.SequenceInfo;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.cart.bean.CartItem;
 import com.fantasy.mall.delivery.bean.DeliveryItem;
@@ -43,14 +45,36 @@ public class Product extends BaseBusEntity implements DynaBean {
             this.setGoods(goods);
         }
         // goods相同的属性
-        this.setSn(goods.getSn());
-        this.setName(goods.getName());
-        this.setPrice(goods.getPrice());
-        this.setCost(goods.getCost());
-        this.setMarketPrice(goods.getMarketPrice());
-        this.setMarketable(goods.getMarketable());
-        this.setWeight(goods.getWeight());
-        if (!goods.getGoodsImages().isEmpty()) {// product只保存一张图片
+        if (!goods.getSpecificationEnabled()) {
+            this.setSn(goods.getSn());
+        } else {
+            this.setSn(goods.getSn() + "-" + SequenceInfo.nextValue("PRODUCT_SN" + goods.getSn()));
+        }
+        if (StringUtil.isBlank(this.getName())) {
+            this.setName(goods.getName());
+        }
+
+        if (StringUtil.isBlank(this.getPrice())) {
+            this.setPrice(goods.getPrice());
+        }
+
+        if (StringUtil.isBlank(this.getCost())) {
+            this.setCost(goods.getCost());
+        }
+
+        if (StringUtil.isBlank(this.getMarketPrice())) {
+            this.setMarketPrice(goods.getMarketPrice());
+        }
+
+        if (StringUtil.isBlank(this.getMarketable())) {
+            this.setMarketable(goods.getMarketable());
+        }
+
+        if (StringUtil.isBlank(this.getWeight())) {
+            this.setWeight(goods.getWeight());
+        }
+
+        if (!goods.getGoodsImages().isEmpty() && this.getGoodsImage() == null) {// product只保存一张图片
             this.setGoodsImageStore(JSON.serialize(goods.getGoodsImages().get(0)));
         }
     }
