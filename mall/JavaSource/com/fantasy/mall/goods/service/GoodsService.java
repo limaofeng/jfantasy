@@ -3,6 +3,7 @@ package com.fantasy.mall.goods.service;
 import com.fantasy.common.bean.enums.TimeUnit;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.dao.mybatis.keygen.util.SequenceInfo;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -89,7 +90,11 @@ public class GoodsService implements InitializingBean {
      * @return 商品对象
      */
     public Goods get(String sn) {
-        return this.goodsDao.findUnique(Restrictions.eq("sn", sn));
+        Goods goods = this.goodsDao.findUnique(Restrictions.eq("sn", sn));
+        for(Product product : goods.getProducts()) {
+            Hibernate.initialize(product);
+        }
+        return goods;
     }
 
     public List<GoodsCategory> rootCategories() {
@@ -287,7 +292,7 @@ public class GoodsService implements InitializingBean {
     /**
      * 保存商品
      *
-     * @param goods 商品对象
+     * @param goods 商品对象            备注：如果只需要添加一个product  specificationEnabled=true  如果需要添加多个product specificationEnabled=true
      * @return Goods
      */
     public Goods save(Goods goods) {
@@ -297,13 +302,21 @@ public class GoodsService implements InitializingBean {
             goods.setMonthSaleCount(0);
             goods.setSaleCount(0);
             goods.setMarketable(false);
-            goods.setSpecificationEnabled(false);
-            goods.setProducts(new ArrayList<Product>());
-
         }
         this.goodsDao.save(goods);
+        if(goods.getProducts()!=null){
+            for(Product product:goods.getProducts()){
+                product.setGoods(goods);
+                product.setMarketPrice(goods.getMarketPrice());
+                product.setName(goods.getName());
+                product.setCost(goods.getCost());
+                product.setSn(goods.getSn()+"-"+SequenceInfo.nextValue("PRODUCT_SN"+goods.getSn()));
+                product.setWeight(goods.getWeight());
+                this.productService.save(product);
+            }
+        }
         if (!goods.getSpecificationEnabled()) {// 如果未启用商品规格
-            Product product = goods.getProducts().isEmpty() ? null : goods.getProducts().get(0);
+            Product product = goods.getProducts()==null ? null : goods.getProducts().get(0);
             if (product == null) {
                 product = new Product();
             }
@@ -560,6 +573,17 @@ public class GoodsService implements InitializingBean {
     public static List<GoodsCategory> goodsCategoryList() {
         GoodsService goodsService = SpringContextUtil.getBeanByType(GoodsService.class);
         return goodsService.listGoodsCategory();
+    }
+
+
+    /**
+     * 分类分页查询
+     * @param pager
+     * @param filters
+     * @return
+     */
+    public Pager<GoodsCategory> findCategoryPager(Pager<GoodsCategory> pager, List<PropertyFilter> filters){
+        return this.goodsCategoryDao.findPager(pager,filters);
     }
 
 }
