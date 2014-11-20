@@ -2,13 +2,18 @@ package com.fantasy.wx.config.init;
 
 import com.fantasy.framework.util.concurrent.LinkedQueue;
 import com.fantasy.wx.message.bean.Message;
-import me.chanjar.weixin.mp.api.WxMpConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
-import me.chanjar.weixin.mp.api.WxMpMessageRouter;
-import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.api.*;
 import org.springframework.beans.factory.InitializingBean;
+import org.xml.sax.InputSource;
 
 import javax.annotation.Resource;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.io.InputStream;
 
 /**
  * Created by zzzhong on 2014/11/18.
@@ -18,7 +23,6 @@ public class WeixinConfigInit implements InitializingBean {
     /**
      * 微信service处理对象
      */
-    @Resource
     protected WxMpService util;
     /**
      * 微信过滤规则
@@ -33,8 +37,14 @@ public class WeixinConfigInit implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-
-        WxMpInMemoryConfigStorage config=new WxMpInMemoryConfigStorage();
+        try {
+            InputStream is1 = ClassLoader.getSystemResourceAsStream("xml/weixin-config.xml");
+            WxXmlMpInMemoryConfigStorage config = fromXml(WxXmlMpInMemoryConfigStorage.class, is1);
+            util = new WxMpServiceImpl();
+            util.setWxMpConfigStorage(config);
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public WxMpConfigStorage getWxMpConfigStorage() {
@@ -78,5 +88,32 @@ public class WeixinConfigInit implements InitializingBean {
             e.printStackTrace();
         }
         return null;
+    }
+
+    @XmlRootElement(name = "xml")
+    @XmlAccessorType(XmlAccessType.FIELD)
+    public static class WxXmlMpInMemoryConfigStorage extends WxMpInMemoryConfigStorage {
+
+        protected String openId;
+
+        public String getOpenId() {
+            return openId;
+        }
+        public void setOpenId(String openId) {
+            this.openId = openId;
+        }
+        @Override
+        public String toString() {
+            return "SimpleWxConfigProvider [appId=" + appId + ", secret=" + secret + ", accessToken=" + accessToken
+                    + ", expiresIn=" + expiresIn + ", token=" + token + ", openId=" + openId + "]";
+        }
+
+    }
+    public static <T> T fromXml(Class<T> clazz, InputStream is) throws JAXBException {
+        Unmarshaller um = JAXBContext.newInstance(clazz).createUnmarshaller();
+        InputSource inputSource = new InputSource(is);
+        inputSource.setEncoding("utf-8");
+        T object = (T) um.unmarshal(inputSource);
+        return object;
     }
 }
