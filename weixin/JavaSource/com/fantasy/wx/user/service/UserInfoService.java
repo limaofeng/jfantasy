@@ -27,8 +27,13 @@ public class UserInfoService {
     @Resource
     private WeixinConfigInit config;
 
-    public String[] checkOpenId(List<String> openId){
-        userInfoDao.batchSQLExecute("UPDATE wx_user_info SET subscribe='0'");
+    /**
+     * 获取所有未添加的微信粉丝，并刷新粉丝状态
+     * @param openId
+     * @return
+     */
+    public List<String> getRefreshOpenId(List<String> openId){
+        userInfoDao.batchSQLExecute("UPDATE wx_user_info SET subscribe=false");
         UserInfo u=null;
         List<String> sList=new ArrayList<String>();
         for(String s:openId){
@@ -36,23 +41,36 @@ public class UserInfoService {
             if (u == null) {
                 sList.add(s);
             } else {
-                u.setSubscribe(1);
+                u.setSubscribe(true);
                 userInfoDao.save(u);
             }
         }
-        String[] sarry=new String[sList.size()];
-        sList.toArray(sarry);
-        return sarry;
+        return sList;
     }
+
+    /**
+     * 保存多个用户
+     * @param uArray
+     */
     public void saveArry(UserInfo[] uArray){
         for(UserInfo u:uArray){
             userInfoDao.save(u);
         }
     }
+
+    /**
+     * 获取
+     * @param openId
+     * @return
+     */
     public UserInfo getUserInfo(String openId){
         return userInfoDao.get(openId);
     }
 
+    /**
+     * 保存
+     * @param ui
+     */
     public void save(UserInfo ui){
         userInfoDao.save(ui);
     }
@@ -74,33 +92,53 @@ public class UserInfoService {
      */
     public void refresh() throws WxErrorException {
         WxMpService service=config.getUtil();
-        WxMpUserList userList=userList=service.userList(null);
-        List<String> openList=new ArrayList<String>();
-        openList.addAll(userList.getOpenIds());
-        while(userList.getNextOpenId()!=null){
-            userList=service.userList(userList.getNextOpenId());
-            openList.addAll(userList.getOpenIds());
-        }
-        String[] arry=checkOpenId(openList);
-        for(int i=0;i<arry.length;i++){
-            UserInfo ui= BeanUtil.copyProperties(new UserInfo(), service.userInfo(arry[i], null));
+        WxMpUserList userList=null;
+        List<String> refreshList=new ArrayList<String>();
+        do{
+            userList=service.userList(userList==null?null:userList.getNextOpenId());
+            refreshList.addAll(userList.getOpenIds());
+        }while(userList!=null&&userList.getTotal()>userList.getCount());
+
+        for(String s:getRefreshOpenId(refreshList)){
+            UserInfo ui= BeanUtil.copyProperties(new UserInfo(), service.userInfo(s, null));
             userInfoDao.save(ui);
         }
     }
 
+    public void delete(String openId){
+        userInfoDao.delete(openId);
+    }
+
+    /**
+     * 查询所有用户未读的消息数
+     * @param list
+     */
     public void countUnReadSize(List<UserInfo> list){
         for(UserInfo u:list){
             setUnReadSize(u);
         }
     }
+
+    /**
+     * 获取某个用户的未读消息数
+     * @param u
+     */
     public void setUnReadSize(UserInfo u){
-        List query=userInfoDao.createSQLQuery("SELECT COUNT(*) c FROM wx_message WHERE create_time>? and openid=?", u.getLastLookTime(),u.getOpenid()).list();
+        List query=userInfoDao.createSQLQuery("SELECT COUNT(*) c FROM wx_message WHERE create_time>? and openid=?", u.getLastLookTime(),u.getOpenId()).list();
         if(query.size()!=0){
             u.setUnReadSize(Integer.parseInt(query.get(0).toString()));
         }
     }
-    public void refreshMessage(String openId){
-        userInfoDao.batchSQLExecute("update wx_user_info set last_look_time=last_message_time  where openid=?",openId);
+
+    /**
+     * 刷新用户最后查看消息时间
+     * @param ui
+     */
+    public void refreshMessage(UserInfo ui){
+        userInfoDao.batchSQLExecute("update wx_user_info set last_look_time=last_message_time  where openid=?",ui.getOpenId());
+        ui.setLastLookTime(ui.getLastMessageTime());
     }
+
+
 
 }
