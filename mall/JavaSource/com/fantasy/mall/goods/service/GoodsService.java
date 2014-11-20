@@ -316,8 +316,7 @@ public class GoodsService implements InitializingBean {
             product.initialize(goods);
             productService.save(product);
         } else {//启用了商品规格  TODO 该位置以后需要优化
-            List<Product> products = goods.getProducts() == null ? new ArrayList<Product>() : goods.getProducts();
-            for (Product product : products) {
+            for (Product product : goods.getProducts()) {
                 product.initialize(goods);
                 this.productService.save(product);
             }
