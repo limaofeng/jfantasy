@@ -4,8 +4,12 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.Pager.Order;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.framework.util.regexp.RegexpUtil;
+import org.apache.commons.lang.StringUtils;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,14 +17,14 @@ public class WebServiceUtil {
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public static <T> Pager<T> toPager(com.fantasy.framework.ws.util.PagerDTO pager, Class<T> clazz) {
-        Pager page= new Pager();
+        Pager page = new Pager();
         page.setPageSize(pager.getPageSize());
         page.setOrderBy(pager.getOrderBy());
         page.setCurrentPage(pager.getCurrentPage());
         // page.setTotalCount(pager.getTotalCount());
         // page.setTotalPage(pager.getTotalPage());
         page.setOrder(pager.getOrder());
-        return  page;
+        return page;
         //TODO ObjectUtil.copy(new Pager(), pager, "pageItems");
     }
 
@@ -50,12 +54,34 @@ public class WebServiceUtil {
         return pager;
     }
 
-    public static List<PropertyFilter> toFilters(com.fantasy.framework.ws.util.PropertyFilterDTO[] filters) {
-        List<PropertyFilter> newFilters = new ArrayList<PropertyFilter>();
-        for (com.fantasy.framework.ws.util.PropertyFilterDTO filter : filters) {
-            newFilters.add(new PropertyFilter(filter.getFilterName(), filter.getPropertyValue()));
+    public static List<PropertyFilter> toFilters(PropertyFilterDTO[] filterDTOs) {
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        for (PropertyFilterDTO filterDTO : filterDTOs) {
+            filters.add(new PropertyFilter(filterDTO.getFilterName(), filterDTO.getPropertyValue()));
         }
-        return newFilters;
+        return filters;
+    }
+
+    public static List<PropertyFilter> toFilters(PropertyFilterDTO[] filterDTOs, Class<?> clazz) {
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        for (PropertyFilterDTO filterDTO : filterDTOs) {
+            String filterName = filterDTO.getFilterName();
+            String propertyNameStr = StringUtils.substringAfter(filterDTO.getFilterName(), "_");
+            String[] propertyNames = propertyNameStr.split("_OR_");
+            for (String propertyName : propertyNames) {
+                Field field = ClassUtil.getDeclaredField(clazz, propertyName);
+                if (field == null) {
+                    continue;
+                }
+                Mapping mapping = ClassUtil.getDeclaredField(clazz, propertyName).getAnnotation(Mapping.class);
+                if (mapping == null || StringUtil.isBlank(mapping.value())) {
+                    continue;
+                }
+                filterName = RegexpUtil.replace(filterName, propertyName, mapping.value());
+            }
+            filters.add(new PropertyFilter(filterName, filterDTO.getPropertyValue()));
+        }
+        return filters;
     }
 
     @SuppressWarnings("unchecked")
