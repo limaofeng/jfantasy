@@ -38,6 +38,7 @@ public class WeixinMessageWebSocket extends TextWebSocketHandler {
                 }
                 while (true) {
                     try{
+                        if(config==null) return;
                         Message message = config.getMessage();
                         userInfoService.setUnReadSize(message.getUserInfo());
                         if(message!=null){

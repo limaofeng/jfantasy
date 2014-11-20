@@ -38,7 +38,7 @@ public class WeixinConfigInit implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         try {
-            InputStream is1 = ClassLoader.getSystemResourceAsStream("xml/weixin-config.xml");
+            InputStream is1 = this.getClass().getResourceAsStream("/xml/weixin-config.xml");
             WxXmlMpInMemoryConfigStorage config = fromXml(WxXmlMpInMemoryConfigStorage.class, is1);
             util = new WxMpServiceImpl();
             util.setWxMpConfigStorage(config);
