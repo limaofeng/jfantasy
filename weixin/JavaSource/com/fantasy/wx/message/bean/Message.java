@@ -17,9 +17,9 @@ public class Message {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-    //表示是由客户端还是服务端发送的消息null客户端send服务端
+    //表示是由客户端还是服务端发送的消息send客户端发送到服务端为client
     @Column(name = "TYPE")
-    private String type;
+    private String type="client";
 
     @Column(name = "TO_USER_NAME")
     private String toUserName;
@@ -38,7 +38,7 @@ public class Message {
     public void setFromUserName(String fromUserName) {
         if(userInfo==null)
             userInfo=new UserInfo();
-        userInfo.setOpenid(fromUserName);
+        userInfo.setOpenId(fromUserName);
         this.fromUserName = fromUserName;
     }
 
@@ -136,14 +136,6 @@ public class Message {
      */
     @Column(name = "ERROR_COUNT")
     private Integer errorCount;
-
-    public Integer getErrorCount() {
-        return errorCount;
-    }
-
-    public void setErrorCount(Integer errorCount) {
-        this.errorCount = errorCount;
-    }
 
     public Long getId() {
         return id;
@@ -383,5 +375,13 @@ public class Message {
 
     public void setSentCount(Integer sentCount) {
         this.sentCount = sentCount;
+    }
+
+    public Integer getErrorCount() {
+        return errorCount;
+    }
+
+    public void setErrorCount(Integer errorCount) {
+        this.errorCount = errorCount;
     }
 }

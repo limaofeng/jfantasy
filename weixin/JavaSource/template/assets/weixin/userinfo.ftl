@@ -80,8 +80,8 @@
                 </div>
                 <p><span class="label bg-purple mrg5R">{nickname} </span></p>
             </td>
-            <td>{sex:dict({'0':'未知','1':'男','2':'女'})}</td>
-            <td>{subscribe:dict({'0':'未关注','1':'已关注'})}</td>
+            <td>{sex}</td>
+            <td>{subscribe:dict({false:'未关注',true:'已关注'})}</td>
             <td>{time}</td>
         </tr>
         </tbody>

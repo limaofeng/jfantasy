@@ -14,16 +14,19 @@ import java.util.Date;
 @Entity
 @Table(name = "WX_USER_INFO")
 public class UserInfo {
+
+    public UserInfo(){}
+    public UserInfo(String openid){this.openId=openid;}
     //用户的标识，对当前公众号唯一
     @Id
     @Column(name = "OPENID", nullable = false, insertable = true, updatable = false)
-    private String openid;
+    private String openId;
     //用户的昵称
     @Column(name = "NICKNAME", length = 200)
     private String nickname;
     //用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
     @Column(name = "SEX")
-    private int sex;
+    private String sex;
     //用户所在城市
     @Column(name = "CITY")
     private String city;
@@ -38,34 +41,38 @@ public class UserInfo {
     private String language;
     //用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
     @Column(name = "HEADIMGURL" ,length = 600)
-    private String headimgurl;
+    private String headImgUrl;
     //用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
     @Column(name = "SUBSCRIBE_TIME")
-    private Long subscribe_time;
+    private Long subscribeTime;
     //用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
     @Column(name = "SUBSCRIBE")
-    private int subscribe;
-    //备注
-    @Column(name = "remark")
-    private String remark;
-    //状态
-    @Column(name = "state")
-    private String state;
+    private Boolean subscribe;
+    @Column(name = "UNION_ID")
+    private String unionId;
     //最后消息时间
     @Column(name = "LAST_MESSAGE_TIME")
     private Long lastMessageTime;
     //最后查看消息时间
     @Column(name = "LAST_LOOK_TIME")
     private Long lastLookTime;
+    //未读消息条数
     @Column(name = "UN_READ_SIZE")
     private Integer unReadSize;
 
-    public String getOpenid() {
-        return openid;
+    public String getTime(){
+        if(subscribeTime==0) return "";
+        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long time=subscribeTime*1000L;
+        return sdf.format(new Date(time));
     }
 
-    public void setOpenid(String openid) {
-        this.openid = openid;
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
     }
 
     public String getNickname() {
@@ -76,11 +83,11 @@ public class UserInfo {
         this.nickname = nickname;
     }
 
-    public int getSex() {
+    public String getSex() {
         return sex;
     }
 
-    public void setSex(int sex) {
+    public void setSex(String sex) {
         this.sex = sex;
     }
 
@@ -116,50 +123,32 @@ public class UserInfo {
         this.language = language;
     }
 
-    public String getHeadimgurl() {
-        return headimgurl;
+    public String getHeadImgUrl() {
+        return headImgUrl;
     }
 
-    public void setHeadimgurl(String headimgurl) {
-        this.headimgurl = headimgurl;
+    public void setHeadImgUrl(String headImgUrl) {
+        this.headImgUrl = headImgUrl;
     }
 
-    public Long getSubscribe_time() {
-        return subscribe_time;
+    public void setSubscribeTime(long subscribeTime) {
+        this.subscribeTime = subscribeTime;
     }
 
-    public void setSubscribe_time(Long subscribe_time) {
-        this.subscribe_time = subscribe_time;
-    }
-    public String getTime(){
-        if(subscribe_time==null) return "";
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long time=subscribe_time*1000L;
-        return sdf.format(new Date(time));
-    }
-
-    public int getSubscribe() {
+    public boolean isSubscribe() {
         return subscribe;
     }
 
-    public void setSubscribe(int subscribe) {
+    public void setSubscribe(boolean subscribe) {
         this.subscribe = subscribe;
     }
 
-    public String getRemark() {
-        return remark;
+    public String getUnionId() {
+        return unionId;
     }
 
-    public void setRemark(String remark) {
-        this.remark = remark;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
     }
 
     public Long getLastMessageTime() {

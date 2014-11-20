@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.reflect.Property;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,6 +35,14 @@ public class BeanUtil {
             }
             Property setProperty = ClassUtil.getProperty(destClass, property.getName());
             if (setProperty == null || !setProperty.isWrite()) {
+                continue;
+            }
+            if(ClassUtil.isBasicType(property.getPropertyType()) && ClassUtil.isBasicType(setProperty.getPropertyType())){
+                Object o = property.getValue(orig);
+                if (o == null) {
+                    continue;
+                }
+                OgnlUtil.getInstance().setValue(setProperty.getName(),dest,o.toString());
                 continue;
             }
             if (!property.getPropertyType().equals(setProperty.getPropertyType())) {

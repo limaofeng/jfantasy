@@ -42,7 +42,7 @@ public class MessageAction extends ActionSupport {
         //查询第一个用户的消息
         List<PropertyFilter> filters=new ArrayList<PropertyFilter>();
         if(pager.getPageItems().size()>0)
-            filters.add(new PropertyFilter("EQS_userInfo.openid",pager.getPageItems().get(0).getOpenid()));
+            filters.add(new PropertyFilter("EQS_userInfo.openid",pager.getPageItems().get(0).getOpenId()));
         Pager<Message> messagePager=new Pager<Message>();
         messagePager.setPageSize(3);
         this.search(messagePager, filters);
@@ -51,6 +51,7 @@ public class MessageAction extends ActionSupport {
             UserInfo ui=pager.getPageItems().get(0);
             ui.setLastLookTime(ui.getLastMessageTime());
         }
+        //查询所有用户未读的消息数
         userInfoService.countUnReadSize(pager.getPageItems());
         this.attrs.put("userPager", pager);
         this.attrs.put("messagePager", this.attrs.get(ROOT));
