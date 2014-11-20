@@ -69,11 +69,23 @@
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-weixin</artifactId>
             <version>${com.fantasy-version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpcore</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-core-ws-server</artifactId>
             <version>${com.fantasy-version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>httpcore</artifactId>
+                    <groupId>org.apache.httpcomponents</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!--
         <dependency>
