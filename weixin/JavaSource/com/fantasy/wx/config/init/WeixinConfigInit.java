@@ -1,8 +1,11 @@
 package com.fantasy.wx.config.init;
 
 import com.fantasy.framework.util.concurrent.LinkedQueue;
+import com.fantasy.schedule.service.ScheduleService;
 import com.fantasy.wx.message.bean.Message;
 import me.chanjar.weixin.mp.api.*;
+import org.quartz.JobKey;
+import org.quartz.TriggerKey;
 import org.springframework.beans.factory.InitializingBean;
 import org.xml.sax.InputSource;
 
@@ -14,6 +17,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * Created by zzzhong on 2014/11/18.
@@ -33,11 +37,26 @@ public class WeixinConfigInit implements InitializingBean {
      * 微信消息websocket处理集合
      */
     private LinkedQueue<Message> messageQueue = new LinkedQueue<Message>();
-
+    @Resource
+    private ScheduleService scheduleService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
         try {
+            List<? extends TriggerKey> triggerKeys=scheduleService.getTriggers();
+            for(TriggerKey key:triggerKeys){
+                if(key.getName().indexOf("accessToken")>=0){
+                    scheduleService.pauseTrigger(key);
+                    scheduleService.removeTrigdger(key);
+                }
+            }
+            List<JobKey>jobKeys= scheduleService.getJobKeys();
+            for(JobKey key:jobKeys){
+                if(key.getName().indexOf("weixin")>=0){
+                    scheduleService.interrupt(key);
+                    scheduleService.deleteJob(key);
+                }
+            }
             InputStream is1 = this.getClass().getResourceAsStream("/xml/weixin-config.xml");
             WxXmlMpInMemoryConfigStorage config = fromXml(WxXmlMpInMemoryConfigStorage.class, is1);
             util = new WxMpServiceImpl();

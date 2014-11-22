@@ -1,9 +1,6 @@
 package com.fantasy.wx.user.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -59,6 +56,10 @@ public class UserInfo {
     //未读消息条数
     @Column(name = "UN_READ_SIZE")
     private Integer unReadSize;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID")
+    private WxGroup wxGroup;
 
     public String getTime(){
         if(subscribeTime==0) return "";
@@ -173,5 +174,29 @@ public class UserInfo {
 
     public void setUnReadSize(Integer unReadSize) {
         this.unReadSize = unReadSize;
+    }
+
+    public Long getSubscribeTime() {
+        return subscribeTime;
+    }
+
+    public void setSubscribeTime(Long subscribeTime) {
+        this.subscribeTime = subscribeTime;
+    }
+
+    public Boolean getSubscribe() {
+        return subscribe;
+    }
+
+    public void setSubscribe(Boolean subscribe) {
+        this.subscribe = subscribe;
+    }
+
+    public WxGroup getWxGroup() {
+        return wxGroup;
+    }
+
+    public void setWxGroup(WxGroup wxGroup) {
+        this.wxGroup = wxGroup;
     }
 }

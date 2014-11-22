@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.user.bean.WxGroup;
 import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.dao.UserInfoDao;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -24,6 +25,8 @@ import java.util.List;
 public class UserInfoService {
     @Resource
     private UserInfoDao userInfoDao;
+    @Resource
+    private GroupService groupService;
     @Resource
     private WeixinConfigInit config;
 
@@ -101,8 +104,19 @@ public class UserInfoService {
 
         for(String s:getRefreshOpenId(refreshList)){
             UserInfo ui= BeanUtil.copyProperties(new UserInfo(), service.userInfo(s, null));
-            userInfoDao.save(ui);
+            refresh(ui);
         }
+    }
+
+    public void refresh(UserInfo ui) throws WxErrorException {
+        if(ui.getWxGroup()==null){
+            Long groupId=groupService.getUserGroup(ui.getOpenId());
+            if(groupId!=-1){
+                ui.setWxGroup(new WxGroup(groupId, null));
+            }
+        }
+
+        userInfoDao.save(ui);
     }
 
     public void delete(String openId){
@@ -138,7 +152,6 @@ public class UserInfoService {
         userInfoDao.batchSQLExecute("update wx_user_info set last_look_time=last_message_time  where openid=?",ui.getOpenId());
         ui.setLastLookTime(ui.getLastMessageTime());
     }
-
 
 
 }

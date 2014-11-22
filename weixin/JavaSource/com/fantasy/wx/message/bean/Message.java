@@ -1,9 +1,11 @@
 package com.fantasy.wx.message.bean;
 
+import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.wx.user.bean.UserInfo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * 文本消息
@@ -48,7 +50,7 @@ public class Message {
     @Column(name = "MSG_TYPE")
     private String msgType;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT",length = 1000)
     private String content;
 
     @Column(name = "MSG_ID")
@@ -66,13 +68,13 @@ public class Message {
     @Column(name = "THUMB_MEDIAID")
     private String thumbMediaId;
 
-    @Column(name = "LOCATION_X")
+    @Column(name = "LOCATION_X", precision = 15, scale = 5)
     private Double locationX;
 
-    @Column(name = "LOCATION_Y")
+    @Column(name = "LOCATION_Y", precision = 15, scale = 5)
     private Double locationY;
 
-    @Column(name = "SCALE")
+    @Column(name = "SCALE", precision = 15, scale = 5)
     private Double scale;
 
     @Column(name = "LABEL")
@@ -96,13 +98,13 @@ public class Message {
     @Column(name = "TICKET")
     private String ticket;
 
-    @Column(name = "LATITUDE")
+    @Column(name = "LATITUDE", precision = 15, scale = 5)
     private Double latitude;
 
-    @Column(name = "LONGITUDE")
+    @Column(name = "LONGITUDE", precision = 15, scale = 5)
     private Double longitude;
 
-    @Column(name = "PRECISION")
+    @Column(name = "PRECISION_VALUE", precision = 15, scale = 5)
     private Double precision;
 
     @Column(name = "RECOGNITION")
@@ -136,6 +138,13 @@ public class Message {
      */
     @Column(name = "ERROR_COUNT")
     private Integer errorCount;
+
+    /**
+     * 最后修改时间
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "MODIFY_TIME")
+    private Date modifyTime;
 
     public Long getId() {
         return id;
@@ -384,4 +393,5 @@ public class Message {
     public void setErrorCount(Integer errorCount) {
         this.errorCount = errorCount;
     }
+
 }

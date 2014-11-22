@@ -39,7 +39,7 @@
 		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="org.hibernate">
-		<priority value="ERROR"/>
+		<priority value="DEBUG"/>
 		<appender-ref ref="CONSOLE"/>
 	</category>
 	<category name="java.sql.Connection">

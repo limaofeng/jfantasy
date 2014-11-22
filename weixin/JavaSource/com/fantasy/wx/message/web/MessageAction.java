@@ -25,8 +25,7 @@ public class MessageAction extends ActionSupport {
     private MessageService messageService;
     @Resource
     private UserInfoService userInfoService;
-    @Resource
-    private WeixinConfigInit config;
+
 
     public String index(){
         //查询用户列表
@@ -99,19 +98,7 @@ public class MessageAction extends ActionSupport {
      * @return
      */
     public String sendMessage(Message m) {
-        m.setType("send");
-        WxMpService service=config.getUtil();
-        WxMpCustomMessage message=WxMpCustomMessage.TEXT().toUser(m.getToUserName()).content(m.getContent()).build();
-        int result=0;
-        try {
-            service.customMessageSend(message);
-        } catch (WxErrorException e) {
-            if(e.getError().getErrorCode()==45015){
-                throw new RuntimeException("该用户48小时之内未与您发送信息");
-            }
-            result=e.getError().getErrorCode();
-        }
-        this.attrs.put(ROOT, result);
+        this.attrs.put(ROOT, messageService.save(m));
         return JSONDATA;
     }
 

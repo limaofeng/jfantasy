@@ -3,8 +3,6 @@ package com.fantasy.wx.user.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.remind.bean.Model;
-import com.fantasy.wx.config.service.WeixinConfigService;
 import com.fantasy.wx.user.bean.UserInfo;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
@@ -17,12 +15,9 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class UserInfoServiceTest {
@@ -30,6 +25,7 @@ public class UserInfoServiceTest {
     private static final Log logger = LogFactory.getLog(UserInfo.class);
     @Resource
     private UserInfoService userInfoService;
+
     @Before
     public void setUp() throws Exception {
         testSave();
@@ -56,6 +52,7 @@ public class UserInfoServiceTest {
     public void testDelete() throws Exception{
         userInfoService.delete("test");
     }
+
     public Pager<UserInfo> testFindPager(String... openid){
         Pager<UserInfo> pager=new Pager<UserInfo>();
         List<PropertyFilter> list=new ArrayList<PropertyFilter>();
