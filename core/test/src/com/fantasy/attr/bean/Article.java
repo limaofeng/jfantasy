@@ -37,11 +37,11 @@ public class Article extends BaseBusEntity implements DynaBean {
     @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_VERSION"))
     private AttributeVersion version;
     /**
-     * 动态属性集合。 * 注意访问修饰符为 protected
+     * 动态属性集合。
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    protected List<AttributeValue> attributeValues;
+    private List<AttributeValue> attributeValues;
 
     public Long getId() {
         return id;
