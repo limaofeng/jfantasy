@@ -69,7 +69,7 @@ public class AttributeVersionServiceTest {
         Attribute attribute = new Attribute();
         attribute.setCode("intTest");
         attribute.setName("测试Int类型字段");
-        attribute.setDescription("");
+        attribute.setDescription("test");
         attribute.setAttributeType(attributeType);
         attribute.setNonNull(true);
         attribute.setNotTemporary(false);
@@ -78,7 +78,7 @@ public class AttributeVersionServiceTest {
         Converter userConverter = new Converter();
         userConverter.setName("用户对象转换器");
         userConverter.setTypeConverter(UserTypeConverter.class.getName());
-        userConverter.setDescription("");
+        userConverter.setDescription("test");
         converterService.save(userConverter);
 
         AttributeType userAttributeType = new AttributeType();
@@ -90,7 +90,7 @@ public class AttributeVersionServiceTest {
 
         Attribute userAttribute = new Attribute();
         userAttribute.setCode("user");
-        userAttribute.setName("测试Int类型字段");
+        userAttribute.setName("测试 user 类型字段");
         userAttribute.setDescription("");
         userAttribute.setAttributeType(userAttributeType);
         userAttribute.setNonNull(true);
@@ -111,7 +111,7 @@ public class AttributeVersionServiceTest {
     public void tearDown() throws Exception {
         AttributeVersion version = attributeVersionService.getVersion(Article.class, "1.0");
         if (version == null) {
-            for(Converter converter : converterService.find(Restrictions.eq("name", "测试转换器"), Restrictions.eq("typeConverter", PrimitiveTypeConverter.class.getName()))){
+            for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
                 this.converterService.delete(converter.getId());
             }
             return;

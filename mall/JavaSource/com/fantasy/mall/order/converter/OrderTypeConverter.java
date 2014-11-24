@@ -3,7 +3,6 @@ package com.fantasy.mall.order.converter;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.mall.order.bean.Order;
 import com.fantasy.mall.order.service.OrderService;
-import com.fantasy.security.bean.User;
 import ognl.DefaultTypeConverter;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +20,7 @@ public class OrderTypeConverter extends DefaultTypeConverter {
 
     @Transactional
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        if (toType == User.class) {
+        if (toType == Order.class) {
             return orderService.get((String) value);
         } else if (value instanceof Order && toType == String.class) {
             return OgnlUtil.getInstance().getValue("sn", value);

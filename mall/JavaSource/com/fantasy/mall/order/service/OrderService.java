@@ -151,6 +151,10 @@ public class OrderService {
         if (ObjectUtil.isNotNull(SpringSecurityUtils.getCurrentUser(MemberUser.class))) {
             order.setMember(SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser());
         }
+        //解决附言不能为空的问题
+        if (StringUtil.isBlank(order.getMemo())) {
+            order.setMemo("");
+        }
         order.setTotalAmount(order.getTotalProductPrice().add(order.getDeliveryFee()));// 订单总金额(商品金额+邮费)
         this.orderDao.save(order);
         for (OrderItem item : order.getOrderItems()) {
@@ -163,7 +167,7 @@ public class OrderService {
      *
      * @param ids 订单Ids
      */
-    public void delete(Long[] ids) {
+    public void delete(Long... ids) {
         for (Long id : ids) {
             this.orderDao.delete(id);
         }
