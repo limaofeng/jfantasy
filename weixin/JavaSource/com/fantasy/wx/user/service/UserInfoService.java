@@ -4,8 +4,8 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.user.bean.WxGroup;
 import com.fantasy.wx.user.bean.UserInfo;
+import com.fantasy.wx.user.bean.WxGroup;
 import com.fantasy.wx.user.dao.UserInfoDao;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -26,7 +26,7 @@ public class UserInfoService {
     @Resource
     private UserInfoDao userInfoDao;
     @Resource
-    private GroupService groupService;
+    private WxGroupService wxGroupService;
     @Resource
     private WeixinConfigInit config;
 
@@ -57,7 +57,7 @@ public class UserInfoService {
      */
     public void saveArry(UserInfo[] uArray){
         for(UserInfo u:uArray){
-            userInfoDao.save(u);
+            save(u);
         }
     }
 
@@ -94,29 +94,31 @@ public class UserInfoService {
      * 刷新粉丝列表
      */
     public void refresh() throws WxErrorException {
-        WxMpService service=config.getUtil();
         WxMpUserList userList=null;
         List<String> refreshList=new ArrayList<String>();
         do{
-            userList=service.userList(userList==null?null:userList.getNextOpenId());
+            userList=config.getUtil().userList(userList==null?null:userList.getNextOpenId());
             refreshList.addAll(userList.getOpenIds());
         }while(userList!=null&&userList.getTotal()>userList.getCount());
 
         for(String s:getRefreshOpenId(refreshList)){
-            UserInfo ui= BeanUtil.copyProperties(new UserInfo(), service.userInfo(s, null));
-            refresh(ui);
+            refresh(s);
         }
     }
 
-    public void refresh(UserInfo ui) throws WxErrorException {
-        if(ui.getWxGroup()==null){
-            Long groupId=groupService.getUserGroup(ui.getOpenId());
-            if(groupId!=-1){
-                ui.setWxGroup(new WxGroup(groupId, null));
-            }
+    /**
+     * 刷新用户对象
+     * @param openId
+     * @throws WxErrorException
+     */
+    public UserInfo refresh(String openId) throws WxErrorException {
+        UserInfo ui= BeanUtil.copyProperties(new UserInfo(), config.getUtil().userInfo(openId, null));
+        Long groupId= wxGroupService.getUserGroup(ui.getOpenId());
+        if(groupId!=-1){
+            ui.setWxGroup(new WxGroup(groupId, null));
         }
-
         userInfoDao.save(ui);
+        return ui;
     }
 
     public void delete(String openId){

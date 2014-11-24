@@ -4,9 +4,9 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.user.bean.WxGroup;
 import com.fantasy.wx.user.bean.UserInfo;
-import com.fantasy.wx.user.dao.GroupDao;
+import com.fantasy.wx.user.bean.WxGroup;
+import com.fantasy.wx.user.dao.WxGroupDao;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpGroup;
 import org.springframework.stereotype.Service;
@@ -21,28 +21,28 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class GroupService {
+public class WxGroupService {
     @Resource
-    private GroupDao groupDao;
+    private WxGroupDao wxGroupDao;
     @Resource
     private UserInfoService userInfoService;
     @Resource
     private WeixinConfigInit config;
 
     public WxGroup save(WxGroup wxGroup){
-        groupDao.save(wxGroup);
+        wxGroupDao.save(wxGroup);
         return wxGroup;
     }
     public List<WxGroup> getAll(){
-        return groupDao.getAll();
+        return wxGroupDao.getAll();
     }
 
     public Pager<WxGroup> findPager(Pager<WxGroup> pager,List<PropertyFilter> list){
-        return groupDao.findPager(pager,list);
+        return wxGroupDao.findPager(pager,list);
     }
 
     public WxGroup getGroup(Long id){
-        return groupDao.get(id);
+        return wxGroupDao.get(id);
     }
 
     public void delete(Long... ids){
@@ -54,7 +54,7 @@ public class GroupService {
                 ui.setWxGroup(null);
                 userInfoService.save(ui);
             }
-            groupDao.delete(id);
+            wxGroupDao.delete(id);
         }
     }
 
@@ -68,7 +68,7 @@ public class GroupService {
             WxMpGroup res = config.getUtil().groupCreate(name);
             WxGroup wxGroup =new WxGroup(res.getId(),res.getName());
             wxGroup.setCount(res.getCount());
-            groupDao.save(wxGroup);
+            wxGroupDao.save(wxGroup);
         } catch (WxErrorException e) {
             e.printStackTrace();
             return e.getError().getErrorCode();
@@ -89,7 +89,7 @@ public class GroupService {
         WxGroup wxGroup =new WxGroup(id,name);
         try {
             config.getUtil().groupUpdate(wxMpGroup);
-            groupDao.save(wxGroup);
+            wxGroupDao.save(wxGroup);
         } catch (WxErrorException e) {
             e.printStackTrace();
             return e.getError().getErrorCode();
@@ -107,7 +107,7 @@ public class GroupService {
             List<WxMpGroup> list=config.getUtil().groupGet();
             for(WxMpGroup g:list){
                 WxGroup wxGroup =BeanUtil.copyProperties(new WxGroup(),g);
-                groupDao.save(wxGroup);
+                wxGroupDao.save(wxGroup);
                 gl.add(wxGroup);
             }
         } catch (WxErrorException e) {

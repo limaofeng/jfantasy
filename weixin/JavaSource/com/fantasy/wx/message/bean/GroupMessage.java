@@ -1,8 +1,6 @@
 package com.fantasy.wx.message.bean;
 
-import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
-import me.chanjar.weixin.mp.bean.WxMpMassNews;
 import org.codehaus.jackson.type.TypeReference;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,8 +13,8 @@ import java.util.List;
  * Created by zzzhong on 2014/11/20.
  */
 @Entity
-@Table(name = "WX_OUT_MESSAGE")
-public class OutMessage {
+@Table(name = "WX_GROUP_MESSAGE")
+public class GroupMessage {
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")

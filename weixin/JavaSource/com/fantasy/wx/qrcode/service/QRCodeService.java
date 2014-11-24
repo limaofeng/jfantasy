@@ -2,22 +2,16 @@ package com.fantasy.wx.qrcode.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.message.bean.OutMessage;
-import com.fantasy.wx.message.dao.OutMessageDao;
 import com.fantasy.wx.qrcode.bean.QRCode;
 import com.fantasy.wx.qrcode.dao.QRCodeDao;
-import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.mp.bean.WxMpMassGroupMessage;
-import me.chanjar.weixin.mp.bean.WxMpMassOpenIdsMessage;
-import me.chanjar.weixin.mp.bean.result.WxMpMassSendResult;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -52,6 +46,7 @@ public class QRCodeService {
         return qrCodeDao.get(id);
     }
     public QRCode save(QRCode q){
+        q.setCreateTime(new Date());
         this.qrCodeDao.save(q);
         return q;
     }
@@ -62,14 +57,16 @@ public class QRCodeService {
      * </pre>
      * @throws WxErrorException
      */
-    public QRCode qrCodeCreateTmpTicket() throws WxErrorException {
+    public QRCode qrCodeCreateTmpTicket(String linkKey,Integer e) throws WxErrorException {
+        if(e==null) e=1800;
         QRCode code=new QRCode();
         qrCodeDao.save(code);
-        WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateTmpTicket(new Long(code.getId()).intValue(), 1800);
+        WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateTmpTicket(new Long(code.getId()).intValue(), e);
         code.setExpireSeconds(ticket.getExpire_seconds());
         code.setTicket(ticket.getTicket());
         code.setUrl(ticket.getUrl());
-        qrCodeDao.save(code);
+        code.setLinkKey(linkKey);
+        save(code);
         return code;
     }
     /**
@@ -80,14 +77,15 @@ public class QRCodeService {
      * @return
      * @throws WxErrorException
      */
-    public QRCode qrCodeCreateLastTicket() throws WxErrorException {
+    public QRCode qrCodeCreateLastTicket(String linkKey) throws WxErrorException {
         QRCode code=new QRCode();
         qrCodeDao.save(code);
         WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateLastTicket(new Long(code.getId()).intValue());
         code.setExpireSeconds(ticket.getExpire_seconds());
         code.setTicket(ticket.getTicket());
         code.setUrl(ticket.getUrl());
-        qrCodeDao.save(code);
+        code.setLinkKey(linkKey);
+        save(code);
         return code;
     }
 

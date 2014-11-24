@@ -174,8 +174,13 @@ function ajaxScroll(zhis,settings){
             }
 
             if(!!item.click) btn.on("click",item.click);
-            optionBtn.length>3&&i>=3?$(".optionScrollBtn").find(".dropdown-menu").append(btn):$(".optionScrollBtn").append(btn);
+            optionBtn.length>3&&i>=3?$(".optionScrollBtn", $(zhis)).find(".dropdown-menu").append(btn):$(".optionScrollBtn", $(zhis)).append(btn);
         }
+        $('.optionScrollBtn a[target]', $(zhis)).filter(function(){
+            return !$(this).data('_target') && ['_blank','_self','_parent','_top'].indexOf($(this).attr('target')) == -1;
+        }).data('_target',true).each(function () {
+            $(this).target();
+        });
     }else{
         $('.optionScrollBtn').remove();
     }

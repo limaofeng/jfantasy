@@ -22,10 +22,10 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-public class WxGroupServiceTest {
+public class WxWxGroupServiceTest {
     private static final Log logger = LogFactory.getLog(WxGroup.class);
     @Resource
-    private GroupService groupService;
+    private WxGroupService wxGroupService;
     @Resource
     private WeixinConfigInit config;
 
@@ -40,11 +40,11 @@ public class WxGroupServiceTest {
     }
 
     public void testSave() throws Exception {
-        groupService.create("测试");
+        wxGroupService.create("测试");
     }
 
     public void testGetAll() throws Exception {
-        List<WxGroup> list=groupService.getAll();
+        List<WxGroup> list= wxGroupService.getAll();
         Assert.assertNotNull(list);
         logger.debug(JSON.serialize(list));
     }
@@ -53,18 +53,18 @@ public class WxGroupServiceTest {
     public void testDelete() throws Exception {
         List<PropertyFilter> list=new ArrayList<PropertyFilter>();
         list.add(new PropertyFilter("LIKES_name","测试"));
-        Pager<WxGroup> pager=groupService.findPager(new Pager<WxGroup>(),list);
-        groupService.delete(pager.getPageItems().get(0).getId());
+        Pager<WxGroup> pager= wxGroupService.findPager(new Pager<WxGroup>(),list);
+        wxGroupService.delete(pager.getPageItems().get(0).getId());
     }
 
     @Test
     public void testUpdate() throws Exception {
         List<PropertyFilter> list=new ArrayList<PropertyFilter>();
         list.add(new PropertyFilter("LIKES_name","测试"));
-        Pager<WxGroup> pager=groupService.findPager(new Pager<WxGroup>(),list);
+        Pager<WxGroup> pager= wxGroupService.findPager(new Pager<WxGroup>(),list);
         Long id=pager.getPageItems().get(0).getId();
-        groupService.update(id,"测试2");
-        WxGroup wxGroup =groupService.getGroup(id);
+        wxGroupService.update(id,"测试2");
+        WxGroup wxGroup = wxGroupService.getGroup(id);
         Assert.assertEquals(wxGroup.getName(),"测试2");
         logger.debug(wxGroup);
 
@@ -72,7 +72,7 @@ public class WxGroupServiceTest {
 
     @Test
     public void testRefreshGroup() throws Exception {
-        List<WxGroup> list=groupService.refreshGroup();
+        List<WxGroup> list= wxGroupService.refreshGroup();
         Assert.assertNotNull(list);
         logger.debug(JSON.serialize(list));
     }
@@ -80,7 +80,7 @@ public class WxGroupServiceTest {
     @Test
     public void testGetGroup1() throws Exception {
         WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage)config.getWxMpConfigStorage();
-        Long groupId=groupService.getUserGroup(configProvider.getOpenId());
+        Long groupId= wxGroupService.getUserGroup(configProvider.getOpenId());
         Assert.assertNotNull(groupId);
         logger.debug(groupId);
     }
@@ -88,7 +88,7 @@ public class WxGroupServiceTest {
     @Test
     public void testMoveGroup() throws Exception {
         WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage)config.getWxMpConfigStorage();
-        int i=groupService.moveGroup(configProvider.getOpenId(),1L);
+        int i= wxGroupService.moveGroup(configProvider.getOpenId(),1L);
         Assert.assertEquals(i,0);
     }
 }

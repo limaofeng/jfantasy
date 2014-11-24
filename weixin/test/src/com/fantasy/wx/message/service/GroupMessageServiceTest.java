@@ -4,8 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.message.bean.Message;
-import com.fantasy.wx.message.bean.OutMessage;
+import com.fantasy.wx.message.bean.GroupMessage;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,15 +20,14 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.*;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-public class OutMessageServiceTest {
+public class GroupMessageServiceTest {
     @Resource
-    private OutMessageService outMessageService;
+    private GroupMessageService groupMessageService;
     @Resource
     private WeixinConfigInit config;
-    private static final Log logger = LogFactory.getLog(OutMessage.class);
+    private static final Log logger = LogFactory.getLog(GroupMessage.class);
 
     @Before
     public void setUp() throws Exception {
@@ -43,34 +41,34 @@ public class OutMessageServiceTest {
 
     @Test
     public void testFindPager() throws Exception {
-        Pager<OutMessage> p=new Pager<OutMessage>();
+        Pager<GroupMessage> p=new Pager<GroupMessage>();
         List<PropertyFilter> list=new ArrayList<PropertyFilter>();
         list.add(new PropertyFilter("EQS_content","test@"));
-        Pager<OutMessage> pager=outMessageService.findPager(p,list);
+        Pager<GroupMessage> pager= groupMessageService.findPager(p,list);
         Assert.assertNotNull(pager.getPageItems());
         logger.debug(JSON.serialize(pager));
     }
 
     public void testDelete() throws Exception {
-        Pager<OutMessage> pager=outMessageService.findPager(new Pager<OutMessage>(),new ArrayList<PropertyFilter>());
-        outMessageService.delete(pager.getPageItems().get(0).getId());
+        Pager<GroupMessage> pager= groupMessageService.findPager(new Pager<GroupMessage>(),new ArrayList<PropertyFilter>());
+        groupMessageService.delete(pager.getPageItems().get(0).getId());
     }
 
     @Test
     public void testGetOutMessage() throws Exception {
-        Pager<OutMessage> pager=outMessageService.findPager(new Pager<OutMessage>(),new ArrayList<PropertyFilter>());
-        OutMessage o=outMessageService.getOutMessage(pager.getPageItems().get(0).getId());
+        Pager<GroupMessage> pager= groupMessageService.findPager(new Pager<GroupMessage>(),new ArrayList<PropertyFilter>());
+        GroupMessage o= groupMessageService.getOutMessage(pager.getPageItems().get(0).getId());
         Assert.assertNotNull(o);
         logger.debug(JSON.serialize(o));
     }
 
     public void testSave() throws Exception {
-        OutMessage outMessage=new OutMessage();
-        outMessage.setContent("test@");
-        outMessage.setMsgType("text");
+        GroupMessage groupMessage =new GroupMessage();
+        groupMessage.setContent("test@");
+        groupMessage.setMsgType("text");
 
-        outMessage.setToUsers(createOpenId());
-        outMessageService.save(outMessage);
+        groupMessage.setToUsers(createOpenId());
+        groupMessageService.save(groupMessage);
     }
     public List<String> createOpenId(){
         List<String> list=new ArrayList<String>();
@@ -81,11 +79,11 @@ public class OutMessageServiceTest {
 
     @Test
     public void testSendGroupMessage() throws Exception {
-        outMessageService.sendGroupMessage(1L, "福建省快乐group");
+        groupMessageService.sendGroupMessage(1L, "福建省快乐group");
     }
 
     @Test
     public void testSendOpenIdMessage() throws Exception {
-        outMessageService.sendOpenIdMessage(createOpenId(),"福建省快乐openId");
+        groupMessageService.sendOpenIdMessage(createOpenId(),"福建省快乐openId");
     }
 }

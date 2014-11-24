@@ -1,6 +1,5 @@
 package com.fantasy.wx.message.bean;
 
-import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.wx.user.bean.UserInfo;
 import org.hibernate.annotations.GenericGenerator;
 

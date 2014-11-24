@@ -1,9 +1,16 @@
 package com.fantasy.wx.config.init;
 
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.concurrent.LinkedQueue;
 import com.fantasy.schedule.service.ScheduleService;
 import com.fantasy.wx.message.bean.Message;
+import com.fantasy.wx.user.service.UserInfoService;
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.*;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
 import org.quartz.JobKey;
 import org.quartz.TriggerKey;
 import org.springframework.beans.factory.InitializingBean;
@@ -18,6 +25,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zzzhong on 2014/11/18.
@@ -37,13 +45,13 @@ public class WeixinConfigInit implements InitializingBean {
      * 微信消息websocket处理集合
      */
     private LinkedQueue<Message> messageQueue = new LinkedQueue<Message>();
-    @Resource
-    private ScheduleService scheduleService;
+    /*@Resource
+    private ScheduleService scheduleService;*/
 
     @Override
     public void afterPropertiesSet() throws Exception {
         try {
-            List<? extends TriggerKey> triggerKeys=scheduleService.getTriggers();
+            /*List<? extends TriggerKey> triggerKeys=scheduleService.getTriggers();
             for(TriggerKey key:triggerKeys){
                 if(key.getName().indexOf("accessToken")>=0){
                     scheduleService.pauseTrigger(key);
@@ -56,11 +64,33 @@ public class WeixinConfigInit implements InitializingBean {
                     scheduleService.interrupt(key);
                     scheduleService.deleteJob(key);
                 }
-            }
+            }*/
             InputStream is1 = this.getClass().getResourceAsStream("/xml/weixin-config.xml");
             WxXmlMpInMemoryConfigStorage config = fromXml(WxXmlMpInMemoryConfigStorage.class, is1);
             util = new WxMpServiceImpl();
             util.setWxMpConfigStorage(config);
+            wxMpMessageRouter=new WxMpMessageRouter().rule()
+                    .async(false)
+                    .msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_SUBSCRIBE)
+                    .handler(new WxMpMessageHandler() {
+                        @Override public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context) {
+                            UserInfoService service= (UserInfoService) SpringContextUtil.getBean("userInfoService");
+                            try {
+                                service.refresh(wxMessage.getToUserName());
+                            } catch (WxErrorException e) {
+                                e.printStackTrace();
+                            }
+                            WxMpXmlOutTextMessage m= WxMpXmlOutMessage.TEXT().content("欢迎关注").fromUser(wxMessage.getToUserName())
+                                    .toUser(wxMessage.getFromUserName()).build();
+                            return m;
+                        }
+                    })
+                    .end()
+                    .rule().async(false).handler(new WxMpMessageHandler() {
+                        @Override public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context) {
+                            return null;
+                        }
+                    }).end();
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }

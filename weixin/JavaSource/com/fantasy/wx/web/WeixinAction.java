@@ -5,7 +5,6 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
 import com.fantasy.wx.message.bean.Message;
 import com.fantasy.wx.message.service.MessageService;
-import com.fantasy.wx.user.bean.UserInfo;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;

@@ -4,10 +4,8 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.message.bean.OutMessage;
+import com.fantasy.wx.message.bean.GroupMessage;
 import com.fantasy.wx.message.dao.OutMessageDao;
-import com.fantasy.wx.user.bean.UserInfo;
-import com.fantasy.wx.user.service.UserInfoService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpMassGroupMessage;
@@ -17,7 +15,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,7 +22,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class OutMessageService {
+public class GroupMessageService {
     @Resource
     private OutMessageDao outMessageDao;
     @Resource
@@ -40,7 +37,7 @@ public class OutMessageService {
      *            查询条件
      * @return
      */
-    public Pager<OutMessage> findPager(Pager<OutMessage> pager, List<PropertyFilter> filters) {
+    public Pager<GroupMessage> findPager(Pager<GroupMessage> pager, List<PropertyFilter> filters) {
         return this.outMessageDao.findPager(pager, filters);
     }
     public void delete(Long... ids){
@@ -48,10 +45,10 @@ public class OutMessageService {
             outMessageDao.delete(id);
         }
     }
-    public OutMessage getOutMessage(Long id){
+    public GroupMessage getOutMessage(Long id){
         return outMessageDao.get(id);
     }
-    public OutMessage save(OutMessage om){
+    public GroupMessage save(GroupMessage om){
         this.outMessageDao.save(om);
         return om;
     }
@@ -92,7 +89,7 @@ public class OutMessageService {
     public int sendGroupMessage(Long groupId,String content){
         WxMpMassGroupMessage groupM=createGroupMessage(groupId,WxConsts.MASS_MSG_TEXT);
         groupM.setContent(content);
-        save(BeanUtil.copyProperties(new OutMessage(),groupM));
+        save(BeanUtil.copyProperties(new GroupMessage(),groupM));
         try {
             WxMpMassSendResult result=config.getUtil().massGroupMessageSend(groupM);
             return Integer.parseInt(result.getErrorCode());
@@ -110,7 +107,7 @@ public class OutMessageService {
     public int sendOpenIdMessage(List<String> openid,String content){
         WxMpMassOpenIdsMessage message=createOpenIdsMessage(openid,WxConsts.MASS_MSG_TEXT);
         message.setContent(content);
-        save(BeanUtil.copyProperties(new OutMessage(),message));
+        save(BeanUtil.copyProperties(new GroupMessage(),message));
         try {
             WxMpMassSendResult massResult = config.getUtil().massOpenIdsMessageSend(message);
             return Integer.parseInt(massResult.getErrorCode());

@@ -1,7 +1,6 @@
 package com.fantasy.wx.qrcode.dao;
 
 import com.fantasy.framework.dao.hibernate.HibernateDao;
-import com.fantasy.wx.message.bean.Message;
 import com.fantasy.wx.qrcode.bean.QRCode;
 import org.springframework.stereotype.Repository;
 

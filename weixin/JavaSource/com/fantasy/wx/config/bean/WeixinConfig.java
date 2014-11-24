@@ -1,9 +1,11 @@
 package com.fantasy.wx.config.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 

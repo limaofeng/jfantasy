@@ -6,8 +6,6 @@ import org.codehaus.jackson.annotate.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,9 +14,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "WX_MENU")
-public class Menu extends BaseBusEntity{
-    public Menu(){}
-    public Menu(String name,String type,Integer layer,Integer sort,String url,String key,Menu parent){
+public class WxMenu extends BaseBusEntity{
+    public WxMenu(){}
+    public WxMenu(String name, String type, Integer layer, Integer sort, String url, String key,WxMenu parent){
         this.name=name;
         this.type=type;
         this.layer=layer;
@@ -32,11 +30,11 @@ public class Menu extends BaseBusEntity{
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-    @Column(name = "TYPE")
+    @Column(name = "\"TYPE\"")
     private String type;
-    @Column(name = "NAME")
+    @Column(name = "\"NAME\"")
     private String name;
-    @Column(name = "KEY")
+    @Column(name = "\"KEY\"")
     private String key;
     @Column(name = "URL")
     private String url;
@@ -52,14 +50,14 @@ public class Menu extends BaseBusEntity{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "P_ID", foreignKey = @ForeignKey(name = "FK_MENU_PARENT"))
     @JsonManagedReference
-    private Menu parent;
+    private WxMenu parent;
     /**
      * 下级分类
      */
-    @OneToMany(mappedBy = "parent", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     @JsonBackReference
-    private List<Menu> children;
+    private List<WxMenu> children;
 
     public Long getId() {
         return id;
@@ -117,19 +115,19 @@ public class Menu extends BaseBusEntity{
         this.sort = sort;
     }
 
-    public Menu getParent() {
+    public WxMenu getParent() {
         return parent;
     }
 
-    public void setParent(Menu parent) {
+    public void setParent(WxMenu parent) {
         this.parent = parent;
     }
 
-    public List<Menu> getChildren() {
+    public List<WxMenu> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Menu> children) {
+    public void setChildren(List<WxMenu> children) {
         this.children = children;
     }
 }
