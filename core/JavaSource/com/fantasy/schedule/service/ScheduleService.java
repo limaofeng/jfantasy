@@ -164,6 +164,9 @@ public class ScheduleService {
 
     public JobDetail addJob(JobKey jobKey, Class<? extends Job> jobClass, Map<String, Object> data) {
         try {
+            if (data == null) {
+                data = new HashMap<String, Object>();
+            }
             JobDetail job = newJob(jobClass).withIdentity(jobKey.getName(), jobKey.getGroup()).storeDurably(true).setJobData(new JobDataMap(data)).build();
             scheduler.addJob(job, true);
             scheduler.resumeJob(jobKey);
@@ -450,7 +453,7 @@ public class ScheduleService {
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
         try {
             this.scheduler.shutdown();
         } catch (SchedulerException e) {
@@ -458,4 +461,18 @@ public class ScheduleService {
         }
     }
 
+    public List<JobDetail> jobs() {
+        List<JobDetail> jobDetails = new ArrayList<JobDetail>();
+        for (JobKey jobKey : this.getJobKeys()) {
+            try {
+                jobDetails.add(scheduler.getJobDetail(jobKey));
+            } catch (SchedulerException e) {
+                logger.error(e.getMessage(), e);
+                if (e.getCause() instanceof ClassNotFoundException) {
+                    this.deleteJob(jobKey);
+                }
+            }
+        }
+        return jobDetails;
+    }
 }

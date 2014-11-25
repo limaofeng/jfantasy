@@ -220,6 +220,10 @@
                 $('#ddDetails').show().prevAll().hide();
                 return false;
             });
+        }).on('move',function(type,t,o,invoke){
+            //TODO 数据库顺序调整后，调用该方法
+            invoke();
+            return false;
         });
         var deleteMethod = $('.batchDelete').batchExecute($("#allChecked"),$grid.data('grid').pager(),'key','<h4 class="infobox-title">删除确认</h4><p>确认删除数据字典项[<b>{name}</b>]？</p>',function(){
             $.msgbox({
@@ -412,6 +416,18 @@
                                 </span>
                             </a>
                             <ul class="dropdown-menu float-right">
+                                <li>
+                                    <a href="javascript:;" class="up" title=" <@s.text name="system.dictionary.list.actions.moveup"/>">
+                                        <i class="glyph-icon icon-circle-arrow-up mrg5R"></i>
+                                        <@s.text name="system.dictionary.list.actions.moveup"/>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;" class="down" title=" <@s.text name="system.dictionary.list.actions.movedown"/>">
+                                        <i class="glyph-icon icon-circle-arrow-down mrg5R"></i>
+                                        <@s.text name="system.dictionary.list.actions.movedown"/>
+                                    </a>
+                                </li>
                                 <li>
                                     <a href="javascript:;" class="edit" title=" <@s.text name="system.dictionary.list.actions.edit"/>">
                                         <i class="glyph-icon icon-edit mrg5R"></i>

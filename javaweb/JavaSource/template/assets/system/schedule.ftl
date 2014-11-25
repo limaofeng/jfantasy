@@ -1,8 +1,8 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <@override name="pageTitle">
-任务调度
+    <@s.text name="schedule.title"/>
 <small>
-    You can use the Messaging List component to create all kinds of messaging systems for your application users.
+    <@s.text name="schedule.description"/>
 </small>
 </@override>
 <@override name="head">
@@ -21,12 +21,14 @@
     });*/
     $(function(){
         //当浏览器窗口发生变化时,自动调整布局的js代码
-        $(window).resize(function () {
-            var _$gridPanel = $('.grid-panel');
-            if(!!_$gridPanel.length){
-                _$gridPanel.css('minHeight', $(window).height() - (_$gridPanel.offset().top + 15));
-                _$gridPanel.triggerHandler('resize');
-            }
+        var _$gridPanel = $('.grid-panel');
+        var _resize = function () {
+            _$gridPanel.css('minHeight', $(window).height() - (_$gridPanel.offset().top + 15));
+            _$gridPanel.triggerHandler('resize');
+        };
+        $(window).resize(_resize);
+        $page$.one('destroy',function(){
+            $(window).unbind('resize',_resize);
         });
         var $advsearch = $('.propertyFilter').advsearch({
             filters : [{
@@ -42,12 +44,21 @@
             }]
         });
         //列表初始化
-        var jobs=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(jobInfos)" escapeHtml="false"/>;
+        var jobs=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(jobs)" escapeHtml="false"/>;
         var pager={"order":"asc","orderBy":null,"pageSize":15,"orderBySetted":false,"orders":[],"totalCount":0,"pageItems":jobs,"totalPage":1,"currentPage":1};
         var $grid = $('#view').dataGrid($('#searchFormPanel'),$('.batch'));
 
-        $grid.data('grid').view().on('add',function(data){
-
+        $grid.data('grid').view().on('add',function(){
+            $('.run',this.target).click(function(e){
+                $.post($(this).attr('href'),function(){
+                    $.msgbox({
+                        msg : '触发执行成功',
+                        type : 'success'
+                    });
+                });
+                return e.stopPropagation();
+            });
+            /*
             var trigger = data.triggerInfos[0];
             this.target.find('.preFire').text(trigger.preFire);
 
@@ -57,13 +68,14 @@
                 deleteMethod([data.id]);
                 return stopDefault(e);
             });
+            */
         });
 
         $grid.setJSON(pager);
 
-        var deleteMethod = $('.batchDelete').batchExecute($("#allChecked"),$grid.data('grid').pager(),'id','是否确认删除[{name}]广告位？',function(){
+        var deleteMethod = $('.batchDelete').batchExecute($("#allChecked"),$grid.data('grid').pager(),'id',' <@s.text name="schedule.delete.alert"/>',function(){
             $.msgbox({
-                msg : "删除成功!",
+                msg : " <@s.text name="schedule.delete.success"/>",
                 type : "success"
             });
         });
@@ -73,10 +85,10 @@
 <@override name="pageContent">
 <div id="searchFormPanel" class="button-panel pad5A">
     <@s.form id="searchForm" namespace="/system/schedule" action="search" method="post">
-        <a title="添加" class="btn medium primary-bg dd-add" href="<@s.url namespace="/system/schedule" action="add"/>" ajax="{type:'html',target:'closest(\'#page-content\')'}">
+        <a title="<@s.text name="schedule.button.add"/>" class="btn medium primary-bg dd-add" href="<@s.url namespace="/system/schedule" action="add"/>" target="after:closest('#page-content')">
             <span class="button-content">
                 <i class="glyph-icon icon-plus float:left"></i>
-                添加
+                <@s.text name="schedule.button.add"/>
             </span>
         </a>
         <div class="propertyFilter">
@@ -88,10 +100,10 @@
     </@s.form>
 </div>
 <div class="batch">
-    <a title="批量删除" class="btn small primary-bg batchDelete" href="<@s.url namespace="/system/schedule" action="delete"/>">
+    <a title="<@s.text name="schedule.button.batchdelete"/>" class="btn small primary-bg batchDelete" href="<@s.url namespace="/system/schedule" action="delete"/>">
         <span class="button-content">
             <i class="glyph-icon icon-trash float-left"></i>
-            批量删除
+            <@s.text name="schedule.button.batchdelete"/>
         </span>
     </a>
 </div>
@@ -102,13 +114,13 @@
             <th class="pad15L" style="width:20px;">
                 <input id="allChecked" class="custom-checkbox bg-white" checkAll=".id" type="checkbox" />
             </th>
-            <th>名称</th>
-            <th>类名</th>
-            <th>上次执行时间</th>
-            <th>下次执行时间</th>
-            <th width="10%">参数</th>
-            <th width="10%">触发器状态</th>
-            <th class="text-center" width="10%">操作</th>
+            <th><@s.text name="schedule.list.name"/></th>
+            <th><@s.text name="schedule.list.class"/></th>
+            <th><@s.text name="schedule.list.preFire"/></th>
+            <th><@s.text name="schedule.list.nextFire"/></th>
+            <th width="10%"><@s.text name="schedule.list.parameter"/></th>
+            <th width="10%"><@s.text name="schedule.list.running"/></th>
+            <th class="text-center" width="10%"><@s.text name="schedule.list.actions"/></th>
         </tr>
         </thead>
         <tbody>
@@ -130,28 +142,28 @@
                     </a>
                     <ul class="dropdown-menu float-right">
                         <li>
-                            <a title="执行" class="edit" href="<@s.url namespace="/system/schedule" action="resumeJob?jobKey={id}"/>" ajax="{type:'html',target:'closest(\'#page-content\')'}">
+                            <a title="<@s.text name="schedule.list.actions.run"/>" class="run" href="<@s.url namespace="/system/schedule/job" action="execute?group={group}&name={name}"/>" target="after:closest('#page-content')">
                                 <i class="glyph-icon icon-edit mrg5R"></i>
-                                执行
+                                <@s.text name="schedule.list.actions.run"/>
                             </a>
                         </li>
                         <li>
-                            <a title="中止" class="edit" href="<@s.url namespace="/system/schedule" action="pauseJob?jobKey={id}"/>" >
+                            <a title="<@s.text name="schedule.list.actions.suspend"/>" class="suspend" href="<@s.url namespace="/system/schedule" action="pauseJob?jobKey={id}"/>" >
                                 <i class="glyph-icon icon-edit mrg5R"></i>
-                                中止
+                                <@s.text name="schedule.list.actions.suspend"/>
                             </a>
                         </li>
                         <li>
-                            <a title="编辑" class="edit" href="<@s.url namespace="/system/schedule" action="edit?queryGroup={group}&queryJobName={name}&jobKey={id}"/>" ajax="{type:'html',target:'closest(\'#page-content\')'}">
+                            <a title="<@s.text name="schedule.list.actions.edit"/>" class="edit" href="<@s.url namespace="/system/schedule" action="edit?queryGroup={group}&queryJobName={name}&jobKey={id}"/>" target="after:closest('#page-content')">
                                 <i class="glyph-icon icon-edit mrg5R"></i>
-                                编辑
+                                <@s.text name="schedule.list.actions.edit"/>
                             </a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="###" class="font-red delete" title="删除">
+                            <a href="###" class="font-red delete" title="<@s.text name="schedule.list.actions.delete"/>">
                                 <i class="glyph-icon icon-remove mrg5R"></i>
-                                删除
+                                <@s.text name="schedule.list.actions.delete"/>
                             </a>
                         </li>
                     </ul>

@@ -65,6 +65,11 @@
             <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.3.2</version>
+        </dependency>
+        <dependency>
             <groupId>me.chanjar</groupId>
             <artifactId>weixin-java-mp</artifactId>
             <version>1.0.4</version>
