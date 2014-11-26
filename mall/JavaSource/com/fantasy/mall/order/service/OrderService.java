@@ -72,6 +72,19 @@ public class OrderService {
     }
 
     /**
+     * 查询订单
+     *
+     * @param filters 过滤条件
+     * @param orderBy 排序字段
+     * @param order 排序方向
+     * @param size  条数
+     * @return List<Order>
+     */
+    public List<Order> find(List<PropertyFilter> filters, String orderBy, String order,Integer size) {
+        return this.orderDao.find(filters, orderBy, order,0,size);
+    }
+
+    /**
      * 订单保存
      *
      * @param order 订单对象
