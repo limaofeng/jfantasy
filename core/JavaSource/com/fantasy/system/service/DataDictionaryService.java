@@ -5,15 +5,19 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.schedule.service.ScheduleService;
 import com.fantasy.system.bean.DataDictionary;
 import com.fantasy.system.bean.DataDictionaryKey;
 import com.fantasy.system.bean.DataDictionaryType;
 import com.fantasy.system.dao.DataDictionaryDao;
 import com.fantasy.system.dao.DataDictionaryTypeDao;
+import com.fantasy.system.job.DataDictJob;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.quartz.JobKey;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,9 +26,14 @@ import java.util.List;
 
 @Service
 @Transactional
-public class DataDictionaryService{
+public class DataDictionaryService implements InitializingBean {
 
     private static final Log logger = LogFactory.getLog(DataDictionaryService.class);
+
+    public static final JobKey jobKey = JobKey.jobKey("DataDictionary","SYSTEM");
+
+    @Resource
+    private ScheduleService scheduleService;
 
     @Resource
     private DataDictionaryTypeDao dataDictionaryTypeDao;
@@ -32,6 +41,13 @@ public class DataDictionaryService{
     @Resource
     private DataDictionaryDao dataDictionaryDao;
 
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if(this.scheduleService.checkExists(jobKey)) {
+            logger.debug("添加用于生成 json 文件的 Job ");
+            this.scheduleService.addJob(jobKey, DataDictJob.class);
+        }
+    }
 
     public List<DataDictionaryType> allTypes() {
         return dataDictionaryTypeDao.getAll();
