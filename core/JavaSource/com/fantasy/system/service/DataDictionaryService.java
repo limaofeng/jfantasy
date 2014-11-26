@@ -37,8 +37,8 @@ public class DataDictionaryService{
         return dataDictionaryTypeDao.getAll();
     }
 
-    public List<DataDictionaryType> allDataDicts() {
-        return dataDictionaryTypeDao.find(new Criterion[0], "sort", "asc");
+    public List<DataDictionary> allDataDicts() {
+        return dataDictionaryDao.find(new Criterion[0], "sort", "asc");
     }
 
     public DataDictionary get(DataDictionaryKey key) {
