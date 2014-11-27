@@ -339,6 +339,21 @@ public class GoodsService implements InitializingBean {
     }
 
     /**
+     * 查询分类
+     *
+     * @param filters 查询条件
+     * @param orderBy 排序字段
+     * @param order   排序方向
+     * @param start   结果集返回的开始位置
+     * @param size    结果集条数
+     * @return List<GoodsCategory>
+     */
+    public List<GoodsCategory> findGoodsCategory(List<PropertyFilter> filters, String orderBy, String order, int start, int size){
+        return this.goodsCategoryDao.find(filters,orderBy,order,start,size);
+    }
+
+
+    /**
      * 计算商品的存货及销售数量
      *
      * @param id 商品id
