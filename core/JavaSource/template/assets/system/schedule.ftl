@@ -44,12 +44,21 @@
             }]
         });
         //列表初始化
-        var jobs=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(jobInfos)" escapeHtml="false"/>;
+        var jobs=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(jobs)" escapeHtml="false"/>;
         var pager={"order":"asc","orderBy":null,"pageSize":15,"orderBySetted":false,"orders":[],"totalCount":0,"pageItems":jobs,"totalPage":1,"currentPage":1};
         var $grid = $('#view').dataGrid($('#searchFormPanel'),$('.batch'));
 
-        $grid.data('grid').view().on('add',function(data){
-
+        $grid.data('grid').view().on('add',function(){
+            $('.run',this.target).click(function(e){
+                $.post($(this).attr('href'),function(){
+                    $.msgbox({
+                        msg : '触发执行成功',
+                        type : 'success'
+                    });
+                });
+                return e.stopPropagation();
+            });
+            /*
             var trigger = data.triggerInfos[0];
             this.target.find('.preFire').text(trigger.preFire);
 
@@ -59,6 +68,7 @@
                 deleteMethod([data.id]);
                 return stopDefault(e);
             });
+            */
         });
 
         $grid.setJSON(pager);
@@ -132,13 +142,13 @@
                     </a>
                     <ul class="dropdown-menu float-right">
                         <li>
-                            <a title="<@s.text name="schedule.list.actions.run"/>" class="edit" href="<@s.url namespace="/system/schedule" action="resumeJob?jobKey={id}"/>" target="after:closest('#page-content')">
+                            <a title="<@s.text name="schedule.list.actions.run"/>" class="run" href="<@s.url namespace="/system/schedule/job" action="execute?group={group}&name={name}"/>" target="after:closest('#page-content')">
                                 <i class="glyph-icon icon-edit mrg5R"></i>
                                 <@s.text name="schedule.list.actions.run"/>
                             </a>
                         </li>
                         <li>
-                            <a title="<@s.text name="schedule.list.actions.suspend"/>" class="edit" href="<@s.url namespace="/system/schedule" action="pauseJob?jobKey={id}"/>" >
+                            <a title="<@s.text name="schedule.list.actions.suspend"/>" class="suspend" href="<@s.url namespace="/system/schedule" action="pauseJob?jobKey={id}"/>" >
                                 <i class="glyph-icon icon-edit mrg5R"></i>
                                 <@s.text name="schedule.list.actions.suspend"/>
                             </a>
