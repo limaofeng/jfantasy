@@ -23,6 +23,7 @@ import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.system.bean.DataDictionary;
 import com.fantasy.system.service.DataDictionaryService;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -193,7 +194,16 @@ public class OrderService {
      * @return {Order}
      */
     public Order get(String sn) {
-        Order order = this.orderDao.findUnique(Restrictions.eq("sn", sn));
+        return this.findUnique(Restrictions.eq("sn", sn));
+    }
+
+    /**
+     * 根据 criterions 获取对象
+     * @param criterions 筛选条件
+     * @return {Order}
+     */
+    public Order findUnique(Criterion... criterions) {
+        Order order = this.orderDao.findUnique(criterions);
         Hibernate.initialize(order);
         for (OrderItem item : order.getOrderItems()) {
             Hibernate.initialize(item);
