@@ -77,12 +77,12 @@ public class OrderService {
      *
      * @param filters 过滤条件
      * @param orderBy 排序字段
-     * @param order 排序方向
-     * @param size  条数
+     * @param order   排序方向
+     * @param size    条数
      * @return List<Order>
      */
-    public List<Order> find(List<PropertyFilter> filters, String orderBy, String order,Integer size) {
-        return this.orderDao.find(filters, orderBy, order,0,size);
+    public List<Order> find(List<PropertyFilter> filters, String orderBy, String order, Integer size) {
+        return this.orderDao.find(filters, orderBy, order, 0, size);
     }
 
     /**
@@ -199,11 +199,15 @@ public class OrderService {
 
     /**
      * 根据 criterions 获取对象
+     *
      * @param criterions 筛选条件
      * @return {Order}
      */
     public Order findUnique(Criterion... criterions) {
         Order order = this.orderDao.findUnique(criterions);
+        if (order == null) {
+            return null;
+        }
         Hibernate.initialize(order);
         for (OrderItem item : order.getOrderItems()) {
             Hibernate.initialize(item);
