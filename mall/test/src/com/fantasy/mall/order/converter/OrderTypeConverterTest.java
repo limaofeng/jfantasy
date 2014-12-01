@@ -202,6 +202,11 @@ public class OrderTypeConverterTest {
         filters.add(new PropertyFilter("EQS_testOrder.sn",subOrder.getSn()));
         List<Order> orders = orderService.find(filters,"id","asc");
         Assert.assertEquals(1,orders.size());
+
+        filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_testOrder.sn",subOrder.getSn()));
+        orders = orderService.find(filters,"id","asc");
+        Assert.assertEquals(1,orders.size());
     }
 
 }

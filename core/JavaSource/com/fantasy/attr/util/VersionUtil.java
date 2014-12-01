@@ -8,6 +8,7 @@ import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.attr.service.AttributeVersionService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.asm.AsmUtil;
+import com.fantasy.framework.util.asm.MethodInfo;
 import com.fantasy.framework.util.asm.Property;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
@@ -45,14 +46,18 @@ public class VersionUtil {
 
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
-        DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
+        DynaBean dynaBean = newInstance(makeClass(version));
         dynaBean.setVersion(version);
         return clazz.cast(dynaBean);
     }
 
+    private static DynaBean newInstance(Class clazz){
+        return (DynaBean) ClassUtil.newInstance(clazz);
+    }
+
     private static DynaBean createDynaBean(Class<?> clazz, String number, DynaBean bean) {
         AttributeVersion version = getVersion(clazz, number);
-        DynaBean dynaBean = (DynaBean) ClassUtil.newInstance(makeClass(version));
+        DynaBean dynaBean = newInstance(makeClass(version));
         dynaBean.setVersion(version);
         dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
         for (Attribute attribute : version.getAttributes()) {
@@ -66,10 +71,10 @@ public class VersionUtil {
     }
 
     public static AttributeVersion getVersion(Class<?> clazz, String number) {
-        if (!versionCache.containsKey(clazz.getName() + "$v" + number)) {
-            versionCache.putIfAbsent(clazz.getName() + "$v" + number, getAttributeVersionService().getVersion(clazz, number));
+        if (!versionCache.containsKey(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number)) {
+            versionCache.putIfAbsent(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number, getAttributeVersionService().getVersion(clazz, number));
         }
-        return versionCache.get(clazz.getName() + "$v" + number);
+        return versionCache.get(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number);
     }
 
     private synchronized static AttributeVersionService getAttributeVersionService() {
@@ -84,15 +89,50 @@ public class VersionUtil {
     }
 
     public static Class makeClass(AttributeVersion version) {
-        String className = version.getClassName() + "$v" + version.getNumber();
+        String className = version.getClassName() + ClassUtil.CGLIB_CLASS_SEPARATOR + version.getNumber();
         if (!dynaBeanClassCache.containsKey(className)) {
             String superClass = version.getClassName();
             List<Property> properties = new ArrayList<Property>();
+            List<MethodInfo> methodInfos = new ArrayList<MethodInfo>();
             for (Attribute attribute : version.getAttributes()) {
-                properties.add(new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType())));
+                final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
+                properties.add(property);
+                /*TODO 添加自动转换类型的拦截器
+                if (!String.class.isAssignableFrom(property.getType())) {
+                    methodInfos.add(new MethodInfo("set" + StringUtil.upperCaseFirst(property.getName()), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(String.class)}), null, new MethodCreator() {
+
+                        @Override
+                        public void execute(MethodVisitor mv) {
+                            String className = AsmContext.getContext().get("className", String.class);
+                            String newClassInternalName = className.replace('.', '/');
+
+                            String fieldName = property.getName();
+                            String descriptor = Type.getDescriptor(String.class);
+                            int[] loadAndReturnOf = AsmUtil.loadAndReturnOf(descriptor);
+
+                            Label l0 = new Label();
+                            Label l1 = new Label();
+                            Label l2 = new Label();
+
+                            mv.visitLabel(l0);
+                            mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
+                            mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND);
+                            mv.visitFieldInsn(Opcodes.PUTFIELD, newClassInternalName, fieldName, descriptor);
+                            mv.visitLabel(l1);
+                            mv.visitInsn(Opcodes.RETURN);
+                            mv.visitLabel(l2);
+//                            mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
+//                            mv.visitLocalVariable(fieldName, descriptor, AsmUtil.getSignature(String.class, new Class<?>[0]), l0, l2, 1);
+                            mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND); //ALOAD
+                            mv.visitMaxs(2, 2);
+                        }
+
+                    }));
+                }
+                */
             }
             logger.debug("dynaBeanClass:" + className);
-            dynaBeanClassCache.putIfAbsent(className, AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()])));
+            dynaBeanClassCache.putIfAbsent(className, AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()]), methodInfos.toArray(new MethodInfo[methodInfos.size()])));
         }
         return dynaBeanClassCache.get(className);
     }
