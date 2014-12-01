@@ -9,6 +9,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.security.bean.User;
+import com.fantasy.security.service.UserService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,6 +41,8 @@ public class AttributeVersionServiceTest {
     private AttributeTypeService attributeTypeService;
     @Resource
     private AttributeService attributeService;
+    @Resource
+    private UserService userService;
 
     @Before
     public void setUp() throws Exception {
@@ -84,6 +87,7 @@ public class AttributeVersionServiceTest {
         AttributeType userAttributeType = new AttributeType();
         userAttributeType.setName("用户类型");
         userAttributeType.setDataType(User.class.getName());
+        userAttributeType.setForeignKey("username");
         userAttributeType.setConverter(userConverter);
         userAttributeType.setDescription("");
         attributeTypeService.save(userAttributeType);
@@ -109,6 +113,10 @@ public class AttributeVersionServiceTest {
 
     @After
     public void tearDown() throws Exception {
+        for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
+            this.articleService.delete(art.getId());
+        }
+
         AttributeVersion version = attributeVersionService.getVersion(Article.class, "1.0");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
@@ -124,11 +132,15 @@ public class AttributeVersionServiceTest {
 
     public void testFindPager() throws Exception {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("LIKES_title_OR_summary","测试"));
-        filters.add(new PropertyFilter("EQS_title","测试"));
-        for(Article art : this.articleService.findPager(new Pager<Article>(),filters).getPageItems()){
-            logger.debug(art);
-        }
+        filters.add(new PropertyFilter("EQI_intTest","123"));
+        List<Article> articles =  this.articleService.findPager(new Pager<Article>(),filters).getPageItems();
+
+        Assert.assertEquals(1,articles.size());
+
+        Article article = articles.get(0);
+
+        Assert.assertEquals(123,VersionUtil.getOgnlUtil(ObjectUtil.find(article.getVersion().getAttributes(),"code","intTest").getAttributeType()).getValue("intTest",article));
+
     }
 
     @Test
@@ -170,10 +182,28 @@ public class AttributeVersionServiceTest {
 
         this.testFindPager();
 
+        this.testFind();
+
         for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
-            this.articleService.delete(art.getId());
+            logger.debug(art);
         }
 
+    }
+
+    private void testFind() {
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQI_intTest", "123"));
+        for(Article art : this.articleService.find(filters)){
+            logger.debug(art);
+        }
+        for(Article art : this.articleService.find(Restrictions.eq("intTest",Integer.valueOf("123")))){
+            logger.debug(art);
+        }
+        List<Article> articles = this.articleService.find(Restrictions.eq("user.username","admin"));
+        Assert.assertEquals(1,articles.size());
+        for(Article art : articles){
+            logger.debug(art);
+        }
     }
 
     public void testGet() throws Exception {

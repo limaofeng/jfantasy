@@ -2,15 +2,18 @@ package com.fantasy.attr.bean;
 
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.DynaBeanEntityPersister;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "TEST_Article")
+@Persister(impl = DynaBeanEntityPersister.class)
 public class Article extends BaseBusEntity implements DynaBean {
 
     @Id

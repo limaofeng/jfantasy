@@ -4,12 +4,22 @@ import com.fantasy.attr.bean.Article;
 import com.fantasy.attr.dao.ArticleDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.internal.CriteriaImpl;
+import org.hibernate.loader.criteria.CriteriaJoinWalker;
+import org.hibernate.loader.criteria.CriteriaQueryTranslator;
+import org.hibernate.persister.entity.OuterJoinLoadable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @Transactional
@@ -48,4 +58,7 @@ public class ArticleService {
         return this.articleDao.findUniqueBy(propertyName, value);
     }
 
+    public List<Article> find(List<PropertyFilter> filters) {
+        return this.articleDao.find(filters,"id","asc",0,10);
+    }
 }

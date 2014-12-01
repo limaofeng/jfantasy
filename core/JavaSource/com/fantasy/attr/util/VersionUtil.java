@@ -14,6 +14,7 @@ import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.framework.util.regexp.RegexpUtil;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -103,4 +104,20 @@ public class VersionUtil {
         return OgnlUtil.getInstance("attr-" + attributeType.getId());
     }
 
+    public static Attribute getAttribute(Class<?> entityClass, String propertyName) {
+        //TODO 如果不缓存，查询时可能有性能问题
+        List<AttributeVersion> versions = getAttributeVersionService().getVersions(entityClass);
+        for (AttributeVersion version : versions) {
+            AttributeVersion attributeVersion = VersionUtil.getVersion(entityClass, version.getNumber());
+            String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
+            Attribute attribute = ObjectUtil.find(attributeVersion.getAttributes(), "code", simpleName);
+            if (attribute != null) {
+                com.fantasy.framework.util.reflect.Property property = ClassUtil.getProperty(ClassUtil.forName(attribute.getAttributeType().getDataType()), RegexpUtil.replaceFirst(propertyName, simpleName + ".", ""));
+                if (property != null) {
+                    return attribute;
+                }
+            }
+        }
+        return null;
+    }
 }
