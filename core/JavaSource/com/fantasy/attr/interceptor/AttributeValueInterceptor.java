@@ -156,10 +156,11 @@ public class AttributeValueInterceptor {
                 for (PropertyFilter filter : (List<PropertyFilter>) arg) {
                     for (String propertyName : filter.getPropertyNames()) {
                         String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
-                        if (ObjectUtil.find(properties, "name", simpleName) == null) {
-                            if (simpleName.equals(propertyName)) {
-                                dynaBeanQuery.addColumn(propertyName, filter.getPropertyType());
-                            }
+                        if (ObjectUtil.find(properties, "name", simpleName) != null) {
+                            continue;
+                        }
+                        if (simpleName.equals(propertyName)) {
+                            dynaBeanQuery.addColumn(propertyName, filter.getPropertyType());
                         } else {
                             Attribute attribute = VersionUtil.getAttribute(entityClass, propertyName);
                             if (attribute != null && StringUtil.isNotBlank(attribute.getAttributeType().getForeignKey())) {
@@ -184,15 +185,16 @@ public class AttributeValueInterceptor {
                     } else {
                         String propertyName = (String) ReflectionUtils.getFieldValue(c, "propertyName");
                         String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
-                        if (ObjectUtil.find(properties, "name", simpleName) == null) {
-                            if (simpleName.equals(propertyName)) {
-                                Object value = ReflectionUtils.getFieldValue(c, "value");
-                                dynaBeanQuery.addColumn(propertyName, value.getClass());
-                            } else {
-                                Attribute attribute = VersionUtil.getAttribute(entityClass, propertyName);
-                                if (attribute != null && StringUtil.isNotBlank(attribute.getAttributeType().getForeignKey())) {
-                                    dynaBeanQuery.addColumn(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()), attribute.getAttributeType().getForeignKey());
-                                }
+                        if (ObjectUtil.find(properties, "name", simpleName) != null) {
+                            continue;
+                        }
+                        if (simpleName.equals(propertyName)) {
+                            Object value = ReflectionUtils.getFieldValue(c, "value");
+                            dynaBeanQuery.addColumn(propertyName, value.getClass());
+                        } else {
+                            Attribute attribute = VersionUtil.getAttribute(entityClass, propertyName);
+                            if (attribute != null && StringUtil.isNotBlank(attribute.getAttributeType().getForeignKey())) {
+                                dynaBeanQuery.addColumn(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()), attribute.getAttributeType().getForeignKey());
                             }
                         }
                     }

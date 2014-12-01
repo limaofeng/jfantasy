@@ -1,6 +1,7 @@
 package com.fantasy.mall.goods.bean;
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.DynaBeanEntityPersister;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
@@ -14,6 +15,7 @@ import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MALL_GOODS_CATEGORY")
+@Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "metaKeywords", "metaDescription", "goodsParameterStore", "brandCustomSort", "goods"})
 public class GoodsCategory extends BaseBusEntity implements DynaBean {
 

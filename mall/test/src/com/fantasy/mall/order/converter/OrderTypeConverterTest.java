@@ -73,6 +73,7 @@ public class OrderTypeConverterTest {
         AttributeType attributeType = new AttributeType();
         attributeType.setName("测试数据类");
         attributeType.setDataType(Order.class.getName());
+        attributeType.setForeignKey("sn");
         attributeType.setConverter(converter);
         attributeType.setDescription("");
         attributeTypeService.save(attributeType);
@@ -197,6 +198,10 @@ public class OrderTypeConverterTest {
         Order getOrder = orderService.get(order.getSn());
         Assert.assertEquals(subOrder.getSn(),ognlUtil.getValue("testOrder.sn", getOrder));
 
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_testOrder.sn",subOrder.getSn()));
+        List<Order> orders = orderService.find(filters,"id","asc");
+        Assert.assertEquals(1,orders.size());
     }
 
 }

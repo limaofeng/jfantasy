@@ -1,12 +1,14 @@
 package com.fantasy.cms.bean;
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.DynaBeanEntityPersister;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.*;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -22,6 +24,7 @@ import java.util.List;
 @Indexed
 @Entity
 @Table(name = "CMS_ARTICLE")
+@Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "content", "keywords", "version", "attributeValues"})
 public class Article extends BaseBusEntity implements DynaBean {
 
