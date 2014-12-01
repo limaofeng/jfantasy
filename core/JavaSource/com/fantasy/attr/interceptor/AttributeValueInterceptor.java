@@ -216,7 +216,7 @@ public class AttributeValueInterceptor {
     public Object save(ProceedingJoinPoint pjp, Object entity) throws Throwable {
         HibernateDao dao = (HibernateDao) pjp.getTarget();
         Class entityClass = (Class) ClassUtil.getValue(pjp.getTarget(), "entityClass");
-        if (!(entity != null && entity instanceof DynaBean && entity.getClass().getName().contains("$v") && entityClass.equals(entity.getClass().getSuperclass()))) {
+        if (!(entity != null && entity instanceof DynaBean && entity.getClass().getName().contains(ClassUtil.CGLIB_CLASS_SEPARATOR) && entityClass.equals(entity.getClass().getSuperclass()))) {
             return pjp.proceed(new Object[]{entity});
         }
         Long entityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
