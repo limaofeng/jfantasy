@@ -13,7 +13,6 @@ import org.hibernate.mapping.PersistentClass;
 import org.hibernate.metamodel.binding.EntityBinding;
 import org.hibernate.persister.entity.EntityPersister;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
-import org.hibernate.type.IntegerType;
 import org.hibernate.type.Type;
 
 public class DynaBeanEntityPersister extends SingleTableEntityPersister implements EntityPersister {
@@ -122,13 +121,7 @@ public class DynaBeanEntityPersister extends SingleTableEntityPersister implemen
             if (dynaBeanQuery.inColumn(propertyName)) {
                 return dynaBeanQuery.toType(propertyName,this.getFactory());
             }
-            if ("user".equals(propertyName)) {
-                //return new ManyToOneType( new TypeScopeImpl(), persistentClass );
-
-            } else if ("intTest".equals(propertyName)) {
-                return IntegerType.INSTANCE;
-            }
-            return null;
+            throw e;
         }
     }
 
