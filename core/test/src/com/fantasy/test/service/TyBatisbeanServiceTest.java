@@ -64,6 +64,11 @@ public class TyBatisbeanServiceTest {
         for (TyBatisbean t : tyBatisbeanList) {
             logger.debug(t);
         }
+        tyBatisbeanList =  tMyBatisbeanService.selectMultiParameters("test", "test");
+        logger.debug("size : " + tyBatisbeanList.size());
+        for (TyBatisbean t : tyBatisbeanList) {
+            logger.debug(t);
+        }
     }
 
     @Test

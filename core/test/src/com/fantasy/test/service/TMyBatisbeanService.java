@@ -41,4 +41,8 @@ public class TMyBatisbeanService {
     public Pager<TyBatisbean> findPager(Pager<TyBatisbean> pager, TyBatisbean tyBatisbean) {
         return this.tyBatisbeanDao.findPager(pager,tyBatisbean);
     }
+
+    public List<TyBatisbean> selectMultiParameters(String key, String value) {
+        return this.tyBatisbeanDao.selectMultiParameters(key, value);
+    }
 }

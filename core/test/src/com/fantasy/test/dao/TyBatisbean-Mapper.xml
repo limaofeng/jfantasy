@@ -15,6 +15,15 @@
         SELECT * FROM test_bean
     </select>
 
+    <select id="selectMultiParameters" resultMap="TestResultMap" flushCache="true">
+        SELECT * FROM test_bean
+        <where>
+            <if test=" key != null ">AND T_KEY = #{key} </if>
+            <if test=" value != null ">AND T_VALUE = #{value} </if>
+        </where>
+    </select>
+
+
     <select id="findPager" parameterType="com.fantasy.test.bean.TyBatisbean" resultMap="TestResultMap" flushCache="true">
         SELECT * FROM test_bean
         <where>
