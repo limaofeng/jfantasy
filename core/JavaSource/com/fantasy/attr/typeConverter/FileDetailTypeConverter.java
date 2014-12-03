@@ -23,8 +23,13 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
 
     @SuppressWarnings("rawtypes")
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        if (toType == FileDetail[].class) {
-            //fileM:/static/images/xxx.jpg,fileM:/static/images/xxx.jpg,fileM:/static/images/xxx.jpg
+        if (toType == FileDetail.class) {
+            if (StringUtil.isBlank(value) || value.toString().contains(":")) {
+                return null;
+            }
+            String[] arry = value.toString().split(":");
+            return fileService.getFileDetail(arry[1], arry[0]);
+        } else if (toType == FileDetail[].class) {
             String files = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
             if (StringUtil.isBlank(files)) {
                 return new FileDetail[0];
@@ -48,9 +53,12 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
                 fileDetails.add(fileDetail.clone());
             }
             return fileDetails.toArray(new FileDetail[fileDetails.size()]);
+        } else if (value instanceof FileDetail && toType == String.class) {
+            FileDetail fileDetail = (FileDetail) value;
+            return fileDetail.getFileManagerId() + ":" + fileDetail.getAbsolutePath();
         } else if (value instanceof FileDetail[] && toType == String.class) {
             StringBuilder stringBuilder = new StringBuilder();
-            for(FileDetail fileDetail : (FileDetail[])value){
+            for (FileDetail fileDetail : (FileDetail[]) value) {
                 stringBuilder.append(fileDetail.getFileManagerId()).append(":").append(fileDetail.getAbsolutePath()).append(",");
             }
             return stringBuilder.toString();
