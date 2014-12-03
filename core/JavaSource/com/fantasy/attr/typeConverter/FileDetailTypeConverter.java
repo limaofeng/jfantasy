@@ -24,7 +24,8 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
     @SuppressWarnings("rawtypes")
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (toType == FileDetail.class) {
-            if (StringUtil.isBlank(value) || value.toString().contains(":")) {
+            value = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            if (StringUtil.isBlank(value) || !value.toString().contains(":")) {
                 return null;
             }
             String[] arry = value.toString().split(":");
