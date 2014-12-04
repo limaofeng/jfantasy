@@ -74,6 +74,8 @@ public class CmsService extends BuguSearcher<Article> {
         return articlePager;
     }
 
+    private final static String ARTICLECATEGORY_PARENT_PROPERTYNAME = "parent";
+
     /**
      * 保存栏目
      *
@@ -90,7 +92,7 @@ public class CmsService extends BuguSearcher<Article> {
             category.setLayer(0);
             category.setPath(category.getCode() + ArticleCategory.PATH_SEPARATOR);
             root = true;
-            categories = ObjectUtil.sort(articleCategoryDao.find(Restrictions.isNull("parent")), "sort", "asc");
+            categories = ObjectUtil.sort(articleCategoryDao.find(Restrictions.isNull(ARTICLECATEGORY_PARENT_PROPERTYNAME)), "sort", "asc");
         } else {
             ArticleCategory parentCategory = this.articleCategoryDao.get(category.getParent().getCode());
             category.setLayer(parentCategory.getLayer() + 1);
@@ -98,16 +100,20 @@ public class CmsService extends BuguSearcher<Article> {
             categories = ObjectUtil.sort(articleCategoryDao.findBy("parent.code", parentCategory.getCode()), "sort", "asc");
         }
         ArticleCategory old = category.getCode() != null ? this.articleCategoryDao.get(category.getCode()) : null;
-        if (old != null) {// 更新数据
-            if (category.getSort() != null && (ObjectUtil.find(categories, "code", old.getCode()) == null || !old.getSort().equals(category.getSort()))) {
+        // 新增数据
+        if(old == null){
+            category.setSort(categories.size() + 1);
+            // 更新数据
+        }else {
+            if (category.getSort() != null) {
                 if (ObjectUtil.find(categories, "code", old.getCode()) == null) {// 移动了节点的层级
                     int i = 0;
-                    for (ArticleCategory m : ObjectUtil.sort((old.getParent() == null || StringUtil.isBlank(old.getParent().getCode())) ? articleCategoryDao.find(Restrictions.isNull("parent")) : articleCategoryDao.findBy("parent.id", old.getParent().getCode()), "sort", "asc")) {
+                    for (ArticleCategory m : ObjectUtil.sort((old.getParent() == null || StringUtil.isBlank(old.getParent().getCode())) ? articleCategoryDao.find(Restrictions.isNull(ARTICLECATEGORY_PARENT_PROPERTYNAME)) : articleCategoryDao.findBy("parent.id", old.getParent().getCode()), "sort", "asc")) {
                         m.setSort(i++);
                         this.articleCategoryDao.save(m);
                     }
                     categories.add(category.getSort() - 1, category);
-                } else {
+                } else if(!old.getSort().equals(category.getSort())) {
                     ArticleCategory t = ObjectUtil.remove(categories, "code", old.getCode());
                     if (categories.size() >= category.getSort()) {
                         categories.add(category.getSort() - 1, t);
@@ -125,8 +131,6 @@ public class CmsService extends BuguSearcher<Article> {
                     this.articleCategoryDao.save(m);
                 }
             }
-        } else {// 新增数据
-            category.setSort(categories.size() + 1);
         }
         this.articleCategoryDao.save(category);
         if (root) {
@@ -273,7 +277,7 @@ public class CmsService extends BuguSearcher<Article> {
     }
 
     public List<ArticleCategory> listArticleCategory() {
-        return this.articleCategoryDao.find(Restrictions.isNull("parent"));
+        return this.articleCategoryDao.find(Restrictions.isNull(ARTICLECATEGORY_PARENT_PROPERTYNAME));
     }
 
     public static List<ArticleCategory> articleCategoryList() {
