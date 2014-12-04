@@ -172,7 +172,7 @@ public class CmsService extends BuguSearcher<Article> {
         if (StringUtil.isBlank(article.getSummary()) && StringUtil.isNotBlank(article.getContent())) {
             TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent().getContent());
             String content = node.getText().toString().trim().replace("\n", "");
-            String summary = content.substring(0,content.length()>=10?10:content.length());
+            String summary = content.substring(0, content.length() >= 10 ? 10 : content.length());
             article.setSummary(summary);
         }
         return article;
@@ -186,6 +186,9 @@ public class CmsService extends BuguSearcher<Article> {
      */
     public Article get(Long id) {
         Article article = this.articleDao.get(id);
+        if (article == null) {
+            return null;
+        }
         Hibernate.initialize(article.getCategory());
         Hibernate.initialize(article.getContent());
         Hibernate.initialize(article.getVersion());

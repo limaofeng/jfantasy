@@ -1,8 +1,14 @@
 package com.fantasy.security.web.filter;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.security.SpringSecurityUtils;
+import org.springframework.beans.factory.annotation.Required;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -11,17 +17,9 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.springframework.beans.factory.annotation.Required;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-import org.springframework.web.filter.GenericFilterBean;
-
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.security.SpringSecurityUtils;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 自动以默认用户名登录的filter, 用于开发时不需要每次进入登录页面.s
@@ -60,10 +58,10 @@ public class AutoLoginFilter extends GenericFilterBean {
 		}
 		if (this.logger.isDebugEnabled()) {
 			StringBuffer buffer = new StringBuffer("\r\n自动登陆配置信息:");
-			buffer.append("\r\nenabled:" + enabled);
-			buffer.append("\r\ndefaultUserName:" + defaultUserName);
-			buffer.append("\r\nuserDetailsServiceBeanName:" + userDetailsServiceBeanName);
-			buffer.append("\r\nuserDetailsService:" + userDetailsService);
+			buffer.append("\r\nenabled:").append(enabled);
+			buffer.append("\r\ndefaultUserName:").append(defaultUserName);
+			buffer.append("\r\nuserDetailsServiceBeanName:").append(userDetailsServiceBeanName);
+			buffer.append("\r\nuserDetailsService:").append(userDetailsService);
 			logger.debug(buffer);
 		}
 	}
