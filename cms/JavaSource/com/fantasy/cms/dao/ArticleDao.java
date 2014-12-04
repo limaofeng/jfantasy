@@ -47,8 +47,8 @@ public class ArticleDao extends HibernateDao<Article, Long> implements LuceneDao
 			ArticleCategory category = (ArticleCategory) this.getSession().get(ArticleCategory.class, (Serializable) filter.getPropertyValue());
 			likePathCriterion = Restrictions.like("category.path", category.getPath(), MatchMode.START);
 		}
-		filters = filters == null ? new ArrayList<PropertyFilter>() : filters;
-		Criterion[] criterions = super.buildPropertyFilterCriterions(filters);
+		List<PropertyFilter> _newFilters = filters == null ? new ArrayList<PropertyFilter>() : filters;
+		Criterion[] criterions = super.buildPropertyFilterCriterions(_newFilters);
 		criterions = ObjectUtil.join(criterions, likePathCriterion);
 		return criterions;
 	}

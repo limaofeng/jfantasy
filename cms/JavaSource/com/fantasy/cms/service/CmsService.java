@@ -40,7 +40,7 @@ import java.util.List;
 @Transactional
 public class CmsService extends BuguSearcher<Article> {
 
-    private static final Log logger = LogFactory.getLog(CmsService.class);
+    private static final Log LOG = LogFactory.getLog(CmsService.class);
 
     @Resource
     private ArticleCategoryDao articleCategoryDao;
@@ -83,8 +83,8 @@ public class CmsService extends BuguSearcher<Article> {
      * @return string
      */
     public ArticleCategory save(ArticleCategory category) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("保存栏目 > " + JSON.serialize(category));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
         List<ArticleCategory> categories;
         boolean root = false;
@@ -169,12 +169,12 @@ public class CmsService extends BuguSearcher<Article> {
      * @return Article
      */
     public Article save(Article article) {
-        if (logger.isDebugEnabled()) {
-            logger.debug("保存文章 > " + JSON.serialize(article));
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("保存文章 > " + JSON.serialize(article));
         }
         this.articleDao.save(article);
         if (StringUtil.isBlank(article.getSummary()) && StringUtil.isNotBlank(article.getContent())) {
-            TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent().getContent());
+            TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent().getText());
             String content = node.getText().toString().trim().replace("\n", "");
             String summary = content.substring(0, content.length() >= 10 ? 10 : content.length());
             article.setSummary(summary);
@@ -305,6 +305,7 @@ public class CmsService extends BuguSearcher<Article> {
                 configuration.getTemplate(newTemplateUrl);
                 return newTemplateUrl;
             } catch (IOException e) {
+                LOG.error(e.getMessage(),e);
                 if (category.getParent() == null) {
                     break;
                 }
