@@ -100,7 +100,6 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
 
         ActionProxy proxy = super.getActionProxy("/cms/article/search.do");
         Assert.assertNotNull(proxy);
-        proxy.setExecuteResult(false);
 
         String result = proxy.execute();
         Assert.assertEquals(ActionConstants.JSONDATA, result);
@@ -119,7 +118,6 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
 
         ActionProxy proxy = super.getActionProxy("/cms/article/article_save.do");
         Assert.assertNotNull(proxy);
-        proxy.setExecuteResult(false);
 
         String result = proxy.execute();
         Assert.assertEquals(ActionConstants.JSONDATA, result);
@@ -182,7 +180,6 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
 
         ActionProxy proxy = super.getActionProxy("/cms/article/article_issue.do");
         Assert.assertNotNull(proxy);
-        proxy.setExecuteResult(false);
 
         String result = proxy.execute();
 
@@ -206,7 +203,6 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
 
         ActionProxy proxy = super.getActionProxy("/cms/article/article_colse.do");
         Assert.assertNotNull(proxy);
-        proxy.setExecuteResult(false);
 
         String result = proxy.execute();
 
@@ -229,7 +225,6 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("ids",articles.get(0).getId().toString());
         ActionProxy proxy = super.getActionProxy("/cms/article/article_delete.do");
         Assert.assertNotNull(proxy);
-        proxy.setExecuteResult(false);
 
         String result = proxy.execute();
 
@@ -332,7 +327,6 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
 
         ActionProxy proxy = super.getActionProxy("/cms/article/move.do");
         Assert.assertNotNull(proxy);
-        proxy.setExecuteResult(false);
 
         String result = proxy.execute();
 
