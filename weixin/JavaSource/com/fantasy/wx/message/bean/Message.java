@@ -20,7 +20,7 @@ public class Message {
     private Long id;
     //表示是由客户端还是服务端发送的消息send客户端发送到服务端为client
     @Column(name = "TYPE")
-    private String type="client";
+    private String type = "client";
 
     @Column(name = "TO_USER_NAME")
     private String toUserName;
@@ -37,8 +37,8 @@ public class Message {
     }
 
     public void setFromUserName(String fromUserName) {
-        if(userInfo==null)
-            userInfo=new UserInfo();
+        if (userInfo == null)
+            userInfo = new UserInfo();
         userInfo.setOpenId(fromUserName);
         this.fromUserName = fromUserName;
     }
@@ -49,7 +49,7 @@ public class Message {
     @Column(name = "MSG_TYPE")
     private String msgType;
 
-    @Column(name = "CONTENT",length = 1000)
+    @Column(name = "CONTENT", length = 1000)
     private String content;
 
     @Column(name = "MSG_ID")

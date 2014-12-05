@@ -24,27 +24,27 @@ public class GroupMessage {
     /**
      * 消息类型
      */
-    @Column(name = "MSG_TYPE",length =50)
+    @Column(name = "MSG_TYPE", length = 50)
     private String msgType;
     /**
      * 文本消息内容
      */
-    @Column(name = "CONTENT",length =1000)
+    @Column(name = "CONTENT", length = 1000)
     private String content;
     /**
      * 媒体消息id
      */
-    @Column(name = "MEDIA_ID",length =100)
+    @Column(name = "MEDIA_ID", length = 100)
     private String mediaId;
     /**
      * 分组的id通过group api 获取
      */
-    @Column(name = "GROUP_ID",length =50)
+    @Column(name = "GROUP_ID", length = 50)
     private Long groupId;
     /**
      * openid列表消息集合
      */
-    @Column(name = "TO_USERS_DATA",length =5000)
+    @Column(name = "TO_USERS_DATA", length = 5000)
     private String toUsersData;
 
     @Transient
@@ -71,7 +71,7 @@ public class GroupMessage {
     }
 
     public void setToUsersData(String toUsersData) {
-        toUsers=JSON.deserialize(toUsersData,new TypeReference<List<String>>() {
+        toUsers = JSON.deserialize(toUsersData, new TypeReference<List<String>>() {
         });
         this.toUsersData = toUsersData;
     }
@@ -106,7 +106,7 @@ public class GroupMessage {
 
     public void setToUsers(List<String> toUsers) {
         this.toUsers = toUsers;
-        this.toUsersData=JSON.serialize(toUsers);
+        this.toUsersData = JSON.serialize(toUsers);
     }
 
     public Long getGroupId() {

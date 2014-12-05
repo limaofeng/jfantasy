@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "WX_CONFIG")
-public class WeixinConfig extends BaseBusEntity{
+public class WeixinConfig extends BaseBusEntity {
     //开发者凭证
     @Id
     @Column(name = "APP_ID", length = 200)
@@ -24,7 +24,7 @@ public class WeixinConfig extends BaseBusEntity{
     private String appsecret;
 
     //微信服务器配置的token
-    @Column(name = "TOKEN_NAME", length =200)
+    @Column(name = "TOKEN_NAME", length = 200)
     private String tokenName;
     // 获取到的凭证
     @Column(name = "TOKEN", length = 500)
@@ -40,13 +40,15 @@ public class WeixinConfig extends BaseBusEntity{
     public void setToken(String token) {
         this.token = token;
     }
+
     public Integer getExpiresIn() {
         return expiresIn;
     }
+
     public String getExpiresInTime() {
-        if(expiresIn==null) return "";
-        SimpleDateFormat  sdf=new SimpleDateFormat("hh:mm:ss");
-        return sdf.format(new Date(expiresIn*1000L));
+        if (expiresIn == null) return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm:ss");
+        return sdf.format(new Date(expiresIn * 1000L));
     }
 
     public void setExpiresIn(int expiresIn) {

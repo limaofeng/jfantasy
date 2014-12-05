@@ -5,6 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.config.init.WeixinConfigInit;
 import com.fantasy.wx.user.bean.WxGroup;
+import com.fantasy.wx.user.service.impl.WxGroupService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,51 +45,51 @@ public class WxWxGroupServiceTest {
     }
 
     public void testGetAll() throws Exception {
-        List<WxGroup> list= wxGroupService.getAll();
+        List<WxGroup> list = wxGroupService.getAll();
         Assert.assertNotNull(list);
         logger.debug(JSON.serialize(list));
     }
 
     @Test
     public void testDelete() throws Exception {
-        List<PropertyFilter> list=new ArrayList<PropertyFilter>();
-        list.add(new PropertyFilter("LIKES_name","测试"));
-        Pager<WxGroup> pager= wxGroupService.findPager(new Pager<WxGroup>(),list);
+        List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+        list.add(new PropertyFilter("LIKES_name", "测试"));
+        Pager<WxGroup> pager = wxGroupService.findPager(new Pager<WxGroup>(), list);
         wxGroupService.delete(pager.getPageItems().get(0).getId());
     }
 
     @Test
     public void testUpdate() throws Exception {
-        List<PropertyFilter> list=new ArrayList<PropertyFilter>();
-        list.add(new PropertyFilter("LIKES_name","测试"));
-        Pager<WxGroup> pager= wxGroupService.findPager(new Pager<WxGroup>(),list);
-        Long id=pager.getPageItems().get(0).getId();
-        wxGroupService.update(id,"测试2");
+        List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+        list.add(new PropertyFilter("LIKES_name", "测试"));
+        Pager<WxGroup> pager = wxGroupService.findPager(new Pager<WxGroup>(), list);
+        Long id = pager.getPageItems().get(0).getId();
+        wxGroupService.update(id, "测试2");
         WxGroup wxGroup = wxGroupService.getGroup(id);
-        Assert.assertEquals(wxGroup.getName(),"测试2");
+        Assert.assertEquals(wxGroup.getName(), "测试2");
         logger.debug(wxGroup);
 
     }
 
     @Test
     public void testRefreshGroup() throws Exception {
-        List<WxGroup> list= wxGroupService.refreshGroup();
+        List<WxGroup> list = wxGroupService.refreshGroup();
         Assert.assertNotNull(list);
         logger.debug(JSON.serialize(list));
     }
 
     @Test
     public void testGetGroup1() throws Exception {
-        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage)config.getWxMpConfigStorage();
-        Long groupId= wxGroupService.getUserGroup(configProvider.getOpenId());
+        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) config.getWxMpConfigStorage();
+        Long groupId = wxGroupService.getUserGroup(configProvider.getOpenId());
         Assert.assertNotNull(groupId);
         logger.debug(groupId);
     }
 
     @Test
     public void testMoveGroup() throws Exception {
-        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage)config.getWxMpConfigStorage();
-        int i= wxGroupService.moveGroup(configProvider.getOpenId(),1L);
-        Assert.assertEquals(i,0);
+        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) config.getWxMpConfigStorage();
+        int i = wxGroupService.moveGroup(configProvider.getOpenId(), 1L);
+        Assert.assertEquals(i, 0);
     }
 }

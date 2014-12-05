@@ -5,6 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.config.init.WeixinConfigInit;
 import com.fantasy.wx.message.bean.GroupMessage;
+import com.fantasy.wx.message.service.impl.GroupMessageService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,49 +42,50 @@ public class GroupMessageServiceTest {
 
     @Test
     public void testFindPager() throws Exception {
-        Pager<GroupMessage> p=new Pager<GroupMessage>();
-        List<PropertyFilter> list=new ArrayList<PropertyFilter>();
-        list.add(new PropertyFilter("EQS_content","test@"));
-        Pager<GroupMessage> pager= groupMessageService.findPager(p,list);
+        Pager<GroupMessage> p = new Pager<GroupMessage>();
+        List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+        list.add(new PropertyFilter("EQS_content", "test@"));
+        Pager<GroupMessage> pager = groupMessageService.findPager(p, list);
         Assert.assertNotNull(pager.getPageItems());
         logger.debug(JSON.serialize(pager));
     }
 
     public void testDelete() throws Exception {
-        Pager<GroupMessage> pager= groupMessageService.findPager(new Pager<GroupMessage>(),new ArrayList<PropertyFilter>());
+        Pager<GroupMessage> pager = groupMessageService.findPager(new Pager<GroupMessage>(), new ArrayList<PropertyFilter>());
         groupMessageService.delete(pager.getPageItems().get(0).getId());
     }
 
     @Test
     public void testGetOutMessage() throws Exception {
-        Pager<GroupMessage> pager= groupMessageService.findPager(new Pager<GroupMessage>(),new ArrayList<PropertyFilter>());
-        GroupMessage o= groupMessageService.getOutMessage(pager.getPageItems().get(0).getId());
+        Pager<GroupMessage> pager = groupMessageService.findPager(new Pager<GroupMessage>(), new ArrayList<PropertyFilter>());
+        GroupMessage o = groupMessageService.getGroupMessage(pager.getPageItems().get(0).getId());
         Assert.assertNotNull(o);
         logger.debug(JSON.serialize(o));
     }
 
     public void testSave() throws Exception {
-        GroupMessage groupMessage =new GroupMessage();
+        GroupMessage groupMessage = new GroupMessage();
         groupMessage.setContent("test@");
         groupMessage.setMsgType("text");
 
         groupMessage.setToUsers(createOpenId());
         groupMessageService.save(groupMessage);
     }
-    public List<String> createOpenId(){
-        List<String> list=new ArrayList<String>();
-        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage)config.getWxMpConfigStorage();
+
+    public List<String> createOpenId() {
+        List<String> list = new ArrayList<String>();
+        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) config.getWxMpConfigStorage();
         list.add(configProvider.getOpenId());
         return list;
     }
 
     @Test
     public void testSendGroupMessage() throws Exception {
-        groupMessageService.sendGroupMessage(1L, "福建省快乐group");
+        groupMessageService.sendTextGroupMessage(1L, "福建省快乐group");
     }
 
     @Test
     public void testSendOpenIdMessage() throws Exception {
-        groupMessageService.sendOpenIdMessage(createOpenId(),"福建省快乐openId");
+        groupMessageService.sendTextOpenIdMessage(createOpenId(), "福建省快乐openId");
     }
 }

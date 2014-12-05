@@ -1,9 +1,10 @@
-package com.fantasy.wx.config.service;
+package com.fantasy.wx.config.service.impl;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.config.bean.WeixinConfig;
 import com.fantasy.wx.config.dao.WeixinConfigDao;
+import com.fantasy.wx.config.service.IConfigService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,41 +16,36 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class WeixinConfigService {
+public class WeixinConfigService implements IConfigService {
 
     @Resource
     private WeixinConfigDao weixinConfigDao;
 
-    public List<WeixinConfig> getAll(){
+    @Override
+    public List<WeixinConfig> getAll() {
         return weixinConfigDao.getAll();
     }
-    /**
-     * 列表查询
-     *
-     * @param pager
-     *            分页
-     * @param filters
-     *            查询条件
-     * @return
-     */
+
+    @Override
     public Pager<WeixinConfig> findPager(Pager<WeixinConfig> pager, List<PropertyFilter> filters) {
         return this.weixinConfigDao.findPager(pager, filters);
     }
-    public WeixinConfig save(WeixinConfig wc){
+
+    @Override
+    public WeixinConfig save(WeixinConfig wc) {
         weixinConfigDao.save(wc);
         return wc;
     }
-    /**
-     * 根据id 批量删除
-     *
-     * @param ids
-     */
+
+    @Override
     public void delete(String... ids) {
         for (String id : ids) {
-            WeixinConfig m=this.weixinConfigDao.get(id);
+            WeixinConfig m = this.weixinConfigDao.get(id);
             this.weixinConfigDao.delete(m);
         }
     }
+
+    @Override
     public WeixinConfig get(String id) {
         return this.weixinConfigDao.get(id);
     }

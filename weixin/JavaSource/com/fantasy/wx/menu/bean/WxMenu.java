@@ -14,17 +14,20 @@ import java.util.List;
  */
 @Entity
 @Table(name = "WX_MENU")
-public class WxMenu extends BaseBusEntity{
-    public WxMenu(){}
-    public WxMenu(String name, String type, Integer layer, Integer sort, String url, String key,WxMenu parent){
-        this.name=name;
-        this.type=type;
-        this.layer=layer;
-        this.sort=sort;
-        this.url=url;
-        this.key=key;
-        this.parent=parent;
+public class WxMenu extends BaseBusEntity {
+    public WxMenu() {
     }
+
+    public WxMenu(String name, String type, Integer layer, Integer sort, String url, String key, WxMenu parent) {
+        this.name = name;
+        this.type = type;
+        this.layer = layer;
+        this.sort = sort;
+        this.url = url;
+        this.key = key;
+        this.parent = parent;
+    }
+
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")

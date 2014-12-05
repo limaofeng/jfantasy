@@ -16,11 +16,6 @@ public class QRCode {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-    /**
-     * 获取的二维码ticket，凭借此ticket可以在有效时间内换取二维码。
-     */
-    @Column(name = "TICKET")
-    protected String ticket;
     @Column(name = "CREATE_TIME")
     protected Date createTime;
     /**
@@ -36,6 +31,9 @@ public class QRCode {
     //关联的关键字
     @Column(name = "LINK_KEY")
     private String linkKey;
+    //图片路径
+    @Column(name = "IMG_PATH", length = 800)
+    private String imgPath;
 
     public Long getId() {
         return id;
@@ -43,14 +41,6 @@ public class QRCode {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getTicket() {
-        return ticket;
-    }
-
-    public void setTicket(String ticket) {
-        this.ticket = ticket;
     }
 
     public String getUrl() {
@@ -83,5 +73,13 @@ public class QRCode {
 
     public void setCreateTime(Date createTime) {
         this.createTime = createTime;
+    }
+
+    public String getImgPath() {
+        return imgPath;
+    }
+
+    public void setImgPath(String imgPath) {
+        this.imgPath = imgPath;
     }
 }
