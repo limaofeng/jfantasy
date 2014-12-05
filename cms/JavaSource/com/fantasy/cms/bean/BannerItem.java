@@ -116,4 +116,14 @@ public class BannerItem extends BaseBusEntity {
         this.banner = banner;
     }
 
+    @Override
+    public String toString() {
+        return "BannerItem{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", summary='" + summary + '\'' +
+                ", url='" + url + '\'' +
+                ", bannerImageStore='" + bannerImageStore + '\'' +
+                '}';
+    }
 }

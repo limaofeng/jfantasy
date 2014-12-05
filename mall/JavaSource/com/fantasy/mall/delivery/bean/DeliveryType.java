@@ -59,7 +59,6 @@ public class DeliveryType extends BaseBusEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
 	@JoinColumn(name = "DELIVERY_CORP_ID",foreignKey = @ForeignKey(name = "MALL_DELIVERY_TYPE_CORP"))
-
 	private DeliveryCorp defaultDeliveryCorp; // 默认物流公司
 
 	@OneToMany(mappedBy = "deliveryType", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)

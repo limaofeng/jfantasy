@@ -18,6 +18,9 @@
         $page$.one('destroy',function(){
             $(window).unbind('resize',_resize);
         });
+        $page$.on('refresh',function(){
+            $grid.data('grid').pager().reload();
+        });
         var $advsearch = $('.propertyFilter').advsearch({
             filters : [{
                 name : 'S_code',

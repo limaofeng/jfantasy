@@ -65,11 +65,18 @@ public class Photo extends BaseBusEntity {
     }
 
     public Date getTime() {
-        return this.time;
+        if (this.time == null) {
+            return null;
+        }
+        return (Date) this.time.clone();
     }
 
     public void setTime(Date time) {
-        this.time = time;
+        if (time == null) {
+            this.time = null;
+        } else {
+            this.time = (Date) time.clone();
+        }
     }
 
     public String getPoiName() {

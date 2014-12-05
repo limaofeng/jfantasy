@@ -12,7 +12,6 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import org.hibernate.Hibernate;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -53,6 +52,10 @@ public class AttributeVersionService {
         }
     }
 
+    public List<AttributeVersion> getVersions(Class<?> entityClass) {
+        return this.attributeVersionDao.find(Restrictions.eq("className", entityClass.getName()));
+    }
+
     /**
      * 通过 version id 加载全部版本相关的完整数据
      *
@@ -62,7 +65,7 @@ public class AttributeVersionService {
      */
     public AttributeVersion getVersion(Class clazz, String number) {
         AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("className", clazz.getName()), Restrictions.eq("number", number));
-        if(version == null){
+        if (version == null) {
             return null;
         }
         AttributeVersion _rev = BeanUtil.copyProperties(new AttributeVersion(), version);
@@ -117,19 +120,20 @@ public class AttributeVersionService {
     /**
      * 获取版本列表
      *
-     * @return
+     * @return List<AttributeVersion>
      */
     public List<AttributeVersion> getAttributeVersions() {
-        return this.attributeVersionDao.find(new Criterion[0]);
+        return this.attributeVersionDao.find();
     }
 
     /**
      * 静态获取版本列表
      *
-     * @return
+     * @return List<AttributeVersion>
      */
     public static List<AttributeVersion> listAttributeVersions() {
         AttributeVersionService versionService = SpringContextUtil.getBeanByType(AttributeVersionService.class);
         return versionService.getAttributeVersions();
     }
+
 }

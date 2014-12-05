@@ -5,10 +5,8 @@ import com.fantasy.mall.order.bean.Order;
 import com.fantasy.mall.order.bean.OrderItem;
 import com.fantasy.mall.order.service.OrderService;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -33,8 +31,8 @@ public class OrderInvalidInterceptor {
      *
      * @param point {}
      */
-    @After("execution(public * com.fantasy.mall.order.service.OrderService.invalid(..))")
-    @Transactional
+    //@After("execution(public * com.fantasy.mall.order.service.OrderService.invalid(..))")
+    //@Transactional
     public void revertFreezeStore(JoinPoint point) {
         for (Long orderId : (Long[]) point.getArgs()[0]) {
             if (orderId == null)

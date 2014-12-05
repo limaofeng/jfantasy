@@ -1,6 +1,7 @@
 package com.fantasy.framework.struts2;
 
 import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.opensymphony.xwork2.Preparable;
 import com.opensymphony.xwork2.inject.Inject;
 import org.apache.struts2.interceptor.*;
@@ -23,7 +24,7 @@ public class ActionSupport extends com.opensymphony.xwork2.ActionSupport impleme
     private String pageTheme;
 
     public void setRequest(Map<String, Object> attrs) {
-        this.attrs = attrs;
+        this.attrs = ObjectUtil.defaultValue(attrs,new HashMap<String, Object>());
     }
 
     public void setServletRequest(HttpServletRequest request) {
@@ -35,11 +36,11 @@ public class ActionSupport extends com.opensymphony.xwork2.ActionSupport impleme
     }
 
     public void setSession(Map<String, Object> session) {
-        this.session = session;
+        this.session = ObjectUtil.defaultValue(session,new HashMap<String, Object>());
     }
 
     public void setCookiesMap(Map<String, String> cookiesMap) {
-        this.cookies = cookiesMap;
+        this.cookies = ObjectUtil.defaultValue(cookiesMap,new HashMap<String, String>());
     }
 
     public void prepare() throws Exception {

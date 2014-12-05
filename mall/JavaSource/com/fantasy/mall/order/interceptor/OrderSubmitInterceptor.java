@@ -5,10 +5,8 @@ import com.fantasy.mall.goods.service.ProductService;
 import com.fantasy.mall.order.bean.Order;
 import com.fantasy.mall.order.bean.OrderItem;
 import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 
@@ -31,8 +29,8 @@ public class OrderSubmitInterceptor {
      *
      * @param point JoinPoint
      */
-    @After("execution(public * com.fantasy.mall.order.service.OrderService.submitOrder(..))")
-    @Transactional
+    //@After("execution(public * com.fantasy.mall.order.service.OrderService.submitOrder(..))")
+    //@Transactional
     public void freshCart(JoinPoint point) {
         Order order = (Order) point.getArgs()[0];
         for (OrderItem orderItem : order.getOrderItems()) {
@@ -46,8 +44,8 @@ public class OrderSubmitInterceptor {
      *
      * @param point JoinPoint
      */
-    @After("execution(public * com.fantasy.mall.order.service.OrderService.submitOrder(..))")
-    @Transactional
+    //@After("execution(public * com.fantasy.mall.order.service.OrderService.submitOrder(..))")
+    //@Transactional
     public void freezeStore(JoinPoint point) {
         Order order = (Order) point.getArgs()[0];
         for (OrderItem orderItem : order.getOrderItems()) {

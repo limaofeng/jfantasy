@@ -460,7 +460,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 continue;
             }
             try {
-                if (formbean instanceof DynaBean) {
+                //如果 bean 为 动态 bean 同时动态数据版本不为 null 时,设置动态属性
+                if (formbean instanceof DynaBean && ((DynaBean) formbean).getVersion() != null) {
                     Attribute attribute = ObjectUtil.find(((DynaBean) formbean).getVersion().getAttributes(), "code", name);
                     if (attribute != null) {
                         VersionUtil.getOgnlUtil(attribute.getAttributeType()).setValue(name, formbean, value);

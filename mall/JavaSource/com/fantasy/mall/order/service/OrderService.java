@@ -23,6 +23,7 @@ import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.system.bean.DataDictionary;
 import com.fantasy.system.service.DataDictionaryService;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -69,6 +70,19 @@ public class OrderService {
      */
     public List<Order> find(List<PropertyFilter> filters, String orderBy, String order) {
         return this.orderDao.find(filters, orderBy, order);
+    }
+
+    /**
+     * 查询订单
+     *
+     * @param filters 过滤条件
+     * @param orderBy 排序字段
+     * @param order   排序方向
+     * @param size    条数
+     * @return List<Order>
+     */
+    public List<Order> find(List<PropertyFilter> filters, String orderBy, String order, Integer size) {
+        return this.orderDao.find(filters, orderBy, order, 0, size);
     }
 
     /**
@@ -151,6 +165,10 @@ public class OrderService {
         if (ObjectUtil.isNotNull(SpringSecurityUtils.getCurrentUser(MemberUser.class))) {
             order.setMember(SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser());
         }
+        //解决附言不能为空的问题
+        if (StringUtil.isBlank(order.getMemo())) {
+            order.setMemo("");
+        }
         order.setTotalAmount(order.getTotalProductPrice().add(order.getDeliveryFee()));// 订单总金额(商品金额+邮费)
         this.orderDao.save(order);
         for (OrderItem item : order.getOrderItems()) {
@@ -163,7 +181,7 @@ public class OrderService {
      *
      * @param ids 订单Ids
      */
-    public void delete(Long[] ids) {
+    public void delete(Long... ids) {
         for (Long id : ids) {
             this.orderDao.delete(id);
         }
@@ -176,7 +194,20 @@ public class OrderService {
      * @return {Order}
      */
     public Order get(String sn) {
-        Order order = this.orderDao.findUnique(Restrictions.eq("sn", sn));
+        return this.findUnique(Restrictions.eq("sn", sn));
+    }
+
+    /**
+     * 根据 criterions 获取对象
+     *
+     * @param criterions 筛选条件
+     * @return {Order}
+     */
+    public Order findUnique(Criterion... criterions) {
+        Order order = this.orderDao.findUnique(criterions);
+        if (order == null) {
+            return null;
+        }
         Hibernate.initialize(order);
         for (OrderItem item : order.getOrderItems()) {
             Hibernate.initialize(item);

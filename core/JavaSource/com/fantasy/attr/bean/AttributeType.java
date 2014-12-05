@@ -30,6 +30,11 @@ public class AttributeType extends BaseBusEntity {
     @Column(name = "DATA_TYPE", length = 200, unique = true)
     private String dataType;
     /**
+     * 关联的外键字段
+     */
+    @Column(name = "FOREIGN_KEY", length = 20)
+    private String foreignKey;
+    /**
      * 属性类型对应的转换器
      */
     @ManyToOne(fetch = FetchType.LAZY)
@@ -97,4 +102,11 @@ public class AttributeType extends BaseBusEntity {
         this.attributes = attributes;
     }
 
+    public String getForeignKey() {
+        return foreignKey;
+    }
+
+    public void setForeignKey(String foreignKey) {
+        this.foreignKey = foreignKey;
+    }
 }

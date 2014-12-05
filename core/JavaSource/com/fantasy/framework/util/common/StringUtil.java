@@ -11,15 +11,9 @@ import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.*;
 
-public class StringUtil {
+public abstract class StringUtil {
 
     private static final Log logger = LogFactory.getLog(StringUtil.class);
-
-    public static int PASSWORD_LEVEL_LOW = 1;
-
-    public static int PASSWORD_LEVEL_MIDDLE = 2;
-
-    public static int PASSWORD_LEVEL_HIGH = 3;
 
     /**
      * 字符串超出指定长度时截取到指定长度，并在末尾追加指定的字符串。
@@ -34,9 +28,11 @@ public class StringUtil {
             return value;
         }
         len -= length(word);
-        do
+        if (value.length() > len) {
+            value = value.substring(0, len);
+        }
+        while (length(value) > len)
             value = value.substring(0, value.length() - 1);
-        while (length(value) > len);
         return value + word;
     }
 

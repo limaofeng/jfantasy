@@ -83,14 +83,14 @@ public class Property {
 
             mv.visitLabel(l0);
             mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
-            mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_APPEND);
+            mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND);
             mv.visitFieldInsn(Opcodes.PUTFIELD, newClassInternalName, fieldName, descriptor);
             mv.visitLabel(l1);
             mv.visitInsn(Opcodes.RETURN);
             mv.visitLabel(l2);
             mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
             mv.visitLocalVariable(fieldName, descriptor, AsmUtil.getSignature(property.getType(), property.getGenericTypes()), l0, l2, 1);
-            mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND);// ALOAD
+            //mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND); ALOAD
             mv.visitMaxs(2, 2);
 
         }

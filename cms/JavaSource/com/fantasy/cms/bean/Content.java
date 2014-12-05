@@ -32,13 +32,13 @@ public class Content extends BaseBusEntity {
      */
     @Lob
     @Column(name = "CONTENT")
-    private String content;
+    private String text;
 
     public Content() {
     }
 
     public Content(String text) {
-        this.setContent(text);
+        this.setText(text);
     }
 
     public Long getId() {
@@ -49,31 +49,27 @@ public class Content extends BaseBusEntity {
         this.id = id;
     }
 
-    public String getContent() {
-        return content;
+    public String getText() {
+        return text;
     }
 
-    public void setContent(String text) {
-        this.content = text;
+    public void setText(String text) {
+        this.text = text;
     }
 
     @Override
     public String toString() {
-        return this.content == null ? "" : this.content;
+        return this.text == null ? "" : this.text;
     }
 
     public static class ContentSerialize extends JsonSerializer<Content> {
 
         @Override
         public void serialize(Content content, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            try {
-                if (content == null) {
-                    jgen.writeString("");
-                } else {
-                    jgen.writeString(SettingUtil.toHtml(content.toString()));
-                }
-            } catch (IOException e) {
+            if (content == null) {
                 jgen.writeString("");
+            } else {
+                jgen.writeString(SettingUtil.toHtml(content.toString()));
             }
         }
 

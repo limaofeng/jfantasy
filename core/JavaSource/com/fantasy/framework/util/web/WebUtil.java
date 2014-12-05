@@ -15,19 +15,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Array;
 import java.net.*;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
- * web 工具类
+ * web 工具类<br/>
+ * web开发中经常使用的方法
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述 web开发中经常使用的方法
  * @since 2013-9-10 上午9:16:01
  */
 public class WebUtil {
@@ -399,9 +397,8 @@ public class WebUtil {
         }
         return parameter;
     }
-
     public static class UserAgent {
-
+        
     }
 
     public static enum Browser {

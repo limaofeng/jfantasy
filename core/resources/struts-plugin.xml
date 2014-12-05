@@ -302,4 +302,6 @@
     </package>
     <!-- 任务调度管理 -->
     <include file="struts/struts-schedule.xml"/>
+
+    <include file="struts/struts-remind.xml"/>
 </struts>

@@ -1,45 +1,81 @@
 package com.fantasy.wx.web;
 
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.wx.service.CoreService;
-import com.fantasy.wx.util.SignUtil;
+import com.fantasy.framework.util.common.BeanUtil;
+import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.message.bean.Message;
+import com.fantasy.wx.message.service.MessageService;
+import com.fantasy.wx.user.bean.UserInfo;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * Created by zzzhong on 2014/9/23.
  */
-public class WeixinAction extends ActionSupport{
+public class WeixinAction   extends ActionSupport{
+
     @Resource
-    private CoreService coreService;
+    public WxMpService wxMpService;
+    @Resource
+    private MessageService messageService;
+    @Resource
+    public WeixinConfigInit weixinConfig;
 
     public String operationUrl()throws IOException{
-        this.request.setCharacterEncoding("utf-8");
-        this.response.setCharacterEncoding("utf-8");
-        String method = request.getMethod();
-        if(method.equals("POST")){
-            // 调用核心业务类接收消息、处理消息
-            String respMessage = coreService.processRequest(request);
+        String signature = request.getParameter("signature");
+        String nonce = request.getParameter("nonce");
+        String timestamp = request.getParameter("timestamp");
 
-            response.getWriter().print(respMessage);
-        }else{
-            // 微信加密签名
-            String signature = request.getParameter("signature");
-            // 时间戳
-            String timestamp = request.getParameter("timestamp");
-            // 随机数
-            String nonce = request.getParameter("nonce");
+        response.setContentType("text/html;charset=utf-8");
+        response.setStatus(HttpServletResponse.SC_OK);
 
-            // 随机字符串
-            String echostr = request.getParameter("echostr");
-            if (SignUtil.checkSignature("haolue_weixin", signature, timestamp, nonce)) {
-                response.getWriter().print(echostr);
-            }
+        if (!wxMpService.checkSignature(timestamp, nonce, signature)) {
+            // 消息签名不正确，说明不是公众平台发过来的消息
+            response.getWriter().println("非法请求");
+            return NONE;
         }
-        WebUtil.getMethod(this.request);
-        this.response.getWriter().print("");
+
+        String echostr = request.getParameter("echostr");
+        if (StringUtils.isNotBlank(echostr)) {
+            // 说明是一个仅仅用来验证的请求，回显echostr
+            response.getWriter().println(echostr);
+            return NONE;
+        }
+
+        String encryptType = StringUtils.isBlank(request.getParameter("encrypt_type")) ?
+                "raw" :
+                request.getParameter("encrypt_type");
+
+        WxMpXmlMessage inMessage = null;
+        if ("raw".equals(encryptType)) {
+            // 明文传输的消息
+            inMessage = WxMpXmlMessage.fromXml(request.getInputStream());
+        } else if ("aes".equals(encryptType)) {
+            // 是aes加密的消息
+            String msgSignature = request.getParameter("msg_signature");
+            inMessage = WxMpXmlMessage.fromEncryptedXml(request.getInputStream(), weixinConfig.getWxMpConfigStorage(), timestamp, nonce, msgSignature);
+        } else {
+            response.getWriter().println("不可识别的加密类型");
+            return NONE;
+        }
+        Message message=BeanUtil.copyProperties(new Message(), inMessage, null);
+        messageService.save(message);
+
+        WxMpXmlOutMessage outMessage = weixinConfig.getWxMpMessageRouter().route(inMessage);
+        if (outMessage != null) {
+            if ("raw".equals(encryptType)) {
+                response.getWriter().write(outMessage.toXml());
+            } else if ("aes".equals(encryptType)) {
+                response.getWriter().write(outMessage.toEncryptedXml(weixinConfig.getWxMpConfigStorage()));
+            }
+            return NONE;
+        }
         return NONE;
     }
 }

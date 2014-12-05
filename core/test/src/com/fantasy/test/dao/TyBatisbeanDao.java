@@ -3,6 +3,7 @@ package com.fantasy.test.dao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
 import com.fantasy.test.bean.TyBatisbean;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -24,6 +25,14 @@ public interface TyBatisbeanDao extends SqlMapper {
      * @return
      */
     public List<TyBatisbean> selectAll();
+
+    /**
+     * 多参数查询方法测试
+     * @param key p1
+     * @param value p2
+     * @return List<TyBatisbean>
+     */
+    public List<TyBatisbean> selectMultiParameters(@Param("key") String key,@Param("value") String value);
 
     /**
      * 插入数据

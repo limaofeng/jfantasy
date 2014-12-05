@@ -31,6 +31,7 @@
     <link rel="stylesheet" type="text/css" href="${request.contextPath}/assets/themes/minified/fides/common.min.css" />
     <link rel="stylesheet" type="text/css" href="${request.contextPath}/assets/themes/minified/fides/responsive.min.css" />
     <link rel="stylesheet" type="text/css" href="${request.contextPath}/assets/css/component.css" />
+    <script language="javascript" type="text/javascript" src="${request.contextPath}/js/jquery.scroll.js" charset="utf-8"></script>
     <@block name="head"></@block>
     <style type="text/css">
         .inline-input input[type="text"], .inline-input input[type="password"], input.inline-input[type="text"], input.inline-input[type="password"] {
@@ -56,12 +57,49 @@
             $("#loader-overlay").fadeIn("fast");
         };
         var remove_loader = function(){
-            $("#loader-overlay").fadeOut("fast")
+            $("#loader-overlay").fadeOut("fast");
         };
+        Fantasy.apply(Fantasy.util.Format,{},{
+            compareTime : function(value){
+                return Date.parse(value).compareTime();
+            }
+        });
         $(function(){
             setInterval(function(){
                 $(window).resize();
             },1000);
+            setInterval(function(){
+                if(!!view)view.setJSON(view.getData());
+            },60000);
+            var notices=<@s.property value="@com.fantasy.remind.service.NoticeService@findUserNotice()" escapeHtml="false"/>;
+            var view =$("#noticeBaseView").view().on("add",function(){
+                var zhis=this;
+                if(!!this.data&&!!this.data.model)this.target.find("img").attr("src","${request.contextPath}"+this.data.model.avatar);
+                this.target.on("click",function(d,i){
+                    view.remove(zhis.index);
+                    notices.totalCount--;
+                    refreshNotices();
+                    location.href='${request.contextPath}/notice/go.do?id='+ zhis.data.id;
+                });
+
+            });
+            view.setJSON(notices.pageItems);
+            var refreshNotices=function(){
+                $("#noticeBaseSize").text(notices.totalCount);
+                notices.totalCount>0?$("#noticeBaseSize").show():$("#noticeBaseSize").hide();
+            }
+            refreshNotices();
+            var socket = new WebSocket('ws://'+window.location.host+request.getContextPath()+'/notice/msg');
+            socket.onopen = function(event) {
+                // 监听消息
+                socket.onmessage = function(event) {
+                    var data=JSON.parse(event.data);
+                    view.insert(0,data);
+                    notices.totalCount++;
+                    refreshNotices();
+                    view.setJSON(view.getData());
+                };
+            };
         });
     </script>
 </head>
@@ -572,67 +610,29 @@
 <div class="dropdown">
 
     <a data-toggle="dropdown" href="javascript:;" title="">
-        <span class="badge badge-absolute bg-green">9</span>
+        <span class="badge badge-absolute bg-green" id="noticeBaseSize">9</span>
         <i class="glyph-icon icon-bell"></i>
     </a>
     <div class="dropdown-menu">
-
         <div class="popover-title display-block clearfix form-row pad10A">
-            <div class="form-input">
-                <div class="form-input-icon">
-                    <i class="glyph-icon icon-search transparent"></i>
-                    <input type="text" placeholder="Search notifications..." class="radius-all-100" name="" id="" />
+            <form>
+                <div class="form-input">
+                    <div class="form-input-icon">
+                        <i class="glyph-icon icon-search transparent"></i>
+                        <input type="text" placeholder="Search notifications..." class="radius-all-100" name="" id="" />
+                    </div>
                 </div>
-            </div>
+            </form>
         </div>
+
         <div class="scrollable-content medium-box scrollable-small">
 
-            <ul class="no-border notifications-box">
-                <li>
-                    <span class="btn bg-purple icon-notification glyph-icon icon-user"></span>
-                    <span class="notification-text">This is an error notification</span>
+            <ul class="no-border notifications-box"  id="noticeBaseView">
+                <li class="template" name="default"  style="height:46px;line-height: 46px;padding:5px;">
+                    <span class="btn float-left"><img data-src="holder.js/38x38/simple" class="img-small view-field float-left mrg5R"/></span>
+                    <span class="notification-text" style="white-space: nowrap;overflow: hidden;text-overflow: ellipsis;width: 248px;">{content}</span>
                     <div class="notification-time">
-                        a few seconds ago
-                        <span class="glyph-icon icon-time"></span>
-                    </div>
-                </li>
-                <li>
-                    <span class="btn bg-orange icon-notification glyph-icon icon-user"></span>
-                    <span class="notification-text">This is a warning notification</span>
-                    <div class="notification-time">
-                        <b>15</b> minutes ago
-                        <span class="glyph-icon icon-time"></span>
-                    </div>
-                </li>
-                <li>
-                    <span class="bg-green btn icon-notification glyph-icon icon-user"></span>
-                    <span class="notification-text font-green font-bold">A success message example.</span>
-                    <div class="notification-time">
-                        <b>2 hours</b> ago
-                        <span class="glyph-icon icon-time"></span>
-                    </div>
-                </li>
-                <li>
-                    <span class="btn bg-purple icon-notification glyph-icon icon-user"></span>
-                    <span class="notification-text">This is an error notification</span>
-                    <div class="notification-time">
-                        a few seconds ago
-                        <span class="glyph-icon icon-time"></span>
-                    </div>
-                </li>
-                <li>
-                    <span class="btn bg-orange icon-notification glyph-icon icon-user"></span>
-                    <span class="notification-text">This is a warning notification</span>
-                    <div class="notification-time">
-                        <b>15</b> minutes ago
-                        <span class="glyph-icon icon-time"></span>
-                    </div>
-                </li>
-                <li>
-                    <span class="bg-blue btn icon-notification glyph-icon icon-user"></span>
-                    <span class="notification-text font-blue">Alternate notification styling.</span>
-                    <div class="notification-time">
-                        <b>2 hours</b> ago
+                        <span>{modifyTime:compareTime()}</span>
                         <span class="glyph-icon icon-time"></span>
                     </div>
                 </li>
@@ -823,6 +823,12 @@
 </div>
 <!-- #page-main -->
 </div><!-- #page-wrapper -->
-
+<script type="text/javascript">
+    $(function(){
+        if (window.$page$) {
+            $page$.load($('body'));
+        }
+    });
+</script>
 </body>
 </html>
