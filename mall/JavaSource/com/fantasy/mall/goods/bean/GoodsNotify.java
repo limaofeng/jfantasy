@@ -9,7 +9,6 @@ import java.util.Date;
 /**
  * 到货通知
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-9-21 下午5:47:17
  * @version 1.0

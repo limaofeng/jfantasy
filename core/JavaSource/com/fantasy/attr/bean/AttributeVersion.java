@@ -12,7 +12,7 @@ import java.util.List;
  * 动态属性版本表
  */
 @Entity
-@Table(name = "ATTR_VERSION")
+@Table(name = "ATTR_VERSION",uniqueConstraints = {@UniqueConstraint(columnNames = {"CLASS_NAME","NUMBER"})})
 public class AttributeVersion extends BaseBusEntity {
 
     @Id

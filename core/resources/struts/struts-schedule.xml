@@ -38,6 +38,11 @@
         <!-- 删除 -->
         <action name="delete" class="com.fantasy.schedule.web.ScheduleAction" method="deleteJob" />
 
-
     </package>
+
+    <package name="task-schedule-job" extends="fantasy-default" namespace="/system/schedule/job">
+        <action name="save" class="com.fantasy.schedule.web.ScheduleAction" method="saveJob"/>
+        <action name="execute" class="com.fantasy.schedule.web.ScheduleAction" method="executeOnce"/>
+    </package>
+
 </struts>

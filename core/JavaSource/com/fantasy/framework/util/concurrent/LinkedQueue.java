@@ -36,22 +36,20 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 	private List<E> list = new Li();
 
 	private void signalNotEmpty() {
-		final ReentrantLock takeLock = this.takeLock;
-		takeLock.lock();
+		this.takeLock.lock();
 		try {
-			notEmpty.signal();
+			this.notEmpty.signal();
 		} finally {
-			takeLock.unlock();
+			this.takeLock.unlock();
 		}
 	}
 
 	private void signalNotFull() {
-		final ReentrantLock putLock = this.putLock;
-		putLock.lock();
+		this.putLock.lock();
 		try {
-			notFull.signal();
+			this.notFull.signal();
 		} finally {
-			putLock.unlock();
+			this.putLock.unlock();
 		}
 	}
 
@@ -84,8 +82,9 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 	}
 
 	public LinkedQueue(int capacity) {
-		if (capacity <= 0)
+		if (capacity <= 0) {
 			throw new IllegalArgumentException();
+		}
 		this.capacity = capacity;
 		last = head = new Node<E>(null, null, null);
 	}

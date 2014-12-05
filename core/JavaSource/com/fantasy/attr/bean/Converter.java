@@ -24,13 +24,19 @@ public class Converter extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
-    @Column(name = "TYPE_CONVERTER", length = 200)
-    private String typeConverter;
-
+    /**
+     * 转换器名称
+     */
     @Column(name = "NAME", length = 200)
     private String name;
-
+    /**
+     * 转换器本身的 Class
+     */
+    @Column(name = "TYPE_CONVERTER", length = 200)
+    private String typeConverter;
+    /**
+     * 转换器描述
+     */
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
 

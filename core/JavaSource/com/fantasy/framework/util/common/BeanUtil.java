@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.reflect.Property;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,18 +20,33 @@ public class BeanUtil {
         return ClassUtil.getValue(target, fieldName);
     }
 
-    public static <T> T copyProperties(T dest, Object orig) {
+    public static <T> T copyProperties(T dest, Object orig, String... excludeProperties) {
         if (dest == null || orig == null) {
             return dest;
         }
         Class destClass = dest.getClass();
         Property[] properties = ClassUtil.getPropertys(orig);
         for (Property property : properties) {
+            if (ObjectUtil.indexOf(excludeProperties, property.getName()) != -1) {
+                continue;
+            }
             if (!property.isRead()) {
                 continue;
             }
             Property setProperty = ClassUtil.getProperty(destClass, property.getName());
             if (setProperty == null || !setProperty.isWrite()) {
+                continue;
+            }
+            if (ClassUtil.isBasicType(property.getPropertyType()) && ClassUtil.isBasicType(setProperty.getPropertyType())) {
+                Object o = property.getValue(orig);
+                if (o == null) {
+                    continue;
+                }
+                if (Boolean.class.isAssignableFrom(property.getPropertyType()) || boolean.class.isAssignableFrom(property.getPropertyType())) {
+                    OgnlUtil.getInstance().setValue(setProperty.getName(), dest, o);
+                } else {
+                    OgnlUtil.getInstance().setValue(setProperty.getName(), dest, o.toString());
+                }
                 continue;
             }
             if (!property.getPropertyType().equals(setProperty.getPropertyType())) {

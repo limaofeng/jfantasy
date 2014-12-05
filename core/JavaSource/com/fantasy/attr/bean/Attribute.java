@@ -125,4 +125,17 @@ public class Attribute extends BaseBusEntity {
     public void setNotTemporary(Boolean notTemporary) {
         this.notTemporary = notTemporary;
     }
+
+    @Override
+    public String toString() {
+        return "Attribute{" +
+                "id=" + id +
+                ", code='" + code + '\'' +
+                ", name='" + name + '\'' +
+                ", notTemporary=" + notTemporary +
+                ", nonNull=" + nonNull +
+                ", attributeType=" + attributeType +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }

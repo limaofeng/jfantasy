@@ -49,4 +49,11 @@ public class PropertyFilterDTO {
         this.filterName = filterName;
     }
 
+    @Override
+    public String toString() {
+        return "PropertyFilterDTO{" +
+                "filterName='" + filterName + '\'' +
+                ", propertyValue='" + propertyValue + '\'' +
+                '}';
+    }
 }

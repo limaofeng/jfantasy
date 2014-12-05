@@ -180,7 +180,7 @@
 
     <package name="fides-captcha-config" extends="fantasy-default" namespace="/system/captchaConfig">
         <action name="index" class="com.fantasy.sms.web.CaptchaConfigAction" method="index">
-            <result type="freemarker">/template/%{pageTheme}/system/captcha/config.ftl</result>
+            <result type="freemarker">/template/%{pageTheme}/system/captcha/xml.ftl</result>
         </action>
         <action name="search" class="com.fantasy.sms.web.CaptchaConfigAction" method="search"/>
         <action name="save" class="com.fantasy.sms.web.CaptchaConfigAction" method="save"/>

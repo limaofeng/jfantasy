@@ -133,7 +133,7 @@ public class AsmUtil implements Opcodes {
 
         // get方法
         if (property.isRead()) {
-            makeMethod(classWriter, "get" + StringUtil.upperCaseFirst(fieldName), Type.getMethodDescriptor(Type.getType(property.getType()), new Type[0]), property.getGenericTypes().length != 0 ? ("()" + getSignature(property.getType(), property.getGenericTypes())) : null, property.getGetMethodCreator());
+            makeMethod(classWriter, (boolean.class == property.getType() ? "is" : "get") + StringUtil.upperCaseFirst(fieldName), Type.getMethodDescriptor(Type.getType(property.getType()), new Type[0]), property.getGenericTypes().length != 0 ? ("()" + getSignature(property.getType(), property.getGenericTypes())) : null, property.getGetMethodCreator());
         }
     }
 

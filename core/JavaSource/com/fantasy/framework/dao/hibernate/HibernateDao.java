@@ -1,5 +1,7 @@
 package com.fantasy.framework.dao.hibernate;
 
+import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.DynaBeanQueryManager;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
@@ -16,6 +18,7 @@ import org.hibernate.criterion.*;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.hibernate.metadata.ClassMetadata;
+import org.hibernate.sql.JoinType;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.Type;
@@ -324,7 +327,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                             addObjects.add(fk);
                         }
                     }
-                    ognlUtil.setValue(field.getName(), oldEntity, addObjects);
+                    ognlUtil.setValue(field.getName(), entity, addObjects);
                 }
             }
             return entity;
@@ -368,7 +371,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
      */
     public void delete(PK id) {
         Assert.notNull(id, "id不能为空");
-        T t = get(id);
+        T t = load(id);
         if (t != null) {
             delete(t);
         }
@@ -628,6 +631,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {
 
     protected Criteria createCriteria(Criterion[] criterions, String... orderBys) {
         Criteria criteria = getSession().createCriteria(this.entityClass);
+        if(DynaBean.class.isAssignableFrom(this.entityClass) && DynaBeanQueryManager.getManager().peek().isDynamicQuery()){
+            criteria = criteria.createAlias("attributeValues", "_attributeValues", JoinType.LEFT_OUTER_JOIN);
+        }
         Set<String> alias = new HashSet<String>();
         for (Criterion c : criterions) {
             changePropertyName(criteria, alias, c);
@@ -641,7 +647,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     }
 
     @SuppressWarnings("unchecked")
-    private void changePropertyName(Criteria criteria, Set<String> alias, Criterion c) {
+    protected void changePropertyName(Criteria criteria, Set<String> alias, Criterion c) {
         if (c instanceof Disjunction) {
             List<Criterion> criterions = (List<Criterion>) ReflectionUtils.getFieldValue(c, "conditions");
             for (Criterion criterion : criterions) {
@@ -739,10 +745,10 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     @SuppressWarnings("unchecked")
     public Pager<T> findPager(Pager<T> pager, Criterion... criterions) {
         pager = pager == null ? new Pager<T>() : pager;
-        Criteria c = createCriteria(criterions, StringUtil.tokenizeToStringArray(pager.getOrderBy()));
+        Criteria c = distinct(createCriteria(criterions, StringUtil.tokenizeToStringArray(pager.getOrderBy())));
         pager.setTotalCount(countCriteriaResult(c));
         setPageParameter(c, pager);
-        pager.setPageItems(distinct(c).list());
+        pager.setPageItems(c.list());
         return pager;
     }
 
@@ -864,14 +870,14 @@ public abstract class HibernateDao<T, PK extends Serializable> {
 
     @SuppressWarnings("unchecked")
     public List<T> find(Criterion... criterions) {
-        return createCriteria(criterions).list();// .setCacheable(false)
+        return distinct(createCriteria(criterions)).list();
     }
 
     @SuppressWarnings("unchecked")
     public List<T> find(Criterion[] criterions, String orderBy, String order) {
         Criteria c = createCriteria(criterions, StringUtil.tokenizeToStringArray(orderBy));
         setPageParameter(c, orderBy, order);
-        return c.list();
+        return distinct(c).list();
     }
 
     @SuppressWarnings("unchecked")
@@ -880,7 +886,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         c.setFirstResult(start);
         c.setMaxResults(size);
         setPageParameter(c, orderBy, order);
-        return c.list();
+        return distinct(c).list();
     }
 
     @SuppressWarnings("unchecked")
@@ -888,12 +894,11 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         Criteria c = createCriteria(criterions);
         c.setFirstResult(start);
         c.setMaxResults(size);
-        return c.list();
+        return distinct(c).list();
     }
 
     public List<T> find(List<PropertyFilter> filters) {
-        Criterion[] criterions = buildPropertyFilterCriterions(filters);
-        return find(criterions);
+        return find(buildPropertyFilterCriterions(filters));
     }
 
     @SuppressWarnings("unchecked")
@@ -908,7 +913,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 c.addOrder(Order.desc(orderByAlias(orderByArray[i])));
             }
         }
-        return c.list();
+        return distinct(c).list();
     }
 
     @SuppressWarnings("unchecked")
@@ -917,7 +922,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         c.setFirstResult(start);
         c.setMaxResults(size);
         setPageParameter(c, orderBy, order);
-        return c.list();
+        return distinct(c).list();
     }
 
     @SuppressWarnings("unchecked")
@@ -926,7 +931,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         Criteria c = createCriteria(criterions);
         c.setFirstResult(start);
         c.setMaxResults(size);
-        return c.list();
+        return distinct(c).list();
     }
 
     public Pager<T> findPager(Pager<T> pager, List<PropertyFilter> filters) {

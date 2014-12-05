@@ -256,4 +256,20 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 		return SpringSecurityUtils.getAuthorities(this);
 	}
 
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", enabled=" + enabled +
+                ", accountNonExpired=" + accountNonExpired +
+                ", accountNonLocked=" + accountNonLocked +
+                ", credentialsNonExpired=" + credentialsNonExpired +
+                ", lockTime=" + lockTime +
+                ", lastLoginTime=" + lastLoginTime +
+                ", details=" + details +
+                '}';
+    }
 }

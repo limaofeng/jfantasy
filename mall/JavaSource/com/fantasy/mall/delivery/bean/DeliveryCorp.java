@@ -32,6 +32,8 @@ public class DeliveryCorp extends BaseBusEntity {
 	private String url;// 物流公司网址
 	@Column(name = "SORT")
 	private Integer sort;// 排序
+	@Column(name = "DESCRIPTION", length = 3000)
+	private String description;// 介绍
 
 	@OneToMany(mappedBy = "defaultDeliveryCorp", fetch = FetchType.LAZY)
 	private List<DeliveryType> deliveryTypes;// 配送方式
@@ -76,4 +78,11 @@ public class DeliveryCorp extends BaseBusEntity {
 		this.deliveryTypes = deliveryTypes;
 	}
 
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 }

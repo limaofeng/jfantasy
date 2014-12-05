@@ -1,19 +1,17 @@
 package com.fantasy.attr.service;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.hibernate.Hibernate;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fantasy.attr.bean.Attribute;
 import com.fantasy.attr.dao.AttributeDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
+import org.hibernate.Hibernate;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 商品属性 service
@@ -76,7 +74,7 @@ public class AttributeService {
 	 * 删除
 	 * @param ids
 	 */
-	public void delete(Long[] ids) {
+	public void delete(Long... ids) {
 		for (Long id : ids) {
 			this.attributeDao.delete(id);
 		}

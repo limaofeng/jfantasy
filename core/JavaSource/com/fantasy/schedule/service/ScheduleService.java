@@ -5,9 +5,9 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
 import org.quartz.impl.matchers.GroupMatcher;
 import org.quartz.impl.matchers.StringMatcher;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -15,14 +15,14 @@ import java.util.Map;
 
 import static org.quartz.CalendarIntervalScheduleBuilder.calendarIntervalSchedule;
 import static org.quartz.CronScheduleBuilder.cronSchedule;
+import static org.quartz.DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule;
 import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
-import static org.quartz.DailyTimeIntervalScheduleBuilder.dailyTimeIntervalSchedule;
 
 @Service
 public class ScheduleService {
 
-    @Resource
+    @Autowired(required = false)
     private Scheduler scheduler;
 
     private final static Log logger = LogFactory.getLog(ScheduleService.class);
@@ -164,6 +164,9 @@ public class ScheduleService {
 
     public JobDetail addJob(JobKey jobKey, Class<? extends Job> jobClass, Map<String, Object> data) {
         try {
+            if (data == null) {
+                data = new HashMap<String, Object>();
+            }
             JobDetail job = newJob(jobClass).withIdentity(jobKey.getName(), jobKey.getGroup()).storeDurably(true).setJobData(new JobDataMap(data)).build();
             scheduler.addJob(job, true);
             scheduler.resumeJob(jobKey);
@@ -281,7 +284,7 @@ public class ScheduleService {
      */
     public boolean isStartTimerTisk() {
         try {
-            return this.scheduler.isStarted();
+            return this.scheduler != null && this.scheduler.isStarted();
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
             return false;
@@ -295,7 +298,7 @@ public class ScheduleService {
      */
     public boolean isShutDownTimerTisk() {
         try {
-            return this.scheduler.isShutdown();
+            return this.scheduler != null && this.scheduler.isShutdown();
         } catch (SchedulerException e) {
             logger.error(e.getMessage(), e);
             return false;
@@ -450,7 +453,7 @@ public class ScheduleService {
         }
     }
 
-    public void shutdown(){
+    public void shutdown() {
         try {
             this.scheduler.shutdown();
         } catch (SchedulerException e) {
@@ -458,4 +461,18 @@ public class ScheduleService {
         }
     }
 
+    public List<JobDetail> jobs() {
+        List<JobDetail> jobDetails = new ArrayList<JobDetail>();
+        for (JobKey jobKey : this.getJobKeys()) {
+            try {
+                jobDetails.add(scheduler.getJobDetail(jobKey));
+            } catch (SchedulerException e) {
+                logger.error(e.getMessage(), e);
+                if (e.getCause() instanceof ClassNotFoundException) {
+                    this.deleteJob(jobKey);
+                }
+            }
+        }
+        return jobDetails;
+    }
 }

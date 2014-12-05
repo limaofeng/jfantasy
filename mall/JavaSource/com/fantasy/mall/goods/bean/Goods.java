@@ -1,6 +1,7 @@
 package com.fantasy.mall.goods.bean;
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.DynaBeanEntityPersister;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
@@ -19,12 +20,16 @@ import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.type.TypeReference;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +44,7 @@ import java.util.List;
 @Indexed
 @Entity
 @Table(name = "MALL_GOODS")
+@Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore", "category"})
 public class Goods extends BaseBusEntity implements DynaBean {
@@ -187,7 +193,7 @@ public class Goods extends BaseBusEntity implements DynaBean {
      * 所属店铺信息
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinTable(name = "MALL_SHOP", joinColumns = @JoinColumn(name = "SHOP_ID"), inverseJoinColumns = @JoinColumn(name = "ID"), foreignKey = @ForeignKey(name = "FK_GOODS_SHOP"))
+    @JoinColumn(name = "SHOP_ID", foreignKey = @ForeignKey(name = "FK_GOODS_SHOP"))
     private Shop shop;
     /**
      * 数据版本
@@ -196,11 +202,11 @@ public class Goods extends BaseBusEntity implements DynaBean {
     @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_GOODS_VERSION"))
     private AttributeVersion version;
     /**
-     * 动态属性集合。 * 注意访问修饰符为 protected
+     * 动态属性集合。
      */
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    protected List<AttributeValue> attributeValues;
+    private List<AttributeValue> attributeValues;
 
     /**
      * 获取商品ID

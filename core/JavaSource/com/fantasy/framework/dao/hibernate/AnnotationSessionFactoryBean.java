@@ -208,6 +208,7 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         if (packagesToScan != null) {
             sfb.scanPackages(packagesToScan);
         }
+        //getEntityPersisterClass
         return sfb;
     }
 

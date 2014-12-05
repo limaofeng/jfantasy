@@ -10,7 +10,6 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
@@ -18,11 +17,7 @@ public class OrderDao extends HibernateDao<Order, Long> {
 
     @Override
     protected Criterion[] buildPropertyFilterCriterions(List<PropertyFilter> filters) {
-        PropertyFilter filter = ObjectUtil.find(filters, "propertyName", "status");
-        if (filter != null) {
-            ObjectUtil.remove(filters, "propertyName", "status");
-        }
-        filters = filters == null ? new ArrayList<PropertyFilter>() : filters;
+        PropertyFilter filter = ObjectUtil.remove(filters, "filterName", "EQS_status");
         Criterion[] criterions = super.buildPropertyFilterCriterions(filters);
         if (filter != null) {
             if ("1".equals(filter.getPropertyValue(String.class))) {//未付款的订单(先付款未付款的)

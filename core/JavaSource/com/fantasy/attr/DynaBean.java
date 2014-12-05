@@ -17,6 +17,8 @@ public interface DynaBean {
      */
     public AttributeVersion getVersion();
 
+    public void setVersion(AttributeVersion version);
+
     /**
      * 获取动态属性
      *

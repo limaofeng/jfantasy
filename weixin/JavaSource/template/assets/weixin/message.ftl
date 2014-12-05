@@ -10,6 +10,42 @@
 <script type="text/javascript">
 
     $(function() {
+        //var socket = new WebSocket('ws://211.100.41.186:9999');//http://211.100.41.186:9999/-
+        var socket = new WebSocket('ws://'+window.location.host+request.getContextPath()+'/weixin/msg');
+        // 打开Socket
+        socket.onerror = function(event){
+            console.log(event);
+        };
+        socket.onopen = function(event) {
+            console.log(event);
+            // 监听消息
+            socket.onmessage = function(event) {
+                var data=JSON.parse(event.data);
+                $("#userView li").each(function(){
+                    if($(this).data("openid")==data.fromUserName){
+                        if($(this).hasClass("current_user")){
+                            messageView.insert(messageView.getData().length,data);
+                            //当接受的消息是当前聊天的用户时，设置消息为已读
+                            socket.send(data.fromUserName);
+                            $("#messageScroll").scrollTop($("#messagePager").height());
+                        }else{
+                            $(this).find(".unreadSize").text(data.userInfo.unReadSize);
+                            $(this).find(".unreadSize").show();
+                        }
+                    }
+                });
+            };
+            // 监听Socket的关闭
+            socket.onclose = function(event) {
+                console.log('Client notified socket has closed', event);
+            };
+            // 关闭Socket....
+            //socket.close()
+        };
+
+        $("#sendMsg").click(function(){
+            socket.send($("#msg").val());
+        });
         //当浏览器窗口发生变化时,自动调整布局的js代码
         $(window).resize(function () {
             var _$gridPanel = $('.grid-panel');
@@ -18,14 +54,15 @@
                 _$gridPanel.triggerHandler('resize');
             }
         });
-        var boolAjax=true;
         var userPager=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(userPager)" escapeHtml="false"/>;
         var messagePager=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(messagePager)" escapeHtml="false"/>;
         messagePager.pageItems.reverse();
+        //当消息数为0时不能发送消息
         if(messagePager.pageItems.length==0){
             $('#content').attr("readonly","readonly");
         }
-        if (messagePager.totalCount>3) {
+        //如果消息总条数大于分页条数时显示更多消息按钮
+        if (messagePager.totalCount>messagePager.pageSize) {
                 $("#moreMessage").data("time",messagePager.pageItems[0].createTime);
         }else{
             $("#moreMessage").hide();
@@ -34,8 +71,8 @@
             this.target.find('img').attr("src",data.headimgurl);
             this.target.data("openId",data.openId);
             $(this.target).click(function(){
-                var zhis=this;
-                $.get("${request.contextPath}/weixin/message/search.do", {"pager.pageSize":3,"EQS_userInfo.openid":$(this).data("openid")},
+                var zhis=this,size=$(zhis).find(".unreadSize").text();
+                $.get("${request.contextPath}/weixin/message/search.do", {"pager.pageSize":size==0?3:size,"EQS_userInfo.openid":$(this).data("openid")},
                         function (data) {
                             $(".current_user").removeClass("current_user");
                             $(zhis).addClass("current_user");
@@ -47,11 +84,16 @@
                             if(data.pageItems.length>0)
                                 $("#moreMessage").data("time",data.pageItems[0].createTime);
                             $("#messageScroll").scrollTop($("#messagePager").height());
+                            $(zhis).find(".unreadSize").hide();
                         }, "json");
             });
             $(this.target).data("openid",data.openid);
             if(this.getIndex()==0){
                 $(this.target).addClass("current_user");
+            }
+            this.target.find(".unreadSize").text(data.unReadSize);
+            if(data.unReadSize==0){
+                this.target.find(".unreadSize").hide();
             }
         }).setJSON(userPager.pageItems);
 
@@ -104,12 +146,12 @@
             }
         });*/
         $("#enterMessage").click(function(){
-            $.post("${request.contextPath}/weixin/message/send.do",{content:$("#content").val(),msgType:"text","userInfo.openid":$(".current_user").data("openid")},function(data){
-                if(data){
+            $.post("${request.contextPath}/weixin/message/send.do",{content:$("#content").val(),"userInfo.openid":$(".current_user").data("openid"),msgType:"text"},function(data){
+                if(data=="0"){
                     messageView.insert({content:$("#content").val()},"left")
                     $("#content").val("");
                     $("#messageScroll").scrollTop($("#messagePager").height());
-                }else{
+                }else if(data=="0"){
                     $.msgbox({
                         msg : "消息发送失败!",
                         type : "warning"
@@ -137,10 +179,12 @@
                 $(".notUser").hide();
             }
         });
+        //用户搜索按钮
         $("#searchWxBtn").click(function(){
             var value=$("#searchWx").val();
             var bool=true;
             var ishidden=false;
+            //在本地回话列表里面查找是否有匹配用户有则显示
             $("#userView li").each(function(){
                 if( $(this).is(":hidden")&&$(this).is(".template"))
                     ishidden=true;
@@ -155,6 +199,7 @@
                 $("#userView .template").show();
                     return;
             }
+            //如果没有本地匹配项就在后台查询
             if(bool){
                 $.post("${request.contextPath}/weixin/message/searchUserInfo.do", {"LIKES_nickname":value},
                 function (data) {
@@ -189,10 +234,23 @@
         zoom:1.3;
         background: #2381E9;
     }
-    .current_user span{
+    .current_user p span{
         color: #797979;
         background: #e9ecf1;
     }
+    .badge-absolute{
+        right:-5px;
+        left:auto;
+    }
+    #userScroll .badge, .label{
+        min-width: 0.8em;
+        height: 1.4em;
+        line-height: 1.4em;
+    }
+    .notification-text{width:100%;text-align: center;}
+    .loadUser,.notUser{display:none;}
+    #userView .head{width:45px; height: 45px;}
+    #userView .head img{height: 39px;width: 39px;}
 </style>
 </@override>
 <@override name="pageContent">
@@ -219,16 +277,19 @@
                 <div class="scrollable-content grid-panel" id="userScroll" tabindex="5005" style="overflow: hidden; outline: none;">
                     <ul class="notifications-box" id="userView">
                         <li  class="template" name="default">
-                            <div class="large btn info-icon float-left mrg5R" style="height:45px;">
-                                <img data-src="holder.js/38x38/simple" style="height: 39px;" class="img-small view-field"/>
+                            <div class="large btn info-icon float-left mrg5R dropdown head">
+                                <a data-toggle="dropdown" href="javascript:;" title="">
+                                    <span class="badge badge-absolute bg-orange unreadSize" ></span>
+                                    <img data-src="holder.js/38x38/simple" class="img-small view-field"/>
+                                </a>
                             </div>
                             <p><span class="label bg-purple mrg5R">{nickname}</span></p>
                         </li>
-                        <li class="loadUser" style="display:none;">
-                            <span class="notification-text" style="text-align: center;">正在加载...</span>
+                        <li class="loadUser">
+                            <span class="notification-text">正在加载...</span>
                         </li>
-                        <li class="notUser" style="display:none;">
-                            <div class="notification-text" style="width:100%;text-align: center;">无匹配项</div>
+                        <li class="notUser">
+                            <div class="notification-text">无匹配项</div>
                         </li>
                     </ul>
 

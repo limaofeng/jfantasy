@@ -1030,6 +1030,12 @@
     </div>
 </div>
 <!-- #page-footer-wrapper -->
-
+<script type="text/javascript">
+    $(function(){
+        if (window.$page$) {
+            $page$.load($('body'));
+        }
+    });
+</script>
 </body>
 </html>

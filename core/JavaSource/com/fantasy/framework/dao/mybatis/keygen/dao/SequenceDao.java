@@ -4,6 +4,9 @@ import com.fantasy.framework.dao.mybatis.keygen.bean.Sequence;
 import com.fantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
 import org.springframework.stereotype.Repository;
 
+/**
+ *  MyBatis SequenceDao 接口
+ */
 @Repository
 public interface SequenceDao extends SqlMapper {
 

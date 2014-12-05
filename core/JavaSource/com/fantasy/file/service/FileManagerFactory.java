@@ -24,16 +24,16 @@ import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
 /**
  * FileManager 管理类
+ * 1.从数据库。初始化FileManager类
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述 <br/>
- * 1.从数据库。初始化FileManager类
  * @since 2013-7-12 下午03:57:31
  */
 @Transactional
@@ -198,7 +198,7 @@ public class FileManagerFactory implements InitializingBean {
         FTPFileManager fileManager = (FTPFileManager) fileManagerCache.get(beanId);
         if (!fileManagerCache.containsKey(beanId)) {
             SpringContextUtil.registerBeanDefinition(getFileManagerBeanId(beanId), FTPFileManager.class, new Object[]{ftpService});
-            fileManagerCache.put(beanId, fileManager = (FTPFileManager) SpringContextUtil.getBean(getFileManagerBeanId(beanId), FileManager.class));
+            fileManagerCache.put(beanId, SpringContextUtil.getBean(getFileManagerBeanId(beanId), FileManager.class));
         } else {
             fileManager.setFtpService(ftpService);
         }
@@ -226,7 +226,11 @@ public class FileManagerFactory implements InitializingBean {
     }
 
     public static String[] getFileManagerIds() {
-        return fileManagerCache.keySet().toArray(new String[0]);
+        if (fileManagerCache.isEmpty()) {
+            getInstance().initialize();
+        }
+        Set<String> strings = fileManagerCache.keySet();
+        return strings.toArray(new String[strings.size()]);
     }
 
     public void remove(FileManagerConfig config) {
