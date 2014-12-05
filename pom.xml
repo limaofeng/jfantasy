@@ -2,6 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <!-- 基本设置 -->
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-framework</artifactId>
@@ -54,6 +55,7 @@
         </repository>
     </distributionManagement>
 
+    <!-- 构建过程的设置 -->
     <build>
         <extensions>
             <extension>
@@ -226,6 +228,21 @@
         </plugins>
     </build>
 
+    <reporting>
+        <outputDirectory>target/site</outputDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-report-plugin</artifactId>
+                <version>2.9</version>
+                <configuration>
+                    <showSuccess>false</showSuccess>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <!-- jar yi依赖 -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -858,20 +875,7 @@
         </dependencies>
     </dependencyManagement>
 
-    <reporting>
-        <outputDirectory>target/site</outputDirectory>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-                <version>2.9</version>
-                <configuration>
-                    <showSuccess>false</showSuccess>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
+    <!-- 包含模块 -->
     <modules>
         <module>core</module>
         <module>core-ws</module>
@@ -890,10 +894,24 @@
         <module>javaweb</module>
     </modules>
 
+    <!-- 项目信息设置 -->
+    <name>jfantasy</name>
+    <description>昊略公司开发框架</description>
+    <url>http://www.jfantasy.org</url>
+    <inceptionYear>2012</inceptionYear>
+    <organization>
+        <name>上海昊略信息技术有限公司</name>
+    </organization>
     <developers>
         <developer>
-            <name>limaofeng</name>
+            <name>李茂峰</name>
             <email>limaofeng@msn.com</email>
+        </developer>
+        <developer>
+            <name>何博</name>
+        </developer>
+        <developer>
+            <name>钟整整</name>
         </developer>
     </developers>
 
