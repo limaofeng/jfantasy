@@ -1,15 +1,5 @@
 package com.fantasy.cms.service;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.hibernate.Hibernate;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fantasy.cms.bean.Banner;
 import com.fantasy.cms.bean.BannerItem;
 import com.fantasy.cms.dao.BannerDao;
@@ -17,6 +7,14 @@ import com.fantasy.cms.dao.BannerItemDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
+import org.hibernate.Hibernate;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 轮播图Service
@@ -44,10 +42,10 @@ public class BannerService {
 		bannerDao.save(banner);
 		List<BannerItem> banntiems = banner.getBannerItems();// 数据库中原来就有的集合
 		if (bitems == null) {
-			bitems = Collections.EMPTY_LIST;
+			bitems = Collections.emptyList();
 		}
 		if (banntiems == null) {
-			banntiems = Collections.EMPTY_LIST;
+			banntiems = Collections.emptyList();
 		}
 		for (BannerItem bnitem : bitems) {
 			bnitem.setBanner(banner);

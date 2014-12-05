@@ -1,21 +1,20 @@
 package com.fantasy.framework.dao;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Map;
-
-import javax.sql.DataSource;
-
-import org.apache.log4j.Logger;
-import org.springframework.beans.BeansException;
-import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
-
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import org.apache.log4j.Logger;
+import org.springframework.beans.BeansException;
+import org.springframework.jdbc.datasource.lookup.AbstractRoutingDataSource;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Map;
 
 public class MultiDataSource extends AbstractRoutingDataSource {
+
 	private static final Logger logger = Logger.getLogger(MultiDataSource.class);
 
 	private CatalogConverter catalogConverter;

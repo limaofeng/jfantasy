@@ -2,68 +2,42 @@ package com.fantasy.schedule.web;
 
 
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.schedule.service.JobInfo;
-import com.fantasy.schedule.service.TriggerInfo;
-import com.fantasy.schedule.service.TriggerType;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.schedule.service.ScheduleService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
-import org.quartz.impl.matchers.GroupMatcher;
-import org.quartz.impl.matchers.StringMatcher;
 
 import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.quartz.CronScheduleBuilder.cronSchedule;
-import static org.quartz.JobBuilder.newJob;
 import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 import static org.quartz.TriggerBuilder.newTrigger;
 
 public class ScheduleAction extends ActionSupport {
 
+    private final static Log logger = LogFactory.getLog(ScheduleAction.class);
     @Resource
     private Scheduler scheduler;
+    @Resource
+    private ScheduleService scheduleService;
 
     public String index() throws Exception {
         this.search();
-        this.attrs.put("jobInfos", this.attrs.get(ROOT));
+        this.attrs.put("jobs", this.attrs.get(ROOT));
         this.attrs.remove(ROOT);
         return SUCCESS;
     }
 
 
     public String search() throws Exception {
-        List<JobInfo> jobInfos = new ArrayList<JobInfo>();
-        Map<String, String> executingJobsMap = new HashMap<String, String>();
-        for (JobExecutionContext context : scheduler.getCurrentlyExecutingJobs()) {
-            executingJobsMap.put(context.getJobDetail().getKey().getGroup() + context.getJobDetail().getKey().getName(), "1");
-        }
-
-        for (String group : scheduler.getJobGroupNames()) {
-            @SuppressWarnings("serial")
-            Set<JobKey> jobKeys = scheduler.getJobKeys(new GroupMatcher<JobKey>(group, StringMatcher.StringOperatorName.EQUALS) {
-            });
-            for (JobKey jobKey : jobKeys) {
-                JobDetail jobDetail = scheduler.getJobDetail(jobKey);
-                JobInfo jobInfo = new JobInfo(jobDetail);
-
-                List<? extends Trigger> triggers = scheduler.getTriggersOfJob(jobKey);
-                for (Trigger trigger : triggers) {
-                    TriggerInfo triggerInfo = new TriggerInfo(trigger);
-                    triggerInfo.setState(scheduler.getTriggerState(trigger.getKey()));
-                    jobInfo.addTriggerInfo(triggerInfo);
-                }
-
-                jobInfo.setRunning(executingJobsMap.containsKey(jobDetail.getKey().getGroup() + jobDetail.getKey().getName()));
-                jobInfos.add(jobInfo);
-            }
-        }
-        this.attrs.put(ROOT, jobInfos);
-        /**
-         this.attrs.put("jobs", jobInfos);
-         this.attrs.put("scheduler", scheduler);
-         this.attrs.put("groups", scheduler.getJobGroupNames());
-         */
+        this.attrs.put(ROOT, this.scheduleService.jobs());
         return JSONDATA;
     }
 
@@ -107,15 +81,9 @@ public class ScheduleAction extends ActionSupport {
      *
      * @throws org.quartz.SchedulerException
      */
-    public String addSave(JobInfo jobInfo, Map<String, String> args) throws SchedulerException {
-        Trigger trigger = TriggerType.cron == jobInfo.getType() ? TriggerType.cron.newTrigger(jobInfo.getName(), jobInfo.getGroup(), jobInfo.getCronExpression()) : TriggerType.simple.newTrigger(jobInfo.getName(), jobInfo.getGroup(), jobInfo.getRate(), jobInfo.getTimes());
-        JobDetail job = newJob(jobInfo.getJobClass()).withIdentity(jobInfo.getName(), jobInfo.getGroup()).build();
-        JobDataMap map = job.getJobDataMap();
-        if (args != null) {
-            map.putAll(args);
-        }
-        scheduler.resumeAll();
-        scheduler.scheduleJob(job, trigger);
+    public String saveJob(String group, String name, String className, Map<String, Object> args) throws SchedulerException {
+        JobKey jobKey = StringUtil.isBlank(group) ? JobKey.jobKey(name) : JobKey.jobKey(name, group);
+        this.scheduleService.addJob(jobKey, (Class<Job>) ClassUtil.forName(className), args);
         this.attrs.put("success", "1");
         this.attrs.put("msg", "添加成功");
         return JSONDATA;
@@ -127,25 +95,17 @@ public class ScheduleAction extends ActionSupport {
      *
      * @throws org.quartz.SchedulerException
      */
-    public String executeOnce() throws SchedulerException {
-        String queryGroup = request.getParameter("queryGroup");
-        String queryJobName = request.getParameter("queryJobName");
-        if (queryGroup != null) {
-            queryGroup = queryGroup.trim();
-        }
-        if (queryJobName != null) {
-            queryJobName = queryJobName.trim();
-        }
-        String jobKey = request.getParameter("jobKey").trim();
-        String[] keyArray = jobKey.split("\\.");
-        Trigger trigger = newTrigger().
-                withIdentity(keyArray[1] + UUID.randomUUID().toString(), keyArray[0]).
-                withPriority(100).
-                forJob(JobKey.jobKey(keyArray[1], keyArray[0])).
-                build();
-
-        scheduler.scheduleJob(trigger);
-        return SUCCESS;
+    public String executeOnce(String group,String name) throws SchedulerException {
+//        Trigger trigger = newTrigger().
+//                withIdentity(name + UUID.randomUUID().toString(), group).
+//                withPriority(100).
+//                forJob(JobKey.jobKey(name,group)).
+//                build();
+//
+//        this.scheduleService.interrupt()
+//        scheduler.scheduleJob(trigger);
+        this.scheduleService.triggerJob(StringUtil.isBlank(group) ? JobKey.jobKey(name) : JobKey.jobKey(name, group));
+        return JSONDATA;
     }
 
     /**

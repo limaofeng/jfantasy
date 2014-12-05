@@ -3,7 +3,6 @@ package com.fantasy.mall.goods.service;
 import com.fantasy.common.bean.enums.TimeUnit;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.dao.mybatis.keygen.util.SequenceInfo;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -91,7 +90,7 @@ public class GoodsService implements InitializingBean {
      */
     public Goods get(String sn) {
         Goods goods = this.goodsDao.findUnique(Restrictions.eq("sn", sn));
-        for(Product product : goods.getProducts()) {
+        for (Product product : goods.getProducts()) {
             Hibernate.initialize(product);
         }
         return goods;
@@ -302,26 +301,23 @@ public class GoodsService implements InitializingBean {
             goods.setMonthSaleCount(0);
             goods.setSaleCount(0);
             goods.setMarketable(false);
+            //设置是否启用规格默认值
+            if (goods.getSpecificationEnabled() == null) {
+                goods.setSpecificationEnabled(false);
+            }
+            //设置 products 默认空集合
+            if (goods.getProducts() == null) {
+                goods.setProducts(new ArrayList<Product>());
+            }
         }
         this.goodsDao.save(goods);
         if (!goods.getSpecificationEnabled()) {// 如果未启用商品规格
-            Product product = goods.getProducts() == null ? null : goods.getProducts().get(0);
-            if (product == null) {
-                product = new Product();
-            }
+            Product product = goods.getProducts().isEmpty() ? new Product() : goods.getProducts().get(0);
             product.initialize(goods);
-            product.getGoodsNotifys();
-            product.getStocks();
             productService.save(product);
-        } else {
-            List<Product> products = goods.getProducts() == null ? new ArrayList<Product>() : goods.getProducts();
-            for (Product product : products) {
-                product.setGoods(goods);
-                product.setMarketPrice(goods.getMarketPrice());
-                product.setName(goods.getName());
-                product.setCost(goods.getCost());
-                product.setSn(goods.getSn() + "-" + SequenceInfo.nextValue("PRODUCT_SN" + goods.getSn()));
-                product.setWeight(goods.getWeight());
+        } else {//启用了商品规格  TODO 该位置以后需要优化
+            for (Product product : goods.getProducts()) {
+                product.initialize(goods);
                 this.productService.save(product);
             }
         }
@@ -341,6 +337,21 @@ public class GoodsService implements InitializingBean {
     public List<Goods> find(List<PropertyFilter> filters, String orderBy, String order, int start, int size) {
         return this.goodsDao.find(filters, orderBy, order, start, size);
     }
+
+    /**
+     * 查询分类
+     *
+     * @param filters 查询条件
+     * @param orderBy 排序字段
+     * @param order   排序方向
+     * @param start   结果集返回的开始位置
+     * @param size    结果集条数
+     * @return List<GoodsCategory>
+     */
+    public List<GoodsCategory> findGoodsCategory(List<PropertyFilter> filters, String orderBy, String order, int start, int size){
+        return this.goodsCategoryDao.find(filters,orderBy,order,start,size);
+    }
+
 
     /**
      * 计算商品的存货及销售数量
@@ -578,12 +589,13 @@ public class GoodsService implements InitializingBean {
 
     /**
      * 分类分页查询
+     *
      * @param pager
      * @param filters
      * @return
      */
-    public Pager<GoodsCategory> findCategoryPager(Pager<GoodsCategory> pager, List<PropertyFilter> filters){
-        return this.goodsCategoryDao.findPager(pager,filters);
+    public Pager<GoodsCategory> findCategoryPager(Pager<GoodsCategory> pager, List<PropertyFilter> filters) {
+        return this.goodsCategoryDao.findPager(pager, filters);
     }
 
 }

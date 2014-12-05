@@ -16,8 +16,8 @@ import java.util.Date;
  * @since 2012-11-4 下午06:39:55
  */
 @Entity
-@Table(name = "CMS_SPECIAL")
-public class Special extends BaseBusEntity {
+@Table(name = "CMS_TOPIC")
+public class Topic extends BaseBusEntity {
 
     private static final long serialVersionUID = -5097339037069263955L;
 

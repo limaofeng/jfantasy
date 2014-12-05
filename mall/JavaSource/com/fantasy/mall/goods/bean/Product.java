@@ -1,11 +1,14 @@
 package com.fantasy.mall.goods.bean;
 
 import com.fantasy.attr.DynaBean;
+import com.fantasy.attr.DynaBeanEntityPersister;
 import com.fantasy.attr.bean.AttributeValue;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.dao.mybatis.keygen.util.SequenceInfo;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.cart.bean.CartItem;
 import com.fantasy.mall.delivery.bean.DeliveryItem;
@@ -15,6 +18,7 @@ import com.fantasy.mall.stock.bean.WarningSettings;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -29,6 +33,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MALL_PRODUCT")
+@Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "specificationValueStore", "goodsNotifys", "goodsImage", "goodsImageStore", "cartItems", "orderItems", "deliveryItems", "warningSettings"})
 public class Product extends BaseBusEntity implements DynaBean {
 
@@ -43,14 +48,36 @@ public class Product extends BaseBusEntity implements DynaBean {
             this.setGoods(goods);
         }
         // goods相同的属性
-        this.setSn(goods.getSn());
-        this.setName(goods.getName());
-        this.setPrice(goods.getPrice());
-        this.setCost(goods.getCost());
-        this.setMarketPrice(goods.getMarketPrice());
-        this.setMarketable(goods.getMarketable());
-        this.setWeight(goods.getWeight());
-        if (!goods.getGoodsImages().isEmpty()) {// product只保存一张图片
+        if (!goods.getSpecificationEnabled()) {
+            this.setSn(goods.getSn());
+        } else {
+            this.setSn(goods.getSn() + "-" + SequenceInfo.nextValue("PRODUCT_SN" + goods.getSn()));
+        }
+        if (StringUtil.isBlank(this.getName())) {
+            this.setName(goods.getName());
+        }
+
+        if (StringUtil.isBlank(this.getPrice())) {
+            this.setPrice(goods.getPrice());
+        }
+
+        if (StringUtil.isBlank(this.getCost())) {
+            this.setCost(goods.getCost());
+        }
+
+        if (StringUtil.isBlank(this.getMarketPrice())) {
+            this.setMarketPrice(goods.getMarketPrice());
+        }
+
+        if (StringUtil.isBlank(this.getMarketable())) {
+            this.setMarketable(goods.getMarketable());
+        }
+
+        if (StringUtil.isBlank(this.getWeight())) {
+            this.setWeight(goods.getWeight());
+        }
+
+        if (!goods.getGoodsImages().isEmpty() && this.getGoodsImage() == null) {// product只保存一张图片
             this.setGoodsImageStore(JSON.serialize(goods.getGoodsImages().get(0)));
         }
     }

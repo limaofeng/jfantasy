@@ -1,14 +1,13 @@
 package com.fantasy.cms.web;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import com.fantasy.cms.bean.Banner;
 import com.fantasy.cms.service.BannerService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * 轮播图Action
@@ -64,15 +63,15 @@ public class BannerAction extends ActionSupport {
 	 * @param id
 	 * @return
 	 */
-	public String edit(Long ids) {
-		this.attrs.put("banner", this.bannerService.get(ids));
+	public String edit(Long id) {
+		this.attrs.put("banner", this.bannerService.get(id));
 		return SUCCESS;
 	}
 	
 	/**
 	 * 删除
 	 * 
-	 * @param id
+	 * @param ids
 	 * @return
 	 */
 	
