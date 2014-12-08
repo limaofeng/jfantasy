@@ -9,7 +9,6 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-10-21 下午4:57:33
  */
 @JsonIgnoreProperties(value = {"fileManagerId", "realPath", "md5", "folder", "creator", "createTime", "modifier", "modifyTime"})

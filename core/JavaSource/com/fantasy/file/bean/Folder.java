@@ -5,6 +5,7 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.spring.SpringContextUtil;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "FILE_FOLDER")
 @IdClass(FolderKey.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Folder extends BaseBusEntity {
 
     private static final long serialVersionUID = -1415999483740197039L;

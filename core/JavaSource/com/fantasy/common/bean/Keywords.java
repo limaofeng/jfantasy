@@ -1,25 +1,21 @@
 package com.fantasy.common.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
+import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fantasy.framework.dao.BaseBusEntity;
+import javax.persistence.*;
 
 /**
  * 自定义关键词表(相当于词库)
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-12-23 下午3:25:46
  * @version 1.0
  */
 @Entity
 @Table(name = "KEYWORDS")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Keywords extends BaseBusEntity {
 
 	public enum Type {

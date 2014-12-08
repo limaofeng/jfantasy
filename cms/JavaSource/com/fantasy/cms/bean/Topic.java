@@ -1,6 +1,7 @@
 package com.fantasy.cms.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,6 +18,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "CMS_TOPIC")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Topic extends BaseBusEntity {
 
     private static final long serialVersionUID = -5097339037069263955L;

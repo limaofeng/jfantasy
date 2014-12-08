@@ -3,6 +3,7 @@ package com.fantasy.attr.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.StringUtil;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ATTR_VERSION",uniqueConstraints = {@UniqueConstraint(columnNames = {"CLASS_NAME","NUMBER"})})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AttributeVersion extends BaseBusEntity {
 
     @Id

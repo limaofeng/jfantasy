@@ -2,8 +2,12 @@ package com.fantasy.mall.goods.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import java.util.Date;
 
 /**
@@ -15,6 +19,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "MALL_GOODS_NOTIFY")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class GoodsNotify extends BaseBusEntity {
 
 	private static final long serialVersionUID = 2814795887062166006L;

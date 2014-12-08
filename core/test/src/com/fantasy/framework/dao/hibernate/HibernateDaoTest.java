@@ -24,7 +24,7 @@ public class HibernateDaoTest extends TestCase {
     @Test
     public void cache(){
         logger.debug("> Dao find 方法缓存测试");
-
+        long average = 0;
         long start = System.currentTimeMillis();
         logger.debug(" 开始第一次查 >> ");
         dataDictionaryService.allTypes();

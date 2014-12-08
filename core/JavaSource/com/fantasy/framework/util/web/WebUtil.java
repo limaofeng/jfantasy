@@ -2,7 +2,6 @@ package com.fantasy.framework.util.web;
 
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
@@ -19,6 +18,7 @@ import java.net.*;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * web 工具类<br/>
@@ -50,7 +50,6 @@ public class WebUtil {
      *
      * @param request HttpServletRequest
      * @return {String}
-     * @功能描述
      */
     public static String getExtension(HttpServletRequest request) {
         return getExtension(request.getRequestURI());
@@ -61,7 +60,6 @@ public class WebUtil {
      *
      * @param requestUri 请求路径
      * @return {String}
-     * @功能描述
      */
     public static String getExtension(String requestUri) {
         if (RegexpUtil.isMatch(requestUri, "[^/]{1,}[.]([^./]{1,})$")) {
@@ -100,7 +98,6 @@ public class WebUtil {
      *
      * @param request HttpServletRequest
      * @return {String}
-     * @功能描述
      */
     public static String getServerName(HttpServletRequest request) {
         return getServerName(request.getRequestURL().toString());
@@ -146,19 +143,22 @@ public class WebUtil {
      * @param request 路径
      * @return {String}
      */
-    public static String getPort(HttpServletRequest request) {
-        return String.valueOf(request.getLocalPort());
+    public static int getPort(HttpServletRequest request) {
+        return request.getLocalPort();
     }
 
-    @Deprecated
-    public static String getResponsePath(String filePath) {
-        return filePath.replaceAll("\\\\", "/").replaceFirst(PathUtil.root().replaceAll("\\\\", "/"), "").replaceAll("\\\\", "/");
-    }
-
-    @Deprecated
-    public static boolean acceptEncoding(HttpServletRequest request) {
-        String encoding = request.getHeader("Accept-Encoding");
-        return (encoding != null) && (encoding.contains("gzip"));
+    /**
+     * HTTP Header中Accept-Encoding 是浏览器发给服务器,声明浏览器支持的编码类型.常见的有
+     * Accept-Encoding: compress, gzip //支持compress 和gzip类型
+     * Accept-Encoding:　//默认是identity
+     * Accept-Encoding: *　//支持所有类型 Accept-Encoding: compress;q=0.5, gzip;q=1.0//按顺序支持 gzip , compress
+     * Accept-Encoding: gzip;q=1.0, identity; q=0.5, *;q=0 // 按顺序支持 gzip , identity
+     *
+     * @param request HTTP 请求对象
+     * @return Accept-Encoding
+     */
+    public static String getAcceptEncoding(HttpServletRequest request) {
+        return request.getHeader("Accept-Encoding");
     }
 
     public static String getReferer(HttpServletRequest request) {
@@ -172,9 +172,9 @@ public class WebUtil {
     public static Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = getCookies(request);
         if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                if (cookies[i].getName().equals(name))
-                    return cookies[i];
+            for (Cookie cooky : cookies) {
+                if (cooky.getName().equals(name))
+                    return cooky;
             }
         }
         return null;
@@ -211,9 +211,11 @@ public class WebUtil {
     }
 
     public static boolean isSelfIp(String ip) {
-        Enumeration<NetworkInterface> netInterfaces = null;
         try {
-            netInterfaces = NetworkInterface.getNetworkInterfaces();
+            if (InetAddress.getLocalHost().getHostAddress().equals(ip.trim())) {
+                return true;
+            }
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
             while (netInterfaces.hasMoreElements()) {
                 NetworkInterface ni = netInterfaces.nextElement();
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
@@ -232,6 +234,8 @@ public class WebUtil {
             }
         } catch (SocketException e) {
             logger.error(e.getMessage(), e);
+        } catch (UnknownHostException e) {
+            logger.error(e.getMessage(), e);
         }
         return false;
     }
@@ -243,7 +247,7 @@ public class WebUtil {
      */
     public static String[] getServerIps() {
         String[] serverIps = new String[0];
-        Enumeration<NetworkInterface> netInterfaces = null;
+        Enumeration<NetworkInterface> netInterfaces;
         try {
             netInterfaces = NetworkInterface.getNetworkInterfaces();
             while (netInterfaces.hasMoreElements()) {
@@ -251,7 +255,8 @@ public class WebUtil {
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
                     InetAddress ia = ips.nextElement();
-                    if (ia instanceof Inet4Address && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {// 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
+                    // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
+                    if (ia instanceof Inet4Address && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
                         serverIps = ObjectUtil.join(serverIps, ia.getHostAddress());
                     }
                 }
@@ -384,21 +389,17 @@ public class WebUtil {
         return queryString.replace("&$", "").concat("&sort=" + orderBy + "-asc");
     }
 
-    @SuppressWarnings("unchecked")
     public static Map<String, String> getParameterMap(HttpServletRequest request) {
         Map<String, String> parameter = new LinkedHashMap<String, String>();
-        Set<Map.Entry<String, Object>> entries = request.getParameterMap().entrySet();
-        for (Map.Entry<String, Object> entry : entries) {
-            if (ClassUtil.isArray(entry.getValue())) {
-                parameter.put(entry.getKey(), (String) Array.get(entry.getValue(), 0));
-            } else {
-                parameter.put(entry.getKey(), (String) entry.getValue());
-            }
+        Set<Map.Entry<String, String[]>> entries = request.getParameterMap().entrySet();
+        for (Map.Entry<String, String[]> entry : entries) {
+            parameter.put(entry.getKey(), entry.getValue()[0]);
         }
         return parameter;
     }
+
     public static class UserAgent {
-        
+
     }
 
     public static enum Browser {
@@ -455,15 +456,6 @@ public class WebUtil {
         } catch (UnsupportedEncodingException e) {
             logger.error(e);
             return name;
-        }
-    }
-
-    public static String getValue(byte[] bytes, String charset) {
-        try {
-            return new String(bytes, charset);
-        } catch (UnsupportedEncodingException e) {
-            logger.error(e);
-            return new String(bytes);
         }
     }
 

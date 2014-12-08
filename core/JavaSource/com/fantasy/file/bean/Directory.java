@@ -7,7 +7,7 @@ import javax.persistence.*;
 /**
  * 文件上传时，为其指定的上传目录
  * 
- * @功能描述 通过Key获取上传的目录及文件管理器
+ * 通过Key获取上传的目录及文件管理器
  * @author 李茂峰
  * @since 2013-7-23 上午10:30:06
  * @version 1.0
