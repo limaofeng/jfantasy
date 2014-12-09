@@ -8,7 +8,7 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
-	<form action="${paymentUrl}" method="post">
+	<form action="${paymentUrl}" method="get">
         <#list parameterMap?keys as key>
             <#if StringUtil.isNotBlank(parameterMap.get(key))>
             ${key}:<input type="text" name="${key}" value="${parameterMap.get(key)}"><br/>

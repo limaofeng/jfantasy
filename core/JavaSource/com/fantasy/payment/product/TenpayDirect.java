@@ -1,11 +1,12 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,38 +30,26 @@ public class TenpayDirect extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    public String getPaymentSn(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String spBillno = httpServletRequest.getParameter("sp_billno");
-        if (StringUtils.isEmpty(spBillno)) {
-            return null;
-        }
-        return spBillno;
-    }
-
-    public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String totalFee = httpServletRequest.getParameter("total_fee");
-        if (StringUtils.isEmpty(totalFee)) {
-            return null;
-        }
-        return new BigDecimal(totalFee).divide(new BigDecimal(100));
-    }
-
     public boolean isPaySuccess(Map<String, String> parameters) {
         if (parameters == null) {
             return false;
         }
+        /*
+        parameters.get("sp_billno")
+        new BigDecimal(parameters.get("total_fee")).divide(new BigDecimal(100))
+        */
         String payResult = parameters.get("pay_result");
         return StringUtils.equals(payResult, "0");
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
+    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+        PaymentContext context = PaymentContext.getContext();
+        PaymentConfig paymentConfig = context.getPaymentConfig();
+        Payment payment = context.getPayment();
+        BigDecimal paymentAmount = payment.getTotalAmount();
+        String paymentSn = payment.getSn();
+
         String transactionId = buildTenpayTransactionId(paymentConfig.getBargainorId(), paymentSn);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMdd");
         String dateString = simpleDateFormat.format(new Date());
@@ -118,7 +107,8 @@ public class TenpayDirect extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
+    public boolean verifySign(Map<String, String> parameters) {
+        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 财付通（即时交易）
         String cmdno = parameters.get("cmdno");
         String pay_result = parameters.get("pay_result");
@@ -150,7 +140,7 @@ public class TenpayDirect extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPaynotifyMessage() {
+    public String getPaynotifyMessage(String paymentSn) {
         return null;
     }
 

@@ -5,6 +5,7 @@ import com.fantasy.file.bean.FileDetailKey;
 import com.fantasy.file.bean.Folder;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.common.NumberUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
@@ -60,12 +61,12 @@ public class FileServiceTest {
         FileDetail fileDetail = this.fileService.get(fileDetailKey);
         fileDetail.setFileName("替换原生的文件名");
         this.fileService.update(fileDetail);
-        Assert.assertEquals("替换原生的文件名",this.fileService.get(fileDetailKey).getFileName());
+        Assert.assertEquals("替换原生的文件名", this.fileService.get(fileDetailKey).getFileName());
     }
 
     @Test
     public void testGetFolder() throws Exception {
-        Folder folder = this.fileService.getFolder("/","haolue-upload");
+        Folder folder = this.fileService.getFolder("/", "haolue-upload");
         Assert.assertNotNull(folder);
     }
 
@@ -96,7 +97,36 @@ public class FileServiceTest {
 
     @Test
     public void testFindFileDetailPager() throws Exception {
-        this.fileService.findFileDetailPager(new Pager<FileDetail>(15), new ArrayList<PropertyFilter>());
+        logger.debug("> Dao findPager 方法缓存测试");
+
+        long min, max, total = 0;
+        long start = System.currentTimeMillis();
+        logger.debug(" 开始第一次查 >> ");
+        Pager<FileDetail> pager = this.fileService.findFileDetailPager(new Pager<FileDetail>(15), new ArrayList<PropertyFilter>());
+        long _temp = System.currentTimeMillis() - start;
+        total += _temp;
+        max = min = _temp;
+        logger.debug(" 第一次查询耗时：" + _temp + "ms");
+
+        for (int i = 2; i < 250; i++) {
+            start = System.currentTimeMillis();
+            logger.debug(" 开始第" + NumberUtil.toChinese(i) + "次查 >> ");
+            Pager<FileDetail> _pager = this.fileService.findFileDetailPager(new Pager<FileDetail>(15), new ArrayList<PropertyFilter>());
+
+            Assert.assertEquals(pager.getTotalCount(), _pager.getTotalCount());
+            Assert.assertEquals(pager.getPageItems().size(), _pager.getPageItems().size());
+
+            _temp = System.currentTimeMillis() - start;
+            total += _temp;
+            if (_temp >= max) {
+                max = _temp;
+            }
+            if (_temp <= min) {
+                min = _temp;
+            }
+            logger.debug(" 第" + NumberUtil.toChinese(i) + "次查询耗时：" + _temp + "ms");
+        }
+        logger.debug("查询耗共耗时：" + total + "ms\t平均:" + total / 250 + "ms\t最大:" + max + "ms\t最小:" + min + "ms");
     }
 
     @Test

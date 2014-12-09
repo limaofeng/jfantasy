@@ -745,8 +745,8 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     @SuppressWarnings("unchecked")
     public Pager<T> findPager(Pager<T> pager, Criterion... criterions) {
         pager = pager == null ? new Pager<T>() : pager;
-        pager.setTotalCount(count(criterions));
         Criteria c = distinct(createCriteria(criterions, StringUtil.tokenizeToStringArray(pager.getOrderBy())));
+        pager.setTotalCount(countCriteriaResult(c));
         setPageParameter(c, pager);
         pager.setPageItems(c.list());
         return pager;

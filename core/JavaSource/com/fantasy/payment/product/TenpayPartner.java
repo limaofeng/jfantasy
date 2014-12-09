@@ -1,11 +1,12 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -28,42 +29,25 @@ public class TenpayPartner extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    public String getPaymentSn(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String cftTid = httpServletRequest.getParameter("cft_tid");
-        if (StringUtils.isEmpty(cftTid)) {
-            return null;
-        }
-        return cftTid;
-    }
-
-    public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String totalFee = httpServletRequest.getParameter("total_fee");
-        if (StringUtils.isEmpty(totalFee)) {
-            return null;
-        }
-        return new BigDecimal(totalFee).divide(new BigDecimal(100));
-    }
-
     public boolean isPaySuccess(Map<String, String> parameters) {
         if (parameters == null) {
             return false;
         }
+        //getPaymentSn
+        //parameters.get("cft_tid")
+        //getPaymentAmount
+        //new BigDecimal(parameters.get("total_fee")).divide(new BigDecimal(100))
         String status = parameters.get("status");
-        if (StringUtils.equals(status, "3")) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.equals(status, "3");
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
+    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+        PaymentContext context = PaymentContext.getContext();
+        PaymentConfig paymentConfig = context.getPaymentConfig();
+        Payment payment = context.getPayment();
+        BigDecimal paymentAmount = payment.getTotalAmount();
+        String paymentSn = payment.getSn();
         String totalAmountString = paymentAmount.multiply(new BigDecimal(100)).setScale(0).toString();
 
         String attach = "sh" + "op" + "xx";// 商户数据
@@ -128,7 +112,8 @@ public class TenpayPartner extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
+    public boolean verifySign(Map<String, String> parameters) {
+        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String attach = parameters.get("attach");
         String buyer_id = parameters.get("buyer_id");
@@ -161,11 +146,7 @@ public class TenpayPartner extends AbstractPaymentProduct {
         parameterMap.put("transport_fee", transport_fee);
         parameterMap.put("version", version);
         parameterMap.put("key", paymentConfig.getBargainorKey());
-        if (StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase())) {
-            return true;
-        } else {
-            return false;
-        }
+        return StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase());
     }
 
     @Override
@@ -174,7 +155,7 @@ public class TenpayPartner extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPaynotifyMessage() {
+    public String getPaynotifyMessage(String paymentSn) {
         return null;
     }
 

@@ -1,6 +1,8 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -31,41 +33,27 @@ public class Yeepay extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    /*
-    @Override
-    public String getPaymentSn(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String r6Order = httpServletRequest.getParameter("r6_Order");
-        if (StringUtils.isEmpty(r6Order)) {
-            return null;
-        }
-        return r6Order;
-    }
-
-    @Override
-    public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String r3Amt = httpServletRequest.getParameter("r3_Amt");
-        if (StringUtils.isEmpty(r3Amt)) {
-            return null;
-        }
-        return new BigDecimal(r3Amt);
-    }*/
-
     public boolean isPaySuccess(Map<String, String> parameters) {
         if (parameters == null) {
             return false;
         }
+        //getPaymentSn
+        //parameters.get("r6_Order")
+        //getPaymentAmount
+        //parameters.get("r3_Amt")
+
         String r1Code = parameters.get("r1_Code");
         return StringUtils.equals(r1Code, "1");
     }
 
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
+    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+        PaymentContext context = PaymentContext.getContext();
+        PaymentConfig paymentConfig = context.getPaymentConfig();
+        Payment payment = context.getPayment();
+        BigDecimal paymentAmount = payment.getTotalAmount();
+        String paymentSn = payment.getSn();
+
         String p0_Cmd = "Buy";// 业务类型
         String p1_MerId = paymentConfig.getBargainorId();// 商户编号
         String p2_Order = paymentSn;// 支付编号
@@ -105,7 +93,8 @@ public class Yeepay extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
+    public boolean verifySign(Map<String, String> parameters) {
+        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String p1_MerId = parameters.get("p1_MerId");
         String r0_Cmd = parameters.get("r0_Cmd");
@@ -178,7 +167,7 @@ public class Yeepay extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPaynotifyMessage() {
+    public String getPaynotifyMessage(String paymentSn) {
         return null;
     }
 

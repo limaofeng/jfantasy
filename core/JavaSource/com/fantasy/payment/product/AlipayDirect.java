@@ -2,7 +2,10 @@ package com.fantasy.payment.product;
 
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.web.WebUtil;
+import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.service.OrderDetails;
+import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
@@ -11,11 +14,6 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.math.BigDecimal;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -25,10 +23,10 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 支付宝（即时交易）
  */
-public class AlipayDirect extends AbstractPaymentProduct {
+public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
     private static final String HTTPS_VERIFY_URL = "https://mapi.alipay.com/gateway.do?service=notify_verify&";
-    public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=UTF-8";// 支付请求URL
+    public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
     public static final String RETURN_URL = "/payment/payreturn.do";// 回调处理URL
     public static final String NOTIFY_URL = "/payment/paynotify.do";// 消息通知URL
     public static final String SHOW_URL = "/payment.do";// 支付单回显url
@@ -89,33 +87,30 @@ public class AlipayDirect extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    public boolean isPaySuccess(Map<String, String> parameters) {
-        if (parameters == null) {
-            return false;
-        }
-        String tradeStatus = parameters.get("trade_status");
-        return StringUtils.equals(tradeStatus, "TRADE_FINISHED") || StringUtils.equals(tradeStatus, "TRADE_SUCCESS");
-    }
-
     @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, Map<String, String> parameters) {
+    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+        PaymentContext context = PaymentContext.getContext();
+        PaymentConfig paymentConfig = context.getPaymentConfig();
+        OrderDetails orderDetails = context.getOrderDetails();
+        Payment payment = context.getPayment();
+
         HttpServletResponse response = ServletActionContext.getResponse();
         String _input_charset = "UTF-8";// 字符集编码格式（UTF-8、GBK）
-        AtomicReference<String> body = new AtomicReference<String>(paymentSn);// 订单描述
+        AtomicReference<String> body = new AtomicReference<String>(orderDetails.getSN());// 订单描述
         String defaultbank = parameters.get("bankNo");// 默认选择银行（当paymethod为bankPay时有效）
         String extra_common_param = "";// 商户数据
-        String notify_url = SettingUtil.getServerUrl() + response.encodeURL(NOTIFY_URL + "?sn=" + paymentSn);// 消息通知URL
-        AtomicReference<String> out_trade_no = new AtomicReference<String>(paymentSn);// 支付编号
+        String notify_url = SettingUtil.getServerUrl() + response.encodeURL(NOTIFY_URL + "?sn=" + payment.getSn());// 消息通知URL
+        AtomicReference<String> out_trade_no = new AtomicReference<String>(payment.getSn());// 支付编号
         String partner = paymentConfig.getBargainorId();// 合作身份者ID
         String payment_type = "1";// 支付类型（固定值：1）
         String paymethod = StringUtil.isBlank(defaultbank) ? "directPay" : "bankPay";// 默认支付方式（bankPay：网银、cartoon：卡通、directPay：余额、CASH：网点支付）
-        String return_url = SettingUtil.getServerUrl() + response.encodeURL(RETURN_URL + "?sn=" + paymentSn);// 回调处理URL
+        String return_url = SettingUtil.getServerUrl() + response.encodeURL(RETURN_URL + "?sn=" + payment.getSn());// 回调处理URL
         String seller_id = paymentConfig.getSellerEmail();// 商家ID
         String service = "create_direct_pay_by_user";// 接口类型（create_direct_pay_by_user：即时交易）
-        String show_url = SettingUtil.getServerUrl() + response.encodeURL(SHOW_URL + "?sn=" + paymentSn);// 商品显示URL
+        String show_url = SettingUtil.getServerUrl() + response.encodeURL(SHOW_URL + "?sn=" + payment.getSn());// 商品显示URL
         String sign_type = "MD5";//签名加密方式（MD5）
-        AtomicReference<String> subject = new AtomicReference<String>(paymentSn);// 订单的名称、标题、关键字等
-        String total_fee = decimalFormat.format(paymentAmount);// 总金额（单位：元）
+        AtomicReference<String> subject = new AtomicReference<String>(orderDetails.getSubject());// 订单的名称、标题、关键字等
+        String total_fee = decimalFormat.format(orderDetails.getPayableFee());// 总金额（单位：元）
         String key = paymentConfig.getBargainorKey();// 密钥
         //防钓鱼时间戳
         String anti_phishing_key = "";
@@ -154,9 +149,12 @@ public class AlipayDirect extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, Map<String, String> parameters) {
+    public boolean verifySign(Map<String, String> parameters) {
+        PaymentContext context = PaymentContext.getContext();
+        PaymentConfig paymentConfig = context.getPaymentConfig();
+
         Map<String, String> params = new HashMap<String, String>();
-        for (Map.Entry<String,String> entry : parameters.entrySet()) {
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
             //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
             params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
         }
@@ -172,33 +170,6 @@ public class AlipayDirect extends AbstractPaymentProduct {
         return StringUtils.equals(params.get("sign"), DigestUtils.md5Hex(getParameterString(paraFilter(params)) + paymentConfig.getBargainorKey())) && verifyResponse(paymentConfig.getBargainorId(), params.get("notify_id"));
     }
 
-    /**
-     * 获取远程服务器ATN结果,验证返回URL
-     *
-     * @param notify_id 通知校验ID
-     * @return 服务器ATN结果
-     * 验证结果集：
-     * invalid命令参数不对 出现这个错误，请检测返回处理中partner和key是否为空
-     * true 返回正确信息
-     * false 请检查防火墙或者是服务器阻止端口问题以及验证时间是否超过一分钟
-     */
-    private static boolean verifyResponse(String partner, String notify_id) {
-        if (notify_id == null) {
-            return true;
-        }
-        //获取远程服务器ATN结果，验证是否是支付宝服务器发来的请求
-        try {
-            URL url = new URL(HTTPS_VERIFY_URL + "partner=" + partner + "&notify_id=" + notify_id);
-            HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-            BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
-            return "true".equalsIgnoreCase(in.readLine());
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return false;
-        }
-    }
-
-
     public static Map<String, String> getDebitBankcodes() {
         return AlipayDirect.debitBankcodes;
     }
@@ -213,7 +184,7 @@ public class AlipayDirect extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPaynotifyMessage() {
+    public String getPaynotifyMessage(String paymentSn) {
         return "success";
     }
 
