@@ -1,6 +1,7 @@
 package com.fantasy.common.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "JDBC_CONFIG")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class JdbcConfig extends BaseBusEntity {
 
     private static final long serialVersionUID = 7287559970566190214L;

@@ -1,22 +1,21 @@
 package com.fantasy.security.bean;
 
-import java.util.List;
+import com.fantasy.framework.dao.BaseBusEntity;
+import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
-import com.fantasy.framework.dao.BaseBusEntity;
+import java.util.List;
 
 /**
  * 组织机构
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-1-22 下午04:00:57
  * @version 1.0
  */
 @JsonIgnoreProperties( { "hibernateLazyInitializer" })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Organization extends BaseBusEntity {
 
 	private static final long serialVersionUID = -6159187521342750200L;

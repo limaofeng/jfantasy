@@ -24,7 +24,6 @@ public class HibernateDaoTest extends TestCase {
     @Test
     public void cache(){
         logger.debug("> Dao find 方法缓存测试");
-
         long start = System.currentTimeMillis();
         logger.debug(" 开始第一次查 >> ");
         dataDictionaryService.allTypes();
@@ -40,17 +39,17 @@ public class HibernateDaoTest extends TestCase {
         logger.debug("\n\n\n> Dao get 方法缓存测试");
 
 
-        start = System.currentTimeMillis();
-        logger.debug(" 开始第一次查 >> ");
-        dataDictionaryService.get("root:test");
-        logger.debug(" 第一次查询耗时：" + (System.currentTimeMillis() - start) + "ms");
-
-        for(int i=2;i<10;i++) {
-            start = System.currentTimeMillis();
-            logger.debug(" 开始第"+ NumberUtil.toChinese(i) +"次查 >> ");
-            dataDictionaryService.get("root:test");
-            logger.debug(" 第"+ NumberUtil.toChinese(i) +"次查询耗时：" + (System.currentTimeMillis() - start) + "ms");
-        }
+//        start = System.currentTimeMillis();
+//        logger.debug(" 开始第一次查 >> ");
+//        dataDictionaryService.get("root:test");
+//        logger.debug(" 第一次查询耗时：" + (System.currentTimeMillis() - start) + "ms");
+//
+//        for(int i=2;i<10;i++) {
+//            start = System.currentTimeMillis();
+//            logger.debug(" 开始第"+ NumberUtil.toChinese(i) +"次查 >> ");
+//            dataDictionaryService.get("root:test");
+//            logger.debug(" 第"+ NumberUtil.toChinese(i) +"次查询耗时：" + (System.currentTimeMillis() - start) + "ms");
+//        }
     }
 
 }

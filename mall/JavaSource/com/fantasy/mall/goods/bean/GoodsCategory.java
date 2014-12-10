@@ -14,10 +14,14 @@ import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.codehaus.jackson.type.TypeReference;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Persister;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,6 +35,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_GOODS_CATEGORY")
 @Persister(impl = DynaBeanEntityPersister.class)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "metaKeywords", "metaDescription", "goodsParameterStore", "brandCustomSort", "goods"})
 public class GoodsCategory extends BaseBusEntity implements DynaBean {
 

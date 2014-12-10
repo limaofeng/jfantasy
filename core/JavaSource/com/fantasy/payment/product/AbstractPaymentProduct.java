@@ -1,11 +1,12 @@
 package com.fantasy.payment.product;
 
-import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.service.PaymentContext;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.web.util.HtmlUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -14,8 +15,10 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public abstract class AbstractPaymentProduct implements PaymentProduct {
 
+    protected final static Log LOG = LogFactory.getLog(AbstractPaymentProduct.class);
+    /*
     protected static final String RESULT_URL = "/payment/result.do";// 支付结果显示URL
-
+    */
     protected String id;//支付产品ID
     protected String name;// 支付产品名称
     protected String bargainorIdName;// 商户ID参数名称
@@ -25,70 +28,20 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
     protected String logoPath;// 支付产品LOGO路径
 
     /**
-     * 获取支付请求URL
-     *
-     * @return 支付请求URL
-     */
-    @JsonIgnore
-    public abstract String getPaymentUrl();
-
-    /**
-     * 获取支付编号
-     *
-     * @param httpServletRequest httpServletRequest
-     * @return 支付编号
-     */
-    public abstract String getPaymentSn(HttpServletRequest httpServletRequest);
-
-    /**
-     * 获取支付金额（单位：元）
-     *
-     * @param httpServletRequest httpServletRequest
-     * @return 支付金额
-     */
-    public abstract BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest);
-
-    /**
      * 判断是否支付成功
      *
-     * @param httpServletRequest httpServletRequest
+     * @param parameters 请求参数
      * @return 是否支付成功
      */
-    public abstract boolean isPaySuccess(HttpServletRequest httpServletRequest);
-
-    /**
-     * 获取参数
-     *
-     * @param paymentSn          支付编号
-     * @param paymentAmount      支付金额
-     * @param httpServletRequest httpServletRequest
-     * @return 在线支付参数
-     */
-    public abstract Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest);
+    public abstract boolean isPaySuccess(Map<String, String> parameters);
 
     /**
      * 验证签名
      *
-     * @param httpServletRequest httpServletRequest
+     * @param parameters 请求参数
      * @return 是否验证通过
      */
-    public abstract boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest httpServletRequest);
-
-    /**
-     * 根据支付编号获取支付返回信息
-     *
-     * @param paymentSn 支付编号
-     * @return 支付返回信息
-     */
-    public abstract String getPayreturnMessage(String paymentSn);
-
-    /**
-     * 获取支付通知信息
-     *
-     * @return 支付通知信息
-     */
-    @JsonIgnore
-    public abstract String getPaynotifyMessage();
+    public abstract boolean verifySign(Map<String, String> parameters);
 
     /**
      * 根据参数集合组合参数字符串（忽略空值参数）
@@ -123,6 +76,54 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
             result.put(key, value);
         }
         return result;
+    }
+
+    @Override
+    public String buildRequest(Map<String, String> sParaTemp) {
+        return this.buildRequest(sParaTemp, "post", "确定");
+    }
+
+    /**
+     * 建立请求，以表单HTML形式构造（默认）
+     *
+     * @param sParaTemp     请求参数数组
+     * @param strMethod     提交方式。两个值可选：post、get
+     * @param strButtonName 确认按钮显示文字
+     * @return 提交表单HTML文本
+     */
+    public String buildRequest(Map<String, String> sParaTemp, String strMethod, String strButtonName) {
+        //待请求参数数组
+        List<String> keys = new ArrayList<String>(sParaTemp.keySet());
+
+        StringBuilder sbHtml = new StringBuilder();
+
+        sbHtml.append("<form id=\"alipaysubmit\" name=\"alipaysubmit\" action=\"").append(getPaymentUrl()).append("\" method=\"").append(strMethod).append("\">\n");
+
+        for (String key : keys) {
+            String value = sParaTemp.get(key);
+            sbHtml.append(key).append(":<input type=\"hidden\" name=\"").append(key).append("\" value=\"").append(HtmlUtils.htmlEscape(value)).append("\"/><br/>\n");
+        }
+
+        //submit按钮控件请不要含有name属性
+        sbHtml.append("<input type=\"submit\" value=\"").append(strButtonName).append("\" style=\"display:none;\">\n</form>");
+
+        sbHtml.append("\n<script>document.forms['alipaysubmit'].submit();</script>");
+
+        if (LOG.isDebugEnabled()) {
+            LOG.debug(sbHtml);
+        }
+
+        return sbHtml.toString();
+    }
+
+    @Override
+    public String getPayreturnMessage(String paymentSn) {
+        return "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + PaymentContext.getContext().getShowPaymentUrl(paymentSn) + "\"></form></body></html>";
+    }
+
+    @Override
+    public String getPaynotifyMessage(String paymentSn) {
+        return null;
     }
 
     public String getName() {

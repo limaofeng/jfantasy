@@ -7,6 +7,7 @@ import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.commons.lang.StringUtils;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.type.TypeReference;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -22,6 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_BANNER_ITEM")
 @JsonIgnoreProperties(value = {"banner", "bannerImageStore"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class BannerItem extends BaseBusEntity {
 
     private static final long serialVersionUID = 3179187068898470124L;

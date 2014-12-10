@@ -1,6 +1,7 @@
 package com.fantasy.attr.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ATTR_CONVERTER")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Converter extends BaseBusEntity {
 
     private static final long serialVersionUID = -1025801007920540587L;

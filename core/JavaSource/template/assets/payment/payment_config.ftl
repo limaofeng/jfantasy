@@ -118,7 +118,7 @@
                             </a>
                         </li>
                         <li>
-                            <a target="_blank" href="<@s.url namespace="/system/payconfig" action="text?amount=0.01"/>&paymentConfigId={id}">
+                            <a target="_blank" href="<@s.url namespace="/system/payconfig" action="test?amount=0.01"/>&paymentConfigId={id}">
                                 <i class="glyph-icon icon-edit mrg5R"></i>
                                 <@s.text name="payment.config.list.actions.test"/>
                             </a>

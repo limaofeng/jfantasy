@@ -2,6 +2,7 @@ package com.fantasy.common.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
 @Entity
 @Table(name = "AREA")
 @JsonIgnoreProperties(value = {"JavassistLazyInitializer", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Area extends BaseBusEntity {
 
     private static final long serialVersionUID = -2158109459123036967L;

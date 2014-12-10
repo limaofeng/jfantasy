@@ -8,13 +8,6 @@
 <link rel="icon" href="favicon.ico" type="image/x-icon" />
 </head>
 <body>
-	<form action="${paymentUrl}" method="post">
-        <#list parameterMap?keys as key>
-            <#if StringUtil.isNotBlank(parameterMap.get(key))>
-            ${key}:<input type="text" name="${key}" value="${parameterMap.get(key)}"><br/>
-            </#if>
-        </#list>
-        <input type="submit" value="提交">
-	</form>
+	${sHtmlText}
 </body>
 </html>

@@ -8,6 +8,7 @@ import com.fantasy.security.bean.enums.ResourceType;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.annotate.JsonProperty;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +21,6 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 访问规则
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2014年4月23日 下午5:53:06
  * @version 1.0
@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Entity
 @Table(name = "AUTH_RESOURCE")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "parentResources", "userGroups", "roles" })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Resource extends BaseBusEntity {
 
 	private static final long serialVersionUID = -4031735792597359821L;
