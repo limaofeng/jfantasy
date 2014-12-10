@@ -895,7 +895,7 @@
     </modules>
 
     <!-- 项目信息设置 -->
-    <name>jfantasy</name>
+    <name>fantasy-framework</name>
     <description>昊略公司开发框架</description>
     <url>http://www.jfantasy.org</url>
     <inceptionYear>2012</inceptionYear>
