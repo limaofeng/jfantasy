@@ -49,7 +49,7 @@ public class PaymentAction extends ActionSupport {
      * @return {string}
      */
     public String submit(String orderType, String orderSn, Long paymentConfigId) throws IOException, PaymentException {
-        String sHtmlText = paymentService.submit(orderType, orderSn, paymentConfigId, WebUtil.getParameterMap(this.request));
+        String sHtmlText = paymentService.buildRequest(orderType, orderSn, paymentConfigId, WebUtil.getParameterMap(this.request));
         this.attrs.put("sHtmlText", sHtmlText);
         return SUCCESS;
     }

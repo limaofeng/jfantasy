@@ -185,8 +185,8 @@ public class PaymentService {
     }
 
 
-    public String submit(String orderType, String orderSn, Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
-        return this.submit(orderType, orderSn, paymentConfigId, "", parameters);
+    public String buildRequest(String orderType, String orderSn, Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
+        return this.buildRequest(orderType, orderSn, paymentConfigId, "", parameters);
     }
 
     public String test(Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
@@ -232,7 +232,7 @@ public class PaymentService {
      * @param parameters      请求参数
      * @return html 表单字符串
      */
-    public String submit(String orderType, String orderSn, Long paymentConfigId, String payMember, Map<String, String> parameters) throws PaymentException {
+    public String buildRequest(String orderType, String orderSn, Long paymentConfigId, String payMember, Map<String, String> parameters) throws PaymentException {
         Payment payment = this.ready(orderType, orderSn, payMember, paymentConfigId);
 
         PaymentContext context = this.createPaymentContext(payment.getSn());
