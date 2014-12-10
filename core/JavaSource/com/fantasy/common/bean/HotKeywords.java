@@ -1,24 +1,18 @@
 package com.fantasy.common.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import org.hibernate.annotations.GenericGenerator;
-
 import com.fantasy.common.bean.enums.TimeUnit;
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 /**
  * 热门关键词
  */
 @Entity
 @Table(name = "HOT_KEYWORDS", uniqueConstraints = { @UniqueConstraint(columnNames = { "TARGET_KEY", "KEYWORDS", "TIME_UNIT", "TIME" }) })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class HotKeywords extends BaseBusEntity {
 
 	private static final long serialVersionUID = 1060015917650774536L;

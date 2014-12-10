@@ -2,6 +2,8 @@ package com.fantasy.payment.service;
 
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.payment.order.TestOrderDetailsService;
 import com.fantasy.payment.product.*;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -19,7 +21,7 @@ public class PaymentConfiguration implements InitializingBean {
      * 所有支持的支付产品
      */
     private List<PaymentProduct> paymentProducts = new ArrayList<PaymentProduct>();
-    private Map<String,PaymentOrderService> paymentOrderServices = new HashMap<String, PaymentOrderService>();
+    private Map<String,OrderDetailsService> paymentOrderServices = new HashMap<String, OrderDetailsService>();
 
     public void setPaymentProducts(List<PaymentProduct> paymentProducts) {
         this.paymentProducts = paymentProducts;
@@ -29,7 +31,7 @@ public class PaymentConfiguration implements InitializingBean {
         return ObjectUtil.find(this.paymentProducts, "id", paymentProductId);
     }
 
-    public void setPaymentOrderServices(Map<String, PaymentOrderService> paymentOrderServices) {
+    public void setPaymentOrderServices(Map<String, OrderDetailsService> paymentOrderServices) {
         this.paymentOrderServices = paymentOrderServices;
     }
 
@@ -52,6 +54,19 @@ public class PaymentConfiguration implements InitializingBean {
             alipayDirect.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
             alipayDirect.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
             this.paymentProducts.add(alipayDirect);
+        }
+
+        //支付宝WAP即时交易
+        if (ObjectUtil.find(this.paymentProducts, "id", "alipayDirectByWap") == null) {
+            AlipayDirectByWap alipayDirectByWap = new AlipayDirectByWap();
+            alipayDirectByWap.setId("alipayDirectByWap");
+            alipayDirectByWap.setName("支付宝（WAP即时交易）");
+            alipayDirectByWap.setBargainorIdName("合作身份者ID");
+            alipayDirectByWap.setBargainorKeyName("安全校验码");
+            alipayDirectByWap.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
+            alipayDirectByWap.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
+            alipayDirectByWap.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
+            this.paymentProducts.add(alipayDirectByWap);
         }
 
         //支付宝担保交易
@@ -121,12 +136,17 @@ public class PaymentConfiguration implements InitializingBean {
 
         //支付订单service
         if(!this.paymentOrderServices.containsKey("test")){
-            this.paymentOrderServices.put("test", SpringContextUtil.createBean(TestPaymentOrderService.class,SpringContextUtil.AUTOWIRE_BY_TYPE));
+            TestOrderDetailsService orderDetailsService = SpringContextUtil.createBean(TestOrderDetailsService.class,SpringContextUtil.AUTOWIRE_BY_TYPE);
+            orderDetailsService.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
+            orderDetailsService.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
+            orderDetailsService.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
+            orderDetailsService.setShowUrlTemplate("http://test.jfantasy.org/order/{orderSn}");
+            this.paymentOrderServices.put("test", orderDetailsService);
         }
 
     }
 
-    public PaymentOrderService getPaymentOrderService(String orderType) {
+    public OrderDetailsService getPaymentOrderService(String orderType) {
         if(!this.paymentOrderServices.containsKey(orderType)){
             //TODO 添加自定义异常
             throw new RuntimeException("orderType["+orderType+"] 对应的 PaymentOrderService 未配置！");

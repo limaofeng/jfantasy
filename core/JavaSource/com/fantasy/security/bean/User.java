@@ -12,6 +12,7 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.codehaus.jackson.map.JsonSerializer;
 import org.codehaus.jackson.map.SerializerProvider;
 import org.codehaus.jackson.map.annotate.JsonSerialize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -25,6 +26,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "userGroups", "password", "menus", "authorities" ,"logoImageStore"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements FantasyUserDetails {
 
 	private static final long serialVersionUID = 5507435998232223911L;

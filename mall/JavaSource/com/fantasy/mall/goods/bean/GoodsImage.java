@@ -4,6 +4,8 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 /**
  * 商品预览时的图片
@@ -13,6 +15,7 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
  * @since 2013-10-21 下午4:57:33
  */
 @JsonIgnoreProperties(value = {"realPath", "md5", "folder", "creator", "createTime", "modifier", "modifyTime", "sourceImagePath", "bigImagePath", "smallImagePath", "thumbnailImagePath"})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class GoodsImage extends FileDetail implements Comparable<GoodsImage> {
 
     private static final long serialVersionUID = 5747517861013219422L;

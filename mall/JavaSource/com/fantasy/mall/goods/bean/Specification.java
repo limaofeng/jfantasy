@@ -2,9 +2,12 @@ package com.fantasy.mall.goods.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -16,6 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MALL_SPECIFICATION")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
 public class Specification extends BaseBusEntity {
 

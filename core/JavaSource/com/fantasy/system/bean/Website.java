@@ -5,6 +5,7 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.security.bean.Menu;
 import com.fantasy.security.bean.User;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -21,6 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = "SYS_WEBSITE")
 @JsonIgnoreProperties(value = {"defaultFileManager", "defaultUploadFileManager", "settings", "user"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Website extends BaseBusEntity {
 
     private static final long serialVersionUID = 3763626581086219087L;

@@ -7,6 +7,7 @@ import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.*;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
 
@@ -26,6 +27,7 @@ import java.util.List;
 @Table(name = "CMS_ARTICLE")
 @Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "content", "keywords", "version", "attributeValues"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Article extends BaseBusEntity implements DynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;
