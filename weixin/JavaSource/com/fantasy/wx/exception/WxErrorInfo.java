@@ -43,13 +43,4 @@ public class WxErrorInfo {
         return "微信错误 errcode=" + errorCode + ", errmsg=" + errorMsg + "\njson:" + json;
     }
 
-    public static WxErrorInfo wxExceptionBuilder(me.chanjar.weixin.common.bean.result.WxError e){
-        WxErrorInfo wxError=new WxErrorInfo();
-        wxError.setErrorCode(e.getErrorCode());
-        wxError.setErrorMsg(e.getErrorMsg());
-        wxError.setJson(e.getJson());
-        return wxError;
-    }
-
-
 }

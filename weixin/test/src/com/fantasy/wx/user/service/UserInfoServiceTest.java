@@ -4,7 +4,6 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.user.bean.UserInfo;
-import com.fantasy.wx.user.service.impl.UserInfoService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,7 +25,7 @@ public class UserInfoServiceTest {
 
     private static final Log logger = LogFactory.getLog(UserInfo.class);
     @Resource
-    private UserInfoService userInfoService;
+    private IUserInfoService iUserInfoService;
 
     @Before
     public void setUp() throws Exception {
@@ -48,24 +47,24 @@ public class UserInfoServiceTest {
         ui.setLanguage("zh");
         ui.setNickname("测试nick");
         ui.setSubscribeTime(new Date().getTime());
-        userInfoService.saveArry(new UserInfo[]{ui});
+        iUserInfoService.saveArry(new UserInfo[]{ui});
     }
 
     public void testDelete() throws Exception {
-        userInfoService.delete("test");
+        iUserInfoService.delete("test");
     }
 
     public Pager<UserInfo> testFindPager(String... openid) {
         Pager<UserInfo> pager = new Pager<UserInfo>();
         List<PropertyFilter> list = new ArrayList<PropertyFilter>();
         if (openid.length > 0) list.add(new PropertyFilter("NES_openId", openid[0]));
-        return userInfoService.findPager(pager, list);
+        return iUserInfoService.findPager(pager, list);
 
     }
 
     @Test
     public void testRefresh() throws Exception {
-        userInfoService.refresh();
+        iUserInfoService.refresh();
         Pager<UserInfo> p = testFindPager("test");
         Assert.assertNotNull(p.getPageItems());
         logger.debug(JSON.serialize(p));
@@ -74,7 +73,7 @@ public class UserInfoServiceTest {
     @Test
     public void testCountUnReadSize() throws Exception {
         Pager<UserInfo> p = testFindPager();
-        userInfoService.countUnReadSize(p.getPageItems());
+        iUserInfoService.countUnReadSize(p.getPageItems());
         for (UserInfo u : p.getPageItems()) {
             Assert.assertNotNull(u.getUnReadSize());
             logger.debug(u.getUnReadSize());
@@ -83,10 +82,10 @@ public class UserInfoServiceTest {
 
     @Test
     public void testRefreshMessage() throws Exception {
-        UserInfo ui = userInfoService.getUserInfo("test");
+        UserInfo ui = iUserInfoService.getUserInfo("test");
         Assert.assertNotNull(ui);
         logger.debug(JSON.serialize(ui));
-        userInfoService.refreshMessage(ui);
+        iUserInfoService.refreshMessage(ui);
         Assert.assertEquals(ui.getLastLookTime(), ui.getLastMessageTime());
         logger.debug(JSON.serialize(ui));
     }

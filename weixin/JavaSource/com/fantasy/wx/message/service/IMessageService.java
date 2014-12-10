@@ -2,6 +2,7 @@ package com.fantasy.wx.message.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.wx.exception.WxException;
 import com.fantasy.wx.message.bean.Message;
 
 import java.util.List;
@@ -41,6 +42,14 @@ public interface IMessageService {
      * @return
      */
     public Message save(Message message);
+
+    /**
+     * 根据消息类型保存消息对象 更具msgType保存mediaId的消息的媒体文件
+     * @param message
+     * @return
+     * @throws WxException
+     */
+    public Message saveByType(Message message) throws WxException;
 
     /**
      * 发送文本消息

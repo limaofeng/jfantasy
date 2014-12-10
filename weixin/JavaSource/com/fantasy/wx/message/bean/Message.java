@@ -4,7 +4,6 @@ import com.fantasy.wx.user.bean.UserInfo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Date;
 
 /**
  * 文本消息
@@ -49,6 +48,8 @@ public class Message {
     @Column(name = "MSG_TYPE")
     private String msgType;
 
+
+
     @Column(name = "CONTENT", length = 1000)
     private String content;
 
@@ -60,6 +61,11 @@ public class Message {
 
     @Column(name = "MEDIAID")
     private String mediaId;
+
+    //媒体文件路径数据 FileDetail的json数据
+    @Column(name = "MEDIA_DATA",length=5000)
+    private String mediaData;
+
 
     @Column(name = "FORMAT")
     private String format;
@@ -137,13 +143,6 @@ public class Message {
      */
     @Column(name = "ERROR_COUNT")
     private Integer errorCount;
-
-    /**
-     * 最后修改时间
-     */
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFY_TIME")
-    private Date modifyTime;
 
     public Long getId() {
         return id;
@@ -387,6 +386,14 @@ public class Message {
 
     public Integer getErrorCount() {
         return errorCount;
+    }
+
+    public String getMediaData() {
+        return mediaData;
+    }
+
+    public void setMediaData(String mediaData) {
+        this.mediaData = mediaData;
     }
 
     public void setErrorCount(Integer errorCount) {

@@ -27,7 +27,7 @@ public class GroupMessageServiceTest {
     @Resource
     private GroupMessageService groupMessageService;
     @Resource
-    private WeixinConfigInit config;
+    private WeixinConfigInit weixinConfigInit;
     private static final Log logger = LogFactory.getLog(GroupMessage.class);
 
     @Before
@@ -74,7 +74,7 @@ public class GroupMessageServiceTest {
 
     public List<String> createOpenId() {
         List<String> list = new ArrayList<String>();
-        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) config.getWxMpConfigStorage();
+        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) weixinConfigInit.getWxMpConfigStorage();
         list.add(configProvider.getOpenId());
         return list;
     }

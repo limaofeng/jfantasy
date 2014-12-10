@@ -4,7 +4,6 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.menu.bean.WxMenu;
-import com.fantasy.wx.menu.service.impl.WxMenuService;
 import junit.framework.Assert;
 import me.chanjar.weixin.common.api.WxConsts;
 import org.apache.commons.logging.Log;
@@ -17,7 +16,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +24,7 @@ import java.util.List;
 public class WxWxMenuServiceTest {
     private static final Log logger = LogFactory.getLog(WxMenu.class);
     @Resource
-    private WxMenuService wxMenuService;
+    private IMenuService iMenuService;
 
     @Before
     public void setUp() throws Exception {
@@ -44,7 +42,7 @@ public class WxWxMenuServiceTest {
         wxMenuList.add(m5);
         wxMenuList.add(m6);
 
-        wxMenuService.saveList(wxMenuList);
+        iMenuService.saveList(wxMenuList);
         wxMenuList = new ArrayList<WxMenu>();
 
         wxMenuList.add(new WxMenu("hehe1", WxConsts.BUTTON_CLICK, 1, 1, null, "V1001_GOOD", m1));
@@ -94,25 +92,25 @@ public class WxWxMenuServiceTest {
         wxMenuList.add(new WxMenu("hehe65", WxConsts.BUTTON_VIEW, 1, 5, "http://www.baidu.com?id=65", null, m6));
         wxMenuList.add(new WxMenu("hehe66", WxConsts.BUTTON_VIEW, 1, 6, "http://www.baidu.com?id=66", null, m6));
 
-        wxMenuService.saveList(wxMenuList);
+        iMenuService.saveList(wxMenuList);
     }
 
     @After
     public void tearDown() throws Exception {
         List<PropertyFilter> list = new ArrayList<PropertyFilter>();
         list.add(new PropertyFilter("NOTNULL_parent.id"));
-        List<WxMenu> wxMenus = wxMenuService.findAll(list);
+        List<WxMenu> wxMenus = iMenuService.findAll(list);
         Long[] ids = new Long[wxMenus.size()];
         for (int i = 0; i < wxMenus.size(); i++) {
             ids[i] = wxMenus.get(i).getId();
         }
-        wxMenuService.delete(ids);
-        wxMenus = wxMenuService.findAll(new ArrayList<PropertyFilter>());
+        iMenuService.delete(ids);
+        wxMenus = iMenuService.findAll(new ArrayList<PropertyFilter>());
         Long[] bids = new Long[wxMenus.size()];
         for (int i = 0; i < wxMenus.size(); i++) {
             bids[i] = wxMenus.get(i).getId();
         }
-        wxMenuService.delete(bids);
+        iMenuService.delete(bids);
     }
 
 
@@ -124,28 +122,28 @@ public class WxWxMenuServiceTest {
         pager.setOrderBy("sort");
         pager.setOrder(Pager.Order.asc);
 
-        Pager p = wxMenuService.findPager(pager, list);
+        Pager p = iMenuService.findPager(pager, list);
         Assert.assertNotNull(p.getPageItems());
         logger.debug(JSON.serialize(p));
     }
 
     @Test
     public void testGet() throws Exception {
-        List<WxMenu> wxMenus = wxMenuService.findAll(new ArrayList<PropertyFilter>());
-        WxMenu m = wxMenuService.get(wxMenus.get(0).getId());
+        List<WxMenu> wxMenus = iMenuService.findAll(new ArrayList<PropertyFilter>());
+        WxMenu m = iMenuService.get(wxMenus.get(0).getId());
         Assert.assertNotNull(m);
         logger.debug(m);
     }
 
     @Test
     public void testRefresh() throws Exception {
-        int r = wxMenuService.refresh();
+        int r = iMenuService.refresh();
         Assert.assertEquals(r, 0);
     }
 
     @Test
     public void testDeleteMenu() throws Exception {
-        int r = wxMenuService.deleteMenu();
+        int r = iMenuService.deleteMenu();
         Assert.assertEquals(r, 0);
     }
 }

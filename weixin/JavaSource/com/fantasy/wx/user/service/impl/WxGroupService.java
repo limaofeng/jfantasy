@@ -4,12 +4,12 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.exception.WxErrorInfo;
 import com.fantasy.wx.exception.WxException;
 import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.bean.WxGroup;
 import com.fantasy.wx.user.dao.WxGroupDao;
 import com.fantasy.wx.user.service.IGroupService;
+import com.fantasy.wx.user.service.IUserInfoService;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpGroup;
 import org.springframework.stereotype.Service;
@@ -28,9 +28,9 @@ public class WxGroupService implements IGroupService {
     @Resource
     private WxGroupDao wxGroupDao;
     @Resource
-    private UserInfoService userInfoService;
+    private IUserInfoService iUserInfoService;
     @Resource
-    private WeixinConfigInit config;
+    private WeixinConfigInit weixinConfigInit;
 
     @Override
     public WxGroup save(WxGroup wxGroup) {
@@ -58,10 +58,10 @@ public class WxGroupService implements IGroupService {
         for (Long id : ids) {
             List<PropertyFilter> list = new ArrayList<PropertyFilter>();
             list.add(new PropertyFilter("EQS_group.id", id.toString()));
-            Pager<UserInfo> pager = userInfoService.findPager(new Pager<UserInfo>(), list);
+            Pager<UserInfo> pager = iUserInfoService.findPager(new Pager<UserInfo>(), list);
             for (UserInfo ui : pager.getPageItems()) {
                 ui.setWxGroup(null);
-                userInfoService.save(ui);
+                iUserInfoService.save(ui);
             }
             wxGroupDao.delete(id);
         }
@@ -70,7 +70,7 @@ public class WxGroupService implements IGroupService {
     @Override
     public int create(String name) {
         try {
-            WxMpGroup res = config.getUtil().groupCreate(name);
+            WxMpGroup res = weixinConfigInit.getUtil().groupCreate(name);
             WxGroup wxGroup = new WxGroup(res.getId(), res.getName());
             wxGroup.setCount(res.getCount());
             wxGroupDao.save(wxGroup);
@@ -88,7 +88,7 @@ public class WxGroupService implements IGroupService {
         wxMpGroup.setName(name);
         WxGroup wxGroup = new WxGroup(id, name);
         try {
-            config.getUtil().groupUpdate(wxMpGroup);
+            weixinConfigInit.getUtil().groupUpdate(wxMpGroup);
             wxGroupDao.save(wxGroup);
         } catch (WxErrorException e) {
             e.printStackTrace();
@@ -101,7 +101,7 @@ public class WxGroupService implements IGroupService {
     public List<WxGroup> refreshGroup() {
         List<WxGroup> gl = new ArrayList<WxGroup>();
         try {
-            List<WxMpGroup> list = config.getUtil().groupGet();
+            List<WxMpGroup> list = weixinConfigInit.getUtil().groupGet();
             for (WxMpGroup g : list) {
                 WxGroup wxGroup = BeanUtil.copyProperties(new WxGroup(), g);
                 wxGroupDao.save(wxGroup);
@@ -116,20 +116,20 @@ public class WxGroupService implements IGroupService {
     @Override
     public Long getUserGroup(String openId) throws WxException {
         try{
-            return config.getUtil().userGetGroup(openId);
+            return weixinConfigInit.getUtil().userGetGroup(openId);
         }catch (WxErrorException e){
-            throw new WxException(WxErrorInfo.wxExceptionBuilder(e.getError()));
+            throw WxException.wxExceptionBuilder(e);
         }
     }
 
     @Override
     public int moveGroup(String openId, Long groupId) {
         try {
-            config.getUtil().userUpdateGroup(openId, groupId);
+            weixinConfigInit.getUtil().userUpdateGroup(openId, groupId);
             UserInfo ui = new UserInfo();
             ui.setOpenId(openId);
             ui.setWxGroup(new WxGroup(groupId, null));
-            userInfoService.save(ui);
+            iUserInfoService.save(ui);
         } catch (WxErrorException e) {
             e.printStackTrace();
             return e.getError().getErrorCode();

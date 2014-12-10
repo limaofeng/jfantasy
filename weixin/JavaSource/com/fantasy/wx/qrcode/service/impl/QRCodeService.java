@@ -3,7 +3,6 @@ package com.fantasy.wx.qrcode.service.impl;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.exception.WxErrorInfo;
 import com.fantasy.wx.exception.WxException;
 import com.fantasy.wx.qrcode.bean.QRCode;
 import com.fantasy.wx.qrcode.dao.QRCodeDao;
@@ -60,7 +59,7 @@ public class QRCodeService implements IQRCodeService {
             code.setImgPath("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket.getTicket());
             save(code);
         }catch (WxErrorException exception){
-            throw new WxException(WxErrorInfo.wxExceptionBuilder(exception.getError()));
+            throw WxException.wxExceptionBuilder(exception);
         }
 
 
@@ -78,7 +77,7 @@ public class QRCodeService implements IQRCodeService {
             code.setLinkKey(linkKey);
             save(code);
         }catch (WxErrorException exception){
-            throw new WxException(WxErrorInfo.wxExceptionBuilder(exception.getError()));
+            throw WxException.wxExceptionBuilder(exception);
         }
 
 

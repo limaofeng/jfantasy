@@ -5,7 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.wx.config.bean.WeixinConfig;
-import com.fantasy.wx.config.service.impl.WeixinConfigService;
+import com.fantasy.wx.config.service.IConfigService;
 import org.quartz.JobExecutionException;
 
 import javax.annotation.Resource;
@@ -24,7 +24,7 @@ public class WeixinConfigAction extends ActionSupport {
 
 
     @Resource
-    private WeixinConfigService wcService;
+    private IConfigService iConfigService;
 
     public String index() {
         this.search(new Pager<WeixinConfig>(), new ArrayList<PropertyFilter>());
@@ -38,24 +38,24 @@ public class WeixinConfigAction extends ActionSupport {
             pager.setOrderBy("createTime");
             pager.setOrder(Pager.Order.desc);
         }
-        pager = wcService.findPager(pager, filters);
+        pager = iConfigService.findPager(pager, filters);
         this.attrs.put(ROOT, pager);
         return JSONDATA;
     }
 
     public String save(final WeixinConfig at) throws JobExecutionException {
-        this.attrs.put(ROOT, wcService.save(at));
+        this.attrs.put(ROOT, iConfigService.save(at));
         return JSONDATA;
     }
 
     public String edit(String id) {
-        WeixinConfig at = wcService.get(id);
+        WeixinConfig at = iConfigService.get(id);
         this.attrs.put("at", at);
         return SUCCESS;
     }
 
     public String delete(String... ids) {
-        this.wcService.delete(ids);
+        this.iConfigService.delete(ids);
         return JSONDATA;
     }
 

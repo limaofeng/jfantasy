@@ -4,11 +4,11 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.exception.WxErrorInfo;
 import com.fantasy.wx.exception.WxException;
 import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.bean.WxGroup;
 import com.fantasy.wx.user.dao.UserInfoDao;
+import com.fantasy.wx.user.service.IGroupService;
 import com.fantasy.wx.user.service.IUserInfoService;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
@@ -28,7 +28,7 @@ public class UserInfoService implements IUserInfoService {
     @Resource
     private UserInfoDao userInfoDao;
     @Resource
-    private WxGroupService wxGroupService;
+    private IGroupService iGroupService;
     @Resource
     private WeixinConfigInit config;
 
@@ -85,7 +85,7 @@ public class UserInfoService implements IUserInfoService {
                 refresh(s);
             }
         }catch (WxErrorException e){
-            throw new WxException(WxErrorInfo.wxExceptionBuilder(e.getError()));
+            throw WxException.wxExceptionBuilder(e);
         }
 
     }
@@ -94,14 +94,14 @@ public class UserInfoService implements IUserInfoService {
     public UserInfo refresh(String openId) throws WxException {
         try{
             UserInfo ui = BeanUtil.copyProperties(new UserInfo(), config.getUtil().userInfo(openId, null));
-            Long groupId = wxGroupService.getUserGroup(ui.getOpenId());
+            Long groupId = iGroupService.getUserGroup(ui.getOpenId());
             if (groupId != -1) {
                 ui.setWxGroup(new WxGroup(groupId, null));
             }
             userInfoDao.save(ui);
             return ui;
         }catch (WxErrorException e){
-            throw new WxException(WxErrorInfo.wxExceptionBuilder(e.getError()));
+            throw WxException.wxExceptionBuilder(e);
         }
     }
 
