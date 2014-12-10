@@ -52,7 +52,7 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         OrderDetails orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
-        String body = "";// 订单描述
+        String body = orderDetails.getSubject();// 订单描述
         String logistics_fee = "0";// 物流费用
         String logistics_payment = "SELLER_PAY";// 物流支付方式（SELLER_PAY：卖家承担运费、BUYER_PAY：买家承担运费）
         String logistics_type = "EXPRESS";// 物流类型（EXPRESS：快递、POST：平邮、EMS：EMS）
