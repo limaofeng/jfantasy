@@ -30,18 +30,6 @@ public class TenpayDirect extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    public boolean isPaySuccess(Map<String, String> parameters) {
-        if (parameters == null) {
-            return false;
-        }
-        /*
-        parameters.get("sp_billno")
-        new BigDecimal(parameters.get("total_fee")).divide(new BigDecimal(100))
-        */
-        String payResult = parameters.get("pay_result");
-        return StringUtils.equals(payResult, "0");
-    }
-
     @Override
     public Map<String, String> getParameterMap(Map<String, String> parameters) {
         PaymentContext context = PaymentContext.getContext();
@@ -155,6 +143,17 @@ public class TenpayDirect extends AbstractPaymentProduct {
             paymentSn = StringUtils.substring(paymentSn, count);
         }
         return bargainorId + dateString + paymentSn;
+    }
+
+    @Override
+    public PayResult parsePayResult(Map<String, String> parameters) {
+                /*
+        parameters.get("sp_billno")
+        new BigDecimal(parameters.get("total_fee")).divide(new BigDecimal(100))
+        */
+        String payResult = parameters.get("pay_result");
+        StringUtils.equals(payResult, "0");
+        return null;
     }
 
 }

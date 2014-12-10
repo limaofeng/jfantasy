@@ -4,6 +4,7 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.order.OrderDetails;
 import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
 
 /**
@@ -32,6 +33,10 @@ public class PaymentContext {
      * 支付订单 Service
      */
     private OrderDetailsService orderDetailsService;
+    /**
+     * 支付结果
+     */
+    private PayResult payResult;
 
     public static PaymentContext newInstall() {
         PaymentContext context = getContext();
@@ -137,4 +142,13 @@ public class PaymentContext {
     public void paySuccess(Payment payment) {
         this.orderDetailsService.paySuccess(payment);
     }
+
+    public PayResult getPayResult() {
+        return payResult;
+    }
+
+    public void setPayResult(PayResult payResult) {
+        this.payResult = payResult;
+    }
+
 }

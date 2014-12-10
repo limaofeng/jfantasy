@@ -1,7 +1,7 @@
 package com.fantasy.payment.interceptor;
 
 import com.fantasy.payment.service.PaymentConfiguration;
-import com.fantasy.payment.order.PaymentService;
+import com.fantasy.payment.service.PaymentService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -22,13 +22,13 @@ public class PaymentInterceptor {
     private PaymentService paymentService;
 
 
-    @After("execution(public * com.fantasy.payment.order.PaymentService.ready(..))")
+    @After("execution(public * com.fantasy.payment.service.PaymentService.ready(..))")
     public void ready(JoinPoint point) {
 //        Payment payment = (Payment) point.getArgs()[0];
 //        paymentConfiguration.getPaymentOrderService(payment.getOrderType()).ready(payment);
     }
 
-    @After("execution(public * com.fantasy.payment.order.PaymentService.success(..))")
+    @After("execution(public * com.fantasy.payment.service.PaymentService.success(..))")
     public void success(JoinPoint point) {
 //        Payment payment = paymentService.get((String) point.getArgs()[0]);
 //        paymentConfiguration.getPaymentOrderService(payment.getOrderType()).success(payment);

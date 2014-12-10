@@ -7,7 +7,7 @@ import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentConfigService;
-import com.fantasy.payment.order.PaymentService;
+import com.fantasy.payment.service.PaymentService;
 
 import javax.annotation.Resource;
 import java.io.IOException;

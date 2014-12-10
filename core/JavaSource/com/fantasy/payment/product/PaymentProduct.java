@@ -38,14 +38,6 @@ public interface PaymentProduct {
     boolean verifySign(Map<String, String> parameters);
 
     /**
-     * 判断支付是否成功
-     *
-     * @param parameters 请求参数
-     * @return boolean
-     */
-    boolean isPaySuccess(Map<String, String> parameters);
-
-    /**
      * 根据支付编号获取支付返回信息
      *
      * @return String
@@ -62,8 +54,16 @@ public interface PaymentProduct {
     /**
      * 建立请求，以表单HTML形式构造（默认）
      *
-     * @param sParaTemp     请求参数数组
+     * @param sParaTemp 请求参数数组
      * @return 提交表单HTML文本
      */
     public String buildRequest(Map<String, String> sParaTemp);
+
+    /**
+     * 解析支付结果
+     *
+     * @param parameters 支付结果
+     * @return PayResult
+     */
+    public PayResult parsePayResult(Map<String, String> parameters);
 }

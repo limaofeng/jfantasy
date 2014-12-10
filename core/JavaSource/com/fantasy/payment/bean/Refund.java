@@ -11,7 +11,6 @@ import java.math.BigDecimal;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-12-5 上午9:22:39
  */
 @Entity
@@ -48,7 +47,7 @@ public class Refund extends BaseBusEntity {
     @Column(name = "MEMO", updatable = false, length = 3000)
     private String memo;// 备注
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYMENT_CONFIG_ID",foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT_CONFIG"))
+    @JoinColumn(name = "PAYMENT_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT_CONFIG"))
     private PaymentConfig paymentConfig;// 支付配置
     /**
      * 订单类型

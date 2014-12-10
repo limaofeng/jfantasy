@@ -1,4 +1,4 @@
-package com.fantasy.payment.order;
+package com.fantasy.payment.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -12,10 +12,10 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.dao.PaymentDao;
 import com.fantasy.payment.error.PaymentException;
+import com.fantasy.payment.order.OrderDetails;
+import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
-import com.fantasy.payment.service.PaymentConfigService;
-import com.fantasy.payment.service.PaymentConfiguration;
-import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.security.SpringSecurityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,6 +48,16 @@ public class PaymentService {
     @Resource
     private MemberService memberService;
 
+    /**
+     * 支付准备
+     *
+     * @param orderType       订单类型
+     * @param orderSn         订单编号
+     * @param membername      会员
+     * @param paymentConfigId 支付配置
+     * @return Payment
+     * @throws PaymentException
+     */
     public Payment ready(String orderType, String orderSn, String membername, Long paymentConfigId) throws PaymentException {
         PaymentConfig paymentConfig = this.paymentConfigService.get(paymentConfigId);
         //在线支付
@@ -102,15 +112,26 @@ public class PaymentService {
         return payment;
     }
 
+    /**
+     * 过期支付单
+     *
+     * @param sn 支付编号
+     */
     public void invalid(String sn) {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.invalid);
         this.paymentDao.save(payment);
     }
 
+    /**
+     * 支付失败
+     *
+     * @param sn 支付编号
+     */
     public void failure(String sn) {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.failure);
+        payment.setTradeNo(PaymentContext.getContext().getPayResult().getTradeNo());
         this.paymentDao.save(payment);
         PaymentContext.getContext().payFailure(PaymentContext.getContext().getPayment());
     }
@@ -123,6 +144,7 @@ public class PaymentService {
     public void success(String sn) {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.success);
+        payment.setTradeNo(PaymentContext.getContext().getPayResult().getTradeNo());
         this.paymentDao.save(payment);
         PaymentContext.getContext().paySuccess(PaymentContext.getContext().getPayment());
     }
@@ -161,6 +183,7 @@ public class PaymentService {
             this.paymentDao.delete(id);
         }
     }
+
 
     public String submit(String orderType, String orderSn, Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
         return this.submit(orderType, orderSn, paymentConfigId, "", parameters);
@@ -225,12 +248,13 @@ public class PaymentService {
         Payment payment = PaymentContext.getContext().getPayment();
         PaymentProduct paymentProduct = PaymentContext.getContext().getPaymentProduct();
 
-        boolean isSuccess = paymentProduct.isPaySuccess(parameterMap);
+        PayResult payResult = paymentProduct.parsePayResult(parameterMap);
+        PaymentContext.getContext().setPayResult(payResult);
 
         if (!paymentProduct.verifySign(parameterMap)) {
             this.failure(payment.getSn());
             throw new PaymentException("支付签名错误!");
-        } else if (!isSuccess) {
+        } else if (PayResult.PayStatus.failure == payResult.getStatus()) {
             this.failure(payment.getSn());
             throw new PaymentException("支付失败!");
         } else if (payment.getPaymentStatus() == Payment.PaymentStatus.success) {

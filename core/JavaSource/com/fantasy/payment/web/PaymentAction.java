@@ -9,7 +9,7 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentConfiguration;
 import com.fantasy.payment.order.OrderDetailsService;
-import com.fantasy.payment.order.PaymentService;
+import com.fantasy.payment.service.PaymentService;
 
 import javax.annotation.Resource;
 import java.io.IOException;
