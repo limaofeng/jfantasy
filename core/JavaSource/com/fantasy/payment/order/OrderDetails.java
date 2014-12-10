@@ -1,4 +1,4 @@
-package com.fantasy.payment.service;
+package com.fantasy.payment.order;
 
 import java.math.BigDecimal;
 

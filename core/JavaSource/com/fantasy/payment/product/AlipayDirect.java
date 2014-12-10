@@ -4,16 +4,13 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.payment.service.OrderDetails;
+import com.fantasy.payment.order.OrderDetails;
 import com.fantasy.payment.service.PaymentContext;
-import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.ServletActionContext;
 
-import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -27,9 +24,12 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
     private static final String HTTPS_VERIFY_URL = "https://mapi.alipay.com/gateway.do?service=notify_verify&";
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
+
+    /*
     public static final String RETURN_URL = "/payment/payreturn.do";// 回调处理URL
     public static final String NOTIFY_URL = "/payment/paynotify.do";// 消息通知URL
     public static final String SHOW_URL = "/payment.do";// 支付单回显url
+    */
 
     private static final Log logger = LogFactory.getLog(AlipayDirect.class);
 
@@ -94,19 +94,18 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         OrderDetails orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
-        HttpServletResponse response = ServletActionContext.getResponse();
         AtomicReference<String> body = new AtomicReference<String>(orderDetails.getSN());// 订单描述
         String defaultbank = parameters.get("bankNo");// 默认选择银行（当paymethod为bankPay时有效）
         String extra_common_param = "";// 商户数据
-        String notify_url = SettingUtil.getServerUrl() + response.encodeURL(NOTIFY_URL + "?sn=" + payment.getSn());// 消息通知URL
+        String notify_url = context.getNotifyUrl(payment.getSn());// 消息通知URL
         AtomicReference<String> out_trade_no = new AtomicReference<String>(payment.getSn());// 支付编号
         String partner = paymentConfig.getBargainorId();// 合作身份者ID
         String payment_type = "1";// 支付类型（固定值：1）
         String paymethod = StringUtil.isBlank(defaultbank) ? "directPay" : "bankPay";// 默认支付方式（bankPay：网银、cartoon：卡通、directPay：余额、CASH：网点支付）
-        String return_url = SettingUtil.getServerUrl() + response.encodeURL(RETURN_URL + "?sn=" + payment.getSn());// 回调处理URL
+        String return_url = context.getReturnUrl(payment.getSn());// 回调处理URL
         String seller_id = paymentConfig.getSellerEmail();// 商家ID
         String service = "create_direct_pay_by_user";// 接口类型（create_direct_pay_by_user：即时交易）
-        String show_url = SettingUtil.getServerUrl() + response.encodeURL(SHOW_URL + "?sn=" + payment.getSn());// 商品显示URL
+        String show_url = context.getShowUrl(payment.getOrderSn());// 商品显示URL
         String sign_type = "MD5";//签名加密方式（MD5）
         AtomicReference<String> subject = new AtomicReference<String>(orderDetails.getSubject());// 订单的名称、标题、关键字等
         String total_fee = decimalFormat.format(orderDetails.getPayableFee());// 总金额（单位：元）
@@ -177,10 +176,6 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         return AlipayDirect.creditBankcodes;
     }
 
-    @Override
-    public String getPayreturnMessage(String paymentSn) {
-        return "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + SettingUtil.getServerUrl() + RESULT_URL + "\"><input type=\"hidden\" name=\"sn\" value=\"" + paymentSn + "\" /></form></body></html>";
-    }
 
     @Override
     public String getPaynotifyMessage(String paymentSn) {

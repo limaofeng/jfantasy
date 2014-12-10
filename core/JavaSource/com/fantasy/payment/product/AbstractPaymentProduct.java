@@ -15,9 +15,9 @@ import java.util.concurrent.atomic.AtomicReference;
 public abstract class AbstractPaymentProduct implements PaymentProduct {
 
     protected final static Log LOG = LogFactory.getLog(AbstractPaymentProduct.class);
-
+    /*
     protected static final String RESULT_URL = "/payment/result.do";// 支付结果显示URL
-
+    */
     protected String id;//支付产品ID
     protected String name;// 支付产品名称
     protected String bargainorIdName;// 商户ID参数名称

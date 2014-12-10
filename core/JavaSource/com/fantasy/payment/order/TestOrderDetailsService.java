@@ -1,10 +1,10 @@
-package com.fantasy.payment.service;
+package com.fantasy.payment.order;
 
 import com.fantasy.payment.bean.Payment;
 
 import java.math.BigDecimal;
 
-public class TestPaymentOrderDetailsService implements PaymentOrderDetailsService {
+public class TestOrderDetailsService extends AbstractOrderDetailsService {
 
     @Override
     public OrderDetails loadOrderBySn(final String sn) {
@@ -45,16 +45,12 @@ public class TestPaymentOrderDetailsService implements PaymentOrderDetailsServic
 
     @Override
     public void payFailure(Payment payment) {
-
+        LOG.debug("订单支付失败");
     }
 
     @Override
     public void paySuccess(Payment payment) {
-
+        LOG.debug("订单支付成功");
     }
 
-    @Override
-    public String url(String sn) {
-        return null;
-    }
 }

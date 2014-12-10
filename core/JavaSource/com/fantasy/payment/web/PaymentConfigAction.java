@@ -6,7 +6,7 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.service.PaymentConfigService;
-import com.fantasy.payment.service.PaymentService;
+import com.fantasy.payment.order.PaymentService;
 
 import javax.annotation.Resource;
 import java.io.IOException;

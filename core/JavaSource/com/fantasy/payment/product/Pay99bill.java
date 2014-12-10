@@ -2,7 +2,7 @@ package com.fantasy.payment.product;
 
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.payment.service.OrderDetails;
+import com.fantasy.payment.order.OrderDetails;
 import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;

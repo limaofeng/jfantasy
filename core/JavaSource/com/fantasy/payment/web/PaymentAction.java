@@ -8,8 +8,8 @@ import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentConfiguration;
-import com.fantasy.payment.service.PaymentOrderDetailsService;
-import com.fantasy.payment.service.PaymentService;
+import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.payment.order.PaymentService;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class PaymentAction extends ActionSupport {
 
     public String execute(String sn) throws Exception {
         Payment payment = paymentService.get(sn);
-        PaymentOrderDetailsService paymentOrderService = paymentConfiguration.getPaymentOrderService(payment.getOrderType());
+        OrderDetailsService paymentOrderService = paymentConfiguration.getPaymentOrderService(payment.getOrderType());
         String orderUrl = paymentOrderService.url(payment.getOrderSn());
         if (StringUtil.isNotBlank(orderUrl)) {
             response.sendRedirect(orderUrl);
@@ -48,7 +48,7 @@ public class PaymentAction extends ActionSupport {
      * @param paymentConfigId 支付方式
      * @return {string}
      */
-    public String submit(String orderType, String orderSn, Long paymentConfigId) throws IOException {
+    public String submit(String orderType, String orderSn, Long paymentConfigId) throws IOException, PaymentException {
         String sHtmlText = paymentService.submit(orderType, orderSn, paymentConfigId, WebUtil.getParameterMap(this.request));
         this.attrs.put("sHtmlText", sHtmlText);
         return SUCCESS;

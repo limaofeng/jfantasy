@@ -2,6 +2,8 @@ package com.fantasy.payment.service;
 
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.payment.order.TestOrderDetailsService;
 import com.fantasy.payment.product.*;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -19,7 +21,7 @@ public class PaymentConfiguration implements InitializingBean {
      * 所有支持的支付产品
      */
     private List<PaymentProduct> paymentProducts = new ArrayList<PaymentProduct>();
-    private Map<String,PaymentOrderDetailsService> paymentOrderServices = new HashMap<String, PaymentOrderDetailsService>();
+    private Map<String,OrderDetailsService> paymentOrderServices = new HashMap<String, OrderDetailsService>();
 
     public void setPaymentProducts(List<PaymentProduct> paymentProducts) {
         this.paymentProducts = paymentProducts;
@@ -29,7 +31,7 @@ public class PaymentConfiguration implements InitializingBean {
         return ObjectUtil.find(this.paymentProducts, "id", paymentProductId);
     }
 
-    public void setPaymentOrderServices(Map<String, PaymentOrderDetailsService> paymentOrderServices) {
+    public void setPaymentOrderServices(Map<String, OrderDetailsService> paymentOrderServices) {
         this.paymentOrderServices = paymentOrderServices;
     }
 
@@ -134,12 +136,17 @@ public class PaymentConfiguration implements InitializingBean {
 
         //支付订单service
         if(!this.paymentOrderServices.containsKey("test")){
-            this.paymentOrderServices.put("test", SpringContextUtil.createBean(TestPaymentOrderDetailsService.class,SpringContextUtil.AUTOWIRE_BY_TYPE));
+            TestOrderDetailsService orderDetailsService = SpringContextUtil.createBean(TestOrderDetailsService.class,SpringContextUtil.AUTOWIRE_BY_TYPE);
+            orderDetailsService.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
+            orderDetailsService.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
+            orderDetailsService.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
+            orderDetailsService.setShowUrlTemplate("http://test.jfantasy.org/order/{orderSn}");
+            this.paymentOrderServices.put("test", orderDetailsService);
         }
 
     }
 
-    public PaymentOrderDetailsService getPaymentOrderService(String orderType) {
+    public OrderDetailsService getPaymentOrderService(String orderType) {
         if(!this.paymentOrderServices.containsKey(orderType)){
             //TODO 添加自定义异常
             throw new RuntimeException("orderType["+orderType+"] 对应的 PaymentOrderService 未配置！");

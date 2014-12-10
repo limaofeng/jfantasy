@@ -1,4 +1,4 @@
-package com.fantasy.payment.service;
+package com.fantasy.payment.order;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -13,6 +13,9 @@ import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.dao.PaymentDao;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.product.PaymentProduct;
+import com.fantasy.payment.service.PaymentConfigService;
+import com.fantasy.payment.service.PaymentConfiguration;
+import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.security.SpringSecurityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,7 +50,7 @@ public class PaymentService {
 
     public Payment ready(String orderType, String orderSn, String membername, Long paymentConfigId) {
         PaymentConfig paymentConfig = this.paymentConfigService.get(paymentConfigId);
-        PaymentOrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        OrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
         //检查订单支付状态等信息
         OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
 
@@ -107,6 +110,7 @@ public class PaymentService {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.failure);
         this.paymentDao.save(payment);
+        PaymentContext.getContext().payFailure(PaymentContext.getContext().getPayment());
     }
 
     /**
@@ -118,6 +122,7 @@ public class PaymentService {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.success);
         this.paymentDao.save(payment);
+        PaymentContext.getContext().paySuccess(PaymentContext.getContext().getPayment());
     }
 
     public Payment get(String sn) {
@@ -155,7 +160,7 @@ public class PaymentService {
         }
     }
 
-    public String submit(String orderType, String orderSn, Long paymentConfigId, Map<String, String> parameters) {
+    public String submit(String orderType, String orderSn, Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
         return this.submit(orderType, orderSn, paymentConfigId, "", parameters);
     }
 
@@ -168,7 +173,9 @@ public class PaymentService {
         context.setPayment(payment);
 
         PaymentProduct paymentProduct = this.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
-        PaymentOrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        OrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        context.setPaymentProduct(paymentProduct);
+        context.setOrderDetailsService(paymentOrderDetailsService);
 
         //检查订单支付状态等信息
         OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
@@ -177,16 +184,16 @@ public class PaymentService {
         // 支付参数
         Map<String, String> parameterMap = paymentProduct.getParameterMap(parameters);
         String sHtmlText = paymentProduct.buildRequest(parameterMap);
-        TagNode body = HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.htmlCleaner(sHtmlText),"//body");
-        body.removeChild(HtmlCleanerUtil.findFristTagNode(body,"//script"));
-        for(TagNode tagNode : HtmlCleanerUtil.findTagNodes(body,"//form//input")){
-            if("hidden".equals(tagNode.getAttributeByName("type"))){
-                tagNode.addAttribute("type","text");
-            }else if("submit".equals(tagNode.getAttributeByName("type"))){
+        TagNode body = HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.htmlCleaner(sHtmlText), "//body");
+        body.removeChild(HtmlCleanerUtil.findFristTagNode(body, "//script"));
+        for (TagNode tagNode : HtmlCleanerUtil.findTagNodes(body, "//form//input")) {
+            if ("hidden".equals(tagNode.getAttributeByName("type"))) {
+                tagNode.addAttribute("type", "text");
+            } else if ("submit".equals(tagNode.getAttributeByName("type"))) {
                 tagNode.removeAttribute("style");
             }
         }
-        return HtmlCleanerUtil.getAsString(HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.getAsString(body),"//form"));
+        return HtmlCleanerUtil.getAsString(HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.getAsString(body), "//form"));
     }
 
     /**
@@ -199,35 +206,29 @@ public class PaymentService {
      * @param parameters      请求参数
      * @return html 表单字符串
      */
-    public String submit(String orderType, String orderSn, Long paymentConfigId, String payMember, Map<String, String> parameters) {
-        PaymentContext context = PaymentContext.newInstall();
-
+    public String submit(String orderType, String orderSn, Long paymentConfigId, String payMember, Map<String, String> parameters) throws PaymentException {
         Payment payment = this.ready(orderType, orderSn, payMember, paymentConfigId);
-        context.setPayment(payment);
 
-        PaymentProduct paymentProduct = this.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
-        PaymentOrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        PaymentContext context = this.createPaymentContext(payment.getSn());
 
-        //检查订单支付状态等信息
-        OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
-        context.setOrderDetails(orderDetails);
+        PaymentProduct paymentProduct = context.getPaymentProduct();
 
         // 支付参数
         Map<String, String> parameterMap = paymentProduct.getParameterMap(parameters);
         return paymentProduct.buildRequest(parameterMap);
     }
 
-    private void verify(String sn, Map<String, String> parameterMap) throws PaymentException {
+    private void verify(Map<String, String> parameterMap) throws PaymentException {
         Payment payment = PaymentContext.getContext().getPayment();
         PaymentProduct paymentProduct = PaymentContext.getContext().getPaymentProduct();
 
         boolean isSuccess = paymentProduct.isPaySuccess(parameterMap);
 
         if (!paymentProduct.verifySign(parameterMap)) {
-            this.failure(sn);
+            this.failure(payment.getSn());
             throw new PaymentException("支付签名错误!");
         } else if (!isSuccess) {
-            this.failure(sn);
+            this.failure(payment.getSn());
             throw new PaymentException("支付失败!");
         } else if (payment.getPaymentStatus() == Payment.PaymentStatus.success) {
             LOG.debug("订单已支付");
@@ -249,7 +250,9 @@ public class PaymentService {
         }
         context.setPaymentProduct(paymentProduct);
 
-        PaymentOrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(payment.getOrderType());
+        OrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(payment.getOrderType());
+        context.setOrderDetailsService(paymentOrderDetailsService);
+
         OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(payment.getOrderSn());
         context.setOrderDetails(orderDetails);
         return context;
@@ -257,14 +260,14 @@ public class PaymentService {
 
     public String payreturn(String sn, Map<String, String> parameterMap) throws PaymentException {
         PaymentContext context = createPaymentContext(sn);
-        verify(sn, parameterMap);
+        verify(parameterMap);
         this.success(sn);
         return context.getPaymentProduct().getPayreturnMessage(sn);
     }
 
     public String paynotify(String sn, Map<String, String> parameterMap) throws PaymentException {
         PaymentContext context = createPaymentContext(sn);
-        verify(sn, parameterMap);
+        verify(parameterMap);
         this.success(sn);
         return context.getPaymentProduct().getPaynotifyMessage(sn);
     }

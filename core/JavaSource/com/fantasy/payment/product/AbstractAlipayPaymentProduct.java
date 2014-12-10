@@ -294,6 +294,11 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
 
     }
 
+    @Override
+    public String getPayreturnMessage(String paymentSn) {
+        return "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + PaymentContext.getContext().getShowPaymentUrl(paymentSn) + "\"></form></body></html>";
+    }
+
     public boolean isPaySuccess(Map<String, String> parameters) {
         if (parameters == null) {
             return false;

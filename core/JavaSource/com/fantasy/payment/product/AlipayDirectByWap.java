@@ -2,15 +2,13 @@ package com.fantasy.payment.product;
 
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.payment.service.OrderDetails;
+import com.fantasy.payment.order.OrderDetails;
 import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
-import org.apache.struts2.ServletActionContext;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
@@ -25,8 +23,10 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
 
     //支付宝网关地址
     private static final String ALIPAY_GATEWAY_NEW = "http://wappaygw.alipay.com/service/rest.htm?_input_charset=" + input_charset;
+    /*
     public static final String RETURN_URL = "/payment/payreturn.do";// 回调处理URL
     public static final String NOTIFY_URL = "/payment/paynotify.do";// 消息通知URL
+    */
 
     @Override
     public String getPaymentUrl() {
@@ -49,9 +49,8 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
         OrderDetails orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
-        HttpServletResponse response = ServletActionContext.getResponse();
-        String return_url = SettingUtil.getServerUrl() + response.encodeURL(RETURN_URL + "?sn=" + payment.getSn());// 回调处理URL
-        String notify_url = SettingUtil.getServerUrl() + response.encodeURL(NOTIFY_URL + "?sn=" + payment.getSn());// 消息通知URL
+        String return_url = context.getReturnUrl(payment.getSn());// 回调处理URL
+        String notify_url = context.getNotifyUrl(payment.getSn());// 消息通知URL
 
         //操作中断返回地址
         String merchant_url = SettingUtil.getServerUrl() + "/payment/merchant/" + payment.getSn();
@@ -154,11 +153,6 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
     @Override
     public String buildRequest(Map<String, String> sParaTemp) {
         return super.buildRequest(sParaTemp, "get", "确定");
-    }
-
-    @Override
-    public String getPayreturnMessage(String paymentSn) {
-        return "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + SettingUtil.getServerUrl() + RESULT_URL + "\"><input type=\"hidden\" name=\"sn\" value=\"" + paymentSn + "\" /></form></body></html>";
     }
 
     @Override
