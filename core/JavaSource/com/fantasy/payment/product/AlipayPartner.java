@@ -54,7 +54,6 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         Payment payment = context.getPayment();
 
         HttpServletResponse response = ServletActionContext.getResponse();
-        String _input_charset = "UTF-8";// 字符集编码格式（UTF-8、GBK）
         String body = "";// 订单描述
         String logistics_fee = "0";// 物流费用
         String logistics_payment = "SELLER_PAY";// 物流支付方式（SELLER_PAY：卖家承担运费、BUYER_PAY：买家承担运费）
@@ -85,7 +84,7 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
 
         signMap.put("service", service);
         signMap.put("partner", partner);
-        signMap.put("_input_charset", _input_charset);
+        signMap.put("_input_charset", input_charset);
         signMap.put("payment_type", payment_type);
         signMap.put("notify_url", notify_url);
         signMap.put("return_url", return_url);

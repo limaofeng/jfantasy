@@ -95,7 +95,6 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         Payment payment = context.getPayment();
 
         HttpServletResponse response = ServletActionContext.getResponse();
-        String _input_charset = "UTF-8";// 字符集编码格式（UTF-8、GBK）
         AtomicReference<String> body = new AtomicReference<String>(orderDetails.getSN());// 订单描述
         String defaultbank = parameters.get("bankNo");// 默认选择银行（当paymethod为bankPay时有效）
         String extra_common_param = "";// 商户数据
@@ -123,7 +122,7 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         Map<String, String> signMap = new LinkedHashMap<String, String>();
         signMap.put("service", service);
         signMap.put("partner", partner);
-        signMap.put("_input_charset", _input_charset);
+        signMap.put("_input_charset", input_charset);
         signMap.put("payment_type", payment_type);
         signMap.put("notify_url", notify_url);
         signMap.put("return_url", return_url);

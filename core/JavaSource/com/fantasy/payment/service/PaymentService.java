@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
 import com.fantasy.member.userdetails.MemberUser;
@@ -16,6 +17,7 @@ import com.fantasy.security.SpringSecurityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
+import org.htmlcleaner.TagNode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -157,7 +159,7 @@ public class PaymentService {
         return this.submit(orderType, orderSn, paymentConfigId, "", parameters);
     }
 
-    public Map<String, String> test(Long paymentConfigId, Map<String, String> parameters) {
+    public String test(Long paymentConfigId, Map<String, String> parameters) {
         String orderType = "test";
         String orderSn = "TSN" + DateUtil.format("yyyyMMddHHmmss");
         PaymentContext context = PaymentContext.newInstall();
@@ -172,7 +174,19 @@ public class PaymentService {
         OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
         context.setOrderDetails(orderDetails);
 
-        return paymentProduct.getParameterMap(parameters);
+        // 支付参数
+        Map<String, String> parameterMap = paymentProduct.getParameterMap(parameters);
+        String sHtmlText = paymentProduct.buildRequest(parameterMap);
+        TagNode body = HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.htmlCleaner(sHtmlText),"//body");
+        body.removeChild(HtmlCleanerUtil.findFristTagNode(body,"//script"));
+        for(TagNode tagNode : HtmlCleanerUtil.findTagNodes(body,"//form//input")){
+            if("hidden".equals(tagNode.getAttributeByName("type"))){
+                tagNode.addAttribute("type","text");
+            }else if("submit".equals(tagNode.getAttributeByName("type"))){
+                tagNode.removeAttribute("style");
+            }
+        }
+        return HtmlCleanerUtil.getAsString(HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.getAsString(body),"//form"));
     }
 
     /**

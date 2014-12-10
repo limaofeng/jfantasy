@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.codehaus.jackson.annotate.JsonIgnore;
+import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
@@ -95,17 +96,17 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
 
         StringBuilder sbHtml = new StringBuilder();
 
-        sbHtml.append("<form id=\"alipaysubmit\" name=\"alipaysubmit\" action=\"").append(getPaymentUrl()).append("\" method=\"").append(strMethod).append("\">");
+        sbHtml.append("<form id=\"alipaysubmit\" name=\"alipaysubmit\" action=\"").append(getPaymentUrl()).append("\" method=\"").append(strMethod).append("\">\n");
 
         for (String key : keys) {
             String value = sParaTemp.get(key);
-            sbHtml.append("<input type=\"hidden\" name=\"").append(key).append("\" value=\"").append(value).append("\"/>");
+            sbHtml.append(key).append(":<input type=\"hidden\" name=\"").append(key).append("\" value=\"").append(HtmlUtils.htmlEscape(value)).append("\"/><br/>\n");
         }
 
         //submit按钮控件请不要含有name属性
-        sbHtml.append("<input type=\"submit\" value=\"").append(strButtonName).append("\" style=\"display:none;\"></form>");
+        sbHtml.append("<input type=\"submit\" value=\"").append(strButtonName).append("\" style=\"display:none;\">\n</form>");
 
-        sbHtml.append("<script>document.forms['alipaysubmit'].submit();</script>");
+        sbHtml.append("\n<script>document.forms['alipaysubmit'].submit();</script>");
 
         if (LOG.isDebugEnabled()) {
             LOG.debug(sbHtml);

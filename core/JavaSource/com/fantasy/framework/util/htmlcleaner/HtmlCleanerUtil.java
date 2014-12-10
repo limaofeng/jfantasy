@@ -12,6 +12,7 @@ import java.net.URL;
 
 /**
  * HtmlCleaner是一个开源的Java语言的Html文档解析器。HtmlCleaner能够重新整理HTML文档的每个元素并生成结构良好(Well-Formed)的 HTML 文档。
+ *
  * @author 李茂峰
  * @version 1.0
  * @since 2013-8-13 下午01:41:42
@@ -20,40 +21,12 @@ public class HtmlCleanerUtil {
 
     private static HtmlCleaner hc = new HtmlCleaner();
 
-    private static Log logger = LogFactory.getLog(HtmlCleanerUtil.class);
-
-    public static void main(String[] args) throws Exception {
-        CleanerProperties props = hc.getProperties();//new CleanerProperties();
-        System.out.println(props.isUseCdataForScriptAndStyle());
-//		props.setUseCdataForScriptAndStyle(true);
-        System.out.println(props.isRecognizeUnicodeChars());
-//		props.setRecognizeUnicodeChars(true);
-        System.out.println(props.isUseEmptyElementTags());
-//		props.setUseEmptyElementTags(true);
-        System.out.println(props.isAdvancedXmlEscape());
-//		props.setAdvancedXmlEscape(true);
-        System.out.println(props.isTranslateSpecialEntities());
-//		props.setTranslateSpecialEntities(true);
-        System.out.println(props.getBooleanAttributeValues());
-//		props.setBooleanAttributeValues("empty");
-
-        TagNode node = HtmlCleanerUtil.htmlCleaner("<Bean><a>xxx</a></Bean>");
-
-        System.out.println(HtmlCleanerUtil.findFristTagNode(node, "//bean//a").getText());
-
-//		TagNode node = htmlCleaner(new URL("http://www.baidu.com/"));
-//		
-//		for(TagNode tagNode : findTagNodes(node, "//a")){
-//			System.out.println(tagNode);
-//			tagNode.setAttribute("href", "xxxx");
-//			String html = getAsString(getBrowserCompactXmlSerializer(hc), tagNode);
-//			System.out.println(html);
-//		}
-//		
-//		String html = getAsString(getBrowserCompactXmlSerializer(hc), node);
-//		System.out.println(html);
-
+    static {
+        CleanerProperties props = hc.getProperties();
+        props.setOmitXmlDeclaration(true);
     }
+
+    private static Log logger = LogFactory.getLog(HtmlCleanerUtil.class);
 
     public static TagNode[] findTagNodes(String html, String xpath) {
         return findTagNodes(htmlCleaner(html), xpath);

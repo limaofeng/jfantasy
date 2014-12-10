@@ -28,10 +28,7 @@ public class PaymentConfigAction extends ActionSupport {
      * @return {String}
      */
     public String test(Long paymentConfigId) throws IOException {
-        // 支付参数
-        PaymentConfig paymentConfig = this.paymentService.getPaymentConfig(paymentConfigId);
-        this.attrs.put("paymentUrl", this.paymentService.getPaymentProduct(paymentConfig.getPaymentProductId()).getPaymentUrl());
-        this.attrs.put("parameterMap", this.paymentService.test(paymentConfigId, WebUtil.getParameterMap(this.request)));
+        this.attrs.put("sHtmlText", this.paymentService.test(paymentConfigId, WebUtil.getParameterMap(this.request)));
         return SUCCESS;
     }
 
