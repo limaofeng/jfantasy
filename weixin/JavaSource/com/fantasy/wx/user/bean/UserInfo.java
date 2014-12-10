@@ -1,9 +1,6 @@
 package com.fantasy.wx.user.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -15,8 +12,13 @@ import java.util.Date;
 @Table(name = "WX_USER_INFO")
 public class UserInfo {
 
-    public UserInfo(){}
-    public UserInfo(String openid){this.openId=openid;}
+    public UserInfo() {
+    }
+
+    public UserInfo(String openid) {
+        this.openId = openid;
+    }
+
     //用户的标识，对当前公众号唯一
     @Id
     @Column(name = "OPENID", nullable = false, insertable = true, updatable = false)
@@ -40,7 +42,7 @@ public class UserInfo {
     @Column(name = "LANGUAGE")
     private String language;
     //用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
-    @Column(name = "HEADIMGURL" ,length = 600)
+    @Column(name = "HEADIMGURL", length = 600)
     private String headImgUrl;
     //用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
     @Column(name = "SUBSCRIBE_TIME")
@@ -60,10 +62,14 @@ public class UserInfo {
     @Column(name = "UN_READ_SIZE")
     private Integer unReadSize;
 
-    public String getTime(){
-        if(subscribeTime==0) return "";
-        SimpleDateFormat sdf= new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long time=subscribeTime*1000L;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ID")
+    private WxGroup wxGroup;
+
+    public String getTime() {
+        if (subscribeTime == 0) return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        long time = subscribeTime * 1000L;
         return sdf.format(new Date(time));
     }
 
@@ -173,5 +179,29 @@ public class UserInfo {
 
     public void setUnReadSize(Integer unReadSize) {
         this.unReadSize = unReadSize;
+    }
+
+    public Long getSubscribeTime() {
+        return subscribeTime;
+    }
+
+    public void setSubscribeTime(Long subscribeTime) {
+        this.subscribeTime = subscribeTime;
+    }
+
+    public Boolean getSubscribe() {
+        return subscribe;
+    }
+
+    public void setSubscribe(Boolean subscribe) {
+        this.subscribe = subscribe;
+    }
+
+    public WxGroup getWxGroup() {
+        return wxGroup;
+    }
+
+    public void setWxGroup(WxGroup wxGroup) {
+        this.wxGroup = wxGroup;
     }
 }

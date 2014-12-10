@@ -29,12 +29,12 @@
                     <webXml>WebContent/WEB-INF/web.xml</webXml>
                     <webResources>
                         <resource>
-                            <directory>${basedir}/../jslib/static</directory>
+                            <directory>${basedir}/../../jslib/static</directory>
                             <filtering>false</filtering>
                             <targetPath>static</targetPath>
                         </resource>
                         <resource>
-                            <directory>${basedir}/../jslib/fides</directory>
+                            <directory>${basedir}/../../jslib/fides</directory>
                             <filtering>false</filtering>
                             <targetPath>assets</targetPath>
                         </resource>

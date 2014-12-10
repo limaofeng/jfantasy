@@ -31,14 +31,6 @@ public class NoticeAction extends ActionSupport {
         this.searchModel(new Pager<Model>(),new ArrayList<PropertyFilter>());
         this.attrs.put("models",this.attrs.get(ROOT));
         this.attrs.remove(ROOT);
-        Notice notice2=new Notice();
-        notice2.setModel(new Model("shuju"));
-        Map<String,String> map=new HashMap<String, String>();
-        map.put("key","123"+new Date().toString());
-        map.put("content","/web");
-        map.put("id","11");
-        notice2.setReplaceMap(JSON.serialize(map));
-        noticeService.save(notice2);
         return SUCCESS;
     }
 

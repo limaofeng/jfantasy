@@ -1,12 +1,18 @@
 package com.fantasy.wx.config.init;
 
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.concurrent.LinkedQueue;
+import com.fantasy.wx.exception.WxException;
 import com.fantasy.wx.message.bean.Message;
+import com.fantasy.wx.user.service.impl.UserInfoService;
+import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.*;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
 import org.springframework.beans.factory.InitializingBean;
 import org.xml.sax.InputSource;
 
-import javax.annotation.Resource;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
@@ -14,6 +20,7 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.InputStream;
+import java.util.Map;
 
 /**
  * Created by zzzhong on 2014/11/18.
@@ -33,15 +40,72 @@ public class WeixinConfigInit implements InitializingBean {
      * 微信消息websocket处理集合
      */
     private LinkedQueue<Message> messageQueue = new LinkedQueue<Message>();
-
+    /*@Resource
+    private ScheduleService scheduleService;*/
 
     @Override
     public void afterPropertiesSet() throws Exception {
         try {
+            /*List<? extends TriggerKey> triggerKeys=scheduleService.getTriggers();
+            for(TriggerKey key:triggerKeys){
+                if(key.getName().indexOf("accessToken")>=0){
+                    scheduleService.pauseTrigger(key);
+                    scheduleService.removeTrigdger(key);
+                }
+            }
+            List<JobKey>jobKeys= scheduleService.getJobKeys();
+            for(JobKey key:jobKeys){
+                if(key.getName().indexOf("weixin")>=0){
+                    scheduleService.interrupt(key);
+                    scheduleService.deleteJob(key);
+                }
+            }*/
             InputStream is1 = this.getClass().getResourceAsStream("/xml/weixin-config.xml");
             WxXmlMpInMemoryConfigStorage config = fromXml(WxXmlMpInMemoryConfigStorage.class, is1);
             util = new WxMpServiceImpl();
             util.setWxMpConfigStorage(config);
+            wxMpMessageRouter = new WxMpMessageRouter().rule()
+                    .async(false)
+                    .msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_SUBSCRIBE)
+                    .handler(new WxMpMessageHandler() {
+                        @Override
+                        public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context) {
+                            UserInfoService service = (UserInfoService) SpringContextUtil.getBean("userInfoService");
+                            try {
+                                service.refresh(wxMessage.getToUserName());
+                            } catch (WxException e) {
+                                e.printStackTrace();
+                            }
+                            WxMpXmlOutTextMessage m = WxMpXmlOutMessage.TEXT().content("欢迎关注").fromUser(wxMessage.getToUserName())
+                                    .toUser(wxMessage.getFromUserName()).build();
+                            return m;
+                        }
+                    })
+                    .end()
+                    .rule()
+                    .async(false)
+                    .msgType(WxConsts.XML_MSG_EVENT).event(WxConsts.EVT_SUBSCRIBE)
+                    .handler(new WxMpMessageHandler() {
+                        @Override
+                        public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context) {
+                            UserInfoService service = (UserInfoService) SpringContextUtil.getBean("userInfoService");
+                            try {
+                                service.refresh(wxMessage.getToUserName());
+                            } catch (WxException e) {
+                                e.printStackTrace();
+                            }
+                            WxMpXmlOutTextMessage m = WxMpXmlOutMessage.TEXT().content("欢迎关注").fromUser(wxMessage.getToUserName())
+                                    .toUser(wxMessage.getFromUserName()).build();
+                            return m;
+                        }
+                    })
+                    .end()
+                    .rule().async(false).handler(new WxMpMessageHandler() {
+                        @Override
+                        public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context) {
+                            return null;
+                        }
+                    }).end();
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -78,10 +142,12 @@ public class WeixinConfigInit implements InitializingBean {
     public void setMessageQueue(LinkedQueue<Message> messageQueue) {
         this.messageQueue = messageQueue;
     }
+
     public void addMessage(Message m) throws InterruptedException {
         messageQueue.put(m);
     }
-    public Message getMessage(){
+
+    public Message getMessage() {
         try {
             return messageQueue.take();
         } catch (InterruptedException e) {
@@ -99,9 +165,11 @@ public class WeixinConfigInit implements InitializingBean {
         public String getOpenId() {
             return openId;
         }
+
         public void setOpenId(String openId) {
             this.openId = openId;
         }
+
         @Override
         public String toString() {
             return "SimpleWxConfigProvider [appId=" + appId + ", secret=" + secret + ", accessToken=" + accessToken
@@ -109,6 +177,7 @@ public class WeixinConfigInit implements InitializingBean {
         }
 
     }
+
     public static <T> T fromXml(Class<T> clazz, InputStream is) throws JAXBException {
         Unmarshaller um = JAXBContext.newInstance(clazz).createUnmarshaller();
         InputSource inputSource = new InputSource(is);

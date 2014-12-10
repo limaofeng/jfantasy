@@ -4,8 +4,7 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
 import com.fantasy.wx.message.bean.Message;
-import com.fantasy.wx.message.service.MessageService;
-import com.fantasy.wx.user.bean.UserInfo;
+import com.fantasy.wx.message.service.impl.MessageService;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
@@ -18,7 +17,7 @@ import java.io.IOException;
 /**
  * Created by zzzhong on 2014/9/23.
  */
-public class WeixinAction   extends ActionSupport{
+public class WeixinAction extends ActionSupport {
 
     @Resource
     public WxMpService wxMpService;
@@ -27,7 +26,7 @@ public class WeixinAction   extends ActionSupport{
     @Resource
     public WeixinConfigInit weixinConfig;
 
-    public String operationUrl()throws IOException{
+    public String operationUrl() throws IOException {
         String signature = request.getParameter("signature");
         String nonce = request.getParameter("nonce");
         String timestamp = request.getParameter("timestamp");
@@ -64,7 +63,7 @@ public class WeixinAction   extends ActionSupport{
             response.getWriter().println("不可识别的加密类型");
             return NONE;
         }
-        Message message=BeanUtil.copyProperties(new Message(), inMessage, null);
+        Message message = BeanUtil.copyProperties(new Message(), inMessage, null);
         messageService.save(message);
 
         WxMpXmlOutMessage outMessage = weixinConfig.getWxMpMessageRouter().route(inMessage);

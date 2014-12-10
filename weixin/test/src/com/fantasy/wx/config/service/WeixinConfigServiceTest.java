@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.config.bean.WeixinConfig;
+import com.fantasy.wx.config.service.impl.WeixinConfigService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,6 +18,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class WeixinConfigServiceTest {
@@ -36,22 +38,22 @@ public class WeixinConfigServiceTest {
 
     @Test
     public void testGetAll() throws Exception {
-        List<WeixinConfig> list=wcService.getAll();
+        List<WeixinConfig> list = wcService.getAll();
         Assert.assertNotNull(list);
         logger.debug(JSON.serialize(list));
     }
 
     @Test
     public void testFindPager() throws Exception {
-        Pager<WeixinConfig> pager=new Pager<WeixinConfig>();
-        List<PropertyFilter> list=new ArrayList<PropertyFilter>();
-        Pager p=wcService.findPager(pager,list);
+        Pager<WeixinConfig> pager = new Pager<WeixinConfig>();
+        List<PropertyFilter> list = new ArrayList<PropertyFilter>();
+        Pager p = wcService.findPager(pager, list);
         Assert.assertNotNull(p.getPageItems());
         logger.debug(JSON.serialize(p));
     }
 
     public void testSave() throws Exception {
-        WeixinConfig config=new WeixinConfig();
+        WeixinConfig config = new WeixinConfig();
         config.setAppid("wx0e7cef7ad73417eb");
         config.setAppsecret("e932af31311aeebf76e21a539d9f1944");
         config.setTokenName("haolue_weixin");
@@ -64,7 +66,7 @@ public class WeixinConfigServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        WeixinConfig weixinConfig=wcService.get("wx0e7cef7ad73417eb");
+        WeixinConfig weixinConfig = wcService.get("wx0e7cef7ad73417eb");
         logger.debug(JSON.serialize(weixinConfig));
     }
 }
