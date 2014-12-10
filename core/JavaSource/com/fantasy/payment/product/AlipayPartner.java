@@ -20,7 +20,6 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
     /**
      * 支付宝消息验证地址
      */
-    private static final String HTTPS_VERIFY_URL = "https://mapi.alipay.com/gateway.do?service=notify_verify&";
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
     /*
     public static final String RETURN_URL = "/payment/payreturn.do";// 回调处理URL
@@ -127,11 +126,6 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         //移除回调链接中的 paymentSn sign不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
         params.remove("sn");
         return StringUtils.equals(params.get("sign"), DigestUtils.md5Hex(getParameterString(paraFilter(params)) + paymentConfig.getBargainorKey())) && verifyResponse(paymentConfig.getBargainorId(), params.get("notify_id"));
-    }
-
-    @Override
-    public String getPaynotifyMessage(String paymentSn) {
-        return "success";
     }
 
 }

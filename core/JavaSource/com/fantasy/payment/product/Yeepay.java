@@ -113,11 +113,6 @@ public class Yeepay extends AbstractPaymentProduct {
         return StringUtils.equals(hmac, hmacSign(p1_MerId + r0_Cmd + r1_Code + r2_TrxId + r3_Amt + r4_Cur + r5_Pid + r6_Order + r7_Uid + r8_MP + r9_BType, paymentConfig.getBargainorKey()));
     }
 
-    @Override
-    public String getPayreturnMessage(String paymentSn) {
-        return "SUCCESS<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + SettingUtil.get("website", "ShopUrl") + RESULT_URL + "\"><input type=\"hidden\" name=\"paymentsn\" value=\"" + paymentSn + "\" /></form></body></html>";
-    }
-
     // HMAC加密算法
     private String hmacSign(String value, String key) {
         String encodingCharset = "UTF-8";
@@ -164,11 +159,6 @@ public class Yeepay extends AbstractPaymentProduct {
             stringBuffer.append(Integer.toString(current, 16));
         }
         return stringBuffer.toString();
-    }
-
-    @Override
-    public String getPaynotifyMessage(String paymentSn) {
-        return null;
     }
 
 }

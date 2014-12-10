@@ -153,7 +153,7 @@ public class Pay99bill extends AbstractPaymentProduct {
 
     @Override
     public String getPayreturnMessage(String paymentSn) {
-        return "<result>1</result><redirecturl>" + SettingUtil.get("website", "ShopUrl") + RESULT_URL + "?paymentsn=" + paymentSn + "</redirecturl>";
+        return "<result>1</result><redirecturl>" + PaymentContext.getContext().getShowPaymentUrl(paymentSn) + "</redirecturl>";
     }
 
 }

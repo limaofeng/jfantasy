@@ -135,11 +135,6 @@ public class TenpayDirect extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPayreturnMessage(String paymentSn) {
-        return "<html><head><meta name=\"TENCENT_ONLINE_PAYMENT\" content=\"China TENCENT\"><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + SettingUtil.get("website", "ShopUrl") + RESULT_URL + "\"><input type=\"hidden\" name=\"paymentsn\" value=\"" + paymentSn + "\" /></form></body></html>";
-    }
-
-    @Override
     public String getPaynotifyMessage(String paymentSn) {
         return null;
     }

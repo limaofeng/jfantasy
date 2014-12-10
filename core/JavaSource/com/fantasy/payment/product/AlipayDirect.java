@@ -22,7 +22,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
-    private static final String HTTPS_VERIFY_URL = "https://mapi.alipay.com/gateway.do?service=notify_verify&";
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
 
     /*
@@ -174,12 +173,6 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
     public static Map<String, String> getCreditBankcodes() {
         return AlipayDirect.creditBankcodes;
-    }
-
-
-    @Override
-    public String getPaynotifyMessage(String paymentSn) {
-        return "success";
     }
 
 }

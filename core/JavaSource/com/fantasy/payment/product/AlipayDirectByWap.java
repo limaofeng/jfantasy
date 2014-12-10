@@ -155,8 +155,4 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
         return super.buildRequest(sParaTemp, "get", "确定");
     }
 
-    @Override
-    public String getPaynotifyMessage(String paymentSn) {
-        return "success";
-    }
 }

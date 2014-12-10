@@ -30,7 +30,7 @@ public class PaymentAction extends ActionSupport {
     public String execute(String sn) throws Exception {
         Payment payment = paymentService.get(sn);
         OrderDetailsService paymentOrderService = paymentConfiguration.getPaymentOrderService(payment.getOrderType());
-        String orderUrl = paymentOrderService.url(payment.getOrderSn());
+        String orderUrl = paymentOrderService.getShowUrl(payment.getOrderSn());
         if (StringUtil.isNotBlank(orderUrl)) {
             response.sendRedirect(orderUrl);
             return NONE;
