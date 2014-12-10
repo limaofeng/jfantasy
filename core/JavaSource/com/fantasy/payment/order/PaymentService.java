@@ -48,55 +48,57 @@ public class PaymentService {
     @Resource
     private MemberService memberService;
 
-    public Payment ready(String orderType, String orderSn, String membername, Long paymentConfigId) {
+    public Payment ready(String orderType, String orderSn, String membername, Long paymentConfigId) throws PaymentException {
         PaymentConfig paymentConfig = this.paymentConfigService.get(paymentConfigId);
+        //在线支付
+        if (PaymentConfig.PaymentConfigType.online != paymentConfig.getPaymentConfigType()) {
+            throw new PaymentException("暂时只支持在线支付");
+        }
         OrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
         //检查订单支付状态等信息
         OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
 
-        Payment payment = new Payment();
         //支付配置类型（线下支付、在线支付）
-        PaymentConfig.PaymentConfigType paymentConfigType = paymentConfig.getPaymentConfigType();
         Payment.PaymentType paymentType = Payment.PaymentType.online;
         BigDecimal paymentFee = BigDecimal.ZERO; //支付手续费
 
         BigDecimal amountPayable = orderDetails.getPayableFee();//应付金额（含支付手续费）
 
-        Payment oldPayment = this.paymentDao.findUnique(Restrictions.eq("orderType", orderType), Restrictions.eq("orderSn", orderSn), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
-        if (oldPayment != null) {
+        Payment payment = this.paymentDao.findUnique(Restrictions.eq("paymentConfig.id", paymentConfigId), Restrictions.eq("orderType", orderType), Restrictions.eq("orderSn", orderSn), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
+        if (payment != null) {
             //如果存在未完成的支付信息
-            if (amountPayable.equals(oldPayment.getTotalAmount().subtract(oldPayment.getPaymentFee()))) {
-                return oldPayment;
+            if (amountPayable.compareTo(payment.getTotalAmount().subtract(payment.getPaymentFee())) == 0) {
+                return payment;
             } else {
-                this.invalid(oldPayment.getSn());
+                this.invalid(payment.getSn());
             }
         }
 
+        payment = new Payment();
+
         //在线支付
-        if (PaymentConfig.PaymentConfigType.online == paymentConfigType) {
-            PaymentProduct paymentProduct = paymentConfiguration.getPaymentProduct(paymentConfig.getPaymentProductId());
-            String bankName = paymentProduct.getName();
-            String bankAccount = paymentConfig.getBargainorId();
-            payment.setPaymentType(paymentType);
-            payment.setPaymentConfigName(paymentConfig.getName());
-            payment.setBankName(bankName);
-            payment.setBankAccount(bankAccount);
-            payment.setTotalAmount(amountPayable.add(paymentFee));
-            payment.setPaymentFee(paymentFee);
-            payment.setPayer(StringUtil.defaultValue(membername, SpringSecurityUtils.getCurrentUserName()));
-            payment.setMemo(null);
-            payment.setPaymentStatus(Payment.PaymentStatus.ready);
-            payment.setPaymentConfig(paymentConfig);
-            payment.setOrderType(orderType);
-            payment.setOrderSn(orderSn);
-            if (StringUtil.isNotBlank(membername)) {
-                Member member = memberService.findUniqueByUsername(membername);
-                if (member != null) {
-                    payment.setMember(SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser());
-                }
+        PaymentProduct paymentProduct = paymentConfiguration.getPaymentProduct(paymentConfig.getPaymentProductId());
+        String bankName = paymentProduct.getName();
+        String bankAccount = paymentConfig.getBargainorId();
+        payment.setPaymentType(paymentType);
+        payment.setPaymentConfigName(paymentConfig.getName());
+        payment.setBankName(bankName);
+        payment.setBankAccount(bankAccount);
+        payment.setTotalAmount(amountPayable.add(paymentFee));
+        payment.setPaymentFee(paymentFee);
+        payment.setPayer(StringUtil.defaultValue(membername, SpringSecurityUtils.getCurrentUserName()));
+        payment.setMemo(null);
+        payment.setPaymentStatus(Payment.PaymentStatus.ready);
+        payment.setPaymentConfig(paymentConfig);
+        payment.setOrderType(orderType);
+        payment.setOrderSn(orderSn);
+        if (StringUtil.isNotBlank(membername)) {
+            Member member = memberService.findUniqueByUsername(membername);
+            if (member != null) {
+                payment.setMember(SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser());
             }
-            this.paymentDao.save(payment);
         }
+        this.paymentDao.save(payment);
         return payment;
     }
 
@@ -164,9 +166,10 @@ public class PaymentService {
         return this.submit(orderType, orderSn, paymentConfigId, "", parameters);
     }
 
-    public String test(Long paymentConfigId, Map<String, String> parameters) {
+    public String test(Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
         String orderType = "test";
-        String orderSn = "TSN" + DateUtil.format("yyyyMMddHHmmss");
+        List<Payment> payments = this.paymentDao.find(Restrictions.eq("paymentConfig.id", paymentConfigId), Restrictions.eq("orderType", orderType), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
+        String orderSn = payments.isEmpty() ? "TSN" + DateUtil.format("yyyyMMddHHmmss") : payments.get(0).getOrderSn();
         PaymentContext context = PaymentContext.newInstall();
 
         Payment payment = this.ready(orderType, orderSn, "", paymentConfigId);
