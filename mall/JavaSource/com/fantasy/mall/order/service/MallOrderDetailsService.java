@@ -2,13 +2,13 @@ package com.fantasy.mall.order.service;
 
 import com.fantasy.mall.order.bean.Order;
 import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.service.OrderDetails;
-import com.fantasy.payment.service.PaymentOrderDetailsService;
+import com.fantasy.payment.order.AbstractOrderDetailsService;
+import com.fantasy.payment.order.OrderDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 
-public class MallPaymentOrderService implements PaymentOrderDetailsService {
+public class MallOrderDetailsService extends AbstractOrderDetailsService {
 
     @Autowired
     private OrderService orderService;
@@ -74,8 +74,4 @@ public class MallPaymentOrderService implements PaymentOrderDetailsService {
         orderService.save(order);
     }
 
-    @Override
-    public String url(String sn) {
-        return null;
-    }
 }
