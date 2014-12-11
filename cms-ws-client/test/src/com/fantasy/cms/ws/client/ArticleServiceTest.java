@@ -37,6 +37,15 @@ public class ArticleServiceTest {
         Assert.assertNotNull(pagination);
     }
 
+
+    @Test
+    public void testFind(){
+        List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
+        filters.add(new PropertyFilterDTO("EQS_category.code", "abcd"));
+        ArticleDTO[] articleDTOs = articleService.find(filters.toArray(new PropertyFilterDTO[filters.size()]),"id","desc",10);
+    }
+
+
     @Test
     public void testFindcategory() {
         Assert.assertNotNull(articleService.categorys());
@@ -48,19 +57,17 @@ public class ArticleServiceTest {
         PagerDTO pager = new PagerDTO();// 设置每页显示的数据条数
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
         ArticlePagerResult pagination = articleService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
-        if (pagination.getPageItems().length!=0){
+        Assert.assertNotNull("文章数据为空",pagination.getPageItems());
             for(ArticleDTO dto:pagination.getPageItems()){
                 ArticleDTO articleDTO = this.articleService.findArticleById(dto.getId());
                 Assert.assertNotNull(articleDTO);
             }
-        }
     }
 
 
     @Test
     public void getArticleCategoryDtoByCode(){
         ArticleCategoryDTO[] articleCategoryDTOs = this.articleService.getArticleCategoryDtoByCode("root");
-        Assert.assertNotNull(articleCategoryDTOs.length);
     }
 
 
