@@ -27,7 +27,7 @@ public class ArticleService extends WebServiceClient implements IArticleService 
 
     @Override
     public ArticleDTO[] find(PropertyFilterDTO[] filters, String orderBy, String order, int size) {
-        return new ArticleDTO[0];
+        return super.invokeOption("find",new Object[] { filters,orderBy,order,size},ArticleDTO[].class);
     }
 
     @Override
