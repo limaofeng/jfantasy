@@ -30,4 +30,6 @@
         </dependency>
     </dependencies>
 
+    <description>开发框架 - 电子商务模块,包含订单、商品等功能</description>
+
 </project>

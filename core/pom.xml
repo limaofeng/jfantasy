@@ -270,4 +270,6 @@
         </dependency>
     </dependencies>
 
+    <description>开发框架 - 框架主体,包含支付、用户、会员、权限等功能</description>
+
 </project>
