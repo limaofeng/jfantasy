@@ -33,7 +33,7 @@ public class DictionaryWebService implements IDictionaryService {
     public DataDictionaryDTO[] list(String configKey) {
         String[] ck = StringUtil.tokenizeToStringArray(configKey, ":");
         return asArray(dataDictionaryService.list(ck[0], ck.length > 1 ? ck[1] : null));
-    }GoodsWebService
+    }
 
     public static DataDictionaryDTO[] asArray(List<DataDictionary> dictionaries) {
         DataDictionaryDTO[] array = new DataDictionaryDTO[dictionaries.size()];
