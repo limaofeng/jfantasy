@@ -4,6 +4,7 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.file.ws.IFileUploadService;
 import com.fantasy.file.ws.dto.FileDTO;
+import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axis2.context.MessageContext;
@@ -30,8 +31,8 @@ public class FileUploadWebService implements IFileUploadService{
 
         FileDetail fileDetail = fileUploadService.upload(tmp,contentType,fileName,dir);
 		FileUtil.delFile(tmp);
-		//TODO 查询上传文件对应的记录
-		return null;//WebServiceUtil.toBean(fileDetail,FileDTO.class);
+
+		return BeanUtil.copyProperties(new FileDTO(),fileDetail);
 	}
 
 }

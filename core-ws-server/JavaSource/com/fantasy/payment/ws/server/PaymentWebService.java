@@ -1,7 +1,6 @@
 package com.fantasy.payment.ws.server;
 
 import com.fantasy.framework.util.common.BeanUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.framework.ws.util.WebServiceUtil;
 import com.fantasy.payment.bean.Payment;
@@ -83,7 +82,7 @@ public class PaymentWebService implements IPaymentService {
         return dto;
     }
 
-    private PaymentConfigDTO[] asArray(List<PaymentConfig> paymentConfigs) {
+    private static PaymentConfigDTO[] asArray(List<PaymentConfig> paymentConfigs) {
         PaymentConfigDTO[] dtos = new PaymentConfigDTO[paymentConfigs.size()];
         for (int i = 0; i < dtos.length; i++) {
             dtos[i] = asDto(paymentConfigs.get(i));
