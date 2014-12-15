@@ -50,7 +50,6 @@ public class ArticleDao extends HibernateDao<Article, Long> implements LuceneDao
             } else {
                 likePathCriterion = Restrictions.eq("category.code", filter.getPropertyValue());
             }
-
         }
         List<PropertyFilter> _newFilters = filters == null ? new ArrayList<PropertyFilter>() : filters;
         Criterion[] criterions = super.buildPropertyFilterCriterions(_newFilters);
