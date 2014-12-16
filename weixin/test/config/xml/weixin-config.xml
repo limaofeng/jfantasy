@@ -1,6 +1,6 @@
 <xml>
-    <appId>wx0e7cef7ad73417eb</appId>
-    <secret>e932af31311aeebf76e21a539d9f1944</secret>
+    <appId>wxdb4ed8c64ae393e6</appId>
+    <secret>1882fa9a1de98177ae463aa0b1f78503</secret>
     <token>公众号Token</token>
     <aesKey>公众号EncodingAESKey</aesKey>
     <accessToken>可以不填写</accessToken>

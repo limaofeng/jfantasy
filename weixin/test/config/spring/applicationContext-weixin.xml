@@ -5,5 +5,12 @@
        default-lazy-init="true">
 
     <bean id="weixinConfigInit" class="com.fantasy.wx.config.init.WeixinConfigInit" />
-
+    <bean id="iConfigService" class="com.fantasy.wx.config.service.impl.WeixinConfigService" />
+    <bean id="iMenuService" class="com.fantasy.wx.menu.service.impl.WxMenuService" />
+    <bean id="iMessageService" class="com.fantasy.wx.message.service.impl.MessageService" />
+    <bean id="iGroupMessageService" class="com.fantasy.wx.message.service.impl.GroupMessageService" />
+    <bean id="iQRCodeService" class="com.fantasy.wx.qrcode.service.impl.QRCodeService" />
+    <bean id="iUserInfoService" class="com.fantasy.wx.user.service.impl.UserInfoService" />
+    <bean id="iGroupService" class="com.fantasy.wx.user.service.impl.WxGroupService" />
+    <bean id="weixinMessageHandler" class="com.fantasy.wx.handler.WeixinMessageHandler" />
 </beans>
