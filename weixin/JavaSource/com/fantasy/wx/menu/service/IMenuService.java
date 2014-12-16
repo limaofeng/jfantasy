@@ -19,7 +19,6 @@ public interface IMenuService {
 
     /**
      * 列表查询
-     *
      * @param pager   分页
      * @param filters 查询条件
      * @return 分页对象
