@@ -20,13 +20,13 @@ public class ScheduleServiceTest {
 //    @Before
     public void setUp() throws Exception {
 
-        Map<String, Object> data = new HashMap<String, Object>();
+        Map<String, String> data = new HashMap<String, String>();
         data.put("name", "limaofeng");
         data.put("time", DateUtil.format("yyyy-MM-dd HH:mm:ss"));
         // 添加 job
         scheduleService.addJob(JobKey.jobKey("junit", "test"), HelloJob.class,data);
         // 添加触发器
-        Map<String, Object> _data = new HashMap<String, Object>();
+        Map<String, String> _data = new HashMap<String, String>();
         _data.put("name", "limaofeng-1");
         scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 20, 5, _data);
     }
