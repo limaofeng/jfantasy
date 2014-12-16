@@ -93,6 +93,9 @@
                     <include>**/*.xml</include>
                     <include>**/*.jpg</include>
                     <include>**/*.png</include>
+                    <include>**/*.jpeg</include>
+                    <include>**/*.map3</include>
+                    <include>**/*.map4</include>
                     <include>**/*.properties</include>
                 </includes>
             </testResource>
