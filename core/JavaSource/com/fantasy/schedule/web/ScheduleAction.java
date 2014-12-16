@@ -81,7 +81,7 @@ public class ScheduleAction extends ActionSupport {
      *
      * @throws org.quartz.SchedulerException
      */
-    public String saveJob(String group, String name, String className, Map<String, Object> args) throws SchedulerException {
+    public String saveJob(String group, String name, String className, Map<String, String> args) throws SchedulerException {
         JobKey jobKey = StringUtil.isBlank(group) ? JobKey.jobKey(name) : JobKey.jobKey(name, group);
         this.scheduleService.addJob(jobKey, (Class<Job>) ClassUtil.forName(className), args);
         this.attrs.put("success", "1");
