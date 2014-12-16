@@ -10,7 +10,6 @@ import com.fantasy.payment.product.sign.MD5;
 import com.fantasy.payment.product.sign.RSA;
 import com.fantasy.payment.service.PaymentContext;
 import org.apache.commons.httpclient.NameValuePair;
-import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 
@@ -297,14 +296,6 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
     @Override
     public String getPaynotifyMessage(String paymentSn) {
         return "success";
-    }
-
-    public boolean isPaySuccess(Map<String, String> parameters) {
-        if (parameters == null) {
-            return false;
-        }
-        String tradeStatus = parameters.get("trade_status");
-        return StringUtils.equals(tradeStatus, "TRADE_FINISHED") || StringUtils.equals(tradeStatus, "TRADE_SUCCESS");
     }
 
 }

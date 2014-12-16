@@ -33,17 +33,22 @@ public class WxMenu extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
+    //菜单类型
     @Column(name = "\"TYPE\"")
     private String type;
+    //菜单名称
     @Column(name = "\"NAME\"")
     private String name;
+    //菜单key
     @Column(name = "\"KEY\"")
     private String key;
+    //菜单的url
     @Column(name = "URL")
     private String url;
+    //菜单级别 一级菜单或者二级菜单
     @Column(name = "LAYER")
     private Integer layer;
-
+    //排序
     @Column(name = "SORT")
     private Integer sort;// 排序
 

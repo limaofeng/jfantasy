@@ -8,9 +8,8 @@ import com.fantasy.payment.order.OrderDetails;
 import com.fantasy.payment.service.PaymentContext;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -29,8 +28,6 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
     public static final String NOTIFY_URL = "/payment/paynotify.do";// 消息通知URL
     public static final String SHOW_URL = "/payment.do";// 支付单回显url
     */
-
-    private static final Log logger = LogFactory.getLog(AlipayDirect.class);
 
     public static final DecimalFormat decimalFormat = new DecimalFormat("#.00");
 
@@ -155,16 +152,26 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
             //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
             params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
         }
-        //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以下仅供参考)//
-        //商户订单号
-//        String out_trade_no = WebUtil.transformCoding(request.getParameter("out_trade_no"), "ISO-8859-1", "UTF-8");
-        //支付宝交易号
-//        String trade_no = WebUtil.transformCoding(request.getParameter("trade_no"), "ISO-8859-1", "UTF-8");
-        //交易状态
-//        String trade_status = WebUtil.transformCoding(request.getParameter("trade_status"), "ISO-8859-1", "UTF-8");
+
         //移除回调链接中的 paymentSn sign不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
         params.remove("sn");
         return StringUtils.equals(params.get("sign"), DigestUtils.md5Hex(getParameterString(paraFilter(params)) + paymentConfig.getBargainorKey())) && verifyResponse(paymentConfig.getBargainorId(), params.get("notify_id"));
+    }
+
+    @Override
+    public PayResult parsePayResult(Map<String, String> parameters) {
+        Map<String, String> params = new HashMap<String, String>();
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+            params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
+        }
+        PayResult payResult = new PayResult();
+        payResult.setPaymentSN(params.get("out_trade_no"));//支付编号
+        payResult.setTradeNo(params.get("trade_no"));//交易流水号
+        payResult.setTotalFee(BigDecimal.valueOf(Double.valueOf(params.get("total_fee"))));//交易金额
+        String tradeStatus = params.get("trade_status");
+        payResult.setStatus((StringUtils.equals(tradeStatus, "TRADE_FINISHED") || StringUtils.equals(tradeStatus, "TRADE_SUCCESS")) ? PayResult.PayStatus.success : PayResult.PayStatus.failure);
+        return payResult;
     }
 
     public static Map<String, String> getDebitBankcodes() {

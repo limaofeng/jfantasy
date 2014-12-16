@@ -5,8 +5,9 @@ import java.io.Serializable;
 public class ArticleCategoryDTO implements Serializable {
 
 	private static final long serialVersionUID = -7217345631547439291L;
+
 	/**
-	 * id
+	 * 栏目编码
 	 */
 	private String code;
 	/**
@@ -14,29 +15,29 @@ public class ArticleCategoryDTO implements Serializable {
 	 */
 	private String name;
 
+    /**
+     * 栏目英文名称
+     */
+    private String engname;
+
 	/**
 	 * 层级
 	 */
 	private Integer layer;
 	/**
-	 * 路径
-	 */
-	private String path;// 树路径
-	/**
 	 * 描述
 	 */
-
 	private String description;
 	/**
 	 * 排序字段
 	 * 
 	 */
 	private Integer sort;
-	/**
-	 * 上级栏目
-	 * 
-	 */
-	private ArticleCategoryDTO parent;
+
+    /**
+     * 文章数组
+     */
+    private ArticleDTO[] articleDTOs;
 
 	public String getCode() {
 		return code;
@@ -62,14 +63,6 @@ public class ArticleCategoryDTO implements Serializable {
 		this.layer = layer;
 	}
 
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
-
 	public String getDescription() {
 		return description;
 	}
@@ -86,12 +79,20 @@ public class ArticleCategoryDTO implements Serializable {
 		this.sort = sort;
 	}
 
-	public ArticleCategoryDTO getParent() {
-		return parent;
-	}
 
-	public void setParent(ArticleCategoryDTO parent) {
-		this.parent = parent;
-	}
+    public ArticleDTO[] getArticleDTOs() {
+        return articleDTOs;
+    }
 
+    public void setArticleDTOs(ArticleDTO[] articleDTOs) {
+        this.articleDTOs = articleDTOs;
+    }
+
+    public String getEngname() {
+        return engname;
+    }
+
+    public void setEngname(String engname) {
+        this.engname = engname;
+    }
 }

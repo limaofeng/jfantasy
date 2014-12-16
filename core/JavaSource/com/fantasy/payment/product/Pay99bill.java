@@ -30,15 +30,6 @@ public class Pay99bill extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean isPaySuccess(Map<String, String> parameters) {
-        if (parameters == null) {
-            return false;
-        }
-        String payResult = parameters.get("payResult");
-        return StringUtils.equals(payResult, "10");
-    }
-
-    @Override
     public Map<String, String> getParameterMap(Map<String, String> parameters) {
         PaymentContext context = PaymentContext.getContext();
         PaymentConfig paymentConfig = context.getPaymentConfig();
@@ -154,6 +145,13 @@ public class Pay99bill extends AbstractPaymentProduct {
     @Override
     public String getPayreturnMessage(String paymentSn) {
         return "<result>1</result><redirecturl>" + PaymentContext.getContext().getShowPaymentUrl(paymentSn) + "</redirecturl>";
+    }
+
+    @Override
+    public PayResult parsePayResult(Map<String, String> parameters) {
+        String payResult = parameters.get("payResult");
+        StringUtils.equals(payResult, "10");
+        return null;
     }
 
 }

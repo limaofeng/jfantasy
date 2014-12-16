@@ -5,8 +5,9 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentConfigService;
-import com.fantasy.payment.order.PaymentService;
+import com.fantasy.payment.service.PaymentService;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -27,7 +28,7 @@ public class PaymentConfigAction extends ActionSupport {
      *
      * @return {String}
      */
-    public String test(Long paymentConfigId) throws IOException {
+    public String test(Long paymentConfigId) throws IOException, PaymentException {
         this.attrs.put("sHtmlText", this.paymentService.test(paymentConfigId, WebUtil.getParameterMap(this.request)));
         return SUCCESS;
     }

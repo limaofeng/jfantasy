@@ -162,7 +162,6 @@ public class Order extends BaseBusEntity implements DynaBean {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID",foreignKey =  @ForeignKey(name = "FK_ORDER_MEMBER"))
-
     private Member member;// 会员
 
     @Element(OrderItem.class)

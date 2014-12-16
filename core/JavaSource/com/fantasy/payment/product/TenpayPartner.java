@@ -29,18 +29,6 @@ public class TenpayPartner extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    public boolean isPaySuccess(Map<String, String> parameters) {
-        if (parameters == null) {
-            return false;
-        }
-        //getPaymentSn
-        //parameters.get("cft_tid")
-        //getPaymentAmount
-        //new BigDecimal(parameters.get("total_fee")).divide(new BigDecimal(100))
-        String status = parameters.get("status");
-        return StringUtils.equals(status, "3");
-    }
-
     @Override
     public Map<String, String> getParameterMap(Map<String, String> parameters) {
         PaymentContext context = PaymentContext.getContext();
@@ -154,4 +142,14 @@ public class TenpayPartner extends AbstractPaymentProduct {
         return null;
     }
 
+    @Override
+    public PayResult parsePayResult(Map<String, String> parameters) {
+        //getPaymentSn
+        //parameters.get("cft_tid")
+        //getPaymentAmount
+        //new BigDecimal(parameters.get("total_fee")).divide(new BigDecimal(100))
+        String status = parameters.get("status");
+        StringUtils.equals(status, "3");
+        return null;
+    }
 }

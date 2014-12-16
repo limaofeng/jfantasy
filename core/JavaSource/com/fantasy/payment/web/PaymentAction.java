@@ -9,7 +9,7 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentConfiguration;
 import com.fantasy.payment.order.OrderDetailsService;
-import com.fantasy.payment.order.PaymentService;
+import com.fantasy.payment.service.PaymentService;
 
 import javax.annotation.Resource;
 import java.io.IOException;
@@ -49,7 +49,7 @@ public class PaymentAction extends ActionSupport {
      * @return {string}
      */
     public String submit(String orderType, String orderSn, Long paymentConfigId) throws IOException, PaymentException {
-        String sHtmlText = paymentService.submit(orderType, orderSn, paymentConfigId, WebUtil.getParameterMap(this.request));
+        String sHtmlText = paymentService.buildRequest(orderType, orderSn, paymentConfigId, WebUtil.getParameterMap(this.request));
         this.attrs.put("sHtmlText", sHtmlText);
         return SUCCESS;
     }

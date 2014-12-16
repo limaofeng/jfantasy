@@ -1,7 +1,7 @@
 package com.fantasy.system.ws;
 
-import com.fantasy.system.ws.dto.ConfigDTO;
-import com.fantasy.system.ws.dto.ConfigTypeDTO;
+import com.fantasy.system.ws.dto.DataDictionaryDTO;
+import com.fantasy.system.ws.dto.DataDictionaryTypeDTO;
 
 /**
  * 数据字典
@@ -19,7 +19,7 @@ public interface IDictionaryService {
 	 * @功能描述
 	 * @return
 	 */
-	public ConfigTypeDTO[] allTypes();
+	public DataDictionaryTypeDTO[] allTypes();
 
 	/**
 	 * 通过字典分类及字段编码返回数据项
@@ -31,7 +31,7 @@ public interface IDictionaryService {
 	 *            Config.code 数据编码
 	 * @return
 	 */
-	public ConfigDTO getUnique(String type, String code);
+	public DataDictionaryDTO getUnique(String type, String code);
 
 	/**
 	 * 通过字典的 configKey 返回一组数据
@@ -42,6 +42,6 @@ public interface IDictionaryService {
 	 *            如果要获取ConfigType.code对应的数据直接传入 ConfigType.code<br/>
 	 * @return
 	 */
-	public ConfigDTO[] list(String configKey);
+	public DataDictionaryDTO[] list(String configKey);
 
 }

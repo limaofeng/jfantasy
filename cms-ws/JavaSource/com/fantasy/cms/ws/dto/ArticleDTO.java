@@ -3,9 +3,6 @@ package com.fantasy.cms.ws.dto;
 import java.io.Serializable;
 
 public class ArticleDTO implements Serializable {
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = -3450531192706976441L;
 
 	/**
@@ -49,7 +46,12 @@ public class ArticleDTO implements Serializable {
      */
     private AttributeValueDTO[] attributeValueDTOs;
 
-	public Long getId() {
+    /**
+     * 图片路径
+     */
+    private String articleImageStore;
+
+    public Long getId() {
 		return id;
 	}
 
@@ -119,5 +121,13 @@ public class ArticleDTO implements Serializable {
 
     public void setAttributeValueDTOs(AttributeValueDTO[] attributeValueDTOs) {
         this.attributeValueDTOs = attributeValueDTOs;
+    }
+
+    public String getArticleImageStore() {
+        return articleImageStore;
+    }
+
+    public void setArticleImageStore(String articleImageStore) {
+        this.articleImageStore = articleImageStore;
     }
 }

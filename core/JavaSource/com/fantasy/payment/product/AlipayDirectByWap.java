@@ -1,5 +1,6 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.order.OrderDetails;
@@ -10,6 +11,7 @@ import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.DecimalFormat;
 import java.util.Collections;
@@ -31,15 +33,6 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
     @Override
     public String getPaymentUrl() {
         return ALIPAY_GATEWAY_NEW;
-    }
-
-    @Override
-    public boolean isPaySuccess(Map<String, String> parameters) {
-        if (parameters == null) {
-            return false;
-        }
-        String tradeStatus = parameters.get("trade_status");
-        return StringUtils.equals(tradeStatus, "TRADE_FINISHED") || StringUtils.equals(tradeStatus, "TRADE_SUCCESS");
     }
 
     @Override
@@ -153,6 +146,40 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
     @Override
     public String buildRequest(Map<String, String> sParaTemp) {
         return super.buildRequest(sParaTemp, "get", "确定");
+    }
+
+    @Override
+    public PayResult parsePayResult(Map<String, String> parameters) {
+        Map<String, String> params = new HashMap<String, String>();
+        for (Map.Entry<String, String> entry : parameters.entrySet()) {
+            //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
+            params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
+        }
+        try {
+            String sign_type = parameters.get("sign_type");
+            //RSA签名解密
+            if ("0001".equals(sign_type)) {
+                params = decrypt(parameters);
+            }
+            //XML解析notify_data数据
+            Document doc_notify_data = DocumentHelper.parseText(params.get("notify_data"));
+            //商户订单号
+            params.put("out_trade_no", doc_notify_data.selectSingleNode("//notify/out_trade_no").getText());
+            //支付宝交易号
+            params.put("trade_no", doc_notify_data.selectSingleNode("//notify/trade_no").getText());
+            //交易状态
+            params.put("trade_status", doc_notify_data.selectSingleNode("//notify/trade_status").getText());
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
+        }
+
+        PayResult payResult = new PayResult();
+        payResult.setPaymentSN(params.get("out_trade_no"));//支付编号
+        payResult.setTradeNo(params.get("trade_no"));//交易流水号
+        payResult.setTotalFee(BigDecimal.valueOf(Double.valueOf(params.get("total_fee"))));//交易金额
+        String tradeStatus = params.get("trade_status");
+        payResult.setStatus((StringUtils.equals(tradeStatus, "TRADE_FINISHED") || StringUtils.equals(tradeStatus, "TRADE_SUCCESS")) ? PayResult.PayStatus.success : PayResult.PayStatus.failure);
+        return payResult;
     }
 
 }

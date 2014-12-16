@@ -28,14 +28,6 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
     protected String logoPath;// 支付产品LOGO路径
 
     /**
-     * 判断是否支付成功
-     *
-     * @param parameters 请求参数
-     * @return 是否支付成功
-     */
-    public abstract boolean isPaySuccess(Map<String, String> parameters);
-
-    /**
      * 验证签名
      *
      * @param parameters 请求参数

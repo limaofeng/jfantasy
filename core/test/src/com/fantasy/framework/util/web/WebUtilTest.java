@@ -113,8 +113,6 @@ public class WebUtilTest {
 
     @Test
     public void testIsSelfIp() throws Exception {
-        Assert.assertTrue(WebUtil.isSelfIp("127.0.0.1"));
-
         Assert.assertTrue(WebUtil.isSelfIp("192.168.1.200"));
     }
 

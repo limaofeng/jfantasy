@@ -33,19 +33,6 @@ public class Yeepay extends AbstractPaymentProduct {
         return PAYMENT_URL;
     }
 
-    public boolean isPaySuccess(Map<String, String> parameters) {
-        if (parameters == null) {
-            return false;
-        }
-        //getPaymentSn
-        //parameters.get("r6_Order")
-        //getPaymentAmount
-        //parameters.get("r3_Amt")
-
-        String r1Code = parameters.get("r1_Code");
-        return StringUtils.equals(r1Code, "1");
-    }
-
     @Override
     public Map<String, String> getParameterMap(Map<String, String> parameters) {
         PaymentContext context = PaymentContext.getContext();
@@ -159,6 +146,18 @@ public class Yeepay extends AbstractPaymentProduct {
             stringBuffer.append(Integer.toString(current, 16));
         }
         return stringBuffer.toString();
+    }
+
+    @Override
+    public PayResult parsePayResult(Map<String, String> parameters) {
+        //getPaymentSn
+        //parameters.get("r6_Order")
+        //getPaymentAmount
+        //parameters.get("r3_Amt")
+
+        String r1Code = parameters.get("r1_Code");
+        StringUtils.equals(r1Code, "1");
+        return null;
     }
 
 }
