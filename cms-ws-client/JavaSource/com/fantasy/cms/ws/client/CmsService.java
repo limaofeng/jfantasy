@@ -1,6 +1,6 @@
 package com.fantasy.cms.ws.client;
 
-import com.fantasy.cms.ws.IArticleService;
+import com.fantasy.cms.ws.ICmsService;
 import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
 import com.fantasy.cms.ws.dto.ArticlePagerResult;
@@ -8,7 +8,7 @@ import com.fantasy.framework.ws.axis2.WebServiceClient;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 
-public class CmsService extends WebServiceClient implements IArticleService {
+public class CmsService extends WebServiceClient implements ICmsService {
 
     public CmsService(){
         super("CmsService");

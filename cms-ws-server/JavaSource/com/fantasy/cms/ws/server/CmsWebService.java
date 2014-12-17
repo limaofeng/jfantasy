@@ -3,7 +3,7 @@ package com.fantasy.cms.ws.server;
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.service.CmsService;
-import com.fantasy.cms.ws.IArticleService;
+import com.fantasy.cms.ws.ICmsService;
 import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
 import com.fantasy.cms.ws.dto.ArticlePagerResult;
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 @Component
-public class ArticleWebService implements IArticleService {
+public class CmsWebService implements ICmsService {
 
     @Resource
     private CmsService cmsService;
