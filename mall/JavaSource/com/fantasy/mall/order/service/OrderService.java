@@ -162,7 +162,7 @@ public class OrderService {
             order.setPaymentConfigName("支付功能尚未实现");
         }
         // 订单所属人
-        if (ObjectUtil.isNotNull(SpringSecurityUtils.getCurrentUser(MemberUser.class))) {
+        if (SpringSecurityUtils.getCurrentUser() instanceof MemberUser) {
             order.setMember(SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser());
         }
         //解决附言不能为空的问题

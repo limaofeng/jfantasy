@@ -2,7 +2,7 @@ package com.fantasy.framework.ws.util;
 
 import java.util.Arrays;
 
-public class PagerResult<T> extends WSResult {
+public abstract class PagerResult<T> extends WSResult {
 
     /**
      * 最大数据条数
@@ -152,6 +152,10 @@ public class PagerResult<T> extends WSResult {
     public void setOrders(String[] orders) {
         this.orders = orders;
     }
+
+    public abstract T[] getPageItems();
+
+    public abstract void setPageItems(T[] pageItems);
 
     @Override
     public String toString() {

@@ -162,10 +162,10 @@ public class ScheduleService {
         }
     }
 
-    public JobDetail addJob(JobKey jobKey, Class<? extends Job> jobClass, Map<String, Object> data) {
+    public JobDetail addJob(JobKey jobKey, Class<? extends Job> jobClass, Map<String, String> data) {
         try {
             if (data == null) {
-                data = new HashMap<String, Object>();
+                data = new HashMap<String, String>();
             }
             JobDetail job = newJob(jobClass).withIdentity(jobKey.getName(), jobKey.getGroup()).storeDurably(true).setJobData(new JobDataMap(data)).build();
             scheduler.addJob(job, true);
@@ -180,14 +180,14 @@ public class ScheduleService {
     private static final String emptyString = "";
 
     public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron) {
-        return addTrigger(jobKey, triggerKey, cron, emptyString, new HashMap<String, Object>());
+        return addTrigger(jobKey, triggerKey, cron, emptyString, new HashMap<String, String>());
     }
 
     public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron, String triggerDescription) {
-        return addTrigger(jobKey, triggerKey, cron, triggerDescription, new HashMap<String, Object>());
+        return addTrigger(jobKey, triggerKey, cron, triggerDescription, new HashMap<String, String>());
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron, Map<String, String> args) {
         return this.addTrigger(jobKey, triggerKey, cron, emptyString, args);
     }
 
@@ -200,7 +200,7 @@ public class ScheduleService {
      * @param args       参数
      * @return Trigger
      */
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron, String triggerDescription, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, String cron, String triggerDescription, Map<String, String> args) {
         try {
             Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(cronSchedule(cron).withMisfireHandlingInstructionFireAndProceed()).build();
             this.scheduler.scheduleJob(trigger);
@@ -212,11 +212,11 @@ public class ScheduleService {
         }
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int times, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int times, Map<String, String> args) {
         return this.addTrigger(jobKey, triggerKey, interval, times, emptyString, args);
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int times, String triggerDescription, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int times, String triggerDescription, Map<String, String> args) {
         try {
             Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(simpleSchedule().withIntervalInMilliseconds(interval).withRepeatCount(times).withMisfireHandlingInstructionFireNow()).build();
             this.scheduler.scheduleJob(trigger);
@@ -228,7 +228,7 @@ public class ScheduleService {
         }
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, int times, String triggerDescription, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, int times, String triggerDescription, Map<String, String> args) {
         try {
             Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).withRepeatCount(times)).build();
             this.scheduler.scheduleJob(trigger);
@@ -240,7 +240,7 @@ public class ScheduleService {
         }
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, TimeOfDay timeOfDay, int times, String triggerDescription, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, TimeOfDay timeOfDay, int times, String triggerDescription, Map<String, String> args) {
         try {
             Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).startingDailyAt(timeOfDay).withRepeatCount(times)).build();
             this.scheduler.scheduleJob(trigger);
@@ -252,11 +252,11 @@ public class ScheduleService {
         }
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, Map<String, String> args) {
         return this.addTrigger(jobKey, triggerKey, interval, unit, emptyString, args);
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, String triggerDescription, Map<String, Object> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, String triggerDescription, Map<String, String> args) {
         try {
             Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(calendarIntervalSchedule().withInterval(interval, unit)).build();
             this.scheduler.scheduleJob(trigger);
@@ -445,7 +445,7 @@ public class ScheduleService {
      * @param jobKey jobkey
      * @param args   执行参数
      */
-    public void triggerJob(JobKey jobKey, Map<String, Object> args) {
+    public void triggerJob(JobKey jobKey, Map<String, String> args) {
         try {
             this.scheduler.triggerJob(jobKey, new JobDataMap(args));
         } catch (SchedulerException e) {

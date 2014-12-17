@@ -2,7 +2,7 @@ package com.fantasy.system.ws.dto;
 
 import java.util.List;
 
-public class ConfigTypeDTO {
+public class DataDictionaryTypeDTO {
 
 
 	/**
@@ -20,12 +20,12 @@ public class ConfigTypeDTO {
 	 */
 	private String description;
 
-	private List<ConfigDTO> configs;
+	private List<DataDictionaryDTO> configs;
 
-	public ConfigTypeDTO() {
+	public DataDictionaryTypeDTO() {
 	}
 
-	public ConfigTypeDTO(String code) {
+	public DataDictionaryTypeDTO(String code) {
 		this.code = code;
 	}
 
@@ -53,11 +53,11 @@ public class ConfigTypeDTO {
 		this.description = description;
 	}
 
-	public List<ConfigDTO> getConfigs() {
+	public List<DataDictionaryDTO> getConfigs() {
 		return configs;
 	}
 
-	public void setConfigs(List<ConfigDTO> configs) {
+	public void setConfigs(List<DataDictionaryDTO> configs) {
 		this.configs = configs;
 	}
 

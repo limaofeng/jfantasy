@@ -53,10 +53,7 @@ public class QRCodeService implements IQRCodeService {
         qrCodeDao.save(code);
         try{
             WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateTmpTicket(new Long(code.getId()).intValue(), e);
-            code.setExpireSeconds(ticket.getExpire_seconds());
-            code.setUrl(ticket.getUrl());
-            code.setLinkKey(linkKey);
-            code.setImgPath("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket.getTicket());
+            copyBean(ticket,code,linkKey);
             save(code);
         }catch (WxErrorException exception){
             throw WxException.wxExceptionBuilder(exception);
@@ -70,11 +67,8 @@ public class QRCodeService implements IQRCodeService {
         QRCode code = new QRCode();
         qrCodeDao.save(code);
         try{
-            WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateLastTicket(new Long(code.getId()).intValue());
-            code.setExpireSeconds(ticket.getExpire_seconds());
-            code.setImgPath("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket.getTicket());
-            code.setUrl(ticket.getUrl());
-            code.setLinkKey(linkKey);
+            WxMpQrCodeTicket ticket= config.getUtil().qrCodeCreateLastTicket(new Long(code.getId()).intValue());
+            copyBean(ticket,code,linkKey);
             save(code);
         }catch (WxErrorException exception){
             throw WxException.wxExceptionBuilder(exception);
@@ -84,4 +78,10 @@ public class QRCodeService implements IQRCodeService {
         return code;
     }
 
+    public void copyBean(WxMpQrCodeTicket ticket,QRCode code,String linkKey){
+        code.setExpireSeconds(ticket.getExpire_seconds());
+        code.setImgPath("https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket=" + ticket.getTicket());
+        code.setUrl(ticket.getUrl());
+        code.setLinkKey(linkKey);
+    }
 }

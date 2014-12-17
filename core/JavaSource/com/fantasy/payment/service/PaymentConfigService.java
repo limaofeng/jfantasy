@@ -28,6 +28,10 @@ public class PaymentConfigService {
         return this.paymentConfigDao.findPager(pager, filters);
     }
 
+    public List<PaymentConfig> find(List<PropertyFilter> filters) {
+        return this.paymentConfigDao.find(filters);
+    }
+
     /**
      * 保存
      *
