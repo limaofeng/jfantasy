@@ -6,7 +6,7 @@ import com.fantasy.cms.ws.dto.ArticlePagerResult;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 
-public interface IArticleService {
+public interface ICmsService {
 
     /**
      * 文章检索

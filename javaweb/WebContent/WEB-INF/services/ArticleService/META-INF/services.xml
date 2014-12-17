@@ -1,7 +1,7 @@
-<service name="ArticleService">
-    <parameter name="ServiceClass">com.fantasy.cms.ws.IArticleService</parameter>
+<service name="CmsService">
+    <parameter name="ServiceClass">com.fantasy.cms.ws.ICmsService</parameter>
     <parameter name="ServiceObjectSupplier">org.apache.axis2.extensions.spring.receivers.SpringServletContextObjectSupplier</parameter>
-    <parameter name="SpringBeanName">articleWebService</parameter>
+    <parameter name="SpringBeanName">cmsWebService</parameter>
     <operation name="findPager">
         <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
