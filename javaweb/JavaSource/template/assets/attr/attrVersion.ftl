@@ -1,21 +1,20 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <@override name="pageTitle">
 属性版本号
-<small>
-    attributeVersion
-</small>
 </@override>
 <@override name="head">
 <script type="text/javascript">
     $(function(){
-        $(window).resize(function () {
-            var _$gridPanel = $('.grid-panel');
-            if(!!_$gridPanel.length){
-                _$gridPanel.css('minHeight', $(window).height() - (_$gridPanel.offset().top + 15));
-                _$gridPanel.triggerHandler('resize');
-            }
+        //当浏览器窗口发生变化时,自动调整布局的js代码
+        var _$gridPanel = $('.grid-panel');
+        var _resize = function () {
+            _$gridPanel.css('minHeight', $(window).height() - (_$gridPanel.offset().top + 15));
+            _$gridPanel.triggerHandler('resize');
+        };
+        $(window).resize(_resize);
+        $page$.un('destroy').on('destroy',function(){
+            $(window).unbind('resize',_resize);
         });
-
         //表单  search
         var $advsearch = $('.propertyFilter').advsearch({
             filters : [{
@@ -41,7 +40,7 @@
         });
         $grid.setJSON(pager);
 
-        var deleteMethod = $('.batchDelete').batchExecute($("#allChecked"),$grid.data('grid').pager(),'id','是否确认删除{code}？',function(){
+        var deleteMethod = $('.batchDelete').batchExecute($("#allChecked"),$grid.data('grid').pager(),'id','是否确认删除{number}？',function(){
             $.msgbox({
                 msg : "删除成功!",
                 type : "success"
@@ -52,7 +51,7 @@
 </@override>
 <@override name="pageContent">
 <div id="searchFormPanel" class="button-panel pad5A">
-    <@s.form id="searchForm" namespace="/attr" action="search" method="post">
+    <@s.form id="searchForm" namespace="/attr" action="version_search" method="post">
         <a title="添加" class="btn medium primary-bg dd-add" href="<@s.url namespace="/attr" action="version_add"/>" target="after:closest('#page-content')">
             <span class="button-content">
                 <i class="glyph-icon icon-plus float:left"></i>
@@ -61,7 +60,7 @@
         </a>
         <div class="propertyFilter"> </div>
         <div class="form-search">
-            <input type="text" name="LIKES_name" title="" data-placement="bottom" class="input tooltip-button ac_input" placeholder="Search..." autocomplete="off" style="display: inline-block; width: 200px;">
+            <input type="text" name="LIKES_number" title="" data-placement="bottom" class="input tooltip-button ac_input" placeholder="Search..." autocomplete="off" style="display: inline-block; width: 200px;">
             <i class="glyph-icon icon-search"></i>
         </div>
     </@s.form>
@@ -100,12 +99,6 @@
                         </span>
                     </a>
                     <ul class="dropdown-menu float-right">
-                        <li>
-                            <a title="<@s.text name= '详情' />" class="view" href="<@s.url namespace="/attr" action="version_view?id={id}"/>" target="after:closest('#page-content')" >
-                                <i class="glyph-icon icon-external-link-sign mrg5R"></i>
-                                详情
-                            </a>
-                        </li>
                         <li>
                             <a title="<@s.text name= '修改' />" class="edit" href="<@s.url namespace="/attr" action="version_edit?id={id}"/>" target="after:closest('#page-content')" >
                                 <i class="glyph-icon icon-edit mrg5R"></i>

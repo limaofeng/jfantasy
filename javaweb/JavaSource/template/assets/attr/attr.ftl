@@ -1,19 +1,27 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <@override name="pageTitle">
 属性
-<small>
-    attribute
-</small>
 </@override>
 <@override name="head">
 <script type="text/javascript">
     $(function(){
-        $(window).resize(function () {
-            var _$gridPanel = $('.grid-panel');
-            if(!!_$gridPanel.length){
-                _$gridPanel.css('minHeight', $(window).height() - (_$gridPanel.offset().top + 15));
-                _$gridPanel.triggerHandler('resize');
-            }
+        //当浏览器窗口发生变化时,自动调整布局的js代码
+        var _$gridPanel = $('.grid-panel');
+        var _resize = function () {
+            _$gridPanel.css('minHeight', $(window).height() - (_$gridPanel.offset().top + 15));
+            _$gridPanel.triggerHandler('resize');
+        };
+        $(window).resize(_resize);
+        $page$.un('destroy').on('destroy',function(){
+            $(window).unbind('resize',_resize);
+        });
+        var $advsearch = $('.propertyFilter').advsearch({
+            filters : [{
+                name : 'S_code',
+                text : '编码',
+                type : 'input',
+                matchType :['EQ','LIKE']
+            }]
         });
         //列表初始化
         var pager=<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(pager)" escapeHtml="false"/>;
@@ -49,7 +57,7 @@
         <div class="propertyFilter">
         </div>
         <div class="form-search">
-            <input type="text" name="LIKES_title" title="" data-placement="bottom" class="input tooltip-button ac_input" placeholder="Search..." autocomplete="off" style="display: inline-block; width: 200px;">
+            <input type="text" name="LIKES_code" title="" data-placement="bottom" class="input tooltip-button ac_input" placeholder="Search..." autocomplete="off" style="display: inline-block; width: 200px;">
             <i class="glyph-icon icon-search"></i>
         </div>
     </@s.form>
@@ -72,8 +80,8 @@
             <th>编码</th>
             <th>名称</th>
             <th>类型</th>
-            <th>非空</th>
-            <th>是否非临时</th>
+            <th style="width:100px; ">非空</th>
+            <th style="width:100px;">是否非临时</th>
             <th class="text-center">操作</th>
         </tr>
         </thead>
