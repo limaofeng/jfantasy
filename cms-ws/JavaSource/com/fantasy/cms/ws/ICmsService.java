@@ -52,6 +52,6 @@ public interface ICmsService {
      * @param code 分类编码 code
      * @return 分类对象数组
      */
-    public ArticleCategoryDTO[] getArticleCategoryDtoByCode(String code);
+    public ArticleCategoryDTO[] getArticleCategoryByCode(String code);
 
 }

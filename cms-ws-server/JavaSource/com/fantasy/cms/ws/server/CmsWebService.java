@@ -10,6 +10,7 @@ import com.fantasy.cms.ws.dto.ArticlePagerResult;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
@@ -49,7 +50,7 @@ public class CmsWebService implements ICmsService {
     }
 
     @Override
-    public ArticleCategoryDTO[] getArticleCategoryDtoByCode(String code) {
+    public ArticleCategoryDTO[] getArticleCategoryByCode(String code) {
         return asArray(this.cmsService.getCategorys(code));
     }
 
@@ -83,7 +84,7 @@ public class CmsWebService implements ICmsService {
         }
         articleDTO.setAuthor(article.getAuthor());
         articleDTO.setReleaseDate(article.getReleaseDate());
-        if (OgnlUtil.getInstance().getValue("articleImage", article) != null) {
+        if (ClassUtil.getProperty(article.getClass(),"articleImage") != null) {//OgnlUtil.getInstance().getValue("articleImage", article) != null
             FileDetail fileDetail = (FileDetail) OgnlUtil.getInstance().getValue("articleImage", article);
             articleDTO.setArticleImageStore(fileDetail.getAbsolutePath());
         }

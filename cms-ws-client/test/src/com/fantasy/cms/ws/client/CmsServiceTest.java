@@ -31,7 +31,7 @@ public class CmsServiceTest {
     public void testFindPager(){
         PagerDTO pager = new PagerDTO();// 设置每页显示的数据条数
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
-        filters.add(new PropertyFilterDTO("EQS_category.code", "abcd"));
+        //filters.add(new PropertyFilterDTO("EQS_category.code", "wxtx"));
         // 调用接口查询
         ArticlePagerResult pagination = cmsService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
         Assert.assertNotNull(pagination);
@@ -43,6 +43,7 @@ public class CmsServiceTest {
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
         filters.add(new PropertyFilterDTO("EQS_category.code", "abcd"));
         ArticleDTO[] articleDTOs = cmsService.find(filters.toArray(new PropertyFilterDTO[filters.size()]),"id","desc",10);
+        Assert.assertNotNull(articleDTOs);
     }
 
 

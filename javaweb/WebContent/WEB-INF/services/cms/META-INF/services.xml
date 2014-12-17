@@ -5,13 +5,16 @@
     <operation name="findPager">
         <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
+    <operation name="find">
+        <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
+    </operation>
     <operation name="findArticleById">
         <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
     <operation name="categorys">
         <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
-    <operation name="getArticleCategoryDtoByCode">
+    <operation name="getArticleCategoryByCode">
         <messageReceiver class="org.apache.axis2.rpc.receivers.RPCMessageReceiver" />
     </operation>
 

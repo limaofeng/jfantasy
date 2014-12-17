@@ -36,7 +36,7 @@ public class CmsService extends WebServiceClient implements ICmsService {
     }
 
     @Override
-    public ArticleCategoryDTO[] getArticleCategoryDtoByCode(String code) {
-        return super.invokeOption("getArticleCategoryDtoByCode",new Object[] { code },ArticleCategoryDTO[].class);
+    public ArticleCategoryDTO[] getArticleCategoryByCode(String code) {
+        return super.invokeOption("getArticleCategoryByCode",new Object[] { code },ArticleCategoryDTO[].class);
     }
 }
