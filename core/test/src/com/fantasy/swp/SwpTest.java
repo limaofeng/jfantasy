@@ -1,10 +1,11 @@
-package com.fantasy.framework.swp;
+package com.fantasy.swp;
 
 
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.swp.analysis.data.BasicTypeAnalyzer;
 import com.fantasy.swp.bean.*;
+import com.fantasy.swp.bean.PageAnalyzer;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateMethodModel;
 import freemarker.template.TemplateModelException;
@@ -61,13 +62,13 @@ public class SwpTest {
         page.setDatas(datas);
 
         //添加数据解析器
-        DataAnalyzer dataAnalyzer = new DataAnalyzer();
+        com.fantasy.swp.bean.DataAnalyzer dataAnalyzer = new com.fantasy.swp.bean.DataAnalyzer();
         dataAnalyzer.setName("数据解析器");
         dataAnalyzer.setClassName(BasicTypeAnalyzer.class.getName());
         data.setDataAnalyzer(dataAnalyzer);
 
         //添加页面解析器
-        PageAnalyzer pageAnalyzer = new PageAnalyzer();
+        com.fantasy.swp.bean.PageAnalyzer pageAnalyzer = new PageAnalyzer();
         pageAnalyzer.setName("页面解析器");
         pageAnalyzer.setClassName("xxxxx");
         page.setPageAnalyzer(pageAnalyzer);
