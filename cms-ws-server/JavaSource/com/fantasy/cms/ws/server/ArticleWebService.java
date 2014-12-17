@@ -7,6 +7,7 @@ import com.fantasy.cms.ws.IArticleService;
 import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
 import com.fantasy.cms.ws.dto.ArticlePagerResult;
+import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.ognl.OgnlUtil;
@@ -49,7 +50,10 @@ public class ArticleWebService implements IArticleService {
             }
             articleDTO.setAuthor(articleList.get(i).getAuthor());
             articleDTO.setReleaseDate(articleList.get(i).getReleaseDate());
-            articleDTO.setArticleImageStore((String)OgnlUtil.getInstance().getValue("articleImage",articleList.get(i)));
+            if(OgnlUtil.getInstance().getValue("articleImage",articleList.get(i))!=null){
+                FileDetail fileDetail = (FileDetail)OgnlUtil.getInstance().getValue("articleImage",articleList.get(i));
+                articleDTO.setArticleImageStore(fileDetail.getAbsolutePath());
+            }
             articleDTOs[i] = articleDTO;
         }
         articlePagerResult.setPageItems(articleDTOs);
@@ -89,7 +93,10 @@ public class ArticleWebService implements IArticleService {
             }
             articleDTO.setAuthor(articleList.get(i).getAuthor());
             articleDTO.setReleaseDate(articleList.get(i).getReleaseDate());
-            articleDTO.setArticleImageStore((String)OgnlUtil.getInstance().getValue("articleImage",articleList.get(i)));
+            if(OgnlUtil.getInstance().getValue("articleImage",articleList.get(i))!=null){
+                FileDetail fileDetail = (FileDetail)OgnlUtil.getInstance().getValue("articleImage",articleList.get(i));
+                articleDTO.setArticleImageStore(fileDetail.getAbsolutePath());
+            }
             articleDTOs[i] = articleDTO;
         }
         return articleDTOs;
@@ -108,7 +115,11 @@ public class ArticleWebService implements IArticleService {
         }
         articleDTO.setAuthor(article.getAuthor());
         articleDTO.setReleaseDate(article.getReleaseDate());
-        articleDTO.setArticleImageStore((String)OgnlUtil.getInstance().getValue("articleImage",article));
+        if(OgnlUtil.getInstance().getValue("articleImage",article)!=null){
+            FileDetail fileDetail = (FileDetail)OgnlUtil.getInstance().getValue("articleImage",article);
+            articleDTO.setArticleImageStore(fileDetail.getAbsolutePath());
+        }
+
         return articleDTO;
     }
 
