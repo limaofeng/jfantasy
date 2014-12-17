@@ -8,10 +8,10 @@ import com.fantasy.framework.ws.axis2.WebServiceClient;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 
-public class ArticleService extends WebServiceClient implements IArticleService {
+public class CmsService extends WebServiceClient implements IArticleService {
 
-    public ArticleService(){
-        super("ArticleService");
+    public CmsService(){
+        super("CmsService");
     }
 
     @Override
