@@ -50,6 +50,7 @@ public class ArticleDTO implements Serializable {
     /**
      * 图片路径
      */
+	@Deprecated
     private String articleImageStore;
 
     public Long getId() {
