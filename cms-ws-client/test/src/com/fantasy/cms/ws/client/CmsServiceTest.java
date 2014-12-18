@@ -7,6 +7,8 @@ import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.uitl.Constants;
 import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,6 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CmsServiceTest {
+
+    private final static Log LOG = LogFactory.getLog(CmsServiceTest.class);
 
     private CmsService cmsService;
 
@@ -33,8 +37,10 @@ public class CmsServiceTest {
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
         //filters.add(new PropertyFilterDTO("EQS_category.code", "wxtx"));
         // 调用接口查询
-        ArticlePagerResult pagination = cmsService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
-        Assert.assertNotNull(pagination);
+        ArticlePagerResult pagerResult = cmsService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
+        for(ArticleDTO article : pagerResult.getPageItems()){
+            LOG.debug(article);
+        }
     }
 
 
