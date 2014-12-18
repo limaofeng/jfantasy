@@ -1,19 +1,16 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
-<div class="pad10L pad10R">
-    <div class="example-box">
-    <div class="tabs">
-        <ul >
-            <li>
-                <a title="属性类型" href="#normal-tabs-1">
-                    属性类型
+<div class="example-box" style="padding-left:10px;padding-right:10px;">
+    <div class="example-code">
+        <div class="content-box box-toggle">
+            <h3 class="content-box-header primary-bg">
+                <span class="float-left">属性类型详情</span>
+                <a href="javascript:;" class="btn small hover-black float-right back-page" title="返回" style="margin-top: 10px;margin-right: 30px">
+                    <i class="glyph-icon icon-reply"></i>
                 </a>
-            </li>
-        </ul>
-        <a href="javascript:;" class="btn small hover-black float-right back-page" title="" style="margin-top: -30px;margin-right: 30px">
-            <i class="glyph-icon icon-reply"></i>
-        </a>
-        <div id="normal-tabs-1">
-                <div class="row issue-date">
+            </h3>
+        <div class="content-box-wrapper">
+            <div class="row">
+                <div class="row">
                     <div class="col-md-6">
                         <div class="form-row">
                             <div class="form-label col-md-3">
@@ -23,7 +20,31 @@
                             </div>
                             <div class="form-input col-md-9">
                                 <div class="append-left">
-                                    <@s.property  value="attributeType.name" />
+                                    <@s.textfield name="name" id="name" value="%{attributeType.name}" disabled="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label col-md-3">
+                                <label for="">
+                                    类型对应的转换器：
+                                </label>
+                            </div>
+                            <div class="form-input col-md-9">
+                                <div class="append-left">
+                                    <@s.select name="converter.id" value="%{attributeType.converter.id}" list="@com.fantasy.attr.service.ConverterService@findAll()"  listKey="id" listValue="name" cssClass="chosen-select" data_placeholder="请选择类型对应的转换器"  disabled="true"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-label col-md-3">
+                                <label for="">
+                                    描述：
+                                </label>
+                            </div>
+                            <div class="form-input col-md-9">
+                                <div class="append-left">
+                                    <@s.textarea name="description" cssStyle="height: 150px;width:888px;" value="%{attributeType.description}"  disabled="true"/>
                                 </div>
                             </div>
                         </div>
@@ -37,35 +58,15 @@
                             </div>
                             <div class="form-input col-md-9">
                                 <div class="append-right">
-                                    <@s.property value="attributeType.dataType" />
+                                    <@s.textfield id="dataType" name="dataType" value="%{attributeType.dataType}"  disabled="true"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label class="label-description" for="">
-                            类型对应的转换器:
-                        </label>
-                    </div>
-                    <div class="form-checkbox-radio col-md-10">
-                        <@s.property value="attributeType.converter.name" />
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-label  col-md-2">
-                        <label class="label-description" for="">
-                            描述:
-                        </label>
-                    </div>
-                    <div class="form-input col-md-10">
-                        <@s.property value="attributeType.description"/>
-                    </div>
-                </div>
+            </div>
+        </div>
         </div>
     </div>
-    </div>
+</div>
 </div>

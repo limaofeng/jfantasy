@@ -3,6 +3,16 @@
 <@s.set var="version" value="@com.fantasy.attr.service.AttributeVersionService@version(#parameters['vId'][0])"/>
 <script type="text/javascript">
     $(function(){
+        //当浏览器窗口发生变化时,自动调整布局的js代码
+        var _$gridPanel = $('.grid-panel');
+        var _resize = function () {
+            _$gridPanel.css('minHeight', $(window).height() - (_$gridPanel.offset().top + 15));
+            _$gridPanel.triggerHandler('resize');
+        };
+        $(window).resize(_resize);
+        $page$.un('destroy').on('destroy',function(){
+            $(window).unbind('resize',_resize);
+        });
         //表单  search
         var $advsearch = $('.propertyFilter').advsearch({
             filters : [{
@@ -38,13 +48,13 @@
                        $("#searchForm").submit();
                        top.$.msgbox({
                            msg: "添加成功!",
-                           icon: "success"
+                           type: "success"
                        });
                    });
                }else{
                    top.$.msgbox({
                        msg: "属性名称重复!",
-                       icon: "warning"
+                       type: "warning"
                    });
                }
                return stopDefault(e);
