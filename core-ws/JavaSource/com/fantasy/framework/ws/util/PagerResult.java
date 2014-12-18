@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 public abstract class PagerResult<T> extends WSResult {
 
+    private T[] pageItems;
     /**
      * 最大数据条数
      */
@@ -153,9 +154,13 @@ public abstract class PagerResult<T> extends WSResult {
         this.orders = orders;
     }
 
-    public abstract T[] getPageItems();
+    public T[] getPageItems(){
+        return pageItems;
+    }
 
-    public abstract void setPageItems(T[] pageItems);
+    public void setPageItems(T[] pageItems){
+        this.pageItems = pageItems;
+    }
 
     @Override
     public String toString() {

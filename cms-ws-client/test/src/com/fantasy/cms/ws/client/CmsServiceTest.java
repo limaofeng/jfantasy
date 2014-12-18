@@ -68,7 +68,8 @@ public class CmsServiceTest {
 
     @Test
     public void getArticleCategoryDtoByCode(){
-        ArticleCategoryDTO[] articleCategoryDTOs = this.cmsService.getArticleCategoryDtoByCode("root");
+        ArticleCategoryDTO[] articleCategoryDTOs = this.cmsService.getArticleCategoryByCode("root");
+        Assert.assertNotNull(articleCategoryDTOs);
     }
 
 
