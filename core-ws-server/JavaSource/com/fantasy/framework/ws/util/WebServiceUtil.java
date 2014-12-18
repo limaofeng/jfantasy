@@ -28,6 +28,11 @@ public class WebServiceUtil {
         pager.setTotalCount(daoPager.getTotalCount());
         pager.setTotalPage(daoPager.getTotalPage());
         pager.setOrderBy(daoPager.getOrderBy());
+        String[] orders = new String[daoPager.getOrders().length];
+        for (int i = 0; i < orders.length; i++) {
+            orders[i] = daoPager.getOrders()[i].name();
+        }
+        pager.setOrders(orders);
         pager.setOrder(daoPager.getOrder().name());
         return pager;
     }

@@ -40,15 +40,6 @@ public abstract class PagerResult<T> extends WSResult {
     }
 
     /**
-     * 初始化传入每页显示条数
-     *
-     * @param pageSize 显示条数
-     */
-    public PagerResult(int pageSize) {
-        this.pageSize = pageSize;
-    }
-
-    /**
      * 获取最大数据条数
      *
      * @return int
