@@ -23,13 +23,22 @@ public class WebServiceUtil {
         return page;
     }
 
-    public static <T extends PagerResult> T toPagerResult(Pager<?> daoPager, T pager, Object[] dtos) {
+    public static <T extends PagerResult> T toPagerResult(Pager<?> daoPager, T pager) {
         pager.setCurrentPage(daoPager.getCurrentPage());
         pager.setTotalCount(daoPager.getTotalCount());
         pager.setTotalPage(daoPager.getTotalPage());
         pager.setOrderBy(daoPager.getOrderBy());
+        String[] orders = new String[daoPager.getOrders().length];
+        for (int i = 0; i < orders.length; i++) {
+            orders[i] = daoPager.getOrders()[i].name();
+        }
+        pager.setOrders(orders);
         pager.setOrder(daoPager.getOrder().name());
-        pager.setPageItems(dtos);
+        return pager;
+    }
+
+    public static <T extends PagerResult> T toPagerResult(Pager<?> daoPager, T pager, Object[] dtos) {
+        toPagerResult(daoPager, pager).setPageItems(dtos);
         return pager;
     }
 

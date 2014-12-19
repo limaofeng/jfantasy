@@ -1,6 +1,6 @@
 package com.fantasy.cms.ws.client;
 
-import com.fantasy.cms.ws.IArticleService;
+import com.fantasy.cms.ws.ICmsService;
 import com.fantasy.cms.ws.dto.ArticleCategoryDTO;
 import com.fantasy.cms.ws.dto.ArticleDTO;
 import com.fantasy.cms.ws.dto.ArticlePagerResult;
@@ -8,10 +8,10 @@ import com.fantasy.framework.ws.axis2.WebServiceClient;
 import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 
-public class ArticleService extends WebServiceClient implements IArticleService {
+public class CmsService extends WebServiceClient implements ICmsService {
 
-    public ArticleService(){
-        super("ArticleService");
+    public CmsService(){
+        super("CmsService");
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ArticleService extends WebServiceClient implements IArticleService 
     }
 
     @Override
-    public ArticleCategoryDTO[] getArticleCategoryDtoByCode(String code) {
-        return super.invokeOption("getArticleCategoryDtoByCode",new Object[] { code },ArticleCategoryDTO[].class);
+    public ArticleCategoryDTO[] getArticleCategoryByCode(String code) {
+        return super.invokeOption("getArticleCategoryByCode",new Object[] { code },ArticleCategoryDTO[].class);
     }
 }

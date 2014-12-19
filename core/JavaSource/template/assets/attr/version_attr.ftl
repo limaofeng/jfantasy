@@ -122,12 +122,6 @@
         </span>
     </a>
     <div class="propertyFilter"> </div>
-        <#--
-        <div class="form-search">
-            <input type="text" name="LIKES_title" title="" data-placement="bottom" class="input tooltip-button ac_input" placeholder="Search..." autocomplete="off" style="display: inline-block; width: 200px;">
-            <i class="glyph-icon icon-search"></i>
-        </div>
-        -->
 </div>
 
 <div class="batch"></div>

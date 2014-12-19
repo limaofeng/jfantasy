@@ -7,23 +7,27 @@ import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.uitl.Constants;
 import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ArticleServiceTest {
+public class CmsServiceTest {
 
-    private ArticleService articleService;
+    private final static Log LOG = LogFactory.getLog(CmsServiceTest.class);
+
+    private CmsService cmsService;
 
     @Before
     public void init() throws Exception {
-        articleService = new ArticleService();
-        articleService.setEndPointReference(Constants.END_POINT_REFERENCE);
-        articleService.setTargetNamespace("http://ws.cms.fantasy.com");
-        articleService.setAxis2xml("classpath:axis2.xml");
-        articleService.afterPropertiesSet();
+        cmsService = new CmsService();
+        cmsService.setEndPointReference(Constants.END_POINT_REFERENCE);
+        cmsService.setTargetNamespace("http://ws.cms.fantasy.com");
+        cmsService.setAxis2xml("classpath:axis2.xml");
+        cmsService.afterPropertiesSet();
     }
 
 
@@ -31,10 +35,12 @@ public class ArticleServiceTest {
     public void testFindPager(){
         PagerDTO pager = new PagerDTO();// 设置每页显示的数据条数
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
-        filters.add(new PropertyFilterDTO("EQS_category.code", "abcd"));
+        //filters.add(new PropertyFilterDTO("EQS_category.code", "wxtx"));
         // 调用接口查询
-        ArticlePagerResult pagination = articleService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
-        Assert.assertNotNull(pagination);
+        ArticlePagerResult pagerResult = cmsService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
+        for(ArticleDTO article : pagerResult.getPageItems()){
+            LOG.debug(article);
+        }
     }
 
 
@@ -42,13 +48,14 @@ public class ArticleServiceTest {
     public void testFind(){
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
         filters.add(new PropertyFilterDTO("EQS_category.code", "abcd"));
-        ArticleDTO[] articleDTOs = articleService.find(filters.toArray(new PropertyFilterDTO[filters.size()]),"id","desc",10);
+        ArticleDTO[] articleDTOs = cmsService.find(filters.toArray(new PropertyFilterDTO[filters.size()]),"id","desc",10);
+        Assert.assertNotNull(articleDTOs);
     }
 
 
     @Test
     public void testFindcategory() {
-        Assert.assertNotNull(articleService.categorys());
+        Assert.assertNotNull(cmsService.categorys());
 
     }
 
@@ -56,10 +63,10 @@ public class ArticleServiceTest {
     public  void  testqueryArtcleById(){
         PagerDTO pager = new PagerDTO();// 设置每页显示的数据条数
         List<PropertyFilterDTO> filters = new ArrayList<PropertyFilterDTO>();
-        ArticlePagerResult pagination = articleService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
+        ArticlePagerResult pagination = cmsService.findPager(pager, filters.toArray(new PropertyFilterDTO[filters.size()]));
         Assert.assertNotNull("文章数据为空",pagination.getPageItems());
             for(ArticleDTO dto:pagination.getPageItems()){
-                ArticleDTO articleDTO = this.articleService.findArticleById(dto.getId());
+                ArticleDTO articleDTO = this.cmsService.findArticleById(dto.getId());
                 Assert.assertNotNull(articleDTO);
             }
     }
@@ -67,7 +74,8 @@ public class ArticleServiceTest {
 
     @Test
     public void getArticleCategoryDtoByCode(){
-        ArticleCategoryDTO[] articleCategoryDTOs = this.articleService.getArticleCategoryDtoByCode("root");
+        ArticleCategoryDTO[] articleCategoryDTOs = this.cmsService.getArticleCategoryByCode("root");
+        Assert.assertNotNull(articleCategoryDTOs);
     }
 
 
