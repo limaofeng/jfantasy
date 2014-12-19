@@ -5,6 +5,7 @@ import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
@@ -62,9 +63,8 @@ public class WxMediaService implements IMediaService {
         WxMedia media=null;
         InputStream inputStream=factory.getFileManager(fileDetail.getFileManagerId()).readFile(fileDetail.getAbsolutePath());
         try {
-            WxMediaUploadResult uploadMediaRes = weixinConfigInit.getUtil().mediaUpload(type,fileDetail.getContentType().split("/")[1], inputStream);
-            media=new WxMedia();
-            copyBean(media,uploadMediaRes);
+            WxMediaUploadResult uploadMediaRes = weixinConfigInit.getUtil().mediaUpload(type,fileDetail.getExt(), inputStream);
+            media=BeanUtil.copyProperties(new WxMedia(),uploadMediaRes);
             this.wxMediaDao.save(media);
         } catch (WxErrorException e) {
             throw WxException.wxExceptionBuilder(e);
@@ -86,11 +86,5 @@ public class WxMediaService implements IMediaService {
             if(file!=null) file.delete();
         }
         return fileDetail;
-    }
-    public void copyBean(WxMedia media,WxMediaUploadResult uploadMediaRes){
-        media.setMediaId(uploadMediaRes.getMediaId());
-        media.setThumbMediaId(uploadMediaRes.getThumbMediaId());
-        media.setType(uploadMediaRes.getType());
-        media.setCreatedAt(uploadMediaRes.getCreatedAt());
     }
 }

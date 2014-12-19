@@ -53,7 +53,10 @@ public class WxWxGroupServiceTest {
         List<PropertyFilter> list = new ArrayList<PropertyFilter>();
         list.add(new PropertyFilter("LIKES_name", "测试"));
         Pager<WxGroup> pager = iGroupService.findPager(new Pager<WxGroup>(), list);
-        iGroupService.delete(pager.getPageItems().get(0).getId());
+        for(int i=0;i<pager.getPageItems().size();i++){
+            iGroupService.delete(pager.getPageItems().get(i).getId());
+        }
+
     }
 
     @Test
@@ -68,7 +71,6 @@ public class WxWxGroupServiceTest {
         logger.debug(wxGroup);
 
     }
-
     @Test
     public void testRefreshGroup() throws Exception {
         List<WxGroup> list = iGroupService.refreshGroup();

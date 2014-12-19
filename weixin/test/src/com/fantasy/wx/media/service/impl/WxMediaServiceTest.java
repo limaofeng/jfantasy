@@ -8,11 +8,11 @@ import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.media.bean.WxMedia;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -47,18 +47,22 @@ public class WxMediaServiceTest {
         File file=new File(WxMediaServiceTest.class.getResource("mm.jpeg").getPath());
         String rename=Long.toString(new Date().getTime())+Integer.toString(new Random().nextInt(900000)+100000)+"."+ WebUtil.getExtension(file.getName());
         FileDetail fileDetail=fileUploadService.upload(file, FileUtil.getMimeType(file), rename, "test");
-        Assert.isNull(fileDetail);
+        Assert.assertNotNull(fileDetail);
 
         WxMedia media=wxMediaService.mediaUpload(fileDetail, "image");
-        Assert.isNull(media);
+        Assert.assertNotNull(media);
 
         Pager<WxMedia> pager=wxMediaService.findPager(new Pager<WxMedia>(), new ArrayList<PropertyFilter>());
-        Assert.isNull(pager.getPageItems());
+        Assert.assertNotNull(pager.getPageItems());
 
         WxMedia wxMedia=wxMediaService.getMedia(media.getMediaId());
-        Assert.isNull(wxMedia);
+        Assert.assertNotNull(wxMedia);
 
         FileDetail fileDetail1=wxMediaService.mediaDownload(wxMedia.getMediaId(), "test");
-        Assert.isNull(fileDetail1);
+        Assert.assertNotNull(fileDetail1);
+    }
+    @Test
+    public void testUploadMediaNews() throws Exception {
+
     }
 }

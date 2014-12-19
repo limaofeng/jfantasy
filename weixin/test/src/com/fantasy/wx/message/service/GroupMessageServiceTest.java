@@ -1,10 +1,17 @@
 package com.fantasy.wx.message.service;
 
+import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.media.service.impl.WxMediaServiceTest;
 import com.fantasy.wx.message.bean.GroupMessage;
+import com.fantasy.wx.message.bean.GroupNews;
+import com.fantasy.wx.message.bean.GroupNewsArticle;
 import com.fantasy.wx.message.service.impl.GroupMessageService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
@@ -17,15 +24,19 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class GroupMessageServiceTest {
     @Resource
     private GroupMessageService groupMessageService;
+    @Resource
+    private FileUploadService fileUploadService;
     @Resource
     private WeixinConfigInit weixinConfigInit;
     private static final Log logger = LogFactory.getLog(GroupMessage.class);
@@ -87,5 +98,60 @@ public class GroupMessageServiceTest {
     @Test
     public void testSendOpenIdMessage() throws Exception {
         groupMessageService.sendTextOpenIdMessage(createOpenId(), "福建省快乐openId");
+    }
+    @Test
+    public void testSendNewsOpenIdMessage() throws Exception {
+        //生成缩略图FileDetail对象
+        File file=new File(WxMediaServiceTest.class.getResource("mm.jpeg").getPath());
+        String rename=Long.toString(new Date().getTime())+Integer.toString(new Random().nextInt(900000)+100000)+"."+ WebUtil.getExtension(file.getName());
+        FileDetail fileDetail=fileUploadService.upload(file, FileUtil.getMimeType(file), rename, "test");
+        Assert.assertNotNull(fileDetail);
+
+        //第二个article
+        GroupNews news=new GroupNews();
+        GroupNewsArticle article=new GroupNewsArticle();
+        article.setThumbFile(fileDetail);
+        article.setContent("<img src=\"http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png\" width=\"270\" height=\"129\">我是内容<h1>我比别人大哈哈哈哈</h1>");
+        article.setAuthor("作者是我");
+        article.setContentSourceUrl("http://www.baidu.com/?id=123");
+        article.setDigest("描个述");
+        article.setTitle("我是个标题");
+        news.addArticle(article);
+        //第二个article
+        article=new GroupNewsArticle();
+        article.setThumbFile(fileDetail);
+        article.setContent("<img src=\"http://img3.douban.com/f/fm/6b922536970a3676b4c0b1d464bac01d5573f22f/pics/fm/home/fm_logoV1.png\" >我是内容1<h1>我比别人大哈哈哈哈1</h1>");
+        article.setAuthor("作者是我1");
+        article.setContentSourceUrl("http://www.baidu.com/?id=456");
+        article.setDigest("描个述1");
+        article.setTitle("我是个标题1");
+        article.setShowCoverPic(false);
+        news.addArticle(article);
+
+        //第三个article
+        article=new GroupNewsArticle();
+        article.setContent("<img src=\"http://img3.douban.com/f/fm/6b922536970a3676b4c0b1d464bac01d5573f22f/pics/fm/home/fm_logoV1.png\" >我是内容1<h1>我比别人大哈哈哈哈1</h1>");
+        article.setAuthor("作者是我1");
+        article.setContentSourceUrl("http://www.baidu.com/?id=456");
+        article.setDigest("描个述1");
+        article.setTitle("我是个标题1");
+        news.addArticle(article);
+        //第四个article
+        article=new GroupNewsArticle();
+        article.setThumbFile(fileDetail);
+        article.setContent("<img src=\"http://img3.douban.com/f/fm/6b922536970a3676b4c0b1d464bac01d5573f22f/pics/fm/home/fm_logoV1.png\" >我是内容1<h1>我比别人大哈哈哈哈1</h1>");
+        article.setAuthor("作者是我1");
+        article.setContentSourceUrl("http://www.baidu.com/?id=456");
+        article.setDigest("描个述1");
+        article.setTitle("我是个标题1");
+        news.addArticle(article);
+
+        groupMessageService.sendNewsOpenIdMessage(new ArrayList<String>(){
+            {
+                add("");
+            }
+
+        },news);
+        //groupMessageService.sendNewsGroupMessage()
     }
 }

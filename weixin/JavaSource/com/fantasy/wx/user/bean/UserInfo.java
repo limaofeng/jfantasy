@@ -24,7 +24,7 @@ public class UserInfo {
     @Column(name = "OPENID", nullable = false, insertable = true, updatable = false)
     private String openId;
     //用户的昵称
-    @Column(name = "NICKNAME", length = 200)
+    @Column(name = "NICKNAME", length = 5000)
     private String nickname;
     //用户的性别，值为1时是男性，值为2时是女性，值为0时是未知
     @Column(name = "SEX")
@@ -63,7 +63,7 @@ public class UserInfo {
     private Integer unReadSize;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ID")
+    @JoinColumn(name = "GROUP_ID")
     private WxGroup wxGroup;
 
     public String getTime() {

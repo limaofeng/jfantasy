@@ -1,27 +1,32 @@
 package com.fantasy.wx.message.service.impl;
 
-import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.media.bean.WxMedia;
+import com.fantasy.wx.media.service.IMediaService;
 import com.fantasy.wx.message.bean.GroupMessage;
+import com.fantasy.wx.message.bean.GroupNews;
+import com.fantasy.wx.message.bean.GroupNewsArticle;
+import com.fantasy.wx.message.dao.GroupNewsArticleDao;
+import com.fantasy.wx.message.dao.GroupNewsDao;
 import com.fantasy.wx.message.dao.OutMessageDao;
 import com.fantasy.wx.message.service.IGroupMessageService;
 import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpMassGroupMessage;
 import me.chanjar.weixin.mp.bean.WxMpMassNews;
 import me.chanjar.weixin.mp.bean.WxMpMassOpenIdsMessage;
 import me.chanjar.weixin.mp.bean.result.WxMpMassSendResult;
+import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 /**
@@ -36,6 +41,12 @@ public class GroupMessageService implements IGroupMessageService {
     private WeixinConfigInit config;
     @Resource
     private FileManagerFactory factory;
+    @Resource
+    private GroupNewsDao groupNewsDao;
+    @Resource
+    private GroupNewsArticleDao groupNewsArticleDao;
+    private IMediaService mediaService;
+
     @Override
     public Pager<GroupMessage> findPager(Pager<GroupMessage> pager, List<PropertyFilter> filters) {
         return this.outMessageDao.findPager(pager, filters);
@@ -78,26 +89,18 @@ public class GroupMessageService implements IGroupMessageService {
     }
 
     @Override
-    public int sendTextGroupMessage(Long groupId, String content) {
-        WxMpMassGroupMessage groupM = createGroupMessage(groupId, WxConsts.MASS_MSG_TEXT);
-        groupM.setContent(content);
-        save(BeanUtil.copyProperties(new GroupMessage(), groupM));
-        try {
-            WxMpMassSendResult result = config.getUtil().massGroupMessageSend(groupM);
-            return Integer.parseInt(result.getErrorCode());
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            return e.getError().getErrorCode();
-        }
-    }
-
-    @Override
     public int sendTextOpenIdMessage(List<String> openid, String content) {
         WxMpMassOpenIdsMessage message = createOpenIdsMessage(openid, WxConsts.MASS_MSG_TEXT);
-
         message.setContent(content);
-        save(BeanUtil.copyProperties(new GroupMessage(), message));
+        return sendOpenIdMessage(message);
+    }
+    @Override
+    public int sendNewsOpenIdMessage(List<String> openid,GroupNews news) throws  IOException, WxException {
+        WxMpMassOpenIdsMessage message=createOpenIdsMessage(openid, WxConsts.MASS_MSG_NEWS);
         try {
+            //上传图文素材
+            WxMpMassUploadResult result=uploadNews(news);
+            message.setMediaId(result.getMediaId());
             WxMpMassSendResult massResult = config.getUtil().massOpenIdsMessageSend(message);
             return Integer.parseInt(massResult.getErrorCode());
         } catch (WxErrorException e) {
@@ -105,40 +108,70 @@ public class GroupMessageService implements IGroupMessageService {
             return e.getError().getErrorCode();
         }
     }
+    @Override
+    public int sendTextGroupMessage(Long groupId, String content) {
+        WxMpMassGroupMessage groupM = createGroupMessage(groupId, WxConsts.MASS_MSG_TEXT);
+        groupM.setContent(content);
+        return sendGroupMessage(groupM);
+    }
+    @Override
+    public int sendNewsGroupMessage(Long groupId,GroupNews news) throws IOException, WxException {
+        WxMpMassGroupMessage message = createGroupMessage(groupId, WxConsts.MASS_MSG_TEXT);
+        try {
+            //上传图文素材
+            WxMpMassUploadResult result=uploadNews(news);
+            message.setMediaId(result.getMediaId());
+            WxMpMassSendResult massResult = config.getUtil().massGroupMessageSend(message);
+            return Integer.parseInt(massResult.getErrorCode());
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            return e.getError().getErrorCode();
+        }
 
-    public int sendOpenIdMessage(List<String> openid,String content) throws WxErrorException, IOException {
+    }
 
-        FileDetail fileDetail=new FileDetail();
-
-        factory.getFileManager(fileDetail.getFileManagerId()).readFile(fileDetail.getAbsolutePath());
-
-
-
-        // 上传照片到媒体库
-        InputStream inputStream = ClassLoader.getSystemResourceAsStream("mm.jpeg");
-        WxMediaUploadResult uploadMediaRes = config.getUtil().mediaUpload(WxConsts.MEDIA_IMAGE, WxConsts.FILE_JPG, inputStream);
-
-        // 上传图文消息
-        WxMpMassNews news = new WxMpMassNews();
-        WxMpMassNews.WxMpMassNewsArticle article1 = new WxMpMassNews.WxMpMassNewsArticle();
-        article1.setTitle("标题1");
-        article1.setContent("内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1内容1");
-        article1.setThumbMediaId(uploadMediaRes.getMediaId());
-        news.addArticle(article1);
-
-        WxMpMassNews.WxMpMassNewsArticle article2 = new WxMpMassNews.WxMpMassNewsArticle();
-        article2.setTitle("标题2");
-        article2.setContent("内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2内容2");
-        article2.setThumbMediaId(uploadMediaRes.getMediaId());
-        article2.setShowCoverPic(true);
-        article2.setAuthor("作者2");
-        article2.setContentSourceUrl("www.baidu.com");
-        article2.setDigest("摘要2");
-        news.addArticle(article2);
+    public WxMpMassUploadResult uploadNews(GroupNews news) throws IOException, WxErrorException, WxException {
+        groupNewsDao.save(news);
+        //生成第三方库的群发对象
+        WxMpMassNews massNews=new WxMpMassNews();
+        for(GroupNewsArticle art:news.getArticles()){
+            WxMedia media=mediaService.mediaUpload(art.getThumbFile(), WxConsts.MEDIA_IMAGE);
+            media.setThumbMediaId(media.getMediaId());
+            WxMpMassNews.WxMpMassNewsArticle article = BeanUtil.copyProperties(new WxMpMassNews.WxMpMassNewsArticle(),art);
+            massNews.addArticle(article);
+            groupNewsArticleDao.save(art);
+        }
+        WxMpMassUploadResult result=config.getUtil().massNewsUpload(massNews);
+        news.setCreatedAt(result.getCreatedAt());
+        news.setType(result.getType());
+        news.setMediaId(result.getMediaId());
+        groupNewsDao.save(news);
+        return result;
+    }
 
 
-        WxMpMassOpenIdsMessage message = createOpenIdsMessage(openid, WxConsts.MASS_MSG_NEWS);
-        message.setContent(content);
+    /**
+     * 按照分组发送群发消息
+     * @param message
+     * @return
+     */
+    public int sendGroupMessage(WxMpMassGroupMessage message){
+        save(BeanUtil.copyProperties(new GroupMessage(), message));
+        try {
+            WxMpMassSendResult result = config.getUtil().massGroupMessageSend(message);
+            return Integer.parseInt(result.getErrorCode());
+        } catch (WxErrorException e) {
+            e.printStackTrace();
+            return e.getError().getErrorCode();
+        }
+    }
+
+    /**
+     * 按照openid发送群发消息
+     * @param message
+     * @return
+     */
+    public int sendOpenIdMessage(WxMpMassOpenIdsMessage message){
         save(BeanUtil.copyProperties(new GroupMessage(), message));
         try {
             WxMpMassSendResult massResult = config.getUtil().massOpenIdsMessageSend(message);

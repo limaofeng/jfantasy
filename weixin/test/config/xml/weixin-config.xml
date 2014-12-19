@@ -1,8 +1,8 @@
 <xml>
-    <appId>wxdb4ed8c64ae393e6</appId>
-    <secret>1882fa9a1de98177ae463aa0b1f78503</secret>
-    <token>公众号Token</token>
-    <aesKey>公众号EncodingAESKey</aesKey>
+    <appId>wxcbc2c9fb9d585cd3</appId>
+    <secret>4b224fb5b08f2380572e45baecda63ba</secret>
+    <token>haolue_token</token>
+    <aesKey>tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6</aesKey>
     <accessToken>可以不填写</accessToken>
     <expiresIn>可以不填写</expiresIn>
     <openId>o8W9zt_0puksLdwJlqTGXdH9ViRU</openId>

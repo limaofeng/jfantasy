@@ -5,6 +5,7 @@ import me.chanjar.weixin.common.bean.result.WxError;
 import me.chanjar.weixin.common.exception.WxErrorException;
 
 /**
+ * 微信异常
  * Created by zzzhong on 2014/12/4.
  */
 public class WxException extends Exception{

@@ -7,9 +7,9 @@ import com.fantasy.wx.config.init.WeixinConfigInit;
 import com.fantasy.wx.exception.WxException;
 import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.bean.WxGroup;
+import com.fantasy.wx.user.dao.UserInfoDao;
 import com.fantasy.wx.user.dao.WxGroupDao;
 import com.fantasy.wx.user.service.IGroupService;
-import com.fantasy.wx.user.service.IUserInfoService;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpGroup;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class WxGroupService implements IGroupService {
     @Resource
     private WxGroupDao wxGroupDao;
     @Resource
-    private IUserInfoService iUserInfoService;
+    private UserInfoDao userInfoDao;
     @Resource
     private WeixinConfigInit weixinConfigInit;
 
@@ -56,13 +56,7 @@ public class WxGroupService implements IGroupService {
     @Override
     public void delete(Long... ids) {
         for (Long id : ids) {
-            List<PropertyFilter> list = new ArrayList<PropertyFilter>();
-            list.add(new PropertyFilter("EQS_group.id", id.toString()));
-            Pager<UserInfo> pager = iUserInfoService.findPager(new Pager<UserInfo>(), list);
-            for (UserInfo ui : pager.getPageItems()) {
-                ui.setWxGroup(null);
-                iUserInfoService.save(ui);
-            }
+            userInfoDao.batchSQLExecute("update wx_user_info set GROUP_ID=null where GROUP_ID=?",id);
             wxGroupDao.delete(id);
         }
     }
@@ -129,12 +123,13 @@ public class WxGroupService implements IGroupService {
             UserInfo ui = new UserInfo();
             ui.setOpenId(openId);
             ui.setWxGroup(new WxGroup(groupId, null));
-            iUserInfoService.save(ui);
+            userInfoDao.save(ui);
         } catch (WxErrorException e) {
             e.printStackTrace();
             return e.getError().getErrorCode();
         }
         return 0;
     }
+
 
 }

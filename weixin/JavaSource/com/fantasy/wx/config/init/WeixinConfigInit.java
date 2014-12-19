@@ -93,7 +93,7 @@ public class WeixinConfigInit implements InitializingBean {
             util = new WxMpServiceImpl();
             util.setWxMpConfigStorage(config);
 
-            wxMpMessageRouter=new WxMpMessageRouter();
+            wxMpMessageRouter=new WxMpMessageRouter(util);
             wxMpMessageRouter
                     .rule()
                     .async(false)

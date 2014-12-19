@@ -71,6 +71,11 @@ public class UserInfoService implements IUserInfoService {
         return this.userInfoDao.findPager(pager, filters);
     }
 
+    public List<UserInfo> findByGroupId(Long id){
+        //this.userInfoDao.findUniqueBy("EQL_")
+        return null;
+    }
+
     @Override
     public void refresh() throws WxException {
         WxMpUserList userList = null;

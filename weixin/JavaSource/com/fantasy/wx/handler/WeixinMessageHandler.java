@@ -2,6 +2,7 @@ package com.fantasy.wx.handler;
 
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpMessageInterceptor;
+import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 
@@ -29,10 +30,10 @@ public class WeixinMessageHandler implements WxMpMessageHandler {
      * @return true 代表继续执行别的router，false 代表停止执行别的router
      */
     @Override
-    public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context) {
+    public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context,WxMpService service) {
         // 先进行拦截器验证
         for (WxMpMessageInterceptor interceptor : this.interceptors) {
-            if (!interceptor.intercept(wxMessage, context)) {
+            if (!interceptor.intercept(wxMessage, context,service)) {
                 return null;
             }
         }
@@ -45,14 +46,14 @@ public class WeixinMessageHandler implements WxMpMessageHandler {
             //判断是否匹配
             if(this.test(wxMessage, router)){
                 if(router.getHandler()!=null){
-                    message=service(router, wxMessage, context);
+                    message=service(router, wxMessage, context,service);
                 }else if(router.getHandlers().size()>0){
                     /**
                      * 循环触发list处理器集合
                      */
                     for(WxMpMessageHandler handler:router.getHandlers()){
                         router.setHandler(handler);
-                        message=service(router, wxMessage, context);
+                        message=service(router, wxMessage, context,service);
                     }
                 }
                 if(router.isReEnter()){
@@ -70,21 +71,22 @@ public class WeixinMessageHandler implements WxMpMessageHandler {
      * @param context
      * @return
      */
-    public WxMpXmlOutMessage service(WeixinMessageRouter router,WxMpXmlMessage wxMessage, Map<String, Object> context){
+    public WxMpXmlOutMessage service(WeixinMessageRouter router,WxMpXmlMessage wxMessage, Map<String, Object> context,WxMpService service){
         try{
             if(router.isAsync()){
                 final WxMpMessageHandler asyncHandler=router.getHandler();
                 final WxMpXmlMessage asyncWxMessage=wxMessage;
                 final Map<String, Object> asyncContext=context;
+                final WxMpService asyncService=service;
                 // 在另一个线程里执行
                 es.submit(new Runnable() {
                     public void run() {
-                        asyncHandler.handle(asyncWxMessage,asyncContext);
+                        asyncHandler.handle(asyncWxMessage,asyncContext,asyncService);
                     }
                 });
                 return null;
             }
-            return router.getHandler().handle(wxMessage, context);
+            return router.getHandler().handle(wxMessage, context,service);
         }catch (Exception e){
             e.printStackTrace();
         }
