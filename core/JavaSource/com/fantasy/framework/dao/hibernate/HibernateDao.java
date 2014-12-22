@@ -166,7 +166,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 String getterMethodName = (boolean.class.equals(field.getType()) ? "is" : "get") + StringUtils.capitalize(field.getName()) + "()";
                 Object value = ognlUtil.getValue(getterMethodName, entity);
                 if (value != null) {
-                    ognlUtil.setValue(field.getName(), oldEntity, value);
+                    ClassUtil.setValue(oldEntity, field.getName(), value);
                 }
             }
             // 一对一关联关系的表
@@ -176,15 +176,15 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 if (!(ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.MERGE) > -1)) {
                     continue;
                 }
-                Object value = ognlUtil.getValue(field.getName(), entity);
+                Object value = ClassUtil.getValue(entity, field.getName());
                 if (value != null) {
-                    Object oldValue = ognlUtil.getValue(field.getName(), oldEntity);
+                    Object oldValue = ClassUtil.getValue(oldEntity, field.getName());
                     if (oldValue == null) {
-                        ognlUtil.setValue(field.getName(), oldEntity, value);
+                        ClassUtil.setValue(oldEntity, field.getName(), value);
                     } else {
                         for (Field fkField : ClassUtil.getDeclaredFields(field.getType(), Column.class)) {
                             if (!fkField.isAnnotationPresent(Id.class)) {
-                                Object fkValue = ognlUtil.getValue(fkField.getName(), value);
+                                Object fkValue = ClassUtil.getValue(value, fkField.getName());
                                 if (fkValue != null) {
                                     if (fkValue instanceof Blob) {
                                         ClassUtil.setValue(oldValue, fkField.getName(), fkValue);
@@ -267,7 +267,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 if (field.getAnnotation(Transient.class) != null) {
                     continue;
                 }
-                ognlUtil.setValue(field.getName(), entity, ognlUtil.getValue(field.getName(), oldEntity));
+                ClassUtil.setValue(entity, field.getName(), ClassUtil.getValue(oldEntity, field.getName()));
             }
             return oldEntity;
         } else {

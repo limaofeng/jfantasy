@@ -493,6 +493,9 @@
             </handler>
         </phase>
         <phase name="soapmonitorPhase"/>
+        <phase name="loggingPhase">
+            <handler name="LogHandler" class="com.fantasy.framework.ws.axis2.handlers.LogHandler"/>
+        </phase>
     </phaseOrder>
     <phaseOrder type="OutFlow">
         <!--      user can add his own phases to this area  -->
@@ -504,6 +507,9 @@
         <phase name="PolicyDetermination"/>
         <phase name="MessageOut"/>
         <phase name="Security"/>
+        <phase name="loggingPhase">
+            <handler name="LogHandler" class="com.fantasy.framework.ws.axis2.handlers.LogHandler"/>
+        </phase>
     </phaseOrder>
     <phaseOrder type="InFaultFlow">
         <phase name="Addressing">
@@ -534,6 +540,9 @@
         <!--      user can add his own phases to this area  -->
         <phase name="OperationInFaultPhase"/>
         <phase name="soapmonitorPhase"/>
+        <phase name="loggingPhase">
+            <handler name="LogHandler" class="com.fantasy.framework.ws.axis2.handlers.LogHandler"/>
+        </phase>
     </phaseOrder>
     <phaseOrder type="OutFaultFlow">
         <!--      user can add his own phases to this area  -->
@@ -543,6 +552,9 @@
         <phase name="PolicyDetermination"/>
         <phase name="MessageOut"/>
         <phase name="Security"/>
+        <phase name="loggingPhase">
+            <handler name="LogHandler" class="com.fantasy.framework.ws.axis2.handlers.LogHandler"/>
+        </phase>
     </phaseOrder>
 </axisconfig>
 

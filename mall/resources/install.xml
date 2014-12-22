@@ -4,7 +4,7 @@
 		<sessionFactory>
 			<packagesToScan>
 				<list>
-					<value>com.haolue.*.bean</value>
+					<value>com.fantasy.mall.*.bean</value>
 				</list>
 			</packagesToScan>
 		</sessionFactory>

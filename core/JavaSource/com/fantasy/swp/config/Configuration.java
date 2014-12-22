@@ -5,7 +5,6 @@ import com.fantasy.swp.config.entities.PageConfig;
 /**
  * 配置类
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-3-29 上午12:30:47
  * @version 1.0

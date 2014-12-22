@@ -161,7 +161,6 @@ public class BuguIndex implements InitializingBean {
 	/**
 	 * 初始化方法
 	 * 
-	 * @功能描述
 	 */
 	public void open() {
 		this.executor = Executors.newFixedThreadPool(this.threadPoolSize);
