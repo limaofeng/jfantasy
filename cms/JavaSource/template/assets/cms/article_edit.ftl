@@ -1,13 +1,14 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <script type="text/javascript">
     $(function () {
-        var imageUploader = $('#imageUploader').upload({data:{'dir':'brand_logo'},theme:'image',size:'160x160'},<@s.property value="art.logoImageStore" escapeHtml="false" default="[]"/>);
+        var image = <@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(art.articleImage)" escapeHtml="false" default="[]"/>;
+        var imageUploader = $('#imageUploader').upload({data:{'dir':'cms_image'},theme:'image',size:'160x160'},[image]);
         $("#saveForm").ajaxForm({
             beforeSerialize : function(zhis, options){
                 var _data = {};
                 var _images = imageUploader.getData();
                 if(_images.length > 0){
-                    _data['logoImageStore'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
+                    _data['articleImage'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
                 }
                 options.data = _data;
             },
@@ -23,17 +24,11 @@
     });
 </script>
 <div class="pad10L pad10R">
-    <div class="infobox warning-bg mrg10B">
-        <p><i class="glyph-icon icon-exclamation mrg10R"></i>To view the available grid system options &amp; configurations you can visit the <a title="Fides Admin Grid System documentation" target="_blank" href="grid.html">Fides Admin Grid System documentation</a> page.</p>
-    </div>
     <div class="example-box">
     <@s.form id="saveForm" namespace="/cms/article" action="article_save" method="post" cssClass="center-margin">
         <@s.hidden name="category.code" value="%{art.category.code}"/>
         <@s.hidden name="id" value="%{art.id}"/>
-        <a href="javascript:;" class="btn small hover-black float-right back-page" title="" style="margin-top: -30px;margin-right: 30px">
-            <i class="glyph-icon icon-reply"></i>
-        </a>
-
+        <@s.hidden  name="version.number" value="%{art.category.articleVersion.number}"/>
         <div class="col-md-6 pad10T">
             <div class="form-row">
                 <div class="form-label col-md-2">
@@ -122,7 +117,7 @@
                 </label>
             </div>
             <div class="form-input col-md-10">
-                <@s.textarea cssClass="ckeditor" name="content" cssStyle="width:900px;height:360px;"  value="%{art.content.content}"/>
+                <@s.textarea cssClass="ckeditor" name="content" cssStyle="width:900px;height:360px;"  value="%{art.content.text}"/>
             </div>
         </div>
         <div class="form-row" style="text-align: center;">

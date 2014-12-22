@@ -1,9 +1,6 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <@override name="pageTitle">
 文章维护
-<small>
-    You can use the Messaging List component to create all kinds of messaging systems for your application users.
-</small>
 </@override>
 <@override name="head">
 <script type="text/javascript">
@@ -148,7 +145,7 @@
                 var categoryCode = treeNode.code;
                 $(this).attr('href', $(this).data('href') + '?categoryCode=' + categoryCode);
             }
-        }).target('after:#page-content');
+        });
         //修改分类
         $('.category-update').bind('click', function (e) {
             if (!$(this).data('href')) {
@@ -165,7 +162,7 @@
             var treeNode = selectdNodes[0];
             var categoryCode = treeNode.code;
             $(this).attr('href', $(this).data('href') + '?id=' + categoryCode);
-        }).target('after:#page-content');
+        });
         //删除栏目
         $('.category-remove').click(function (e) {
             var selectdNodes = categoryTree.getSelectedNodes();
@@ -205,13 +202,13 @@
 <@override name="pageContent">
 <div class="col-md-3 pad0L">
     <div class="content-box pad5A mrg0B pad0B" id="layout_left">
-        <a title="添加分类" class="btn medium primary-bg category-add" href="<@s.url namespace="/cms/article" action="category_add"/>">
+        <a title="添加分类" class="btn medium primary-bg category-add" href="<@s.url namespace="/cms/article" action="category_add"/>" target="after:closest('#page-content')">
             <span class="button-content">
                 <i class="glyph-icon icon-plus float-left"></i>
                 <@s.text name="operation.add"/>
             </span>
         </a>
-        <a title="编辑分类" class="btn medium primary-bg category-update" href="<@s.url namespace="/cms/article" action="category_edit"/>">
+        <a title="编辑分类" class="btn medium primary-bg category-update" href="<@s.url namespace="/cms/article" action="category_edit"/>" target="after:closest('#page-content')">
             <span class="button-content">
                 <i class="glyph-icon icon-edit float-left"></i>
                 <@s.text name="operation.edit"/>
@@ -226,7 +223,7 @@
             </a>
             <ul class="dropdown-menu float-right">
                 <li>
-                    <a title="删除分类" class="category-remove" href="<@s.url namespace="/cms/article" action="category_delete"/>">
+                    <a title="删除分类" class="category-remove" href="<@s.url namespace="/cms/article" action="category_delete"/>" target="after:closest('#page-content')">
                         <i class="glyph-icon icon-remove mrg5R"></i>
                         <@s.text name="operation.remove"/>
                     </a>

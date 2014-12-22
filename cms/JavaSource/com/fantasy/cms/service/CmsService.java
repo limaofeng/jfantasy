@@ -1,5 +1,7 @@
 package com.fantasy.cms.service;
 
+import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.service.AttributeVersionService;
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.dao.ArticleCategoryDao;
@@ -27,6 +29,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +50,8 @@ public class CmsService extends BuguSearcher<Article> {
     @Resource
     private ArticleDao articleDao;
 
+    @Resource
+    private AttributeVersionService versionService;
     /**
      * 获取全部栏目
      *
@@ -85,6 +90,35 @@ public class CmsService extends BuguSearcher<Article> {
     public ArticleCategory save(ArticleCategory category) {
         if (LOG.isDebugEnabled()) {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
+        }
+        if(category.getArticleVersion().getClassName()!=null && category.getArticleVersion().getId()==null){
+            List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+            filters.add(new PropertyFilter("EQS_className",category.getArticleVersion().getClassName()));
+            List<AttributeVersion> attributeVersions = this.versionService.getVersions(filters,"createTime","desc",10);
+            if(attributeVersions.isEmpty()){
+                AttributeVersion attributeVersion = new AttributeVersion();
+                attributeVersion.setClassName(category.getArticleVersion().getClassName());
+                attributeVersion.setNumber("Article_v_1");
+                if(!category.getArticleVersion().getAttributes().isEmpty()){
+                    attributeVersion.setAttributes(category.getArticleVersion().getAttributes());
+                }
+                this.versionService.newSave(attributeVersion);
+                category.setArticleVersion(attributeVersion);
+            }else{
+                int num = Integer.valueOf(attributeVersions.get(0).getNumber().substring(attributeVersions.get(0).getNumber().length() - 1));
+                AttributeVersion attributeVersion = new AttributeVersion();
+                attributeVersion.setClassName(category.getArticleVersion().getClassName());
+                attributeVersion.setNumber("Article_v_"+(num+1));
+                if(!category.getArticleVersion().getAttributes().isEmpty()){
+                    attributeVersion.setAttributes(category.getArticleVersion().getAttributes());
+                }
+                this.versionService.newSave(attributeVersion);
+                category.setArticleVersion(attributeVersion);
+            }
+        }else if(category.getArticleVersion().getId()!=null && !category.getArticleVersion().getAttributes().isEmpty()){
+            AttributeVersion attributeVersion = this.versionService.get(category.getArticleVersion().getId());
+            attributeVersion.setAttributes(category.getArticleVersion().getAttributes());
+            this.versionService.newSave(attributeVersion);
         }
         List<ArticleCategory> categories;
         boolean root = false;
