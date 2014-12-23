@@ -7,7 +7,6 @@ import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutTextMessage;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -15,7 +14,6 @@ import java.util.Map;
 /**
  * Created by zzzhong on 2014/12/9.
  */
-@Component
 public class FoucsHandler implements WxMpMessageHandler {
     @Resource
     private UserInfoService userInfoService;
