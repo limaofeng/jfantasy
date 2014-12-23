@@ -32,13 +32,14 @@ public class DictionaryWebService implements IDictionaryService {
     @Override
     public DataDictionaryDTO[] list(String configKey) {
         String[] ck = StringUtil.tokenizeToStringArray(configKey, ":");
-        return asArray(dataDictionaryService.list(ck[0], ck.length > 1 ? ck[1] : null));
+        List<DataDictionary> dataDictionaries = dataDictionaryService.list(ck[0], ck.length > 1 ? ck[1] : null);
+        return asArray(dataDictionaries.toArray(new DataDictionary[dataDictionaries.size()]));
     }
 
-    public static DataDictionaryDTO[] asArray(List<DataDictionary> dictionaries) {
-        DataDictionaryDTO[] array = new DataDictionaryDTO[dictionaries.size()];
-        for (int i = 0; i < dictionaries.size(); i++) {
-            array[i] = asDto(dictionaries.get(i));
+    public static DataDictionaryDTO[] asArray(DataDictionary[] dictionaries) {
+        DataDictionaryDTO[] array = new DataDictionaryDTO[dictionaries.length];
+        for (int i = 0; i < dictionaries.length; i++) {
+            array[i] = asDto(dictionaries[i]);
         }
         return array;
     }
