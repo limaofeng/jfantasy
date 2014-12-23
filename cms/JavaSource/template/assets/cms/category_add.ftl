@@ -98,30 +98,31 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="form-row">
-                            <div class="form-label col-md-2">
-                                <label for="">
-                                </label>
-                            </div>
-                            <div class="form-input col-md-10">
-                                <div class="append-left">
-                                    <div style="float:left;">
-                                        <a href="javascript:void(0);" class="btn medium primary-bg radius-all-4 menu-save4"  onclick="$('#saveForm').submit();return false;" title="保存" >
+
+                </div>
+                <div class="col-md-6">
+                    <div class="form-row">
+                        <div class="form-label col-md-2">
+                            <label for="">
+                            </label>
+                        </div>
+                        <div class="form-input col-md-10">
+                            <div class="append-left">
+                                <div style="float:left;">
+                                    <a href="javascript:void(0);" class="btn medium primary-bg radius-all-4 menu-save4"  onclick="$('#saveForm').submit();return false;" title="保存" >
                                      <span class="button-content">
                                              <i class="glyph-icon icon-save float-left"></i>
                                          保存
                                       </span>
-                                        </a>
-                                    </div>
-                                    <div style="padding-left: 30px;float: left;">
-                                        <a href="javascript:void(0);" class="btn medium primary-bg radius-all-4 switch menu-view back-page "  title="返回" >
+                                    </a>
+                                </div>
+                                <div style="padding-left: 30px;float: left;">
+                                    <a href="javascript:void(0);" class="btn medium primary-bg radius-all-4 switch menu-view back-page "  title="返回" >
                                      <span class="button-content">
                                           <i class="glyph-icon icon-reply"></i>
                                         返回
                                     </span>
-                                        </a>
-                                    </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
