@@ -181,7 +181,11 @@ public class CmsService extends BuguSearcher<Article> {
      * @return ArticleCategory
      */
     public ArticleCategory get(String code) {
-        return this.articleCategoryDao.get(code);
+        ArticleCategory category = this.articleCategoryDao.get(code);
+        if(category.getArticleVersion()!=null){
+            Hibernate.initialize(category.getArticleVersion().getAttributes());
+        }
+        return category;
     }
 
     /**
