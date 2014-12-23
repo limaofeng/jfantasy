@@ -11,6 +11,8 @@
     <bean id="iQRCodeService" class="com.fantasy.wx.qrcode.service.impl.QRCodeService" />
     <bean id="iUserInfoService" class="com.fantasy.wx.user.service.impl.UserInfoService" />
     <bean id="iGroupService" class="com.fantasy.wx.user.service.impl.WxGroupService" />
+    <bean id="foucsHandler" class="com.fantasy.wx.handler.FoucsHandler" />
+    <bean id="defaultTextHandler" class="com.fantasy.wx.handler.DefaultTextHandler" />
     <bean id="weixinMessageHandler" class="com.fantasy.wx.handler.WeixinMessageHandler">
         <property name="list">
             <list>
