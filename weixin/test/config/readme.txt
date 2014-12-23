@@ -10,4 +10,4 @@ applicationContext-websocket.xml添加
 <websocket:handlers>
   <websocket:mapping path="/weixin/msg" handler="weixinWebSocketEndPoint"/>
 </websocket:handlers>
-钟振振
+李茂峰-钟振振
