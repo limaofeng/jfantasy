@@ -30,7 +30,8 @@ public class CmsWebService implements ICmsService {
     public ArticlePagerResult findPager(PagerDTO pagerDTO, PropertyFilterDTO[] filters) {
         List<PropertyFilter> propertyFilters = WebServiceUtil.toFilters(filters);
         Pager<Article> pager = this.cmsService.findPager(WebServiceUtil.toPager(pagerDTO, Article.class), propertyFilters);
-        return WebServiceUtil.toPagerResult(pager, new ArticlePagerResult(), asArray(pager.getPageItems()));
+        List<Article> articles = pager.getPageItems();
+        return WebServiceUtil.toPagerResult(pager, new ArticlePagerResult(), asArray(articles.toArray(new Article[articles.size()])));
     }
 
     @Override
@@ -41,7 +42,8 @@ public class CmsWebService implements ICmsService {
     @Override
     public ArticleDTO[] find(PropertyFilterDTO[] filters, String orderBy, String order, int size) {
         List<PropertyFilter> propertyFilters = WebServiceUtil.toFilters(filters);
-        return asArray(this.cmsService.find(propertyFilters, orderBy, order, size));
+        List<Article> articles =this.cmsService.find(propertyFilters, orderBy, order, size);
+        return asArray(articles.toArray(new Article[articles.size()]));
     }
 
     @Override
@@ -91,10 +93,10 @@ public class CmsWebService implements ICmsService {
         return articleDTO;
     }
 
-    public static ArticleDTO[] asArray(List<Article> articles) {
-        ArticleDTO[] dtos = new ArticleDTO[articles.size()];
+    public static ArticleDTO[] asArray(Article[] articles) {
+        ArticleDTO[] dtos = new ArticleDTO[articles.length];
         for (int i = 0; i < dtos.length; i++) {
-            dtos[i] = asDto(articles.get(i));
+            dtos[i] = asDto(articles[i]);
         }
         return dtos;
     }
