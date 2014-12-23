@@ -5,11 +5,15 @@
         list.view.setJSON(<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(category.articleVersion.attributes)" escapeHtml="false" default="[]"/>);
         $(".custom-radio[name='rl$tt']").change(function(){
             if($(this).val()=='1'){
-                $('#class1,#class2').show().disabled(false);
+                $('#class1').show();
             }else{
-                $('#class1,#class2').hide().disabled(true);
+                $('#class1,#tabs-2').hide();
             }
         }).filter(':checked').change();
+
+        $('#class1').click(function(){
+            $('#tabs-2').show();
+        });
 
         $("#saveForm").ajaxForm({
             beforeSerialize : function(zhis, options){
@@ -62,13 +66,12 @@
                             基本信息
                         </a>
                     </li>
-                    <li>
+                    <li id="class1">
                         <a title="动态属性字段添加" href="#tabs-2">
                             动态属性字段添加
                         </a>
                     </li>
                  </ul>
-
                 <div id="tabs-1">
                     <div class="row">
                         <div class="col-md-6">
@@ -130,7 +133,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6" id="class1">
+                        <#--<div class="col-md-6" id="class1">
                             <div class="form-row">
                                 <div class="form-label col-md-2">
                                     <label for="">
@@ -155,7 +158,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div>-->
                         <div class="col-md-6">
                             <div class="form-row">
                                 <div class="form-label col-md-2">
@@ -165,7 +168,7 @@
                                 </div>
                                 <div class="form-input col-md-10">
                                     <div class="append-left">
-                                        <@s.textarea name="description" cssStyle="width:840px;height: 160px;"  value="%{category.description}"/>
+                                        <@s.textarea name="description" cssStyle="width:900px;height: 160px;"  value="%{category.description}"/>
                                     </div>
                                 </div>
                             </div>
