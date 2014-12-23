@@ -29,7 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,6 +51,7 @@ public class CmsService extends BuguSearcher<Article> {
 
     @Resource
     private AttributeVersionService versionService;
+
     /**
      * 获取全部栏目
      *
@@ -91,34 +91,16 @@ public class CmsService extends BuguSearcher<Article> {
         if (LOG.isDebugEnabled()) {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
-        if(category.getArticleVersion().getClassName()!=null && category.getArticleVersion().getId()==null){
-            List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-            filters.add(new PropertyFilter("EQS_className",category.getArticleVersion().getClassName()));
-            List<AttributeVersion> attributeVersions = this.versionService.getVersions(filters,"createTime","desc",10);
-            if(attributeVersions.isEmpty()){
-                AttributeVersion attributeVersion = new AttributeVersion();
-                attributeVersion.setClassName(category.getArticleVersion().getClassName());
-                attributeVersion.setNumber("Article_v_1");
-                if(!category.getArticleVersion().getAttributes().isEmpty()){
-                    attributeVersion.setAttributes(category.getArticleVersion().getAttributes());
-                }
-                this.versionService.newSave(attributeVersion);
-                category.setArticleVersion(attributeVersion);
-            }else{
-                int num = Integer.valueOf(attributeVersions.get(0).getNumber().substring(attributeVersions.get(0).getNumber().length() - 1));
-                AttributeVersion attributeVersion = new AttributeVersion();
-                attributeVersion.setClassName(category.getArticleVersion().getClassName());
-                attributeVersion.setNumber("Article_v_"+(num+1));
-                if(!category.getArticleVersion().getAttributes().isEmpty()){
-                    attributeVersion.setAttributes(category.getArticleVersion().getAttributes());
-                }
-                this.versionService.newSave(attributeVersion);
-                category.setArticleVersion(attributeVersion);
+        if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
+            AttributeVersion version = this.versionService.getVersion(Article.class, category.getCode());
+            if (version == null) {
+                version = new AttributeVersion();
+                version.setClassName(Article.class.getName());
+                version.setNumber(category.getCode());
             }
-        }else if(category.getArticleVersion().getId()!=null && !category.getArticleVersion().getAttributes().isEmpty()){
-            AttributeVersion attributeVersion = this.versionService.get(category.getArticleVersion().getId());
-            attributeVersion.setAttributes(category.getArticleVersion().getAttributes());
-            this.versionService.newSave(attributeVersion);
+            version.setAttributes(category.getArticleVersion().getAttributes());
+            this.versionService.save(version);
+            category.setArticleVersion(version);
         }
         List<ArticleCategory> categories;
         boolean root = false;
@@ -135,10 +117,10 @@ public class CmsService extends BuguSearcher<Article> {
         }
         ArticleCategory old = category.getCode() != null ? this.articleCategoryDao.get(category.getCode()) : null;
         // 新增数据
-        if(old == null){
+        if (old == null) {
             category.setSort(categories.size() + 1);
             // 更新数据
-        }else {
+        } else {
             if (category.getSort() != null) {
                 if (ObjectUtil.find(categories, "code", old.getCode()) == null) {// 移动了节点的层级
                     int i = 0;
@@ -147,7 +129,7 @@ public class CmsService extends BuguSearcher<Article> {
                         this.articleCategoryDao.save(m);
                     }
                     categories.add(category.getSort() - 1, category);
-                } else if(!old.getSort().equals(category.getSort())) {
+                } else if (!old.getSort().equals(category.getSort())) {
                     ArticleCategory t = ObjectUtil.remove(categories, "code", old.getCode());
                     if (categories.size() >= category.getSort()) {
                         categories.add(category.getSort() - 1, t);
@@ -339,7 +321,7 @@ public class CmsService extends BuguSearcher<Article> {
                 configuration.getTemplate(newTemplateUrl);
                 return newTemplateUrl;
             } catch (IOException e) {
-                LOG.debug(e.getMessage(),e);
+                LOG.debug(e.getMessage(), e);
                 if (category.getParent() == null) {
                     break;
                 }

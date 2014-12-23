@@ -40,6 +40,9 @@ public class AttributeVersionService {
     }
 
     public AttributeVersion save(AttributeVersion version) {
+        for (Attribute attribute : version.getAttributes()) {
+            attributeDao.save(attribute);
+        }
         this.attributeVersionDao.save(version);
         return version;
     }
@@ -56,23 +59,13 @@ public class AttributeVersionService {
         }
     }
 
-
-    public  AttributeVersion newSave(AttributeVersion version){
-        for(Attribute attribute:version.getAttributes()){
-            attributeDao.save(attribute);
-        }
-        this.attributeVersionDao.save(version);
-        return version;
-    }
-
-
     public List<AttributeVersion> getVersions(Class<?> entityClass) {
         return this.attributeVersionDao.find(Restrictions.eq("className", entityClass.getName()));
     }
 
 
-    public List<AttributeVersion> getVersions(List<PropertyFilter> filter, String orderBy, String order, int size){
-        return this.attributeVersionDao.find(filter,orderBy,order,0,size);
+    public List<AttributeVersion> getVersions(List<PropertyFilter> filter, String orderBy, String order, int size) {
+        return this.attributeVersionDao.find(filter, orderBy, order, 0, size);
     }
 
     /**
