@@ -1,9 +1,6 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <@override name="pageTitle">
 Axis 报文日志表
-<small>
-    webservice
-</small>
 </@override>
 <@override name="head">
 <script type="text/javascript">
@@ -22,15 +19,15 @@ Axis 报文日志表
         });
         var $advsearch = $('.propertyFilter').advsearch({
             filters : [{
-                name : 'S_code',
-                text : '编码',
+                name : 'E_type',
+                text : '调用类型',
                 type : 'input',
-                matchType :['EQ','LIKE','LT','GT']
+                matchType :['EQ']
             },{
-                name : 'S_name',
-                text : '名称',
+                name : 'E_result',
+                text : '结果名称',
                 type : 'input',
-                matchType :['EQ','LIKE','GT']
+                matchType :['EQ']
             }]
         });
         //列表初始化
@@ -43,7 +40,7 @@ Axis 报文日志表
             });
         });
         $grid.setJSON(pager);
-        var deleteMethod = $('.batchDelete').batchExecute($("#allChecked"),$grid.data('grid').pager(),'id','是否确认删除[{sn}]订单？',function(){
+        var deleteMethod = $('.batchDelete').batchExecute($("#allChecked"),$grid.data('grid').pager(),'id','是否确认删除[{id}]？',function(){
             $.msgbox({
                 msg : "删除成功!",
                 type : "success"
@@ -54,17 +51,17 @@ Axis 报文日志表
 </@override>
 <@override name="pageContent">
 <div id="searchFormPanel" class="button-panel pad5A">
-    <@s.form id="searchForm" namespace="/order" action="search" method="post">
+    <@s.form id="searchForm" namespace="/axis" action="search" method="post">
         <div class="propertyFilter">
         </div>
         <div class="form-search">
-            <input type="text" name="LIKES_sn" title="" data-placement="bottom" class="input tooltip-button ac_input" placeholder="Search..." autocomplete="off" style="display: inline-block; width: 200px;">
+            <input type="text" name="EQE_type" title="" data-placement="bottom" class="input tooltip-button ac_input" placeholder="Search..." autocomplete="off" style="display: inline-block; width: 200px;">
             <i class="glyph-icon icon-search"></i>
         </div>
     </@s.form>
 </div>
 <div class="batch">
-    <a title="<@s.text name= 'mall.order.index.batchDel' />" class="btn small primary-bg batchDelete" href="<@s.url namespace="/order" action="delete"/>">
+    <a title="批量删除" class="btn small primary-bg batchDelete" href="<@s.url namespace="/axis" action="delete"/>">
         <span class="button-content">
             <i class="glyph-icon icon-trash float-left"></i>
             批量删除
@@ -100,14 +97,14 @@ Axis 报文日志表
                     </a>
                     <ul class="dropdown-menu float-right">
                         <li>
-                            <a title="详情" class="view" href="<@s.url namespace="/axis" action="view?id={id}"/>" ajax="{type:'html',target:'closest(\'#page-content\')'}">
+                            <a title="详情" class="view" href="<@s.url namespace="/axis" action="view?id={id}"/>" target="after:closest('#page-content')">
                                 <i class="glyph-icon icon-external-link-sign mrg5R"></i>
                                 详情
                             </a>
                         </li>
                         <li class="divider"></li>
                         <li>
-                            <a href="<@s.url namespace="/order" action="delete?id={id}"/>" class="font-red delete" title="删除">
+                            <a href="<@s.url namespace="/axis" action="delete?ids={id}"/>" class="font-red delete" title="删除">
                                 <i class="glyph-icon icon-remove mrg5R"></i>
                                 删除
                             </a>
