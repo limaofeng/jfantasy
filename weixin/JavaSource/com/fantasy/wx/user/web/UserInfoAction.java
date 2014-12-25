@@ -4,7 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.service.IUserInfoService;
 
@@ -34,7 +34,7 @@ public class UserInfoAction extends ActionSupport {
         return JSONDATA;
     }
 
-    public String refresh() throws WxException {
+    public String refresh() throws WeiXinException {
         iUserInfoService.refresh();
         return JSONDATA;
     }

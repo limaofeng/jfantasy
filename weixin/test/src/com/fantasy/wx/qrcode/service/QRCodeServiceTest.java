@@ -3,24 +3,25 @@ package com.fantasy.wx.qrcode.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.qrcode.bean.QRCode;
+import com.fantasy.wx.bean.QRCode;
+import com.fantasy.wx.service.QRCodeService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class QRCodeServiceTest {
     private static final Log logger = LogFactory.getLog(QRCode.class);
-    @Resource
-    private IQRCodeService iQRCodeService;
+    @Autowired
+    private QRCodeService iQRCodeService;
 
     @Test
     public void testGetQRCode() throws Exception {

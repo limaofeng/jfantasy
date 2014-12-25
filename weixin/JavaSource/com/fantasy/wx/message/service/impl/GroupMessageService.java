@@ -4,8 +4,8 @@ import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
-import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.account.init.WeixinConfigInit;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.media.bean.WxMedia;
 import com.fantasy.wx.media.service.IMediaService;
 import com.fantasy.wx.message.bean.GroupMessage;
@@ -95,7 +95,7 @@ public class GroupMessageService implements IGroupMessageService {
         return sendOpenIdMessage(message);
     }
     @Override
-    public int sendNewsOpenIdMessage(List<String> openid,GroupNews news) throws  IOException, WxException {
+    public int sendNewsOpenIdMessage(List<String> openid,GroupNews news) throws  IOException, WeiXinException {
         WxMpMassOpenIdsMessage message=createOpenIdsMessage(openid, WxConsts.MASS_MSG_NEWS);
         try {
             //上传图文素材
@@ -115,7 +115,7 @@ public class GroupMessageService implements IGroupMessageService {
         return sendGroupMessage(groupM);
     }
     @Override
-    public int sendNewsGroupMessage(Long groupId,GroupNews news) throws IOException, WxException {
+    public int sendNewsGroupMessage(Long groupId,GroupNews news) throws IOException, WeiXinException {
         WxMpMassGroupMessage message = createGroupMessage(groupId, WxConsts.MASS_MSG_TEXT);
         try {
             //上传图文素材
@@ -130,7 +130,7 @@ public class GroupMessageService implements IGroupMessageService {
 
     }
 
-    public WxMpMassUploadResult uploadNews(GroupNews news) throws IOException, WxErrorException, WxException {
+    public WxMpMassUploadResult uploadNews(GroupNews news) throws IOException, WxErrorException, WeiXinException {
         groupNewsDao.save(news);
         //生成第三方库的群发对象
         WxMpMassNews massNews=new WxMpMassNews();

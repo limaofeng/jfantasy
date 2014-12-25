@@ -1,6 +1,6 @@
 package com.fantasy.wx.handler;
 
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.user.service.impl.UserInfoService;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -21,7 +21,7 @@ public class FoucsHandler implements WxMpMessageHandler {
     public WxMpXmlOutMessage handle(WxMpXmlMessage wxMessage, Map<String, Object> context,WxMpService service) {
         try {
             userInfoService.refresh(wxMessage.getToUserName());
-        } catch (WxException e) {
+        } catch (WeiXinException e) {
             e.printStackTrace();
         }
         WxMpXmlOutTextMessage m = WxMpXmlOutMessage.TEXT()

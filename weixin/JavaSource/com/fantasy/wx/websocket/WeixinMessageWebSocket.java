@@ -1,7 +1,7 @@
 package com.fantasy.wx.websocket;
 
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.message.bean.Message;
 import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.service.impl.UserInfoService;

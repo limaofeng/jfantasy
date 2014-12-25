@@ -3,7 +3,7 @@ package com.fantasy.wx.media.service;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.media.bean.WxMedia;
 
 import java.io.IOException;
@@ -46,16 +46,16 @@ public interface IMediaService {
      * @param fileDetail 系统文件对象
      * @param type 微信上传类型
      * @throws IOException io异常
-     * @throws WxException 微信异常
+     * @throws com.fantasy.wx.exception.WeiXinException 微信异常
      */
-    public WxMedia mediaUpload(FileDetail fileDetail,String type) throws IOException, WxException;
+    public WxMedia mediaUpload(FileDetail fileDetail,String type) throws IOException, WeiXinException;
 
     /**
      * 下载文件到系统
      * @param mediaId 微信文件id
      * @param dir 系统fileManagerId
      * @return 系统文件对象
-     * @throws WxException
+     * @throws com.fantasy.wx.exception.WeiXinException
      */
-    public FileDetail mediaDownload(String mediaId,String dir) throws WxException;
+    public FileDetail mediaDownload(String mediaId,String dir) throws WeiXinException;
 }

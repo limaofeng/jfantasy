@@ -7,7 +7,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.wx.config.init.WeixinConfigInit;
+import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.media.service.impl.WxMediaServiceTest;
 import com.fantasy.wx.message.bean.GroupMessage;
 import com.fantasy.wx.message.bean.GroupNews;

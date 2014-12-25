@@ -5,6 +5,7 @@ import me.chanjar.weixin.mp.api.WxMpMessageInterceptor;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
  * 消息处理
  * Created by zzzhong on 2014/12/8.
  */
+@Component
 public class WeixinMessageHandler implements WxMpMessageHandler {
 
     private List<WxMpMessageInterceptor> interceptors = new ArrayList<WxMpMessageInterceptor>();

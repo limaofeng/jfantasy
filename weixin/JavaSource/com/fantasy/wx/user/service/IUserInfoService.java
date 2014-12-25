@@ -2,7 +2,7 @@ package com.fantasy.wx.user.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.user.bean.UserInfo;
 import me.chanjar.weixin.common.exception.WxErrorException;
 
@@ -54,7 +54,7 @@ public interface IUserInfoService {
     /**
      * 刷新粉丝列表
      */
-    public void refresh() throws  WxException;
+    public void refresh() throws WeiXinException;
 
     /**
      * 刷新用户对象
@@ -62,7 +62,7 @@ public interface IUserInfoService {
      * @param openId
      * @throws WxErrorException
      */
-    public UserInfo refresh(String openId) throws WxException;
+    public UserInfo refresh(String openId) throws WeiXinException;
 
     /**
      * 删除用户对象

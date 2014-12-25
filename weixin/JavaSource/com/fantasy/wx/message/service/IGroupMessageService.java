@@ -2,7 +2,7 @@ package com.fantasy.wx.message.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.bean.GroupMessage;
 import com.fantasy.wx.message.bean.GroupNews;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -84,9 +84,9 @@ public interface IGroupMessageService {
      * @param news 群发图文消息
      * @return 微信返回码0为成功其他为错误码，可参考微信公众平台开发文档
      * @throws IOException 上传图片失败的io异常
-     * @throws WxException 微信异常
+     * @throws com.fantasy.wx.exception.WeiXinException 微信异常
      */
-    public int sendNewsOpenIdMessage(List<String> openid,GroupNews news) throws IOException, WxException;
+    public int sendNewsOpenIdMessage(List<String> openid,GroupNews news) throws IOException, WeiXinException;
     /**
      * 分组群发，发送文本消息
      *
@@ -102,7 +102,7 @@ public interface IGroupMessageService {
      * @param news 群发图文消息
      * @return 微信返回码0为成功其他为错误码，可参考微信公众平台开发文档
      */
-    public int sendNewsGroupMessage(Long groupId,GroupNews news) throws IOException, WxException;
+    public int sendNewsGroupMessage(Long groupId,GroupNews news) throws IOException, WeiXinException;
 
     /**
      * 上传图文消息
@@ -110,7 +110,7 @@ public interface IGroupMessageService {
      * @return 上传图文消息的返回对象
      * @throws IOException 文件上传io异常
      * @throws WxErrorException 上传素材的异常
-     * @throws WxException 上传图片的异常
+     * @throws com.fantasy.wx.exception.WeiXinException 上传图片的异常
      */
-    public WxMpMassUploadResult uploadNews(GroupNews news) throws IOException, WxErrorException, WxException;
+    public WxMpMassUploadResult uploadNews(GroupNews news) throws IOException, WxErrorException, WeiXinException;
 }

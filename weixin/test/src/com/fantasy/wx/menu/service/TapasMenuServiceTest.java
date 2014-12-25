@@ -3,7 +3,8 @@ package com.fantasy.wx.menu.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.menu.bean.WxMenu;
+import com.fantasy.wx.bean.WxMenu;
+import com.fantasy.wx.service.MenuService;
 import junit.framework.Assert;
 import me.chanjar.weixin.common.api.WxConsts;
 import org.apache.commons.logging.Log;
@@ -12,10 +13,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,8 +24,9 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class TapasMenuServiceTest {
     private static final Log logger = LogFactory.getLog(WxMenu.class);
-    @Resource
-    private IMenuService iMenuService;
+
+    @Autowired
+    private MenuService iMenuService;
 
     @Before
     public void setUp() throws Exception {

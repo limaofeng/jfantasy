@@ -8,8 +8,8 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.account.init.WeixinConfigInit;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.media.bean.WxMedia;
 import com.fantasy.wx.media.dao.WxMediaDao;
 import com.fantasy.wx.media.service.IMediaService;
@@ -59,7 +59,7 @@ public class WxMediaService implements IMediaService {
         }
     }
 
-    public WxMedia mediaUpload(FileDetail fileDetail,String type) throws IOException, WxException {
+    public WxMedia mediaUpload(FileDetail fileDetail,String type) throws IOException, WeiXinException {
         WxMedia media=null;
         InputStream inputStream=factory.getFileManager(fileDetail.getFileManagerId()).readFile(fileDetail.getAbsolutePath());
         try {
@@ -67,11 +67,11 @@ public class WxMediaService implements IMediaService {
             media=BeanUtil.copyProperties(new WxMedia(),uploadMediaRes);
             this.wxMediaDao.save(media);
         } catch (WxErrorException e) {
-            throw WxException.wxExceptionBuilder(e);
+            throw WeiXinException.wxExceptionBuilder(e);
         }
         return media;
     }
-    public FileDetail mediaDownload(String mediaId,String dir) throws WxException {
+    public FileDetail mediaDownload(String mediaId,String dir) throws WeiXinException {
         FileDetail fileDetail=null;
         File file=null;
         try {
@@ -79,7 +79,7 @@ public class WxMediaService implements IMediaService {
             String rename=Long.toString(new Date().getTime())+Integer.toString(new Random().nextInt(900000)+100000)+"."+ WebUtil.getExtension(file.getName());
             fileDetail=fileUploadService.upload(file, FileUtil.getMimeType(file),rename,dir);
         } catch (WxErrorException e) {
-            throw WxException.wxExceptionBuilder(e);
+            throw WeiXinException.wxExceptionBuilder(e);
         } catch (IOException e) {
             e.printStackTrace();
         }finally {

@@ -2,7 +2,7 @@ package com.fantasy.wx.user.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.user.bean.WxGroup;
 
 import java.util.List;
@@ -81,7 +81,7 @@ public interface IGroupService {
      * @return groupid
      * @throws
      */
-    public Long getUserGroup(String openId) throws WxException;
+    public Long getUserGroup(String openId) throws WeiXinException;
 
     /**
      * 移动分组

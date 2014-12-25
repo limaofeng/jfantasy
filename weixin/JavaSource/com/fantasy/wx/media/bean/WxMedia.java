@@ -1,6 +1,5 @@
 package com.fantasy.wx.media.bean;
 
-import com.fantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

@@ -3,8 +3,8 @@ package com.fantasy.wx.user.service.impl;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
-import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.account.init.WeixinConfigInit;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.user.bean.UserInfo;
 import com.fantasy.wx.user.bean.WxGroup;
 import com.fantasy.wx.user.dao.UserInfoDao;
@@ -108,11 +108,11 @@ public class WxGroupService implements IGroupService {
     }
 
     @Override
-    public Long getUserGroup(String openId) throws WxException {
+    public Long getUserGroup(String openId) throws WeiXinException {
         try{
             return weixinConfigInit.getUtil().userGetGroup(openId);
         }catch (WxErrorException e){
-            throw WxException.wxExceptionBuilder(e);
+            throw WeiXinException.wxExceptionBuilder(e);
         }
     }
 

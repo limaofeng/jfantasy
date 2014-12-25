@@ -7,8 +7,8 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.wx.config.init.WeixinConfigInit;
-import com.fantasy.wx.exception.WxException;
+import com.fantasy.wx.account.init.WeixinConfigInit;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.bean.Message;
 import com.fantasy.wx.message.dao.MessageDao;
 import com.fantasy.wx.message.service.IMessageService;
@@ -86,7 +86,7 @@ public class MessageService implements IMessageService {
         return message;
     }
 
-    public Message saveByType(Message message) throws WxException {
+    public Message saveByType(Message message) throws WeiXinException {
         String dir=message.getMsgType()+"Wx";
         String media=null;
         if(message.getMsgType().equals("video")){
@@ -104,7 +104,7 @@ public class MessageService implements IMessageService {
         return message;
     }
 
-    public FileDetail getMedia(String mediaId,String dir) throws WxException {
+    public FileDetail getMedia(String mediaId,String dir) throws WeiXinException {
         FileDetail fileDetail=null;
         File file=null;
 
@@ -113,7 +113,7 @@ public class MessageService implements IMessageService {
             String rename=Long.toString(new Date().getTime())+Integer.toString(new Random().nextInt(900000)+100000)+"."+ WebUtil.getExtension(file.getName());
             fileDetail=fileUploadService.upload(file, FileUtil.getMimeType(file),rename,dir);
         } catch (WxErrorException e) {
-            throw WxException.wxExceptionBuilder(e);
+            throw WeiXinException.wxExceptionBuilder(e);
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
