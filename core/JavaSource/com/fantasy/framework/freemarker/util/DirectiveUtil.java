@@ -1,21 +1,18 @@
 package com.fantasy.framework.freemarker.util;
 
+import freemarker.template.*;
+import freemarker.template.utility.DeepUnwrap;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.apache.log4j.Logger;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateUtils;
-
-import freemarker.template.TemplateBooleanModel;
-import freemarker.template.TemplateDateModel;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import freemarker.template.TemplateNumberModel;
-import freemarker.template.TemplateScalarModel;
-import freemarker.template.utility.DeepUnwrap;
-
 public class DirectiveUtil {
+
+	private static final Logger LOG = Logger.getLogger(DirectiveUtil.class);
 
 	/**
 	 * 获取String类型的参数值
@@ -103,7 +100,7 @@ public class DirectiveUtil {
 				String[] pattern = new String[]{"yyyy-MM","yyyyMM","yyyy/MM", "yyyyMMdd","yyyy-MM-dd","yyyy/MM/dd", "yyyyMMddHHmmss", "yyyy-MM-dd HH:mm:ss", "yyyy/MM/dd HH:mm:ss"};
 				return DateUtils.parseDate(value, pattern);
 			} catch (ParseException e) {
-				e.printStackTrace();
+				LOG.error(e.getMessage(),e);
 				return null;
 			}
 		} else if ((templateModel instanceof TemplateDateModel)) {

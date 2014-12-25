@@ -1,12 +1,18 @@
 package com.fantasy.framework.util.reflect;
 
 import com.fantasy.framework.util.common.JavassistUtil;
+import javassist.NotFoundException;
 import net.sf.cglib.reflect.FastMethod;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 public class MethodProxy {
+
+    private final static Log LOG = LogFactory.getLog(MethodProxy.class);
+
     private Object method;
     private Class<?>[] parameterTypes;
     private Class<?> returnType;
@@ -45,19 +51,18 @@ public class MethodProxy {
                 }
                 return ((FastMethod) this.method).invoke(object, params);
             }
-
             if (params.length > 0) {
                 return ((Method) this.method).invoke(object, params);
             }
             return ((Method) this.method).invoke(object, params);
         } catch (IllegalArgumentException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
             return null;
         } catch (IllegalAccessException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
             return null;
         } catch (InvocationTargetException e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
@@ -94,8 +99,10 @@ public class MethodProxy {
             Class<?> declaringClass = ((Method) this.method).getDeclaringClass();
             Method method = (Method) this.method;
             return JavassistUtil.getParamNames(declaringClass.getName(), method.getName(), this.parameterTypes);
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (NotFoundException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (JavassistUtil.MissingLVException e) {
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }

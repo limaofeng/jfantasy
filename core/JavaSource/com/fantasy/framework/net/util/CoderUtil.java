@@ -1,5 +1,7 @@
 package com.fantasy.framework.net.util;
 
+import org.apache.log4j.Logger;
+
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
@@ -14,6 +16,9 @@ import java.nio.charset.Charset;
  * <li>修改日期：
  */
 public class CoderUtil {
+
+	private static final Logger LOG = Logger.getLogger(CoderUtil.class);
+
 	public static final char BEGIN_CHAR = 0x00;// 开始字符
 	public static final char END_CHAR = 0xFF;// 结束字符
 	public static final String BEGIN_MSG = String.valueOf(BEGIN_CHAR);// 消息开始
@@ -56,7 +61,7 @@ public class CoderUtil {
 			try {
 				return str.getBytes(UTF8);
 			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
+				LOG.error(e.getMessage(), e);
 				return null;
 			}
 		}
@@ -102,6 +107,7 @@ public class CoderUtil {
 		try {
 			return new String(bb,charset.displayName());
 		} catch (UnsupportedEncodingException e) {
+			LOG.error(e.getMessage(),e);
 			return "";
 		}
 	}
@@ -124,11 +130,11 @@ public class CoderUtil {
 		long res = 0;
 		int byteslen = b.length;
 		if (byteslen > 8) {
-			return Long.valueOf(0L);
+			return 0L;
 		}
-		for (int i = 0; i < byteslen; i++) {
+		for (byte aB : b) {
 			res <<= 8;
-			temp = b[i] & mask;
+			temp = aB & mask;
 			res |= temp;
 		}
 		return res;

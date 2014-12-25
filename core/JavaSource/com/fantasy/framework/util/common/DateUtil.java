@@ -307,20 +307,25 @@ public class DateUtil {
             case Calendar.YEAR:
                 smallCalendar.clear(Calendar.MONTH);
                 bigCalendar.clear(Calendar.MONTH);
+                break;
             case Calendar.MONTH:
                 smallCalendar.clear(Calendar.DATE);
                 bigCalendar.clear(Calendar.DATE);
+                break;
             case Calendar.DATE:
                 smallCalendar.clear(Calendar.HOUR);
                 smallCalendar.clear(Calendar.HOUR_OF_DAY);
                 bigCalendar.clear(Calendar.HOUR);
                 bigCalendar.clear(Calendar.HOUR_OF_DAY);
+                break;
             case Calendar.HOUR_OF_DAY:
                 smallCalendar.clear(Calendar.MINUTE);
                 bigCalendar.clear(Calendar.MINUTE);
+                break;
             case Calendar.MINUTE:
                 smallCalendar.clear(Calendar.SECOND);
                 bigCalendar.clear(Calendar.SECOND);
+                break;
             default:
                 smallCalendar.clear(Calendar.MILLISECOND);
                 bigCalendar.clear(Calendar.MILLISECOND);
@@ -350,19 +355,25 @@ public class DateUtil {
         long day = Calendar.DATE == field ? field : 0, hour = (field == Calendar.HOUR_OF_DAY || field == Calendar.HOUR) ? between : 0, minute = (field == Calendar.MINUTE) ? between : 0, second = (field == Calendar.SECOND) ? between : 0;
         switch (field) {
             case Calendar.DATE:
+                break;
             case Calendar.MONTH:
+                break;
             case Calendar.YEAR:
                 throw new RuntimeException("不支持的时间转换格式:" + field);
             case Calendar.SECOND:
                 minute = second / 60;
                 second = second % 60;
+                break;
             case Calendar.MINUTE:
                 hour = minute / 60;
                 minute = minute % 60;
+                break;
             case Calendar.HOUR_OF_DAY:
+                break;
             case Calendar.HOUR:
                 day = hour / 24;
                 hour = hour % 24;
+                break;
         }
         final String _day = String.valueOf(day), _hour = String.valueOf(hour), _minute = String.valueOf(minute), _second = String.valueOf(second);
         String retVal = RegexpUtil.replace(format, "dd|HH|mm|ss", new RegexpUtil.AbstractReplaceCallBack() {

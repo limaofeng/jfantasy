@@ -55,7 +55,7 @@ public class PathUtil {
                 url = PathUtil.getClassLocationURL(PathUtil.class);
                 if ("jar".equalsIgnoreCase(url.getProtocol())) {
                     String path = PathUtil.getPathFromClass(PathUtil.class);
-                    if(path.contains("WEB-INF")) {
+                    if (path.contains("WEB-INF")) {
                         PathUtil.WEBROOT_PATH = RegexpUtil.replace(path.substring(0, path.lastIndexOf("WEB-INF")), "[\\/]$", "");
                         PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "/WEB-INF";
                         PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "/classes";
@@ -135,7 +135,7 @@ public class PathUtil {
             try {
                 path = file.getCanonicalPath();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
         return path;

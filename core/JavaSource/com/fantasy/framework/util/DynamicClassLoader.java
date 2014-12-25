@@ -1,14 +1,14 @@
 package com.fantasy.framework.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 /**
  * 动态类加载器
@@ -42,9 +42,9 @@ public class DynamicClassLoader extends ClassLoader {
 			byte[] classData = buffer.toByteArray();
 			return defineClass(noSuffix(className), classData, 0, classData.length);
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error(e.getMessage(),e);
 		}
 		return null;
 	}

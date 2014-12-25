@@ -72,6 +72,11 @@ public class View extends AbstractBuffer {
         return (this == obj) || (((obj instanceof Buffer)) && (obj.equals(this))) || (super.equals(obj));
     }
 
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
     public boolean isReadOnly() {
         return this._buffer.isReadOnly();
     }

@@ -1,17 +1,13 @@
 package com.fantasy.framework.util.xml;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.dom4j.*;
+import org.dom4j.io.SAXReader;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.ProcessingInstruction;
-import org.dom4j.VisitorSupport;
-import org.dom4j.io.SAXReader;
 
 public final class Dom4jUtil {
 
@@ -54,12 +50,6 @@ public final class Dom4jUtil {
 		for (Element e : childNodes) {
 			readNode(e, prefix);
 		}
-	}
-
-	public static void main(String[] args) {
-		Document document = Dom4jUtil.reader(Dom4jUtil.class.getResourceAsStream("test.xml"));
-		document.accept(new MyVistor()) ;  
-//		Dom4jUtil.readNode(document.getRootElement(), "");
 	}
 
 	public static class MyVistor extends VisitorSupport {

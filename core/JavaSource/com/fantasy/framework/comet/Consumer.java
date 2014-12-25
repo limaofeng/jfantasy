@@ -1,11 +1,15 @@
 package com.fantasy.framework.comet;
 
+import com.fantasy.framework.util.common.DateUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Date;
 import java.util.concurrent.BlockingQueue;
 
-import com.fantasy.framework.util.common.DateUtil;
-
 class Consumer implements Runnable {
+
+	private final static Log LOG = LogFactory.getLog(Consumer.class);
 
 	private BlockingQueue<String> drop;
 
@@ -20,8 +24,8 @@ class Consumer implements Runnable {
 				Thread.sleep(1500L);
 				System.out.println(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss SSS") + "\t" + msg);
 			}
-		} catch (Exception intEx) {
-			intEx.printStackTrace();
+		} catch (Exception e) {
+			LOG.error(e.getMessage(),e);
 		}
 	}
 

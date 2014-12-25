@@ -1,9 +1,9 @@
 package com.fantasy.framework.log.interceptor;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.Collection;
-
+import com.fantasy.framework.log.LogManager;
+import com.fantasy.framework.log.annotation.CompositeLogOperationSource;
+import com.fantasy.framework.log.annotation.LogOperation;
+import com.fantasy.framework.log.annotation.LogOperationSource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.aop.framework.AopProxyUtils;
@@ -16,133 +16,129 @@ import org.springframework.util.ClassUtils;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import com.fantasy.framework.log.LogManager;
-import com.fantasy.framework.log.annotation.CompositeLogOperationSource;
-import com.fantasy.framework.log.annotation.LogOperation;
-import com.fantasy.framework.log.annotation.LogOperationSource;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class LogAspectSupport implements InitializingBean {
 
-	public interface Invoker {
-		Object invoke();
-	}
+    public interface Invoker {
+        Object invoke();
+    }
 
-	private final ExpressionEvaluator evaluator = new ExpressionEvaluator();
+    private final ExpressionEvaluator evaluator = new ExpressionEvaluator();
 
-	private LogOperationSource logOperationSource;
+    private LogOperationSource logOperationSource;
 
-	protected final Log logger = LogFactory.getLog(getClass());
+    protected final Log logger = LogFactory.getLog(getClass());
 
-	private LogManager logManager;
+    private LogManager logManager;
 
-	private KeyGenerator keyGenerator = new DefaultKeyGenerator();
+    private KeyGenerator keyGenerator = new DefaultKeyGenerator();
 
-	private boolean initialized = false;
+    private boolean initialized = false;
 
-	public void setLogManager(LogManager logManager) {
-		this.logManager = logManager;
-	}
+    public void setLogManager(LogManager logManager) {
+        this.logManager = logManager;
+    }
 
-	public LogManager getLogManager() {
-		return this.logManager;
-	}
+    public LogManager getLogManager() {
+        return this.logManager;
+    }
 
-	public void setKeyGenerator(KeyGenerator keyGenerator) {
-		this.keyGenerator = keyGenerator;
-	}
+    public void setKeyGenerator(KeyGenerator keyGenerator) {
+        this.keyGenerator = keyGenerator;
+    }
 
-	public KeyGenerator getKeyGenerator() {
-		return this.keyGenerator;
-	}
+    public KeyGenerator getKeyGenerator() {
+        return this.keyGenerator;
+    }
 
-	public void afterPropertiesSet() {
-		// if (this.logManager == null) {
-		// throw new IllegalStateException("'logManager' is required");
-		// }
-		this.initialized = true;
-	}
+    public void afterPropertiesSet() {
+        if (this.logManager == null) {
+            throw new IllegalStateException("'logManager' is required");
+        }
+        this.initialized = true;
+    }
 
-	public void setLogOperationSources(LogOperationSource... logOperationSources) {
-		Assert.notEmpty(logOperationSources);
-		this.logOperationSource = (logOperationSources.length > 1 ? new CompositeLogOperationSource(logOperationSources) : logOperationSources[0]);
-	}
+    public void setLogOperationSources(LogOperationSource... logOperationSources) {
+        Assert.notEmpty(logOperationSources);
+        this.logOperationSource = (logOperationSources.length > 1 ? new CompositeLogOperationSource(logOperationSources) : logOperationSources[0]);
+    }
 
-	protected String methodIdentification(Method method, Class<?> targetClass) {
-		Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
-		return ClassUtils.getQualifiedMethodName(specificMethod);
-	}
+    protected String methodIdentification(Method method, Class<?> targetClass) {
+        Method specificMethod = ClassUtils.getMostSpecificMethod(method, targetClass);
+        return ClassUtils.getQualifiedMethodName(specificMethod);
+    }
 
-	public LogOperationSource getLogOperationSource() {
-		return this.logOperationSource;
-	}
+    public LogOperationSource getLogOperationSource() {
+        return this.logOperationSource;
+    }
 
-	protected Object execute(Invoker invoker, Object target, Method method, Object[] args) {
-		if (!this.initialized) {
-			return invoker.invoke();
-		}
-		Class<?> targetClass = AopProxyUtils.ultimateTargetClass(target);
-		if (targetClass == null && target != null) {
-			targetClass = target.getClass();
-		}
-		final Collection<LogOperation> logOp = getLogOperationSource().getOperations(method, targetClass);
-		if (!CollectionUtils.isEmpty(logOp)) {
-			Collection<LogOperationContext> ops = createOperationContext(logOp, method, args, target, targetClass);
-			for(LogOperationContext context : ops){
-				System.out.println("Log Info : " + context.isConditionPassing() + " - " +  context.text());
-			}
-		}
-		return invoker.invoke();
-	}
+    protected Object execute(Invoker invoker, Object target, Method method, Object[] args) {
+        if (!this.initialized) {
+            return invoker.invoke();
+        }
+        Class<?> targetClass = AopProxyUtils.ultimateTargetClass(target);
+        if (targetClass == null) {
+            targetClass = target.getClass();
+        }
+        final Collection<LogOperation> logOp = getLogOperationSource().getOperations(method, targetClass);
+        if (!CollectionUtils.isEmpty(logOp)) {
+            Collection<LogOperationContext> ops = createOperationContext(logOp, method, args, target, targetClass);
+            for (LogOperationContext context : ops) {
+                System.out.println("Log Info : " + context.isConditionPassing() + " - " + context.text());
+            }
+        }
+        return invoker.invoke();
+    }
 
-	private Collection<LogOperationContext> createOperationContext(Collection<LogOperation> logOp, Method method, Object[] args, Object target, Class<?> targetClass) {
-		Collection<LogOperationContext> logables = new ArrayList<LogOperationContext>();
+    private Collection<LogOperationContext> createOperationContext(Collection<LogOperation> logOp, Method method, Object[] args, Object target, Class<?> targetClass) {
+        Collection<LogOperationContext> logables = new ArrayList<LogOperationContext>();
 
-		for (LogOperation logOperation : logOp) {
-			LogOperationContext opContext = getOperationContext(logOperation, method, args, target, targetClass);
-			logables.add(opContext);
-		}
+        for (LogOperation logOperation : logOp) {
+            LogOperationContext opContext = getOperationContext(logOperation, method, args, target, targetClass);
+            logables.add(opContext);
+        }
 
-		return logables;
-	}
+        return logables;
+    }
 
-	protected LogOperationContext getOperationContext(LogOperation operation, Method method, Object[] args, Object target, Class<?> targetClass) {
-		return new LogOperationContext(operation, method, args, target, targetClass);
-	}
+    protected LogOperationContext getOperationContext(LogOperation operation, Method method, Object[] args, Object target, Class<?> targetClass) {
+        return new LogOperationContext(operation, method, args, target, targetClass);
+    }
 
-	protected class LogOperationContext {
+    protected class LogOperationContext {
 
-		private final LogOperation operation;
+        private final LogOperation operation;
 
-		private final Object target;
+        private final Object target;
 
-		private final Method method;
+        private final Method method;
 
-		private final Object[] args;
+        private final Object[] args;
 
-		private final EvaluationContext evalContext;
+        private final EvaluationContext evalContext;
 
-		public LogOperationContext(LogOperation operation, Method method, Object[] args, Object target, Class<?> targetClass) {
-			this.operation = operation;
-			this.target = target;
-			this.method = method;
-			this.args = args;
+        public LogOperationContext(LogOperation operation, Method method, Object[] args, Object target, Class<?> targetClass) {
+            this.operation = operation;
+            this.target = target;
+            this.method = method;
+            this.args = args;
 
-			this.evalContext = evaluator.createEvaluationContext(method, args, target, targetClass);
-		}
+            this.evalContext = evaluator.createEvaluationContext(method, args, target, targetClass);
+        }
 
-		protected boolean isConditionPassing() {
-			if (StringUtils.hasText(this.operation.getCondition())) {
-				return evaluator.condition(this.operation.getCondition(), this.method, this.evalContext);
-			}
-			return true;
-		}
+        protected boolean isConditionPassing() {
+            return !StringUtils.hasText(this.operation.getCondition()) || evaluator.condition(this.operation.getCondition(), this.method, this.evalContext);
+        }
 
-		protected Object text() {
-			if (StringUtils.hasText(this.operation.getText())) {
-				return evaluator.key(this.operation.getText(), this.method, this.evalContext);
-			}
-			return keyGenerator.generate(this.target, this.method, this.args);
-		}
-	}
+        protected Object text() {
+            if (StringUtils.hasText(this.operation.getText())) {
+                return evaluator.key(this.operation.getText(), this.method, this.evalContext);
+            }
+            return keyGenerator.generate(this.target, this.method, this.args);
+        }
+    }
 
 }

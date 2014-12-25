@@ -464,7 +464,7 @@ public final class ImageUtil {
     }
 
     public static PicsModel getFileAttributes(byte[] content) {
-        PicsModel model = null;
+        PicsModel model;
         String picextendname;
         int k = content.length;
         // 不想处理的话，请直接获取其字节数
@@ -753,20 +753,15 @@ public final class ImageUtil {
      * @return
      */
     public static BufferedImage screenshots(BufferedImage img, int x, int y, int w, int h) {
-        try {
-            if (logger.isDebugEnabled())
-                logger.debug("Method:screenshots,param:{x:" + x + ",y:" + y + ",w:" + w + ",h:" + h + "}");
-            ImageFilter cropFilter = new CropImageFilter(x, y, w, h);
-            Image newImg = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(img.getSource(), cropFilter));
-            BufferedImage tag = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-            Graphics g = tag.getGraphics();
-            g.drawImage(newImg, 0, 0, imageObserver);
-            g.dispose();
-            return tag;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        if (logger.isDebugEnabled())
+            logger.debug("Method:screenshots,param:{x:" + x + ",y:" + y + ",w:" + w + ",h:" + h + "}");
+        ImageFilter cropFilter = new CropImageFilter(x, y, w, h);
+        Image newImg = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(img.getSource(), cropFilter));
+        BufferedImage tag = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        Graphics g = tag.getGraphics();
+        g.drawImage(newImg, 0, 0, imageObserver);
+        g.dispose();
+        return tag;
     }
 
     /**
@@ -791,6 +786,7 @@ public final class ImageUtil {
 
     /**
      * 获取base64位编码的字符串 转换为图片对象
+     *
      * @param base64
      * @return BufferedImage
      */

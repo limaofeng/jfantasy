@@ -1,27 +1,27 @@
 package com.fantasy.framework.dao.mybatis.keygen;
 
-import java.sql.Statement;
-
-import ognl.Ognl;
-import ognl.OgnlException;
-
-import org.apache.ibatis.executor.Executor;
-import org.apache.ibatis.executor.keygen.KeyGenerator;
-import org.apache.ibatis.mapping.MappedStatement;
-
 import com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import ognl.Ognl;
+import ognl.OgnlException;
+import org.apache.ibatis.executor.Executor;
+import org.apache.ibatis.executor.keygen.KeyGenerator;
+import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.log4j.Logger;
+
+import java.sql.Statement;
 
 /**
  * 序列生成器
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-1-14 下午02:08:52
  * @version 1.0
  */
 public class SequenceKeyGenerator implements KeyGenerator {
+
+	private static final Logger LOG = Logger.getLogger(SequenceKeyGenerator.class);
 
 	private DataBaseKeyGenerator dataBaseKeyGenerator;
 
@@ -31,7 +31,7 @@ public class SequenceKeyGenerator implements KeyGenerator {
 			try {
 				Ognl.setValue(keyProperties[0], paramObject, Long.valueOf(getKeyGenerator().nextValue(paramObject.getClass().getName())));
 			} catch (OgnlException e) {
-				e.printStackTrace();
+				LOG.error(e.getMessage(), e);
 			}
 	}
 

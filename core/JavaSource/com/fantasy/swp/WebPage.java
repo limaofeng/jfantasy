@@ -1,12 +1,14 @@
 package com.fantasy.swp;
 
+import com.fantasy.swp.util.DataMap;
+import freemarker.template.Configuration;
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 
-import com.fantasy.swp.util.DataMap;
-
-import freemarker.template.Configuration;
-
 public class WebPage {
+
+	private static final Logger LOG = Logger.getLogger(WebPage.class);
 
 	private String name;
 	
@@ -24,7 +26,7 @@ public class WebPage {
 		try {
 			this.pageWriter.execute(freemarkerManager.getTemplate(this.template), this.data);
 		} catch (IOException e) {
-			e.printStackTrace();
+			LOG.error(e.getMessage(),e);
 		}
 	}
 	

@@ -494,6 +494,7 @@ public abstract class StringUtil {
         return s;
     }
 
+    /*
     public static boolean equals(String s, char[] buf, int offset, int length) {
         if (s.length() != length)
             return false;
@@ -501,7 +502,7 @@ public abstract class StringUtil {
             if (buf[(offset + i)] != s.charAt(i))
                 return false;
         return true;
-    }
+    }*/
 
     public static String toUTF8String(byte[] b, int offset, int length) {
         try {

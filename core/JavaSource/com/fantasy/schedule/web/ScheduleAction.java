@@ -10,7 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
 
 import javax.annotation.Resource;
-import java.io.UnsupportedEncodingException;
+import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
@@ -95,7 +95,7 @@ public class ScheduleAction extends ActionSupport {
      *
      * @throws org.quartz.SchedulerException
      */
-    public String executeOnce(String group,String name) throws SchedulerException {
+    public String executeOnce(String group, String name) throws SchedulerException {
 //        Trigger trigger = newTrigger().
 //                withIdentity(name + UUID.randomUUID().toString(), group).
 //                withPriority(100).
@@ -163,23 +163,16 @@ public class ScheduleAction extends ActionSupport {
      * @return {String}
      * @throws org.quartz.SchedulerException
      */
-    public String editSave() throws SchedulerException {
+    @Deprecated
+    public String editSave() throws SchedulerException, IOException {
         Map<String, String> resultMap = new HashMap<String, String>();
         String queryGroup = request.getParameter("queryGroup");
         String queryJobName = request.getParameter("queryJobName");
         if (queryGroup != null && !"".equals(queryGroup)) {
-            try {
-                queryGroup = URLEncoder.encode(queryGroup, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            queryGroup = URLEncoder.encode(queryGroup, "UTF-8");
         }
         if (queryJobName != null && !"".equals(queryJobName)) {
-            try {
-                queryJobName = URLEncoder.encode(queryJobName, "UTF-8");
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
+            queryJobName = URLEncoder.encode(queryJobName, "UTF-8");
         }
         String jobKey = request.getParameter("jobKey").trim();
         String triggerType = request.getParameter("triggerType").trim();
