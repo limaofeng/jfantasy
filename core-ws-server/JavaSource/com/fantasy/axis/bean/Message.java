@@ -22,11 +22,22 @@ public class Message extends BaseBusEntity {
         /**
          * 客户端调用
          */
-        client,
+        client("客户端调用"),
         /**
          * 服务端响应
          */
-        server
+        server("服务端响应");
+
+        private String value;
+
+        private Type(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+
     }
 
     /**
@@ -36,11 +47,20 @@ public class Message extends BaseBusEntity {
         /**
          * 正常
          */
-        normal,
+        normal("正常"),
         /**
          * 调用出错
          */
-        fault
+        fault("调用出错");
+        private String value;
+
+        private ResultType(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
     }
 
     @Id
