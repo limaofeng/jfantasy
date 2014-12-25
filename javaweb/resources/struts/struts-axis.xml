@@ -17,6 +17,7 @@
             <result type="freemarker">/template/%{pageTheme}/axis/message_view.ftl</result>
         </action>
 
+        <action name="delete" class="com.fantasy.axis.web.MessageAction" method="delete" />
     </package>
 
 

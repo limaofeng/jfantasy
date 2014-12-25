@@ -90,4 +90,10 @@ public class MessageService {
         this.messageDao.save(message);
     }
 
+    public void delete(String... ids){
+        for(String id:ids){
+            this.messageDao.delete(id);
+        }
+    }
+
 }
