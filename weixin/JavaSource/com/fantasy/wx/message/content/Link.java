@@ -17,6 +17,12 @@ public class Link {
      */
     private String url;
 
+    public Link(String title, String description, String url) {
+        this.title = title;
+        this.description = description;
+        this.url = url;
+    }
+
     public String getTitle() {
         return title;
     }
@@ -39,5 +45,14 @@ public class Link {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @Override
+    public String toString() {
+        return "Link{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                '}';
     }
 }

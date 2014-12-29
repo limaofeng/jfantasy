@@ -1,8 +1,9 @@
 package com.fantasy.wx.factory;
 
-import com.fantasy.wx.WeiXinCoreHelper;
+import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.account.AccountDetailsService;
 import com.fantasy.wx.exception.WeiXinException;
+import com.fantasy.wx.message.WeiXinMessage;
 import com.fantasy.wx.session.WeiXinSession;
 
 public interface WeiXinSessionFactory {
@@ -36,5 +37,13 @@ public interface WeiXinSessionFactory {
      * @return AccountDetailsService
      */
     public AccountDetailsService getAccountDetailsService();
+
+    /**
+     * 处理接收到的请求
+     *
+     * @param message http response
+     * @return WeiXinMessage
+     */
+    public WeiXinMessage<?> execute(WeiXinMessage message) throws WeiXinException;
 
 }

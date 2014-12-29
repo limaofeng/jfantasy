@@ -1,8 +1,8 @@
-package com.fantasy.wx;
+package com.fantasy.wx.core;
 
 import com.fantasy.wx.exception.WeiXinException;
+import com.fantasy.wx.message.WeiXinMessage;
 import com.fantasy.wx.session.AccountDetails;
-import com.fantasy.wx.session.WeiXinSession;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,12 +21,21 @@ public interface WeiXinCoreHelper {
     /**
      * 解析接收到的消息
      *
-     * @param session session
      * @param request HTTP请求
      * @return WeiXinMessage
      * @throws WeiXinException
      */
-    public WeiXinMessage parse(WeiXinSession session, HttpServletRequest request) throws WeiXinException;
+    public WeiXinMessage parseInMessage(HttpServletRequest request) throws WeiXinException;
+
+    /**
+     * 构建回复的消息
+     *
+     * @param encryptType encryptType
+     * @param message     消息
+     * @return String
+     * @throws WeiXinException
+     */
+    public String buildOutMessage(String encryptType, WeiXinMessage message) throws WeiXinException;
 
     /**
      * 发送消息

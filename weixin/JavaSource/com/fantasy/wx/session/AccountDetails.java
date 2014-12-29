@@ -63,4 +63,11 @@ public interface AccountDetails {
      */
     public String getAesKey();
 
+    /**
+     * 原始ID 用户消息回复时的 formusername
+     *
+     * @return String
+     */
+    public String getPrimitiveId();
+
 }

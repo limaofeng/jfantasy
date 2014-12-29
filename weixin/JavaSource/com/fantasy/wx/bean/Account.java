@@ -17,6 +17,12 @@ public class Account extends BaseBusEntity implements AccountDetails {
     @Id
     @Column(name = "APP_ID", length = 200)
     private String appId;
+    /**
+     * 原始ID
+     */
+    @Column(name = "PRIMITIVE_ID", length = 200)
+    private String primitiveId;
+
     @Column(name = "APP_SECRET", length = 200)
     private String secret;
     /**
@@ -88,4 +94,12 @@ public class Account extends BaseBusEntity implements AccountDetails {
         this.name = name;
     }
 
+    @Override
+    public String getPrimitiveId() {
+        return primitiveId;
+    }
+
+    public void setPrimitiveId(String primitiveId) {
+        this.primitiveId = primitiveId;
+    }
 }

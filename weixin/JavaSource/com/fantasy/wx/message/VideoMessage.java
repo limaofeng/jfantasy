@@ -1,15 +1,16 @@
 package com.fantasy.wx.message;
 
-import com.fantasy.wx.message.content.Media;
+import com.fantasy.wx.message.content.Video;
+
+import java.util.Date;
 
 /**
  * 微信视频消息
  */
-public class VideoMessage extends AbstractWeiXinMessage<Media> {
+public class VideoMessage extends AbstractWeiXinMessage<Video> {
 
-    @Override
-    public Media getContent() {
-        return null;
+    public VideoMessage(Long id, String fromUserName, Date createTime) {
+        super(id, fromUserName, createTime);
     }
 
 }

@@ -49,6 +49,7 @@ public class AccountService implements AccountDetailsService {
         account.setType(AccountDetails.Type.service);
         account.setToken("haolue_token");
         account.setAesKey("tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6");
+        account.setPrimitiveId("gh_3d6114f11c71");
         /*
         List<Account> accounts = accountDao.getAll();
 

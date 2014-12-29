@@ -1,6 +1,7 @@
 package com.fantasy.wx.handler;
 
-import com.fantasy.wx.WeiXinMessage;
+import com.fantasy.wx.exception.WeiXinException;
+import com.fantasy.wx.message.WeiXinMessage;
 import com.fantasy.wx.session.WeiXinSession;
 
 public interface WeiXinHandler {
@@ -10,8 +11,8 @@ public interface WeiXinHandler {
      *
      * @param session 微信回话
      * @param message 微信消息
-     * @throws Exception
+     * @throws WeiXinException
      */
-    void handleMessage(WeiXinSession session, WeiXinMessage<?> message) throws Exception;
+    WeiXinMessage<?> handleMessage(WeiXinSession session, WeiXinMessage<?> message) throws WeiXinException;
 
 }

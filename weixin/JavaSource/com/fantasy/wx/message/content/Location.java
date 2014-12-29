@@ -5,6 +5,13 @@ package com.fantasy.wx.message.content;
  */
 public class Location {
 
+    public Location(Double x, Double y, Double scale, String label) {
+        this.x = x;
+        this.y = y;
+        this.scale = scale;
+        this.label = label;
+    }
+
     /**
      * 地理位置维度
      */
@@ -16,7 +23,7 @@ public class Location {
     /**
      * 地图缩放大小
      */
-    private int scale;
+    private Double scale;
     /**
      * 地理位置信息
      */
@@ -38,11 +45,11 @@ public class Location {
         this.y = y;
     }
 
-    public int getScale() {
+    public Double getScale() {
         return scale;
     }
 
-    public void setScale(int scale) {
+    public void setScale(Double scale) {
         this.scale = scale;
     }
 
@@ -52,5 +59,15 @@ public class Location {
 
     public void setLabel(String label) {
         this.label = label;
+    }
+
+    @Override
+    public String toString() {
+        return "Location{" +
+                "x=" + x +
+                ", y=" + y +
+                ", scale=" + scale +
+                ", label='" + label + '\'' +
+                '}';
     }
 }

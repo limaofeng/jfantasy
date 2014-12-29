@@ -1,7 +1,7 @@
 package com.fantasy.wx.session;
 
 
-import com.fantasy.wx.WeiXinMessage;
+import com.fantasy.wx.message.WeiXinMessage;
 
 import java.io.IOException;
 

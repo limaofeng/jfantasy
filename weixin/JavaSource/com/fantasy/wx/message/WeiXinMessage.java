@@ -1,4 +1,4 @@
-package com.fantasy.wx;
+package com.fantasy.wx.message;
 
 import java.util.Date;
 
@@ -34,5 +34,12 @@ public interface WeiXinMessage<T> {
      * @return T
      */
     public T getContent();
+
+    /**
+     * 开发者微信号 (微信原始ID)
+     *
+     * @return String
+     */
+    public String getToUserName();
 
 }

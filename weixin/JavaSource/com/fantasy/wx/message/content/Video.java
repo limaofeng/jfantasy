@@ -28,4 +28,12 @@ public class Video {
     public void setMedia(Media media) {
         this.media = media;
     }
+
+    @Override
+    public String toString() {
+        return "Video{" +
+                "thumb=" + thumb +
+                ", media=" + media +
+                '}';
+    }
 }

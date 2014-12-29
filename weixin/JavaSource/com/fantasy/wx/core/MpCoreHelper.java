@@ -1,7 +1,9 @@
 package com.fantasy.wx.core;
 
-import com.fantasy.wx.WeiXinCoreHelper;
-import com.fantasy.wx.WeiXinMessage;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.wx.factory.WeiXinSessionUtils;
+import com.fantasy.wx.message.TextMessage;
+import com.fantasy.wx.message.WeiXinMessage;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.MessageFactory;
 import com.fantasy.wx.session.AccountDetails;
@@ -10,11 +12,14 @@ import me.chanjar.weixin.mp.api.*;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,6 +28,8 @@ import java.util.Map;
  */
 @Component
 public class MpCoreHelper implements WeiXinCoreHelper {
+
+    private final static Log LOG = LogFactory.getLog(MpCoreHelper.class);
 
     private Map<String, WeiXinDetails> weiXinDetailsMap = new HashMap<String, WeiXinDetails>();
 
@@ -35,7 +42,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public WeiXinMessage parse(WeiXinSession session, HttpServletRequest request) throws WeiXinException {
+    public WeiXinMessage parseInMessage(HttpServletRequest request) throws WeiXinException {
         String signature = request.getParameter("signature");
         String nonce = request.getParameter("nonce");
         String timestamp = request.getParameter("timestamp");
@@ -47,6 +54,8 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         } catch (IOException e) {
             throw new WeiXinException(e.getMessage());
         }
+
+        WeiXinSession session = WeiXinSessionUtils.getCurrentSession();
 
         WeiXinDetails weiXinDetails = getWeiXinDetails(session.getId());
 
@@ -67,21 +76,48 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         } else {
             throw new WeiXinException("不可识别的加密类型");
         }
-        if("text".equals(inMessage.getMsgType())){
-            MessageFactory.createTextMessage();
-        }else if("image".equals(inMessage.getMsgType())){
-            MessageFactory.createTextMessage();
-        }else if("voice".equals(inMessage.getMsgType())){
-            MessageFactory.createTextMessage();
-        }else if("video".equals(inMessage.getMsgType())){
-            MessageFactory.createTextMessage();
-        }else if("location".equals(inMessage.getMsgType())){
-            MessageFactory.createTextMessage();
-        }else if("link".equals(inMessage.getMsgType())){
-            MessageFactory.createTextMessage();
+        LOG.debug("inMessage=>" + JSON.serialize(inMessage));
+        if ("text".equals(inMessage.getMsgType())) {
+            return MessageFactory.createTextMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getContent());
+        } else if ("image".equalsIgnoreCase(inMessage.getMsgType())) {
+            return MessageFactory.createImageMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getUrl());
+        } else if ("voice".equalsIgnoreCase(inMessage.getMsgType())) {
+            return MessageFactory.createVoiceMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getFormat(),inMessage.getRecognition());
+        } else if ("video".equalsIgnoreCase(inMessage.getMsgType())) {
+            return MessageFactory.createVideoMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getThumbMediaId());
+        } else if ("location".equalsIgnoreCase(inMessage.getMsgType())) {
+            return MessageFactory.createLocationMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getLocationX(), inMessage.getLocationY(), inMessage.getScale(), inMessage.getLabel());
+        } else if ("link".equalsIgnoreCase(inMessage.getMsgType())) {
+            return MessageFactory.createLinkMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getTitle(), inMessage.getDescription(), inMessage.getUrl());
+        } else if ("event".equalsIgnoreCase(inMessage.getMsgType())) {
+            return MessageFactory.createEventMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()),inMessage.getEvent(),inMessage.getEventKey(),inMessage.getTicket(),inMessage.getLatitude(),inMessage.getLongitude(),inMessage.getPrecision());
+        } else {
+            LOG.debug(inMessage);
+            throw new WeiXinException("无法处理的消息类型" + inMessage.getMsgType());
         }
+    }
 
-        return null;
+    @Override
+    public String buildOutMessage(String encryptType, WeiXinMessage message) throws WeiXinException {
+        WeiXinSession session = WeiXinSessionUtils.getCurrentSession();
+        WeiXinDetails weiXinDetails = getWeiXinDetails(session.getId());
+        WxMpXmlOutMessage outMessage;
+        if (message instanceof TextMessage) {
+            outMessage = WxMpXmlOutMessage.TEXT()
+                    .content(((TextMessage) message).getContent())
+                    .fromUser(message.getFromUserName())
+                    .toUser(message.getToUserName())
+                    .build();
+        } else {
+            throw new WeiXinException("不支持的消息类型");
+        }
+        if ("raw".equals(encryptType)) {
+            return outMessage.toXml();
+        } else if ("aes".equals(encryptType)) {
+            return outMessage.toEncryptedXml(weiXinDetails.getWxMpConfigStorage());
+        } else {
+            throw new WeiXinException("不可识别的加密类型");
+        }
     }
 
     @Override
@@ -89,17 +125,16 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 
     }
 
-    public WeiXinDetails getWeiXinDetails(String appid) throws WeiXinException {
+    private WeiXinDetails getWeiXinDetails(String appid) throws WeiXinException {
         if (!weiXinDetailsMap.containsKey(appid)) {
             throw new WeiXinException("[appid=" + appid + "]未注册！");
         }
         return weiXinDetailsMap.get(appid);
     }
 
-    public static class WeiXinDetails {
+    private static class WeiXinDetails {
         private WxMpService wxMpService;
         private WxMpConfigStorage wxMpConfigStorage;
-        private WxMpMessageRouter wxMpMessageRouter;
 
         public WeiXinDetails(AccountDetails accountDetails) {
             this.wxMpService = new WxMpServiceImpl();
@@ -111,35 +146,16 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             wxMpConfigStorage.setAesKey(accountDetails.getAesKey());
 
             wxMpService.setWxMpConfigStorage(this.wxMpConfigStorage = wxMpConfigStorage);
-
-            this.wxMpMessageRouter = new WxMpMessageRouter(wxMpService);
-
-            wxMpMessageRouter
-                    .rule()
-                    .async(false)
-                    .handler(new WxMpMessageHandler() {
-                        @Override
-                        public WxMpXmlOutMessage handle(WxMpXmlMessage wxMpXmlMessage, Map<String, Object> map, WxMpService wxMpService) {
-                            return null;
-                        }
-                    }).end();
         }
 
         public WxMpService getWxMpService() {
             return wxMpService;
         }
 
-        public void setWxMpService(WxMpService wxMpService) {
-            this.wxMpService = wxMpService;
-        }
-
         public WxMpConfigStorage getWxMpConfigStorage() {
             return wxMpConfigStorage;
         }
 
-        public void setWxMpConfigStorage(WxMpConfigStorage wxMpConfigStorage) {
-            this.wxMpConfigStorage = wxMpConfigStorage;
-        }
     }
 
 }

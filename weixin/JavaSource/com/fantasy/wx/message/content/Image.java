@@ -24,4 +24,12 @@ public class Image {
     public void setMedia(Media media) {
         this.media = media;
     }
+
+    @Override
+    public String toString() {
+        return "Image{" +
+                "url='" + url + '\'' +
+                ", media=" + media +
+                '}';
+    }
 }
