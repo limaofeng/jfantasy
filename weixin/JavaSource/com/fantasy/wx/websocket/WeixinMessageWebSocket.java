@@ -2,9 +2,9 @@ package com.fantasy.wx.websocket;
 
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.account.init.WeixinConfigInit;
-import com.fantasy.wx.message.bean.Message;
-import com.fantasy.wx.user.bean.UserInfo;
-import com.fantasy.wx.user.service.impl.UserInfoService;
+import com.fantasy.wx.bean.Message;
+import com.fantasy.wx.bean.UserInfo;
+import com.fantasy.wx.service.UserInfoService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;

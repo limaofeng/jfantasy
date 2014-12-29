@@ -50,7 +50,7 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         try {
             return WeiXinSessionUtils.getCurrentSession();
         } catch (NoSessionException e) {
-            return WeiXinSessionUtils.saveSession(new DefaultWeiXinSession(this.accountDetailsService.loadAccountByAppid(appid)));
+            return WeiXinSessionUtils.saveSession(new DefaultWeiXinSession(this.accountDetailsService.loadAccountByAppid(appid),weiXinCoreHelper));
         }
     }
 

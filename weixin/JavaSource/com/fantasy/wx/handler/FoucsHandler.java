@@ -1,7 +1,7 @@
 package com.fantasy.wx.handler;
 
 import com.fantasy.wx.exception.WeiXinException;
-import com.fantasy.wx.user.service.impl.UserInfoService;
+import com.fantasy.wx.service.UserInfoService;
 import me.chanjar.weixin.mp.api.WxMpMessageHandler;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;

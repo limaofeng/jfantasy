@@ -1,4 +1,4 @@
-package com.fantasy.wx.user.bean;
+package com.fantasy.wx.bean;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;

@@ -1,4 +1,4 @@
-package com.fantasy.wx.message.bean;
+package com.fantasy.wx.bean;
 
 import com.fantasy.framework.util.jackson.JSON;
 import org.codehaus.jackson.type.TypeReference;

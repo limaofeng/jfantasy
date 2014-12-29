@@ -1,6 +1,5 @@
-package com.fantasy.wx.message.bean;
+package com.fantasy.wx.bean;
 
-import com.fantasy.wx.user.bean.UserInfo;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

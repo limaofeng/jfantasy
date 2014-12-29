@@ -1,16 +1,26 @@
 package com.fantasy.wx.core;
 
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.factory.WeiXinSessionUtils;
-import com.fantasy.wx.message.TextMessage;
-import com.fantasy.wx.message.WeiXinMessage;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.MessageFactory;
+import com.fantasy.wx.message.TextMessage;
+import com.fantasy.wx.message.WeiXinMessage;
+import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.message.user.OpenIdList;
 import com.fantasy.wx.session.AccountDetails;
 import com.fantasy.wx.session.WeiXinSession;
-import me.chanjar.weixin.mp.api.*;
+import com.fantasy.wx.message.user.Group;
+import com.fantasy.wx.message.user.User;
+import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.api.WxMpConfigStorage;
+import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
+import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.api.WxMpServiceImpl;
+import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
+import me.chanjar.weixin.mp.bean.WxMpGroup;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -19,9 +29,7 @@ import org.springframework.stereotype.Component;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 微信服务号与订阅号
@@ -42,7 +50,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public WeiXinMessage parseInMessage(HttpServletRequest request) throws WeiXinException {
+    public WeiXinMessage parseInMessage(WeiXinSession session, HttpServletRequest request) throws WeiXinException {
         String signature = request.getParameter("signature");
         String nonce = request.getParameter("nonce");
         String timestamp = request.getParameter("timestamp");
@@ -54,8 +62,6 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         } catch (IOException e) {
             throw new WeiXinException(e.getMessage());
         }
-
-        WeiXinSession session = WeiXinSessionUtils.getCurrentSession();
 
         WeiXinDetails weiXinDetails = getWeiXinDetails(session.getId());
 
@@ -82,7 +88,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         } else if ("image".equalsIgnoreCase(inMessage.getMsgType())) {
             return MessageFactory.createImageMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getUrl());
         } else if ("voice".equalsIgnoreCase(inMessage.getMsgType())) {
-            return MessageFactory.createVoiceMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getFormat(),inMessage.getRecognition());
+            return MessageFactory.createVoiceMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getFormat(), inMessage.getRecognition());
         } else if ("video".equalsIgnoreCase(inMessage.getMsgType())) {
             return MessageFactory.createVideoMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getThumbMediaId());
         } else if ("location".equalsIgnoreCase(inMessage.getMsgType())) {
@@ -90,7 +96,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         } else if ("link".equalsIgnoreCase(inMessage.getMsgType())) {
             return MessageFactory.createLinkMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getTitle(), inMessage.getDescription(), inMessage.getUrl());
         } else if ("event".equalsIgnoreCase(inMessage.getMsgType())) {
-            return MessageFactory.createEventMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()),inMessage.getEvent(),inMessage.getEventKey(),inMessage.getTicket(),inMessage.getLatitude(),inMessage.getLongitude(),inMessage.getPrecision());
+            return MessageFactory.createEventMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getEvent(), inMessage.getEventKey(), inMessage.getTicket(), inMessage.getLatitude(), inMessage.getLongitude(), inMessage.getPrecision());
         } else {
             LOG.debug(inMessage);
             throw new WeiXinException("无法处理的消息类型" + inMessage.getMsgType());
@@ -98,8 +104,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public String buildOutMessage(String encryptType, WeiXinMessage message) throws WeiXinException {
-        WeiXinSession session = WeiXinSessionUtils.getCurrentSession();
+    public String buildOutMessage(WeiXinSession session, String encryptType, WeiXinMessage message) throws WeiXinException {
         WeiXinDetails weiXinDetails = getWeiXinDetails(session.getId());
         WxMpXmlOutMessage outMessage;
         if (message instanceof TextMessage) {
@@ -121,8 +126,151 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void sendMessage(WeiXinMessage message) {
+    public void sendImageMessage(WeiXinSession session, Image content, String toUser) throws WeiXinException {
+        throw new WeiXinException("该功能未实现");
+    }
 
+    @Override
+    public void sendVoiceMessage(WeiXinSession session, Voice content, String toUser) throws WeiXinException {
+        throw new WeiXinException("该功能未实现");
+    }
+
+    @Override
+    public void sendVideoMessage(WeiXinSession session, Video content, String toUser) throws WeiXinException {
+        throw new WeiXinException("该功能未实现");
+    }
+
+    @Override
+    public void sendMusicMessage(WeiXinSession session, Music content, String toUser) throws WeiXinException {
+        throw new WeiXinException("该功能未实现");
+    }
+
+    @Override
+    public void sendNewsMessage(WeiXinSession session, News content, String toUser) throws WeiXinException {
+        throw new WeiXinException("该功能未实现");
+    }
+
+    @Override
+    public void sendTextMessage(WeiXinSession session, String content, String toUser) throws WeiXinException {
+        try {
+            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.TEXT().toUser(toUser).content(content).build());
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage());
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<Group> getGroups(WeiXinSession session) throws WeiXinException {
+        try {
+            List<WxMpGroup> list = getWeiXinDetails(session.getId()).getWxMpService().groupGet();
+            List<Group> groups = new ArrayList<Group>();
+            for (WxMpGroup wxMpGroup : list) {
+                groups.add(new Group(wxMpGroup.getId(), wxMpGroup.getName(), wxMpGroup.getCount()));
+            }
+            return groups;
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage());
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Group groupCreate(WeiXinSession session, String groupName) throws WeiXinException {
+        try {
+            WxMpGroup res = getWeiXinDetails(session.getId()).getWxMpService().groupCreate(groupName);
+            return new Group(res.getId(), res.getName(), res.getCount());
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage());
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void groupUpdate(WeiXinSession session, long groupId, String groupName) throws WeiXinException {
+        try {
+            WxMpGroup wxMpGroup = new WxMpGroup();
+            wxMpGroup.setId(groupId);
+            wxMpGroup.setName(groupName);
+            getWeiXinDetails(session.getId()).getWxMpService().groupUpdate(wxMpGroup);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage());
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void userUpdateGroup(WeiXinSession session, String userId, Long groupId) throws WeiXinException {
+        try {
+            getWeiXinDetails(session.getId()).getWxMpService().userUpdateGroup(userId, groupId);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage());
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage());
+        }
+    }
+
+    @Override
+    public List<User> getUsers(WeiXinSession session) throws WeiXinException {
+        try {
+            List<User> users = new ArrayList<User>();
+            WxMpUserList userList = getWeiXinDetails(session.getId()).getWxMpService().userList(null);
+            if (userList.getTotal() > userList.getCount()) {
+                throw new WeiXinException("微信关注粉丝超出程序设计值，请联系开发人员。重新设计");
+            }
+            for (String openId : userList.getOpenIds()) {
+                users.add(getUser(session, openId));
+            }
+            return users;
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage());
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage());
+        }
+    }
+
+    @Override
+    public OpenIdList getOpenIds(WeiXinSession session) {
+        return null;
+    }
+
+    @Override
+    public OpenIdList getOpenIds(WeiXinSession session, String nextOpenId) {
+        return null;
+    }
+
+//    @Override
+//    public List<String> getUsers(WeiXinSession session,String nextOpenId) throws WeiXinException {
+//        try {
+//            List<String> openIds = new ArrayList<String>();
+//            WxMpUserList userList = getWeiXinDetails(session.getId()).getWxMpService().userList(null);
+//            openIds.addAll(userList.getOpenIds());
+//            while (userList.getTotal() > userList.getCount()) {
+//                userList = getWeiXinDetails(session.getId()).getWxMpService().userList(userList.getNextOpenId());
+//                openIds.addAll(userList.getOpenIds());
+//            }
+//        } catch (WxErrorException e) {
+//            throw new WeiXinException(e.getMessage());
+//        } catch (WeiXinException e) {
+//            throw new WeiXinException(e.getMessage());
+//        }
+//        return null;
+//    }
+
+    @Override
+    public User getUser(WeiXinSession session, String userId) throws WeiXinException {
+        try {
+            getWeiXinDetails(session.getId()).getWxMpService().userInfo(userId, null);
+            return new User();
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage());
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage());
+        }
     }
 
     private WeiXinDetails getWeiXinDetails(String appid) throws WeiXinException {

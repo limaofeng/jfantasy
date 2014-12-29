@@ -5,7 +5,7 @@ import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.DirectoryService;
 import com.fantasy.framework.util.concurrent.LinkedQueue;
 import com.fantasy.wx.handler.WeixinMessageHandler;
-import com.fantasy.wx.message.bean.Message;
+import com.fantasy.wx.bean.Message;
 import me.chanjar.weixin.mp.api.*;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;

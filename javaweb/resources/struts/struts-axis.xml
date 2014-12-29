@@ -11,14 +11,13 @@
         </action>
 
         <!-- search -->
-        <action name="search" class="com.fantasy.axis.web.MessageAction" method="search" />
+        <action name="search" class="com.fantasy.axis.web.MessageAction" method="search"/>
         <!-- view 查看 -->
         <action name="view" class="com.fantasy.axis.web.MessageAction" method="view">
             <result type="freemarker">/template/%{pageTheme}/axis/message_view.ftl</result>
         </action>
 
-        <action name="delete" class="com.fantasy.axis.web.MessageAction" method="delete" />
+        <action name="delete" class="com.fantasy.axis.web.MessageAction" method="delete"/>
     </package>
-
 
 </struts>

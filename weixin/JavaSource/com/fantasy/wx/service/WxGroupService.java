@@ -1,14 +1,14 @@
-package com.fantasy.wx.user.service.impl;
+package com.fantasy.wx.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.exception.WeiXinException;
-import com.fantasy.wx.user.bean.UserInfo;
-import com.fantasy.wx.user.bean.WxGroup;
-import com.fantasy.wx.user.dao.UserInfoDao;
-import com.fantasy.wx.user.dao.WxGroupDao;
+import com.fantasy.wx.bean.UserInfo;
+import com.fantasy.wx.bean.WxGroup;
+import com.fantasy.wx.dao.UserInfoDao;
+import com.fantasy.wx.dao.WxGroupDao;
 import com.fantasy.wx.user.service.IGroupService;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpGroup;

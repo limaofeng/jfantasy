@@ -4,7 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.account.init.WeixinConfigInit;
-import com.fantasy.wx.user.bean.WxGroup;
+import com.fantasy.wx.bean.WxGroup;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

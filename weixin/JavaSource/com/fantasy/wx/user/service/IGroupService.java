@@ -3,7 +3,7 @@ package com.fantasy.wx.user.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.exception.WeiXinException;
-import com.fantasy.wx.user.bean.WxGroup;
+import com.fantasy.wx.bean.WxGroup;
 
 import java.util.List;
 

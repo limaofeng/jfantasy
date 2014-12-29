@@ -35,7 +35,7 @@
         <appender-ref ref="FILE"/>
     </category>
     <category name="org.apache.axis2">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
         <appender-ref ref="FILE"/>
     </category>
     <category name="com.fantasy.framework.dao.mybatis">
@@ -81,15 +81,15 @@
         <appender-ref ref="FILE"/>
     </category>
     <category name="java.sql.Connection">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
         <appender-ref ref="FILE"/>
     </category>
     <category name="java.sql.Statement">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
         <appender-ref ref="FILE"/>
     </category>
     <category name="java.sql.PreparedStatement">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
         <appender-ref ref="FILE"/>
     </category>
     <category name="java.sql.ResultSet">

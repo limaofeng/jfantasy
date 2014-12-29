@@ -1,12 +1,12 @@
-package com.fantasy.wx.message.web;
+package com.fantasy.wx.web;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.wx.message.bean.Message;
-import com.fantasy.wx.message.service.impl.MessageService;
-import com.fantasy.wx.user.bean.UserInfo;
+import com.fantasy.wx.bean.Message;
+import com.fantasy.wx.service.MessageService;
+import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.user.service.IUserInfoService;
 
 import javax.annotation.Resource;

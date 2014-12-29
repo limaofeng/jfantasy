@@ -1,7 +1,7 @@
-package com.fantasy.wx.user.dao;
+package com.fantasy.wx.dao;
 
 import com.fantasy.framework.dao.hibernate.HibernateDao;
-import com.fantasy.wx.user.bean.WxGroup;
+import com.fantasy.wx.bean.WxGroup;
 import org.springframework.stereotype.Repository;
 
 /**

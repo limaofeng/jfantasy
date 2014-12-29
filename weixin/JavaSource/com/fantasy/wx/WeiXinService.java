@@ -5,7 +5,8 @@ import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.factory.WeiXinSessionFactory;
 import com.fantasy.wx.message.WeiXinMessage;
-import com.fantasy.wx.message.service.IMessageService;
+import com.fantasy.wx.service.MessageService;
+import com.fantasy.wx.session.WeiXinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +31,7 @@ public class WeiXinService implements InitializingBean {
     private WeiXinSessionFactory weiXinSessionFactory;
 
     @Resource
-    private IMessageService iMessageService;
+    private MessageService iMessageService;
     @Resource
     public WeixinConfigInit weixinConfig;
 
@@ -61,14 +62,14 @@ public class WeiXinService implements InitializingBean {
         //解析数据
         try {
             //打开session,并保存到上下文
-            weiXinSessionFactory.openSession(appid);
+            WeiXinSession session = weiXinSessionFactory.openSession(appid);
             WeiXinCoreHelper helper = weiXinSessionFactory.getWeiXinCoreHelper();
-            WeiXinMessage message = helper.parseInMessage(request);
+            WeiXinMessage message = helper.parseInMessage(session,request);
 
             WeiXinMessage returnMessage = weiXinSessionFactory.execute(message);
 
             if (returnMessage != null) {
-                String outMessage = helper.buildOutMessage(request.getParameter("encrypt_type"), returnMessage);
+                String outMessage = helper.buildOutMessage(session,request.getParameter("encrypt_type"), returnMessage);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("outMessage=" + outMessage);
                 }

@@ -3,7 +3,8 @@ package com.fantasy.wx.message.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.message.bean.Message;
+import com.fantasy.wx.bean.Message;
+import com.fantasy.wx.service.MessageService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,7 +24,7 @@ import java.util.List;
 public class MessageServiceTest {
     private static final Log logger = LogFactory.getLog(Message.class);
     @Resource
-    private IMessageService iMessageService;
+    private MessageService messageService;
 
     @Before
     public void setUp() throws Exception {
@@ -34,9 +35,9 @@ public class MessageServiceTest {
     public void tearDown() throws Exception {
         Pager<Message> pager = testFindPager();
         Message m = pager.getPageItems().get(0);
-        m = iMessageService.getMessage(m.getId());
+        m = messageService.getMessage(m.getId());
         logger.debug(JSON.serialize(m));
-        iMessageService.delete(m.getId());
+        messageService.delete(m.getId());
     }
 
     @Test
@@ -48,7 +49,7 @@ public class MessageServiceTest {
         Pager<Message> pager = new Pager<Message>();
         List<PropertyFilter> messageList = new ArrayList<PropertyFilter>();
         messageList.add(new PropertyFilter("EQL_createTime", "1414221271382"));
-        Pager p = iMessageService.findPager(pager, messageList);
+        Pager p = messageService.findPager(pager, messageList);
         Assert.assertNotNull(p.getPageItems());
         logger.debug(JSON.serialize(p));
         return p;
@@ -62,6 +63,6 @@ public class MessageServiceTest {
         m.setMsgType("text");
         m.setToUserName("gh_889dabbab6cb");
         m.setFromUserName("o8W9zt_0puksLdwJlqTGXdH9ViRU");
-        iMessageService.save(m);
+        messageService.save(m);
     }
 }

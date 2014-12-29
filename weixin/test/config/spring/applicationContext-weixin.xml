@@ -7,11 +7,11 @@
     <bean id="weixinConfigInit" class="com.fantasy.wx.account.init.WeixinConfigInit" />
     <bean id="iConfigService" class="com.fantasy.wx.account.service.impl.WeixinConfigService" />
     <bean id="iMenuService" class="com.fantasy.wx.service.MenuService" />
-    <bean id="iMessageService" class="com.fantasy.wx.message.service.impl.MessageService" />
-    <bean id="iGroupMessageService" class="com.fantasy.wx.message.service.impl.GroupMessageService" />
+    <bean id="iMessageService" class="com.fantasy.wx.service.MessageService" />
+    <bean id="iGroupMessageService" class="com.fantasy.wx.service.GroupMessageService" />
     <bean id="iQRCodeService" class="com.fantasy.wx.service.QRCodeService" />
-    <bean id="iUserInfoService" class="com.fantasy.wx.user.service.impl.UserInfoService" />
-    <bean id="iGroupService" class="com.fantasy.wx.user.service.impl.WxGroupService" />
+    <bean id="iUserInfoService" class="com.fantasy.wx.service.UserInfoService" />
+    <bean id="iGroupService" class="com.fantasy.wx.service.WxGroupService" />
     <bean id="weixinMessageHandler" class="com.fantasy.wx.handler.WeixinMessageHandler" >
         <property name="list">
             <list>

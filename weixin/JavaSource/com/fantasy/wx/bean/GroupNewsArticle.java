@@ -1,4 +1,4 @@
-package com.fantasy.wx.message.bean;
+package com.fantasy.wx.bean;
 
 import com.fantasy.file.bean.FileDetail;
 import org.hibernate.annotations.GenericGenerator;

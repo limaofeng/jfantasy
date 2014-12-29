@@ -1,4 +1,4 @@
-package com.fantasy.wx.message.service.impl;
+package com.fantasy.wx.service;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
@@ -8,11 +8,10 @@ import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.account.init.WeixinConfigInit;
+import com.fantasy.wx.bean.Message;
+import com.fantasy.wx.dao.MessageDao;
 import com.fantasy.wx.exception.WeiXinException;
-import com.fantasy.wx.message.bean.Message;
-import com.fantasy.wx.message.dao.MessageDao;
-import com.fantasy.wx.message.service.IMessageService;
-import com.fantasy.wx.user.bean.UserInfo;
+import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.user.service.IUserInfoService;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
@@ -34,7 +33,7 @@ import java.util.Random;
  */
 @Service
 @Transactional
-public class MessageService implements IMessageService {
+public class MessageService {
     @Resource
     private MessageDao messageDao;
     @Resource
@@ -44,7 +43,13 @@ public class MessageService implements IMessageService {
     @Resource
     private FileUploadService fileUploadService;
 
-    @Override
+    /**
+     * 列表查询
+     *
+     * @param pager   分页
+     * @param filters 查询条件
+     * @return 分页对象
+     */
     public Pager<Message> findPager(Pager<Message> pager, List<PropertyFilter> filters) {
         Pager<Message> p = this.messageDao.findPager(pager, filters);
         for (PropertyFilter pf : filters) {
@@ -58,19 +63,33 @@ public class MessageService implements IMessageService {
         return p;
     }
 
-    @Override
+    /**
+     * 删除消息对象
+     *
+     * @param ids id数组
+     */
     public void delete(Long... ids) {
         for (Long id : ids) {
             messageDao.delete(id);
         }
     }
 
-    @Override
+    /**
+     * 获取消息对象
+     *
+     * @param id
+     * @return
+     */
     public Message getMessage(Long id) {
         return messageDao.get(id);
     }
 
-    @Override
+    /**
+     * 保存消息对象
+     *
+     * @param message
+     * @return
+     */
     public Message save(Message message) {
         int result = 0;
         UserInfo ui = iUserInfoService.getUserInfo(message.getUserInfo().getOpenId());
@@ -86,6 +105,12 @@ public class MessageService implements IMessageService {
         return message;
     }
 
+    /**
+     * 根据消息类型保存消息对象 更具msgType保存mediaId的消息的媒体文件
+     * @param message
+     * @return
+     * @throws com.fantasy.wx.exception.WeiXinException
+     */
     public Message saveByType(Message message) throws WeiXinException {
         String dir=message.getMsgType()+"Wx";
         String media=null;
@@ -130,7 +155,13 @@ public class MessageService implements IMessageService {
         return message;
     }
 
-    @Override
+    /**
+     * 发送文本消息
+     *
+     * @param touser  发送人openId
+     * @param content 发送内容
+     * @return 微信返回码0为成功其他为错误码，可参考微信公众平台开发文档
+     */
     public int sendTextMessage(String touser, String content) {
         Message message = createMessage(WxConsts.CUSTOM_MSG_TEXT, touser);
         message.setContent(content);
