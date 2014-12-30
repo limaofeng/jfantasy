@@ -2,6 +2,8 @@ package com.fantasy.axis.service;
 
 import com.fantasy.axis.bean.Message;
 import com.fantasy.axis.dao.MessageDao;
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.axis2.context.MessageContext;
@@ -13,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service("axis.MessageService")
 @Transactional
@@ -25,6 +28,11 @@ public class MessageService {
 
     @Autowired
     private MessageDao messageDao;
+
+
+    public Pager<Message> findPager(Pager<Message> pager,List<PropertyFilter> filters){
+       return this.messageDao.findPager(pager,filters);
+    }
 
     public void log(final MessageContext msgContext, final Message.Type type) {
         final MessageService messageService = SpringContextUtil.getBeanByType(MessageService.class);
@@ -80,6 +88,12 @@ public class MessageService {
 
     public void save(Message message) {
         this.messageDao.save(message);
+    }
+
+    public void delete(String... ids){
+        for(String id:ids){
+            this.messageDao.delete(id);
+        }
     }
 
 }
