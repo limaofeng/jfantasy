@@ -1,5 +1,7 @@
 package com.fantasy.wx.message.content;
 
+import com.fantasy.file.FileItem;
+
 /**
  * 图片消息对象
  */
@@ -8,6 +10,16 @@ public class Image {
     private String url;
 
     private Media media;
+
+    public Image(FileItem fileItem) {
+        this.media = new Media(fileItem,Media.Type.image);
+    }
+
+    public Image(Media media, String url) {
+        this.media = media;
+        this.media.setType(Media.Type.image);
+        this.url = url;
+    }
 
     public String getUrl() {
         return url;

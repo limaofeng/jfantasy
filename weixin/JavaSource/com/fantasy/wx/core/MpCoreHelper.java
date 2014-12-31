@@ -1,25 +1,33 @@
 package com.fantasy.wx.core;
 
+import com.fantasy.file.FileItem;
+import com.fantasy.file.manager.LocalFileManager;
+import com.fantasy.framework.error.IgnoreException;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.MessageFactory;
 import com.fantasy.wx.message.TextMessage;
 import com.fantasy.wx.message.WeiXinMessage;
 import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.message.user.Group;
 import com.fantasy.wx.message.user.OpenIdList;
+import com.fantasy.wx.message.user.User;
 import com.fantasy.wx.session.AccountDetails;
 import com.fantasy.wx.session.WeiXinSession;
-import com.fantasy.wx.message.user.Group;
-import com.fantasy.wx.message.user.User;
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
 import me.chanjar.weixin.mp.api.WxMpServiceImpl;
-import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
-import me.chanjar.weixin.mp.bean.WxMpGroup;
-import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
-import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.*;
+import me.chanjar.weixin.mp.bean.custombuilder.MusicBuilder;
+import me.chanjar.weixin.mp.bean.custombuilder.VideoBuilder;
+import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -27,8 +35,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -60,7 +67,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         try {
             input = request.getInputStream();
         } catch (IOException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         }
 
         WeiXinDetails weiXinDetails = getWeiXinDetails(session.getId());
@@ -69,7 +76,6 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             // 消息签名不正确，说明不是公众平台发过来的消息
             throw new WeiXinException("非法请求");
         }
-
 
         String encryptType = StringUtils.isBlank(encrypt_type) ? "raw" : encrypt_type;
         WxMpXmlMessage inMessage;
@@ -127,37 +133,148 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 
     @Override
     public void sendImageMessage(WeiXinSession session, Image content, String toUser) throws WeiXinException {
-        throw new WeiXinException("该功能未实现");
+        try {
+            //上传图片文件
+            Media media = content.getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.IMAGE().toUser(toUser).mediaId(media.getId()).build());
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
     }
 
     @Override
     public void sendVoiceMessage(WeiXinSession session, Voice content, String toUser) throws WeiXinException {
-        throw new WeiXinException("该功能未实现");
+        try {
+            //上传音乐文件
+            Media media = content.getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.VOICE().toUser(toUser).mediaId(media.getId()).build());
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
     }
 
     @Override
     public void sendVideoMessage(WeiXinSession session, Video content, String toUser) throws WeiXinException {
-        throw new WeiXinException("该功能未实现");
+        try {
+            //上传视频
+            Media media = content.getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            //上传缩略图
+            Media thumb = content.getThumb();
+            thumb.setId(this.mediaUpload(session, thumb.getType(), thumb.getFileItem()));
+            //发送消息
+            VideoBuilder videoBuilder = WxMpCustomMessage.VIDEO().toUser(toUser).mediaId(media.getId()).thumbMediaId(thumb.getId());
+            if (StringUtil.isNotBlank(content.getTitle())) {
+                videoBuilder.title(content.getTitle());
+            }
+            if (StringUtil.isNotBlank(content.getDescription())) {
+                videoBuilder.description(content.getDescription());
+            }
+            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(videoBuilder.build());
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
     }
 
     @Override
     public void sendMusicMessage(WeiXinSession session, Music content, String toUser) throws WeiXinException {
-        throw new WeiXinException("该功能未实现");
-    }
-
-    @Override
-    public void sendNewsMessage(WeiXinSession session, News content, String toUser) throws WeiXinException {
-        throw new WeiXinException("该功能未实现");
-    }
-
-    @Override
-    public void sendTextMessage(WeiXinSession session, String content, String toUser) throws WeiXinException {
         try {
-            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.TEXT().toUser(toUser).content(content).build());
+            //上传缩略图
+            Media thumb = content.getThumb();
+            thumb.setId(this.mediaUpload(session, thumb.getType(), thumb.getFileItem()));
+            //发送消息
+            MusicBuilder musicBuilder = WxMpCustomMessage.MUSIC().toUser(toUser).musicUrl(content.getUrl()).hqMusicUrl(content.getHqUrl()).thumbMediaId(thumb.getId());
+            if (StringUtil.isNotBlank(content.getTitle())) {
+                musicBuilder.title(content.getTitle());
+            }
+            if (StringUtil.isNotBlank(content.getDescription())) {
+                musicBuilder.description(content.getDescription());
+            }
+            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(musicBuilder.build());
         } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendNewsMessage(WeiXinSession session, News content, String... toUsers) throws WeiXinException {
+        try {
+            if (toUsers.length == 0) {
+                throw new WeiXinException("消息接收人为空!");
+            }
+            if (toUsers.length == 1) {
+                WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
+                article.setPicUrl(content.getPicUrl());
+                article.setTitle(content.getLink().getTitle());
+                article.setDescription(content.getLink().getDescription());
+                article.setUrl(content.getLink().getUrl());
+                getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.NEWS().toUser(toUsers[0]).addArticle(article).build());
+            } else {
+                WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
+                openIdsMessage.setMsgType(WxConsts.MASS_MSG_NEWS);
+                for (String toUser : toUsers) {
+                    openIdsMessage.addUser(toUser);
+                }
+                WxMpMassNews massNews = new WxMpMassNews();
+
+                WxMpMassUploadResult result =  getWeiXinDetails(session.getId()).getWxMpService().massNewsUpload(massNews);
+
+                openIdsMessage.setMediaId(result.getMediaId());
+                getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
+            }
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendTextMessage(WeiXinSession session, String content, String... toUsers) throws WeiXinException {
+        try {
+            if (toUsers.length == 0) {
+                throw new WeiXinException("消息接收人为空!");
+            }
+            if (toUsers.length == 1) {
+                getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.TEXT().toUser(toUsers[0]).content(content).build());
+            } else {
+                WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
+                openIdsMessage.setMsgType(WxConsts.MASS_MSG_TEXT);
+                for (String toUser : toUsers) {
+                    openIdsMessage.addUser(toUser);
+                }
+                openIdsMessage.setContent(content);
+                getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
+            }
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendTextMessage(WeiXinSession session, String content, Long toGroup) throws WeiXinException {
+        try {
+            WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
+            groupMessage.setMsgtype(WxConsts.MASS_MSG_TEXT);
+            groupMessage.setGroupId(toGroup);
+            groupMessage.setContent(content);
+            getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
@@ -171,9 +288,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             }
             return groups;
         } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
@@ -183,9 +300,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             WxMpGroup res = getWeiXinDetails(session.getId()).getWxMpService().groupCreate(groupName);
             return new Group(res.getId(), res.getName(), res.getCount());
         } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
@@ -197,9 +314,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             wxMpGroup.setName(groupName);
             getWeiXinDetails(session.getId()).getWxMpService().groupUpdate(wxMpGroup);
         } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
@@ -208,9 +325,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         try {
             getWeiXinDetails(session.getId()).getWxMpService().userUpdateGroup(userId, groupId);
         } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
@@ -227,9 +344,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             }
             return users;
         } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
@@ -254,9 +371,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 //                openIds.addAll(userList.getOpenIds());
 //            }
 //        } catch (WxErrorException e) {
-//            throw new WeiXinException(e.getMessage());
+//            throw new WeiXinException(e.getMessage(),e);
 //        } catch (WeiXinException e) {
-//            throw new WeiXinException(e.getMessage());
+//            throw new WeiXinException(e.getMessage(),e);
 //        }
 //        return null;
 //    }
@@ -267,9 +384,35 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             getWeiXinDetails(session.getId()).getWxMpService().userInfo(userId, null);
             return new User();
         } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
-            throw new WeiXinException(e.getMessage());
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String mediaUpload(WeiXinSession session, Media.Type mediaType, FileItem fileItem) throws WeiXinException {
+        try {
+            WxMediaUploadResult uploadMediaRes = getWeiXinDetails(session.getId()).getWxMpService().mediaUpload(mediaType.name(), WebUtil.getExtension(fileItem.getName()), fileItem.getInputStream());
+            return mediaType == Media.Type.thumb ? uploadMediaRes.getThumbMediaId() : uploadMediaRes.getMediaId();
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    public FileItem mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException {
+        try {
+            File file = getWeiXinDetails(session.getId()).getWxMpService().mediaDownload(mediaId);
+            if (file == null) {
+                return null;
+            }
+            return new LocalFileManager.LocalFileItem(file);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
@@ -304,6 +447,33 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             return wxMpConfigStorage;
         }
 
+    }
+
+    private static class WeiXinMediaInputStream extends InputStream {
+
+        private InputStream inputStream;
+        private File file;
+
+        public WeiXinMediaInputStream(File file) {
+            this.file = file;
+            try {
+                this.inputStream = new FileInputStream(file);
+            } catch (FileNotFoundException e) {
+                throw new IgnoreException(e.getMessage());
+            }
+        }
+
+        @Override
+        public int read() throws IOException {
+            return inputStream.read();
+        }
+
+        @Override
+        public void close() throws IOException {
+            super.close();
+            //流读取完成后删除临时文件
+            FileUtil.delFile(file);
+        }
     }
 
 }

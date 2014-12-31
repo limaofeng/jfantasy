@@ -4,7 +4,6 @@ import com.fantasy.file.bean.Directory;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.DirectoryService;
 import com.fantasy.framework.util.concurrent.LinkedQueue;
-import com.fantasy.wx.handler.WeixinMessageHandler;
 import com.fantasy.wx.bean.Message;
 import me.chanjar.weixin.mp.api.*;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,8 +34,8 @@ public class WeixinConfigInit implements InitializingBean {
     protected WxMpMessageRouter wxMpMessageRouter;
     @Resource
     private DirectoryService directoryService;
-    @Resource
-    private WeixinMessageHandler weixinMessageHandler;
+//    @Resource
+//    private WeixinMessageHandler weixinMessageHandler;
 
     // 微信消息websocket处理集合
     private LinkedQueue<Message> messageQueue = new LinkedQueue<Message>();
@@ -95,12 +94,12 @@ public class WeixinConfigInit implements InitializingBean {
             util = new WxMpServiceImpl();
             util.setWxMpConfigStorage(config);
 
-            wxMpMessageRouter = new WxMpMessageRouter(util);
-            wxMpMessageRouter
-                    .rule()
-                    .async(false)
-                    .handler(weixinMessageHandler)
-                    .end();
+//            wxMpMessageRouter = new WxMpMessageRouter(util);
+//            wxMpMessageRouter
+//                    .rule()
+//                    .async(false)
+//                    .handler(weixinMessageHandler)
+//                    .end();
             //配置接受规则
             /*wxMpMessageRouter = new WxMpMessageRouter()
                     //关注事件

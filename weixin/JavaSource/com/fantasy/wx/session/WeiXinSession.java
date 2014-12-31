@@ -1,6 +1,7 @@
 package com.fantasy.wx.session;
 
 
+import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.message.content.*;
 
 /**
@@ -52,17 +53,24 @@ public interface WeiXinSession {
      * 发送音乐消息
      *
      * @param content 图文消息
-     * @param toUser  接收人
+     * @param toUsers  接收人
      */
-    public void sendNewsMessage(News content, String toUser);
+    public void sendNewsMessage(News content, String... toUsers);
 
     /**
      * 发送文本消息
      *
      * @param content 文本消息
-     * @param toUser  接收人
+     * @param toUsers  接收人
      */
-    void sendTextMessage(String content, String toUser);
+    void sendTextMessage(String content, String... toUsers);
+
+    /**
+     * 发送文本消息
+     * @param content 文本消息
+     * @param toGroup 接收组
+     */
+    void sendTextMessage(String content, Long toGroup);
 
     /**
      * 获取当前公众号信息
@@ -70,5 +78,12 @@ public interface WeiXinSession {
      * @return AccountDetails
      */
     AccountDetails getAccountDetails();
+
+    /**
+     * 微信第三方框架
+     *
+     * @return WeiXinCoreHelper
+     */
+    WeiXinCoreHelper getWeiXinCoreHelper();
 
 }

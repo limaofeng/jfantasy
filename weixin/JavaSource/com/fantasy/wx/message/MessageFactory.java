@@ -1,9 +1,18 @@
 package com.fantasy.wx.message;
 
+import com.fantasy.file.FileItem;
+import com.fantasy.framework.util.cglib.CglibUtil;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.factory.WeiXinSessionUtils;
 import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.session.WeiXinSession;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
+import java.lang.reflect.Method;
 import java.util.Date;
 
 /**
@@ -39,10 +48,32 @@ public class MessageFactory {
     public static ImageMessage createImageMessage(Long msgId, String fromUserName, Date createTime, String mediaId, String url) throws WeiXinException {
         ImageMessage message = new ImageMessage(msgId, fromUserName, createTime);
         message.setToUserName(WeiXinSessionUtils.getCurrentSession().getAccountDetails().getPrimitiveId());
-        Image image = new Image();
-        image.setMedia(new Media(mediaId));
-        image.setUrl(url);
+        final WeiXinSession session = WeiXinSessionUtils.getCurrentSession();
+        final WeiXinCoreHelper coreHelper = session.getWeiXinCoreHelper();
+        Media media = CglibUtil.newInstance(Media.class, new MethodInterceptor() {
+            @Override
+            public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+                try {
+                    if ("getFileItem".equalsIgnoreCase(method.getName())) {
+                        FileItem fileItem = (FileItem) methodProxy.invokeSuper(o, objects);
+                        String id = (String) ClassUtil.getMethodProxy(Media.class, "getId").invoke(o);
+                        if (fileItem == null && StringUtil.isNotBlank(id)) {
+                            ClassUtil.getMethodProxy(Media.class, "setFileItem", FileItem.class).invoke(o, fileItem = coreHelper.mediaDownload(session, id));
+                        }
+                        return fileItem;
+                    } else {
+                        return methodProxy.invokeSuper(o, objects);
+                    }
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                    return null;
+                }
+            }
+        });
+        media.setId(mediaId);
+        Image image = new Image(media, url);
         message.setContent(image);
+
         return message;
     }
 
@@ -56,10 +87,10 @@ public class MessageFactory {
      * @param format       语音格式，如amr，speex等
      * @return VoiceMessage
      */
-    public static VoiceMessage createVoiceMessage(Long msgId, String fromUserName, Date createTime, String mediaId, String format,String recognition) throws WeiXinException {
+    public static VoiceMessage createVoiceMessage(Long msgId, String fromUserName, Date createTime, String mediaId, String format, String recognition) throws WeiXinException {
         VoiceMessage message = new VoiceMessage(msgId, fromUserName, createTime);
         message.setToUserName(WeiXinSessionUtils.getCurrentSession().getAccountDetails().getPrimitiveId());
-        message.setContent(new Voice(new Media(mediaId, format),recognition));
+        message.setContent(new Voice(new Media(mediaId, format), recognition));
         return message;
     }
 
@@ -76,9 +107,7 @@ public class MessageFactory {
     public static VideoMessage createVideoMessage(Long msgId, String fromUserName, Date createTime, String mediaId, String thumbMediaId) throws WeiXinException {
         VideoMessage message = new VideoMessage(msgId, fromUserName, createTime);
         message.setToUserName(WeiXinSessionUtils.getCurrentSession().getAccountDetails().getPrimitiveId());
-        Video video = new Video();
-        video.setMedia(new Media(mediaId));
-        video.setThumb(new Media(thumbMediaId));
+        Video video = new Video(new Media(mediaId), new Media(thumbMediaId));
         message.setContent(video);
         return message;
     }

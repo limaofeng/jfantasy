@@ -21,6 +21,10 @@ public class WeiXinException extends Exception {
         super(message);
     }
 
+    public WeiXinException(String message, Exception e) {
+        super(message, e);
+    }
+
     public static WeiXinException wxExceptionBuilder(WxErrorException e) {
         WxErrorInfo wxError = new WxErrorInfo();
         WxError error = e.getError();

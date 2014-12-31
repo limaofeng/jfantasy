@@ -1,13 +1,14 @@
 package com.fantasy.wx.core;
 
+import com.fantasy.file.FileItem;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.WeiXinMessage;
 import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.message.user.Group;
+import com.fantasy.wx.message.user.OpenIdList;
+import com.fantasy.wx.message.user.User;
 import com.fantasy.wx.session.AccountDetails;
 import com.fantasy.wx.session.WeiXinSession;
-import com.fantasy.wx.message.user.Group;
-import com.fantasy.wx.message.user.User;
-import com.fantasy.wx.message.user.OpenIdList;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -90,20 +91,30 @@ public interface WeiXinCoreHelper {
      *
      * @param session 微信号session对象
      * @param content 图文消息
-     * @param toUser  接收人
+     * @param toUsers  接收人
      * @throws WeiXinException
      */
-    public void sendNewsMessage(WeiXinSession session, News content, String toUser) throws WeiXinException;
+    public void sendNewsMessage(WeiXinSession session, News content, String... toUsers) throws WeiXinException;
 
     /**
      * 发送文本消息
      *
      * @param session 微信号session对象
      * @param content 文本消息
-     * @param toUser  接收人
+     * @param toUsers 接收人
      * @throws WeiXinException
      */
-    void sendTextMessage(WeiXinSession session, String content, String toUser) throws WeiXinException;
+    void sendTextMessage(WeiXinSession session, String content, String... toUsers) throws WeiXinException;
+
+    /**
+     * 发送文本消息
+     *
+     * @param session 微信号session对象
+     * @param content 文本消息
+     * @param toGroup 接收组
+     * @throws WeiXinException
+     */
+    void sendTextMessage(WeiXinSession session, String content, Long toGroup) throws WeiXinException;
 
     /**
      * 获取分组信息
@@ -171,5 +182,25 @@ public interface WeiXinCoreHelper {
      * @return List<User>
      */
     User getUser(WeiXinSession session, String userId) throws WeiXinException;
+
+    /**
+     * 媒体上传接口
+     *
+     * @param session   微信号session对象
+     * @param mediaType 媒体类型
+     * @param fileItem  要上传的文件
+     * @return 媒体Id
+     */
+    String mediaUpload(WeiXinSession session, Media.Type mediaType, FileItem fileItem) throws WeiXinException;
+
+    /**
+     * 媒体下载接口
+     *
+     * @param session 微信号session对象
+     * @param mediaId 媒体id
+     * @return FileItem
+     * @throws WeiXinException
+     */
+    FileItem mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException;
 
 }

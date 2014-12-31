@@ -1,5 +1,7 @@
 package com.fantasy.wx.message.content;
 
+import com.fantasy.file.FileItem;
+
 /**
  * 语音消息
  */
@@ -16,7 +18,12 @@ public class Voice {
 
     public Voice(Media media, String recognition) {
         this.media = media;
+        this.media.setType(Media.Type.voice);
         this.recognition = recognition;
+    }
+
+    public Voice(FileItem fileItem) {
+        this.media = new Media(fileItem, Media.Type.voice);
     }
 
     public String getRecognition() {

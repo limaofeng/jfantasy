@@ -19,7 +19,6 @@ import java.util.List;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-9-8 下午4:49:25
  */
 public interface FileItem {

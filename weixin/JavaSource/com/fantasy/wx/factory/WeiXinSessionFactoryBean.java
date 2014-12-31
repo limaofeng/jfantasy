@@ -5,7 +5,7 @@ import com.fantasy.wx.account.AccountDetailsService;
 import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.event.WeiXinEventListener;
 import com.fantasy.wx.handler.DefaultEventHandler;
-import com.fantasy.wx.handler.DefaultTextHandler;
+import com.fantasy.wx.handler.NotReplyTextHandler;
 import com.fantasy.wx.handler.WeiXinHandler;
 import com.fantasy.wx.intercept.LogInterceptor;
 import com.fantasy.wx.intercept.WeiXinMessageInterceptor;
@@ -35,7 +35,7 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
 
     private Class<? extends WeiXinSession> sessionClass = DefaultWeiXinSession.class;
 
-    private WeiXinHandler messageHandler = new DefaultTextHandler();
+    private WeiXinHandler messageHandler = new NotReplyTextHandler();
 
     private WeiXinHandler eventHandler = new DefaultEventHandler();
 

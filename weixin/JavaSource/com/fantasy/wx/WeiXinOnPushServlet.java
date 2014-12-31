@@ -1,49 +1,36 @@
 package com.fantasy.wx;
 
-import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.factory.WeiXinSessionFactory;
 import com.fantasy.wx.message.WeiXinMessage;
-import com.fantasy.wx.service.MessageService;
 import com.fantasy.wx.session.WeiXinSession;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 /**
- * 微信 service
+ * 微信servlet
  */
-@Service
-public class WeiXinService implements InitializingBean {
+@Component("weiXinOnPushServlet")
+public class WeiXinOnPushServlet extends HttpServlet {
 
-    private final static Log LOG = LogFactory.getLog(WeiXinService.class);
+    private final static Log LOG = LogFactory.getLog(WeiXinOnPushServlet.class);
 
+    @Resource
     private WeiXinSessionFactory weiXinSessionFactory;
 
-    @Resource
-    private MessageService iMessageService;
-    @Resource
-    public WeixinConfigInit weixinConfig;
-
     @Override
-    public void afterPropertiesSet() throws Exception {
-        if (weiXinSessionFactory == null) {
-            LOG.error("weiXinSessionFactory is null");
-            throw new WeiXinException("weiXinSessionFactory is null");
-        }
-    }
-
-    public void onEvent(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=utf-8");
         response.setStatus(HttpServletResponse.SC_OK);
 
@@ -79,10 +66,5 @@ public class WeiXinService implements InitializingBean {
             LOG.error(e.getMessage(),e);
             writer.write(e.getMessage());
         }
-    }
-
-    @Autowired
-    public void setWeiXinSessionFactory(WeiXinSessionFactory weiXinSessionFactory) {
-        this.weiXinSessionFactory = weiXinSessionFactory;
     }
 }

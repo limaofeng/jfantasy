@@ -1,31 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-lazy-init="true">
 
-    <bean id="weixinConfigInit" class="com.fantasy.wx.account.init.WeixinConfigInit" />
-    <bean id="iConfigService" class="com.fantasy.wx.account.service.impl.WeixinConfigService" />
-    <bean id="iMenuService" class="com.fantasy.wx.service.MenuService" />
-    <bean id="iMessageService" class="com.fantasy.wx.service.MessageService" />
-    <bean id="iGroupMessageService" class="com.fantasy.wx.service.GroupMessageService" />
-    <bean id="iQRCodeService" class="com.fantasy.wx.service.QRCodeService" />
-    <bean id="iUserInfoService" class="com.fantasy.wx.service.UserInfoService" />
-    <bean id="iGroupService" class="com.fantasy.wx.service.WxGroupService" />
-    <bean id="weixinMessageHandler" class="com.fantasy.wx.handler.WeixinMessageHandler" >
-        <property name="list">
-            <list>
-                <bean class="com.fantasy.wx.handler.WeixinMessageRouter">
-                    <property name="msgType" value="event" />
-                    <property name="event" value="subscribe"/>
-                    <property name="handler" ref="foucsHandler" />
-                </bean>
-                <bean class="com.fantasy.wx.handler.WeixinMessageRouter">
-                    <property name="msgType" value="text" />
-                    <property name="content" value="1"/>
-                    <property name="handler" ref="defaultTextHandler" />
-                </bean>
-            </list>
+    <bean class="com.fantasy.wx.factory.WeiXinSessionFactoryBean">
+        <property name="messageHandler">
+            <bean class="com.fantasy.wx.handler.AutoReplyTextHandler"/>
         </property>
     </bean>
+
 </beans>

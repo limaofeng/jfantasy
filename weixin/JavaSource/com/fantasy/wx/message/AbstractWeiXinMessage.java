@@ -17,11 +17,11 @@ public abstract class AbstractWeiXinMessage<T> implements WeiXinMessage<T> {
     /**
      * 消息id
      */
-    public Long id;
+    private Long id;
     /**
      * 发送方帐号（一个OpenID）
      */
-    public String fromUserName;
+    private String fromUserName;
     /**
      * 消息创建时间
      */

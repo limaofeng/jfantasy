@@ -6,6 +6,9 @@ import com.fantasy.wx.message.content.*;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 /**
  * 微信 session 抽象实现
  */
@@ -17,6 +20,7 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
 
     private AccountDetails accountDetails;
     private WeiXinCoreHelper weiXinCoreHelper;
+    private final static ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 
     public AbstractWeiXinSession(AccountDetails accountDetails, WeiXinCoreHelper weiXinCoreHelper) {
         this.accountDetails = accountDetails;
@@ -30,57 +34,101 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
-    public void sendImageMessage(Image content, String toUser) {
-        try {
-            weiXinCoreHelper.sendImageMessage(this, content, toUser);
-        } catch (WeiXinException e) {
-            LOG.error(e.getMessage(), e);
-        }
+    public void sendImageMessage(final Image content, final String toUser) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendImageMessage(AbstractWeiXinSession.this, content, toUser);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
     }
 
     @Override
-    public void sendVoiceMessage(Voice content, String toUser) {
-        try {
-            weiXinCoreHelper.sendVoiceMessage(this, content, toUser);
-        } catch (WeiXinException e) {
-            LOG.error(e.getMessage(), e);
-        }
+    public void sendVoiceMessage(final Voice content, final String toUser) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendVoiceMessage(AbstractWeiXinSession.this, content, toUser);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
     }
 
     @Override
-    public void sendVideoMessage(Video content, String toUser) {
-        try {
-            weiXinCoreHelper.sendVideoMessage(this, content, toUser);
-        } catch (WeiXinException e) {
-            LOG.error(e.getMessage(), e);
-        }
+    public void sendVideoMessage(final Video content, final String toUser) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendVideoMessage(AbstractWeiXinSession.this, content, toUser);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
     }
 
     @Override
-    public void sendMusicMessage(Music content, String toUser) {
-        try {
-            weiXinCoreHelper.sendMusicMessage(this, content, toUser);
-        } catch (WeiXinException e) {
-            LOG.error(e.getMessage(), e);
-        }
+    public void sendMusicMessage(final Music content, final String toUser) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendMusicMessage(AbstractWeiXinSession.this, content, toUser);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
     }
 
     @Override
-    public void sendNewsMessage(News content, String toUser) {
-        try {
-            weiXinCoreHelper.sendNewsMessage(this, content, toUser);
-        } catch (WeiXinException e) {
-            LOG.error(e.getMessage(), e);
-        }
+    public void sendNewsMessage(final News content, final String... toUsers) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendNewsMessage(AbstractWeiXinSession.this, content, toUsers);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
     }
 
     @Override
-    public void sendTextMessage(String content, String toUser) {
-        try {
-            weiXinCoreHelper.sendTextMessage(this, content, toUser);
-        } catch (WeiXinException e) {
-            LOG.error(e.getMessage(), e);
-        }
+    public void sendTextMessage(final String content, final String... toUsers) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendTextMessage(AbstractWeiXinSession.this, content, toUsers);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void sendTextMessage(final String content, final Long toGroup) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendTextMessage(AbstractWeiXinSession.this, content, toGroup);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
     }
 
     @Override
@@ -88,5 +136,9 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
         return this.accountDetails;
     }
 
+    @Override
+    public WeiXinCoreHelper getWeiXinCoreHelper() {
+        return weiXinCoreHelper;
+    }
 
 }
