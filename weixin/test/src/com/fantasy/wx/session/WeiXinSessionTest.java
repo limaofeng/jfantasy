@@ -5,7 +5,9 @@ import com.fantasy.file.manager.LocalFileManager;
 import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.wx.factory.WeiXinSessionFactory;
 import com.fantasy.wx.message.content.*;
-import org.junit.After;
+import com.fantasy.wx.oauth2.Scope;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,6 +25,8 @@ public class WeiXinSessionTest {
     private WeiXinSessionFactory factory;
 
     private WeiXinSession session;
+
+    private final static Log LOG = LogFactory.getLog(WeiXinSessionTest.class);
 
     private final static String testOpenId = "oJ27Yt1DDz9OlDXL9uwGe9AfG8sI";
 
@@ -73,6 +77,17 @@ public class WeiXinSessionTest {
 
         session.sendTextMessage("测试消息群发消息", testOpenIds);
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+    }
+
+    @Test
+    public void testGetAuthorizationUrl() throws Exception {
+        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.base));
+
+        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.userinfo));
+
+        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.base,"1"));
+
+        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.userinfo,"1"));
     }
 
 }

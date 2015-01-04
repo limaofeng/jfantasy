@@ -7,6 +7,8 @@ import com.fantasy.wx.message.content.*;
 import com.fantasy.wx.message.user.Group;
 import com.fantasy.wx.message.user.OpenIdList;
 import com.fantasy.wx.message.user.User;
+import com.fantasy.wx.oauth2.AccessToken;
+import com.fantasy.wx.oauth2.Scope;
 import com.fantasy.wx.session.AccountDetails;
 import com.fantasy.wx.session.WeiXinSession;
 
@@ -91,10 +93,20 @@ public interface WeiXinCoreHelper {
      *
      * @param session 微信号session对象
      * @param content 图文消息
+     * @param toUser  接收人
+     * @throws WeiXinException
+     */
+    public void sendNewsMessage(WeiXinSession session, News content, String toUser) throws WeiXinException;
+
+    /**
+     * 发送图文消息
+     *
+     * @param session  微信号session对象
+     * @param articles 图文消息
      * @param toUsers  接收人
      * @throws WeiXinException
      */
-    public void sendNewsMessage(WeiXinSession session, News content, String... toUsers) throws WeiXinException;
+    public void sendNewsMessage(WeiXinSession session, List<Article> articles, String... toUsers) throws WeiXinException;
 
     /**
      * 发送文本消息
@@ -114,7 +126,7 @@ public interface WeiXinCoreHelper {
      * @param toGroup 接收组
      * @throws WeiXinException
      */
-    void sendTextMessage(WeiXinSession session, String content, Long toGroup) throws WeiXinException;
+    void sendTextMessage(WeiXinSession session, String content, long toGroup) throws WeiXinException;
 
     /**
      * 获取分组信息
@@ -146,7 +158,7 @@ public interface WeiXinCoreHelper {
      * @param userId  用户id
      * @param groupId 分组id
      */
-    void userUpdateGroup(WeiXinSession session, String userId, Long groupId) throws WeiXinException;
+    void userUpdateGroup(WeiXinSession session, String userId, long groupId) throws WeiXinException;
 
     /**
      * 获取全部用户关注用户 <br/>
@@ -203,4 +215,36 @@ public interface WeiXinCoreHelper {
      */
     FileItem mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException;
 
+    /**
+     * 获取安全链接
+     *
+     * @param session     微信号session对象
+     * @param redirectUri 授权后重定向的回调链接地址，请使用urlencode对链接进行处理
+     * @param scope       应用授权作用域，snsapi_base （不弹出授权页面，直接跳转，只能获取用户openid），snsapi_userinfo （弹出授权页面，可通过openid拿到昵称、性别、所在地。并且，即使在未关注的情况下，只要用户授权，也能获取其信息）
+     * @param state       重定向后会带上state参数，开发者可以填写a-zA-Z0-9的参数值
+     * @return url
+     * @throws WeiXinException
+     */
+    String oauth2buildAuthorizationUrl(WeiXinSession session, String redirectUri, Scope scope, String state) throws WeiXinException;
+
+    /**
+     * 通过 accessToken 换取用户信息
+     *
+     * @param session     微信号session对象
+     * @param accessToken 安全连接的用户授权token
+     * @return User
+     * @throws WeiXinException
+     */
+    User getUser(WeiXinSession session, AccessToken accessToken) throws WeiXinException;
+
+
+    /**
+     * 通过code换取网页授权access_token
+     *
+     * @param session 微信号session对象
+     * @param code    安全连接返回的code
+     * @return AccessToken
+     * @throws WeiXinException
+     */
+    AccessToken oauth2getAccessToken(WeiXinSession session, String code) throws WeiXinException;
 }

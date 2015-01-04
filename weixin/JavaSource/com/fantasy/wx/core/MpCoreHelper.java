@@ -2,9 +2,7 @@ package com.fantasy.wx.core;
 
 import com.fantasy.file.FileItem;
 import com.fantasy.file.manager.LocalFileManager;
-import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.exception.WeiXinException;
@@ -15,11 +13,14 @@ import com.fantasy.wx.message.content.*;
 import com.fantasy.wx.message.user.Group;
 import com.fantasy.wx.message.user.OpenIdList;
 import com.fantasy.wx.message.user.User;
+import com.fantasy.wx.oauth2.AccessToken;
+import com.fantasy.wx.oauth2.Scope;
 import com.fantasy.wx.session.AccountDetails;
 import com.fantasy.wx.session.WeiXinSession;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.common.util.http.URIUtil;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -28,6 +29,8 @@ import me.chanjar.weixin.mp.bean.*;
 import me.chanjar.weixin.mp.bean.custombuilder.MusicBuilder;
 import me.chanjar.weixin.mp.bean.custombuilder.VideoBuilder;
 import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
+import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
+import me.chanjar.weixin.mp.bean.result.WxMpUser;
 import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -35,7 +38,9 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.*;
 
 /**
@@ -207,35 +212,99 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void sendNewsMessage(WeiXinSession session, News content, String... toUsers) throws WeiXinException {
+    public void sendNewsMessage(WeiXinSession session, News content, String toUser) throws WeiXinException {
         try {
-            if (toUsers.length == 0) {
-                throw new WeiXinException("消息接收人为空!");
-            }
-            if (toUsers.length == 1) {
-                WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
-                article.setPicUrl(content.getPicUrl());
-                article.setTitle(content.getLink().getTitle());
-                article.setDescription(content.getLink().getDescription());
-                article.setUrl(content.getLink().getUrl());
-                getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.NEWS().toUser(toUsers[0]).addArticle(article).build());
-            } else {
-                WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
-                openIdsMessage.setMsgType(WxConsts.MASS_MSG_NEWS);
-                for (String toUser : toUsers) {
-                    openIdsMessage.addUser(toUser);
-                }
-                WxMpMassNews massNews = new WxMpMassNews();
-
-                WxMpMassUploadResult result =  getWeiXinDetails(session.getId()).getWxMpService().massNewsUpload(massNews);
-
-                openIdsMessage.setMediaId(result.getMediaId());
-                getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
-            }
+            WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
+            article.setPicUrl(content.getPicUrl());
+            article.setTitle(content.getLink().getTitle());
+            article.setDescription(content.getLink().getDescription());
+            article.setUrl(content.getLink().getUrl());
+            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.NEWS().toUser(toUser).addArticle(article).build());
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    public void sendNewsMessage(WeiXinSession session, List<Article> articles, String... toUsers) throws WeiXinException {
+        if (toUsers.length == 0) {
+            throw new WeiXinException("消息接收人为空!");
+        }
+        try {
+            WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
+            openIdsMessage.setMsgType(WxConsts.MASS_MSG_NEWS);
+            for (String toUser : toUsers) {
+                openIdsMessage.addUser(toUser);
+            }
+            WxMpMassNews massNews = new WxMpMassNews();
+            for (Article article : articles) {
+                WxMpMassNews.WxMpMassNewsArticle newsArticle = new WxMpMassNews.WxMpMassNewsArticle();
+                this.mediaUpload(session, article.getThumb().getType(), article.getThumb().getFileItem());
+                newsArticle.setThumbMediaId(article.getThumb().getId());
+                newsArticle.setTitle(article.getTitle());
+                newsArticle.setContent(article.getContent());
+                newsArticle.setShowCoverPic(article.isShowCoverPic());
+                if (StringUtil.isNotBlank(article.getAuthor())) {
+                    newsArticle.setAuthor(newsArticle.getAuthor());
+                }
+                if (StringUtil.isNotBlank(article.getContentSourceUrl())) {
+                    newsArticle.setContentSourceUrl(newsArticle.getContentSourceUrl());
+                }
+                if (StringUtil.isNotBlank(article.getDigest())) {
+                    newsArticle.setDigest(article.getDigest());
+                }
+                massNews.addArticle(newsArticle);
+            }
+            WxMpMassUploadResult result = getWeiXinDetails(session.getId()).getWxMpService().massNewsUpload(massNews);
+            openIdsMessage.setMediaId(result.getMediaId());
+            getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public String oauth2buildAuthorizationUrl(WeiXinSession session, String redirectUri, Scope scope, String state) throws WeiXinException {
+        WxMpConfigStorage wxMpConfigStorage = getWeiXinDetails(session.getId()).getWxMpConfigStorage();
+        String url = "https://open.weixin.qq.com/connect/oauth2/authorize?";
+        url += "appid=" + wxMpConfigStorage.getAppId();
+        url += "&redirect_uri=" + URIUtil.encodeURIComponent(redirectUri);
+        url += "&response_type=code";
+        url += "&scope=" + scope;
+        if (StringUtil.isNotBlank(state)) {
+            url += "&state=" + state;
+        }
+        url += "#wechat_redirect";
+        return url;
+    }
+
+    public AccessToken oauth2getAccessToken(WeiXinSession session, String code) throws WeiXinException {
+        try {
+            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = getWeiXinDetails(session.getId()).getWxMpService().oauth2getAccessToken(code);
+            return new AccessToken(wxMpOAuth2AccessToken.getAccessToken(), wxMpOAuth2AccessToken.getExpiresIn(), wxMpOAuth2AccessToken.getRefreshToken(), wxMpOAuth2AccessToken.getOpenId(), wxMpOAuth2AccessToken.getScope());
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    public User getUser(WeiXinSession session, AccessToken accessToken) throws WeiXinException {
+        if (Scope.userinfo == accessToken.getScope()) {
+            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
+            wxMpOAuth2AccessToken.setAccessToken(accessToken.getToken());
+            wxMpOAuth2AccessToken.setExpiresIn(accessToken.getExpiresIn());
+            wxMpOAuth2AccessToken.setOpenId(accessToken.getOpenId());
+            wxMpOAuth2AccessToken.setRefreshToken(accessToken.getRefreshToken());
+            wxMpOAuth2AccessToken.setScope(accessToken.getScope().name());
+            try {
+                return toUser(getWeiXinDetails(session.getId()).getWxMpService().oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN"));
+            } catch (WxErrorException e) {
+                throw new WeiXinException(e.getMessage(), e);
+            }
+        } else {
+            return getUser(session, accessToken.getOpenId());
         }
     }
 
@@ -264,7 +333,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void sendTextMessage(WeiXinSession session, String content, Long toGroup) throws WeiXinException {
+    public void sendTextMessage(WeiXinSession session, String content, long toGroup) throws WeiXinException {
         try {
             WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
             groupMessage.setMsgtype(WxConsts.MASS_MSG_TEXT);
@@ -321,7 +390,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void userUpdateGroup(WeiXinSession session, String userId, Long groupId) throws WeiXinException {
+    public void userUpdateGroup(WeiXinSession session, String userId, long groupId) throws WeiXinException {
         try {
             getWeiXinDetails(session.getId()).getWxMpService().userUpdateGroup(userId, groupId);
         } catch (WxErrorException e) {
@@ -381,13 +450,20 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     @Override
     public User getUser(WeiXinSession session, String userId) throws WeiXinException {
         try {
-            getWeiXinDetails(session.getId()).getWxMpService().userInfo(userId, null);
-            return new User();
+            return toUser(getWeiXinDetails(session.getId()).getWxMpService().userInfo(userId, null));
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
+    }
+
+    private User toUser(WxMpUser wxMpUser) {
+        if (wxMpUser == null) {
+            return null;
+        }
+        User user = new User();
+        return user;
     }
 
     @Override
@@ -400,6 +476,19 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         } catch (WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (IOException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+
+    public void xxx(WeiXinSession session) throws WeiXinException {
+        try {
+
+            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = getWeiXinDetails(session.getId()).getWxMpService().oauth2getAccessToken("xx");
+
+            WxMpUser wxMpUser = getWeiXinDetails(session.getId()).getWxMpService().oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
+
+        } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -447,33 +536,6 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             return wxMpConfigStorage;
         }
 
-    }
-
-    private static class WeiXinMediaInputStream extends InputStream {
-
-        private InputStream inputStream;
-        private File file;
-
-        public WeiXinMediaInputStream(File file) {
-            this.file = file;
-            try {
-                this.inputStream = new FileInputStream(file);
-            } catch (FileNotFoundException e) {
-                throw new IgnoreException(e.getMessage());
-            }
-        }
-
-        @Override
-        public int read() throws IOException {
-            return inputStream.read();
-        }
-
-        @Override
-        public void close() throws IOException {
-            super.close();
-            //流读取完成后删除临时文件
-            FileUtil.delFile(file);
-        }
     }
 
 }

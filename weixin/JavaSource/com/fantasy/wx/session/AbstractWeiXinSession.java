@@ -3,9 +3,12 @@ package com.fantasy.wx.session;
 import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.message.user.User;
+import com.fantasy.wx.oauth2.Scope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -90,12 +93,26 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
-    public void sendNewsMessage(final News content, final String... toUsers) {
+    public void sendNewsMessage(final List<Article> content, final String... toUsers) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
                     AbstractWeiXinSession.this.weiXinCoreHelper.sendNewsMessage(AbstractWeiXinSession.this, content, toUsers);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void sendNewsMessage(final News content, final String toUser) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendNewsMessage(AbstractWeiXinSession.this, content, toUser);
                 } catch (WeiXinException e) {
                     LOG.error(e.getMessage(), e);
                 }
@@ -129,6 +146,36 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
                 }
             }
         });
+    }
+
+    @Override
+    public String getAuthorizationUrl(String redirectUri, Scope scope) {
+        try {
+            return this.weiXinCoreHelper.oauth2buildAuthorizationUrl(this, redirectUri, scope, "");
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public String getAuthorizationUrl(String redirectUri, Scope scope, String state) {
+        try {
+            return this.weiXinCoreHelper.oauth2buildAuthorizationUrl(this, redirectUri, scope, state);
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public User getUser(String code) {
+        try {
+            return this.weiXinCoreHelper.getUser(this, this.weiXinCoreHelper.oauth2getAccessToken(this, code));
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     @Override
