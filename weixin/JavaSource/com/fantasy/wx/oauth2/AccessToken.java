@@ -30,7 +30,7 @@ public class AccessToken {
         this.expiresIn = expiresIn;
         this.refreshToken = refreshToken;
         this.openId = openId;
-        this.scope = Scope.valueOf(scope);
+        this.scope = Scope.valueOf(scope.replaceAll("snsapi_",""));
     }
 
     public String getToken() {
