@@ -5,6 +5,7 @@ import com.fantasy.file.manager.LocalFileManager;
 import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.wx.factory.WeiXinSessionFactory;
 import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.message.user.User;
 import com.fantasy.wx.oauth2.Scope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -30,7 +32,7 @@ public class WeiXinSessionTest {
 
     private final static String testOpenId = "oJ27Yt1DDz9OlDXL9uwGe9AfG8sI";
 
-    private final static String[] testOpenIds = {"oJ27Yt1DDz9OlDXL9uwGe9AfG8sI","oJ27YtwbWvKhQ8g3QSzj_Tgmg4uw"};
+    private final static String[] testOpenIds = {"oJ27Yt1DDz9OlDXL9uwGe9AfG8sI", "oJ27YtwbWvKhQ8g3QSzj_Tgmg4uw"};
 
     private FileManager fileManager = new LocalFileManager(PathUtil.classes());
 
@@ -85,9 +87,18 @@ public class WeiXinSessionTest {
 
         LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.userinfo));
 
-        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.base,"1"));
+        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.base, "1"));
 
-        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.userinfo,"1"));
+        LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.userinfo, "1"));
     }
 
+    @Test
+    public void testGetUsers() throws Exception {
+
+        List<User> users = session.getUsers();
+        LOG.debug("users size : " + users.size());
+        for (User user : users) {
+            LOG.debug(user);
+        }
+    }
 }

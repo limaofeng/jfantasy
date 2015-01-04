@@ -140,4 +140,21 @@ public class User {
     public void setUnionid(String unionid) {
         this.unionid = unionid;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "subscribe=" + subscribe +
+                ", openId='" + openId + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", sex=" + sex +
+                ", country='" + country + '\'' +
+                ", province='" + province + '\'' +
+                ", city='" + city + '\'' +
+                ", language='" + language + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", subscribeTime=" + subscribeTime +
+                ", unionid='" + unionid + '\'' +
+                '}';
+    }
 }
