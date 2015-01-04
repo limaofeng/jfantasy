@@ -179,6 +179,16 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
+    public List<User> getUsers() {
+        try {
+            return this.weiXinCoreHelper.getUsers(this);
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
     public AccountDetails getAccountDetails() {
         return this.accountDetails;
     }

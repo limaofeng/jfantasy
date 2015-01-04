@@ -5,6 +5,7 @@ import com.fantasy.file.manager.LocalFileManager;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
+import com.fantasy.security.bean.enums.Sex;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.MessageFactory;
 import com.fantasy.wx.message.TextMessage;
@@ -463,6 +464,19 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             return null;
         }
         User user = new User();
+        user.setOpenId(wxMpUser.getOpenId());
+        user.setAvatar(wxMpUser.getHeadImgUrl());
+        user.setCity(wxMpUser.getCity());
+        user.setCountry(wxMpUser.getCountry());
+        user.setProvince(wxMpUser.getProvince());
+        user.setLanguage(wxMpUser.getLanguage());
+        user.setNickname(wxMpUser.getNickname());
+        user.setSex(Sex.valueOf(wxMpUser.getSex()));
+        user.setSubscribe(wxMpUser.isSubscribe());
+        if (wxMpUser.getSubscribeTime() != null) {
+            user.setSubscribeTime(new Date(wxMpUser.getSubscribeTime()));
+        }
+        user.setUnionid(wxMpUser.getUnionId());
         return user;
     }
 

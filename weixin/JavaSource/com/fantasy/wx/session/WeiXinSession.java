@@ -112,6 +112,11 @@ public interface WeiXinSession {
      */
     User getUser(String code);
 
+    /**
+     * 获取关注的粉丝
+     * @return List<User>
+     */
+    List<User> getUsers();
 
     /**
      * 获取当前公众号信息
