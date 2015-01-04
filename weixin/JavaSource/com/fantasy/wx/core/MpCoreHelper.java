@@ -471,13 +471,23 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         user.setProvince(wxMpUser.getProvince());
         user.setLanguage(wxMpUser.getLanguage());
         user.setNickname(wxMpUser.getNickname());
-        user.setSex(Sex.valueOf(wxMpUser.getSex()));
+        user.setSex(toSex(wxMpUser.getSex()));
         user.setSubscribe(wxMpUser.isSubscribe());
         if (wxMpUser.getSubscribeTime() != null) {
             user.setSubscribeTime(new Date(wxMpUser.getSubscribeTime()));
         }
         user.setUnionid(wxMpUser.getUnionId());
         return user;
+    }
+
+    private Sex toSex(String sex) {
+        if ("男".equals(sex)) {
+            return Sex.male;
+        }
+        if ("女".equals(sex)) {
+            return Sex.female;
+        }
+        return Sex.unknown;
     }
 
     @Override
