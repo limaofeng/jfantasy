@@ -2,6 +2,7 @@ package com.fantasy.wx.core;
 
 import com.fantasy.file.FileItem;
 import com.fantasy.file.manager.LocalFileManager;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
@@ -409,8 +410,16 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             if (userList.getTotal() > userList.getCount()) {
                 throw new WeiXinException("微信关注粉丝超出程序设计值，请联系开发人员。重新设计");
             }
+            List<Group> groups = session.getGroups();
             for (String openId : userList.getOpenIds()) {
-                users.add(getUser(session, openId));
+                User user = getUser(session, openId);
+                if (groups.size() > 1) {
+                    Group group = ObjectUtil.find(groups, "getId()", this.getGroupIdByUserId(session, openId));
+                    group.addUser(user);
+                } else {
+                    groups.get(0).addUser(user);
+                }
+                users.add(user);
             }
             return users;
         } catch (WxErrorException e) {
@@ -509,19 +518,6 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         } catch (WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (IOException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        }
-    }
-
-
-    public void xxx(WeiXinSession session) throws WeiXinException {
-        try {
-
-            WxMpOAuth2AccessToken wxMpOAuth2AccessToken = getWeiXinDetails(session.getId()).getWxMpService().oauth2getAccessToken("xx");
-
-            WxMpUser wxMpUser = getWeiXinDetails(session.getId()).getWxMpService().oauth2getUserInfo(wxMpOAuth2AccessToken, "zh_CN");
-
-        } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }

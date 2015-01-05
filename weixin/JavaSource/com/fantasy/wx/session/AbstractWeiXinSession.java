@@ -3,11 +3,13 @@ package com.fantasy.wx.session;
 import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.message.user.Group;
 import com.fantasy.wx.message.user.User;
 import com.fantasy.wx.oauth2.Scope;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,6 +23,8 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
 
     private String id;
 
+    //缓存所有group信息
+    private List<Group> groups = new ArrayList<Group>();
     private AccountDetails accountDetails;
     private WeiXinCoreHelper weiXinCoreHelper;
     private final static ExecutorService executor = Executors.newSingleThreadScheduledExecutor();
@@ -189,13 +193,21 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
-    public AccountDetails getAccountDetails() {
-        return this.accountDetails;
+    public List<Group> getGroups() {
+        try {
+            if (!this.groups.isEmpty()) {
+                return this.groups;
+            }
+            return this.groups = this.weiXinCoreHelper.getGroups(this);
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
     }
 
     @Override
-    public WeiXinCoreHelper getWeiXinCoreHelper() {
-        return weiXinCoreHelper;
+    public AccountDetails getAccountDetails() {
+        return this.accountDetails;
     }
 
 }

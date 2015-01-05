@@ -18,6 +18,8 @@ import com.fantasy.wx.session.DefaultWeiXinSession;
 import com.fantasy.wx.session.WeiXinSession;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
 
@@ -40,6 +42,8 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         return this.weiXinCoreHelper;
     }
 
+    private ConcurrentMap<String,WeiXinSession> weiXinSessions = new ConcurrentHashMap<String,WeiXinSession>();
+
     @Override
     public WeiXinSession getCurrentSession() throws WeiXinException {
         return WeiXinSessionUtils.getCurrentSession();
@@ -50,7 +54,8 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         try {
             return WeiXinSessionUtils.getCurrentSession();
         } catch (NoSessionException e) {
-            return WeiXinSessionUtils.saveSession(new DefaultWeiXinSession(this.accountDetailsService.loadAccountByAppid(appid),weiXinCoreHelper));
+            weiXinSessions.putIfAbsent(appid,new DefaultWeiXinSession(this.accountDetailsService.loadAccountByAppid(appid),weiXinCoreHelper));
+            return WeiXinSessionUtils.saveSession(weiXinSessions.get(appid));
         }
     }
 

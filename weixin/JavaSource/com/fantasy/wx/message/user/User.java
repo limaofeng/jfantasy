@@ -53,6 +53,8 @@ public class User {
      */
     private String unionid;
 
+    private Group group;
+
     public boolean isSubscribe() {
         return subscribe;
     }
@@ -141,6 +143,14 @@ public class User {
         this.unionid = unionid;
     }
 
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
+    }
+
     @Override
     public String toString() {
         return "User{" +
@@ -155,6 +165,7 @@ public class User {
                 ", avatar='" + avatar + '\'' +
                 ", subscribeTime=" + subscribeTime +
                 ", unionid='" + unionid + '\'' +
+                ", group=" + group +
                 '}';
     }
 }

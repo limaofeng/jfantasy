@@ -2,8 +2,10 @@ package com.fantasy.wx.factory;
 
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.wx.account.AccountDetailsService;
+import com.fantasy.wx.core.MpCoreHelper;
 import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.event.WeiXinEventListener;
+import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.handler.DefaultEventHandler;
 import com.fantasy.wx.handler.NotReplyTextHandler;
 import com.fantasy.wx.handler.WeiXinHandler;
@@ -52,10 +54,14 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
         DefaultWeiXinSessionFactory factory = new DefaultWeiXinSessionFactory();
 
         if (this.accountDetailsService == null) {
-            factory.setAccountDetailsService(SpringContextUtil.getBeanByType(AccountDetailsService.class));
+            throw new WeiXinException(" accountDetailsService is null");
         }
-        if (this.weiXinCoreHelper == null) {
-            factory.setWeiXinCoreHelper(SpringContextUtil.getBeanByType(WeiXinCoreHelper.class));
+        factory.setAccountDetailsService(this.accountDetailsService);
+
+        if (this.weiXinCoreHelper != null) {
+            factory.setWeiXinCoreHelper(this.weiXinCoreHelper);
+        } else {
+            factory.setWeiXinCoreHelper(SpringContextUtil.getBeanByType(MpCoreHelper.class));
         }
 
         factory.setMessageHandler(this.messageHandler);

@@ -2,6 +2,7 @@ package com.fantasy.wx.session;
 
 
 import com.fantasy.wx.message.content.*;
+import com.fantasy.wx.message.user.Group;
 import com.fantasy.wx.message.user.User;
 import com.fantasy.wx.oauth2.Scope;
 
@@ -113,9 +114,17 @@ public interface WeiXinSession {
 
     /**
      * 获取关注的粉丝
+     *
      * @return List<User>
      */
     List<User> getUsers();
+
+    /**
+     * 获取关注的粉丝
+     *
+     * @return List<Group>
+     */
+    List<Group> getGroups();
 
     /**
      * 获取当前公众号信息
