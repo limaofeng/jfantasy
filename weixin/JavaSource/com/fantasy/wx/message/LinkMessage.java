@@ -13,9 +13,4 @@ public class LinkMessage extends AbstractWeiXinMessage<Link> {
         super(id, fromUserName, createTime);
     }
 
-    @Override
-    public Link getContent() {
-        return null;
-    }
-
 }

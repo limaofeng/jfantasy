@@ -13,8 +13,4 @@ public class LocationMessage extends AbstractWeiXinMessage<Location> {
         super(id, fromUserName, createTime);
     }
 
-    @Override
-    public Location getContent() {
-        return null;
-    }
 }

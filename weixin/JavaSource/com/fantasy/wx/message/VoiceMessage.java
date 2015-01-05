@@ -13,8 +13,4 @@ public class VoiceMessage extends AbstractWeiXinMessage<Voice> {
         super(id, fromUserName, createTime);
     }
 
-    @Override
-    public Voice getContent() {
-        return null;
-    }
 }
