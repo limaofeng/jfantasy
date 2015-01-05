@@ -3,50 +3,26 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-lazy-init="true">
 
-    <!---
-    接口初始化，
-    菜单接口，
-    消息接口，
-    群发接口，
-    二维码，
-    用户，
-    用户分组，
-    媒体接口。
-    -->
-
     <bean class="com.fantasy.wx.factory.WeiXinSessionFactoryBean">
         <property name="messageHandler">
             <bean class="com.fantasy.wx.handler.AutoReplyTextHandler"/>
         </property>
-    </bean>
-
-    <!--
-    <bean id="weixinConfigInit" class="com.fantasy.wx.account.init.WeixinConfigInit" />
-    <bean id="iConfigService" class="com.fantasy.wx.account.service.impl.WeixinConfigService" />
-    <bean id="iMenuService" class="com.fantasy.wx.service.WxMenuService" />
-    <bean id="iMessageService" class="com.fantasy.wx.message.service.impl.MessageService" />
-    <bean id="iGroupMessageService" class="com.fantasy.wx.message.service.impl.GroupMessageService" />
-    <bean id="iQRCodeService" class="com.fantasy.wx.service.QRCodeService" />
-    <bean id="iUserInfoService" class="com.fantasy.wx.user.service.impl.UserInfoService" />
-    <bean id="iGroupService" class="com.fantasy.wx.user.service.impl.WxGroupService" />
-    <bean id="foucsHandler" class="com.fantasy.wx.handler.FoucsHandler" />
-    <bean id="defaultTextHandler" class="com.fantasy.wx.handler.DefaultTextHandler" />
-    <bean id="weixinMessageHandler" class="com.fantasy.wx.handler.WeixinMessageHandler">
-        <property name="list">
-            <list>
-                <bean class="com.fantasy.wx.handler.WeixinMessageRouter">
-                    <property name="msgType" value="event" />
-                    <property name="event" value="subscribe"/>
-                    <property name="handler" ref="foucsHandler" />
-                </bean>
-                <bean class="com.fantasy.wx.handler.WeixinMessageRouter">
-                    <property name="msgType" value="text" />
-                    <property name="content" value="1"/>
-                    <property name="handler" ref="defaultTextHandler" />
-                </bean>
-            </list>
+        <property name="accountDetailsService">
+            <bean class="com.fantasy.wx.account.SimpleAccountDetailsService">
+                <property name="accounts">
+                    <list>
+                        <bean class="com.fantasy.wx.bean.Account">
+                            <property name="appId" value="wxcbc2c9fb9d585cd3"/>
+                            <property name="type" value="service"/>
+                            <property name="secret" value="4b224fb5b08f2380572e45baecda63ba"/>
+                            <property name="token" value="haolue_token"/>
+                            <property name="aesKey" value="tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6"/>
+                            <property name="primitiveId" value="gh_3d6114f11c71"/>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
         </property>
     </bean>
-    -->
 
 </beans>
