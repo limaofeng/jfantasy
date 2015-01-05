@@ -29,7 +29,7 @@ public class GoodsWebService implements IGoodsService {
 	@Override
 	public GoodsPagerResult findPager(PagerDTO pager, PropertyFilterDTO[] filters) {
 		Pager<Goods> _pager = goodsService.findPager(WebServiceUtil.toPager(pager, Goods.class), WebServiceUtil.toFilters(filters));
-		return WebServiceUtil.toPagerResult(_pager,new GoodsPagerResult(),asArray(_pager.getPageItems()));
+		return WebServiceUtil.toPagerResult(_pager,new GoodsPagerResult(),asArray(_pager.getPageItems().toArray(new Goods[_pager.getPageItems().size()])));
 	}
 	
 	@Override
@@ -39,12 +39,14 @@ public class GoodsWebService implements IGoodsService {
 
 	@Override
 	public GoodsCategoryDTO[] categories() {
-		return asArray(goodsService.getCategories());
+		List<GoodsCategory> goodsCategories = goodsService.getCategories();
+		return asArray(goodsCategories.toArray(new GoodsCategory[goodsCategories.size()]));
 	}
 
 	@Override
 	public GoodsDTO[] find(PropertyFilterDTO[] filters, String orderBy, String order, int size) {
-		return asArray(goodsService.find(WebServiceUtil.toFilters(filters), orderBy, order, 0, size));
+		List<Goods> goodses = goodsService.find(WebServiceUtil.toFilters(filters), orderBy, order, 0, size);
+		return asArray(goodses.toArray(new Goods[goodses.size()]));
 	}
 
 	@Override
@@ -58,10 +60,10 @@ public class GoodsWebService implements IGoodsService {
 		return BeanUtil.copyProperties(new GoodsDTO(),goods);
 	}
 
-	public static GoodsDTO[] asArray(List<Goods> goodses){
-		GoodsDTO[] goodsDTOs = new GoodsDTO[goodses.size()];
+	public static GoodsDTO[] asArray(Goods[] goodses){
+		GoodsDTO[] goodsDTOs = new GoodsDTO[goodses.length];
 		for(int i=0;i<goodsDTOs.length;i++){
-			goodsDTOs[i] = asDto(goodses.get(i));
+			goodsDTOs[i] = asDto(goodses[i]);
 		}
 		return goodsDTOs;
 	}
@@ -70,10 +72,10 @@ public class GoodsWebService implements IGoodsService {
 		return BeanUtil.copyProperties(new GoodsCategoryDTO(),category);
 	}
 
-	public static GoodsCategoryDTO[] asArray(List<GoodsCategory> categorys){
-		GoodsCategoryDTO[] categoryDTOs = new GoodsCategoryDTO[categorys.size()];
+	public static GoodsCategoryDTO[] asArray(GoodsCategory[] categorys){
+		GoodsCategoryDTO[] categoryDTOs = new GoodsCategoryDTO[categorys.length];
 		for(int i=0;i<categoryDTOs.length;i++){
-			categoryDTOs[i] = asDto(categorys.get(i));
+			categoryDTOs[i] = asDto(categorys[i]);
 		}
 		return categoryDTOs;
 	}
