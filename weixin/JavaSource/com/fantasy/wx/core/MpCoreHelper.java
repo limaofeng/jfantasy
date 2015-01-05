@@ -98,7 +98,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         if ("text".equals(inMessage.getMsgType())) {
             return MessageFactory.createTextMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getContent());
         } else if ("image".equalsIgnoreCase(inMessage.getMsgType())) {
-            return MessageFactory.createImageMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getUrl());
+            return MessageFactory.createImageMessage(this, inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getUrl());
         } else if ("voice".equalsIgnoreCase(inMessage.getMsgType())) {
             return MessageFactory.createVoiceMessage(inMessage.getMsgId(), inMessage.getFromUserName(), new Date(inMessage.getCreateTime()), inMessage.getMediaId(), inMessage.getFormat(), inMessage.getRecognition());
         } else if ("video".equalsIgnoreCase(inMessage.getMsgType())) {
@@ -447,6 +447,15 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 //        }
 //        return null;
 //    }
+
+    @Override
+    public Long getGroupIdByUserId(WeiXinSession session, String openId) throws WeiXinException {
+        try {
+            return getWeiXinDetails(session.getId()).getWxMpService().userGetGroup(openId);
+        } catch (WxErrorException e) {
+            throw WeiXinException.wxExceptionBuilder(e);
+        }
+    }
 
     @Override
     public User getUser(WeiXinSession session, String userId) throws WeiXinException {

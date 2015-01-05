@@ -237,6 +237,15 @@ public interface WeiXinCoreHelper {
      */
     User getUser(WeiXinSession session, AccessToken accessToken) throws WeiXinException;
 
+    /**
+     * 通过 openId 获取用户的分组
+     *
+     * @param session 微信号session对象
+     * @param userId  用户id
+     * @return group
+     * @throws WeiXinException
+     */
+    Long getGroupIdByUserId(WeiXinSession session, String userId) throws WeiXinException;
 
     /**
      * 通过code换取网页授权access_token
@@ -247,4 +256,5 @@ public interface WeiXinCoreHelper {
      * @throws WeiXinException
      */
     AccessToken oauth2getAccessToken(WeiXinSession session, String code) throws WeiXinException;
+
 }

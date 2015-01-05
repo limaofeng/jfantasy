@@ -1,7 +1,6 @@
 package com.fantasy.wx.session;
 
 
-import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.message.content.*;
 import com.fantasy.wx.message.user.User;
 import com.fantasy.wx.oauth2.Scope;
@@ -124,12 +123,5 @@ public interface WeiXinSession {
      * @return AccountDetails
      */
     AccountDetails getAccountDetails();
-
-    /**
-     * 微信第三方框架
-     *
-     * @return WeiXinCoreHelper
-     */
-    WeiXinCoreHelper getWeiXinCoreHelper();
 
 }

@@ -45,11 +45,10 @@ public class MessageFactory {
      * @param url          图片链接
      * @return ImageMessage
      */
-    public static ImageMessage createImageMessage(Long msgId, String fromUserName, Date createTime, String mediaId, String url) throws WeiXinException {
+    public static ImageMessage createImageMessage(final WeiXinCoreHelper coreHelper, Long msgId, String fromUserName, Date createTime, String mediaId, String url) throws WeiXinException {
         ImageMessage message = new ImageMessage(msgId, fromUserName, createTime);
         message.setToUserName(WeiXinSessionUtils.getCurrentSession().getAccountDetails().getPrimitiveId());
         final WeiXinSession session = WeiXinSessionUtils.getCurrentSession();
-        final WeiXinCoreHelper coreHelper = session.getWeiXinCoreHelper();
         Media media = CglibUtil.newInstance(Media.class, new MethodInterceptor() {
             @Override
             public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
