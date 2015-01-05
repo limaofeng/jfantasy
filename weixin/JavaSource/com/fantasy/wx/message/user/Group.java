@@ -1,5 +1,7 @@
 package com.fantasy.wx.message.user;
 
+import com.fantasy.framework.util.common.ObjectUtil;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +54,10 @@ public class Group {
     }
 
     public void addUser(User user) {
-        this.users.add(user);
-        user.setGroup(this);
+        if (ObjectUtil.find(this.users, "getOpenId()", user.getOpenId()) == null) {
+            this.users.add(user);
+            user.setGroup(this);
+        }
     }
 
     @Override
