@@ -1,5 +1,6 @@
 package com.fantasy.wx.session;
 
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.wx.core.WeiXinCoreHelper;
 import com.fantasy.wx.exception.WeiXinException;
 import com.fantasy.wx.message.content.*;
@@ -202,6 +203,44 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
         } catch (WeiXinException e) {
             LOG.error(e.getMessage(), e);
             return null;
+        }
+    }
+
+    @Override
+    public Group createGroup(String name) {
+        try {
+            Group group = this.weiXinCoreHelper.groupCreate(this, name);
+            this.groups.add(group);
+            return group;
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public Group updateGroup(long groupId, String name) {
+        try {
+            this.weiXinCoreHelper.groupUpdate(this, groupId, name);
+            Group group = ObjectUtil.find(getGroups(), "getId()", groupId);
+            group.setName(name);
+            return group;
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    @Override
+    public void moveUser(String userId, long groupId) {
+        try {
+            long _groupId = this.weiXinCoreHelper.getGroupIdByUserId(this, userId);
+            ObjectUtil.remove(ObjectUtil.find(getGroups(), "getId()", _groupId).getUsers(), "getOpenId()", "userId");
+            this.weiXinCoreHelper.userUpdateGroup(this, userId, groupId);
+            Group group = ObjectUtil.find(getGroups(), "getId()", groupId);
+            group.addUser(getUser(userId));
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
         }
     }
 

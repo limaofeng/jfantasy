@@ -127,6 +127,31 @@ public interface WeiXinSession {
     List<Group> getGroups();
 
     /**
+     * 创建分组
+     *
+     * @param name 用户分组名称
+     * @return Group
+     */
+    Group createGroup(String name);
+
+    /**
+     * 更新分组名称
+     *
+     * @param groupId 用户ID
+     * @param name    用户分组名称
+     * @return Group
+     */
+    Group updateGroup(long groupId, String name);
+
+    /**
+     * 移动用户的分组
+     *
+     * @param userId  用户Id
+     * @param groupId 分组Id
+     */
+    void moveUser(String userId, long groupId);
+
+    /**
      * 获取当前公众号信息
      *
      * @return AccountDetails
