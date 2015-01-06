@@ -3,9 +3,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-lazy-init="true">
 
-    <bean class="com.fantasy.wx.factory.WeiXinSessionFactoryBean">
+    <bean class="com.fantasy.wx.framework.factory.WeiXinSessionFactoryBean">
         <property name="messageHandler">
-            <bean class="com.fantasy.wx.handler.AutoReplyTextHandler"/>
+            <bean class="com.fantasy.wx.framework.handler.AutoReplyTextHandler"/>
 
         </property>
         <property name="eventListeners">
@@ -16,7 +16,7 @@
             </map>
         </property>
         <property name="accountDetailsService">
-            <bean class="com.fantasy.wx.account.SimpleAccountDetailsService">
+            <bean class="com.fantasy.wx.framework.account.SimpleAccountDetailsService">
                 <property name="accounts">
                     <list>
                         <bean class="com.fantasy.wx.bean.Account">

@@ -12,7 +12,7 @@ import com.fantasy.wx.bean.Media;
 import com.fantasy.wx.dao.GroupNewsArticleDao;
 import com.fantasy.wx.dao.GroupNewsDao;
 import com.fantasy.wx.dao.GroupMessageDao;
-import com.fantasy.wx.exception.WeiXinException;
+import com.fantasy.wx.framework.exception.WeiXinException;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpMassGroupMessage;
@@ -140,7 +140,7 @@ public class GroupMessageWeiXinService {
      * @param news   群发图文消息
      * @return 微信返回码0为成功其他为错误码，可参考微信公众平台开发文档
      * @throws IOException                              上传图片失败的io异常
-     * @throws com.fantasy.wx.exception.WeiXinException 微信异常
+     * @throws com.fantasy.wx.framework.exception.WeiXinException 微信异常
      */
     public int sendNewsOpenIdMessage(List<String> openid, GroupNews news) throws IOException, WeiXinException {
         WxMpMassOpenIdsMessage message = createOpenIdsMessage(openid, WxConsts.MASS_MSG_NEWS);
@@ -198,7 +198,7 @@ public class GroupMessageWeiXinService {
      * @return 上传图文消息的返回对象
      * @throws IOException                              文件上传io异常
      * @throws WxErrorException                         上传素材的异常
-     * @throws com.fantasy.wx.exception.WeiXinException 上传图片的异常
+     * @throws com.fantasy.wx.framework.exception.WeiXinException 上传图片的异常
      */
     public WxMpMassUploadResult uploadNews(GroupNews news) throws IOException, WxErrorException, WeiXinException {
         groupNewsDao.save(news);

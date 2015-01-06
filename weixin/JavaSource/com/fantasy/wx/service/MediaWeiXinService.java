@@ -11,7 +11,7 @@ import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.Media;
 import com.fantasy.wx.dao.MediaDao;
-import com.fantasy.wx.exception.WeiXinException;
+import com.fantasy.wx.framework.exception.WeiXinException;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import org.springframework.beans.factory.annotation.Autowired;

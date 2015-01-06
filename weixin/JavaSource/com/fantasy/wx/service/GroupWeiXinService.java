@@ -7,8 +7,8 @@ import com.fantasy.wx.bean.Group;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.dao.GroupDao;
 import com.fantasy.wx.dao.UserInfoDao;
-import com.fantasy.wx.factory.WeiXinSessionFactory;
-import com.fantasy.wx.session.WeiXinSession;
+import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
+import com.fantasy.wx.framework.session.WeiXinSession;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,7 +62,7 @@ public class GroupWeiXinService  implements InitializingBean  {
     }
 
     public int create(String name) {
-        com.fantasy.wx.message.user.Group res = session.createGroup(name);
+        com.fantasy.wx.framework.message.user.Group res = session.createGroup(name);
         Group group = new Group(res.getId(), res.getName(),res.getCount());
         group.setCount(res.getCount());
         groupDao.save(group);
@@ -78,8 +78,8 @@ public class GroupWeiXinService  implements InitializingBean  {
 
     public List<Group> refreshGroup() {
         List<Group> gl = new ArrayList<Group>();
-        List<com.fantasy.wx.message.user.Group> list = session.getGroups();
-        for (com.fantasy.wx.message.user.Group g : list) {
+        List<com.fantasy.wx.framework.message.user.Group> list = session.getGroups();
+        for (com.fantasy.wx.framework.message.user.Group g : list) {
             Group group = new Group(g.getId(),g.getName(),g.getCount());
             groupDao.save(group);
             gl.add(group);

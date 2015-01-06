@@ -11,7 +11,7 @@ import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.Message;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.dao.MessageDao;
-import com.fantasy.wx.exception.WeiXinException;
+import com.fantasy.wx.framework.exception.WeiXinException;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -108,7 +108,7 @@ public class MessageWeiXinService {
      * 根据消息类型保存消息对象 更具msgType保存mediaId的消息的媒体文件
      * @param message
      * @return
-     * @throws com.fantasy.wx.exception.WeiXinException
+     * @throws com.fantasy.wx.framework.exception.WeiXinException
      */
     public Message saveByType(Message message) throws WeiXinException {
         String dir=message.getMsgType()+"Wx";

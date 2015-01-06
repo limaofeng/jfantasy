@@ -5,7 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.QRCode;
 import com.fantasy.wx.dao.QRCodeDao;
-import com.fantasy.wx.exception.WeiXinException;
+import com.fantasy.wx.framework.exception.WeiXinException;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.stereotype.Service;
@@ -99,7 +99,7 @@ public class QRCodeWeiXinService {
      *
      * @param linkKey 关联id
      * @return 二维码对象
-     * @throws com.fantasy.wx.exception.WeiXinException
+     * @throws com.fantasy.wx.framework.exception.WeiXinException
      */
     public QRCode qrCodeCreateLastTicket(String linkKey) throws WeiXinException {
         QRCode code = new QRCode();

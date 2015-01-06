@@ -2,11 +2,11 @@ package com.fantasy.wx.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.account.AccountDetailsService;
+import com.fantasy.wx.framework.account.AccountDetailsService;
 import com.fantasy.wx.bean.Account;
 import com.fantasy.wx.dao.AccountDao;
-import com.fantasy.wx.exception.AppidNotFoundException;
-import com.fantasy.wx.session.AccountDetails;
+import com.fantasy.wx.framework.exception.AppidNotFoundException;
+import com.fantasy.wx.framework.session.AccountDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -1,7 +1,7 @@
 package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.wx.session.AccountDetails;
+import com.fantasy.wx.framework.session.AccountDetails;
 
 import javax.persistence.*;
 
