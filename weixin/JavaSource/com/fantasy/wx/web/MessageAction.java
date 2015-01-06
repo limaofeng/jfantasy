@@ -7,7 +7,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.wx.bean.Message;
 import com.fantasy.wx.service.MessageWeiXinService;
 import com.fantasy.wx.bean.UserInfo;
-import com.fantasy.wx.user.service.IUserInfoService;
+import com.fantasy.wx.service.UserInfoWeiXinService;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -20,7 +20,7 @@ public class MessageAction extends ActionSupport {
     @Resource
     private MessageWeiXinService messageWeiXinService;
     @Resource
-    private IUserInfoService iUserInfoService;
+    private UserInfoWeiXinService userInfoWeiXinService;
 
 
     public String index() {
@@ -32,7 +32,7 @@ public class MessageAction extends ActionSupport {
         }
         pager.setPageSize(6);
         pager.getPageItems();
-        pager = iUserInfoService.findPager(pager, new ArrayList<PropertyFilter>());
+        pager = userInfoWeiXinService.findPager(pager, new ArrayList<PropertyFilter>());
 
         //查询第一个用户的消息
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
@@ -47,7 +47,7 @@ public class MessageAction extends ActionSupport {
             ui.setLastLookTime(ui.getLastMessageTime());
         }
         //查询所有用户未读的消息数
-        iUserInfoService.countUnReadSize(pager.getPageItems());
+        userInfoWeiXinService.countUnReadSize(pager.getPageItems());
         this.attrs.put("userPager", pager);
         this.attrs.put("messagePager", this.attrs.get(ROOT));
         this.attrs.remove(ROOT);
@@ -66,8 +66,8 @@ public class MessageAction extends ActionSupport {
             pager.setOrderBy("lastMessageTime");
             pager.setOrder(Pager.Order.desc);
         }
-        pager = iUserInfoService.findPager(pager, filters);
-        iUserInfoService.countUnReadSize(pager.getPageItems());
+        pager = userInfoWeiXinService.findPager(pager, filters);
+        userInfoWeiXinService.countUnReadSize(pager.getPageItems());
         this.attrs.put(ROOT, pager);
         return JSONDATA;
     }

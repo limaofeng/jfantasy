@@ -8,7 +8,7 @@ import javax.persistence.*;
  * 微信媒体文件
  * Created by zzzhong on 2014/6/18.
  */
-@Entity
+@Entity(name="WxMedia")
 @Table(name = "WX_MEDIA")
 public class Media {
 

@@ -6,8 +6,6 @@ import com.fantasy.file.service.DirectoryService;
 import com.fantasy.framework.util.concurrent.LinkedQueue;
 import com.fantasy.wx.bean.Message;
 import me.chanjar.weixin.mp.api.*;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Service;
 import org.xml.sax.InputSource;
 
 import javax.annotation.Resource;
@@ -24,9 +22,8 @@ import java.util.Map;
 /**
  * 原来的类
  */
-@Service
 @Deprecated
-public class WeixinConfigInit implements InitializingBean {
+public class WeixinConfigInit{
     protected WxMpConfigStorage wxMpConfigStorage;
     //微信service处理对象
     protected WxMpService util;
@@ -51,7 +48,6 @@ public class WeixinConfigInit implements InitializingBean {
     /*@Resource
     private ScheduleService scheduleService;*/
 
-    @Override
     public void afterPropertiesSet() throws Exception {
         try {
             /*

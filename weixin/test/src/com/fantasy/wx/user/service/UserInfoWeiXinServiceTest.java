@@ -48,7 +48,6 @@ public class UserInfoWeiXinServiceTest {
         ui.setLanguage("zh");
         ui.setNickname("测试nick");
         ui.setSubscribeTime(new Date().getTime());
-        iUserInfoService.saveArry(new UserInfo[]{ui});
     }
 
     public void testDelete() throws Exception {

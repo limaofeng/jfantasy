@@ -81,14 +81,6 @@ public class WxWxGroupWeiXinServiceTest {
     }
 
     @Test
-    public void testGetGroup1() throws Exception {
-        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) config.getWxMpConfigStorage();
-        Long groupId = iGroupWeiXinService.getUserGroup(configProvider.getOpenId());
-        Assert.assertNotNull(groupId);
-        logger.debug(groupId);
-    }
-
-    @Test
     public void testMoveGroup() throws Exception {
         WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) config.getWxMpConfigStorage();
         int i = iGroupWeiXinService.moveGroup(configProvider.getOpenId(), 1L);

@@ -12,7 +12,7 @@ import java.util.List;
  * 微信通用接口凭证
  * Created by zzzhong on 2014/6/18.
  */
-@Entity
+@Entity(name="WxMenu")
 @Table(name = "WX_MENU")
 public class Menu extends BaseBusEntity {
     public Menu() {
