@@ -91,7 +91,6 @@ public class Menu extends BaseBusEntity {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "PID",foreignKey = @ForeignKey(name="FK_AUTH_MENU_PID"))
-
     private Menu parent;
     /**
      * 菜单是否选中

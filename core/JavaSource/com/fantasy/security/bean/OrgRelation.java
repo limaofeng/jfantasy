@@ -1,9 +1,9 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -27,14 +27,22 @@ public class OrgRelation extends BaseBusEntity {
     /**
      * 标示主键
      */
+    @Id
+    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
      * 组织机构
      */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ORG_ID",foreignKey = @ForeignKey(name="FK_AUTH_ORG_RELATION"))
     private Organization organization;
     /**
      * 下级组织机构
      */
+    @OneToMany(targetEntity = Organization.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "AUTH_ORG_CHILDREN", joinColumns = @JoinColumn(name = "ID"), inverseJoinColumns = @JoinColumn(name = "ORG_ID"),foreignKey = @ForeignKey(name="FK_AUTH_ORG_CHILDREN"))
     private List<Organization> children;
 
     private Type type;

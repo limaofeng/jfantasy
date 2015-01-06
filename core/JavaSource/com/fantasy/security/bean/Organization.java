@@ -42,6 +42,7 @@ public class Organization extends BaseBusEntity {
     /**
      * 机构简写
      */
+    @Id
     @Column(name = "CODE")
     private String id;
     /**
