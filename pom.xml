@@ -895,6 +895,8 @@
         <module>cms-ws-client</module>
         <module>websocket</module>
         <module>weixin</module>
+        <module>weixin-ws-server</module>
+        <module>weixin-ws-client</module>
         <module>javaweb</module>
     </modules>
 

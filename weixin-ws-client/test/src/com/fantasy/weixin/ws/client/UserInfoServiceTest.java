@@ -1,9 +1,10 @@
 package com.fantasy.weixin.ws.client;
 
+import com.fantasy.uitl.Constants;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.fantasy.uitl.Constants;
 import org.junit.Before;
+import org.junit.Test;
 
 import javax.annotation.Resource;
 
@@ -20,5 +21,9 @@ public class UserInfoServiceTest {
         userInfoService.setEndPointReference(Constants.END_POINT_REFERENCE);
         userInfoService.setTargetNamespace("http://ws.goods.mall.fantasy.com");
         userInfoService.afterPropertiesSet();
+    }
+    @Test
+    public void testRefresh(){
+        userInfoService.getUserInfo("");
     }
 }

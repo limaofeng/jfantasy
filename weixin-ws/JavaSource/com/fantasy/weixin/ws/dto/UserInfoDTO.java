@@ -1,8 +1,5 @@
 package com.fantasy.weixin.ws.dto;
 
-import com.fantasy.weixin.ws.dto.GroupDTO;
-
-import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
