@@ -242,7 +242,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             WxMpMassNews massNews = new WxMpMassNews();
             for (Article article : articles) {
                 WxMpMassNews.WxMpMassNewsArticle newsArticle = new WxMpMassNews.WxMpMassNewsArticle();
-                this.mediaUpload(session, article.getThumb().getType(), article.getThumb().getFileItem());
+                article.getThumb().setId(this.mediaUpload(session, article.getThumb().getType(), article.getThumb().getFileItem()));
                 newsArticle.setThumbMediaId(article.getThumb().getId());
                 newsArticle.setTitle(article.getTitle());
                 newsArticle.setContent(article.getContent());

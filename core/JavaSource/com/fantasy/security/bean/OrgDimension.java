@@ -6,6 +6,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -20,6 +21,7 @@ public class OrgDimension extends BaseBusEntity {
     /**
      * 维度Id
      */
+    @Id
     @Column(name = "CODE")
     private String id;
     /**

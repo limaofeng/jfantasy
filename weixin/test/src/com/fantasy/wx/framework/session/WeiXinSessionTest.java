@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -68,6 +69,11 @@ public class WeiXinSessionTest {
     @Test
     public void testSendNewsMessage() throws Exception {
         session.sendNewsMessage(new News("http://test.jfantasy.org/assets/images/gravatar.jpg", new Link("测试标题", "测试描述", "http://test.jfantasy.org/index.do")), testOpenId);
+        Thread.sleep(TimeUnit.SECONDS.toMillis(5));
+        //测试群发
+        List<Article> articles = new ArrayList<Article>();
+        articles.add(new Article("测试标题","测试内容",fileManager.getFileItem("/files/gravatar.jpg")));
+        session.sendNewsMessage(articles,testOpenIds);
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
     }
 
