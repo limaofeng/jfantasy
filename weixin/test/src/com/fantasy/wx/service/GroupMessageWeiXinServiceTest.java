@@ -1,4 +1,4 @@
-package com.fantasy.wx.framework.message.service;
+package com.fantasy.wx.service;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
@@ -8,11 +8,10 @@ import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.wx.account.init.WeixinConfigInit;
-import com.fantasy.wx.media.service.impl.MediaWeiXinServiceTest;
 import com.fantasy.wx.bean.GroupMessage;
 import com.fantasy.wx.bean.GroupNews;
 import com.fantasy.wx.bean.GroupNewsArticle;
-import com.fantasy.wx.service.GroupMessageWeiXinService;
+import com.fantasy.wx.media.service.impl.MediaWeiXinServiceTest;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

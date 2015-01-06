@@ -1,4 +1,4 @@
-package com.fantasy.wx.framework.message.service;
+package com.fantasy.wx.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
