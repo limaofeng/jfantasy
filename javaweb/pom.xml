@@ -67,7 +67,7 @@
         </dependency>
         <dependency>
             <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-weixin</artifactId>
+            <artifactId>fantasy-weixin-ws-server</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
