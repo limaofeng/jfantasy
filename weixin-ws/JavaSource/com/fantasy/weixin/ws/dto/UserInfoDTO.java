@@ -1,4 +1,6 @@
-package com.fantasy.wx.bean;
+package com.fantasy.weixin.ws.dto;
+
+import com.fantasy.weixin.ws.dto.GroupDTO;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
@@ -8,63 +10,44 @@ import java.util.Date;
  * 微信用户基本信息
  * Created by zzzhong on 2014/6/19.
  */
-@Entity
-@Table(name = "WX_USER_INFO")
-public class UserInfo {
+public class UserInfoDTO {
 
-    public UserInfo() {
+    public UserInfoDTO() {
     }
 
-    public UserInfo(String openid) {
+    public UserInfoDTO(String openid) {
         this.openId = openid;
     }
 
     //用户的标识，对当前公众号唯一
-    @Id
-    @Column(name = "OPENID", nullable = false, insertable = true, updatable = false)
     private String openId;
     //用户的昵称
-    @Column(name = "NICKNAME", length = 5000)
     private String nickname;
     //用户的性别
-    @Column(name = "SEX")
     private String sex;
     //用户所在城市
-    @Column(name = "CITY")
     private String city;
     //用户所在国家
-    @Column(name = "COUNTRY")
     private String country;
     //用户所在省份
-    @Column(name = "PROVINCE")
     private String province;
     //用户的语言，简体中文为zh_CN
-    @Column(name = "LANGUAGE")
     private String language;
     //用户头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），用户没有头像时该项为空
-    @Column(name = "AVATAR", length = 600)
     private String avatar;
     //用户关注时间，为时间戳。如果用户曾多次关注，则取最后关注时间
-    @Column(name = "SUBSCRIBE_TIME")
     private Long subscribeTime;
     //用户是否订阅该公众号标识，值为0时，代表此用户没有关注该公众号，拉取不到其余信息。
-    @Column(name = "SUBSCRIBE")
     private Boolean subscribe;
-    @Column(name = "UNION_ID")
     private String unionId;
     //最后消息时间
-    @Column(name = "LAST_MESSAGE_TIME")
     private Long lastMessageTime;
     //最后查看消息时间
-    @Column(name = "LAST_LOOK_TIME")
     private Long lastLookTime;
     //未读消息条数
-    @Column(name = "UN_READ_SIZE")
     private Integer unReadSize;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_ID")
-    private Group group;
+    private GroupDTO group;
 
     public String getTime() {
         if (subscribeTime == 0) return "";
@@ -197,11 +180,11 @@ public class UserInfo {
         this.subscribe = subscribe;
     }
 
-    public Group getGroup() {
+    public GroupDTO getGroup() {
         return group;
     }
 
-    public void setGroup(Group group) {
+    public void setGroup(GroupDTO group) {
         this.group = group;
     }
 }

@@ -5,7 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.wx.bean.Account;
-import com.fantasy.wx.service.AccountService;
+import com.fantasy.wx.service.AccountWeiXinService;
 import org.quartz.JobExecutionException;
 
 import javax.annotation.Resource;
@@ -24,7 +24,7 @@ public class AccountAction extends ActionSupport {
 
 
     @Resource
-    private AccountService iConfigService;
+    private AccountWeiXinService iConfigService;
 
     public String index() {
         this.search(new Pager<Account>(), new ArrayList<PropertyFilter>());

@@ -12,6 +12,7 @@ public class WeiXinException extends Exception {
 
     private WxErrorInfo error;
 
+    public WeiXinException(){}
     public WeiXinException(WxErrorInfo error) {
         super(error.toString());
         this.error = error;

@@ -4,7 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.bean.Account;
-import com.fantasy.wx.service.AccountService;
+import com.fantasy.wx.service.AccountWeiXinService;
 import com.fantasy.wx.session.AccountDetails;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
@@ -25,7 +25,7 @@ import java.util.List;
 public class WeixinConfigServiceTest {
     private static final Log logger = LogFactory.getLog(Account.class);
     @Resource
-    private AccountService iConfigService;
+    private AccountWeiXinService iConfigService;
 
     @Before
     public void setUp() throws Exception {
