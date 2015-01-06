@@ -6,6 +6,14 @@
     <bean class="com.fantasy.wx.factory.WeiXinSessionFactoryBean">
         <property name="messageHandler">
             <bean class="com.fantasy.wx.handler.AutoReplyTextHandler"/>
+
+        </property>
+        <property name="eventListeners">
+            <map>
+                <entry key="subscribe">
+                    <bean class=""/>
+                </entry>
+            </map>
         </property>
         <property name="accountDetailsService">
             <bean class="com.fantasy.wx.account.SimpleAccountDetailsService">

@@ -4,7 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.bean.QRCode;
-import com.fantasy.wx.service.QRCodeService;
+import com.fantasy.wx.service.QRCodeWeiXinService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class QRCodeServiceTest {
     private static final Log logger = LogFactory.getLog(QRCode.class);
     @Autowired
-    private QRCodeService iQRCodeService;
+    private QRCodeWeiXinService iQRCodeService;
 
     @Test
     public void testGetQRCode() throws Exception {

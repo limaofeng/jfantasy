@@ -5,7 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.wx.bean.Message;
-import com.fantasy.wx.service.MessageService;
+import com.fantasy.wx.service.MessageWeiXinService;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.user.service.IUserInfoService;
 
@@ -18,7 +18,7 @@ import java.util.List;
  */
 public class MessageAction extends ActionSupport {
     @Resource
-    private MessageService messageService;
+    private MessageWeiXinService messageWeiXinService;
     @Resource
     private IUserInfoService iUserInfoService;
 
@@ -85,7 +85,7 @@ public class MessageAction extends ActionSupport {
             pager.setOrder(Pager.Order.desc);
         }
         filters.add(new PropertyFilter("EQS_msgType", "text"));
-        pager = messageService.findPager(pager, filters);
+        pager = messageWeiXinService.findPager(pager, filters);
         this.attrs.put(ROOT, pager);
         return JSONDATA;
     }
@@ -97,7 +97,7 @@ public class MessageAction extends ActionSupport {
      * @return
      */
     public String sendMessage(Message m) {
-        this.attrs.put(ROOT, messageService.save(m));
+        this.attrs.put(ROOT, messageWeiXinService.save(m));
         return JSONDATA;
     }
 

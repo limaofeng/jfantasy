@@ -9,7 +9,7 @@ import java.util.List;
  * 用户分组
  */
 public class Group {
-    private long id = -1L;
+    private long id;
     private String name;
     private long count;
     private List<User> users;

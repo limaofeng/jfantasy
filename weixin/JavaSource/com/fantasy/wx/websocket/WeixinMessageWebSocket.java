@@ -4,7 +4,7 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.Message;
 import com.fantasy.wx.bean.UserInfo;
-import com.fantasy.wx.service.UserInfoService;
+import com.fantasy.wx.service.UserInfoWeiXinService;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -25,7 +25,7 @@ public class WeixinMessageWebSocket extends TextWebSocketHandler {
     @Resource
     private WeixinConfigInit config;
     @Resource
-    private UserInfoService userInfoService;
+    private UserInfoWeiXinService userInfoWeiXinService;
 
     public WeixinMessageWebSocket() {
         new Thread(new Runnable() {
@@ -40,7 +40,7 @@ public class WeixinMessageWebSocket extends TextWebSocketHandler {
                     try {
                         if (config == null) return;
                         Message message = config.getMessage();
-                        userInfoService.setUnReadSize(message.getUserInfo());
+                        userInfoWeiXinService.setUnReadSize(message.getUserInfo());
                         if (message != null) {
                             for (WebSocketSession ws : sessions) {
                                 if (!ws.isOpen()) {
@@ -77,7 +77,7 @@ public class WeixinMessageWebSocket extends TextWebSocketHandler {
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         super.handleTextMessage(session, message);
 
-        userInfoService.refreshMessage(new UserInfo(message.getPayload()));
+        userInfoWeiXinService.refreshMessage(new UserInfo(message.getPayload()));
         /*Principal principal = (Principal) OgnlUtil.getInstance().getValue("principal",session);
         UserDetails userDetails = principal instanceof Authentication ? (UserDetails) ((Authentication) principal).getPrincipal() : null;
         TextMessage returnMessage = new TextMessage(userDetails.getUsername() + " : " + message.getPayload() + " received at server");
