@@ -64,6 +64,10 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         return this.accountDetailsService;
     }
 
+    public void sendMessage(WeiXinMessage message,String userId){
+
+    }
+
     @Override
     public WeiXinMessage<?> execute(WeiXinMessage message) throws WeiXinException {
         List<Object> handler = new ArrayList<Object>(weiXinMessageInterceptors);
