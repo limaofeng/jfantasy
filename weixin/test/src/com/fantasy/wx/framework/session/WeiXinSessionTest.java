@@ -71,9 +71,9 @@ public class WeiXinSessionTest {
     public void testSendVideoMessage() throws Exception {
         session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4"), fileManager.getFileItem("/files/gravatar.jpg")), testOpenId);
 
-        session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4"), fileManager.getFileItem("/files/gravatar.jpg")), testOpenIds);
+        session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4")), testOpenIds);
 
-        session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4"), fileManager.getFileItem("/files/gravatar.jpg")), testOpenId);
+        session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4")), group.getId());
 
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
     }
