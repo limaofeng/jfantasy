@@ -2,11 +2,15 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 
+import javax.persistence.Entity;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
  * 组织机构关系
  */
+@Entity
+@Table(name = "AUTH_ORG_RELATION")
 public class OrgRelation extends BaseBusEntity {
 
     public static enum Type {

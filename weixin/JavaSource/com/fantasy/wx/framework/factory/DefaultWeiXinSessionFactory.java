@@ -42,7 +42,7 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         return this.weiXinCoreHelper;
     }
 
-    private ConcurrentMap<String,WeiXinSession> weiXinSessions = new ConcurrentHashMap<String,WeiXinSession>();
+    private ConcurrentMap<String, WeiXinSession> weiXinSessions = new ConcurrentHashMap<String, WeiXinSession>();
 
     @Override
     public WeiXinSession getCurrentSession() throws WeiXinException {
@@ -54,7 +54,7 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         try {
             return WeiXinSessionUtils.getCurrentSession();
         } catch (NoSessionException e) {
-            weiXinSessions.putIfAbsent(appid,new DefaultWeiXinSession(this.accountDetailsService.loadAccountByAppid(appid),weiXinCoreHelper));
+            weiXinSessions.putIfAbsent(appid, new DefaultWeiXinSession(this.accountDetailsService.loadAccountByAppid(appid), weiXinCoreHelper));
             return WeiXinSessionUtils.saveSession(weiXinSessions.get(appid));
         }
     }
@@ -64,7 +64,7 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         return this.accountDetailsService;
     }
 
-    public void sendMessage(WeiXinMessage message,String userId){
+    public void sendMessage(WeiXinMessage message, String userId) {
 
     }
 
@@ -81,17 +81,17 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
                     } finally {
                         for (WeiXinEventListener listener : listeners) {
                             if (listener instanceof ClickEventListener) {
-                                ((ClickEventListener) listener).onClick(session, (Event) message.getContent());
+                                ((ClickEventListener) listener).onClick(session, (Event) message.getContent(), (EventMessage) message);
                             } else if (listener instanceof LocationEventListener) {
-                                ((LocationEventListener) listener).onLocation(session, (EventLocation) message.getContent());
+                                ((LocationEventListener) listener).onLocation(session, (EventLocation) message.getContent(), (EventMessage) message);
                             } else if (listener instanceof ScanEventListener) {
-                                ((ScanEventListener) listener).onScan(session, (Event) message.getContent());
+                                ((ScanEventListener) listener).onScan(session, (Event) message.getContent(), (EventMessage) message);
                             } else if (listener instanceof SubscribeEventListener) {
-                                ((SubscribeEventListener) listener).onSubscribe(session, (Event) message.getContent());
+                                ((SubscribeEventListener) listener).onSubscribe(session, (Event) message.getContent(), (EventMessage) message);
                             } else if (listener instanceof UnsubscribeEventListener) {
-                                ((UnsubscribeEventListener) listener).onUnsubscribe(session, (Event) message.getContent());
+                                ((UnsubscribeEventListener) listener).onUnsubscribe(session, (Event) message.getContent(), (EventMessage) message);
                             } else if (listener instanceof ViewEventListener) {
-                                ((ViewEventListener) listener).onView(session, (Event) message.getContent());
+                                ((ViewEventListener) listener).onView(session, (Event) message.getContent(), (EventMessage) message);
                             }
                         }
                     }

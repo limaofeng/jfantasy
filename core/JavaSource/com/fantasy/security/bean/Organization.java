@@ -4,10 +4,7 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.Column;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -17,6 +14,8 @@ import java.util.List;
  * @version 1.0
  * @since 2013-1-22 下午04:00:57
  */
+@Entity
+@Table(name = "AUTH_ORGANIZATION")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Organization extends BaseBusEntity {

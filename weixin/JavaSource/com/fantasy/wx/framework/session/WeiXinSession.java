@@ -110,7 +110,15 @@ public interface WeiXinSession {
      * @param code 安全链接code
      * @return User
      */
-    User getUser(String code);
+    User getAuthorizedUser(String code);
+
+    /**
+     * 获取安全连接的授权用户
+     *
+     * @param userId 关注粉丝的openId
+     * @return User
+     */
+    User getUser(String userId);
 
     /**
      * 获取关注的粉丝

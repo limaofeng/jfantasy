@@ -1,5 +1,6 @@
 package com.fantasy.wx.framework.event;
 
+import com.fantasy.wx.framework.message.EventMessage;
 import com.fantasy.wx.framework.message.content.EventLocation;
 import com.fantasy.wx.framework.session.WeiXinSession;
 
@@ -8,6 +9,6 @@ import com.fantasy.wx.framework.session.WeiXinSession;
  */
 public interface LocationEventListener extends WeiXinEventListener {
 
-    public void onLocation(WeiXinSession session,EventLocation event);
+    public void onLocation(WeiXinSession session,EventLocation event,EventMessage message);
 
 }

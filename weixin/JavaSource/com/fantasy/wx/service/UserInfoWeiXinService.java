@@ -67,7 +67,7 @@ public class UserInfoWeiXinService implements InitializingBean{
      * @return
      */
     public UserInfo authUserInfo(String code){
-        return transfiguration(session.getUser(code));
+        return transfiguration(session.getAuthorizedUser(code));
     }
 
 

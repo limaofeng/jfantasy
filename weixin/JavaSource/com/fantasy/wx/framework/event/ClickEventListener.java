@@ -1,5 +1,6 @@
 package com.fantasy.wx.framework.event;
 
+import com.fantasy.wx.framework.message.EventMessage;
 import com.fantasy.wx.framework.message.content.Event;
 import com.fantasy.wx.framework.session.WeiXinSession;
 
@@ -8,6 +9,6 @@ import com.fantasy.wx.framework.session.WeiXinSession;
  */
 public interface ClickEventListener extends WeiXinEventListener {
 
-    public void onClick(WeiXinSession session,Event event);
+    public void onClick(WeiXinSession session,Event event,EventMessage message);
 
 }
