@@ -142,7 +142,8 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     public void sendImageMessage(WeiXinSession session, Image content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                throw new WeiXinException("消息接收人为空!");
+                this.sendImageMessage(session, content, -1);
+                return;
             }
             //上传图片文件
             Media media = content.getMedia();
@@ -171,7 +172,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
             WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
             groupMessage.setMsgtype(WxConsts.MASS_MSG_IMAGE);
-            groupMessage.setGroupId(toGroup);
+            if (toGroup != -1) {
+                groupMessage.setGroupId(toGroup);
+            }
             groupMessage.setMediaId(media.getId());
             getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
         } catch (WxErrorException e) {
@@ -185,7 +188,8 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     public void sendVoiceMessage(WeiXinSession session, Voice content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                throw new WeiXinException("消息接收人为空!");
+                this.sendVoiceMessage(session, content, -1);
+                return;
             }
             //上传语言文件
             Media media = content.getMedia();
@@ -216,7 +220,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
             WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
             groupMessage.setMsgtype(WxConsts.MASS_MSG_VOICE);
-            groupMessage.setGroupId(toGroup);
+            if (toGroup != -1) {
+                groupMessage.setGroupId(toGroup);
+            }
             groupMessage.setMediaId(media.getId());
             getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
         } catch (WxErrorException e) {
@@ -228,7 +234,8 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     public void sendVideoMessage(WeiXinSession session, Video content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                throw new WeiXinException("消息接收人为空!");
+                this.sendVideoMessage(session, content, -1);
+                return;
             }
             //上传视频
             Media media = content.getMedia();
@@ -281,7 +288,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             WxMpMassUploadResult result = getWeiXinDetails(session.getId()).getWxMpService().massVideoUpload(massVideo);
             WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
             groupMessage.setMsgtype(WxConsts.MASS_MSG_VIDEO);
-            groupMessage.setGroupId(toGroup);
+            if (toGroup != -1) {
+                groupMessage.setGroupId(toGroup);
+            }
             groupMessage.setMediaId(result.getMediaId());
             getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
         } catch (WxErrorException e) {
@@ -331,7 +340,8 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 
     public void sendNewsMessage(WeiXinSession session, List<Article> articles, String... toUsers) throws WeiXinException {
         if (toUsers.length == 0) {
-            throw new WeiXinException("消息接收人为空!");
+            this.sendNewsMessage(session, articles, -1);
+            return;
         }
         try {
             WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
@@ -373,7 +383,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         try {
             WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
             groupMessage.setMsgtype(WxConsts.MASS_MSG_NEWS);
-            groupMessage.setGroupId(toGroup);
+            if (toGroup != -1) {
+                groupMessage.setGroupId(toGroup);
+            }
             WxMpMassNews massNews = new WxMpMassNews();
             for (Article article : articles) {
                 WxMpMassNews.WxMpMassNewsArticle newsArticle = new WxMpMassNews.WxMpMassNewsArticle();
@@ -449,9 +461,8 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     public void sendTextMessage(WeiXinSession session, String content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                throw new WeiXinException("消息接收人为空!");
-            }
-            if (toUsers.length == 1) {
+                sendTextMessage(session, content, -1);
+            } else if (toUsers.length == 1) {
                 getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.TEXT().toUser(toUsers[0]).content(content).build());
             } else {
                 WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
@@ -474,7 +485,9 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         try {
             WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
             groupMessage.setMsgtype(WxConsts.MASS_MSG_TEXT);
-            groupMessage.setGroupId(toGroup);
+            if (toGroup != -1) {
+                groupMessage.setGroupId(toGroup);
+            }
             groupMessage.setContent(content);
             getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
         } catch (WxErrorException e) {
