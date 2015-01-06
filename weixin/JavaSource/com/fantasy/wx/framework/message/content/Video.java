@@ -24,6 +24,12 @@ public class Video {
      */
     private Media media;
 
+    public Video(String title, String description, FileItem media) {
+        this.title = title;
+        this.description = description;
+        this.media = new Media(media, Media.Type.video);
+    }
+
     public Video(String title, String description, FileItem media, FileItem thumb) {
         this.title = title;
         this.description = description;

@@ -139,12 +139,41 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void sendImageMessage(WeiXinSession session, Image content, String toUser) throws WeiXinException {
+    public void sendImageMessage(WeiXinSession session, Image content, String... toUsers) throws WeiXinException {
+        try {
+            if (toUsers.length == 0) {
+                throw new WeiXinException("消息接收人为空!");
+            }
+            //上传图片文件
+            Media media = content.getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            if (toUsers.length == 1) {
+                getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.IMAGE().toUser(toUsers[0]).mediaId(media.getId()).build());
+            } else {
+                WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
+                openIdsMessage.setMsgType(WxConsts.MASS_MSG_IMAGE);
+                for (String toUser : toUsers) {
+                    openIdsMessage.addUser(toUser);
+                }
+                openIdsMessage.setMediaId(media.getId());
+                getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
+            }
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendImageMessage(WeiXinSession session, Image content, long toGroup) throws WeiXinException {
         try {
             //上传图片文件
             Media media = content.getMedia();
             media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
-            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.IMAGE().toUser(toUser).mediaId(media.getId()).build());
+            WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
+            groupMessage.setMsgtype(WxConsts.MASS_MSG_IMAGE);
+            groupMessage.setGroupId(toGroup);
+            groupMessage.setMediaId(media.getId());
+            getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
@@ -196,23 +225,65 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void sendVideoMessage(WeiXinSession session, Video content, String toUser) throws WeiXinException {
+    public void sendVideoMessage(WeiXinSession session, Video content, String... toUsers) throws WeiXinException {
+        try {
+            if (toUsers.length == 0) {
+                throw new WeiXinException("消息接收人为空!");
+            }
+            //上传视频
+            Media media = content.getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            //发送消息
+            if (toUsers.length == 1) {
+                //上传缩略图
+                Media thumb = content.getThumb();
+                thumb.setId(this.mediaUpload(session, thumb.getType(), thumb.getFileItem()));
+                VideoBuilder videoBuilder = WxMpCustomMessage.VIDEO().toUser(toUsers[0]).mediaId(media.getId()).thumbMediaId(thumb.getId());
+                if (StringUtil.isNotBlank(content.getTitle())) {
+                    videoBuilder.title(content.getTitle());
+                }
+                if (StringUtil.isNotBlank(content.getDescription())) {
+                    videoBuilder.description(content.getDescription());
+                }
+                getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(videoBuilder.build());
+            } else {
+                WxMpMassVideo massVideo = new WxMpMassVideo();
+                massVideo.setMediaId(media.getId());
+                massVideo.setTitle(content.getTitle());
+                massVideo.setDescription(content.getDescription());
+                WxMpMassUploadResult result = getWeiXinDetails(session.getId()).getWxMpService().massVideoUpload(massVideo);
+                WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
+                openIdsMessage.setMsgType(WxConsts.MASS_MSG_VIDEO);
+                for (String toUser : toUsers) {
+                    openIdsMessage.addUser(toUser);
+                }
+                openIdsMessage.setMediaId(result.getMediaId());
+                getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
+            }
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendVideoMessage(WeiXinSession session, Video content, long toGroup) throws WeiXinException {
         try {
             //上传视频
             Media media = content.getMedia();
             media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
-            //上传缩略图
-            Media thumb = content.getThumb();
-            thumb.setId(this.mediaUpload(session, thumb.getType(), thumb.getFileItem()));
             //发送消息
-            VideoBuilder videoBuilder = WxMpCustomMessage.VIDEO().toUser(toUser).mediaId(media.getId()).thumbMediaId(thumb.getId());
-            if (StringUtil.isNotBlank(content.getTitle())) {
-                videoBuilder.title(content.getTitle());
-            }
-            if (StringUtil.isNotBlank(content.getDescription())) {
-                videoBuilder.description(content.getDescription());
-            }
-            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(videoBuilder.build());
+            WxMpMassVideo massVideo = new WxMpMassVideo();
+            massVideo.setMediaId(media.getId());
+            massVideo.setTitle(content.getTitle());
+            massVideo.setDescription(content.getDescription());
+            WxMpMassUploadResult result = getWeiXinDetails(session.getId()).getWxMpService().massVideoUpload(massVideo);
+            WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
+            groupMessage.setMsgtype(WxConsts.MASS_MSG_VIDEO);
+            groupMessage.setGroupId(toGroup);
+            groupMessage.setMediaId(result.getMediaId());
+            getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {

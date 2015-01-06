@@ -53,17 +53,27 @@ public interface WeiXinCoreHelper {
      *
      * @param session 微信号session对象
      * @param content 图片消息
-     * @param toUser  接收人
+     * @param toUsers 接收人
      * @throws WeiXinException
      */
-    public void sendImageMessage(WeiXinSession session, Image content, String toUser) throws WeiXinException;
+    public void sendImageMessage(WeiXinSession session, Image content, String... toUsers) throws WeiXinException;
+
+    /**
+     * 发送图片消息
+     *
+     * @param session 微信号session对象
+     * @param content 图片消息
+     * @param toGroup 接收组
+     * @throws WeiXinException
+     */
+    public void sendImageMessage(WeiXinSession session, Image content, long toGroup) throws WeiXinException;
 
     /**
      * 发送语音消息
      *
      * @param session 微信号session对象
      * @param content 语音消息
-     * @param toUsers  接收人
+     * @param toUsers 接收人
      * @throws WeiXinException
      */
     public void sendVoiceMessage(WeiXinSession session, Voice content, String... toUsers) throws WeiXinException;
@@ -73,7 +83,7 @@ public interface WeiXinCoreHelper {
      *
      * @param session 微信号session对象
      * @param content 语音消息
-     * @param toGroup  接收人
+     * @param toGroup 接收人
      * @throws WeiXinException
      */
     public void sendVoiceMessage(WeiXinSession session, Voice content, long toGroup) throws WeiXinException;
@@ -83,10 +93,21 @@ public interface WeiXinCoreHelper {
      *
      * @param session 微信号session对象
      * @param content 视频消息
-     * @param toUser  接收人
+     * @param toUsers 接收人
      * @throws WeiXinException
      */
-    public void sendVideoMessage(WeiXinSession session, Video content, String toUser) throws WeiXinException;
+    public void sendVideoMessage(WeiXinSession session, Video content, String... toUsers) throws WeiXinException;
+
+    /**
+     * 发送视频消息
+     *
+     * @param session 微信号session对象
+     * @param content 视频消息
+     * @param toGroup 接收人
+     * @throws WeiXinException
+     */
+    public void sendVideoMessage(WeiXinSession session, Video content, long toGroup) throws WeiXinException;
+
 
     /**
      * 发送音乐消息

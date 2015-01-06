@@ -50,6 +50,10 @@ public class WeiXinSessionTest {
     @Test
     public void testSendImageMessage() throws Exception {
         session.sendImageMessage(new Image(fileManager.getFileItem("/files/gravatar.jpg")), testOpenId);
+
+        session.sendImageMessage(new Image(fileManager.getFileItem("/files/gravatar.jpg")), testOpenIds);
+
+        session.sendImageMessage(new Image(fileManager.getFileItem("/files/gravatar.jpg")), group.getId());
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
     }
 
@@ -66,6 +70,11 @@ public class WeiXinSessionTest {
     @Test
     public void testSendVideoMessage() throws Exception {
         session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4"), fileManager.getFileItem("/files/gravatar.jpg")), testOpenId);
+
+        session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4"), fileManager.getFileItem("/files/gravatar.jpg")), testOpenIds);
+
+        session.sendVideoMessage(new Video("昊略测试标题", "昊略测试视频摘要", fileManager.getFileItem("/files/video.mp4"), fileManager.getFileItem("/files/gravatar.jpg")), testOpenId);
+
         Thread.sleep(TimeUnit.SECONDS.toMillis(5));
     }
 

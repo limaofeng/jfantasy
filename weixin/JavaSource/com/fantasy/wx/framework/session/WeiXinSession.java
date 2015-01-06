@@ -25,9 +25,17 @@ public interface WeiXinSession {
      * 发送图片消息
      *
      * @param content 图片消息
-     * @param toUser  接收人
+     * @param toUsers  接收人
      */
-    public void sendImageMessage(Image content, String toUser);
+    public void sendImageMessage(Image content, String... toUsers);
+
+    /**
+     * 发送图片消息
+     *
+     * @param content 图片消息
+     * @param toGroup  接收组
+     */
+    public void sendImageMessage(Image content, long toGroup);
 
     /**
      * 发送语音消息
@@ -49,9 +57,17 @@ public interface WeiXinSession {
      * 发送视频消息
      *
      * @param content 视频消息
-     * @param toUser  接收人
+     * @param toUsers  接收人
      */
-    public void sendVideoMessage(Video content, String toUser);
+    public void sendVideoMessage(Video content, String... toUsers);
+
+    /**
+     * 发送视频消息
+     *
+     * @param content 视频消息
+     * @param toGroup  接收组
+     */
+    public void sendVideoMessage(Video content, long toGroup);
 
     /**
      * 发送音乐消息
