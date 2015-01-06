@@ -56,12 +56,26 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
-    public void sendVoiceMessage(final Voice content, final String toUser) {
+    public void sendVoiceMessage(final Voice content, final String... toUsers) {
         executor.execute(new Runnable() {
             @Override
             public void run() {
                 try {
-                    AbstractWeiXinSession.this.weiXinCoreHelper.sendVoiceMessage(AbstractWeiXinSession.this, content, toUser);
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendVoiceMessage(AbstractWeiXinSession.this, content, toUsers);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void sendVoiceMessage(final Voice content, final long toGroup) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendVoiceMessage(AbstractWeiXinSession.this, content, toGroup);
                 } catch (WeiXinException e) {
                     LOG.error(e.getMessage(), e);
                 }
@@ -129,6 +143,20 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
+    public void sendNewsMessage(final List<Article> content, final long toGroup) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendNewsMessage(AbstractWeiXinSession.this,content,toGroup);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    @Override
     public void sendTextMessage(final String content, final String... toUsers) {
         executor.execute(new Runnable() {
             @Override
@@ -143,7 +171,7 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
-    public void sendTextMessage(final String content, final Long toGroup) {
+    public void sendTextMessage(final String content, final long toGroup) {
         executor.execute(new Runnable() {
             @Override
             public void run() {

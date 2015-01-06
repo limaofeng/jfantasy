@@ -153,15 +153,44 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void sendVoiceMessage(WeiXinSession session, Voice content, String toUser) throws WeiXinException {
+    public void sendVoiceMessage(WeiXinSession session, Voice content, String... toUsers) throws WeiXinException {
         try {
-            //上传音乐文件
+            if (toUsers.length == 0) {
+                throw new WeiXinException("消息接收人为空!");
+            }
+            //上传语言文件
             Media media = content.getMedia();
             media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
-            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.VOICE().toUser(toUser).mediaId(media.getId()).build());
+            if (toUsers.length == 1) {
+                getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.VOICE().toUser(toUsers[0]).mediaId(media.getId()).build());
+            } else {
+                WxMpMassOpenIdsMessage openIdsMessage = new WxMpMassOpenIdsMessage();
+                openIdsMessage.setMsgType(WxConsts.MASS_MSG_VOICE);
+                for (String toUser : toUsers) {
+                    openIdsMessage.addUser(toUser);
+                }
+                openIdsMessage.setMediaId(media.getId());
+                getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
+            }
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendVoiceMessage(WeiXinSession session, Voice content, long toGroup) throws WeiXinException {
+        try {
+            //上传语言文件
+            Media media = content.getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
+            groupMessage.setMsgtype(WxConsts.MASS_MSG_VOICE);
+            groupMessage.setGroupId(toGroup);
+            groupMessage.setMediaId(media.getId());
+            getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
+        } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -261,6 +290,41 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             WxMpMassUploadResult result = getWeiXinDetails(session.getId()).getWxMpService().massNewsUpload(massNews);
             openIdsMessage.setMediaId(result.getMediaId());
             getWeiXinDetails(session.getId()).getWxMpService().massOpenIdsMessageSend(openIdsMessage);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        } catch (WeiXinException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void sendNewsMessage(WeiXinSession session, List<Article> articles, long toGroup) throws WeiXinException {
+        try {
+            WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
+            groupMessage.setMsgtype(WxConsts.MASS_MSG_NEWS);
+            groupMessage.setGroupId(toGroup);
+            WxMpMassNews massNews = new WxMpMassNews();
+            for (Article article : articles) {
+                WxMpMassNews.WxMpMassNewsArticle newsArticle = new WxMpMassNews.WxMpMassNewsArticle();
+                article.getThumb().setId(this.mediaUpload(session, article.getThumb().getType(), article.getThumb().getFileItem()));
+                newsArticle.setThumbMediaId(article.getThumb().getId());
+                newsArticle.setTitle(article.getTitle());
+                newsArticle.setContent(article.getContent());
+                newsArticle.setShowCoverPic(article.isShowCoverPic());
+                if (StringUtil.isNotBlank(article.getAuthor())) {
+                    newsArticle.setAuthor(newsArticle.getAuthor());
+                }
+                if (StringUtil.isNotBlank(article.getContentSourceUrl())) {
+                    newsArticle.setContentSourceUrl(newsArticle.getContentSourceUrl());
+                }
+                if (StringUtil.isNotBlank(article.getDigest())) {
+                    newsArticle.setDigest(article.getDigest());
+                }
+                massNews.addArticle(newsArticle);
+            }
+            WxMpMassUploadResult result = getWeiXinDetails(session.getId()).getWxMpService().massNewsUpload(massNews);
+            groupMessage.setMediaId(result.getMediaId());
+            getWeiXinDetails(session.getId()).getWxMpService().massGroupMessageSend(groupMessage);
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {

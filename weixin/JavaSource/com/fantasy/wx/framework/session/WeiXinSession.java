@@ -33,9 +33,17 @@ public interface WeiXinSession {
      * 发送语音消息
      *
      * @param content 语音消息
-     * @param toUser  接收人
+     * @param toUsers 接收人
      */
-    public void sendVoiceMessage(Voice content, String toUser);
+    public void sendVoiceMessage(Voice content, String... toUsers);
+
+    /**
+     * 发送语音消息
+     *
+     * @param content 语音消息
+     * @param toGroup 接收人
+     */
+    public void sendVoiceMessage(Voice content, long toGroup);
 
     /**
      * 发送视频消息
@@ -70,6 +78,14 @@ public interface WeiXinSession {
     public void sendNewsMessage(List<Article> content, String... toUsers);
 
     /**
+     * 发送图文消息
+     *
+     * @param content 图文消息列表
+     * @param toGroup 接收人
+     */
+    public void sendNewsMessage(List<Article> content, long toGroup);
+
+    /**
      * 发送文本消息
      *
      * @param content 文本消息
@@ -83,7 +99,7 @@ public interface WeiXinSession {
      * @param content 文本消息
      * @param toGroup 接收组
      */
-    void sendTextMessage(String content, Long toGroup);
+    void sendTextMessage(String content, long toGroup);
 
     /**
      * 获取安全链接
