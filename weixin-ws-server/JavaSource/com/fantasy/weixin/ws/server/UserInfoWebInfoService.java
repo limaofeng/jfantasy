@@ -1,6 +1,6 @@
 package com.fantasy.weixin.ws.server;
 
-import com.fantasy.weixin.ws.IUserService;
+import com.fantasy.weixin.ws.IUserInfoService;
 import com.fantasy.weixin.ws.dto.GroupDTO;
 import com.fantasy.weixin.ws.dto.UserInfoDTO;
 import com.fantasy.wx.bean.Group;
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 /**
  * Created by zzzhong on 2015/1/6.
  */
-public class UserInfoWebService implements IUserService {
+public class UserInfoWebInfoService implements IUserInfoService {
     @Resource
     public UserInfoWeiXinService userInfoWeiXinService;
     @Override

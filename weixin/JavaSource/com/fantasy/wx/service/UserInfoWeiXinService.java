@@ -60,6 +60,16 @@ public class UserInfoWeiXinService implements InitializingBean{
             this.userInfoDao.save(transfiguration(u));
         }
     }
+    /**
+     * 通过openId刷新用户信息
+     *
+     */
+    public UserInfo refresh(String openId){
+        UserInfo ui=transfiguration(session.getUser(openId));
+        this.userInfoDao.save(ui);
+        return ui;
+    }
+
 
     /**
      * 通过安全连接的code换取微信用户信息
@@ -69,6 +79,8 @@ public class UserInfoWeiXinService implements InitializingBean{
     public UserInfo authUserInfo(String code){
         return transfiguration(session.getAuthorizedUser(code));
     }
+
+
 
 
     /**

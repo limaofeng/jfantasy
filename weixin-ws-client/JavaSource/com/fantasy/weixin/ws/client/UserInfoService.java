@@ -1,13 +1,13 @@
 package com.fantasy.weixin.ws.client;
 
 import com.fantasy.framework.ws.axis2.WebServiceClient;
-import com.fantasy.weixin.ws.IUserService;
+import com.fantasy.weixin.ws.IUserInfoService;
 import com.fantasy.weixin.ws.dto.UserInfoDTO;
 
 /**
  * Created by zzzhong on 2015/1/6.
  */
-public class UserInfoService  extends WebServiceClient implements IUserService {
+public class UserInfoService extends WebServiceClient implements IUserInfoService {
     public UserInfoService() {
         super("UserInfoService");
     }
