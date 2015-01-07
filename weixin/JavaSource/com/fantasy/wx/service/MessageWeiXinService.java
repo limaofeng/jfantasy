@@ -30,7 +30,7 @@ import java.util.Random;
 /**
  * Created by zzzhong on 2014/8/28.
  */
-@Service
+@Service("wxMessageService")
 @Transactional
 public class MessageWeiXinService {
     @Resource
