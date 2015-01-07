@@ -145,8 +145,9 @@ public class BuguIndex implements InitializingBean {
 
 	@SuppressWarnings("unchecked")
 	public <T> LuceneDao<T> getLuceneDao(Class<T> indexedClass) {
-		if (this.luceneDaos.containsKey(indexedClass))
-			return (LuceneDao<T>) this.luceneDaos.get(indexedClass);
+		if (this.luceneDaos.containsKey(indexedClass)){
+            return (LuceneDao<T>) this.luceneDaos.get(indexedClass);
+        }
 		if (this.luceneDaoClass.containsKey(indexedClass)) {
 			LuceneDao<T> luceneDao = (LuceneDao<T>) SpringContextUtil.getBeanByType(this.luceneDaoClass.get(indexedClass));
 			if (luceneDao == null) {
@@ -166,8 +167,9 @@ public class BuguIndex implements InitializingBean {
 		this.executor = Executors.newFixedThreadPool(this.threadPoolSize);
 		this.scheduler = Executors.newSingleThreadScheduledExecutor();
 		this.scheduler.scheduleAtFixedRate(new IndexReopenTask(), this.period, this.period, TimeUnit.MILLISECONDS);
-		if (this.clusterConfig != null)
-			this.clusterConfig.validate();
+		if (this.clusterConfig != null){
+            this.clusterConfig.validate();
+        }
 	}
 
 	/**
@@ -186,25 +188,27 @@ public class BuguIndex implements InitializingBean {
 			this.clusterConfig.invalidate();
 		}
 		Map<String, IndexWriter> map = IndexWriterCache.getInstance().getAll();
-		for (IndexWriter writer : map.values())
-			if (writer != null) {
-				Directory dir = writer.getDirectory();
-				try {
-					writer.commit();
-					writer.close(true);
-				} catch (CorruptIndexException ex) {
-					logger.error("Can not commit and close the lucene index", ex);
-				} catch (IOException ex) {
-					logger.error("Can not commit and close the lucene index", ex);
-				} finally {
-					try {
-						if ((dir != null) && (IndexWriter.isLocked(dir)))
-							IndexWriter.unlock(dir);
-					} catch (IOException ex) {
-						logger.error("Can not unlock the lucene index", ex);
-					}
-				}
-			}
+		for (IndexWriter writer : map.values()){
+            if (writer != null) {
+                Directory dir = writer.getDirectory();
+                try {
+                    writer.commit();
+                    writer.close(true);
+                } catch (CorruptIndexException ex) {
+                    logger.error("Can not commit and close the lucene index", ex);
+                } catch (IOException ex) {
+                    logger.error("Can not commit and close the lucene index", ex);
+                } finally {
+                    try {
+                        if ((dir != null) && (IndexWriter.isLocked(dir))){
+                            IndexWriter.unlock(dir);
+                        }
+                    } catch (IOException ex) {
+                        logger.error("Can not unlock the lucene index", ex);
+                    }
+                }
+            }
+        }
 	}
 
 	public ExecutorService getExecutor() {

@@ -149,8 +149,9 @@ public class SettingUtil {
     }
 
     public static String cleanFileManagerPath(String html, String configType) {
-        if (StringUtil.isBlank(html))
+        if (StringUtil.isBlank(html)){
             return html;
+        }
         html = SettingUtil.getText(html, configType);
         if (!(html.contains("<a") || html.contains("<img"))) {
             return html;

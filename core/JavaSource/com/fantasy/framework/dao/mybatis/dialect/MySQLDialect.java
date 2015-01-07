@@ -14,11 +14,11 @@ public class MySQLDialect implements Dialect {
 		sql = trim(sql);
 		StringBuilder sb = new StringBuilder(sql.length() + 20);
 		sb.append(sql);
-		if (offset > 0)
-			sb.append(" limit ").append(offset).append(',').append(limit).append(SQL_END_DELIMITER);
-		else {
-			sb.append(" limit ").append(limit).append(SQL_END_DELIMITER);
-		}
+		if (offset > 0){
+            sb.append(" limit ").append(offset).append(',').append(limit).append(SQL_END_DELIMITER);
+        }else {
+            sb.append(" limit ").append(limit).append(SQL_END_DELIMITER);
+        }
 		return sb.toString();
 	}
 

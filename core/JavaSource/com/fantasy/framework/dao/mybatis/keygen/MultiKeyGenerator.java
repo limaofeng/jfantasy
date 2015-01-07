@@ -33,8 +33,9 @@ public class MultiKeyGenerator implements KeyGenerator {
         for (String keyPropertie : paramMappedStatement.getKeyProperties()) {
             try {
                 Object value = Ognl.getValue(keyPropertie, paramObject);
-                if ((ObjectUtil.isNull(value)) || (StringUtil.isBlank(value)))
+                if ((ObjectUtil.isNull(value)) || (StringUtil.isBlank(value))){
                     this.targetKeyGenerators.get(keyPropertie).processBefore(paramExecutor, paramMappedStatement, paramStatement, paramObject);
+                }
             } catch (OgnlException e) {
                 LOG.error(e.getMessage(), e);
             }

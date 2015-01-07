@@ -137,9 +137,9 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     public void setResultCode(String resultCode) {
-        if (isExecuted())
+        if (isExecuted()){
             throw new IllegalStateException("Result has already been executed.");
-
+        }
         this.resultCode = resultCode;
     }
 

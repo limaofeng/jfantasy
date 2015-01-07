@@ -1,17 +1,12 @@
 package com.fantasy.framework.util.common;
 
-import java.lang.reflect.Method;
-import java.util.concurrent.ConcurrentHashMap;
-
-import javassist.ClassClassPath;
-import javassist.ClassPool;
-import javassist.CtClass;
-import javassist.CtMethod;
-import javassist.Modifier;
-import javassist.NotFoundException;
+import javassist.*;
 import javassist.bytecode.CodeAttribute;
 import javassist.bytecode.LocalVariableAttribute;
 import javassist.bytecode.MethodInfo;
+
+import java.lang.reflect.Method;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class JavassistUtil {
 
@@ -38,8 +33,9 @@ public class JavassistUtil {
 	public static String[] getParamNames(String classname, Method method) throws NotFoundException, MissingLVException {
 		Class<?>[] parameterTypes = method.getParameterTypes();
 		String[] paramTypeNames = new String[parameterTypes.length];
-		for (int i = 0; i < parameterTypes.length; i++)
-			paramTypeNames[i] = parameterTypes[i].getName();
+		for (int i = 0; i < parameterTypes.length; i++){
+            paramTypeNames[i] = parameterTypes[i].getName();
+        }
 		CtMethod cm = getCtClass(classname).getDeclaredMethod(method.getName(), getDefault().get(paramTypeNames));
 		return getParamNames(cm);
 	}
@@ -56,8 +52,9 @@ public class JavassistUtil {
 	 */
 	public static String[] getParamNames(String classname, String methodname, Class<?>... parameterTypes) throws NotFoundException, MissingLVException {
 		String[] paramTypeNames = new String[parameterTypes.length];
-		for (int i = 0; i < parameterTypes.length; i++)
-			paramTypeNames[i] = parameterTypes[i].getName();
+		for (int i = 0; i < parameterTypes.length; i++){
+            paramTypeNames[i] = parameterTypes[i].getName();
+        }
 		CtMethod cm = getCtClass(classname).getDeclaredMethod(methodname, getDefault().get(paramTypeNames));
 		return getParamNames(cm);
 	}
@@ -76,12 +73,14 @@ public class JavassistUtil {
 		MethodInfo methodInfo = cm.getMethodInfo();
 		CodeAttribute codeAttribute = methodInfo.getCodeAttribute();
 		LocalVariableAttribute attr = (LocalVariableAttribute) codeAttribute.getAttribute(LocalVariableAttribute.tag);
-		if (attr == null)
-			throw new MissingLVException(cc.getName());
+		if (attr == null){
+            throw new MissingLVException(cc.getName());
+        }
 		String[] paramNames = new String[cm.getParameterTypes().length];
 		int pos = Modifier.isStatic(cm.getModifiers()) ? 0 : 1;
-		for (int i = 0; i < paramNames.length; i++)
-			paramNames[i] = attr.variableName(i + pos);
+		for (int i = 0; i < paramNames.length; i++){
+            paramNames[i] = attr.variableName(i + pos);
+        }
 		return paramNames;
 	}
 

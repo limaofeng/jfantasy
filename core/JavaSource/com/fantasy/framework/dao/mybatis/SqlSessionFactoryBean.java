@@ -108,8 +108,9 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     public void setDataSource(DataSource dataSource) {
         if ((dataSource instanceof TransactionAwareDataSourceProxy)) {
             this.dataSource = ((TransactionAwareDataSourceProxy) dataSource).getTargetDataSource();
-        } else
+        } else {
             this.dataSource = dataSource;
+        }
     }
 
     public void setSqlSessionFactoryBuilder(SqlSessionFactoryBuilder sqlSessionFactoryBuilder) {
@@ -149,8 +150,9 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
             this.sqlSessionFactory = buildSqlSessionFactory();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            if (this.sqlSessionFactory == null)
+            if (this.sqlSessionFactory == null){
                 logger.error("sqlSessionFactory 加载失败 : " + e.getMessage(), e);
+            }
             throw e;
         }
     }
@@ -223,8 +225,9 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         if (xmlConfigBuilder != null) {
             try {
                 xmlConfigBuilder.parse();
-                if (this.logger.isDebugEnabled())
+                if (this.logger.isDebugEnabled()){
                     this.logger.debug("Parsed configuration file: '" + this.configLocation + "'");
+                }
             } catch (Exception ex) {
                 throw new NestedIOException("Failed to parse config resource: " + this.configLocation, ex);
             } finally {

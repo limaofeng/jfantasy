@@ -35,8 +35,9 @@ public class MethodProxy {
 
     public MethodProxy(Object method, Class<?> parameterType) {
         this(method);
-        if (parameterType != null)
+        if (parameterType != null){
             this.parameterTypes = new Class[]{parameterType};
+        }
     }
 
     public Object invoke(Object object, Object param) {
@@ -68,8 +69,9 @@ public class MethodProxy {
     }
 
     public static MethodProxy create(Object method) {
-        if (method == null)
+        if (method == null){
             return null;
+        }
         return new MethodProxy(method);
     }
 

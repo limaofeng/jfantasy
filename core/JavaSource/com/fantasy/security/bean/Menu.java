@@ -177,11 +177,13 @@ public class Menu extends BaseBusEntity {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-        if ((ObjectUtil.isNotNull(this.parent)) && (selected))
+        if ((ObjectUtil.isNotNull(this.parent)) && (selected)){
             this.parent.setSelected(selected);
-        else if ((ObjectUtil.isNotNull(getChildren())) && (!selected))
-            for (Menu menu : getChildren())
+        } else if ((ObjectUtil.isNotNull(getChildren())) && (!selected)){
+            for (Menu menu : getChildren()){
                 menu.setSelected(selected);
+            }
+        }
     }
 
     public void setParent(Menu parent) {

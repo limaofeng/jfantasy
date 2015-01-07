@@ -1,21 +1,5 @@
 package com.fantasy.framework.struts2.interceptor;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
-
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
@@ -27,6 +11,12 @@ import com.opensymphony.xwork2.util.PatternMatcher;
 import com.opensymphony.xwork2.util.TextParseUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.dispatcher.multipart.MultiPartRequestWrapper;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.util.*;
 
 public class FileUploadInterceptor extends AbstractInterceptor {
 
@@ -256,9 +246,11 @@ public class FileUploadInterceptor extends AbstractInterceptor {
 	 * @return true if itemCollection contains the item, false otherwise.
 	 */
 	private boolean containsItem(Collection<String> itemCollection, String item) {
-		for (String pattern : itemCollection)
-			if (matchesWildcard(pattern, item))
-				return true;
+		for (String pattern : itemCollection){
+            if (matchesWildcard(pattern, item)){
+                return true;
+            }
+        }
 		return false;
 	}
 

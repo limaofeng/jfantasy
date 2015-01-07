@@ -126,8 +126,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         int count = 0;
         for (int i = s.length() - 1; i >= 0; i--) {
             char c = s.charAt(i);
-            if (c == '.' || c == '[')
+            if (c == '.' || c == '['){
                 count++;
+            }
         }
         return count;
     }
@@ -279,8 +280,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             for (int i = 0; i < paramNames.length; i++) {
                 String paramName = paramNames[i];
                 Class<?> parameterType = parameterTypes[i];
-                if (params.containsKey(paramName))
+                if (params.containsKey(paramName)){
                     continue;
+                }
                 if (List.class.isAssignableFrom(parameterType)) {
                     List<Class> generic = ClassUtil.getMethodGenericParameterTypes(actionMethod, i);
                     properties.add(new Property(paramName, parameterType, generic.toArray(new Class[generic.size()])));
@@ -530,8 +532,9 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 }
             }
             return false;
-        } else
+        } else {
             return acceptedPattern.matcher(paramName).matches();
+        }
     }
 
     protected boolean isExcluded(String paramName) {

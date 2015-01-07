@@ -364,8 +364,9 @@ public final class ImageUtil {
         }
         int realWidth = imageOriginal.getWidth();
         int realHeight = imageOriginal.getHeight();
-        if ((realWidth == width) && (realHeight == heigth))
+        if ((realWidth == width) && (realHeight == heigth)){
             return imageOriginal;
+        }
         return reduce(imageOriginal, realWidth, realHeight, width, heigth);
     }
 
@@ -753,8 +754,9 @@ public final class ImageUtil {
      * @return
      */
     public static BufferedImage screenshots(BufferedImage img, int x, int y, int w, int h) {
-        if (logger.isDebugEnabled())
+        if (logger.isDebugEnabled()){
             logger.debug("Method:screenshots,param:{x:" + x + ",y:" + y + ",w:" + w + ",h:" + h + "}");
+        }
         ImageFilter cropFilter = new CropImageFilter(x, y, w, h);
         Image newImg = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(img.getSource(), cropFilter));
         BufferedImage tag = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);

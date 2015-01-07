@@ -98,8 +98,9 @@ public class DateUtil {
      * @功能描述
      */
     public static String format(Object date, String format) {
-        if (date == null || !Date.class.isAssignableFrom(date.getClass()))
+        if (date == null || !Date.class.isAssignableFrom(date.getClass())){
             return "";
+        }
         return format((Date) date, format);
     }
 
@@ -137,8 +138,9 @@ public class DateUtil {
      * @功能描述 以指定格式格式化日期
      */
     public static Date parse(String s, String format) {
-        if (s == null)
+        if (s == null){
             return null;
+        }
         DateFormat dateFormat = getDateFormat(format);
         locks.get(format).lock();
         try {
@@ -533,8 +535,9 @@ public class DateUtil {
         String start = ampm(startTime);
         String end = ampm(endTime);
 
-        if ("A".equalsIgnoreCase(start) && "A".equalsIgnoreCase(end))
+        if ("A".equalsIgnoreCase(start) && "A".equalsIgnoreCase(end)){
             return "A";
+        }
         if ("P".equalsIgnoreCase(start) && "P".equalsIgnoreCase(end)) {
             return "P";
         }

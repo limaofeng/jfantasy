@@ -13,11 +13,13 @@ public class Algorithm {
 		int stopIndex = items.size() - 1;
 		int middle = (int) Math.floor(Double.valueOf(stopIndex + startIndex).doubleValue() / 2.0D);
 		while (((s = middle < 0 ? (middle = 0) : comparator.compare(items.get(middle), val)) != 0) && (startIndex < stopIndex)) {
-			if (s > 0)
-				stopIndex = middle - 1;
-			else if (s < 0) {
-				startIndex = middle + 1;
-			}
+			if (s > 0){
+                stopIndex = middle - 1;
+            }else if (s < 0) {
+                startIndex = middle + 1;
+            }
+
+
 			middle = (int) Math.floor((stopIndex + startIndex) / 2);
 		}
 		return s != 0 ? middle + 1 : s > 0 ? middle : middle;
@@ -29,11 +31,11 @@ public class Algorithm {
 		int middle = (int) Math.floor(Double.valueOf(stopIndex + startIndex).doubleValue() / 2.0D);
 		int s;
 		while (((s = comparator.compare(items[middle], val)) != 0) && (startIndex < stopIndex)) {
-			if (s > 0)
-				stopIndex = middle - 1;
-			else if (s < 0) {
-				startIndex = middle + 1;
-			}
+			if (s > 0){
+                stopIndex = middle - 1;
+            }else if (s < 0) {
+                startIndex = middle + 1;
+            }
 			middle = (int) Math.floor((stopIndex + startIndex) / 2);
 		}
 		return s != 0 ? middle + 1 : s > 0 ? middle - 1 : middle;
@@ -45,11 +47,11 @@ public class Algorithm {
 		int middle = (int) Math.floor(Double.valueOf(stopIndex + startIndex).doubleValue() / 2.0D);
 		int s;
 		while (((s = items[middle].compareTo(val)) != 0) && (startIndex < stopIndex)) {
-			if (s > 0)
-				stopIndex = middle - 1;
-			else if (s < 0) {
-				startIndex = middle + 1;
-			}
+			if (s > 0){
+                stopIndex = middle - 1;
+            }else if (s < 0) {
+                startIndex = middle + 1;
+            }
 			middle = (int) Math.floor((stopIndex + startIndex) / 2);
 		}
 		return s != 0 ? middle + 1 : s > 0 ? middle - 1 : middle;
@@ -79,25 +81,29 @@ public class Algorithm {
 
 	public static void insertSort(Object[] src, Comparator comparator) {
 		int len = src.length;
-		for (int i = 1; i < len; i++)
-			for (int j = 0; j < i; j++)
-				if (comparator.compare(src[j], src[i]) > 0) {
-					System.out.println("发生交换");
-					Object[] dest = new Object[i + 1];
-					System.arraycopy(src, 0, dest, 0, i + 1);
-					printResult(i, dest);
-					swap(src, j, i);
-					System.arraycopy(src, 0, dest, 0, i + 1);
-					printResult(i, dest);
-					System.out.println("=================");
-				}
+		for (int i = 1; i < len; i++){
+            for (int j = 0; j < i; j++){
+                if (comparator.compare(src[j], src[i]) > 0) {
+                    System.out.println("发生交换");
+                    Object[] dest = new Object[i + 1];
+                    System.arraycopy(src, 0, dest, 0, i + 1);
+                    printResult(i, dest);
+                    swap(src, j, i);
+                    System.arraycopy(src, 0, dest, 0, i + 1);
+                    printResult(i, dest);
+                    System.out.println("=================");
+                }
+            }
+        }
 	}
 
 	public static void insertSort(List<?> src, Comparator comparator) {
 		int len = src.size();
-		for (int i = 1; i < len; i++)
-			for (int j = 0; j < i; j++)
-				;
+		for (int i = 1; i < len; i++){
+            for (int j = 0; j < i; j++){
+                ;
+            }
+        }
 	}
 
 	public static void swap(List<?> data, int i, int j) {

@@ -1,17 +1,5 @@
 package com.fantasy.framework.util.validator;
 
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jdom2.Element;
-
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.validator.entities.DefaultValidateable;
@@ -19,6 +7,17 @@ import com.fantasy.framework.util.validator.entities.FieldValidator;
 import com.fantasy.framework.util.validator.validators.DefaultParamsValidator;
 import com.fantasy.framework.util.validator.validators.StackValidator;
 import com.fantasy.framework.util.xml.JdomUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jdom2.Element;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 public class DefaultValidatorContext implements ValidatorContext {
 	private static final String VALIDATION_XML = "-validation.xml";
@@ -100,17 +99,20 @@ public class DefaultValidatorContext implements ValidatorContext {
 		if (!ObjectUtil.isNull(stream)) {
 			this.parser.setClazz(classes);
 			JdomUtil.parse(stream, this.parser);
-			if (logger.isDebugEnabled())
-				logger.debug("解析完成:" + classes.getResource(new StringBuilder(String.valueOf(classes.getSimpleName())).append(VALIDATION_XML).toString()).getPath());
+			if (logger.isDebugEnabled()){
+                logger.debug("解析完成:" + classes.getResource(new StringBuilder(String.valueOf(classes.getSimpleName())).append(VALIDATION_XML).toString()).getPath());
+            }
 		}
-		if ((!ObjectUtil.isNull(classes.getSuperclass())) && (classes.getSuperclass() != Object.class))
-			validateable.setSuper(getValidateable(classes.getSuperclass()));
+		if ((!ObjectUtil.isNull(classes.getSuperclass())) && (classes.getSuperclass() != Object.class)){
+            validateable.setSuper(getValidateable(classes.getSuperclass()));
+        }
 		return validateable;
 	}
 
 	public static ValidatorContext getInstance() {
-		if (logger.isDebugEnabled())
-			logger.debug("验证器获取规则如:" + Object.class.getName() + VALIDATION_XML);
+		if (logger.isDebugEnabled()){
+            logger.debug("验证器获取规则如:" + Object.class.getName() + VALIDATION_XML);
+        }
 		return context;
 	}
 

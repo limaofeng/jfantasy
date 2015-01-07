@@ -55,8 +55,9 @@ public class CharEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
 	public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
 		String columnValue = rs.getString(columnName);
-		if (rs.wasNull())
-			return null;
+		if (rs.wasNull()){
+            return null;
+        }
 		try {
 			return (E) ConvertUtils.convert(columnValue, enumClass);
 		} catch (Exception ex) {
@@ -66,8 +67,9 @@ public class CharEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
 	public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
 		String columnValue = rs.getString(columnIndex);
-		if (rs.wasNull())
-			return null;
+		if (rs.wasNull()){
+            return null;
+        }
 		try {
 			return (E) ConvertUtils.convert(columnValue, enumClass);
 		} catch (Exception ex) {
@@ -77,8 +79,9 @@ public class CharEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> {
 
 	public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
 		String columnValue = cs.getString(columnIndex);
-		if (cs.wasNull())
-			return null;
+		if (cs.wasNull()){
+            return null;
+        }
 		try {
 			return (E) ConvertUtils.convert(columnValue, enumClass);
 		} catch (Exception ex) {

@@ -179,8 +179,9 @@ public class Response {
      */
     public Header getRequestHeader(String headerName) {
         for (Header requestHeader : requestHeaders) {
-            if (requestHeader.getName().equalsIgnoreCase(headerName))
+            if (requestHeader.getName().equalsIgnoreCase(headerName)){
                 return requestHeader;
+            }
         }
         return null;
     }
@@ -193,8 +194,9 @@ public class Response {
      */
     public Header getResponseHeader(String headerName) {
         for (Header responseHeader : responseHeaders) {
-            if (responseHeader.getName().equalsIgnoreCase(headerName))
+            if (responseHeader.getName().equalsIgnoreCase(headerName)){
                 return responseHeader;
+            }
         }
         return null;
     }

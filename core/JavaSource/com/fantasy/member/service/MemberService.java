@@ -190,8 +190,9 @@ public class MemberService {
 	@Cacheable(value = "fantasy.security.memberService", key = "'findUniqueByUsername' + #username ")
 	public Member findUniqueByUsername(String username) {
 		Member member = this.memberDao.findUniqueBy("username", username);
-		if (member == null)
-			return member;
+		if (member == null){
+            return member;
+        }
 		SpringSecurityUtils.getAuthorities(member);
 		return member;
 	}

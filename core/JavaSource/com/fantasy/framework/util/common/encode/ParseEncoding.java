@@ -153,8 +153,9 @@ public class ParseEncoding extends Encode {
 	 * @return
 	 */
 	public int getEncodeValue(byte[] content) {
-		if (content == null)
-			return -1;
+		if (content == null){
+            return -1;
+        }
 		int[] scores;
 		int index, maxscore = 0;
 		int encoding = UNKNOWN;

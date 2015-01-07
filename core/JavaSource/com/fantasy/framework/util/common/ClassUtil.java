@@ -219,8 +219,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     }
 
     public static boolean isInterface(Field field) {
-        if ((isMap(field)) || (isList(field)))
+        if ((isMap(field)) || (isList(field))){
             return false;
+        }
         if (isArray(field)) {
             return field.getType().getComponentType().isInterface();
         }
@@ -367,8 +368,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         Annotation[][] annotations = method.getParameterAnnotations();
         for (Annotation[] paramAnnots : annotations) {
             for (Annotation annot : paramAnnots) {
-                if (annotClass.equals(annot.annotationType()))
+                if (annotClass.equals(annot.annotationType())){
                     return paramAnnots;
+                }
             }
         }
         return null;
@@ -430,8 +432,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotClass) {
         for (Annotation annot : annotations) {
-            if (annotClass.equals(annot.annotationType()))
+            if (annotClass.equals(annot.annotationType())){
                 return (T) annot;
+            }
         }
         return null;
     }
@@ -450,8 +453,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         for (StackTraceElement stack : stacks) {
             try {
                 Class<?> clasz = forName(stack.getClassName(), FantasyClassLoader.getClassLoader());
-                if (ObjectUtil.isNull(clasz))
+                if (ObjectUtil.isNull(clasz)){
                     continue;
+                }
                 Annotation annot = clasz.getAnnotation(annotClass);
                 if (ObjectUtil.isNotNull(annot)) {
                     return (T) annot;

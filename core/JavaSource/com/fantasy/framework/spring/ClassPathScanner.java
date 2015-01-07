@@ -73,8 +73,9 @@ public class ClassPathScanner implements ResourceLoaderAware {
             Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
             for (Resource resource : resources) {
                 MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
-                if (!metadataReader.getAnnotationMetadata().hasAnnotation(anno.getName()))
+                if (!metadataReader.getAnnotationMetadata().hasAnnotation(anno.getName())){
                     continue;
+                }
                 try {
                     String clazzName = metadataReader.getClassMetadata().getClassName();
                     candidates.add(Class.forName(clazzName));
@@ -110,13 +111,15 @@ public class ClassPathScanner implements ResourceLoaderAware {
             for (Resource resource : resources) {
                 MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
                 ClassMetadata classMetadata = metadataReader.getClassMetadata();
-                if (classMetadata.isInterface())
+                if (classMetadata.isInterface()){
                     continue;
+                }
                 String clazzName = metadataReader.getClassMetadata().getClassName();
                 try {
                     Class<?> clazz = Class.forName(clazzName);
-                    if (interfaceClass.isAssignableFrom(clazz))
+                    if (interfaceClass.isAssignableFrom(clazz)){
                         candidates.add(clazz);
+                    }
                 } catch (ClassNotFoundException localClassNotFoundException) {
                     localClassNotFoundException.printStackTrace();
                 } catch (NoClassDefFoundError e) {

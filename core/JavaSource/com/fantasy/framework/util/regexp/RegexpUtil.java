@@ -130,8 +130,9 @@ public class RegexpUtil {
 	 */
 	public static String parseFirst(String input, String regEx) {
 		Group[] groups = parseGroups(input, regEx);
-		if (groups.length > 0 && groups[0].groups.length > 0)
-			return groups[0].$(0);
+		if (groups.length > 0 && groups[0].groups.length > 0){
+            return groups[0].$(0);
+        }
 		return "";
 	}
 
@@ -145,15 +146,17 @@ public class RegexpUtil {
 	 */
 	public static String parseGroup(String input, String regEx, int group) {
 		Group[] groups = parseGroups(input, regEx);
-		if (groups.length > 0 && groups[0].groups.length > group)
-			return groups[0].$(group);
+		if (groups.length > 0 && groups[0].groups.length > group){
+            return groups[0].$(group);
+        }
 		return null;
 	}
 
 	public static String parseGroup(String input, Pattern pattern, int group) {
 		Group[] groups = parseGroups(input, pattern);
-		if (groups.length > 0 && groups[0].groups.length > group)
-			return groups[0].$(group);
+		if (groups.length > 0 && groups[0].groups.length > group){
+            return groups[0].$(group);
+        }
 		return null;
 	}
 

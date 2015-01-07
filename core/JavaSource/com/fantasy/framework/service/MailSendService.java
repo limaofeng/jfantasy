@@ -84,8 +84,9 @@ public class MailSendService implements InitializingBean {
                     email.addTo(toEmail, toDisplayName);
                 }
             } else {
-                if (validateEmail(to))
+                if (validateEmail(to)){
                     email.addTo(to);
+                }
             }
         }
         if (email.getToAddresses().isEmpty()) {
@@ -253,8 +254,9 @@ public class MailSendService implements InitializingBean {
     private Executor executor;
 
     private Executor getExecutor() {
-        if (executor != null)
+        if (executor != null){
             return executor;
+        }
         executor = SpringContextUtil.getBean("spring.executor", Executor.class);
         if(executor == null){
             executor = Executors.newFixedThreadPool(5);

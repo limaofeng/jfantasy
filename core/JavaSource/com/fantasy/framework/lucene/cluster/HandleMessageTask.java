@@ -68,8 +68,9 @@ public class HandleMessageTask implements Runnable {
 			EntityChangedListener luceneListener = null;//dao.getLuceneListener();
 			if (luceneListener != null) {
 				RefEntityChangedListener refListener = luceneListener.getRefListener();
-				if (refListener != null)
-					refListener.entityChange(clazz, id);
+				if (refListener != null){
+                    refListener.entityChange(clazz, id);
+                }
 			}
 		}
 	}

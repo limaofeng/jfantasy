@@ -54,13 +54,14 @@ public class JarReaderRandomBackgroundGenerator implements BackgroundGenerator {
                 this.images.add(this.images.size(), out);
             }
         }
-        if (this.images.size() != 0)
+        if (this.images.size() != 0){
             for (int i = 0; i < this.images.size(); i++) {
                 BufferedImage bufferedImage = (BufferedImage) this.images.get(i);
                 this.images.set(i, tile(bufferedImage));
             }
-        else
+        } else{
             throw new CaptchaException("Root path directory is valid but does not contains any image (jpg) files");
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -25,8 +25,9 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
 		Object entity = event.getEntity();
 		EntityPersister entityPersister = event.getPersister();
 		Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
-		if (!IndexChecker.hasIndexed(clazz))
-			return;
+		if (!IndexChecker.hasIndexed(clazz)){
+            return;
+        }
 		getEntityChangedListener(clazz).entityInsert(entity);
 	}
 
@@ -39,19 +40,21 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
 		Object entity = event.getEntity();
 		EntityPersister entityPersister = event.getPersister();
 		Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
-		if (IndexChecker.hasIndexed(clazz))
-			getEntityChangedListener(clazz).entityUpdate(entity);
-		else if (IndexChecker.needListener(clazz))
-			getEntityChangedListener(clazz).getRefListener().entityChange(clazz, event.getId().toString());
+		if (IndexChecker.hasIndexed(clazz)){
+            getEntityChangedListener(clazz).entityUpdate(entity);
+        }	else if (IndexChecker.needListener(clazz)){
+            getEntityChangedListener(clazz).getRefListener().entityChange(clazz, event.getId().toString());
+        }
 	}
 
 	public void onPostDelete(PostDeleteEvent event) {
 		EntityPersister entityPersister = event.getPersister();
 		Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
-		if (IndexChecker.hasIndexed(clazz))
-			getEntityChangedListener(clazz).entityRemove(event.getId().toString());
-		else if (IndexChecker.needListener(clazz))
-			getEntityChangedListener(clazz).getRefListener().entityChange(clazz, event.getId().toString());
+		if (IndexChecker.hasIndexed(clazz)){
+            getEntityChangedListener(clazz).entityRemove(event.getId().toString());
+        }else if (IndexChecker.needListener(clazz)){
+            getEntityChangedListener(clazz).getRefListener().entityChange(clazz, event.getId().toString());
+        }
 	}
 
 }

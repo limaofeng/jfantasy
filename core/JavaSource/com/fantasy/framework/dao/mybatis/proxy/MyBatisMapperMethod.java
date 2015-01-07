@@ -65,12 +65,14 @@ public class MyBatisMapperMethod {
         this.resultMaps = new HashMap<String, Map<String, ResultMapping>>();
         MappedStatement ms = this.sqlSession.getConfiguration().getMappedStatement(this.commandName);
         for (ResultMap resultMap : ms.getResultMaps()) {
-            if (this.resultMaps.containsKey(resultMap.getId()))
+            if (this.resultMaps.containsKey(resultMap.getId())){
                 continue;
+            }
             Map<String, ResultMapping> mappings = new HashMap<String, ResultMapping>();
             for (ResultMapping mapping : resultMap.getResultMappings()) {
-                if (mappings.containsKey(mapping.getProperty()))
+                if (mappings.containsKey(mapping.getProperty())){
                     continue;
+                }
                 mappings.put(mapping.getProperty(), mapping);
             }
             this.resultMaps.put(resultMap.getId(), mappings);
@@ -102,9 +104,9 @@ public class MyBatisMapperMethod {
             return param;
         }
         if ((!this.hasNamedParameters) && (paramCount == 1)) {
-            if ((ObjectUtil.isNull(args[this.paramPositions.get(0)])) || (ClassUtil.isPrimitiveWrapper(args[this.paramPositions.get(0)].getClass())))
+            if ((ObjectUtil.isNull(args[this.paramPositions.get(0)])) || (ClassUtil.isPrimitiveWrapper(args[this.paramPositions.get(0)].getClass()))){
                 param.put("value", args[this.paramPositions.get(0)]);
-            else {
+            } else {
                 param.putAll(ObjectUtil.toMap(args[this.paramPositions.get(0)]));
             }
             param.put("pager", getPager((Pager<Object>) args[this.pageIndex]));
@@ -124,8 +126,9 @@ public class MyBatisMapperMethod {
      * @return Pager<Object>
      */
     private Pager<Object> getPager(Pager<Object> page) {
-        if (ObjectUtil.isNull(page))
+        if (ObjectUtil.isNull(page)){
             page = new Pager<Object>();
+        }
         return page;
     }
 
@@ -176,12 +179,14 @@ public class MyBatisMapperMethod {
     private void setupCommandType() {
         MappedStatement ms = this.config.getMappedStatement(this.commandName);
         this.type = ms.getSqlCommandType();
-        if (this.type != SqlCommandType.SELECT)
+        if (this.type != SqlCommandType.SELECT){
             throw new BindingException("Unsupport execution method for: " + this.commandName);
+        }
     }
 
     private void validateStatement() {
-        if (!this.config.hasStatement(this.commandName))
+        if (!this.config.hasStatement(this.commandName)){
             throw new BindingException("Invalid bound statement (not found): " + this.commandName);
+        }
     }
 }

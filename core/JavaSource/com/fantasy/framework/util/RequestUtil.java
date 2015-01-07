@@ -1,12 +1,11 @@
 package com.fantasy.framework.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.bind.ServletRequestUtils;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 @Deprecated
 public class RequestUtil extends ServletRequestUtils {
@@ -19,11 +18,12 @@ public class RequestUtil extends ServletRequestUtils {
 
 			if ((arrayTemp != null) && (arrayTemp.length > 0)) {
 				for (int num = 0; num < arrayTemp.length; num++) {
-					if (num == arrayTemp.length - 1)
-						bufResult.append(arrayTemp[num]);
-					else {
-						bufResult.append(arrayTemp[num] + ",");
-					}
+					if (num == arrayTemp.length - 1){
+                        bufResult.append(arrayTemp[num]);
+                    }else {
+                        bufResult.append(arrayTemp[num] + ",");
+                    }
+
 				}
 			}
 			strResult = bufResult.toString();

@@ -112,12 +112,15 @@ public class ResourceService {
 	public Map<String, String> loadUrlAuthorities() {
 		Map<String, String> urlAuthorities = new HashMap<String, String>();
 		for (Resource resource : loadResourcesByUrl()) {
-			if (!resource.isEnabled())
-				continue;
-			if (urlAuthorities.containsKey(resource.getValue()))
-				continue;
-			if (StringUtils.isNotBlank(resource.getAuthorities()))
-				urlAuthorities.put(resource.getValue(), resource.getAuthorities());
+			if (!resource.isEnabled()){
+                continue;
+            }
+			if (urlAuthorities.containsKey(resource.getValue())){
+                continue;
+            }
+			if (StringUtils.isNotBlank(resource.getAuthorities())){
+                urlAuthorities.put(resource.getValue(), resource.getAuthorities());
+            }
 		}
 		return urlAuthorities;
 	}

@@ -142,8 +142,9 @@ public class FileUtil {
         if (!file.isDirectory()) {
             createFolder(file.getParentFile());
         }
-        if (!file.exists() && !file.mkdirs())
+        if (!file.exists() && !file.mkdirs()){
             throw new RuntimeException("创建文件" + file + "失败");
+        }
         return file;
     }
 
@@ -323,23 +324,28 @@ public class FileUtil {
                 moveFile(file, new File(newName));
             }
         }
-        if (!sourceFile.delete())
+        if (!sourceFile.delete()){
             throw new RuntimeException("删除文件" + sourceFile.getAbsolutePath() + "失败");
+        }
         return true;
     }
 
     private static boolean moveOnlyFile(File sourceFile, File targetFile) {
         File parentFile = targetFile.getParentFile();
-        if (!parentFile.exists() && !parentFile.mkdirs())
+        if (!parentFile.exists() && !parentFile.mkdirs()){
             throw new RuntimeException("创建文件" + parentFile.getAbsolutePath() + "失败");
-        if (targetFile.exists() && !targetFile.delete())
+        }
+        if (targetFile.exists() && !targetFile.delete()){
             throw new RuntimeException("删除文件" + targetFile.getAbsolutePath() + "失败");
+        }
+
         boolean flag = sourceFile.renameTo(targetFile);
         if (!flag) {
             try {
                 copyFile(sourceFile, targetFile);
-                if (sourceFile.exists())
+                if (sourceFile.exists()){
                     System.out.println("delete file:" + sourceFile + ":" + sourceFile.delete());
+                }
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -352,11 +358,12 @@ public class FileUtil {
             copyOnlyFile(sourceFile, targetFile);
         } else {
             File[] files = sourceFile.listFiles();
-            if (files != null)
+            if (files != null){
                 for (File file : files) {
                     String newName = targetFile.getAbsolutePath() + "/" + file.getName();
                     copyFile(file, new File(newName));
                 }
+            }
         }
     }
 
@@ -364,8 +371,9 @@ public class FileUtil {
         System.out.println("copy from:" + sourceFile);
         System.out.println("copy to:" + targetFile);
         File parentFile = targetFile.getParentFile();
-        if (!parentFile.exists() && !parentFile.mkdirs())
+        if (!parentFile.exists() && !parentFile.mkdirs()){
             throw new RuntimeException("创建文件" + parentFile.getAbsolutePath() + "失败");
+        }
         FileInputStream fis = new FileInputStream(sourceFile);
         FileOutputStream fos = new FileOutputStream(targetFile);
         StreamUtil.copyThenClose(fis, fos);
@@ -406,8 +414,9 @@ public class FileUtil {
     }
 
     private static void delOnlyFile(File file) {
-        if (file.exists() && !file.delete())
+        if (file.exists() && !file.delete()){
             logger.error("删除文件" + file.getAbsolutePath() + "失败");
+        }
     }
 
     public static void delFile(String filePath) {
@@ -442,7 +451,9 @@ public class FileUtil {
         if (file.isDirectory()) {
             File[] files = file.listFiles();
             assert files != null;
-            for (File file1 : files) replaceInFolder(file1, oldStr, newStr);
+            for (File file1 : files) {
+                replaceInFolder(file1, oldStr, newStr);
+            }
         } else {
             String content = readFile(file);
             if ((file.getName().endsWith(".html")) && (content.contains(oldStr))) {
@@ -469,8 +480,9 @@ public class FileUtil {
         File file = createFile(filePath);
         OutputStream out = new FileOutputStream(file);
         byte[] buffer = new byte[1024];
-        while (in.read(buffer) != -1)
+        while (in.read(buffer) != -1){
             out.write(buffer);
+        }
         out.close();
         in.close();
         return file;
@@ -478,8 +490,9 @@ public class FileUtil {
 
     public void writeFile(OutputStream out, InputStream in) throws IOException {
         byte[] buffer = new byte[1024];
-        while (in.read(buffer) != -1)
+        while (in.read(buffer) != -1){
             out.write(buffer);
+        }
         out.close();
         in.close();
     }

@@ -117,8 +117,9 @@ public class BeanUtil {
 	*/
 
     private static int length(Object value) {
-        if (ClassUtil.isArray(value))
+        if (ClassUtil.isArray(value)){
             return Array.getLength(value);
+        }
         if (ClassUtil.isList(value)) {
             return ((List<?>) value).size();
         }
@@ -126,8 +127,9 @@ public class BeanUtil {
     }
 
     private static Object get(Object value, int i) {
-        if (ClassUtil.isArray(value))
+        if (ClassUtil.isArray(value)){
             return Array.get(value, i);
+        }
         if (ClassUtil.isList(value)) {
             return ((List<?>) value).get(i);
         }

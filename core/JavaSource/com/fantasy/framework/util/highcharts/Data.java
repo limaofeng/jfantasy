@@ -20,20 +20,22 @@ public class Data {
 
 	public Data(String name, String p, float f) {
 		setName(name);
-		if ("y".equals(p))
-			setY(f);
-		else
-			setX(f);
+		if ("y".equals(p)){
+            setY(f);
+        }else {
+            setX(f);
+        }
 	}
 
 	public Data(String name, String p, float f, boolean sel) {
 		setName(name);
 		setSliced(sel);
 		setSelected(sel);
-		if ("y".equals(p))
-			setY(f);
-		else
-			setX(f);
+		if ("y".equals(p)){
+            setY(f);
+        }else{
+            setX(f);
+        }
 	}
 
 	public Data(BigDecimal f) {
@@ -45,8 +47,9 @@ public class Data {
 	}
 
 	public BigDecimal getX() {
-		if (ObjectUtil.isNotNull(this.x))
-			return this.x.setScale(2, 6);
+		if (ObjectUtil.isNotNull(this.x)){
+            return this.x.setScale(2, 6);
+        }
 		return null;
 	}
 
@@ -55,8 +58,9 @@ public class Data {
 	}
 
 	public BigDecimal getY() {
-		if (ObjectUtil.isNotNull(this.y))
-			return this.y.setScale(2, 6);
+		if (ObjectUtil.isNotNull(this.y)){
+            return this.y.setScale(2, 6);
+        }
 		return null;
 	}
 

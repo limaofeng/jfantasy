@@ -1,19 +1,17 @@
 package com.fantasy.framework.util.web;
 
+import com.fantasy.framework.util.common.EncodeUtil;
+import com.fantasy.framework.util.common.PropertiesHelper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.util.Enumeration;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.TreeMap;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.fantasy.framework.util.common.EncodeUtil;
-import com.fantasy.framework.util.common.PropertiesHelper;
 
 public class ServletUtils {
 	private static final Log logger = LogFactory.getLog(ServletUtils.class);
@@ -111,10 +109,12 @@ public class ServletUtils {
 				StringTokenizer commaTokenizer = new StringTokenizer(headerValue, ",");
 				do {
 					String currentToken = commaTokenizer.nextToken();
-					if (currentToken.trim().equals(etag))
-						conditionSatisfied = true;
-					if (conditionSatisfied)
-						break;
+					if (currentToken.trim().equals(etag)){
+                        conditionSatisfied = true;
+                    }
+					if (conditionSatisfied){
+                        break;
+                    }
 				} while (commaTokenizer.hasMoreTokens());
 			} else {
 				conditionSatisfied = true;
@@ -156,10 +156,11 @@ public class ServletUtils {
 				String unprefixed = paramName.substring(prefix.length());
 				String[] values = request.getParameterValues(paramName);
 				if ((values != null) && (values.length != 0)) {
-					if (values.length > 1)
-						params.put(unprefixed, values);
-					else
-						params.put(unprefixed, values[0]);
+					if (values.length > 1){
+                        params.put(unprefixed, values);
+                    }else{
+                        params.put(unprefixed, values[0]);
+                    }
 				}
 			}
 		}

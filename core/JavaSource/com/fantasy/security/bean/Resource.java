@@ -173,8 +173,9 @@ public class Resource extends BaseBusEntity {
 	}
 
 	public void addResource(Resource resource) {
-		if (ObjectUtil.isNull(getSubResources()))
-			setSubResources(new ArrayList<Resource>());
+		if (ObjectUtil.isNull(getSubResources())){
+            setSubResources(new ArrayList<Resource>());
+        }
 		getSubResources().add(resource);
 	}
 
@@ -182,8 +183,9 @@ public class Resource extends BaseBusEntity {
 	public String getRoleAuthorities() {
 		AtomicReference<StringBuffer> roleAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
 		for (Role role : (getRoles() == null ? new ArrayList<Role>() : getRoles())) {
-			if (!role.isEnabled())
-				continue;
+			if (!role.isEnabled()){
+                continue;
+            }
 			List<GrantedAuthority> authorities = role.getRoleAuthorities();
 			for (GrantedAuthority authority : authorities) {
 				roleAuthorities.get().append(authority.getAuthority()).append(",");

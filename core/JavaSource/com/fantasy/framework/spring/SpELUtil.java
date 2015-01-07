@@ -22,8 +22,9 @@ public class SpELUtil {
 
     public static EvaluationContext createEvaluationContext(Object object, Map<String, Object> data) {
         EvaluationContext context = createEvaluationContext(object);
-        for (Map.Entry<String, Object> entry : data.entrySet())
+        for (Map.Entry<String, Object> entry : data.entrySet()){
             context.setVariable(entry.getKey(), entry.getValue());
+        }
         return context;
     }
 

@@ -1,17 +1,16 @@
 package com.fantasy.security.userdetails.checker;
 
-import javax.servlet.http.HttpServletRequest;
-
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.web.context.ActionContext;
+import com.octo.captcha.service.CaptchaService;
+import com.octo.captcha.service.CaptchaServiceException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.web.context.ActionContext;
-import com.octo.captcha.service.CaptchaService;
-import com.octo.captcha.service.CaptchaServiceException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 
@@ -44,8 +43,9 @@ public class CaptchaChecker implements UserDetailsChecker {
 		try {
 			String captchaID = request.getSession().getId();
 			String challengeResponse = request.getParameter(this.captchaParameter);
-			if (StringUtil.isBlank(challengeResponse))
-				return false;
+			if (StringUtil.isBlank(challengeResponse)){
+                return false;
+            }
 			return this.captchaService.validateResponseForID(captchaID, challengeResponse.toUpperCase()).booleanValue();
 		} catch (CaptchaServiceException e) {
 			logger.error(e.getMessage(), e);

@@ -8,7 +8,8 @@ import java.util.Map;
 public class RegexpFieldValidator extends DefaultParamsValidator {
 	public void validate(Object object, Map<String, String> params) throws ValidationException {
 		String regexp = (String) params.get("regexp");
-		if (!RegexpUtil.isMatch(StringUtil.nullValue(object), StringUtil.nullValue(regexp)))
-			throw new ValidationException("{value:" + object + ",regexp:" + regexp + "}验证失败!");
+		if (!RegexpUtil.isMatch(StringUtil.nullValue(object), StringUtil.nullValue(regexp))){
+            throw new ValidationException("{value:" + object + ",regexp:" + regexp + "}验证失败!");
+        }
 	}
 }

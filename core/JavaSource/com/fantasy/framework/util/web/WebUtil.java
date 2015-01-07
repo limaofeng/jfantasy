@@ -173,8 +173,9 @@ public class WebUtil {
         Cookie[] cookies = getCookies(request);
         if (cookies != null) {
             for (Cookie cooky : cookies) {
-                if (cooky.getName().equals(name))
+                if (cooky.getName().equals(name)){
                     return cooky;
+                }
             }
         }
         return null;
@@ -278,32 +279,45 @@ public class WebUtil {
     public static String getOsVersion(HttpServletRequest request) {
         String useros = request.getHeader("User-Agent").toLowerCase();
         String osVersion = "unknown";
-        if (useros.indexOf("nt 6.1") > 0)
+        if (useros.indexOf("nt 6.1") > 0){
             osVersion = "Windows 7";
-        else if (useros.indexOf("nt 6.0") > 0)
+        }
+        else if (useros.indexOf("nt 6.0") > 0){
             osVersion = "Windows Vista/Server 2008";
-        else if (useros.indexOf("nt 5.2") > 0)
+        }
+        else if (useros.indexOf("nt 5.2") > 0){
             osVersion = "Windows Server 2003";
-        else if (useros.indexOf("nt 5.1") > 0)
+        }
+        else if (useros.indexOf("nt 5.1") > 0){
             osVersion = "Windows XP";
-        else if (useros.indexOf("nt 5") > 0)
+        }
+        else if (useros.indexOf("nt 5") > 0){
             osVersion = "Windows 2000";
-        else if (useros.indexOf("nt 4") > 0)
+        }
+        else if (useros.indexOf("nt 4") > 0){
             osVersion = "Windows nt4";
-        else if (useros.indexOf("me") > 0)
+        }
+        else if (useros.indexOf("me") > 0){
             osVersion = "Windows Me";
-        else if (useros.indexOf("98") > 0)
+        }
+        else if (useros.indexOf("98") > 0){
             osVersion = "Windows 98";
-        else if (useros.indexOf("95") > 0)
+        }
+        else if (useros.indexOf("95") > 0){
             osVersion = "Windows 95";
-        else if (useros.indexOf("ipad") > 0)
+        }
+        else if (useros.indexOf("ipad") > 0){
             osVersion = "iPad";
-        else if (useros.indexOf("macintosh") > 0)
+        }
+        else if (useros.indexOf("macintosh") > 0){
             osVersion = "Mac";
-        else if (useros.indexOf("unix") > 0)
+        }
+        else if (useros.indexOf("unix") > 0){
             osVersion = "UNIX";
-        else if (useros.indexOf("linux") > 0)
+        }
+        else if (useros.indexOf("linux") > 0){
             osVersion = "Linux";
+        }
         else if (useros.indexOf("sunos") > 0) {
             osVersion = "SunOS";
         } else if (useros.indexOf("iPhone") > 0) {
@@ -336,9 +350,9 @@ public class WebUtil {
                     val = pair.split("=")[1];
                 }
             }
-            if (!params.containsKey(key))
+            if (!params.containsKey(key)){
                 params.put(key, new String[]{val});
-            else {
+            }  else {
                 params.put(key, ObjectUtil.join(params.get(key), val));
             }
         }
@@ -358,10 +372,11 @@ public class WebUtil {
             return null;
         }
         for (Map.Entry<String, String[]> entry : parseQuery(query).entrySet()) {
-            if (entry.getValue().length == 1)
+            if (entry.getValue().length == 1){
                 OgnlUtil.getInstance().setValue(entry.getKey(), t, (entry.getValue())[0]);
-            else
+            }else {
                 OgnlUtil.getInstance().setValue(entry.getKey(), t, entry.getValue());
+            }
         }
         return t;
     }

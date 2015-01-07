@@ -1,17 +1,5 @@
 package com.fantasy.framework.tags;
 
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspException;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.Tag;
-import javax.servlet.jsp.tagext.TagSupport;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
 import com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import com.fantasy.framework.spring.SpringContextUtil;
@@ -25,8 +13,17 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.security.SpringSecurityUtils;
-
 import freemarker.template.Template;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.Tag;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
 
 @SuppressWarnings("unchecked")
 public abstract class AbstractUITag<T extends UIBean> extends TagSupport {
@@ -123,8 +120,9 @@ public abstract class AbstractUITag<T extends UIBean> extends TagSupport {
 	 * @param tagModel
 	 */
 	public void writer(String templateName, T tagModel) {
-		if (StringUtil.isBlank(templateName))
-			return;
+		if (StringUtil.isBlank(templateName)){
+            return;
+        }
 		FreeMarkerConfigurationFactoryBean freemarkerService = (FreeMarkerConfigurationFactoryBean) SpringContextUtil.getBean("freemarkerService", FreeMarkerConfigurationFactoryBean.class);
 		Template template;
 		try {

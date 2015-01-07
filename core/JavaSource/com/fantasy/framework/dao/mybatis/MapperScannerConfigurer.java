@@ -135,10 +135,12 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 
 		Object value = property.getValue();
 
-		if (value == null)
-			return null;
-		if ((value instanceof String))
-			return value.toString();
+		if (value == null){
+            return null;
+        }
+		if ((value instanceof String)){
+            return value.toString();
+        }
 		if ((value instanceof TypedStringValue)) {
 			return ((TypedStringValue) value).getValue();
 		}

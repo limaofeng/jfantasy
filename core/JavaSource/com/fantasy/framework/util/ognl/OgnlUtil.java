@@ -209,8 +209,9 @@ public class OgnlUtil {
             Throwable reason = e.getReason();
             String msg = "Caught OgnlException while setting property '" + name + "' on type '" + o.getClass().getName() + "'.";
             Throwable exception = reason == null ? e : reason;
-            if (throwPropertyExceptions)
+            if (throwPropertyExceptions){
                 throw new Exception(msg, exception);
+            }
         }
     }
 
@@ -264,15 +265,16 @@ public class OgnlUtil {
         for (PropertyDescriptor fromPd : fromPds) {
             if (fromPd.getReadMethod() != null) {
                 boolean copy = true;
-                if ((exclusions != null) && (exclusions.contains(fromPd.getName())))
+                if ((exclusions != null) && (exclusions.contains(fromPd.getName()))){
                     copy = false;
-                else if ((inclusions != null) && (!inclusions.contains(fromPd.getName()))) {
+                } else if ((inclusions != null) && (!inclusions.contains(fromPd.getName()))) {
                     copy = false;
                 }
                 if (copy) {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
-                    if ((toPd == null) || (toPd.getWriteMethod() == null))
+                    if ((toPd == null) || (toPd.getWriteMethod() == null)){
                         continue;
+                    }
                     try {
                         Object expr = compile(fromPd.getName());
                         Object value = Ognl.getValue(expr, contextFrom, from);

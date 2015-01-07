@@ -1,9 +1,9 @@
 package com.fantasy.framework.util.userstamp;
 
-import java.security.MessageDigest;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
+import java.security.MessageDigest;
 
 public class Decoder {
 
@@ -49,9 +49,11 @@ public class Decoder {
 			algorithm.reset();
 			algorithm.update((new String(userStamp, 0, 14) + "ldg").getBytes());
 			byte[] messageDigest = algorithm.digest();
-			for (int i = 0; i < 2; i++)
-				if (userStamp[(14 + i)] != Encoder.NToC(Math.abs(messageDigest[i]) % 62))
-					return false;
+			for (int i = 0; i < 2; i++){
+                if (userStamp[(14 + i)] != Encoder.NToC(Math.abs(messageDigest[i]) % 62)){
+                    return false;
+                }
+            }
 		} catch (Exception e) {
 			return false;
 		}

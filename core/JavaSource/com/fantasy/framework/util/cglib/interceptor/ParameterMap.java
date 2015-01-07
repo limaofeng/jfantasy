@@ -30,8 +30,9 @@ public class ParameterMap extends HashMap<String, Object> {
                             array.add(array.get(i));
                         }
                     }
-                    if (array.get(index) == null)
+                    if (array.get(index) == null){
                         array.set(index, new ParameterMap());
+                    }
                     ((ParameterMap) array.get(index)).put(RegexpUtil.replace(name, "^" + propertyName + ".", ""), value);
                 } else {
                     List<Object> array = (List<Object>) super.get(propertyName);
@@ -69,9 +70,11 @@ public class ParameterMap extends HashMap<String, Object> {
     }
 
     private static boolean isBean(String fieldName) {
-        if (!fieldName.contains("."))
-            if (!RegexpUtil.find(fieldName, "^[0-9]+$"))
+        if (!fieldName.contains(".")){
+            if (!RegexpUtil.find(fieldName, "^[0-9]+$")){
                 return false;
+            }
+        }
         return true;
     }
 

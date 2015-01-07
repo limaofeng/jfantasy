@@ -1,14 +1,13 @@
 package com.fantasy.framework.dao.mybatis.dialect;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.Assert;
-
 import com.fantasy.framework.dao.MultiDataSourceManager;
 import com.fantasy.framework.dao.annotations.DataSource;
 import com.fantasy.framework.util.common.ObjectUtil;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.Assert;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 多数据源时方言
@@ -25,8 +24,9 @@ public class MultiDialect implements Dialect, InitializingBean {
 	private Map<String, String> dataSourceTypes;
 
 	public void afterPropertiesSet() throws Exception {
-		if (ObjectUtil.isNull(targetDialects))
-			targetDialects = new HashMap<String, Dialect>();
+		if (ObjectUtil.isNull(targetDialects)){
+            targetDialects = new HashMap<String, Dialect>();
+        }
 		targetDialects.put("sql2005", new MsSQLDialect("2005"));
 		targetDialects.put("sql2000", new MsSQLDialect("2000"));
 		targetDialects.put("db2", new DB2SQLDialect());

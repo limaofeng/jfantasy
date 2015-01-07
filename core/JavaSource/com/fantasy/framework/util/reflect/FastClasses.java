@@ -115,8 +115,9 @@ public class FastClasses<T> implements IClass<T> {
 
 	public T newInstance(Object object) {
 		try {
-			if (object == null)
-				return newInstance();
+			if (object == null){
+                return newInstance();
+            }
 			return newInstance(object.getClass(), object);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
@@ -144,8 +145,9 @@ public class FastClasses<T> implements IClass<T> {
 
 	public MethodProxy getMethod(String methodName) {
 		MethodProxy methodProxy = (MethodProxy) this.methodProxys.get(methodName + "()");
-		if (ObjectUtil.isNotNull(methodProxy))
-			return methodProxy;
+		if (ObjectUtil.isNotNull(methodProxy)){
+            return methodProxy;
+        }
 		for (Map.Entry<String, MethodProxy> entry : this.methodProxys.entrySet()) {
 			if (entry.getKey().equals(methodName) || entry.getKey().startsWith(methodName + "(")) {
 				return entry.getValue();
@@ -170,24 +172,26 @@ public class FastClasses<T> implements IClass<T> {
 
 	public void setValue(Object target, String name, Object value) {
 		Field field = null;
-		if (!this.fields.containsKey(name))
-			try {
-				field = ClassUtil.getDeclaredField(this.fastClass.getJavaClass(), name);
-				if (!field.isAccessible()) {
-					field.setAccessible(true);
-				}
-				this.fields.put(name, field);
-			} catch (Exception e) {
-				logger.error(e);
-				this.fields.put(name, field);
-			}
-		else
-			field = (Field) this.fields.get(name);
+		if (!this.fields.containsKey(name)){
+            try {
+                field = ClassUtil.getDeclaredField(this.fastClass.getJavaClass(), name);
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
+                this.fields.put(name, field);
+            } catch (Exception e) {
+                logger.error(e);
+                this.fields.put(name, field);
+            }
+        }else{
+            field = (Field) this.fields.get(name);
+        }
 		try {
-			if (field != null)
-				field.set(target, value);
-			else
-				throw new Exception("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!");
+			if (field != null) {
+                field.set(target, value);
+            }else{
+                throw new Exception("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!");
+            }
 		} catch (Exception e) {
 			throw new RuntimeException(e.getMessage(), e);
 		}
@@ -217,8 +221,9 @@ public class FastClasses<T> implements IClass<T> {
 	}
 
 	public T newInstance(Class<?>[] parameterTypes, Object[] parameters) {
-		if (parameterTypes.length == 0)
-			return newInstance();
+		if (parameterTypes.length == 0){
+            return newInstance();
+        }
 		if (parameterTypes.length == 1) {
 			return newInstance(parameterTypes[0], parameters[0]);
 		}

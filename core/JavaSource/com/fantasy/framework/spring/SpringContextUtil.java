@@ -1,9 +1,6 @@
 package com.fantasy.framework.spring;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-
+import com.fantasy.framework.util.common.ObjectUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.BeansException;
@@ -16,7 +13,9 @@ import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
 
-import com.fantasy.framework.util.common.ObjectUtil;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SpringContextUtil implements ApplicationContextAware, DisposableBean {
 
@@ -38,8 +37,9 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
 	 */
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
 		logger.debug(applicationContext);
-		if (ObjectUtil.isNull(SpringContextUtil.applicationContext))
-			SpringContextUtil.applicationContext = applicationContext;
+		if (ObjectUtil.isNull(SpringContextUtil.applicationContext)){
+            SpringContextUtil.applicationContext = applicationContext;
+        }
 	}
 
 	/**
@@ -60,12 +60,14 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
 		try {
 			return applicationContext.getBean(name);
 		} catch (NoSuchBeanDefinitionException e) {
-			if (logger.isErrorEnabled())
-				logger.error("{Bean:" + name + "}没有找到!", e);
+			if (logger.isErrorEnabled()){
+                logger.error("{Bean:" + name + "}没有找到!", e);
+            }
 			return null;
 		} catch (BeansException e) {
-			if (logger.isErrorEnabled())
-				logger.error("{Bean:" + name + "}没有找到!", e);
+			if (logger.isErrorEnabled()){
+                logger.error("{Bean:" + name + "}没有找到!", e);
+            }
 			throw e;
 		}
 	}
@@ -84,12 +86,14 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
 		try {
 			return applicationContext.getBean(name, requiredType);
 		} catch (NoSuchBeanDefinitionException e) {
-			if (logger.isErrorEnabled())
-				logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!");
+			if (logger.isErrorEnabled()){
+                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!");
+            }
 			return null;
 		} catch (BeansException e) {
-			if (logger.isErrorEnabled())
-				logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!");
+			if (logger.isErrorEnabled()){
+                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!");
+            }
 			throw e;
 		} catch (NullPointerException e) {
 			logger.error("查找Bean:" + name + "时发现applicationContext未启动");

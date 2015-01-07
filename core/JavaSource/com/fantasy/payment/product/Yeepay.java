@@ -141,8 +141,9 @@ public class Yeepay extends AbstractPaymentProduct {
         StringBuilder stringBuffer = new StringBuilder(digest.length * 2);
         for (byte aDigest : digest) {
             int current = aDigest & 0xff;
-            if (current < 16)
+            if (current < 16){
                 stringBuffer.append("0");
+            }
             stringBuffer.append(Integer.toString(current, 16));
         }
         return stringBuffer.toString();

@@ -41,8 +41,9 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
             }
             List<FileDetail> fileDetails = new ArrayList<FileDetail>();
             for (String absolutePath : absolutePaths) {
-                if (StringUtil.isBlank(absolutePath))
+                if (StringUtil.isBlank(absolutePath)){
                     continue;
+                }
                 String[] arry = absolutePath.split(":");
                 if (arry.length != 2) {
                     continue;

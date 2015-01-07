@@ -61,8 +61,9 @@ public class FreeMarkerTemplateUtils {
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         } finally {
-            if (writer != null)
+            if (writer != null){
                 StreamUtil.closeQuietly(writer);
+            }
         }
     }
 

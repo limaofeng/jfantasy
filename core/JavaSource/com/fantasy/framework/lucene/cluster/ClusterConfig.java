@@ -95,8 +95,9 @@ public class ClusterConfig {
 		}
 
 		this.server.close();
-		if (this.serverExecutor != null)
-			this.serverExecutor.shutdown();
+		if (this.serverExecutor != null){
+            this.serverExecutor.shutdown();
+        }
 	}
 
 	public boolean isSelfNode() {

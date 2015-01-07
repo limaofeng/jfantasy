@@ -22,8 +22,9 @@ public class ResourceDao extends HibernateDao<Resource, Long> {
 		query = distinct(query,ResourceRelation.class);
 		List<ResourceRelation> list = query.list();
 		for (ResourceRelation r : list) {
-			if (ObjectUtil.isNull(r.getResourceId()) || ObjectUtil.isNull(r.getSubResourceId()))
-				continue;
+			if (ObjectUtil.isNull(r.getResourceId()) || ObjectUtil.isNull(r.getSubResourceId())){
+                continue;
+            }
 			if (!res.containsKey(r.getResourceId())) {
 				res.put(r.getResourceId(), new ArrayList<Long>());
 			}

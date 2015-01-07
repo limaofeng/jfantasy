@@ -22,8 +22,9 @@ public class MultiDataSource extends AbstractRoutingDataSource {
     @Override
     public void afterPropertiesSet() {
         super.afterPropertiesSet();
-        if (ObjectUtil.isNull(catalogConverter))
+        if (ObjectUtil.isNull(catalogConverter)){
             catalogConverter = new SimpleCatalogConverter();
+        }
     }
 
     public Connection getConnection() throws SQLException {
@@ -65,8 +66,9 @@ public class MultiDataSource extends AbstractRoutingDataSource {
             logger.error("没有匹配到DataSource,将使用默认数据源!");
             return null;
         }
-        if (containsDataSource(dataSource.name()))
+        if (containsDataSource(dataSource.name())){
             return dataSource.name();
+        }
         try {
             DataSource object = (DataSource) SpringContextUtil.getBean(dataSource.name());
             Map<Object, DataSource> resolvedDataSources = (Map<Object, DataSource>) ClassUtil.getValue(this, "resolvedDataSources");

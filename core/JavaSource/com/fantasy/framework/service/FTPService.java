@@ -1,28 +1,16 @@
 package com.fantasy.framework.service;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.StringTokenizer;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
-import org.springframework.util.Assert;
-
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.commons.net.ftp.*;
+import org.springframework.util.Assert;
+
+import java.io.*;
+import java.util.StringTokenizer;
 
 /**
  * FTP工具类
@@ -270,13 +258,15 @@ public class FTPService {
 	 * @throws IOException
 	 */
 	public void uploadFile(File localFile, String remoteFolder) throws IOException {
-		if (!localFile.exists())
-			throw new FileNotFoundException("此文件[" + localFile.getName() + "]有误或不存在");
+		if (!localFile.exists()){
+            throw new FileNotFoundException("此文件[" + localFile.getName() + "]有误或不存在");
+        }
 		if (remoteFolder.endsWith("/")) {
 			remoteFolder += RegexpUtil.parseGroup(localFile.getPath().replace("\\", "/"), "[^\\/]+$", 0);
 		}
-		if (localFile.isDirectory())
-			throw new IOException(localFile.getPath() + "不是一个文件");
+		if (localFile.isDirectory()){
+            throw new IOException(localFile.getPath() + "不是一个文件");
+        }
 		uploadFile(new FileInputStream(localFile), remoteFolder);
 	}
 
@@ -290,8 +280,9 @@ public class FTPService {
 	 * @throws IOException
 	 */
 	protected void uploadFile(InputStream in, String remoteFile, FTPClient ftpClient) throws IOException {
-		if (remoteFile.indexOf(".") < 1)
-			throw new FileNotFoundException("必须指定上传文件的目录及文件名");
+		if (remoteFile.indexOf(".") < 1){
+            throw new FileNotFoundException("必须指定上传文件的目录及文件名");
+        }
 		OutputStream out = getOutputStream(remoteFile, ftpClient);
 		try {
 			StreamUtil.copy(in, out, this.bufferSize);
@@ -340,10 +331,12 @@ public class FTPService {
 	 * @throws IOException
 	 */
 	public void uploadFolder(File localFile, String remoteFolder) throws IOException {
-		if (!localFile.exists())
-			throw new FileNotFoundException("此文件夹[" + localFile.getName() + "]有误或不存在");
-		if (!localFile.isDirectory())
-			throw new IOException(localFile.getPath() + "不是一个文件夹");
+		if (!localFile.exists()){
+            throw new FileNotFoundException("此文件夹[" + localFile.getName() + "]有误或不存在");
+        }
+		if (!localFile.isDirectory()){
+            throw new IOException(localFile.getPath() + "不是一个文件夹");
+        }
 		FTPClient ftpClient = login();
 		try {
 			// 在服务器上创建目录
@@ -455,8 +448,9 @@ public class FTPService {
 			log.debug("从FTP[" + this.hostname + "]上删除文件:" + remoteFile);
 		}
 		int replyCode = ftpClient.dele(encode(remoteFile));
-		if (replyCode != 250)
-			throw new FileNotFoundException("此文件[" + remoteFile + "]有误或不存在!");
+		if (replyCode != 250){
+            throw new FileNotFoundException("此文件[" + remoteFile + "]有误或不存在!");
+        }
 	}
 
 	/**
@@ -468,18 +462,19 @@ public class FTPService {
 	 * @throws IOException
 	 */
 	protected void deleteRemoteFolder(String remoteFolder, FTPClient ftpClient) throws IOException {
-		if (!isDirExist(encode(remoteFolder), ftpClient))
-			throw new FileNotFoundException("此文件夹[" + remoteFolder + "]不存在!");
+		if (!isDirExist(encode(remoteFolder), ftpClient)){
+            throw new FileNotFoundException("此文件夹[" + remoteFolder + "]不存在!");
+        }
 		if (ftpClient.changeWorkingDirectory(encode(remoteFolder))) {
 			FTPFile[] files = ftpClient.listFiles();
 			for (FTPFile file : files) {
 				String remote = (remoteFolder.endsWith("/") ? remoteFolder : new StringBuilder(String.valueOf(remoteFolder)).append("/").toString()) + file.getName();
 				if (!file.getName().endsWith(".")) {
-					if (file.isDirectory())
-						deleteRemoteFolder(remote + "/", ftpClient);
-					else {
-						deleteRemoteFile(remote, ftpClient);
-					}
+					if (file.isDirectory()){
+                        deleteRemoteFolder(remote + "/", ftpClient);
+                    }else {
+                        deleteRemoteFile(remote, ftpClient);
+                    }
 				}
 			}
 		}
@@ -510,8 +505,9 @@ public class FTPService {
 			pathName = pathName + "/" + (String) s.nextElement();
 			try {
 				boolean success = ftpClient.makeDirectory(pathName);
-				if ((!success) && (dir.equals(pathName + "/")))
-					throw new IOException();
+				if ((!success) && (dir.equals(pathName + "/"))){
+                    throw new IOException();
+                }
 			} catch (IOException e) {
 				log.error("创建远程目录[" + decode(dir) + "]时出现异常 ", e);
 			}
@@ -543,8 +539,9 @@ public class FTPService {
 	}
 
 	protected void downloadFolder(String remoteFolder, File localFolder, FTPClient ftpClient) throws IOException {
-		if (!isDirExist(encode(remoteFolder), ftpClient))
-			throw new FileNotFoundException("在[" + this.hostname + "]上不存在[" + remoteFolder + "]目录");
+		if (!isDirExist(encode(remoteFolder), ftpClient)){
+            throw new FileNotFoundException("在[" + this.hostname + "]上不存在[" + remoteFolder + "]目录");
+        }
 		FTPFile[] files = ftpClient.listFiles(encode(remoteFolder));
 		for (FTPFile file : files) {
 			if (file.getName().endsWith(".")) {
@@ -702,8 +699,9 @@ public class FTPService {
 	 * @throws IOException
 	 */
 	public OutputStream getOutputStream(String remoteFile) throws IOException {
-		if (remoteFile.endsWith("/"))
-			throw new FileNotFoundException("必须指定上传文件的目录及文件名");
+		if (remoteFile.endsWith("/")){
+            throw new FileNotFoundException("必须指定上传文件的目录及文件名");
+        }
 		FTPClient ftpClient = login();
 		try {
 			String fileName = RegexpUtil.parseGroup(remoteFile, "[^\\/]+$", 0);

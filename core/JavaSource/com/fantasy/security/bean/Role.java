@@ -153,8 +153,9 @@ public class Role extends BaseBusEntity {
     public List<GrantedAuthority> getUrlAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>(getResources().size());
         for (Resource resource : getResources()) {
-            if (!resource.isEnabled())
+            if (!resource.isEnabled()){
                 continue;
+            }
             grantedAuthorities.add(resource.getUrlAuthoritie());
         }
         return grantedAuthorities;

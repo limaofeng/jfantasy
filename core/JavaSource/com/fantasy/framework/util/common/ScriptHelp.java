@@ -54,19 +54,20 @@ public class ScriptHelp {
         for (String fromFile : fileList) {
             content.append(readFile(fromFile));
         }
-        if (isCompress)
+        if (isCompress){
             writeFile(compressJS(content.toString()), toFile);
-        else
+        } else{
             writeFile(content.toString(), toFile);
+        }
     }
 
     public static String compressJS(String content) {
         content = content.replaceAll("([^\"])\\/\\*([^\\*^\\/]*|[\\*^\\/*]*[^\\**\\/]*)*\\*\\/", "$1").replaceAll("\\/\\/[^\\n]*", "");
 
-        if (content.indexOf("/*") == 0)
+        if (content.indexOf("/*") == 0){
             content = content.substring(content.indexOf("*/") + 2, content.length());
+        }
         content = content.replaceAll("\\s{2,}", " ").replaceAll("\r\n", "").replaceAll("\n", "");
-
         return content;
     }
 
@@ -111,7 +112,9 @@ public class ScriptHelp {
         String temp = path.replaceAll("/", "\\\\");
         if (((f.isDirectory()) && (isdepth)) || (temp.equals(f.getAbsolutePath()))) {
             File[] ts = f.listFiles();
-            for (File aT : ts != null ? ts : new File[0]) listFile(path, aT, suffix, isdepth);
+            for (File aT : ts != null ? ts : new File[0]){
+                listFile(path, aT, suffix, isdepth);
+            }
         } else {
             addFilePath(f, suffix);
         }
@@ -123,12 +126,12 @@ public class ScriptHelp {
         if (suffix != null) {
             int begIndex = filePath.lastIndexOf(".");
             String tempsuffix = "";
-
             if (begIndex != -1) {
                 tempsuffix = filePath.substring(begIndex + 1, filePath.length());
             }
-            if (tempsuffix.equals(suffix))
+            if (tempsuffix.equals(suffix)){
                 fileList.add(filePath);
+            }
         } else {
             fileList.add(filePath);
         }

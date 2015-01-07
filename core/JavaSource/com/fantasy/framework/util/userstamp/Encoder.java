@@ -11,8 +11,9 @@ public class Encoder {
 			algorithm.reset();
 			algorithm.update((new String(userStamp, 0, 14) + "ldg").getBytes());
 			byte[] messageDigest = algorithm.digest();
-			for (int i = 0; i < 2; i++)
-				userStamp[(14 + i)] = NToC(Math.abs(messageDigest[i]) % 62);
+			for (int i = 0; i < 2; i++){
+                userStamp[(14 + i)] = NToC(Math.abs(messageDigest[i]) % 62);
+            }
 		} catch (NoSuchAlgorithmException e) {
 		}
 		return userStamp;
@@ -72,8 +73,9 @@ public class Encoder {
 			algorithm.reset();
 			algorithm.update(password.getBytes());
 			byte[] messageDigest = algorithm.digest();
-			for (int i = 0; i < 5; i++)
-				pwChars[i] = NToC(Math.abs(messageDigest[i]) % 62);
+			for (int i = 0; i < 5; i++){
+                pwChars[i] = NToC(Math.abs(messageDigest[i]) % 62);
+            }
 		} catch (NoSuchAlgorithmException e) {
 		}
 		return pwChars;
@@ -84,7 +86,8 @@ public class Encoder {
 	}
 
 	public static void main(String[] args) {
-		for (int i = 0; i < 62; i++)
-			System.out.println(i + " : " + NToC(i));
+		for (int i = 0; i < 62; i++){
+            System.out.println(i + " : " + NToC(i));
+        }
 	}
 }

@@ -26,10 +26,11 @@ public class PropertyFieldHandler extends AbstractFieldHandler {
 
 	protected void process(Document doc, boolean analyze, boolean store, float boost) {
 		Class<?> type = this.field.getType();
-		if (type.isArray())
-			processArray(doc, analyze, store, boost);
-		else
-			processPrimitive(doc, analyze, store, boost);
+		if (type.isArray()){
+            processArray(doc, analyze, store, boost);
+        }else{
+            processPrimitive(doc, analyze, store, boost);
+        }
 	}
 
 	private void processArray(Document doc, boolean analyze, boolean store, float boost) {

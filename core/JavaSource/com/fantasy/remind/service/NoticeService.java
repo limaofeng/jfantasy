@@ -54,20 +54,27 @@ public class NoticeService {
     public void save(Notice notice) throws Exception {
         if (notice.getId() == null && StringUtil.isNotNull(notice.getReplaceMap()) && notice.getModel() != null && notice.getModel().getCode() != null) {
             Model m = modelDao.get(notice.getModel().getCode());
-            if (m == null)
+            if (m == null){
                 throw new RuntimeException("无匹配model项");
+            }
             Map<String, String> replaceMap = JSON.deserialize(notice.getReplaceMap(), new HashMap<String, String>().getClass());
             if (replaceMap != null) {
                 String content = m.getContent();
                 String url = m.getUrl();
                 for (String s : replaceMap.keySet()) {
-                    if (StringUtil.isNotNull(content) && !StringUtil.isNotNull(notice.getContent()))
+                    if (StringUtil.isNotNull(content) && !StringUtil.isNotNull(notice.getContent())){
                         content = content.replace("${" + s + "}", replaceMap.get(s));
-                    if (StringUtil.isNotNull(url) && !StringUtil.isNotNull(notice.getUrl()))
+                    }
+                    if (StringUtil.isNotNull(url) && !StringUtil.isNotNull(notice.getUrl())){
                         url = url.replace("${" + s + "}", replaceMap.get(s));
+                    }
                 }
-                if (!StringUtil.isNotNull(notice.getUrl())) notice.setUrl(url);
-                if (!StringUtil.isNotNull(notice.getContent())) notice.setContent(content);
+                if (!StringUtil.isNotNull(notice.getUrl())) {
+                    notice.setUrl(url);
+                }
+                if (!StringUtil.isNotNull(notice.getContent())) {
+                    notice.setContent(content);
+                }
 
             }
         }

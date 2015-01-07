@@ -1,22 +1,22 @@
 package com.fantasy.framework.dao;
 
+import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import javax.sql.DataSource;
-
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-
 public class DaoUtil {
 
 	public static Connection getConnection(String dataSourceName) throws SQLException {
 		DataSource dataSource = (DataSource) SpringContextUtil.getBean(dataSourceName);
-		if (ObjectUtil.isNotNull(dataSource))
-			return dataSource.getConnection();
+		if (ObjectUtil.isNotNull(dataSource)){
+            return dataSource.getConnection();
+        }
 		throw new SQLException("名为:" + dataSourceName + ",的数据源没有找到!");
 	}
 

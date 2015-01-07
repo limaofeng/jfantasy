@@ -1,12 +1,11 @@
 package com.fantasy.framework.util.highcharts;
 
+import com.fantasy.framework.util.jackson.JSON;
+
+import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import javax.annotation.Resource;
-
-import com.fantasy.framework.util.jackson.JSON;
 
 public class Test {
 	@Resource
@@ -37,10 +36,10 @@ public class Test {
 	}
 
 	static String addMonth(int mon, String formatStr) {
-		if ((formatStr == null) || (formatStr.length() <= 0))
-			formatStr = "yyyyMMdd";
+		if ((formatStr == null) || (formatStr.length() <= 0)){
+            formatStr = "yyyyMMdd";
+        }
 		SimpleDateFormat sdf = new SimpleDateFormat(formatStr);
-
 		Calendar cal = Calendar.getInstance();
 		Date d = new Date();
 		cal.setTime(d);

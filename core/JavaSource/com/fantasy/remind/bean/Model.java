@@ -115,7 +115,9 @@ public class Model extends BaseBusEntity {
             });
             this.avatar = fileDetails.isEmpty() ? null : fileDetails.get(0);
         }
-        if(this.avatar==null) return null;
+        if(this.avatar==null){
+            return null;
+        }
         return RegexpUtil.replace(this.avatar.getAbsolutePath(), "[.][a-zA-Z]{1,}$", "_250x153$0");
     }
 }

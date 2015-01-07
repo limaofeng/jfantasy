@@ -1,17 +1,16 @@
 package com.fantasy.framework.lucene.dao.mybatis;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
+import com.fantasy.framework.lucene.backend.EntityChangedListener;
+import com.fantasy.framework.lucene.backend.IndexChecker;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 
-import com.fantasy.framework.lucene.backend.EntityChangedListener;
-import com.fantasy.framework.lucene.backend.IndexChecker;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * 
@@ -44,11 +43,13 @@ public class EntityChangedInterceptor implements Interceptor {
 			return invocation.proceed();
 		} finally {
 			if (SqlCommandType.INSERT.equals(ms.getSqlCommandType())) {
-				if (IndexChecker.hasIndexed(clazz))
-					getEntityChangedListener(clazz).entityInsert(entity);
+				if (IndexChecker.hasIndexed(clazz)){
+                    getEntityChangedListener(clazz).entityInsert(entity);
+                }
 			} else if (SqlCommandType.UPDATE.equals(ms.getSqlCommandType())) {
-				if (!IndexChecker.hasIndexed(clazz))
-					getEntityChangedListener(clazz).entityUpdate(entity);
+				if (!IndexChecker.hasIndexed(clazz)){
+                    getEntityChangedListener(clazz).entityUpdate(entity);
+                }
 			} else if (SqlCommandType.DELETE.equals(ms.getSqlCommandType())) {
 
 			}

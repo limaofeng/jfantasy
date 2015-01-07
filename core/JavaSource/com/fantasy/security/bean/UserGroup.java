@@ -137,8 +137,9 @@ public class UserGroup extends BaseBusEntity {
 
 	@JsonIgnore
 	public List<GrantedAuthority> getRoleAuthorities() {
-		if (ObjectUtil.isNull(getRoles()))
-			return new ArrayList<GrantedAuthority>();
+		if (ObjectUtil.isNull(getRoles())){
+            return new ArrayList<GrantedAuthority>();
+        }
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		for (Role role : getRoles()) {
 			grantedAuthorities.addAll(role.getRoleAuthorities());
@@ -151,8 +152,9 @@ public class UserGroup extends BaseBusEntity {
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		if (ObjectUtil.isNotNull(getRoles())) {
 			for (Role role : getRoles()) {
-				if (!role.isEnabled())
-					continue;
+				if (!role.isEnabled()){
+                    continue;
+                }
 				grantedAuthorities.addAll(role.getUrlAuthorities());
 			}
 		}
@@ -168,8 +170,9 @@ public class UserGroup extends BaseBusEntity {
 			List<Resource> resources = new ArrayList<Resource>();
 
 			for (Resource re : resources) {
-				if (!re.isEnabled())
-					continue;
+				if (!re.isEnabled()){
+                    continue;
+                }
 				grantedAuthorities.add(re.getUrlAuthoritie());
 			}
 		}

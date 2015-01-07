@@ -1,23 +1,5 @@
 package com.fantasy.framework.struts2.result;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.StrutsConstants;
-import org.apache.struts2.StrutsStatics;
-import org.apache.struts2.json.JSONException;
-import org.apache.struts2.json.JSONUtil;
-import org.apache.struts2.json.JSONWriter;
-import org.apache.struts2.json.SerializationParams;
-import org.apache.struts2.json.smd.SMDGenerator;
-
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -32,6 +14,22 @@ import com.opensymphony.xwork2.util.ValueStack;
 import com.opensymphony.xwork2.util.WildcardUtil;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.StrutsConstants;
+import org.apache.struts2.StrutsStatics;
+import org.apache.struts2.json.JSONException;
+import org.apache.struts2.json.JSONUtil;
+import org.apache.struts2.json.JSONWriter;
+import org.apache.struts2.json.SerializationParams;
+import org.apache.struts2.json.smd.SMDGenerator;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.regex.Pattern;
 
 public class JSONResult implements Result {
 
@@ -224,8 +222,10 @@ public class JSONResult implements Result {
 	protected String addCallbackIfApplicable(HttpServletRequest request, String json) {
 		if ((callbackParameter != null) && (callbackParameter.length() > 0)) {
 			String callbackName = request.getParameter(callbackParameter);
-			if ((callbackName != null) && (callbackName.length() > 0))
-				json = callbackName + "(" + json + ")";
+			if ((callbackName != null) && (callbackName.length() > 0)){
+                json = callbackName + "(" + json + ")";
+            }
+
 		}
 		return json;
 	}

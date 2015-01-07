@@ -1,5 +1,11 @@
 package com.fantasy.framework.lucene.handler;
 
+import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
+import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.mapper.DataType;
+import com.fantasy.framework.lucene.mapper.FieldUtil;
+import org.apache.lucene.document.Document;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -8,13 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.lucene.document.Document;
-
-import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
-import com.fantasy.framework.lucene.cache.FieldsCache;
-import com.fantasy.framework.lucene.mapper.DataType;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
 
 public class EmbedListFieldHandler extends AbstractFieldHandler {
 	public EmbedListFieldHandler(Object obj, Field field, String prefix) {
@@ -34,8 +33,9 @@ public class EmbedListFieldHandler extends AbstractFieldHandler {
 			clazz = type.getComponentType();
 			int len = Array.getLength(value);
 			list = new ArrayList<Object>();
-			for (int i = 0; i < len; i++)
-				list.add(Array.get(value, i));
+			for (int i = 0; i < len; i++){
+                list.add(Array.get(value, i));
+            }
 		} else {
 			ParameterizedType paramType = (ParameterizedType) this.field.getGenericType();
 			Type[] types = paramType.getActualTypeArguments();
