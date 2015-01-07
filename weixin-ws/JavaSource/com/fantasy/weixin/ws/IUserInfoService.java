@@ -5,7 +5,7 @@ import com.fantasy.weixin.ws.dto.UserInfoDTO;
 /**
  * Created by zzzhong on 2015/1/4.
  */
-public interface IUserService {
+public interface IUserInfoService {
     /**
      * 通过openId获取微信用户信息
      * @param openId 微信用户的唯一表示
