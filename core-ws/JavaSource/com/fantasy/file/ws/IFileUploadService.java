@@ -2,10 +2,12 @@ package com.fantasy.file.ws;
 
 import com.fantasy.file.ws.dto.FileDTO;
 
-import java.io.IOException;
+import javax.activation.DataHandler;
 
 public interface IFileUploadService {
 
-	public FileDTO upload(String fileName, String contentType, String dir, String attchmentID) throws IOException;
+	public FileDTO uploadFile(String fileName, String contentType, String dir, String attchmentID);
+
+	public String upload(DataHandler handler, String fileName, String dir);
 
 }

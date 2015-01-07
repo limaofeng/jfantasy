@@ -22,7 +22,7 @@ import java.util.regex.Pattern;
 
 public abstract class WebServiceClient {
 
-    private final Log logger = LogFactory.getLog(getClass());
+    protected final Log LOG = LogFactory.getLog(getClass());
 
     private static String WEBCLASSES_PATH = null;
 
@@ -34,13 +34,13 @@ public abstract class WebServiceClient {
         WEBCLASSES_PATH = replace(url.getPath(), "[\\/]$", "");
     }
 
-    private EndpointReference targetEPR;
-    private String targetNamespace;
-    private String endPointReference;
-    private String serviceName;
-    private String axis2xml;
-    private boolean manageSession = false;
-    private ConfigurationContext configurationContext;
+    protected EndpointReference targetEPR;
+    protected String targetNamespace;
+    protected String endPointReference;
+    protected String serviceName;
+    protected String axis2xml;
+    protected boolean manageSession = false;
+    protected ConfigurationContext configurationContext;
 
     public WebServiceClient(String serviceName) {
         this.serviceName = serviceName;
@@ -60,7 +60,7 @@ public abstract class WebServiceClient {
         this.targetEPR = new EndpointReference(this.endPointReference.concat("/").concat(this.serviceName));
     }
 
-    private RPCServiceClient createServiceClient() throws AxisFault {
+    protected RPCServiceClient createServiceClient() throws AxisFault {
         RPCServiceClient serviceClient;
         if (this.configurationContext != null) {
             serviceClient = new RPCServiceClient(this.configurationContext, null);
@@ -73,7 +73,7 @@ public abstract class WebServiceClient {
         options.setTimeOutInMilliSeconds(30000);
         //设置Http客户端连接可以复用
         options.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
-        this.logger.debug(this.endPointReference.concat("/").concat(this.serviceName));
+        this.LOG.debug(this.endPointReference.concat("/").concat(this.serviceName));
         options.setTo(this.targetEPR);
         return serviceClient;
     }
@@ -85,7 +85,7 @@ public abstract class WebServiceClient {
             Object[] response = (serviceClient = this.createServiceClient()).invokeBlocking(opQName, opArgs, new Class[]{opReturnType});
             return opReturnType.cast(response.length > 0 ? response[0] : null);
         } catch (AxisFault e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw new WebServiceException(e);
         } finally {
             if (serviceClient != null) {
@@ -106,7 +106,7 @@ public abstract class WebServiceClient {
             Object[] response = (serviceClient = this.createServiceClient()).invokeBlocking(opQName, opArgs, opReturnType);
             return response.length > 0 ? response[0] : null;
         } catch (AxisFault e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw new WebServiceException(e);
         } finally {
             if (serviceClient != null) {
@@ -150,7 +150,7 @@ public abstract class WebServiceClient {
                 }
             });
         } catch (AxisFault e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw new WebServiceException(e);
         }
     }

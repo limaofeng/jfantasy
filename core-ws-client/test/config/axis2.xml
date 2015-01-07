@@ -19,6 +19,7 @@
 
 <axisconfig name="AxisJava2.0">
 
+    <!--
 	<module ref="rampart" />
 	<parameter name="OutflowSecurity">
 		<action>
@@ -35,7 +36,8 @@
 			<signaturePropFile>client.properties</signaturePropFile>
 		</action>
 	</parameter>
-	
+	-->
+
     <!-- ================================================= -->
     <!-- Parameters -->
     <!-- ================================================= -->
