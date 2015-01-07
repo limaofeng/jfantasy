@@ -9,7 +9,7 @@ import javax.persistence.Table;
  * 微信用用户组
  * Created by zzzhong on 2014/6/19.
  */
-@Entity
+@Entity(name= "WxGroup")
 @Table(name = "WX_GROUP")
 public class Group {
     public Group() {

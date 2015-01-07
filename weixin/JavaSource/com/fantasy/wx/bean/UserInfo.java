@@ -8,7 +8,7 @@ import java.util.Date;
  * 微信用户基本信息
  * Created by zzzhong on 2014/6/19.
  */
-@Entity
+@Entity(name="wxUserInfo")
 @Table(name = "WX_USER_INFO")
 public class UserInfo {
 

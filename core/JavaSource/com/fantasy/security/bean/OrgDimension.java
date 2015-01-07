@@ -5,10 +5,15 @@ import org.codehaus.jackson.annotate.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * 组织维度
  */
+@Entity
+@Table(name = "AUTH_ORG_DIMENSION")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgDimension extends BaseBusEntity {
@@ -16,6 +21,7 @@ public class OrgDimension extends BaseBusEntity {
     /**
      * 维度Id
      */
+    @Id
     @Column(name = "CODE")
     private String id;
     /**

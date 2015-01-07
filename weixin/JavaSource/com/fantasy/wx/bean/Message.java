@@ -8,7 +8,7 @@ import javax.persistence.*;
  * 文本消息
  * Created by zzzhong on 2014/6/17.
  */
-@Entity
+@Entity(name="wxMessage")
 @Table(name = "WX_MESSAGE")
 public class Message {
     @Id

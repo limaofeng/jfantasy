@@ -8,13 +8,13 @@
             <bean class="com.fantasy.wx.framework.handler.AutoReplyTextHandler"/>
 
         </property>
-        <property name="eventListeners">
+        <!--<property name="eventListeners">
             <map>
                 <entry key="subscribe">
                     <bean class=""/>
                 </entry>
             </map>
-        </property>
+        </property>-->
         <property name="accountDetailsService">
             <bean class="com.fantasy.wx.framework.account.SimpleAccountDetailsService">
                 <property name="accounts">

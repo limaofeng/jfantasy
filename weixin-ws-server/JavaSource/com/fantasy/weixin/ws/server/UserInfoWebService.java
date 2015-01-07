@@ -27,6 +27,7 @@ public class UserInfoWebService implements IUserService {
     public UserInfoDTO authUserInfo(String code) {
         return transUser(userInfoWeiXinService.authUserInfo(code));
     }
+
     public UserInfoDTO transUser(UserInfo u){
         if (u == null) {
             return null;
@@ -48,6 +49,7 @@ public class UserInfoWebService implements IUserService {
         }
         return user;
     }
+
     public GroupDTO transGroup(Group g){
         if (g == null) {
             return null;
