@@ -562,12 +562,13 @@ public final class ObjectUtil {
      * @return boolean
      */
     public static <T> Boolean exists(List<T> list, Object object) {
-        for (Object t : list)
+        for (Object t : list){
             if (t.getClass().isEnum() && t.toString().equals(object)) {
                 return true;
             } else if (t.equals(object)) {
                 return true;
             }
+        }
         return false;
     }
 
