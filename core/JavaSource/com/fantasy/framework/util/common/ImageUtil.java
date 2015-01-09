@@ -356,13 +356,14 @@ public final class ImageUtil {
         target = new ByteArrayInputStream(os.toByteArray());
         if (BMP_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
             imageOriginal = toBufferedImage((ToolkitImage) bmpReader(target));
-        }/* else if (PNG_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
-            imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
-        }*/ else if (GIF_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
+        }else if (GIF_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
             throw new RuntimeException("暂不支持GIF图片缩放");
         } else {
             imageOriginal = ImageIO.read(target);// toBufferedImage((ToolkitImage)jpgReader(target));
         }
+        /* else if (PNG_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
+            imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
+        }*/
         int realWidth = imageOriginal.getWidth();
         int realHeight = imageOriginal.getHeight();
         if ((realWidth == width) && (realHeight == heigth)){

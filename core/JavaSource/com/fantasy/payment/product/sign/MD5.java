@@ -41,10 +41,9 @@ public class MD5 {
     	String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
     	if(mysign.equals(sign)) {
     		return true;
-    	}
-    	else {
-    		return false;
-    	}
+    	}else {
+            return false;
+        }
     }
 
     /**

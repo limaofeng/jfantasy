@@ -30,29 +30,28 @@ public class IndexWriterCache {
 		IndexWriter writer = null;
 		if (this.cache.containsKey(name)){
             writer = (IndexWriter) this.cache.get(name);
+        }else {
+            synchronized (this) {
+                if (this.cache.containsKey(name)) {
+                    writer = (IndexWriter) this.cache.get(name);
+                } else {
+                    BuguIndex index = BuguIndex.getInstance();
+                    IndexWriterConfig cfg = new IndexWriterConfig(index.getVersion(), index.getAnalyzer());
+                    cfg.setRAMBufferSizeMB(index.getBufferSizeMB());
+                    try {
+                        Directory dir = FSDirectory.open(BuguIndex.getInstance().getOpenFolder("/" + name));// new File(path + "/" + name);
+                        if (IndexWriter.isLocked(dir)) {
+                            IndexWriter.unlock(dir);
+                        }
+                        cfg.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+                        writer = new IndexWriter(dir, cfg);
+                    } catch (IOException ex) {
+                        logger.error("Something is wrong when create IndexWriter for " + name, ex);
+                    }
+                    this.cache.put(name, writer);
+                }
+            }
         }
-		else {
-			synchronized (this) {
-				if (this.cache.containsKey(name)) {
-					writer = (IndexWriter) this.cache.get(name);
-				} else {
-					BuguIndex index = BuguIndex.getInstance();
-					IndexWriterConfig cfg = new IndexWriterConfig(index.getVersion(), index.getAnalyzer());
-					cfg.setRAMBufferSizeMB(index.getBufferSizeMB());
-					try {
-						Directory dir = FSDirectory.open(BuguIndex.getInstance().getOpenFolder("/" + name));// new File(path + "/" + name);
-						if (IndexWriter.isLocked(dir)) {
-							IndexWriter.unlock(dir);
-						}
-						cfg.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-						writer = new IndexWriter(dir, cfg);
-					} catch (IOException ex) {
-						logger.error("Something is wrong when create IndexWriter for " + name, ex);
-					}
-					this.cache.put(name, writer);
-				}
-			}
-		}
 		return writer;
 	}
 

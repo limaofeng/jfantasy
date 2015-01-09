@@ -288,8 +288,7 @@ class ConfigurationClassEnhancer {
                 if (factoryBean instanceof ScopedProxyFactoryBean) {
                     // Pass through - scoped proxy factory beans are a special case and should not
                     // be further proxied
-                }
-                else {
+                } else {
                     // It is a candidate FactoryBean - go ahead with enhancement
                     return enhanceFactoryBean(factoryBean.getClass(), beanFactory, beanName);
                 }
@@ -309,8 +308,7 @@ class ConfigurationClassEnhancer {
                             beanMethod.getDeclaringClass().getSimpleName(), beanMethod.getName()));
                 }
                 return cglibMethodProxy.invokeSuper(enhancedConfigInstance, beanMethodArgs);
-            }
-            else {
+            }else {
                 // The user (i.e. not the factory) is requesting this bean through a
                 // call to the bean method, direct or indirect. The bean may have already been
                 // marked as 'in creation' in certain autowiring scenarios; if so, temporarily
@@ -321,8 +319,7 @@ class ConfigurationClassEnhancer {
                         beanFactory.setCurrentlyInCreation(beanName, false);
                     }
                     return beanFactory.getBean(beanName);
-                }
-                finally {
+                }finally {
                     if (alreadyInCreation) {
                         beanFactory.setCurrentlyInCreation(beanName, true);
                     }
