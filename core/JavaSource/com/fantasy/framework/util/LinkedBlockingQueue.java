@@ -1,5 +1,7 @@
 package com.fantasy.framework.util;
 
+import com.fantasy.framework.error.IgnoreException;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -74,7 +76,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         }
 
         public boolean addAll(int index, Collection<? extends E> c) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public void clear() {
@@ -102,15 +104,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         }
 
         public int lastIndexOf(Object o) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public ListIterator<E> listIterator() {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public ListIterator<E> listIterator(int index) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public boolean remove(Object o) {
@@ -143,7 +145,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         }
 
         public List<E> subList(int fromIndex, int toIndex) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public Object[] toArray() {

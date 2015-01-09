@@ -10,6 +10,7 @@ import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.bean.Folder;
 import com.fantasy.file.service.FilePartService;
 import com.fantasy.file.service.FileService;
+import com.fantasy.framework.error.IgnoreException;
 
 import javax.annotation.Resource;
 import java.io.File;
@@ -219,7 +220,7 @@ public class UploadFileManager implements FileManager {
 
         public InputStream getInputStream() throws IOException {
             if (this.isDirectory()) {
-                throw new RuntimeException("当前对象为一个目录,不能获取 InputStream ");
+                throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
             }
             return uploadFileManager.source.readFile(this.fileDetail.getRealPath());
         }

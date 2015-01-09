@@ -1,6 +1,7 @@
 package com.fantasy.attr;
 
 import com.fantasy.attr.bean.Attribute;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.Stack;
 import com.fantasy.framework.util.common.ObjectUtil;
 
@@ -21,7 +22,7 @@ public class DynaBeanQueryManager {
     private final static DynaBeanQuery defaultDynaBeanQuery = new DynaBeanQuery() {
         @Override
         public void addColumn(String name, Class<?> type) {
-            throw new RuntimeException("默认动态查询，不能添加字段");
+            throw new IgnoreException("默认动态查询，不能添加字段");
         }
     };
 

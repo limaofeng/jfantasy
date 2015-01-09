@@ -2,6 +2,7 @@ package com.fantasy.remind.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.concurrent.LinkedQueue;
@@ -51,11 +52,11 @@ public class NoticeService {
      *
      * @param notice
      */
-    public void save(Notice notice) throws Exception {
+    public void save(Notice notice){
         if (notice.getId() == null && StringUtil.isNotNull(notice.getReplaceMap()) && notice.getModel() != null && notice.getModel().getCode() != null) {
             Model m = modelDao.get(notice.getModel().getCode());
             if (m == null){
-                throw new RuntimeException("无匹配model项");
+                throw new IgnoreException("无匹配model项");
             }
             Map<String, String> replaceMap = JSON.deserialize(notice.getReplaceMap(), new HashMap<String, String>().getClass());
             if (replaceMap != null) {
@@ -81,7 +82,11 @@ public class NoticeService {
         boolean b = notice.getId() == null;
         this.noticeDao.save(notice);
         if (b){
-            noticeQueue.put(notice);
+            try {
+                noticeQueue.put(notice);
+            } catch (InterruptedException e) {
+                throw new IgnoreException(e.getMessage());
+            }
         }
     }
 

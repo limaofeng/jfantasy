@@ -1,6 +1,7 @@
 package com.fantasy.framework.util.common;
 
 import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.sun.imageio.plugins.bmp.BMPImageReader;
 import com.sun.imageio.plugins.gif.GIFImageReader;
@@ -310,7 +311,7 @@ public final class ImageUtil {
             imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
         */
         } else if (GIF_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
-            throw new RuntimeException("暂不支持GIF图片缩放");
+            throw new IgnoreException("暂不支持GIF图片缩放");
         } else {
             imageOriginal = ImageIO.read(target);
         }
@@ -686,7 +687,7 @@ public final class ImageUtil {
             return imageIcon.getImage();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage());
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -728,7 +729,7 @@ public final class ImageUtil {
                 image = kit.createImage(new MemoryImageSource(nwidth, nheight, ndata, 0, nwidth));
                 logger.debug("read bmp image success");
             } else {
-                throw new RuntimeException("it's not 24bits bmp, fail.");
+                throw new IgnoreException("it's not 24bits bmp, fail.");
             }
         } finally {
             StreamUtil.closeQuietly(fs);

@@ -1,5 +1,7 @@
 package com.fantasy.framework.util.concurrent;
 
+import com.fantasy.framework.error.IgnoreException;
+
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.TimeUnit;
@@ -733,7 +735,7 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 		}
 
 		public boolean addAll(int index, Collection<? extends E> c) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
 		public void clear() {
@@ -766,17 +768,17 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 		}
 
 		public int lastIndexOf(Object o) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
         @SuppressWarnings("NullableProblems")
 		public ListIterator<E> listIterator() {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
         @SuppressWarnings("NullableProblems")
 		public ListIterator<E> listIterator(int index) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
 		public boolean remove(Object o) {
@@ -805,7 +807,7 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
 
         @SuppressWarnings("NullableProblems")
 		public List<E> subList(int fromIndex, int toIndex) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
         @SuppressWarnings("NullableProblems")

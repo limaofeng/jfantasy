@@ -1,18 +1,8 @@
 package com.fantasy.framework.util.generate.binder;
 
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.io.IOUtils;
-import org.springframework.util.Assert;
-
 import com.fantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.generate.model.Column;
@@ -20,6 +10,12 @@ import com.fantasy.framework.util.generate.model.Module;
 import com.fantasy.framework.util.generate.model.Table;
 import com.fantasy.framework.util.generate.util.TemplateUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import org.apache.commons.io.IOUtils;
+import org.springframework.util.Assert;
+
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 @SuppressWarnings("unchecked")
 public class MyBatisBinder {
@@ -43,24 +39,34 @@ public class MyBatisBinder {
 	this.freemarkerService = freemarkerService;
     }
 
-    public void generate(String javasource, String path, Module module) throws Exception {
-	for (Table table : module.getTables()) {
-	    this.generateJavaBean(javasource, table);
-	    this.generateJavaService(javasource, table);
-	    this.generateJavaServiceImpl(javasource, table);
-	    this.generateJavaDao(javasource, table);
-	    this.generateJavaMapper(javasource, table);
-	    this.generateSqlMap(javasource, table);
-	    // this.generateTest(new File("").getCanonicalFile().getPath().concat("/test"), table);
-	    // this.generateController(javasource, table);
-	    // this.generateFormBean(javasource, table);
-	}
+    public void generate(String javasource, String path, Module module){
+        try{
+            for (Table table : module.getTables()) {
+                this.generateJavaBean(javasource, table);
+                this.generateJavaService(javasource, table);
+                this.generateJavaServiceImpl(javasource, table);
+                this.generateJavaDao(javasource, table);
+                this.generateJavaMapper(javasource, table);
+                this.generateSqlMap(javasource, table);
+                // this.generateTest(new File("").getCanonicalFile().getPath().concat("/test"), table);
+                // this.generateController(javasource, table);
+                // this.generateFormBean(javasource, table);
+            }
+        }catch (Exception e){
+            throw new IgnoreException(e.getMessage());
+        }
+
     }
 
-    public void generateFormBean(String javasource, Table table) throws Exception {
+    public void generateFormBean(String javasource, Table table)  {
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("form"), "Form.java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map<String, String> importsMap = new HashMap<String, String>();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
 	for (Column tabColumn : table.listColumn()) {
 	    String javaClass = util.toJavaType(tabColumn.getDataType());
@@ -82,10 +88,15 @@ public class MyBatisBinder {
 	}
     }
 
-    public void generateController(String javasource, Table table) throws Exception {
+    public void generateController(String javasource, Table table){
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("controller"), "Controller.java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map data = new HashMap();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map data = new HashMap();
 	data.put("beanClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("bean")));
 	data.put("formBeanClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("form")) + "Form");
 	data.put("package", table.getPackage(packages.get("controller")));
@@ -99,10 +110,15 @@ public class MyBatisBinder {
     }
 
     @SuppressWarnings("unused")
-    private void generateTest(String javasource, Table table) throws Exception {
+    private void generateTest(String javasource, Table table) {
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("test"), "ServiceTest.java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map data = new HashMap();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map data = new HashMap();
 	data.put("package", table.getPackage(packages.get("test")));
 	data.put("beanClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("bean")));
 	data.put("serviceClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("service")).concat("Service"));
@@ -114,10 +130,15 @@ public class MyBatisBinder {
 	}
     }
 
-    public void generateSqlMap(String javasource, Table table) throws Exception {
+    public void generateSqlMap(String javasource, Table table){
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("mapper"), "-Mapper.xml")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map data = new HashMap();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map data = new HashMap();
 	data.put("beanClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("bean")));
 	data.put("mapperClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("mapper")).concat("Mapper"));
 	data.put("table", table);
@@ -128,10 +149,15 @@ public class MyBatisBinder {
 	}
     }
 
-    public void generateJavaMapper(String javasource, Table table) throws Exception {
+    public void generateJavaMapper(String javasource, Table table){
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("mapper"), "Mapper.java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map<String, String> importsMap = new HashMap<String, String>();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
 	for (Column tabColumn : table.listColumn()) {
 	    String javaClass = util.toJavaType(tabColumn.getDataType());
@@ -153,10 +179,15 @@ public class MyBatisBinder {
 	}
     }
 
-    public void generateJavaDao(String javasource, Table table) throws Exception {
+    public void generateJavaDao(String javasource, Table table){
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("dao"), "Dao.java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map<String, String> importsMap = new HashMap<String, String>();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
 	for (Column tabColumn : table.listColumn()) {
 	    String javaClass = util.toJavaType(tabColumn.getDataType());
@@ -178,10 +209,15 @@ public class MyBatisBinder {
 	}
     }
 
-    private void generateJavaServiceImpl(String javasource, Table table) throws Exception {
+    private void generateJavaServiceImpl(String javasource, Table table){
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("serviceImpl"), "ServiceImpl.java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map<String, String> importsMap = new HashMap<String, String>();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
 	for (Column tabColumn : table.listColumn()) {
 	    String javaClass = util.toJavaType(tabColumn.getDataType());
@@ -204,10 +240,15 @@ public class MyBatisBinder {
 	}
     }
 
-    public void generateJavaBean(String javasource, Table table) throws Exception {
+    public void generateJavaBean(String javasource, Table table){
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("bean"), ".java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map<String, String> importsMap = new HashMap<String, String>();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
 	for (Column tabColumn : table.listColumn()) {
 	    String javaClass = util.toJavaType(tabColumn.getDataType());
@@ -228,10 +269,15 @@ public class MyBatisBinder {
 	}
     }
 
-    private void generateJavaService(String javasource, Table table) throws Exception {
+    private void generateJavaService(String javasource, Table table){
 	File file = FileUtil.createFile(javasource.concat("/").concat(table.getFilePath(packages.get("service"), "Service.java")));
-	Writer out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
-	Map<String, String> importsMap = new HashMap<String, String>();
+        Writer out = null;
+        try {
+            out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
+        } catch (FileNotFoundException e) {
+            throw new IgnoreException(e.getMessage());
+        }
+        Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
 	for (Column tabColumn : table.listColumn()) {
 	    String javaClass = util.toJavaType(tabColumn.getDataType());

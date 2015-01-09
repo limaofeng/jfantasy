@@ -1,19 +1,18 @@
 package com.fantasy.framework.freemarker.loader;
 
+import com.fantasy.file.FileItem;
+import com.fantasy.file.FileManager;
+import com.fantasy.file.service.FileManagerFactory;
+import com.fantasy.framework.error.IgnoreException;
+import com.fantasy.framework.util.common.StringUtil;
+import freemarker.cache.TemplateLoader;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileManager;
-import com.fantasy.file.service.FileManagerFactory;
-import com.fantasy.framework.util.common.StringUtil;
-
-import freemarker.cache.TemplateLoader;
 
 public class FileManagerTemplateLoader implements TemplateLoader {
 
@@ -36,7 +35,7 @@ public class FileManagerTemplateLoader implements TemplateLoader {
 			}
 			return fileManager = FileManagerFactory.getInstance().getFileManager(fileManagerBeanName);
 		}
-		throw new RuntimeException("fileManager 与  fileManagerBeanName 不能同时为空!");
+		throw new IgnoreException("fileManager 与  fileManagerBeanName 不能同时为空!");
 	}
 
 	public void closeTemplateSource(Object templateSource) throws IOException {

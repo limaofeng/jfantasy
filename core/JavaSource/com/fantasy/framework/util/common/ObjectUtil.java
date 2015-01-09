@@ -1,6 +1,7 @@
 package com.fantasy.framework.util.common;
 
 import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
@@ -64,7 +65,7 @@ public final class ObjectUtil {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -371,7 +372,7 @@ public final class ObjectUtil {
         try {
             BeanUtil.setValue(obj, fieldName, value);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 

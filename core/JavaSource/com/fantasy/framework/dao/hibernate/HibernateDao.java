@@ -5,6 +5,7 @@ import com.fantasy.attr.DynaBeanQueryManager;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -823,7 +824,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql+""+e.getMessage());
         }
     }
 
@@ -836,7 +837,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql+""+e.getMessage());
         }
     }
 
@@ -1108,7 +1109,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             ClassUtil.setValue(criterion, "rhs", sqlRestriction((Criterion) ClassUtil.getValue(criterion, "rhs"), propertyNameSql));
             return criterion;
         }
-        throw new RuntimeException("暂不支持  " + criterion.getClass() + " 到 SQLCriterion 的转换(" + criterion.toString() + ")");
+        throw new IgnoreException("暂不支持  " + criterion.getClass() + " 到 SQLCriterion 的转换(" + criterion.toString() + ")");
     }
 
     @SuppressWarnings("unchecked")

@@ -1,5 +1,6 @@
 package com.fantasy.payment.service;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.payment.order.OrderDetailsService;
@@ -149,7 +150,7 @@ public class PaymentConfiguration implements InitializingBean {
     public OrderDetailsService getPaymentOrderService(String orderType) {
         if(!this.paymentOrderServices.containsKey(orderType)){
             //TODO 添加自定义异常
-            throw new RuntimeException("orderType["+orderType+"] 对应的 PaymentOrderService 未配置！");
+            throw new IgnoreException("orderType["+orderType+"] 对应的 PaymentOrderService 未配置！");
         }
         return this.paymentOrderServices.get(orderType);
     }

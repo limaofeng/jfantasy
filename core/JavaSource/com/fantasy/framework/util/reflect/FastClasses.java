@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.reflect;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import net.sf.cglib.reflect.FastClass;
@@ -109,7 +110,7 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return this.clazz.newInstance();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -120,7 +121,7 @@ public class FastClasses<T> implements IClass<T> {
             }
 			return newInstance(object.getClass(), object);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -128,7 +129,7 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return this.constructors.get(type).newInstance(new Object[] { object });
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -190,10 +191,10 @@ public class FastClasses<T> implements IClass<T> {
 			if (field != null) {
                 field.set(target, value);
             }else{
-                throw new Exception("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!");
+                throw new IgnoreException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!");
             }
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(), e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -216,7 +217,7 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return field != null ? field.get(target) : null;
 		} catch (Exception ex) {
-			throw new RuntimeException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!", ex);
+			throw new IgnoreException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!"+ex.getMessage());
 		}
 	}
 
@@ -227,7 +228,7 @@ public class FastClasses<T> implements IClass<T> {
 		if (parameterTypes.length == 1) {
 			return newInstance(parameterTypes[0], parameters[0]);
 		}
-		throw new RuntimeException("还不支持多个参数的构造器");
+		throw new IgnoreException("还不支持多个参数的构造器");
 	}
 
 	public Field[] getDeclaredFields() {

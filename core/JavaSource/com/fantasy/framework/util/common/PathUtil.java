@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -31,7 +32,7 @@ public class PathUtil {
             String webAppRootKey = PropertiesHelper.load("props/application.properties").getProperty("webAppRootKey", "webapp.root");
             PathUtil.WEBROOT_PATH = System.getProperty(webAppRootKey);
             if (StringUtil.isNull(PathUtil.WEBROOT_PATH)){
-                throw new Exception("根据webAppRootKey[" + webAppRootKey + "]获取WebRoot路径失败");
+                throw new IgnoreException("根据webAppRootKey[" + webAppRootKey + "]获取WebRoot路径失败");
             }
             PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "WEB-INF" + File.separator;
             PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "classes" + File.separator;
@@ -110,7 +111,7 @@ public class PathUtil {
         try {
             return new URL("file://" + PathUtil.classes() + path);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -242,7 +243,7 @@ public class PathUtil {
         try {
             return new URL("file:///" + System.getProperty("java.io.tmpdir"));
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 

@@ -1,5 +1,6 @@
 package com.fantasy.framework.lucene;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.lucene.annotations.Indexed;
 import com.fantasy.framework.lucene.backend.IndexChecker;
 import com.fantasy.framework.lucene.backend.IndexReopenTask;
@@ -135,10 +136,10 @@ public class BuguIndex implements InitializingBean {
 
 	public void rebuild(Class<?> clazz) {
 		if (!IndexChecker.hasIndexed(clazz)) {
-			throw new RuntimeException(clazz + " @Indexed ");
+			throw new IgnoreException(clazz + " @Indexed ");
 		}
 		if (!this.indexRebuilders.containsKey(clazz)) {
-			throw new RuntimeException(clazz + " not found indexRebuilder");
+			throw new IgnoreException(clazz + " not found indexRebuilder");
 		}
 		indexRebuilders.get(clazz).rebuild();
 	}

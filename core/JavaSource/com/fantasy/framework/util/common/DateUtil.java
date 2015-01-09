@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -146,7 +147,7 @@ public class DateUtil {
         try {
             return dateFormat.parse(s);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new IgnoreException(e.getMessage());
         } finally {
             locks.get(format).unlock();
         }
@@ -361,7 +362,7 @@ public class DateUtil {
             case Calendar.MONTH:
                 break;
             case Calendar.YEAR:
-                throw new RuntimeException("不支持的时间转换格式:" + field);
+                throw new IgnoreException("不支持的时间转换格式:" + field);
             case Calendar.SECOND:
                 minute = second / 60;
                 second = second % 60;

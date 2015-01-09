@@ -4,6 +4,7 @@ import com.fantasy.file.FileItem;
 import com.fantasy.file.FileItemFilter;
 import com.fantasy.file.FileItemSelector;
 import com.fantasy.file.FileManager;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.service.FTPService;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
@@ -121,7 +122,7 @@ public class FTPFileManager implements FileManager {
 				}
 				return fileItems;
 			} catch (IOException e) {
-				throw new RuntimeException(e.getMessage());
+				throw new IgnoreException(e.getMessage());
 			}
 		}
 
@@ -160,7 +161,7 @@ public class FTPFileManager implements FileManager {
 
 		public InputStream getInputStream() throws IOException {
 			if (this.isDirectory()) {
-				throw new RuntimeException("当前对象为一个目录,不能获取 InputStream ");
+				throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
 			}
 			return fileManager.ftpService.getInputStream(getAbsolutePath());
 		}
@@ -171,7 +172,7 @@ public class FTPFileManager implements FileManager {
 				try {
 					ftpFile = fileManager.ftpService.listFiles(RegexpUtil.replace(this.absolutePath, "/$", ""))[0];
 				} catch (IOException e) {
-					throw new RuntimeException(e.getMessage(), e);
+					throw new IgnoreException(e.getMessage());
 				}
 			}
 			return ftpFile;
@@ -193,7 +194,7 @@ public class FTPFileManager implements FileManager {
 				return retrieveFileItem(this.ftpService.listFiles(remotePath)[0], parentPath);
 			}
 		} catch (IOException e) {
-			throw new RuntimeException(e.getMessage(), e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 

@@ -1,14 +1,14 @@
 package com.fantasy.swp.writer;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.util.List;
-
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import com.fantasy.swp.data.SimpleData;
 import com.fantasy.swp.util.DataMap;
-
 import freemarker.template.Template;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.util.List;
 
 public class ListWriter extends AbstractWriter {
 
@@ -16,7 +16,7 @@ public class ListWriter extends AbstractWriter {
 
 	public void execute(Template template, DataMap data) throws IOException {
 		if (list == null) {
-			throw new RuntimeException("list is null");
+			throw new IgnoreException("list is null");
 		}
 		for (Object object : list) {
 			data.put("item", SimpleData.getData("item", object));

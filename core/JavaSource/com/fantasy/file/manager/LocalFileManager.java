@@ -4,6 +4,7 @@ import com.fantasy.file.FileItem;
 import com.fantasy.file.FileItemFilter;
 import com.fantasy.file.FileItemSelector;
 import com.fantasy.file.FileManager;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
@@ -223,7 +224,7 @@ public class LocalFileManager implements FileManager {
 
         public InputStream getInputStream() throws IOException {
             if (this.isDirectory()) {
-                throw new RuntimeException("当前对象为一个目录,不能获取 InputStream ");
+                throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
             }
             if (this.fileManager == null) {
                 return new FileInputStream(file);

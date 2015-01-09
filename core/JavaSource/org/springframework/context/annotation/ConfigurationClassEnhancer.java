@@ -16,6 +16,7 @@
 
 package org.springframework.context.annotation;
 
+import com.fantasy.framework.error.IgnoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.aop.scope.ScopedProxyFactoryBean;
@@ -248,7 +249,7 @@ class ConfigurationClassEnhancer {
     private static class BeanMethodInterceptor implements MethodInterceptor, ConditionalCallback {
 
         public Object intercept(Object[] enhancedConfigInstance, Method[] beanMethod, Object[] beanMethodArgs,MethodProxy[] cglibMethodProxy) throws Throwable {
-            throw new RuntimeException("jrebel 5.6.3 spring 加载问题。恶心解决办法");
+            throw new IgnoreException("jrebel 5.6.3 spring 加载问题。恶心解决办法");
         }
 
         /**
