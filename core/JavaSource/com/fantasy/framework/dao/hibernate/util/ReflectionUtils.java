@@ -102,8 +102,9 @@ public class ReflectionUtils {
     }
 
     protected static void makeAccessible(Field field) {
-        if ((!Modifier.isPublic(field.getModifiers())) || (!Modifier.isPublic(field.getDeclaringClass().getModifiers())))
+        if ((!Modifier.isPublic(field.getModifiers())) || (!Modifier.isPublic(field.getDeclaringClass().getModifiers()))){
             field.setAccessible(true);
+        }
     }
 
     protected static Method getDeclaredMethod(Object object, String methodName, Class<?>[] parameterTypes) {
@@ -198,8 +199,9 @@ public class ReflectionUtils {
         if (((e instanceof IllegalAccessException)) || ((e instanceof IllegalArgumentException)) || ((e instanceof NoSuchMethodException))) {
             return new IllegalArgumentException("Reflection Exception.", e);
         }
-        if ((e instanceof InvocationTargetException))
+        if ((e instanceof InvocationTargetException)){
             return new RuntimeException("Reflection Exception.", ((InvocationTargetException) e).getTargetException());
+        }
         if ((e instanceof RuntimeException)) {
             return (RuntimeException) e;
         }

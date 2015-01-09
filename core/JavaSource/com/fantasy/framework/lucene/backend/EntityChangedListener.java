@@ -1,12 +1,5 @@
 package com.fantasy.framework.lucene.backend;
 
-import java.lang.reflect.Field;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.Id;
-
 import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.lucene.annotations.IndexRefBy;
 import com.fantasy.framework.lucene.cache.FieldsCache;
@@ -15,6 +8,12 @@ import com.fantasy.framework.lucene.cluster.ClusterConfig;
 import com.fantasy.framework.lucene.cluster.EntityMessage;
 import com.fantasy.framework.lucene.cluster.MessageFactory;
 import com.fantasy.framework.lucene.mapper.FieldUtil;
+
+import javax.persistence.Id;
+import java.lang.reflect.Field;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class EntityChangedListener {
 	private Class<?> clazz;
@@ -33,17 +32,18 @@ public class EntityChangedListener {
 			if (irb != null) {
 				Class<?>[] cls = irb.value();
 				refBySet.addAll(Arrays.asList(cls));
-				if (f.getAnnotation(Id.class) != null)
-					byId = true;
-				else {
-					byOther = true;
-				}
+				if (f.getAnnotation(Id.class) != null){
+                    byId = true;
+                }else {
+                    byOther = true;
+                }
 			}
 		}
 		if (refBySet.size() > 0) {
 			this.refListener = new RefEntityChangedListener(refBySet);
-			if ((byId) && (!byOther))
-				this.onlyIdRefBy = true;
+			if ((byId) && (!byOther)){
+                this.onlyIdRefBy = true;
+            }
 		}
 	}
 
@@ -76,14 +76,16 @@ public class EntityChangedListener {
 		} else {
 			processRemove(id);
 		}
-		if ((this.refListener != null) && (!this.onlyIdRefBy))
-			processRefBy(id);
+		if ((this.refListener != null) && (!this.onlyIdRefBy)){
+            processRefBy(id);
+        }
 	}
 
 	public void entityRemove(String id) {
 		processRemove(id);
-		if (this.refListener != null)
-			processRefBy(id);
+		if (this.refListener != null){
+            processRefBy(id);
+        }
 	}
 
 	private void processRemove(String id) {

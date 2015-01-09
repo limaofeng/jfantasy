@@ -107,9 +107,9 @@ public class JDBCFileManager implements FileManager, InitializingBean {
             con = this.dataSource.getConnection();
             con.setAutoCommit(false);
             st = con.createStatement();
-            if (isExistFileByPath(absolutePath))
+            if (isExistFileByPath(absolutePath)){
                 st.executeUpdate("update F_FILE set BLOBATTR = empty_blob() where PATH='" + absolutePath + "'");
-            else {
+            } else {
                 st.executeUpdate("insert into F_FILE (PATH, BLOBATTR) values ('" + absolutePath + "', empty_blob())");
             }
             rs = st.executeQuery("select BLOBATTR from F_FILE where PATH='" + absolutePath + "' for update");

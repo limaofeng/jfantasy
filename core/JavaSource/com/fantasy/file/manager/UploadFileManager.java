@@ -248,8 +248,9 @@ public class UploadFileManager implements FileManager {
 
     public void removeFile(String remotePath) {
         FileDetail detail = fileService.get(new FileDetailKey(remotePath, this.getConfig().getId()));
-        if (detail == null)
+        if (detail == null){
             return;
+        }
         fileService.delete(FileDetailKey.newInstance(detail.getAbsolutePath(), detail.getFileManagerId()));
         filePartService.delete(FileDetailKey.newInstance(detail.getAbsolutePath(), detail.getFileManagerId()));
         FileDetail other = fileService.findUniqueByMd5(detail.getMd5(), this.getConfig().getId());

@@ -33,8 +33,9 @@ public final class Dom4jUtil {
 
 	@SuppressWarnings("unchecked")
 	public static void readNode(Element root, String prefix) {
-		if (root == null)
-			return;
+		if (root == null){
+            return;
+        }
 		// 获取属性
 		List<Attribute> attrs = root.attributes();
 		if (attrs != null && attrs.size() > 0) {

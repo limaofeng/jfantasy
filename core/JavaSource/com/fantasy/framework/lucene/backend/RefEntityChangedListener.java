@@ -1,17 +1,17 @@
 package com.fantasy.framework.lucene.backend;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.List;
-import java.util.Set;
-
 import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.lucene.annotations.IndexRef;
 import com.fantasy.framework.lucene.annotations.IndexRefList;
 import com.fantasy.framework.lucene.cache.DaoCache;
 import com.fantasy.framework.lucene.cache.FieldsCache;
 import com.fantasy.framework.lucene.dao.LuceneDao;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Set;
 
 public class RefEntityChangedListener {
 	private Set<Class<?>> refBySet;
@@ -23,8 +23,9 @@ public class RefEntityChangedListener {
 	public void entityChange(Class<?> refClass, String id) {
 		for (Class<?> cls : this.refBySet) {
 			Field[] fields = FieldsCache.getInstance().get(cls);
-			for (Field f : fields)
-				processField(refClass, id, cls, f);
+			for (Field f : fields){
+                processField(refClass, id, cls, f);
+            }
 		}
 	}
 
@@ -42,11 +43,11 @@ public class RefEntityChangedListener {
 				} else {
 					ParameterizedType paramType = (ParameterizedType) f.getGenericType();
 					Type[] types = paramType.getActualTypeArguments();
-					if (types.length == 1)
-						c = (Class<?>) types[0];
-					else {
-						c = (Class<?>) types[1];
-					}
+					if (types.length == 1){
+                        c = (Class<?>) types[0];
+                    }else {
+                        c = (Class<?>) types[1];
+                    }
 				}
 				if ((c != null) && (c.equals(refClass))) {
 					match = true;

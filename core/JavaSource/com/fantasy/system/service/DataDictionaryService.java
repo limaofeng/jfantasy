@@ -209,8 +209,9 @@ public class DataDictionaryService implements InitializingBean {
     public void deleteType(String... codes) {
         for (String code : codes) {
             DataDictionaryType dataDictionaryType = this.dataDictionaryTypeDao.get(code);
-            if (dataDictionaryType == null)
+            if (dataDictionaryType == null){
                 continue;
+            }
             for (DataDictionary dataDictionary : dataDictionaryType.getDataDictionaries()) {
                 this.dataDictionaryDao.batchExecute("delete from Config where type = ? and code = ? ", dataDictionaryType.getCode(), dataDictionary.getCode());
             }

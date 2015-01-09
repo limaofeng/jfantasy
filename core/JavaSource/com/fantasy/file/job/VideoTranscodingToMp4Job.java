@@ -28,8 +28,9 @@ public class VideoTranscodingToMp4Job implements Job {
             InputStream stderr = proc.getErrorStream();
             BufferedReader br = new BufferedReader(new InputStreamReader(stderr));
             String line;
-            while ((line = br.readLine()) != null)
+            while ((line = br.readLine()) != null){
                 logger.debug("Process exitValue:" + line);
+            }
             int exitVal = proc.waitFor();
             StreamUtil.closeQuietly(stderr);
             logger.debug("Process exitValue:" + exitVal);

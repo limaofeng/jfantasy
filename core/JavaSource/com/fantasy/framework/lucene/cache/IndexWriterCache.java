@@ -1,9 +1,6 @@
 package com.fantasy.framework.lucene.cache;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import com.fantasy.framework.lucene.BuguIndex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.index.IndexWriter;
@@ -11,7 +8,9 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
 
-import com.fantasy.framework.lucene.BuguIndex;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class IndexWriterCache {
 	private static final Log logger = LogFactory.getLog(IndexWriterCache.class);
@@ -29,8 +28,9 @@ public class IndexWriterCache {
 
 	public IndexWriter get(String name) {
 		IndexWriter writer = null;
-		if (this.cache.containsKey(name))
-			writer = (IndexWriter) this.cache.get(name);
+		if (this.cache.containsKey(name)){
+            writer = (IndexWriter) this.cache.get(name);
+        }
 		else {
 			synchronized (this) {
 				if (this.cache.containsKey(name)) {

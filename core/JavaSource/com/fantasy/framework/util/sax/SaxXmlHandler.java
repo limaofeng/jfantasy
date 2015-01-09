@@ -37,8 +37,10 @@ public class SaxXmlHandler extends DefaultHandler {
 		XmlElement element = (XmlElement) this.stack.pop();
 		if (!this.stack.empty()) {
 			this.RootElement = ((XmlElement) this.stack.peek());
-			if (this.RootElement != null)
-				this.RootElement.addElement(element);
+			if (this.RootElement != null){
+                this.RootElement.addElement(element);
+            }
+
 		}
 		super.endElement(uri, localName, qName);
 	}

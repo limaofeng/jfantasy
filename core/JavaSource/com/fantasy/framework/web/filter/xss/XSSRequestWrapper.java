@@ -1,25 +1,19 @@
 package com.fantasy.framework.web.filter.xss;
 
-import java.lang.reflect.Array;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.Map.Entry;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.springframework.web.util.HtmlUtils;
-
 import com.fantasy.framework.util.common.Base64Util;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.web.WebUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.util.HtmlUtils;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.Map.Entry;
 
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
@@ -44,11 +38,13 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 	}
 
 	public String[] getParameterValues(String name) {
-		if (parameterMaps.containsKey(name))
-			return parameterMaps.get(name);
+		if (parameterMaps.containsKey(name)){
+            return parameterMaps.get(name);
+        }
 		String[] values = super.getParameterValues(name);
-		if (StringUtil.isNull(values))
-			return values;
+		if (StringUtil.isNull(values)){
+            return values;
+        }
 		Object vals = ClassUtil.newInstance(String.class, values.length);
 		for (int i = 0; i < values.length; i++) {
 			String escapeStr = null;

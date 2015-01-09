@@ -119,12 +119,15 @@ public class LimitInterceptor implements Interceptor {
             logger.error(e.getMessage(), e);
         } finally {
             try {
-                if (rs != null)
+                if (rs != null){
                     rs.close();
-                if (statement != null)
+                }
+                if (statement != null){
                     statement.close();
-                if (connection != null)
+                }
+                if (connection != null){
                     connection.close();
+                }
             } catch (SQLException e) {
                 logger.error(e.getMessage(), e);
             }

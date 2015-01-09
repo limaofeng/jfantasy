@@ -283,8 +283,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         try {
             try {
                 // 如果链表已满,等待释放
-                while (count.get() == this.capacity)
+                while (count.get() == this.capacity){
                     this.notFull.await();
+                }
             } catch (InterruptedException ie) {
                 this.notFull.signal();
                 throw ie;
@@ -714,11 +715,11 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         Node<E> e = this.head;
-        if (index < size >> 1)
+        if (index < size >> 1){
             for (int i = 0; i <= index; i++){
                 e = e.next;
             }
-        else {
+        } else {
             for (int i = size; i > index; i--){
                 e = e.previous;
             }
