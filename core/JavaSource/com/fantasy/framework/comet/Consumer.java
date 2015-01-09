@@ -20,7 +20,7 @@ class Consumer implements Runnable {
 	public void run() {
 		try {
 			String msg = null;
-			while (!(msg = (String) this.drop.take()).equals("DONE")) {
+			while (!"DONE".equals(msg = (String) this.drop.take())) {
 				Thread.sleep(1500L);
                 LOG.debug(DateUtil.format(new Date(), "yyyy-MM-dd HH:mm:ss SSS") + "\t" + msg);
 			}

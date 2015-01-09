@@ -492,7 +492,7 @@ public final class ImageUtil {
         picheight = 0;
         color = 0;
         piccolor = null;
-        if (picextendname.equals("GIF")) {
+        if ("GIF".equals(picextendname)) {
             // picwidth position
             picwidth = getFileAttribute(content, 7, 2, picextendname);
             // picheight position
@@ -502,7 +502,7 @@ public final class ImageUtil {
             color = color % 8 + 1;
             piccolor = getPicColor(color);
         }
-        if (picextendname.equals("JPG")) {
+        if ("JPG".equals(picextendname)) {
             // 考虑了两种情况
             picwidth = getFileAttribute(content, 166, 2, picextendname);
             picheight = getFileAttribute(content, 164, 2, picextendname);
@@ -516,13 +516,13 @@ public final class ImageUtil {
             }
             piccolor = getPicColor(color);
         }
-        if (picextendname.equals("BMP")) {
+        if ("BMP".equals(picextendname)) {
             picwidth = getFileAttribute(content, 19, 2, picextendname);
             picheight = getFileAttribute(content, 23, 2, picextendname);
             color = getFileAttribute(content, 28, 1, picextendname);
             piccolor = getPicColor(color);
         }
-        if (picextendname.equals("PNG")) {
+        if ("PNG".equals(picextendname)) {
             picwidth = getFileAttribute(content, 19, 2, picextendname);
             picheight = getFileAttribute(content, 23, 2, picextendname);
             // usually is "16M"??
@@ -609,7 +609,7 @@ public final class ImageUtil {
                 str1 = "0" + str1;
             }
             // 格式的不同，表达属性的字节也有变化
-            if (fileextendname.equalsIgnoreCase("JPG") || fileextendname.equalsIgnoreCase("PNG")) {
+            if ("JPG".equalsIgnoreCase(fileextendname) || "PNG".equalsIgnoreCase(fileextendname)) {
                 str = str1 + str;
             } else {
                 str = str + str1;

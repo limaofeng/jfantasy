@@ -232,7 +232,7 @@ class ConfigurationClassEnhancer {
 
         @Override
         public boolean isMatch(Method candidateMethod) {
-            return candidateMethod.getName().equals("setBeanFactory") &&
+            return "setBeanFactory".equals(candidateMethod.getName()) &&
                     candidateMethod.getParameterTypes().length == 1 &&
                     candidateMethod.getParameterTypes()[0].equals(BeanFactory.class) &&
                     BeanFactoryAware.class.isAssignableFrom(candidateMethod.getDeclaringClass());
@@ -373,7 +373,7 @@ class ConfigurationClassEnhancer {
             enhancer.setCallback(new MethodInterceptor() {
                 @Override
                 public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-                    if (method.getName().equals("getObject") && args.length == 0) {
+                    if ("getObject".equals(method.getName()) && args.length == 0) {
                         return beanFactory.getBean(beanName);
                     }
                     return proxy.invokeSuper(obj, args);
@@ -420,7 +420,7 @@ class ConfigurationClassEnhancer {
 
         @Override
         public boolean isMatch(Method candidateMethod) {
-            return candidateMethod.getName().equals("destroy") &&
+            return "destroy".equals(candidateMethod.getName()) &&
                     candidateMethod.getParameterTypes().length == 0 &&
                     DisposableBean.class.isAssignableFrom(candidateMethod.getDeclaringClass());
         }

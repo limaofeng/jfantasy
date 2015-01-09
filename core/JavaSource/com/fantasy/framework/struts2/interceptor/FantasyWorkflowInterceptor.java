@@ -42,7 +42,7 @@ public class FantasyWorkflowInterceptor extends MethodFilterInterceptor {
 				}
 				InputConfig annotation = getActionMethod(action.getClass(), invocation.getProxy().getMethod()).getAnnotation(InputConfig.class);
 				if (annotation != null) {
-					if (!annotation.methodName().equals("")) {
+					if (!"".equals(annotation.methodName())) {
 						Method method = action.getClass().getMethod(annotation.methodName());
 						resultName = (String) method.invoke(action);
 					} else {

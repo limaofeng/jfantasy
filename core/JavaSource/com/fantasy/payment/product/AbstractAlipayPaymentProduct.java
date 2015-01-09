@@ -94,7 +94,7 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
         String mysign = buildRequestMysign(sPara, config);
         //签名结果与签名方式加入请求提交参数组中
         sPara.put("sign", mysign);
-        if (!sPara.get("service").equals("alipay.wap.trade.create.direct") && !sPara.get("service").equals("alipay.wap.auth.authAndExecute")) {
+        if (!"alipay.wap.trade.create.direct".equals(sPara.get("service")) && !"alipay.wap.auth.authAndExecute".equals(sPara.get("service"))) {
             sPara.put("sign_type", sign_type);
         }
         return sPara;

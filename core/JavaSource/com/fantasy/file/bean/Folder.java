@@ -188,7 +188,7 @@ public class Folder extends BaseBusEntity {
     }
 
     public synchronized Folder getParentFolder() {
-        if (this.parentFolder == null && !this.absolutePath.equals("/")) {
+        if (this.parentFolder == null && !"/".equals(this.absolutePath)) {
             this.parentFolder = SpringContextUtil.getBeanByType(FileService.class).createFolder(this.getAbsolutePath().replaceFirst("[^/]+/$", ""), this.getFileManagerId());
         }
         return parentFolder;

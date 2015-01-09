@@ -147,7 +147,7 @@ public class LocalFileManager implements FileManager {
 
         public String getAbsolutePath() {
             FileItem fileItem = getParentFileItem();
-            return fileItem != null ? ((fileItem.getAbsolutePath().equals("/") ? "/" : (fileItem.getAbsolutePath() + "/")) + getName()) : "/";
+            return fileItem != null ? (("/".equals(fileItem.getAbsolutePath()) ? "/" : (fileItem.getAbsolutePath() + "/")) + getName()) : "/";
         }
 
         public String getContentType() {

@@ -383,7 +383,7 @@ public class WebUtil {
         if (params.containsKey("sort")) {
             String value = (params.get("sort"))[0];
             if (value.startsWith(orderBy)) {
-                return queryString.replace("sort=" + value, "sort=" + orderBy + (value.split("-")[1].equals("asc") ? "-desc" : "-asc"));
+                return queryString.replace("sort=" + value, "sort=" + orderBy + ("asc".equals(value.split("-")[1]) ? "-desc" : "-asc"));
             }
             return queryString.replace("sort=" + value, "sort=" + orderBy + "-asc");
         }

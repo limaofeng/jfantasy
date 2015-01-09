@@ -124,7 +124,7 @@ public class HttpProtocolHandler {
 
             // parseNotifyConfig会保证使用GET方法时，request一定使用QueryString
             method.setQueryString(request.getQueryString());
-        } else if (strParaFileName.equals("") && strFilePath.equals("")) {
+        } else if ("".equals(strParaFileName) && "".equals(strFilePath)) {
             //post模式且不带上传文件
             method = new PostMethod(request.getUrl());
             ((PostMethod) method).addParameters(request.getParameters());

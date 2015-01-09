@@ -260,7 +260,7 @@ public class NumberUtil {
 			chinese = chinese.replaceAll(numberChinese[0] + "{1,}", numberChinese[0]);// 多个零改写为零
 			chinese = chinese.replaceAll(numberChinese[0] + unitChinese[0], unitChinese[0]);// 零元改写为元
 			chinese = chinese.replaceAll("^" + unitChinese[0], "");// 以元打头的去掉
-			chinese += "00".equals(number) ? unitChinese[8] : ((numberChinese[Integer.valueOf(number.substring(0, 1))] + (number.substring(0, 1).equals("0") ? "" : unitChinese[6])) + (number.substring(1).equals("0") ? "" : (numberChinese[Integer.valueOf(number.substring(1))] + unitChinese[7])));
+			chinese += "00".equals(number) ? unitChinese[8] : ((numberChinese[Integer.valueOf(number.substring(0, 1))] + ("0".equals(number.substring(0, 1)) ? "" : unitChinese[6])) + ("0".equals(number.substring(1)) ? "" : (numberChinese[Integer.valueOf(number.substring(1))] + unitChinese[7])));
 		}
 		return chinese.replaceAll("^" + numberChinese[0], "");// 以零打头的去掉
 	}

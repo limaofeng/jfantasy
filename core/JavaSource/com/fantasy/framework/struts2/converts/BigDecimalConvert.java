@@ -1,8 +1,9 @@
 package com.fantasy.framework.struts2.converts;
 
+import org.apache.struts2.util.StrutsTypeConverter;
+
 import java.math.BigDecimal;
 import java.util.Map;
-import org.apache.struts2.util.StrutsTypeConverter;
 
 @SuppressWarnings("rawtypes")
 public class BigDecimalConvert extends StrutsTypeConverter {
@@ -11,7 +12,7 @@ public class BigDecimalConvert extends StrutsTypeConverter {
 	if (BigDecimal.class == toClass) {
 	    String doubleStr = values[0];
 	    BigDecimal b = null;
-	    if (!doubleStr.equals("")) {
+	    if (!"".equals(doubleStr)) {
 		b = BigDecimal.valueOf(doubleValue(doubleStr));
 	    }
 	    return b;
