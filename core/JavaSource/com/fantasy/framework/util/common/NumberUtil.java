@@ -21,7 +21,6 @@ public class NumberUtil {
 	private final static byte[] hex = "0123456789ABCDEF".getBytes();
 	public static final int INTEGER_MAX = 99999;
 	private static Random random = new Random();
-
 	public static int randomInt() {
 		return random.nextInt();
 	}
@@ -265,7 +264,7 @@ public class NumberUtil {
 		}
 		return chinese.replaceAll("^" + numberChinese[0], "");// 以零打头的去掉
 	}
-
+/*
 	public static void main(String[] args) {
 
 		System.out.println(percent(23d,123d));
@@ -274,5 +273,5 @@ public class NumberUtil {
 		System.out.println(toRMB("11"));
 
 		System.out.println(toRMB("11010001000.11"));
-	}
+	}*/
 }

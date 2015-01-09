@@ -1,14 +1,14 @@
 package com.fantasy.swp.url;
 
-import java.util.Map;
-import java.util.regex.Matcher;
-
-import com.fantasy.swp.PageUrl;
-import com.fantasy.swp.data.SimpleData;
-import com.fantasy.swp.util.DataMap;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fantasy.swp.PageUrl;
+import com.fantasy.swp.data.SimpleData;
+import com.fantasy.swp.util.DataMap;
+
+import java.util.Map;
+import java.util.regex.Matcher;
 
 /**
  * 可以通过表达式从数据中生成url
@@ -52,7 +52,7 @@ public class ExpressionUrl implements PageUrl {
 
 		ExpressionUrl pageUrl = new ExpressionUrl();
 		pageUrl.setUrl("/${name}.html");
-		System.out.println(pageUrl.getUrl(data));
+		/*System.out.println(pageUrl.getUrl(data));*/
 	}
 
 }

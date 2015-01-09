@@ -242,9 +242,9 @@ public class FTPFileManager implements FileManager {
 		fileManager.setFtpService(ftpService);
 
 		FileItem fileItem = fileManager.getFileItem("/urcbweb");
-		System.out.println(fileItem.getName() + "\t" + fileItem.getAbsolutePath());
+		logger.debug(fileItem.getName() + "\t" + fileItem.getAbsolutePath());
 		for (FileItem f : fileItem.listFileItems()) {
-			System.out.println(f.getName() + "\t" + f.getAbsolutePath());
+			logger.debug(f.getName() + "\t" + f.getAbsolutePath());
 		}
 
 	}

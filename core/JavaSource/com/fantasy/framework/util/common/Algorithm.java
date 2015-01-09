@@ -1,5 +1,7 @@
 package com.fantasy.framework.util.common;
 
+import org.apache.log4j.Logger;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -7,6 +9,9 @@ import java.util.List;
 @Deprecated
 @SuppressWarnings("unchecked")
 public class Algorithm {
+
+    private static final Logger LOGGER = Logger.getLogger(Algorithm.class);
+
 	public static int binarySearch(List<?> items, Object val, Comparator comparator) {
 		int s = 0;
 		int startIndex = 0;
@@ -68,11 +73,11 @@ public class Algorithm {
 				}
 			}
 			if (n == 0) {
-				System.out.println("已经有序!");
+				LOGGER.debug("已经有序!");
 				printResult(i, src);
 				break;
 			}
-			System.out.print("交换次数:" + n + "\t");
+            LOGGER.debug("交换次数:" + n + "\t");
 			printResult(i, src);
 
 			i++;
@@ -84,14 +89,14 @@ public class Algorithm {
 		for (int i = 1; i < len; i++){
             for (int j = 0; j < i; j++){
                 if (comparator.compare(src[j], src[i]) > 0) {
-                    System.out.println("发生交换");
+                    LOGGER.debug("发生交换");
                     Object[] dest = new Object[i + 1];
                     System.arraycopy(src, 0, dest, 0, i + 1);
                     printResult(i, dest);
                     swap(src, j, i);
                     System.arraycopy(src, 0, dest, 0, i + 1);
                     printResult(i, dest);
-                    System.out.println("=================");
+                    LOGGER.debug("=================");
                 }
             }
         }
@@ -116,18 +121,18 @@ public class Algorithm {
 	}
 
 	private static void printResult(int i, Object[] src) {
-		System.out.println(i + "|" + Arrays.toString(src));
+		LOGGER.debug(i + "|" + Arrays.toString(src));
 	}
 
 	public static void main(String[] args) {
 		String[] items = { "roles", "subMenus", "parentMenu" };
 
-		System.out.println(binarySearch(items, "roles"));
-		System.out.println("===========================");
-		System.out.println(binarySearch(items, "subMenus"));
-		System.out.println("===========================");
-		System.out.println(binarySearch(items, "parentMenu"));
-		System.out.println("===========================");
-		System.out.println(binarySearch(items, "type"));
+		LOGGER.debug(binarySearch(items, "roles"));
+		LOGGER.debug("===========================");
+		LOGGER.debug(binarySearch(items, "subMenus"));
+		LOGGER.debug("===========================");
+		LOGGER.debug(binarySearch(items, "parentMenu"));
+		LOGGER.debug("===========================");
+		LOGGER.debug(binarySearch(items, "type"));
 	}
 }

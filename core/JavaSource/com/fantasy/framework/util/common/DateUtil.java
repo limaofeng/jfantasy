@@ -401,12 +401,12 @@ public class DateUtil {
         return StringUtil.isBlank(zeroFormat) ? retVal : RegexpUtil.replace(retVal, zeroFormat, repStr);
     }
 
-    public static void main(String[] args) {
-//		Date big = DateUtil.parse("20120307220559", "yyyyMMddHHmmss");
-//		Date small = DateUtil.parse("20120307230559", "yyyyMMddHHmmss");
-//		System.out.println(DateUtil.intervalFormat(Calendar.MINUTE, DateUtil.interval(big, small, Calendar.MINUTE), "dd天HH小时mm分"));
+   /* public static void main(String[] args) {
+		Date big = DateUtil.parse("20120307220559", "yyyyMMddHHmmss");
+		Date small = DateUtil.parse("20120307230559", "yyyyMMddHHmmss");
+		System.out.println(DateUtil.intervalFormat(Calendar.MINUTE, DateUtil.interval(big, small, Calendar.MINUTE), "dd天HH小时mm分"));
         System.out.println(DateUtil.getWeekOfYear(DateUtil.now()));
-    }
+    }*/
 
     public static long interval(Date big, Date small, int field, int... ignore) {
         if (ignore.length == 0) {

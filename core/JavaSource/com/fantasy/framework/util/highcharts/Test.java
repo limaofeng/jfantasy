@@ -1,7 +1,5 @@
 package com.fantasy.framework.util.highcharts;
 
-import com.fantasy.framework.util.jackson.JSON;
-
 import javax.annotation.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,9 +28,9 @@ public class Test {
 		((Data) pie.getData().get(0)).setSelected(true);
 		chart.addSerie(pie);
 
-		System.out.println(JSON.serialize(chart));
+		/*System.out.println(JSON.serialize(chart));
 
-		System.out.println(addMonth(-3, null));
+		System.out.println(addMonth(-3, null));*/
 	}
 
 	static String addMonth(int mon, String formatStr) {

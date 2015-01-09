@@ -1,6 +1,7 @@
 package com.fantasy.framework.util.concurrent;
 
 import com.fantasy.framework.error.IgnoreException;
+import org.apache.log4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.BlockingQueue;
@@ -13,6 +14,8 @@ import java.util.concurrent.locks.ReentrantLock;
 public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>, java.io.Serializable {
 
 	private static final long serialVersionUID = -4457362206741191196L;
+
+    private static final Logger LOGGER = Logger.getLogger(LinkedQueue.class);
 
 	static class Node<E> {
 		volatile E item;
@@ -257,9 +260,9 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
                     return null;
                 }
 				try {
-					System.out.println("等待时间:" + nanos + "\t" + TimeUnit.NANOSECONDS.toMillis(nanos));
+					LOGGER.debug("等待时间:" + nanos + "\t" + TimeUnit.NANOSECONDS.toMillis(nanos));
 					nanos = notEmpty.awaitNanos(nanos);
-					System.out.println("剩余时间:" + nanos + "\t" + TimeUnit.NANOSECONDS.toMillis(nanos));
+					LOGGER.debug("剩余时间:" + nanos + "\t" + TimeUnit.NANOSECONDS.toMillis(nanos));
 				} catch (InterruptedException ie) {
 					notEmpty.signal();
 					throw ie;

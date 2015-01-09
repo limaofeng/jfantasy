@@ -14,7 +14,6 @@ class ProxyLogConfiguration extends AbstractLogConfiguration {
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public LogInterceptor logInterceptor() {
 		LogInterceptor interceptor = new LogInterceptor();
-		System.out.println(interceptor);
 		return interceptor;
 	}
 }

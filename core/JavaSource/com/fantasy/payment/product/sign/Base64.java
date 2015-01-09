@@ -6,6 +6,8 @@
 
 package com.fantasy.payment.product.sign;
 
+import org.apache.log4j.Logger;
+
 public final class Base64 {
 
     static private final int     BASELENGTH           = 128;
@@ -19,7 +21,7 @@ public final class Base64 {
     static private final boolean fDebug               = false;
     static final private byte[]  base64Alphabet       = new byte[BASELENGTH];
     static final private char[]  lookUpBase64Alphabet = new char[LOOKUPLENGTH];
-
+    private static final Logger LOGGER = Logger.getLogger(Base64.class);
     static {
         for (int i = 0; i < BASELENGTH; ++i) {
             base64Alphabet[i] = -1;
@@ -95,7 +97,7 @@ public final class Base64 {
         int encodedIndex = 0;
         int dataIndex = 0;
         if (fDebug) {
-            System.out.println("number of triplets = " + numberTriplets);
+            LOGGER.debug("number of triplets = " + numberTriplets);
         }
 
         for (int i = 0; i < numberTriplets; i++) {
@@ -104,7 +106,7 @@ public final class Base64 {
             b3 = binaryData[dataIndex++];
 
             if (fDebug) {
-                System.out.println("b1= " + b1 + ", b2= " + b2 + ", b3= " + b3);
+                LOGGER.debug("b1= " + b1 + ", b2= " + b2 + ", b3= " + b3);
             }
 
             l = (byte) (b2 & 0x0f);
@@ -115,9 +117,9 @@ public final class Base64 {
             byte val3 = ((b3 & SIGN) == 0) ? (byte) (b3 >> 6) : (byte) ((b3) >> 6 ^ 0xfc);
 
             if (fDebug) {
-                System.out.println("val2 = " + val2);
-                System.out.println("k4   = " + (k << 4));
-                System.out.println("vak  = " + (val2 | (k << 4)));
+                LOGGER.debug("val2 = " + val2);
+                LOGGER.debug("k4   = " + (k << 4));
+                LOGGER.debug("vak  = " + (val2 | (k << 4)));
             }
 
             encodedData[encodedIndex++] = lookUpBase64Alphabet[val1];
@@ -131,8 +133,8 @@ public final class Base64 {
             b1 = binaryData[dataIndex];
             k = (byte) (b1 & 0x03);
             if (fDebug) {
-                System.out.println("b1=" + b1);
-                System.out.println("b1<<2 = " + (b1 >> 2));
+                LOGGER.debug("b1=" + b1);
+                LOGGER.debug("b1<<2 = " + (b1 >> 2));
             }
             byte val1 = ((b1 & SIGN) == 0) ? (byte) (b1 >> 2) : (byte) ((b1) >> 2 ^ 0xc0);
             encodedData[encodedIndex++] = lookUpBase64Alphabet[val1];

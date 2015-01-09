@@ -1,5 +1,6 @@
 package com.fantasy.framework.log.annotation;
 
+import org.apache.log4j.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportAware;
 import org.springframework.core.annotation.AnnotationAttributes;
@@ -13,6 +14,8 @@ public abstract class AbstractLogConfiguration implements ImportAware {
 
 	protected AnnotationAttributes enableLog;
 
+    private static final Logger LOGGER = Logger.getLogger(AbstractLogConfiguration.class);
+
 	public void setImportMetadata(AnnotationMetadata importMetadata) {
 		this.enableLog = AnnotationAttributes.fromMap(importMetadata.getAnnotationAttributes(EnableLog.class.getName(), false));
 		Assert.notNull(this.enableLog, "@EnableLog is not present on importing class " + importMetadata.getClassName());
@@ -20,6 +23,6 @@ public abstract class AbstractLogConfiguration implements ImportAware {
 
 	@PostConstruct
 	protected void reconcileLogManager() {
-		System.out.println("reconcileLogManager");
+		LOGGER.debug("reconcileLogManager");
 	}
 }

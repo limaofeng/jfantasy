@@ -40,11 +40,10 @@ public final class Dom4jUtil {
 		// 获取属性
 		List<Attribute> attrs = root.attributes();
 		if (attrs != null && attrs.size() > 0) {
-			System.err.print(prefix);
+			logger.error(prefix);
 			for (Attribute attr : attrs) {
-				System.err.print(attr.getValue() + " ");
+				logger.error(attr.getValue() + " ");
 			}
-			System.err.println();
 		}
 		// 获取他的子节点
 		List<Element> childNodes = root.elements();
@@ -56,20 +55,20 @@ public final class Dom4jUtil {
 
 	public static class MyVistor extends VisitorSupport {
 		public void visit(Attribute node) {
-			System.out.println("Attibute: " + node.getName() + "=" + node.getValue());
+			logger.debug("Attibute: " + node.getName() + "=" + node.getValue());
 		}
 
 		public void visit(Element node) {
 			if (node.isTextOnly()) {
-				System.out.println("Element: " + node.getName() + "=" + node.getText());
+				logger.debug("Element: " + node.getName() + "=" + node.getText());
 			} else {
-				System.out.println("root:"+node.getName());
+				logger.debug("root:"+node.getName());
 			}
 		}
 
 		@Override
 		public void visit(ProcessingInstruction node) {
-			System.out.println("PI:" + node.getTarget() + " " + node.getText());
+			logger.debug("PI:" + node.getTarget() + " " + node.getText());
 		}
 	}
 

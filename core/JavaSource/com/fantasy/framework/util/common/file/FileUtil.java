@@ -243,7 +243,7 @@ public class FileUtil {
             FileInputStream fin = new FileInputStream(oldPath);
 
             createFolder(RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", ""));
-            System.out.println("创建文件 ：" + RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", "") + "|" + newPath);
+            logger.debug("创建文件 ：" + RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", "") + "|" + newPath);
             FileOutputStream fout = new FileOutputStream(newPath);
 
             GZIPOutputStream gzout = new GZIPOutputStream(fout);
@@ -345,7 +345,7 @@ public class FileUtil {
             try {
                 copyFile(sourceFile, targetFile);
                 if (sourceFile.exists()){
-                    System.out.println("delete file:" + sourceFile + ":" + sourceFile.delete());
+                    logger.debug("delete file:" + sourceFile + ":" + sourceFile.delete());
                 }
             } catch (IOException e) {
                 throw new IgnoreException(e.getMessage());
@@ -369,8 +369,8 @@ public class FileUtil {
     }
 
     private static void copyOnlyFile(File sourceFile, File targetFile) throws IOException {
-        System.out.println("copy from:" + sourceFile);
-        System.out.println("copy to:" + targetFile);
+        logger.debug("copy from:" + sourceFile);
+        logger.debug("copy to:" + targetFile);
         File parentFile = targetFile.getParentFile();
         if (!parentFile.exists() && !parentFile.mkdirs()){
             throw new IgnoreException("创建文件" + parentFile.getAbsolutePath() + "失败");

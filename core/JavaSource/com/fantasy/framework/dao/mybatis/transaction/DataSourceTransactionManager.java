@@ -1,5 +1,6 @@
 package com.fantasy.framework.dao.mybatis.transaction;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.transaction.TransactionDefinition;
@@ -13,6 +14,7 @@ import javax.sql.DataSource;
 public class DataSourceTransactionManager extends AbstractPlatformTransactionManager implements ResourceTransactionManager, InitializingBean {
 	private static final long serialVersionUID = 4259053668416751804L;
 	private transient DataSource dataSource;
+    private static final Logger LOGGER = Logger.getLogger(DataSourceTransactionManager.class);
 
 	public DataSource getDataSource() {
 		return this.dataSource;
@@ -37,15 +39,15 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	}
 
 	protected void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
-		System.out.println(">doBegin");
+		LOGGER.debug(">doBegin");
 	}
 
 	protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
-		System.out.println(">doCommit");
+		LOGGER.debug(">doCommit");
 	}
 
 	protected Object doGetTransaction() throws TransactionException {
-		System.out.println(">doGetTransaction");
+		LOGGER.debug(">doGetTransaction");
 		return null;
 	}
 

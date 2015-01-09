@@ -7,6 +7,8 @@ import com.fantasy.framework.util.validator.Validator;
 import com.fantasy.framework.util.validator.exception.Error;
 import com.fantasy.framework.util.validator.exception.StackValidationException;
 import com.fantasy.framework.util.validator.exception.ValidationException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.util.*;
 
@@ -18,6 +20,8 @@ public class FieldValidator {
 		this.type = type;
 		this.params = params;
 	}
+
+    private final static Log LOGGER = LogFactory.getLog(FieldValidator.class);
 
 	public String getType() {
 		return this.type;
@@ -66,7 +70,7 @@ public class FieldValidator {
 			Object value = localIterator.next();
 			Error[] errors = validate(validateable, value);
 			for (Error error : errors) {
-				System.out.println("验证项:" + error.getField() + ",错误信息:" + error.getMessage());
+                LOGGER.debug("验证项:" + error.getField() + ",错误信息:" + error.getMessage());
 			}
 			allError.addAll(Arrays.asList(errors));
 		}
