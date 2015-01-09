@@ -1,21 +1,20 @@
 package com.fantasy.framework.freemarker.directive;
 
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.fantasy.framework.freemarker.directive.OverrideDirective.TemplateDirectiveBodyOverrideWraper;
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModelException;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.Map;
 
 
 @SuppressWarnings("rawtypes")
 public class DirectiveUtils {
 
-	public static String BLOCK = "__ftl_override__";
-	public static String OVERRIDE_CURRENT_NODE = "__ftl_override_current_node";
+	public static final String BLOCK = "__ftl_override__";
+	public static final String OVERRIDE_CURRENT_NODE = "__ftl_override_current_node";
 
 	public static String getOverrideVariableName(String name) {
 		return BLOCK + name;
