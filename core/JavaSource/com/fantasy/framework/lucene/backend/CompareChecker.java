@@ -1,10 +1,10 @@
 package com.fantasy.framework.lucene.backend;
 
-import java.lang.reflect.Field;
-
 import com.fantasy.framework.lucene.annotations.Compare;
 import com.fantasy.framework.lucene.mapper.DataType;
 import com.fantasy.framework.lucene.mapper.FieldUtil;
+
+import java.lang.reflect.Field;
 
 public class CompareChecker {
 	private Object obj;
@@ -40,6 +40,7 @@ public class CompareChecker {
 		case 8:
 			fit = notNull(FieldUtil.get(this.obj, f));
 			break;
+        default:
 		}
 		return fit;
 	}

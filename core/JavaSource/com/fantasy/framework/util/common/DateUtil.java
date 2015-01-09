@@ -377,6 +377,7 @@ public class DateUtil {
                 day = hour / 24;
                 hour = hour % 24;
                 break;
+            default:
         }
         final String _day = String.valueOf(day), _hour = String.valueOf(hour), _minute = String.valueOf(minute), _second = String.valueOf(second);
         String retVal = RegexpUtil.replace(format, "dd|HH|mm|ss", new RegexpUtil.AbstractReplaceCallBack() {
@@ -597,6 +598,7 @@ public class DateUtil {
             case 7:
                 cw = "星期六";
                 break;
+            default:
         }
 
         return cw;

@@ -833,6 +833,7 @@ public final class ImageUtil {
                     return new Position(0, srcHeight - watermarkImageHeight);
                 case bottomRight:
                     return new Position(srcWidth - watermarkImageWidth, srcHeight - watermarkImageHeight);
+                default:
             }
             return null;
         }
