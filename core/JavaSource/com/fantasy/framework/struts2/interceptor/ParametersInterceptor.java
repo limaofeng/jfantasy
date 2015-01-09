@@ -260,10 +260,8 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         }
         // 初始化Pager对象
         index = ObjectUtil.indexOf(parameterTypes, Pager.class);
-        if (index > -1 && paramNames.length != 1) {
-            if (ObjectUtil.isNull(params.get(paramNames[index]))) {
+        if (index > -1 && paramNames.length != 1 && ObjectUtil.isNull(params.get(paramNames[index]))) {
                 params.put(paramNames[index], new Pager());
-            }
         }
         // 重新排序保存到 MethodParam 对象
         for (String paramName : paramNames) {

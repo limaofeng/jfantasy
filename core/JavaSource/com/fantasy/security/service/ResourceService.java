@@ -90,10 +90,8 @@ public class ResourceService {
 						}
 					}
 					// 移除非GROUP资源
-					if (!ResourceType.group.equals(resource.getType())) {
-						if (reIds.indexOf(resource.getId()) == -1) {
+					if (!ResourceType.group.equals(resource.getType()) && reIds.indexOf(resource.getId()) == -1) {
 							reIds.add(resource.getId());
-						}
 					}
 				}
 				// 移除被引用的资源

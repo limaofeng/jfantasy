@@ -51,10 +51,8 @@ public class FantasyClassLoader extends ClassLoader {
 		try {
 			lock.lock();
 			if (loadclass.contains(classname)) {// 如果对象已经被加载
-				if (loadclass.contains(classname)) {
-					classLoader = new DynamicClassLoader(classLoader);// 创建新的加载器
-					loadclass.clear();
-				}
+                classLoader = new DynamicClassLoader(classLoader);// 创建新的加载器
+                loadclass.clear();
 			}
 			loadclass.add(classname);
 			return classLoader.loadClass(classpath, classname);
@@ -76,10 +74,8 @@ public class FantasyClassLoader extends ClassLoader {
         try {
             lock.lock();
             if (loadclass.contains(classname)) {// 如果对象已经被加载
-                if (loadclass.contains(classname)) {
-                    classLoader = new DynamicClassLoader(classLoader);// 创建新的加载器
-                    loadclass.clear();
-                }
+                classLoader = new DynamicClassLoader(classLoader);// 创建新的加载器
+                loadclass.clear();
             }
             loadclass.add(classname);
             return classLoader.loadClass(classdata, classname);

@@ -80,14 +80,10 @@ public class WebUtil {
         scheme = scheme.toLowerCase();
         StringBuilder url = new StringBuilder();
         url.append(scheme).append("://").append(serverName);
-        if ("http".equals(scheme)) {
-            if (serverPort != 80) {
-                url.append(":").append(serverPort);
-            }
-        } else if ("https".equals(scheme)) {
-            if (serverPort != 443) {
-                url.append(":").append(serverPort);
-            }
+        if ("http".equals(scheme) && serverPort != 80) {
+            url.append(":").append(serverPort);
+        } else if ("https".equals(scheme) && serverPort != 443) {
+            url.append(":").append(serverPort);
         }
         url.append(contextPath);
         return url.toString();
@@ -222,14 +218,12 @@ public class WebUtil {
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
                     InetAddress ia = ips.nextElement();
-                    if (ia instanceof Inet4Address && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
+                    if (ia instanceof Inet4Address && ia.getHostAddress().equals(ip.trim())  && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
                         // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
                         // System.out.println("IP:"
                         // + ia.getHostAddress());
                         // System.out.println("--------------------------------------------");
-                        if (ia.getHostAddress().equals(ip.trim())) {
                             return true;
-                        }
                     }
                 }
             }

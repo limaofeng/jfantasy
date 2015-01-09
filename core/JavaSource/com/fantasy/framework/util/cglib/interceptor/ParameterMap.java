@@ -70,10 +70,8 @@ public class ParameterMap extends HashMap<String, Object> {
     }
 
     private static boolean isBean(String fieldName) {
-        if (!fieldName.contains(".")){
-            if (!RegexpUtil.find(fieldName, "^[0-9]+$")){
-                return false;
-            }
+        if (!fieldName.contains(".")  && !RegexpUtil.find(fieldName, "^[0-9]+$")){
+             return false;
         }
         return true;
     }
