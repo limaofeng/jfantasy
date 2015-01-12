@@ -339,10 +339,8 @@ public class DefaultActionInvocation implements ActionInvocation {
                             rootObject = action;
                         }
                     }
-                    if (rootObject == null) {
-                        if (action instanceof RequestAware) {
+                    if (rootObject == null && action instanceof RequestAware) {
                             rootObject = ClassUtil.getValue(action, "attrs");
-                        }
                     }
                     // 剥离formbean
                     ValueStack stack = this.getStack();

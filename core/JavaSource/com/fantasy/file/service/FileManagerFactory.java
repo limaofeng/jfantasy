@@ -7,6 +7,7 @@ import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.file.manager.FTPFileManager;
 import com.fantasy.file.manager.LocalFileManager;
 import com.fantasy.file.manager.UploadFileManager;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.service.FTPService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.PathUtil;
@@ -134,7 +135,7 @@ public class FileManagerFactory implements InitializingBean {
         } else if (FileManagerType.jdbc == config.getType()) {// JDBC文件管理
             return null;
         }
-        throw new RuntimeException(config.getType() + " 对应的FileManagerType不存在!");
+        throw new IgnoreException(config.getType() + " 对应的FileManagerType不存在!");
     }
 
     /**
@@ -167,10 +168,10 @@ public class FileManagerFactory implements InitializingBean {
     public UploadFileManager getUploadFileManager(String id) {
         FileManager fileManager = getFileManager(id);
         if (fileManager == null) {
-            throw new RuntimeException("文件管理器[" + id + "]不存在!");
+            throw new IgnoreException("文件管理器[" + id + "]不存在!");
         }
         if (!(fileManager instanceof UploadFileManager)) {
-            throw new RuntimeException("文件管理器[" + id + "]不支持文件上传功能!");
+            throw new IgnoreException("文件管理器[" + id + "]不支持文件上传功能!");
         }
         return (UploadFileManager) fileManager;
     }
@@ -248,7 +249,7 @@ public class FileManagerFactory implements InitializingBean {
                 return entry.getKey();
             }
         }
-        throw new RuntimeException(fm + "-对应的文件管理器未注册!");
+        throw new IgnoreException(fm + "-对应的文件管理器未注册!");
     }
 
 }

@@ -28,6 +28,7 @@ public class HandleMessageTask implements Runnable {
 		case 4:
 			handleRefBy();
 			break;
+        default:
 		}
 	}
 

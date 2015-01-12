@@ -1,5 +1,6 @@
 package com.fantasy.framework.dao.mybatis.dialect;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 
@@ -32,7 +33,7 @@ public class MsSQLDialect implements Dialect {
 			sql = trim(sql);
 			String over = StringUtil.defaultValue(RegexpUtil.parseFirst(sql, "(order|ORDER)[ ]+(by|BY)[ ]+([a-zA-Z0-9_, ]+)([ ]|[\r\n\t]){0,}((desc|DESC|asc|ASC)|[ ]|[\r\n\t]){0,}$"), "");
 			if (StringUtil.isBlank(over)) {
-				throw new RuntimeException("sqlserver2000 翻页必须添加 order by ? 条件");
+				throw new IgnoreException("sqlserver2000 翻页必须添加 order by ? 条件");
 			}
 			sb.append("SELECT * FROM ( ");
 			sb.append("SELECT TOP ").append(limit).append(" * FROM ( ");
@@ -47,7 +48,7 @@ public class MsSQLDialect implements Dialect {
 			sql = trim(sql);
 			String over = StringUtil.defaultValue(RegexpUtil.parseFirst(sql, "(order|ORDER)[ ]+(by|BY)[ ]+([a-zA-Z0-9_, ]+)([ ]|[\r\n\t]){0,}((desc|DESC|asc|ASC)|[ ]|[\r\n\t]){0,}$"), "");
 			if (StringUtil.isBlank(over)) {
-				throw new RuntimeException("sqlserver2005 翻页必须添加 order by ? 条件");
+				throw new IgnoreException("sqlserver2005 翻页必须添加 order by ? 条件");
 			}
 			if (!StringUtil.isBlank(over)) {
 				sql = sql.replaceFirst(over, "");

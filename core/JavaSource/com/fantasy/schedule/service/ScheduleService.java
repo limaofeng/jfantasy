@@ -36,14 +36,15 @@ public class ScheduleService {
      */
     public static String cron(String cron, int i) {
         String str = "";
-        if ("".equals(cron) || cron == null) return str;
+        if ("".equals(cron) || cron == null){
+            return str;
+        }
         String[] crons = cron.split(" ");
         for (int a = 0; a < crons.length; a++) {
             if (i == a) {
                 str = crons[a];
                 break;
             }
-
         }
         return str;
     }

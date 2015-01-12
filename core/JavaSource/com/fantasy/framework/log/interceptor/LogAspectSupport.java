@@ -87,7 +87,7 @@ public class LogAspectSupport implements InitializingBean {
         if (!CollectionUtils.isEmpty(logOp)) {
             Collection<LogOperationContext> ops = createOperationContext(logOp, method, args, target, targetClass);
             for (LogOperationContext context : ops) {
-                System.out.println("Log Info : " + context.isConditionPassing() + " - " + context.text());
+                logger.debug("Log Info : " + context.isConditionPassing() + " - " + context.text());
             }
         }
         return invoker.invoke();

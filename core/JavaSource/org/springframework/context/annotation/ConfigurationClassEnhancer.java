@@ -16,6 +16,7 @@
 
 package org.springframework.context.annotation;
 
+import com.fantasy.framework.error.IgnoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.aop.scope.ScopedProxyFactoryBean;
@@ -231,7 +232,7 @@ class ConfigurationClassEnhancer {
 
         @Override
         public boolean isMatch(Method candidateMethod) {
-            return candidateMethod.getName().equals("setBeanFactory") &&
+            return "setBeanFactory".equals(candidateMethod.getName()) &&
                     candidateMethod.getParameterTypes().length == 1 &&
                     candidateMethod.getParameterTypes()[0].equals(BeanFactory.class) &&
                     BeanFactoryAware.class.isAssignableFrom(candidateMethod.getDeclaringClass());
@@ -248,7 +249,7 @@ class ConfigurationClassEnhancer {
     private static class BeanMethodInterceptor implements MethodInterceptor, ConditionalCallback {
 
         public Object intercept(Object[] enhancedConfigInstance, Method[] beanMethod, Object[] beanMethodArgs,MethodProxy[] cglibMethodProxy) throws Throwable {
-            throw new RuntimeException("jrebel 5.6.3 spring 加载问题。恶心解决办法");
+            throw new IgnoreException("jrebel 5.6.3 spring 加载问题。恶心解决办法");
         }
 
         /**
@@ -287,8 +288,7 @@ class ConfigurationClassEnhancer {
                 if (factoryBean instanceof ScopedProxyFactoryBean) {
                     // Pass through - scoped proxy factory beans are a special case and should not
                     // be further proxied
-                }
-                else {
+                } else {
                     // It is a candidate FactoryBean - go ahead with enhancement
                     return enhanceFactoryBean(factoryBean.getClass(), beanFactory, beanName);
                 }
@@ -308,8 +308,7 @@ class ConfigurationClassEnhancer {
                             beanMethod.getDeclaringClass().getSimpleName(), beanMethod.getName()));
                 }
                 return cglibMethodProxy.invokeSuper(enhancedConfigInstance, beanMethodArgs);
-            }
-            else {
+            }else {
                 // The user (i.e. not the factory) is requesting this bean through a
                 // call to the bean method, direct or indirect. The bean may have already been
                 // marked as 'in creation' in certain autowiring scenarios; if so, temporarily
@@ -320,8 +319,7 @@ class ConfigurationClassEnhancer {
                         beanFactory.setCurrentlyInCreation(beanName, false);
                     }
                     return beanFactory.getBean(beanName);
-                }
-                finally {
+                }finally {
                     if (alreadyInCreation) {
                         beanFactory.setCurrentlyInCreation(beanName, true);
                     }
@@ -375,7 +373,7 @@ class ConfigurationClassEnhancer {
             enhancer.setCallback(new MethodInterceptor() {
                 @Override
                 public Object intercept(Object obj, Method method, Object[] args, MethodProxy proxy) throws Throwable {
-                    if (method.getName().equals("getObject") && args.length == 0) {
+                    if ("getObject".equals(method.getName()) && args.length == 0) {
                         return beanFactory.getBean(beanName);
                     }
                     return proxy.invokeSuper(obj, args);
@@ -422,7 +420,7 @@ class ConfigurationClassEnhancer {
 
         @Override
         public boolean isMatch(Method candidateMethod) {
-            return candidateMethod.getName().equals("destroy") &&
+            return "destroy".equals(candidateMethod.getName()) &&
                     candidateMethod.getParameterTypes().length == 0 &&
                     DisposableBean.class.isAssignableFrom(candidateMethod.getDeclaringClass());
         }

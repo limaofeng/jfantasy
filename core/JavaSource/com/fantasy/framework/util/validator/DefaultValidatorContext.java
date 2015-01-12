@@ -37,9 +37,9 @@ public class DefaultValidatorContext implements ValidatorContext {
 
 		@SuppressWarnings("unchecked")
 		public void callBack(String tagName, Element element) {
-			if (tagName.equalsIgnoreCase("validator")) {
+			if ("validator".equalsIgnoreCase(tagName)) {
 				context.validateables.get(this.clazz).addValidator(element.getAttributeValue("name"), getValidator(element));
-			} else if (tagName.equalsIgnoreCase("method-validator")) {
+			} else if ("method-validator".equalsIgnoreCase(tagName)) {
 				String methodName = element.getAttributeValue("name");
 				for (Element ele : (List<Element>) element.getChildren()) {
 					String fieldName = ele.getAttributeValue("name");

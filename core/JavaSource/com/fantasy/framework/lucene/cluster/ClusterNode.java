@@ -30,12 +30,13 @@ public class ClusterNode {
 		} catch (IOException ex) {
 			logger.error("Error when transmit message to host: " + this.host + ", port: " + this.port, ex);
 		} finally {
-			if (channel != null)
-				try {
-					channel.close();
-				} catch (IOException ex) {
-					logger.error("Error when close channel host: " + this.host + ", port: " + this.port, ex);
-				}
+			if (channel != null){
+                try {
+                    channel.close();
+                } catch (IOException ex) {
+                    logger.error("Error when close channel host: " + this.host + ", port: " + this.port, ex);
+                }
+            }
 		}
 	}
 }

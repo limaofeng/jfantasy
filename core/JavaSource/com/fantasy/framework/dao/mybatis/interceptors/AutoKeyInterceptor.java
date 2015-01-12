@@ -1,14 +1,10 @@
 package com.fantasy.framework.dao.mybatis.interceptors;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-
-import javax.persistence.GeneratedValue;
-
+import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
+import com.fantasy.framework.dao.mybatis.keygen.MultiKeyGenerator;
+import com.fantasy.framework.dao.mybatis.keygen.SequenceKeyGenerator;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
@@ -18,11 +14,9 @@ import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
-import com.fantasy.framework.dao.mybatis.keygen.MultiKeyGenerator;
-import com.fantasy.framework.dao.mybatis.keygen.SequenceKeyGenerator;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
+import javax.persistence.GeneratedValue;
+import java.lang.reflect.Field;
+import java.util.*;
 
 /**
  * 注解序列拦截器(扩展mybatis注解主键生成)
@@ -45,8 +39,9 @@ public class AutoKeyInterceptor implements Interceptor, InitializingBean {
 	}
 
 	public void afterPropertiesSet() {
-		if (ObjectUtil.isNull(keyGenerators))
-			keyGenerators = new HashMap<String, KeyGenerator>();
+		if (ObjectUtil.isNull(keyGenerators)){
+            keyGenerators = new HashMap<String, KeyGenerator>();
+        }
 		keyGenerators.put("system-uuid", GUIDKeyGenerator.getInstance());
 		keyGenerators.put("fantasy-sequence", new SequenceKeyGenerator());
 	}
@@ -68,11 +63,11 @@ public class AutoKeyInterceptor implements Interceptor, InitializingBean {
 			Map<String, KeyGenerator> targetKeyGenerators = new HashMap<String, KeyGenerator>();
 			for (Field field : fields) {
 				targetKeyGenerators.put(field.getName(), this.keyGenerators.get(((GeneratedValue) ClassUtil.getFieldGenericType(field, GeneratedValue.class)).generator()));
-				if (ObjectUtil.isNull(field.getName()))
-					targetKeyGenerators.remove(field.getName());
-				else {
-					keyPropertieNameList.add(field.getName());
-				}
+				if (ObjectUtil.isNull(field.getName())){
+                    targetKeyGenerators.remove(field.getName());
+                }else {
+                    keyPropertieNameList.add(field.getName());
+                }
 			}
 			if (!targetKeyGenerators.isEmpty()) {
 				ClassUtil.setValue(ms, "keyProperties", keyPropertieNameList.toArray(new String[fields.length]));

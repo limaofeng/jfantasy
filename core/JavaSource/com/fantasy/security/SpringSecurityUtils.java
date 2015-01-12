@@ -111,8 +111,9 @@ public class SpringSecurityUtils {
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		// 添加用户组权限
 		for (UserGroup userGroup : fantasyUserDetails.getUserGroups()) {
-			if (!userGroup.isEnabled())
-				continue;
+			if (!userGroup.isEnabled()){
+                continue;
+            }
 			ObjectUtil.join(grantedAuthorities, userGroup.getGroupAuthorities(), "authority");
 			ObjectUtil.join(grantedAuthorities, userGroup.getUrlAuthorities(), "authority");
 			ObjectUtil.join(grantedAuthorities, userGroup.getMenuAuthorities(), "authority");

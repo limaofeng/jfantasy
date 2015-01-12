@@ -1,5 +1,6 @@
 package com.fantasy.framework.service;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
@@ -391,7 +392,7 @@ public class FTPService {
 		try {
 			return new String(str.getBytes(this.controlEncoding), ISO_8859_1);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -399,7 +400,7 @@ public class FTPService {
 		try {
 			return str == null ? "" : new String(str.getBytes(ISO_8859_1), this.controlEncoding);
 		} catch (UnsupportedEncodingException e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 

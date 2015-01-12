@@ -1,15 +1,14 @@
 package com.fantasy.security.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.security.bean.Resource;
 import com.fantasy.security.service.ResourceService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ResourceAction extends ActionSupport {
 
@@ -35,12 +34,12 @@ public class ResourceAction extends ActionSupport {
 		return JSONDATA;
 	}
 	
-	public String edit(Long id) throws Exception {
+	public String edit(Long id){
 		this.attrs.put("resource",this.resourceService.get(id));
 		return SUCCESS;
 	}
 
-	public String delete(Long[] ids) throws Exception {
+	public String delete(Long[] ids){
 		this.resourceService.delete(ids);
 		return JSONDATA;
 	}

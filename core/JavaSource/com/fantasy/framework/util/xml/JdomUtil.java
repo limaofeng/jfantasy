@@ -1,16 +1,17 @@
 package com.fantasy.framework.util.xml;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.util.List;
-
+import com.fantasy.framework.error.IgnoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom2.Document;
 import org.jdom2.Element;
 import org.jdom2.input.SAXBuilder;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.List;
 
 public class JdomUtil {
 	private static final Log logger = LogFactory.getLog(JdomUtil.class);
@@ -24,7 +25,7 @@ public class JdomUtil {
 			return reader(new FileInputStream(file));
 		} catch (Exception e) {
 			logger.error(e);
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -33,7 +34,7 @@ public class JdomUtil {
 			return new SAXBuilder().build(inputStream);
 		} catch (Exception e) {
 			logger.error(e);
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -42,7 +43,7 @@ public class JdomUtil {
 			return new SAXBuilder().build(url);
 		} catch (Exception e) {
 			logger.error(e);
-			throw new RuntimeException(e.getMessage());
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 

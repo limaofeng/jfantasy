@@ -120,8 +120,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 						parent._children[oi] = node;
 					} else {
 						Node<V> n = parent._children[oi];
-						while (n._next != null)
-							n = n._next;
+						while (n._next != null){
+                            n = n._next;
+                        }
 						n._next = node;
 					}
 				}

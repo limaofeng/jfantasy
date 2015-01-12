@@ -57,9 +57,11 @@ public abstract class StringUtil {
         return RegexpUtil.isMatch(input, "[^\\x00-\\xff]");
     }
 
+    /*
     public static void main(String[] args) throws Exception {
-        System.out.println(append("dsdf", 5, "0"));
+    System.out.println(append("dsdf", 5, "0"));
     }
+    */
 
     /**
      * 剔除字符串中的空白字符

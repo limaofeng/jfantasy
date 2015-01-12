@@ -85,9 +85,4 @@ public class Encoder {
 		return (char) (n + ((n >= 52) && (n < 62) ? -4 : (n >= 26) && (n < 52) ? 39 : (n >= 0) && (n < 26) ? 97 : -n));
 	}
 
-	public static void main(String[] args) {
-		for (int i = 0; i < 62; i++){
-            System.out.println(i + " : " + NToC(i));
-        }
-	}
 }

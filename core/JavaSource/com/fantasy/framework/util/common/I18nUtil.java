@@ -1,10 +1,9 @@
 package com.fantasy.framework.util.common;
 
-import java.io.UnsupportedEncodingException;
-import java.util.regex.Matcher;
-
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil.AbstractReplaceCallBack;
+
+import java.util.regex.Matcher;
 
 public class I18nUtil {
 
@@ -32,10 +31,10 @@ public class I18nUtil {
 		});
 	}
 
-	public static void main(String[] args) throws UnsupportedEncodingException {
+	/*public static void main(String[] args) throws UnsupportedEncodingException {
 		String unicode = unicode("：“成功导入{0}条,新的资源!");
 		System.out.println(unicode);
 		System.out.print(decodeUnicode(unicode));
-	}
+	}*/
 
 }

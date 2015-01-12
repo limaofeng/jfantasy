@@ -5,7 +5,7 @@ public class LinkedQueueTest{
 
 	public static void main(String[] args) throws Exception {
 		
-		System.out.println( 8 >> 1);
+		//System.out.println( 8 >> 1);
 		
 		//AtomicInteger count = new AtomicInteger(0);
 		

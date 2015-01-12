@@ -3,40 +3,40 @@ package com.fantasy.framework.util.common.encode;
 public class Encoding {
 
 	// 支持的字符格式
-	public static int GB2312 = 0;
+	public static final int GB2312 = 0;
 
-	public static int GBK = 1;
+	public static final int GBK = 1;
 
-	public static int BIG5 = 2;
+	public static final int BIG5 = 2;
 
-	public static int UTF8 = 3;
+	public static final int UTF8 = 3;
 
-	public static int UNICODE = 4;
+	public static final int UNICODE = 4;
 
-	public static int EUC_KR = 5;
+	public static final int EUC_KR = 5;
 
-	public static int SJIS = 6;
+	public static final int SJIS = 6;
 
-	public static int EUC_JP = 7;
+	public static final int EUC_JP = 7;
 
-	public static int ASCII = 8;
+	public static final int ASCII = 8;
 
-	public static int UNKNOWN = 9;
+	public static final int UNKNOWN = 9;
 
-	public static int TOTALT = 10;
+	public static final int TOTALT = 10;
 
 	public final static int SIMP = 0;
 
 	public final static int TRAD = 1;
 
 	// 解析名称用
-	public static String[] javaname;
+	public static  String[] javaname;
 
 	// 编码用
-	public static String[] nicename;
+	public static  String[] nicename;
 
 	// 应用于html中的字符集
-	public static String[] htmlname;
+	public static  String[] htmlname;
 
 	public Encoding() {
 		javaname = new String[TOTALT];

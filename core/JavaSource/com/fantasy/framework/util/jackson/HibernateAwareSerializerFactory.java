@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.jackson;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.jackson.serializer.DateSerializer;
 import com.fantasy.framework.util.ognl.typeConverter.DateFormat;
 import org.codehaus.jackson.JsonGenerator;
@@ -126,7 +127,7 @@ public class HibernateAwareSerializerFactory extends CustomSerializerFactory {
 				}
 			}
 			if (serializer == null) {
-				throw new RuntimeException(" JsonSerializer is null !");
+				throw new IgnoreException(" JsonSerializer is null !");
 			}
 //			Class<?> clazz = type.getRawClass();
 //			JsonSerializer<Object> serializer;

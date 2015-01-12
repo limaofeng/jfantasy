@@ -33,14 +33,15 @@ public class StringUnicodeSerializer extends JsonSerializer<String> {
 	public void serialize(String str, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
 		int status = ((JsonWriteContext) gen.getOutputContext()).writeValue();
 		switch (status) {
-		case JsonWriteContext.STATUS_OK_AFTER_COLON:
-			gen.writeRaw(':');
-			break;
-		case JsonWriteContext.STATUS_OK_AFTER_COMMA:
-			gen.writeRaw(',');
-			break;
-		case JsonWriteContext.STATUS_EXPECT_NAME:
-			throw new JsonGenerationException("Can not write string value here");
+            case JsonWriteContext.STATUS_OK_AFTER_COLON:
+                gen.writeRaw(':');
+                break;
+            case JsonWriteContext.STATUS_OK_AFTER_COMMA:
+                gen.writeRaw(',');
+                break;
+            case JsonWriteContext.STATUS_EXPECT_NAME:
+                throw new JsonGenerationException("Can not write string value here");
+            default:
 		}
 		gen.writeRaw('"');// 写入JSON中字符串的开头引号
 		for (char c : str.toCharArray()) {

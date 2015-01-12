@@ -1,9 +1,11 @@
 package com.fantasy.sms.service;
 
 import com.fantasy.framework.service.SMSService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public class DefaultSMSService implements SMSService {
-
+    private final static Log LOGGER = LogFactory.getLog(DefaultSMSService.class);
 	// 短信发送后返回值 说　明
 	// -1 没有该用户账户
 	// -2 密钥不正确（不是用户密码）
@@ -14,7 +16,7 @@ public class DefaultSMSService implements SMSService {
 	// -42 短信内容为空
 	// 大于0 短信发送数量
 	public boolean send(String phone, String value) {
-        System.out.println(phone + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + value);
+        LOGGER.debug(phone + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + value);
 //		try {
 //			Request request = new Request();
 //			request.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=gbk");

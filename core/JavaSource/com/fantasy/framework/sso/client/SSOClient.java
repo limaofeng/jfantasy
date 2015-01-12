@@ -1,24 +1,20 @@
 package com.fantasy.framework.sso.client;
 
+import org.apache.log4j.Logger;
+import org.springframework.stereotype.Component;
+
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.stereotype.Component;
-
 @Component("SSOClient")
 public class SSOClient implements Filter {
 
+    private static final Logger LOGGER = Logger.getLogger(SSOClient.class);
 	private static final String PARAM_NAME_EXCLUDES_URL = "com.fantasy.framework.sso.excludesUrl";
 	private static final String PARAM_NAME_includes_URL = "com.fantasy.framework.sso.includesUrl";
 	private static final String PARAM_NAME_validate_URL = "com.fantasy.framework.sso.validateUrl";
@@ -31,7 +27,7 @@ public class SSOClient implements Filter {
 			String paramName = enumeration.nextElement();
 			params.put(paramName, config.getInitParameter(paramName));
 		}
-		System.out.println(params.toString());
+		LOGGER.debug(params.toString());
 	}
 
 	public void doFilter(ServletRequest theRequest, ServletResponse theResponse, FilterChain chain) throws IOException, ServletException {
@@ -41,14 +37,14 @@ public class SSOClient implements Filter {
 		Enumeration<String> enumeration = request.getHeaderNames();
 		while(enumeration.hasMoreElements()){
 			String headerName=enumeration.nextElement();
-			System.out.println(headerName+"="+request.getAttribute(headerName)+"\n");
+			LOGGER.debug(headerName+"="+request.getAttribute(headerName)+"\n");
 		}
 		
-		System.out.println(request.getRequestURL());
-		System.out.println(request.getQueryString());
-		System.out.println(request.getRequestURI());
-		System.out.println("========================="+request.getSession().getId());
-		System.out.println("xxxxx");
+		LOGGER.debug(request.getRequestURL());
+		LOGGER.debug(request.getQueryString());
+		LOGGER.debug(request.getRequestURI());
+		LOGGER.debug("========================="+request.getSession().getId());
+		LOGGER.debug("xxxxx");
 		chain.doFilter(request, response);
 	}
 

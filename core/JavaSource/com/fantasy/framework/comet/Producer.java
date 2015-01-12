@@ -23,7 +23,7 @@ class Producer implements Runnable {
 			int i = 0;
 			for (String s : this.messages) {
 				this.drop.put(s);
-				System.out.println(this.drop.size());
+                LOG.debug(this.drop.size());
 				Thread.sleep(1000L);
 			}
 			this.drop.put("DONE");

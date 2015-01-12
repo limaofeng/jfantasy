@@ -80,14 +80,10 @@ public class WebUtil {
         scheme = scheme.toLowerCase();
         StringBuilder url = new StringBuilder();
         url.append(scheme).append("://").append(serverName);
-        if ("http".equals(scheme)) {
-            if (serverPort != 80) {
-                url.append(":").append(serverPort);
-            }
-        } else if ("https".equals(scheme)) {
-            if (serverPort != 443) {
-                url.append(":").append(serverPort);
-            }
+        if ("http".equals(scheme) && serverPort != 80) {
+            url.append(":").append(serverPort);
+        } else if ("https".equals(scheme) && serverPort != 443) {
+            url.append(":").append(serverPort);
         }
         url.append(contextPath);
         return url.toString();
@@ -222,14 +218,12 @@ public class WebUtil {
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
                     InetAddress ia = ips.nextElement();
-                    if (ia instanceof Inet4Address && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
+                    if (ia instanceof Inet4Address && ia.getHostAddress().equals(ip.trim())  && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
                         // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
                         // System.out.println("IP:"
                         // + ia.getHostAddress());
                         // System.out.println("--------------------------------------------");
-                        if (ia.getHostAddress().equals(ip.trim())) {
                             return true;
-                        }
                     }
                 }
             }
@@ -281,44 +275,31 @@ public class WebUtil {
         String osVersion = "unknown";
         if (useros.indexOf("nt 6.1") > 0){
             osVersion = "Windows 7";
-        }
-        else if (useros.indexOf("nt 6.0") > 0){
+        }else if (useros.indexOf("nt 6.0") > 0){
             osVersion = "Windows Vista/Server 2008";
-        }
-        else if (useros.indexOf("nt 5.2") > 0){
+        } else if (useros.indexOf("nt 5.2") > 0){
             osVersion = "Windows Server 2003";
-        }
-        else if (useros.indexOf("nt 5.1") > 0){
+        } else if (useros.indexOf("nt 5.1") > 0){
             osVersion = "Windows XP";
-        }
-        else if (useros.indexOf("nt 5") > 0){
+        } else if (useros.indexOf("nt 5") > 0){
             osVersion = "Windows 2000";
-        }
-        else if (useros.indexOf("nt 4") > 0){
+        } else if (useros.indexOf("nt 4") > 0){
             osVersion = "Windows nt4";
-        }
-        else if (useros.indexOf("me") > 0){
+        }else if (useros.indexOf("me") > 0){
             osVersion = "Windows Me";
-        }
-        else if (useros.indexOf("98") > 0){
+        } else if (useros.indexOf("98") > 0){
             osVersion = "Windows 98";
-        }
-        else if (useros.indexOf("95") > 0){
+        }else if (useros.indexOf("95") > 0){
             osVersion = "Windows 95";
-        }
-        else if (useros.indexOf("ipad") > 0){
+        } else if (useros.indexOf("ipad") > 0){
             osVersion = "iPad";
-        }
-        else if (useros.indexOf("macintosh") > 0){
+        } else if (useros.indexOf("macintosh") > 0){
             osVersion = "Mac";
-        }
-        else if (useros.indexOf("unix") > 0){
+        } else if (useros.indexOf("unix") > 0){
             osVersion = "UNIX";
-        }
-        else if (useros.indexOf("linux") > 0){
+        } else if (useros.indexOf("linux") > 0){
             osVersion = "Linux";
-        }
-        else if (useros.indexOf("sunos") > 0) {
+        }else if (useros.indexOf("sunos") > 0) {
             osVersion = "SunOS";
         } else if (useros.indexOf("iPhone") > 0) {
             osVersion = "iPhone";
@@ -396,7 +377,7 @@ public class WebUtil {
         if (params.containsKey("sort")) {
             String value = (params.get("sort"))[0];
             if (value.startsWith(orderBy)) {
-                return queryString.replace("sort=" + value, "sort=" + orderBy + (value.split("-")[1].equals("asc") ? "-desc" : "-asc"));
+                return queryString.replace("sort=" + value, "sort=" + orderBy + ("asc".equals(value.split("-")[1]) ? "-desc" : "-asc"));
             }
             return queryString.replace("sort=" + value, "sort=" + orderBy + "-asc");
         }

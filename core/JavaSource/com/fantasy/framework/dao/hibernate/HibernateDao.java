@@ -5,6 +5,7 @@ import com.fantasy.attr.DynaBeanQueryManager;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -823,7 +824,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql+""+e.getMessage());
         }
     }
 
@@ -836,7 +837,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new RuntimeException("hql can't be auto count, hql is:" + countHql, e);
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql+""+e.getMessage());
         }
     }
 
@@ -1023,23 +1024,17 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         try {
             if (PropertyFilter.MatchType.EQ.equals(matchType)){
                 criterion = Restrictions.eq(propertyName, propertyValue);
-            }
-            else if (PropertyFilter.MatchType.LIKE.equals(matchType)){
+            }else if (PropertyFilter.MatchType.LIKE.equals(matchType)){
                 criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.ANYWHERE);
-            }
-            else if (PropertyFilter.MatchType.LE.equals(matchType)){
+            }else if (PropertyFilter.MatchType.LE.equals(matchType)){
                 criterion = Restrictions.le(propertyName, propertyValue);
-            }
-            else if (PropertyFilter.MatchType.LT.equals(matchType)){
+            }else if (PropertyFilter.MatchType.LT.equals(matchType)){
                 criterion = Restrictions.lt(propertyName, propertyValue);
-            }
-            else if (PropertyFilter.MatchType.GE.equals(matchType)){
+            }else if (PropertyFilter.MatchType.GE.equals(matchType)){
                 criterion = Restrictions.ge(propertyName, propertyValue);
-            }
-            else if (PropertyFilter.MatchType.GT.equals(matchType)){
+            }else if (PropertyFilter.MatchType.GT.equals(matchType)){
                 criterion = Restrictions.gt(propertyName, propertyValue);
-            }
-            else if (PropertyFilter.MatchType.IN.equals(matchType)) {
+            }else if (PropertyFilter.MatchType.IN.equals(matchType)) {
                 if (Array.getLength(propertyValue) == 0) {
                     return null;
                 }
@@ -1051,23 +1046,17 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 criterion = Restrictions.not(Restrictions.in(propertyName, (Object[]) propertyValue));
             } else if (PropertyFilter.MatchType.NE.equals(matchType)){
                 criterion = Restrictions.ne(propertyName, propertyValue);
-            }
-            else if (PropertyFilter.MatchType.NULL.equals(matchType)){
+            }else if (PropertyFilter.MatchType.NULL.equals(matchType)){
                 criterion = Restrictions.isNull(propertyName);
-            }
-            else if (PropertyFilter.MatchType.NOTNULL.equals(matchType)){
+            } else if (PropertyFilter.MatchType.NOTNULL.equals(matchType)){
                 criterion = Restrictions.isNotNull(propertyName);
-            }
-            else if (PropertyFilter.MatchType.EMPTY.equals(matchType)){
+            }else if (PropertyFilter.MatchType.EMPTY.equals(matchType)){
                 criterion = Restrictions.isEmpty(propertyName);
-            }
-            else if (PropertyFilter.MatchType.NOTEMPTY.equals(matchType)){
+            } else if (PropertyFilter.MatchType.NOTEMPTY.equals(matchType)){
                 criterion = Restrictions.isNotEmpty(propertyName);
-            }
-            else if (PropertyFilter.MatchType.BETWEEN.equals(matchType)){
+            }else if (PropertyFilter.MatchType.BETWEEN.equals(matchType)){
                 criterion = Restrictions.between(propertyName, Array.get(propertyValue, 0), Array.get(propertyValue, 1));
-            }
-            else if (PropertyFilter.MatchType.SQL.equals(matchType)){
+            } else if (PropertyFilter.MatchType.SQL.equals(matchType)){
                 criterion = Restrictions.sqlRestriction("ERROR");
             }
         } catch (Exception e) {
@@ -1108,7 +1097,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             ClassUtil.setValue(criterion, "rhs", sqlRestriction((Criterion) ClassUtil.getValue(criterion, "rhs"), propertyNameSql));
             return criterion;
         }
-        throw new RuntimeException("暂不支持  " + criterion.getClass() + " 到 SQLCriterion 的转换(" + criterion.toString() + ")");
+        throw new IgnoreException("暂不支持  " + criterion.getClass() + " 到 SQLCriterion 的转换(" + criterion.toString() + ")");
     }
 
     @SuppressWarnings("unchecked")

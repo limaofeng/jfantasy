@@ -1,11 +1,12 @@
 package com.fantasy.swp.util;
 
+import com.fantasy.framework.error.IgnoreException;
+import com.fantasy.swp.PageData;
+
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
-import com.fantasy.swp.PageData;
 
 public class DataMap implements Map<String, Object> {
 
@@ -16,11 +17,11 @@ public class DataMap implements Map<String, Object> {
 	}
 
 	public boolean containsValue(java.lang.Object value) {
-		throw new RuntimeException("对象不支持该方法!");
+		throw new IgnoreException("对象不支持该方法!");
 	}
 
 	public Set<java.util.Map.Entry<String, Object>> entrySet() {
-		throw new RuntimeException("对象不支持该方法!");
+		throw new IgnoreException("对象不支持该方法!");
 	}
 
 	public Object get(java.lang.Object key) {
@@ -40,11 +41,11 @@ public class DataMap implements Map<String, Object> {
 	}
 
 	public Object put(String key, Object value) {
-		throw new RuntimeException("对象不支持该方法!");
+		throw new IgnoreException("对象不支持该方法!");
 	}
 
 	public void putAll(Map<? extends String, ? extends Object> t) {
-		throw new RuntimeException("对象不支持该方法!");
+		throw new IgnoreException("对象不支持该方法!");
 	}
 
 	public Object remove(java.lang.Object key) {
@@ -56,7 +57,7 @@ public class DataMap implements Map<String, Object> {
 	}
 
 	public Collection<Object> values() {
-		throw new RuntimeException("对象不支持该方法!");
+		throw new IgnoreException("对象不支持该方法!");
 	}
 
 	public void clear() {

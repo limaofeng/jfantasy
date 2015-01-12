@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.regexp;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,7 +37,7 @@ public class RegexpUtil {
 	 */
 	public static Pattern getPattern(String patternString) {
 		if (StringUtil.isBlank(patternString)) {
-			throw new RuntimeException("pattern string is space");
+			throw new IgnoreException("pattern string is space");
 		}
 		if (!patternCache.containsKey(patternString)) {
 			if (logger.isDebugEnabled()) {

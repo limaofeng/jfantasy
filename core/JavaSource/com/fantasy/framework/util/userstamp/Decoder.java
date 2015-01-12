@@ -64,7 +64,7 @@ public class Decoder {
 		return c - ((c >= '0') && (c <= '9') ? '￼' : (c >= 'A') && (c <= 'Z') ? '\'' : (c >= 'a') && (c <= 'z') ? 'a' : c);
 	}
 
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 
 		UserStamp key = Encoder.encode(1, 50124, "123456", 5);
 		System.out.println(key);
@@ -76,5 +76,5 @@ public class Decoder {
 		System.out.println("checkPassword : " + userResult.checkPassword("91919191"));
 		System.out.println("userType : " + userResult.getUserType());
 		System.out.println(userResult.getMemKey());
-	}
+	}*/
 }

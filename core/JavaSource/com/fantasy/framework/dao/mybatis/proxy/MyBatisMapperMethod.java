@@ -137,7 +137,7 @@ public class MyBatisMapperMethod {
      */
     private void setupMethodSignature() {
         Class<?>[] argTypes = this.method.getParameterTypes();
-        for (int i = 0; i < argTypes.length; i++)
+        for (int i = 0; i < argTypes.length; i++){
             if (Pager.class.isAssignableFrom(argTypes[i])) {
                 this.pageIndex = i;
             } else {
@@ -146,6 +146,7 @@ public class MyBatisMapperMethod {
                 this.paramNames.add(paramName);
                 this.paramPositions.add(i);
             }
+        }
     }
 
     /**

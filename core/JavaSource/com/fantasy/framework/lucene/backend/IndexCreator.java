@@ -33,17 +33,18 @@ public class IndexCreator {
 			if (bs != null) {
 				CompareChecker checker = new CompareChecker(this.obj);
 				boolean fit = checker.isFit(f, bs.compare(), bs.value());
-				if (fit)
-					doc.setBoost(bs.fit());
-				else {
-					doc.setBoost(bs.unfit());
-				}
+				if (fit){
+                    doc.setBoost(bs.fit());
+                }else {
+                    doc.setBoost(bs.unfit());
+                }
 			}
 			Object objValue = FieldUtil.get(this.obj, f);
 			if (objValue != null) {
 				FieldHandler handler = FieldHandlerFactory.create(this.obj, f, this.prefix);
-				if (handler != null)
-					handler.handle(doc);
+				if (handler != null){
+                    handler.handle(doc);
+                }
 			}
 		}
 	}

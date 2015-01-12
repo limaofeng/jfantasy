@@ -28,7 +28,8 @@ public class NumberFieldValidator extends DefaultParamsValidator {
 				throw new ValidationException("数值超过最大精度[NUMBER(" + length + "," + scale + ")]");
 			}
 		}
-		if (decimal.length() > scale.longValue())
-			throw new ValidationException("数值超过最大精度[NUMBER(," + scale + ")]");
+		if (decimal.length() > scale.longValue()){
+            throw new ValidationException("数值超过最大精度[NUMBER(," + scale + ")]");
+        }
 	}
 }

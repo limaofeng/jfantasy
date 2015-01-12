@@ -1,25 +1,22 @@
 package com.fantasy.framework.struts2.views.freemarker;
 
-import java.io.CharArrayWriter;
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-import org.apache.struts2.views.freemarker.FreemarkerManager;
-import org.apache.struts2.views.util.ResourceUtil;
-
 import com.fantasy.framework.struts2.views.freemarker.FantasyFreemarkerManager.Mode;
 import com.opensymphony.xwork2.ActionContext;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.inject.Inject;
-
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import freemarker.template.TemplateModel;
+import org.apache.struts2.ServletActionContext;
+import org.apache.struts2.views.freemarker.FreemarkerManager;
+import org.apache.struts2.views.util.ResourceUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.CharArrayWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 public class FantasyFreemarkerResult extends org.apache.struts2.views.freemarker.FreemarkerResult {
 
@@ -56,11 +53,9 @@ public class FantasyFreemarkerResult extends org.apache.struts2.views.freemarker
 		this.wrapper = getObjectWrapper();
 		ActionContext ctx = invocation.getInvocationContext();
 		HttpServletRequest req = (HttpServletRequest) ctx.get(ServletActionContext.HTTP_REQUEST);
-		if (Mode.struts2.equals(this.freemarkerManager.getMode())) {
-			if (!locationArg.startsWith("/")) {
+		if (Mode.struts2.equals(this.freemarkerManager.getMode()) && !locationArg.startsWith("/")) {
 				String base = ResourceUtil.getResourceBase(req);
 				locationArg = base + "/" + locationArg;
-			}
 		}
 		Template template = configuration.getTemplate(locationArg, deduceLocale());
 		TemplateModel model = createModel();

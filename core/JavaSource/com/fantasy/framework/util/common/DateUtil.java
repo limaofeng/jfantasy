@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -96,7 +97,7 @@ public class DateUtil {
      * @return string
      */
     public static String format(Object date, String format) {
-        if (date == null || !Date.class.isAssignableFrom(date.getClass())) {
+        if (date == null || !Date.class.isAssignableFrom(date.getClass())){
             return "";
         }
         return format((Date) date, format);
@@ -138,7 +139,7 @@ public class DateUtil {
      * @return data
      */
     public static Date parse(String s, String format) {
-        if (s == null) {
+        if (s == null){
             return null;
         }
         DateFormat dateFormat = getDateFormat(format);
@@ -146,7 +147,7 @@ public class DateUtil {
         try {
             return dateFormat.parse(s);
         } catch (ParseException e) {
-            throw new RuntimeException(e);
+            throw new IgnoreException(e.getMessage());
         } finally {
             locks.get(format).unlock();
         }

@@ -1,5 +1,6 @@
 package com.fantasy.sms.service;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.service.SMSService;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.regexp.RegexpCst;
@@ -100,14 +101,14 @@ public class ShortMessagingService {
 			if (logger.isDebugEnabled()) {
 				logger.debug("发送的手机号码格式不对:" + phone);
 			}
-			throw new RuntimeException("发送的手机号码格式不对:" + phone);
+			throw new IgnoreException("发送的手机号码格式不对:" + phone);
 		}
 		CaptchaConfig config = this.captchaConfigService.get(configId);
 		if (configId == null) {
 			if (logger.isDebugEnabled()) {
 				logger.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
 			}
-			throw new RuntimeException("短信验证设置[id=" + configId + "]不存在!");
+			throw new IgnoreException("短信验证设置[id=" + configId + "]不存在!");
 		}
 		Captcha captcha = captchaDao.findUnique(Restrictions.eq("captchaConfig.id", configId), Restrictions.eq("sessionId", id));
         CaptchaConfig captchaConfig = captchaConfigService.get(configId);

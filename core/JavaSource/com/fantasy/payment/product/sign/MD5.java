@@ -1,5 +1,6 @@
 package com.fantasy.payment.product.sign;
 
+import com.fantasy.framework.error.IgnoreException;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -38,12 +39,7 @@ public class MD5 {
     public static boolean verify(String text, String sign, String key, String input_charset) {
     	text = text + key;
     	String mysign = DigestUtils.md5Hex(getContentBytes(text, input_charset));
-    	if(mysign.equals(sign)) {
-    		return true;
-    	}
-    	else {
-    		return false;
-    	}
+    	return mysign.equals(sign);
     }
 
     /**
@@ -60,7 +56,7 @@ public class MD5 {
         try {
             return content.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
+            throw new IgnoreException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
         }
     }
 

@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.htmlcleaner;
 
+import com.fantasy.framework.error.IgnoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.htmlcleaner.*;
@@ -182,7 +183,7 @@ public class HtmlCleanerUtil {
             TagNode tagNode = node.findElementByAttValue(att, value, true, true);
             return getAsString(getBrowserCompactXmlSerializer(hc), tagNode);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 

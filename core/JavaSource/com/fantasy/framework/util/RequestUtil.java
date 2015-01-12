@@ -5,7 +5,6 @@ import org.springframework.web.bind.ServletRequestUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 @Deprecated
 public class RequestUtil extends ServletRequestUtils {
@@ -39,8 +38,8 @@ public class RequestUtil extends ServletRequestUtils {
 		return str;
 	}
 
-	public static void main(String[] args) throws UnsupportedEncodingException {
+	/*public static void main(String[] args) throws UnsupportedEncodingException {
 		System.out.println(URLDecoder.decode("中文", "UTF-8"));
 		System.out.println(new String("中文".getBytes("8859_1"), "UTF-8"));
-	}
+	}*/
 }

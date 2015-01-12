@@ -1,6 +1,7 @@
 package com.fantasy.framework.util.common.file;
 
 import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
@@ -41,9 +42,9 @@ public class FileUtil {
             reader.close();
             return buf.toString();
         } catch (FileNotFoundException ex) {
-            throw new RuntimeException("没有找到文件:" + file.getAbsolutePath());
+            throw new IgnoreException("没有找到文件:" + file.getAbsolutePath());
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            throw new IgnoreException(ex.getMessage());
         }
 
     }
@@ -106,7 +107,7 @@ public class FileUtil {
         try {
             File f = new File(file).getParentFile();
             if (!f.exists() && !f.mkdirs()) {
-                throw new RuntimeException("创建文件" + file + "失败");
+                throw new IgnoreException("创建文件" + file + "失败");
             }
             FileOutputStream fos = new FileOutputStream(file);
             Writer out = new OutputStreamWriter(fos, ENCODE);
@@ -116,7 +117,7 @@ public class FileUtil {
             out.close();
         } catch (IOException ex) {
             logger.error(ex);
-            throw new RuntimeException(ex);
+            throw new IgnoreException(ex.getMessage());
         }
     }
 
@@ -143,7 +144,7 @@ public class FileUtil {
             createFolder(file.getParentFile());
         }
         if (!file.exists() && !file.mkdirs()){
-            throw new RuntimeException("创建文件" + file + "失败");
+            throw new IgnoreException("创建文件" + file + "失败");
         }
         return file;
     }
@@ -187,7 +188,7 @@ public class FileUtil {
     public static File[] listFolders(String folderName) {
         File folder = new File(folderName);
         if (!folder.exists()) {
-            throw new RuntimeException("(目录不存在。)folder [" + folder + "]not exist。");
+            throw new IgnoreException("(目录不存在。)folder [" + folder + "]not exist。");
         }
         return folder.listFiles(new FileFilter() {
             public boolean accept(File pathname) {
@@ -206,7 +207,7 @@ public class FileUtil {
     public static File[] listFiles(String folderName, final String... extNames) {
         File folder = new File(folderName);
         if (!folder.exists()) {
-            throw new RuntimeException("(目录不存在。)folder [" + folder + "]not exist。");
+            throw new IgnoreException("(目录不存在。)folder [" + folder + "]not exist。");
         }
         return folder.listFiles(new FileFilter() {
             public boolean accept(File pathname) {
@@ -242,7 +243,7 @@ public class FileUtil {
             FileInputStream fin = new FileInputStream(oldPath);
 
             createFolder(RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", ""));
-            System.out.println("创建文件 ：" + RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", "") + "|" + newPath);
+            logger.debug("创建文件 ：" + RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", "") + "|" + newPath);
             FileOutputStream fout = new FileOutputStream(newPath);
 
             GZIPOutputStream gzout = new GZIPOutputStream(fout);
@@ -325,7 +326,7 @@ public class FileUtil {
             }
         }
         if (!sourceFile.delete()){
-            throw new RuntimeException("删除文件" + sourceFile.getAbsolutePath() + "失败");
+            throw new IgnoreException("删除文件" + sourceFile.getAbsolutePath() + "失败");
         }
         return true;
     }
@@ -333,10 +334,10 @@ public class FileUtil {
     private static boolean moveOnlyFile(File sourceFile, File targetFile) {
         File parentFile = targetFile.getParentFile();
         if (!parentFile.exists() && !parentFile.mkdirs()){
-            throw new RuntimeException("创建文件" + parentFile.getAbsolutePath() + "失败");
+            throw new IgnoreException("创建文件" + parentFile.getAbsolutePath() + "失败");
         }
         if (targetFile.exists() && !targetFile.delete()){
-            throw new RuntimeException("删除文件" + targetFile.getAbsolutePath() + "失败");
+            throw new IgnoreException("删除文件" + targetFile.getAbsolutePath() + "失败");
         }
 
         boolean flag = sourceFile.renameTo(targetFile);
@@ -344,10 +345,10 @@ public class FileUtil {
             try {
                 copyFile(sourceFile, targetFile);
                 if (sourceFile.exists()){
-                    System.out.println("delete file:" + sourceFile + ":" + sourceFile.delete());
+                    logger.debug("delete file:" + sourceFile + ":" + sourceFile.delete());
                 }
             } catch (IOException e) {
-                throw new RuntimeException(e);
+                throw new IgnoreException(e.getMessage());
             }
         }
         return false;
@@ -368,11 +369,11 @@ public class FileUtil {
     }
 
     private static void copyOnlyFile(File sourceFile, File targetFile) throws IOException {
-        System.out.println("copy from:" + sourceFile);
-        System.out.println("copy to:" + targetFile);
+        logger.debug("copy from:" + sourceFile);
+        logger.debug("copy to:" + targetFile);
         File parentFile = targetFile.getParentFile();
         if (!parentFile.exists() && !parentFile.mkdirs()){
-            throw new RuntimeException("创建文件" + parentFile.getAbsolutePath() + "失败");
+            throw new IgnoreException("创建文件" + parentFile.getAbsolutePath() + "失败");
         }
         FileInputStream fis = new FileInputStream(sourceFile);
         FileOutputStream fos = new FileOutputStream(targetFile);

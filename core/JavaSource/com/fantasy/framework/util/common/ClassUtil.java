@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.reflect.ClassFactory;
 import com.fantasy.framework.util.reflect.IClassFactory;
@@ -262,7 +263,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             ParameterizedType type = (ParameterizedType) returnType;
             Type[] typeArguments = type.getActualTypeArguments();
             if ((index >= typeArguments.length) || (index < 0)) {
-                throw new RuntimeException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
+                throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
             }
             return (Class<?>) typeArguments[index];
         }
@@ -285,7 +286,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         List<Class> results = new ArrayList<Class>();
         Type[] genericParameterTypes = method.getGenericParameterTypes();
         if ((index >= genericParameterTypes.length) || (index < 0)) {
-            throw new RuntimeException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
+            throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
         }
         Type genericParameterType = genericParameterTypes[index];
         if ((genericParameterType instanceof ParameterizedType)) {
@@ -340,7 +341,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             ParameterizedType aType = (ParameterizedType) genericFieldType;
             Type[] fieldArgTypes = aType.getActualTypeArguments();
             if ((index >= fieldArgTypes.length) || (index < 0)) {
-                throw new RuntimeException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
+                throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
             }
             return (Class<?>) fieldArgTypes[index];
         }

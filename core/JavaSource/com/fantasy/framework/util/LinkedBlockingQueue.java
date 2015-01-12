@@ -1,5 +1,7 @@
 package com.fantasy.framework.util;
 
+import com.fantasy.framework.error.IgnoreException;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -74,7 +76,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         }
 
         public boolean addAll(int index, Collection<? extends E> c) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public void clear() {
@@ -102,15 +104,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         }
 
         public int lastIndexOf(Object o) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public ListIterator<E> listIterator() {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public ListIterator<E> listIterator(int index) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public boolean remove(Object o) {
@@ -143,7 +145,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         }
 
         public List<E> subList(int fromIndex, int toIndex) {
-            throw new RuntimeException("null method");
+            throw new IgnoreException("null method");
         }
 
         public Object[] toArray() {
@@ -283,8 +285,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         try {
             try {
                 // 如果链表已满,等待释放
-                while (count.get() == this.capacity)
+                while (count.get() == this.capacity){
                     this.notFull.await();
+                }
             } catch (InterruptedException ie) {
                 this.notFull.signal();
                 throw ie;
@@ -714,11 +717,11 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
             throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
         }
         Node<E> e = this.head;
-        if (index < size >> 1)
+        if (index < size >> 1){
             for (int i = 0; i <= index; i++){
                 e = e.next;
             }
-        else {
+        } else {
             for (int i = size; i > index; i--){
                 e = e.previous;
             }

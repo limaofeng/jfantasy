@@ -1,6 +1,7 @@
 package com.fantasy.framework.util.common;
 
 import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.sun.imageio.plugins.bmp.BMPImageReader;
 import com.sun.imageio.plugins.gif.GIFImageReader;
@@ -310,7 +311,7 @@ public final class ImageUtil {
             imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
         */
         } else if (GIF_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
-            throw new RuntimeException("暂不支持GIF图片缩放");
+            throw new IgnoreException("暂不支持GIF图片缩放");
         } else {
             imageOriginal = ImageIO.read(target);
         }
@@ -355,13 +356,14 @@ public final class ImageUtil {
         target = new ByteArrayInputStream(os.toByteArray());
         if (BMP_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
             imageOriginal = toBufferedImage((ToolkitImage) bmpReader(target));
-        }/* else if (PNG_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
-            imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
-        }*/ else if (GIF_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
+        }else if (GIF_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
             throw new RuntimeException("暂不支持GIF图片缩放");
         } else {
             imageOriginal = ImageIO.read(target);// toBufferedImage((ToolkitImage)jpgReader(target));
         }
+        /* else if (PNG_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
+            imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
+        }*/
         int realWidth = imageOriginal.getWidth();
         int realHeight = imageOriginal.getHeight();
         if ((realWidth == width) && (realHeight == heigth)){
@@ -490,7 +492,7 @@ public final class ImageUtil {
         picheight = 0;
         color = 0;
         piccolor = null;
-        if (picextendname.equals("GIF")) {
+        if ("GIF".equals(picextendname)) {
             // picwidth position
             picwidth = getFileAttribute(content, 7, 2, picextendname);
             // picheight position
@@ -500,7 +502,7 @@ public final class ImageUtil {
             color = color % 8 + 1;
             piccolor = getPicColor(color);
         }
-        if (picextendname.equals("JPG")) {
+        if ("JPG".equals(picextendname)) {
             // 考虑了两种情况
             picwidth = getFileAttribute(content, 166, 2, picextendname);
             picheight = getFileAttribute(content, 164, 2, picextendname);
@@ -514,13 +516,13 @@ public final class ImageUtil {
             }
             piccolor = getPicColor(color);
         }
-        if (picextendname.equals("BMP")) {
+        if ("BMP".equals(picextendname)) {
             picwidth = getFileAttribute(content, 19, 2, picextendname);
             picheight = getFileAttribute(content, 23, 2, picextendname);
             color = getFileAttribute(content, 28, 1, picextendname);
             piccolor = getPicColor(color);
         }
-        if (picextendname.equals("PNG")) {
+        if ("PNG".equals(picextendname)) {
             picwidth = getFileAttribute(content, 19, 2, picextendname);
             picheight = getFileAttribute(content, 23, 2, picextendname);
             // usually is "16M"??
@@ -607,7 +609,7 @@ public final class ImageUtil {
                 str1 = "0" + str1;
             }
             // 格式的不同，表达属性的字节也有变化
-            if (fileextendname.equalsIgnoreCase("JPG") || fileextendname.equalsIgnoreCase("PNG")) {
+            if ("JPG".equalsIgnoreCase(fileextendname) || "PNG".equalsIgnoreCase(fileextendname)) {
                 str = str1 + str;
             } else {
                 str = str + str1;
@@ -686,7 +688,7 @@ public final class ImageUtil {
             return imageIcon.getImage();
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage());
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -728,7 +730,7 @@ public final class ImageUtil {
                 image = kit.createImage(new MemoryImageSource(nwidth, nheight, ndata, 0, nwidth));
                 logger.debug("read bmp image success");
             } else {
-                throw new RuntimeException("it's not 24bits bmp, fail.");
+                throw new IgnoreException("it's not 24bits bmp, fail.");
             }
         } finally {
             StreamUtil.closeQuietly(fs);
@@ -831,6 +833,7 @@ public final class ImageUtil {
                     return new Position(0, srcHeight - watermarkImageHeight);
                 case bottomRight:
                     return new Position(srcWidth - watermarkImageWidth, srcHeight - watermarkImageHeight);
+                default:
             }
             return null;
         }
