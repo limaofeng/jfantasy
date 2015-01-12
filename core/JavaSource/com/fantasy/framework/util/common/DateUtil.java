@@ -70,9 +70,8 @@ public class DateUtil {
     /**
      * 获取 SimpleDateFormat 对象
      *
-     * @param format
-     * @return
-     * @功能描述
+     * @param format 格式
+     * @return DateFormat
      */
     private static DateFormat getDateFormat(String format) {
         if (!dateFormatCache.containsKey(format)) {
@@ -92,23 +91,23 @@ public class DateUtil {
     /**
      * 为ftl模板调用时提供的方法，以防时间对象为NULL时,找不到方法
      *
-     * @param date
-     * @param format
-     * @return
-     * @功能描述
+     * @param date   时间
+     * @param format 格式
+     * @return string
      */
     public static String format(Object date, String format) {
-        if (date == null || !Date.class.isAssignableFrom(date.getClass())){
+        if (date == null || !Date.class.isAssignableFrom(date.getClass())) {
             return "";
         }
         return format((Date) date, format);
     }
 
     /**
-     * @param date
-     * @param format
-     * @return
-     * @功能描述 格式化日期以字符串形式返回
+     * 格式化日期以字符串形式返回
+     *
+     * @param date   时间
+     * @param format 格式
+     * @return String
      */
     public static String format(Date date, String format) {
         if (date == null) {
@@ -132,13 +131,14 @@ public class DateUtil {
     }
 
     /**
-     * @param s
-     * @param format
-     * @return
-     * @功能描述 以指定格式格式化日期
+     * 以指定格式格式化日期
+     *
+     * @param s      时间字符串
+     * @param format 格式
+     * @return data
      */
     public static Date parse(String s, String format) {
-        if (s == null){
+        if (s == null) {
             return null;
         }
         DateFormat dateFormat = getDateFormat(format);
@@ -155,9 +155,8 @@ public class DateUtil {
     /**
      * 将字符串转为日期
      *
-     * @param s
-     * @return
-     * @功能描述
+     * @param s 时间字符串
+     * @return date
      */
     public static Date parse(String s) {
         if (s == null) {
@@ -169,10 +168,9 @@ public class DateUtil {
     /**
      * 相隔的天数
      *
-     * @param big
-     * @param small
-     * @return
-     * @功能描述
+     * @param big   大的时间
+     * @param small 小时间
+     * @return double
      */
     public static double dayInterval(Date big, Date small) {
         return interval(big, small, Calendar.DATE);
@@ -194,9 +192,8 @@ public class DateUtil {
     /**
      * 获取当前日期的下一天
      *
-     * @param date
-     * @return
-     * @功能描述
+     * @param date 时间
+     * @return date
      */
     public static Date nextDay(Date date) {
         GregorianCalendar gc = new GregorianCalendar();
@@ -223,8 +220,7 @@ public class DateUtil {
      * @param date  原始时间
      * @param field 字段项
      * @param value 字段项值
-     * @return
-     * @功能描述
+     * @return date
      */
     public static Date add(Date date, int field, int value) {
         GregorianCalendar gc = new GregorianCalendar();
@@ -239,8 +235,7 @@ public class DateUtil {
      * @param date  原始时间
      * @param field 字段项
      * @param value 字段项值
-     * @return
-     * @功能描述
+     * @return date
      */
     public static Date set(Date date, int field, int value) {
         GregorianCalendar gc = new GregorianCalendar();
@@ -254,8 +249,7 @@ public class DateUtil {
      *
      * @param date   原始日期
      * @param fields 设置的时间格式字段
-     * @return
-     * @功能描述
+     * @return date
      */
     public static Date getActualMaximumTime(Date date, int... fields) {
         Calendar calendar = Calendar.getInstance();
@@ -271,8 +265,7 @@ public class DateUtil {
      *
      * @param date   原始日期
      * @param fields 设置的时间格式字段
-     * @return
-     * @功能描述
+     * @return date
      */
     public static Date getActualMinimumTime(Date date, int... fields) {
         Calendar calendar = Calendar.getInstance();
@@ -289,8 +282,7 @@ public class DateUtil {
      * @param big   大的日期
      * @param small 小的日期
      * @param field 比较日期字段
-     * @return
-     * @功能描述
+     * @return date
      */
     public static long interval(Date big, Date small, int field) {
         boolean positive = big.after(small);
@@ -398,13 +390,6 @@ public class DateUtil {
 
         });
         return StringUtil.isBlank(zeroFormat) ? retVal : RegexpUtil.replace(retVal, zeroFormat, repStr);
-    }
-
-    public static void main(String[] args) {
-//		Date big = DateUtil.parse("20120307220559", "yyyyMMddHHmmss");
-//		Date small = DateUtil.parse("20120307230559", "yyyyMMddHHmmss");
-//		System.out.println(DateUtil.intervalFormat(Calendar.MINUTE, DateUtil.interval(big, small, Calendar.MINUTE), "dd天HH小时mm分"));
-        System.out.println(DateUtil.getWeekOfYear(DateUtil.now()));
     }
 
     public static long interval(Date big, Date small, int field, int... ignore) {
@@ -535,7 +520,7 @@ public class DateUtil {
         String start = ampm(startTime);
         String end = ampm(endTime);
 
-        if ("A".equalsIgnoreCase(start) && "A".equalsIgnoreCase(end)){
+        if ("A".equalsIgnoreCase(start) && "A".equalsIgnoreCase(end)) {
             return "A";
         }
         if ("P".equalsIgnoreCase(start) && "P".equalsIgnoreCase(end)) {
@@ -611,7 +596,7 @@ public class DateUtil {
                 dates.add(temp);
             }
         }
-        return (Date[]) dates.toArray(new Date[0]);
+        return dates.toArray(new Date[dates.size()]);
     }
 
     static String[] monthChineses = new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
@@ -624,8 +609,7 @@ public class DateUtil {
      * 比较时间返回最小值
      *
      * @param dates 比较的时间数组
-     * @return
-     * @功能描述
+     * @return date
      */
     public static Date min(Date... dates) {
         Date min = null;
@@ -643,8 +627,7 @@ public class DateUtil {
      * 比较时间返回最大值
      *
      * @param dates 比较的时间数组
-     * @return
-     * @功能描述
+     * @return date
      */
     public static Date max(Date... dates) {
         Date max = null;
@@ -661,8 +644,7 @@ public class DateUtil {
     /**
      * 获取当前时间
      *
-     * @return
-     * @功能描述
+     * @return date
      */
     public static Date now() {
         return dateDriver.getTime();
@@ -673,7 +655,6 @@ public class DateUtil {
      *
      * @author 李茂峰
      * @version 1.0
-     * @功能描述
      * @since 2013-3-27 上午10:07:48
      */
     public static interface DateDriver {
@@ -687,7 +668,6 @@ public class DateUtil {
      *
      * @author 李茂峰
      * @version 1.0
-     * @功能描述
      * @since 2013-3-27 上午10:08:07
      */
     public static class SimpleDateDriver implements DateDriver {
