@@ -1,4 +1,24 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
+<script type="text/javascript" src="${request.contextPath}/static/js/common/codemirror/mode/xml/xml.js"></script>
+<script type="text/javascript">
+    $(function(){
+        window.editor = CodeMirror.fromTextArea(document.getElementById('code'), {
+            indentWithTabs: true,
+            smartIndent: true,
+            lineNumbers: true,
+            matchBrackets : true,
+            autofocus: true
+        });
+
+        window.editor = CodeMirror.fromTextArea(document.getElementById('code1'), {
+            indentWithTabs: true,
+            smartIndent: true,
+            lineNumbers: true,
+            matchBrackets : true,
+            autofocus: true
+        });
+    });
+</script>
 <div class="example-box" style="padding-left:10px;padding-right:10px;">
     <div class="example-code">
         <div class="content-box box-toggle">
@@ -78,11 +98,11 @@
                     </div>
 
                     <div id="tabs-2">
-                        <@s.textarea  name="in" cssStyle="width:100%;height:300px;"  value="${message.in}" readonly="true"/>
+                        <textarea id="code"  name="in" style="width:100%;height:300px;"  value="${message.in}"></textarea>
                     </div>
 
                     <div id="tabs-3">
-                        <@s.textarea  name="out" cssStyle="width:100%;height:300px;"  value="%{message.out}" readonly="true"/>
+                        <textarea id="code1"  name="out" style="width:100%;height:300px;"  value="${message.out}"></textarea>
                     </div>
 
                 </div>
