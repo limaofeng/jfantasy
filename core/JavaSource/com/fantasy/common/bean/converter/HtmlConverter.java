@@ -32,8 +32,7 @@ public class HtmlConverter extends DefaultTypeConverter {
                 }
             }
             html = HtmlCleanerUtil.getAsString(HtmlCleanerUtil.findFristTagNode(tagNode, "//body"));
-            html = RegexpUtil.replace(html, "^<[?]xml version=\"1.0\" encoding=\"[a-zA-Z0-9_-]+\"[?]>(\\n)+", "");
-            html = RegexpUtil.replace(html, "^<body>", "");
+            html = RegexpUtil.replace(html, "^\n{0,}<body>", "");
             html = RegexpUtil.replace(html, "</body>$", "");
             return html;
         }
