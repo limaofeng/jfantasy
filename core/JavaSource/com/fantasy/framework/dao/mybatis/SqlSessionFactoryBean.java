@@ -143,9 +143,9 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         this.plugins = ObjectUtil.join(this.plugins, new AutoKeyInterceptor());
         // 添加翻页拦截器
         LimitInterceptor interceptor = new LimitInterceptor();
-        if(this.dialect!=null){
+        if (this.dialect != null) {
             interceptor.setDialect(this.dialect);
-        }else if (this.mybatisProperties.containsKey("mybatis.dialect")) {
+        } else if (this.mybatisProperties.containsKey("mybatis.dialect")) {
             interceptor.setDialectClass(this.mybatisProperties.get("mybatis.dialect").toString());
         }
         this.plugins = ObjectUtil.join(this.plugins, interceptor);
@@ -154,7 +154,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
             this.sqlSessionFactory = buildSqlSessionFactory();
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
-            if (this.sqlSessionFactory == null){
+            if (this.sqlSessionFactory == null) {
                 logger.error("sqlSessionFactory 加载失败 : " + e.getMessage(), e);
             }
             throw e;
@@ -229,7 +229,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         if (xmlConfigBuilder != null) {
             try {
                 xmlConfigBuilder.parse();
-                if (this.logger.isDebugEnabled()){
+                if (this.logger.isDebugEnabled()) {
                     this.logger.debug("Parsed configuration file: '" + this.configLocation + "'");
                 }
             } catch (Exception ex) {
