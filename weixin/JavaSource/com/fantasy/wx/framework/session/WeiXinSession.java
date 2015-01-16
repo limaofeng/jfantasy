@@ -198,4 +198,24 @@ public interface WeiXinSession {
      */
     AccountDetails getAccountDetails();
 
+    /**
+     * 刷新菜单配置
+     *
+     * @param menus   菜单数组
+     */
+    public void refreshMenu(Menu... menus);
+
+    /**
+     * 获取配置的菜单
+     *
+     * @return List<Menu>
+     */
+    List<Menu> getMenus();
+
+    /**
+     * 清除Menu配置
+     *
+     */
+    void clearMenu();
+
 }

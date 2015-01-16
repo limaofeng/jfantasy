@@ -20,6 +20,7 @@ import com.fantasy.wx.framework.oauth2.Scope;
 import com.fantasy.wx.framework.session.AccountDetails;
 import com.fantasy.wx.framework.session.WeiXinSession;
 import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.bean.WxMenu;
 import me.chanjar.weixin.common.bean.result.WxMediaUploadResult;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.common.util.http.URIUtil;
@@ -677,6 +678,65 @@ public class MpCoreHelper implements WeiXinCoreHelper {
                 return null;
             }
             return new LocalFileManager.LocalFileItem(file);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void refreshMenu(WeiXinSession session, Menu... menus) throws WeiXinException {
+        WxMenu wxMenu = new WxMenu();
+        for (Menu menu : menus) {
+            WxMenu.WxMenuButton wxMenuButton = new WxMenu.WxMenuButton();
+            wxMenuButton.setName(menu.getName());
+            wxMenuButton.setType(menu.getType().getValue());
+            wxMenuButton.setUrl(menu.getUrl());
+            wxMenuButton.setKey(menu.getKey());
+
+            for (Menu subMenu : menu.getChildren()) {
+                WxMenu.WxMenuButton subWxMenuButton = new WxMenu.WxMenuButton();
+                subWxMenuButton.setName(subMenu.getName());
+                subWxMenuButton.setType(subMenu.getType().getValue());
+                subWxMenuButton.setUrl(subMenu.getUrl());
+                subWxMenuButton.setKey(subMenu.getKey());
+                wxMenuButton.getSubButtons().add(subWxMenuButton);
+            }
+
+            wxMenu.getButtons().add(wxMenuButton);
+        }
+        try {
+            getWeiXinDetails(session.getId()).getWxMpService().menuCreate(wxMenu);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Menu> getMenus(WeiXinSession session) throws WeiXinException {
+        try {
+            WxMenu wxMenu = getWeiXinDetails(session.getId()).getWxMpService().menuGet();
+            List<Menu> menus = new ArrayList<Menu>(wxMenu.getButtons().size());
+            for (WxMenu.WxMenuButton button : wxMenu.getButtons()) {
+                if (button.getSubButtons().isEmpty()) {
+                    menus.add(new Menu(Menu.MenuType.valueOf(button.getType().toUpperCase()), button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl())));
+                } else {
+                    List<Menu> subMenus = new ArrayList<Menu>();
+                    for (WxMenu.WxMenuButton wxMenuButton : button.getSubButtons()) {
+                        subMenus.add(new Menu(Menu.MenuType.valueOf(wxMenuButton.getType().toUpperCase()), wxMenuButton.getName(), StringUtil.defaultValue(wxMenuButton.getKey(), wxMenuButton.getUrl())));
+                    }
+                    menus.add(new Menu(Menu.MenuType.valueOf(button.getType().toUpperCase()), button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl()), subMenus.toArray(new Menu[subMenus.size()])));
+                }
+            }
+            return menus;
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void clearMenu(WeiXinSession session) throws WeiXinException {
+        try {
+            getWeiXinDetails(session.getId()).getWxMpService().menuDelete();
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }

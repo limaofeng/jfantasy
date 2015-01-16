@@ -1,5 +1,6 @@
 package com.fantasy.wx.framework.session;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.wx.framework.core.WeiXinCoreHelper;
 import com.fantasy.wx.framework.exception.WeiXinException;
@@ -296,7 +297,7 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
             return group;
         } catch (WeiXinException e) {
             LOG.error(e.getMessage(), e);
-            return null;
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -308,6 +309,34 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
             this.weiXinCoreHelper.userUpdateGroup(this, userId, groupId);
             Group group = ObjectUtil.find(getGroups(), "getId()", groupId);
             group.addUser(getUser(userId));
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public void refreshMenu(Menu... menus) {
+        try {
+            this.weiXinCoreHelper.refreshMenu(this, menus);
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
+
+    @Override
+    public List<Menu> getMenus() {
+        try {
+            return this.weiXinCoreHelper.getMenus(this);
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            throw new IgnoreException(e.getMessage());
+        }
+    }
+
+    @Override
+    public void clearMenu() {
+        try {
+            this.weiXinCoreHelper.clearMenu(this);
         } catch (WeiXinException e) {
             LOG.error(e.getMessage(), e);
         }

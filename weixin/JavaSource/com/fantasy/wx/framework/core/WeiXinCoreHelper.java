@@ -298,4 +298,30 @@ public interface WeiXinCoreHelper {
      */
     AccessToken oauth2getAccessToken(WeiXinSession session, String code) throws WeiXinException;
 
+    /**
+     * 刷新菜单配置
+     *
+     * @param session 微信号session对象
+     * @param menus   菜单数组
+     * @throws WeiXinException
+     */
+    public void refreshMenu(WeiXinSession session, Menu... menus) throws WeiXinException;
+
+    /**
+     * 获取配置的菜单
+     *
+     * @param session 微信号session对象
+     * @return List<Menu>
+     * @throws WeiXinException
+     */
+    List<Menu> getMenus(WeiXinSession session) throws WeiXinException;
+
+    /**
+     * 清除Menu配置
+     *
+     * @param session 微信号session对象
+     * @throws WeiXinException
+     */
+    void clearMenu(WeiXinSession session) throws WeiXinException;
+
 }
