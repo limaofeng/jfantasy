@@ -111,6 +111,10 @@ public class MemberService {
 		this.mailSendService.sendHtmlEmail(title, ftl, map, member.getDetails().getEmail());
 	}
 
+	public List<Member> find(Criterion... criterions){
+		return this.memberDao.find(criterions);
+	}
+
 	/**
 	 * 验证邮箱是否已被验证使用
 	 * 
