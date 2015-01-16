@@ -893,6 +893,10 @@
         <module>cms-ws</module>
         <module>cms-ws-server</module>
         <module>cms-ws-client</module>
+        <module>question</module>
+        <module>question-ws</module>
+        <module>question-ws-server</module>
+        <module>qusetion-ws-client</module>
         <module>websocket</module>
         <module>weixin</module>
         <module>weixin-ws</module>
