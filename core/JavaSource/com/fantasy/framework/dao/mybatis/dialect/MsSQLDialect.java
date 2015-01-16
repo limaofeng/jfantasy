@@ -8,7 +8,6 @@ import java.util.regex.Matcher;
 
 /**
  * SqlServer 翻页方言
- * @功能描述 
  * @author 李茂峰
  * @since 2013-1-14 下午02:11:57
  * @version 1.0
@@ -18,6 +17,9 @@ public class MsSQLDialect implements Dialect {
 	protected static final String SQL_END_DELIMITER = ";";
 
 	private String version = "2005";
+
+	public MsSQLDialect() {
+	}
 
 	public MsSQLDialect(String version) {
 		this.version = version;

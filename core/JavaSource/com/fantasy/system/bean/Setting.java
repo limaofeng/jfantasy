@@ -11,7 +11,6 @@ import javax.persistence.*;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2014-2-17 上午11:16:22
  */
 @Entity

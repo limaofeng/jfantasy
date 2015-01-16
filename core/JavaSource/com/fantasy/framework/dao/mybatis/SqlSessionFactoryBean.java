@@ -1,6 +1,7 @@
 package com.fantasy.framework.dao.mybatis;
 
 import com.fantasy.framework.dao.mybatis.binding.MyBatisMapperRegistry;
+import com.fantasy.framework.dao.mybatis.dialect.Dialect;
 import com.fantasy.framework.dao.mybatis.interceptors.AutoKeyInterceptor;
 import com.fantasy.framework.dao.mybatis.interceptors.LimitInterceptor;
 import com.fantasy.framework.spring.SpringContextUtil;
@@ -60,6 +61,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     private String typeAliasesPackage;
     private DatabaseIdProvider databaseIdProvider = new DefaultDatabaseIdProvider();
     private Map<String, Object> mybatisProperties = new HashMap<String, Object>();
+    private Dialect dialect;
 
     public DatabaseIdProvider getDatabaseIdProvider() {
         return this.databaseIdProvider;
@@ -140,11 +142,13 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         // 添加注解主键策略
         this.plugins = ObjectUtil.join(this.plugins, new AutoKeyInterceptor());
         // 添加翻页拦截器
-        if (this.mybatisProperties.containsKey("mybatis.dialect")) {
-            LimitInterceptor interceptor = new LimitInterceptor();
+        LimitInterceptor interceptor = new LimitInterceptor();
+        if(this.dialect!=null){
+            interceptor.setDialect(this.dialect);
+        }else if (this.mybatisProperties.containsKey("mybatis.dialect")) {
             interceptor.setDialectClass(this.mybatisProperties.get("mybatis.dialect").toString());
-            this.plugins = ObjectUtil.join(this.plugins, interceptor);
         }
+        this.plugins = ObjectUtil.join(this.plugins, interceptor);
 
         try {
             this.sqlSessionFactory = buildSqlSessionFactory();
@@ -283,6 +287,10 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
 
     public Class<? extends SqlSessionFactory> getObjectType() {
         return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass();
+    }
+
+    public void setDialect(Dialect dialect) {
+        this.dialect = dialect;
     }
 
     public boolean isSingleton() {
