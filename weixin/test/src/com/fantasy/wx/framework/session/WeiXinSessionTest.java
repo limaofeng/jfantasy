@@ -127,4 +127,28 @@ public class WeiXinSessionTest {
             LOG.debug(user);
         }
     }
+
+    @Test
+    public void testRefreshMenu() throws Exception {
+        List<Menu> menus = session.getMenus();
+        session.refreshMenu(menus.toArray(new Menu[menus.size()]));
+    }
+
+    @Test
+    public void testGetMenus() throws Exception {
+        List<Menu> menus = session.getMenus();
+        for(Menu menu : menus){
+            LOG.debug(menu);
+        }
+    }
+
+    @Test
+    public void testClearMenu() throws Exception {
+        List<Menu> menus = session.getMenus();
+        for(Menu menu : menus){
+            LOG.debug(menu);
+        }
+        session.clearMenu();
+        this.session.refreshMenu(menus.toArray(new Menu[menus.size()]));
+    }
 }

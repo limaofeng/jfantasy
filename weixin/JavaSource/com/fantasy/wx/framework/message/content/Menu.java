@@ -44,7 +44,11 @@ public class Menu {
         /**
          * 弹出地理位置选择器 用户点击按钮后，微信客户端将调起地理位置选择工具，完成选择操作后，将选择的地理位置发送给开发者的服务器，同时收起位置选择工具，随后可能会收到开发者下发的消息。
          */
-        LOCATION_SELECT("location_select");
+        LOCATION_SELECT("location_select"),
+        /**
+         * 未知类型
+         */
+        UNKNOWN("");
 
         private String value;
 
@@ -194,4 +198,14 @@ public class Menu {
         return children;
     }
 
+    @Override
+    public String toString() {
+        return "Menu{" +
+                "type=" + type +
+                ", name='" + name + '\'' +
+                ", key='" + key + '\'' +
+                ", url='" + url + '\'' +
+                ", children=" + children +
+                '}';
+    }
 }

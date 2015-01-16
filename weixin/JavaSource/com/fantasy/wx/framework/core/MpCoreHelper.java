@@ -717,14 +717,15 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             WxMenu wxMenu = getWeiXinDetails(session.getId()).getWxMpService().menuGet();
             List<Menu> menus = new ArrayList<Menu>(wxMenu.getButtons().size());
             for (WxMenu.WxMenuButton button : wxMenu.getButtons()) {
+                Menu.MenuType type = StringUtil.isBlank(button.getType()) ? Menu.MenuType.UNKNOWN : Menu.MenuType.valueOf(button.getType().toUpperCase());
                 if (button.getSubButtons().isEmpty()) {
-                    menus.add(new Menu(Menu.MenuType.valueOf(button.getType().toUpperCase()), button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl())));
+                    menus.add(new Menu(type, button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl())));
                 } else {
                     List<Menu> subMenus = new ArrayList<Menu>();
                     for (WxMenu.WxMenuButton wxMenuButton : button.getSubButtons()) {
                         subMenus.add(new Menu(Menu.MenuType.valueOf(wxMenuButton.getType().toUpperCase()), wxMenuButton.getName(), StringUtil.defaultValue(wxMenuButton.getKey(), wxMenuButton.getUrl())));
                     }
-                    menus.add(new Menu(Menu.MenuType.valueOf(button.getType().toUpperCase()), button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl()), subMenus.toArray(new Menu[subMenus.size()])));
+                    menus.add(new Menu(type, button.getName(), StringUtil.defaultValue(button.getKey(), button.getUrl()), subMenus.toArray(new Menu[subMenus.size()])));
                 }
             }
             return menus;
