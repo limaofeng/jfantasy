@@ -5,6 +5,7 @@ import com.fantasy.common.bean.JdbcConfig;
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -21,6 +22,13 @@ import java.util.List;
 public class FileManagerConfig extends BaseBusEntity {
 
     private static final long serialVersionUID = -4833473939396674528L;
+
+    public FileManagerConfig() {
+    }
+
+    public FileManagerConfig(String id) {
+        this.id = id;
+    }
 
     /**
      * 唯一别名，作为文件管理器的ID
@@ -46,13 +54,13 @@ public class FileManagerConfig extends BaseBusEntity {
     private String description;
 
     /*------------------------------ FTP 配置属性-------------------------------*/
-    @JoinColumn(name = "FTP_CONFIG_ID",foreignKey = @ForeignKey(name = "FK_FILE_MANAGER_FTP_CONFIG") )
+    @JoinColumn(name = "FTP_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_FILE_MANAGER_FTP_CONFIG"))
     @ManyToOne(fetch = FetchType.LAZY)
 
     private FtpConfig ftpConfig;
 
     /*------------------------------ JDBC 配置属性-------------------------------*/
-    @JoinColumn(name = "JDBC_CONFIG_ID",foreignKey =@ForeignKey(name = "FK_FILE_MANAGER_JDBC_CONFIG"))
+    @JoinColumn(name = "JDBC_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_FILE_MANAGER_JDBC_CONFIG"))
     @ManyToOne(fetch = FetchType.LAZY)
 
     private JdbcConfig jdbcConfig;

@@ -37,9 +37,7 @@
             <result type="freemarker">/template/%{pageTheme}/system/website_add.ftl</result>
         </action>
         <action name="save" class="com.fantasy.system.web.WebsiteAction" method="save"/>
-        <action name="edit" class="com.fantasy.system.web.WebsiteAction" method="edit">
-            <result type="freemarker">/template/%{pageTheme}/system/website_edit.ftl</result>
-        </action>
+        <action name="view" class="com.fantasy.system.web.WebsiteAction" method="view"/>
         <action name="delete" class="com.fantasy.system.web.WebsiteAction" method="delete"/>
     </package>
     <package name="system-website-setting" extends="fantasy-default" namespace="/system/website/setting">

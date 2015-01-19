@@ -28,8 +28,6 @@ public class WebsiteAction extends ActionSupport {
     /**
      * 搜索
      *
-     * @param pager
-     * @param filters
      * @return
      */
     public String search() {
@@ -54,9 +52,9 @@ public class WebsiteAction extends ActionSupport {
      * @param id
      * @return
      */
-    public String edit(Long id) {
-        this.attrs.put("website", this.websiteService.get(id));
-        return SUCCESS;
+    public String view(Long id) {
+        this.attrs.put(ROOT, this.websiteService.get(id));
+        return JSONDATA;
     }
 
     /**

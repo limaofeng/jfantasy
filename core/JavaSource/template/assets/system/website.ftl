@@ -92,7 +92,8 @@
                     </div>
                 </div>
         </div>
-        <#include "website_dialog.ftl">
+        <#include "
+        ">
     </div>
 </div>
 </@override>
