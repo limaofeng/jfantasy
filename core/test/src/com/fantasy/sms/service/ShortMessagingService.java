@@ -1,7 +1,7 @@
 package com.fantasy.sms.service;
 
 import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.service.SMSService;
+import com.fantasy.sms.SMSService;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.regexp.RegexpCst;
 import com.fantasy.framework.util.regexp.RegexpUtil;

@@ -1,4 +1,4 @@
-package com.fantasy.framework.service;
+package com.fantasy.sms;
 
 /**
  * 短信发送接口

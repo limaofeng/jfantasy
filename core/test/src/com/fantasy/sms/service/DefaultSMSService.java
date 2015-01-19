@@ -1,6 +1,6 @@
 package com.fantasy.sms.service;
 
-import com.fantasy.framework.service.SMSService;
+import com.fantasy.sms.SMSService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
