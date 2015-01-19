@@ -12,9 +12,9 @@
                 <property name="accounts">
                     <list>
                         <bean class="com.fantasy.wx.bean.Account">
-                            <property name="appId" value="wxcbc2c9fb9d585cd3"/>
+                            <property name="appId" value="wx0e7cef7ad73417eb"/>
                             <property name="type" value="service"/>
-                            <property name="secret" value="4b224fb5b08f2380572e45baecda63ba"/>
+                            <property name="secret" value="e932af31311aeebf76e21a539d9f1944"/>
                             <property name="token" value="haolue_token"/>
                             <property name="aesKey" value="tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6"/>
                             <property name="primitiveId" value="gh_3d6114f11c71"/>

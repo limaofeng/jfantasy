@@ -1,5 +1,8 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.member.bean.Member;
+import org.hibernate.annotations.GenericGenerator;
+
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,10 +21,13 @@ public class UserInfo {
     public UserInfo(String openid) {
         this.openId = openid;
     }
-
-    //用户的标识，对当前公众号唯一
     @Id
-    @Column(name = "OPENID", nullable = false, insertable = true, updatable = false)
+    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    private Long id;
+    //用户的标识，对当前公众号唯一
+    @Column(name = "OPENID", unique = true)
     private String openId;
     //用户的昵称
     @Column(name = "NICKNAME", length = 5000)
@@ -66,11 +72,24 @@ public class UserInfo {
     @JoinColumn(name = "GROUP_ID")
     private Group group;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "MEMBER_ID")
+    @PrimaryKeyJoinColumn
+    private Member member;
+
     public String getTime() {
         if (subscribeTime == 0) return "";
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         long time = subscribeTime * 1000L;
         return sdf.format(new Date(time));
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getOpenId() {
@@ -137,15 +156,19 @@ public class UserInfo {
         this.avatar = avatar;
     }
 
-    public void setSubscribeTime(long subscribeTime) {
+    public Long getSubscribeTime() {
+        return subscribeTime;
+    }
+
+    public void setSubscribeTime(Long subscribeTime) {
         this.subscribeTime = subscribeTime;
     }
 
-    public boolean isSubscribe() {
+    public Boolean getSubscribe() {
         return subscribe;
     }
 
-    public void setSubscribe(boolean subscribe) {
+    public void setSubscribe(Boolean subscribe) {
         this.subscribe = subscribe;
     }
 
@@ -181,27 +204,19 @@ public class UserInfo {
         this.unReadSize = unReadSize;
     }
 
-    public Long getSubscribeTime() {
-        return subscribeTime;
-    }
-
-    public void setSubscribeTime(Long subscribeTime) {
-        this.subscribeTime = subscribeTime;
-    }
-
-    public Boolean getSubscribe() {
-        return subscribe;
-    }
-
-    public void setSubscribe(Boolean subscribe) {
-        this.subscribe = subscribe;
-    }
-
     public Group getGroup() {
         return group;
     }
 
     public void setGroup(Group group) {
         this.group = group;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
     }
 }

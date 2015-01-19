@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
  * Created by zzzhong on 2014/8/28.
  */
 @Repository("wx.UserInfoDao")
-public class UserInfoDao extends HibernateDao<UserInfo, String> {
+public class UserInfoDao extends HibernateDao<UserInfo, Long> {
 }
