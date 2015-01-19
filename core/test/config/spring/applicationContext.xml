@@ -113,6 +113,9 @@
     <!-- 支付配置 -->
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
 
+    <!-- 用户登陆接口(通过XML文件配置) -->
+    <bean id="userDetailsService" class="com.fantasy.security.userdetails.SimpleUserDetailsService"/>
+
     <!-- 其他需要加载的spring模块 -->
     <import resource="classpath:spring/applicationContext-datasource.xml"/>
 

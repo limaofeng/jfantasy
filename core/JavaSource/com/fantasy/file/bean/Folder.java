@@ -3,8 +3,8 @@ package com.fantasy.file.bean;
 import com.fantasy.file.service.FileService;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.spring.SpringContextUtil;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;

@@ -32,8 +32,6 @@ public class WebsiteService{
     @Resource
     private FileManagerService fileManagerService;
 
-
-
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Website findUniqueByKey(String key) {
         Website website = this.websiteDao.findUniqueBy("key", key);

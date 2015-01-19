@@ -4,8 +4,8 @@ import com.fantasy.common.bean.enums.TimeUnit;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

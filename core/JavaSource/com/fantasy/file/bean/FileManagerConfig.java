@@ -4,7 +4,7 @@ import com.fantasy.common.bean.FtpConfig;
 import com.fantasy.common.bean.JdbcConfig;
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.framework.dao.BaseBusEntity;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 import java.util.List;
 

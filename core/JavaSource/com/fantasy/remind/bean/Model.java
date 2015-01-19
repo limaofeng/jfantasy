@@ -4,10 +4,10 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.type.TypeReference;
 
 import javax.persistence.*;
 import java.util.List;

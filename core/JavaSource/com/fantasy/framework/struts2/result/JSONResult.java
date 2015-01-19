@@ -180,11 +180,10 @@ public class JSONResult implements Result {
 	}
 
 	protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
-		String json = JSON.serialize(rootObject);
 		// excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties 不能使用
 		// JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties);
 		// json = addCallbackIfApplicable(request, json);
-		return json;
+		return JSON.serialize(rootObject);
 	}
 
 	protected boolean enableGzip(HttpServletRequest request) {

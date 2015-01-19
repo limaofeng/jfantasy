@@ -5,7 +5,7 @@ import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.UserGroup;
 import com.fantasy.security.userdetails.FantasyUserDetails;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;

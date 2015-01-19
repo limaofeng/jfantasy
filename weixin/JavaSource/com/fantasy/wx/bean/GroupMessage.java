@@ -1,7 +1,7 @@
 package com.fantasy.wx.bean;
 
 import com.fantasy.framework.util.jackson.JSON;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

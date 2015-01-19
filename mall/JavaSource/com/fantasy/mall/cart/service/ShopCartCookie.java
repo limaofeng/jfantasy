@@ -7,7 +7,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
 import com.fantasy.framework.spring.SpringContextUtil;

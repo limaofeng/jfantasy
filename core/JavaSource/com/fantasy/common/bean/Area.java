@@ -1,7 +1,7 @@
 package com.fantasy.common.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;

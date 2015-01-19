@@ -2,7 +2,7 @@ package com.fantasy.mall.delivery.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.mall.order.bean.Order;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

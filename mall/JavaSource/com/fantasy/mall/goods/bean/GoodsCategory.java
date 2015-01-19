@@ -8,12 +8,12 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.annotate.*;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.core.type.TypeReference;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;

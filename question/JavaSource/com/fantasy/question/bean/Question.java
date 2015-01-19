@@ -4,7 +4,7 @@ package com.fantasy.question.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
 import com.opensymphony.xwork2.util.Element;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 

@@ -4,7 +4,7 @@ import com.fantasy.payment.service.PaymentContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.annotate.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.web.util.HtmlUtils;
 
 import java.util.*;

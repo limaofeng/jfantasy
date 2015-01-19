@@ -16,7 +16,7 @@ import com.fantasy.mall.order.bean.OrderItem;
 import com.fantasy.mall.stock.bean.Stock;
 import com.fantasy.mall.stock.bean.WarningSettings;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;

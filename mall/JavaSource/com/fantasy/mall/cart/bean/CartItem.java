@@ -2,8 +2,8 @@ package com.fantasy.mall.cart.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.mall.goods.bean.Product;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;

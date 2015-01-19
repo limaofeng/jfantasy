@@ -1,6 +1,6 @@
 package com.fantasy.mall.goods.bean;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.util.regexp.RegexpUtil;

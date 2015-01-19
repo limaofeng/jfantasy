@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" version="2.0" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd">
+	<display-name>"Fantasy config Tags"</display-name>
+	<tlib-version>2.2</tlib-version>
+	<short-name>config</short-name>
+	<uri>http://www.fantasy.com.cn/tags/config</uri>
+	<function>
+		<description>通过配置编码获取配置项</description>
+		<name>list</name>
+		<function-class>com.fantasy.system.service.ConfigService</function-class>
+		<function-signature>java.util.List list(java.lang.String)</function-signature>
+		<example>${config:list(type)}</example>
+	</function>
+	<function>
+		<description>获取所有配置项分类</description>
+		<name>types</name>
+		<function-class>com.fantasy.system.service.ConfigService</function-class>
+		<function-signature>java.util.List types()</function-signature>
+		<example>${config:types()}</example>
+	</function>
+	<function>
+		<description>通过配置分类及配置代码获取配置项</description>
+		<name>get</name>
+		<function-class>com.fantasy.system.service.ConfigService</function-class>
+		<function-signature>com.fantasy.framework.security.bean.Config get(java.lang.String,java.lang.String)</function-signature>
+		<example>${config:get(type,code)}</example>
+	</function>
+</taglib>
+
