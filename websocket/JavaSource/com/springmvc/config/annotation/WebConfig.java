@@ -1,4 +1,4 @@
-package com.fantasy.framework.spring.config.annotation;
+package com.springmvc.config.annotation;
 
 
 import org.springframework.context.annotation.Configuration;

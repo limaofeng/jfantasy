@@ -1,8 +1,8 @@
 package com.fantasy.question.web;
 
 import com.fantasy.framework.struts2.ActionSupport;
-import com.yr.question.bean.Answer;
-import com.yr.question.service.AnswerService;
+import com.fantasy.question.bean.Answer;
+import com.fantasy.question.service.AnswerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**

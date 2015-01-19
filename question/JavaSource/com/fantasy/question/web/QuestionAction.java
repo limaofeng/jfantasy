@@ -5,13 +5,17 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
+import com.fantasy.question.bean.Answer;
+import com.fantasy.question.bean.Category;
+import com.fantasy.question.bean.Question;
+import com.fantasy.question.service.AnswerService;
+import com.fantasy.question.service.QuestionService;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.userdetails.AdminUser;
 import com.fantasy.system.util.SettingUtil;
-import com.yr.question.bean.Category;
-import com.yr.question.bean.Question;
-import com.yr.question.service.QuestionService;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -23,12 +27,14 @@ public class QuestionAction extends ActionSupport {
 
     @Autowired
     private QuestionService questionService;
-
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private AnswerService answerService;
 
     /**
      * 问题首页
+     *
      * @param pager
      * @param filters
      * @return
@@ -43,7 +49,7 @@ public class QuestionAction extends ActionSupport {
         }
         // 默认选择根目录的第一个分类
         if (ObjectUtil.find(filters, "filterName", "EQL_category.id") == null) {
-            filters.add(new PropertyFilter("EQL_category.id",categories.isEmpty()?rootCode:categories.get(0).getId().toString()));
+            filters.add(new PropertyFilter("EQL_category.id", categories.isEmpty() ? rootCode : categories.get(0).getId().toString()));
         }
         // 设置当前根
         PropertyFilter filter = ObjectUtil.find(filters, "filterName", "EQL_category.id");
@@ -61,6 +67,7 @@ public class QuestionAction extends ActionSupport {
 
     /**
      * 问题列表
+     *
      * @param pager
      * @param filters
      * @return
@@ -96,6 +103,7 @@ public class QuestionAction extends ActionSupport {
 
     /**
      * 问题保存
+     *
      * @param question
      * @return
      */
@@ -106,56 +114,62 @@ public class QuestionAction extends ActionSupport {
 
     /**
      * 根据ID查询问题对象
+     *
      * @param id
      * @return
      */
-    public String get(Long id){
-        this.attrs.put("question",questionService.get(id));
+    public String get(Long id) {
+        this.attrs.put("question", questionService.get(id));
         return SUCCESS;
     }
 
     /**
      * 删除问题
+     *
      * @param ids
      * @return
      */
-    public String delete(Long[] ids){
+    public String delete(Long[] ids) {
         this.questionService.delete(ids);
         return JSONDATA;
     }
 
     /**
      * 问题分类保存
+     *
      * @param category
      * @return
      */
-    public String categorySave(Category category){
+    public String categorySave(Category category) {
         this.attrs.put(ROOT, questionService.save(category));
         return JSONDATA;
     }
 
     /**
      * 根据分类ID查询分类对象
+     *
      * @param id
      * @return
      */
-    public String categoryEdit(Long id){
+    public String categoryEdit(Long id) {
         this.attrs.put("category", questionService.getCategoryById(id));
         return SUCCESS;
     }
 
     /**
      * 删除分类
+     *
      * @param ids
      * @return
      */
-    public String categoryDelete(Long[]  ids){
+    public String categoryDelete(Long[] ids) {
         this.questionService.categoryDelete(ids);
         return JSONDATA;
     }
 
     /**
      * 问题移动分类
+     *
      * @param ids
      * @param categoryId
      * @return
@@ -167,31 +181,39 @@ public class QuestionAction extends ActionSupport {
 
     /**
      * 关闭问题
+     *
      * @param ids
      * @return
      */
-    public String close(Long[] ids){
+    public String close(Long[] ids) {
         this.questionService.close(ids);
         return JSONDATA;
     }
 
     /**
      * 打开问题
+     *
      * @param ids
      * @return
      */
-    public String run(Long[] ids){
+    public String run(Long[] ids) {
         this.questionService.run(ids);
-        return  JSONDATA;
+        return JSONDATA;
     }
 
 
-    public String askQuestion(Long id){
-       Question question = questionService.get(id);
-       Long memberId =question.getMember().getId();
-       Long userId = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getId();
-       this.attrs.put("memberList",this.memberService.queryMemberByUserAndId(userId,memberId,id));
-       this.attrs.put("question",question);
-       return SUCCESS;
+    public String askQuestion(Long id) {
+        Question question = questionService.get(id);
+        Long memberId = question.getMember().getId();
+        Long userId = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getId();
+        //所有的马甲,除掉本身提问马甲
+        List<Member> myMembers = this.memberService.find(Restrictions.eq("user.id", userId), Restrictions.ne("id", memberId));
+        List<Answer> answerList = this.answerService.queryMemberId(id); //回答过问题的人
+        for (Answer answer : answerList) {
+            ObjectUtil.remove(myMembers, "id", answer.getMember().getId());
+        }
+        this.attrs.put("memberList", myMembers);
+        this.attrs.put("question", question);
+        return SUCCESS;
     }
 }

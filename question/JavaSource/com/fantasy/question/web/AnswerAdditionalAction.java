@@ -3,12 +3,12 @@ package com.fantasy.question.web;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
-import com.yr.question.bean.Answer;
-import com.yr.question.bean.AnswerAdditional;
-import com.yr.question.bean.Question;
-import com.yr.question.service.AnswerAdditionalService;
-import com.yr.question.service.AnswerService;
-import com.yr.question.service.QuestionService;
+import com.fantasy.question.bean.Answer;
+import com.fantasy.question.bean.AnswerAdditional;
+import com.fantasy.question.bean.Question;
+import com.fantasy.question.service.AnswerAdditionalService;
+import com.fantasy.question.service.AnswerService;
+import com.fantasy.question.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
