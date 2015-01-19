@@ -1,4 +1,4 @@
-package com.fantasy.insatll;
+package com.fantasy.install;
 
 import org.springframework.context.annotation.ComponentScan;
 
