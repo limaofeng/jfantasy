@@ -41,7 +41,7 @@ public class UserInfoWebInfoService implements IUserInfoService {
         user.setLanguage(u.getLanguage());
         user.setNickname(u.getNickname());
         user.setSex(u.getSex());
-        user.setSubscribe(u.isSubscribe());
+        user.setSubscribe(u.getSubscribe());
         user.setSubscribeTime(u.getSubscribeTime());
         user.setUnionId(u.getUnionId());
         if(u.getGroup()!=null){
