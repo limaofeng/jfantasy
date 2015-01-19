@@ -38,13 +38,19 @@ public class UserInfoWeiXinService implements InitializingBean{
     }
 
     public UserInfo getUserInfo(String openId) {
-        return userInfoDao.get(openId);
+        return userInfoDao.findUniqueBy("openId", openId);
     }
     public void save(UserInfo ui) {
         userInfoDao.save(ui);
     }
-    public void delete(String openId) {
-        userInfoDao.delete(openId);
+    public void delete(Long... ids) {
+        for(Long id:ids){
+            userInfoDao.delete(id);
+        }
+    }
+    public void deleteByOpenId(String openId){
+        UserInfo ui=this.getUserInfo(openId);
+        this.delete(ui.getId());
     }
     public Pager<UserInfo> findPager(Pager<UserInfo> pager, List<PropertyFilter> filters) {
         return this.userInfoDao.findPager(pager, filters);
@@ -57,7 +63,10 @@ public class UserInfoWeiXinService implements InitializingBean{
     public void refresh() throws WeiXinException {
         List<User> list=session.getUsers();
         for (User u :list) {
-            this.userInfoDao.save(transfiguration(u));
+            UserInfo ui=this.getUserInfo(u.getOpenId());
+            UserInfo unew=transfiguration(u);
+            if(ui!=null) unew.setId(ui.getId());
+            this.userInfoDao.save(unew);
         }
     }
     /**

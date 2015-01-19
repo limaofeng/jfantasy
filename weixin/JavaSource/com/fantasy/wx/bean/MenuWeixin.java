@@ -12,13 +12,13 @@ import java.util.List;
  * 微信通用接口凭证
  * Created by zzzhong on 2014/6/18.
  */
-@Entity(name="WxMenu")
+@Entity
 @Table(name = "WX_MENU")
-public class Menu extends BaseBusEntity {
-    public Menu() {
+public class MenuWeixin extends BaseBusEntity {
+    public MenuWeixin() {
     }
 
-    public Menu(String name, String type, Integer layer, Integer sort, String url, String key, Menu parent) {
+    public MenuWeixin(String name, String type, Integer layer, Integer sort, String url, String key, MenuWeixin parent) {
         this.name = name;
         this.type = type;
         this.layer = layer;
@@ -58,14 +58,14 @@ public class Menu extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "P_ID", foreignKey = @ForeignKey(name = "FK_MENU_PARENT"))
     @JsonManagedReference
-    private Menu parent;
+    private MenuWeixin parent;
     /**
      * 下级分类
      */
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     @JsonBackReference
-    private List<Menu> children;
+    private List<MenuWeixin> children;
 
     public Long getId() {
         return id;
@@ -123,19 +123,19 @@ public class Menu extends BaseBusEntity {
         this.sort = sort;
     }
 
-    public Menu getParent() {
+    public MenuWeixin getParent() {
         return parent;
     }
 
-    public void setParent(Menu parent) {
+    public void setParent(MenuWeixin parent) {
         this.parent = parent;
     }
 
-    public List<Menu> getChildren() {
+    public List<MenuWeixin> getChildren() {
         return children;
     }
 
-    public void setChildren(List<Menu> children) {
+    public void setChildren(List<MenuWeixin> children) {
         this.children = children;
     }
 }

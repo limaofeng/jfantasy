@@ -2,14 +2,18 @@ package com.fantasy.wx.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.account.init.WeixinConfigInit;
-import com.fantasy.wx.bean.Menu;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.wx.account.Consts;
+import com.fantasy.wx.bean.MenuWeixin;
 import com.fantasy.wx.dao.MenuDao;
-import me.chanjar.weixin.common.exception.WxErrorException;
+import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
+import com.fantasy.wx.framework.message.content.Menu;
+import com.fantasy.wx.framework.session.WeiXinSession;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,19 +22,21 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class MenuWeiXinService {
+public class MenuWeiXinService  implements InitializingBean {
 
-    @Resource
+    @Autowired
     private MenuDao menuDao;
-    @Resource
-    private WeixinConfigInit config;
+    @Autowired
+    private WeiXinSessionFactory factory;
+
+    private WeiXinSession session;
 
     /**
      * 获取所有菜单对象
      *
      * @return 菜单对象集合
      */
-    public List<Menu> getAll() {
+    public List<MenuWeixin> getAll() {
         return menuDao.getAll();
     }
 
@@ -41,7 +47,7 @@ public class MenuWeiXinService {
      * @param filters 查询条件
      * @return 分页对象
      */
-    public Pager<Menu> findPager(Pager<Menu> pager, List<PropertyFilter> filters) {
+    public Pager<MenuWeixin> findPager(Pager<MenuWeixin> pager, List<PropertyFilter> filters) {
         return this.menuDao.findPager(pager, filters);
     }
 
@@ -51,7 +57,7 @@ public class MenuWeiXinService {
      * @param filters
      * @return 菜单集合
      */
-    public List<Menu> findAll(List<PropertyFilter> filters) {
+    public List<MenuWeixin> findAll(List<PropertyFilter> filters) {
         return this.menuDao.find(filters);
     }
 
@@ -60,7 +66,7 @@ public class MenuWeiXinService {
      *
      * @param wc
      */
-    public Menu save(Menu wc) {
+    public MenuWeixin save(MenuWeixin wc) {
         menuDao.save(wc);
         return wc;
     }
@@ -70,8 +76,8 @@ public class MenuWeiXinService {
      *
      * @param list
      */
-    public void saveList(List<Menu> list) {
-        for (Menu m : list) {
+    public void saveList(List<MenuWeixin> list) {
+        for (MenuWeixin m : list) {
             menuDao.save(m);
         }
     }
@@ -93,7 +99,7 @@ public class MenuWeiXinService {
      * @param id
      * @return菜单对象
      */
-    public Menu get(Long id) {
+    public MenuWeixin get(Long id) {
         return this.menuDao.get(id);
     }
 
@@ -103,30 +109,51 @@ public class MenuWeiXinService {
      * @return 微信返回码0为成功其他为错误码，可参考微信公众平台开发文档
      */
     public int refresh() {
-        me.chanjar.weixin.common.bean.WxMenu wxMenu = new me.chanjar.weixin.common.bean.WxMenu();
+        Menu[] mArray=new Menu[3];
         List<PropertyFilter> list = new ArrayList<PropertyFilter>();
         list.add(new PropertyFilter("EQI_layer", "0"));
-        Pager<Menu> pager = new Pager<Menu>();
+        Pager<MenuWeixin> pager = new Pager<MenuWeixin>();
         pager.setOrderBy("sort");
         pager.setOrder(Pager.Order.asc);
-        Pager<Menu> p = menuDao.findPager(pager, list);
+        Pager<MenuWeixin> p = menuDao.findPager(pager, list);
         for (int i = 0; i < (p.getPageItems().size() > 3 ? 3 : p.getPageItems().size()); i++) {
-            Menu m = p.getPageItems().get(i);
-            me.chanjar.weixin.common.bean.WxMenu.WxMenuButton menuButton = createBtn(m);
-            if (m.getChildren() != null && m.getChildren().size() > 0) {
-                List<Menu> menus = m.getChildren();
-                for (int j = 0; j < (menus.size() > 5 ? 5 : menus.size()); j++) {
-                    menuButton.getSubButtons().add(createBtn(menus.get(j)));
+            MenuWeixin m = p.getPageItems().get(i);
+            Menu.MenuType type = StringUtil.isBlank(m.getType()) ? Menu.MenuType.UNKNOWN : Menu.MenuType.valueOf(m.getType().toUpperCase());
+            if (m.getChildren().isEmpty()) {
+                mArray[i]=new Menu(type, m.getName(), StringUtil.defaultValue(m.getKey(), m.getUrl()));
+            } else {
+                List<Menu> subMenus = new ArrayList<Menu>();
+                for (MenuWeixin menus: m.getChildren()) {
+                    subMenus.add(new Menu(Menu.MenuType.valueOf(menus.getType().toUpperCase()), menus.getName(), StringUtil.defaultValue(menus.getKey(), menus.getUrl())));
+                }
+                mArray[i]=new Menu(type, m.getName(), StringUtil.defaultValue(m.getKey(), m.getUrl()), subMenus.toArray(new Menu[subMenus.size()]));
+            }
+        }
+        session.refreshMenu(mArray);
+        return 0;
+    }
+
+    /**
+     * 刷新菜单
+     *
+     * @return 微信返回码0为成功其他为错误码，可参考微信公众平台开发文档
+     */
+    public int refresh(Menu... menu) {
+        //menuWeixinList.add(new MenuWeixin("商场首页", WxConsts.BUTTON_VIEW, 1, 1, "http://112.124.22.92:8080/iziwx/bazaar/index",null, m1));
+        Menu m=null;
+        for(int i=0;i<menu.length;i++){
+            m=menu[i];
+            MenuWeixin mwx=new MenuWeixin(m.getName(),m.getType().toString(),0,i,m.getUrl(),m.getKey(),null);
+            menuDao.save(mwx);
+            if(!m.getChildren().isEmpty()){
+                Menu subm;
+                for(int j=0,si=m.getChildren().size();j<si;j++){
+                    subm=m.getChildren().get(j);
+                    menuDao.save(new MenuWeixin(subm.getName(),subm.getType().toString(),1,j+1,subm.getUrl(),subm.getKey(),mwx));
                 }
             }
-            wxMenu.getButtons().add(menuButton);
         }
-        try {
-            config.getUtil().menuCreate(wxMenu);
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            return e.getError().getErrorCode();
-        }
+        session.refreshMenu(menu);
         return 0;
     }
 
@@ -136,23 +163,13 @@ public class MenuWeiXinService {
      * @return
      */
     public int deleteMenu() {
-        try {
-            config.getUtil().menuDelete();
-            menuDao.batchSQLExecute("delete from wx_menu WHERE layer != 0");
-            menuDao.batchSQLExecute("delete from wx_menu");
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            return e.getError().getErrorCode();
-        }
+        session.clearMenu();
+        menuDao.batchSQLExecute("delete from wx_menu WHERE layer != 0");
+        menuDao.batchSQLExecute("delete from wx_menu");
         return 0;
     }
-
-    public me.chanjar.weixin.common.bean.WxMenu.WxMenuButton createBtn(Menu m) {
-        me.chanjar.weixin.common.bean.WxMenu.WxMenuButton menuButton = new me.chanjar.weixin.common.bean.WxMenu.WxMenuButton();
-        menuButton.setName(m.getName());
-        menuButton.setKey(m.getKey());
-        menuButton.setUrl(m.getUrl());
-        menuButton.setType(m.getType());
-        return menuButton;
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        session = factory.openSession(Consts.appid);
     }
 }
