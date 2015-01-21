@@ -12,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "AUTH_ORG_DIMENSION")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","website"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgDimension extends BaseBusEntity {
     /**
@@ -34,7 +34,7 @@ public class OrgDimension extends BaseBusEntity {
     /**
      * 维度对应的站点
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
     @JoinColumn(name = "WEBSITE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_RELATION_WEBSITE"))
     private Website website;
 
