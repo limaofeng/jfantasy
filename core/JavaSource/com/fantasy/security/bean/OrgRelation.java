@@ -4,7 +4,6 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * 组织机构关系
@@ -21,7 +20,11 @@ public class OrgRelation extends BaseBusEntity {
         /**
          * 分支机构(用于表示子公司,可承担独立法律责任组织)
          */
-        branch
+        branch,
+        /**
+         * 子公司
+         */
+        subsidiary
     }
 
     /**
@@ -41,13 +44,9 @@ public class OrgRelation extends BaseBusEntity {
     /**
      * 下级组织机构
      */
-    @OneToMany(targetEntity = Organization.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_ORG_CHILDREN", joinColumns = @JoinColumn(name = "ID"), inverseJoinColumns = @JoinColumn(name = "ORG_ID"), foreignKey = @ForeignKey(name = "FK_AUTH_ORG_CHILDREN"))
-    private List<Organization> children;
-
-    @Transient
-    private Type type;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "SUBSIDIARY_ID", foreignKey = @ForeignKey(name = "FK_AUTH_SUB_ORG_RELATION"))
+    private Organization subsidiary;
     /**
      * 机构关系对应的维度
      */
@@ -61,22 +60,6 @@ public class OrgRelation extends BaseBusEntity {
 
     public void setOrganization(Organization organization) {
         this.organization = organization;
-    }
-
-    public List<Organization> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<Organization> children) {
-        this.children = children;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
     }
 
     public OrgDimension getOrgDimension() {
@@ -93,5 +76,13 @@ public class OrgRelation extends BaseBusEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Organization getSubsidiary() {
+        return subsidiary;
+    }
+
+    public void setSubsidiary(Organization subsidiary) {
+        this.subsidiary = subsidiary;
     }
 }
