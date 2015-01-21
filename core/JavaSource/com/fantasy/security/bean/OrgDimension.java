@@ -1,13 +1,11 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.system.bean.Website;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 组织维度
@@ -33,6 +31,12 @@ public class OrgDimension extends BaseBusEntity {
      */
     @Column(name = "DESCRIPTION")
     private String description;
+    /**
+     * 维度对应的站点
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WEBSITE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_RELATION_WEBSITE"))
+    private Website website;
 
     public String getId() {
         return id;
@@ -56,5 +60,13 @@ public class OrgDimension extends BaseBusEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Website getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(Website website) {
+        this.website = website;
     }
 }
