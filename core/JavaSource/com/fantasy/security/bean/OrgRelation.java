@@ -13,7 +13,7 @@ import java.util.List;
  * 组织机构关系
  */
 @Entity
-@Table(name = "AUTH_ORG_RELATION")
+@Table(name = "AUTH_ORG_RELATION", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORG_DIMENSION_ID", "ORG_ID"})})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "parent"})
 public class OrgRelation extends BaseBusEntity {
 
