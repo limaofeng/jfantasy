@@ -1,15 +1,20 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 组织机构关系
  */
 @Entity
-@Table(name = "AUTH_ORG_RELATION")
+@Table(name = "AUTH_ORG_RELATION", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORG_DIMENSION_ID", "ORG_ID"})})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "parent"})
 public class OrgRelation extends BaseBusEntity {
 
     public static enum Type {
@@ -42,11 +47,29 @@ public class OrgRelation extends BaseBusEntity {
     @JoinColumn(name = "ORG_ID", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_RELATION"))
     private Organization organization;
     /**
-     * 下级组织机构
+     * 层级
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "SUBSIDIARY_ID", foreignKey = @ForeignKey(name = "FK_AUTH_SUB_ORG_RELATION"))
-    private Organization subsidiary;
+    @Column(name = "LAYER", nullable = false)
+    private Integer layer;
+    /**
+     * 排序字段
+     */
+    @Column(name = "SORT")
+    private Integer sort;
+    /**
+     * 上级关系
+     */
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_PID"))
+    private OrgRelation parent;
+    /**
+     * 下级关系
+     */
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OrderBy("sort ASC")
+    private List<OrgRelation> children;
     /**
      * 机构关系对应的维度
      */
@@ -78,11 +101,35 @@ public class OrgRelation extends BaseBusEntity {
         this.id = id;
     }
 
-    public Organization getSubsidiary() {
-        return subsidiary;
+    public OrgRelation getParent() {
+        return parent;
     }
 
-    public void setSubsidiary(Organization subsidiary) {
-        this.subsidiary = subsidiary;
+    public void setParent(OrgRelation parent) {
+        this.parent = parent;
+    }
+
+    public List<OrgRelation> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<OrgRelation> children) {
+        this.children = children;
+    }
+
+    public Integer getLayer() {
+        return layer;
+    }
+
+    public void setLayer(Integer layer) {
+        this.layer = layer;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 }

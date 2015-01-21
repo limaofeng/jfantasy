@@ -2,7 +2,6 @@ package com.fantasy.swp.writer;
 
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.swp.data.SimpleData;
 import com.fantasy.swp.util.DataMap;
 import freemarker.template.Template;
 
@@ -19,7 +18,7 @@ public class ListWriter extends AbstractWriter {
 			throw new IgnoreException("list is null");
 		}
 		for (Object object : list) {
-			data.put("item", SimpleData.getData("item", object));
+//			data.put("item", SimpleData.getData("item", object));
 			OutputStream out = this.fileManager.writeFile(pageUrl.getUrl(data));
 			FreeMarkerTemplateUtils.writer(data, template, out);
 		}
@@ -28,5 +27,6 @@ public class ListWriter extends AbstractWriter {
 	public void setList(List<Object> list) {
 		this.list = list;
 	}
+
 
 }

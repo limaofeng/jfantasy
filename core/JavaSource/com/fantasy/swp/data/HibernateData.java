@@ -5,7 +5,7 @@ import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import java.util.List;
 
-public class HibernateData extends AbstractPageData {
+public class HibernateData extends AbstractTemplateData {
 
 	private static HibernateDaoSupport query;
 

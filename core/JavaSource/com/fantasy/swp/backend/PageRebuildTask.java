@@ -19,7 +19,7 @@ public class PageRebuildTask implements Runnable {
 	}
 
 	public void run() {
-		this.page.process();
+//		this.page.process();
 	}
 
 }

@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class PageService{
+public class _PageService {
 
     @Resource
     private PageDao pageDao;
