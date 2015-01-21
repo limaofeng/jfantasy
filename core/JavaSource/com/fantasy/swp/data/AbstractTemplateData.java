@@ -1,8 +1,8 @@
 package com.fantasy.swp.data;
 
-import com.fantasy.swp.PageData;
+import com.fantasy.swp.TemplateData;
 
-public abstract class AbstractPageData implements PageData {
+public abstract class AbstractTemplateData implements TemplateData {
 	protected String key;
 
 	public String getKey() {

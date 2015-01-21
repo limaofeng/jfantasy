@@ -1,14 +1,12 @@
 package com.fantasy.swp;
 
 
-import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.swp.analysis.data.BasicTypeAnalyzer;
-import com.fantasy.swp.bean.*;
-import com.fantasy.swp.bean.PageAnalyzer;
+import com.fantasy.file.FileManager;
+import com.fantasy.file.manager.LocalFileManager;
+import com.fantasy.swp.service.DefaultPageService;
+import com.fantasy.swp.template.FreemarkerTemplate;
+import com.fantasy.swp.url.SimpleUrl;
 import freemarker.template.Configuration;
-import freemarker.template.TemplateMethodModel;
-import freemarker.template.TemplateModelException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -16,11 +14,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
@@ -32,6 +25,45 @@ public class SwpTest {
     @Test
     public void run() throws IOException {
 
+        FileManager fileManager = new LocalFileManager("/Users/lmf/Downloads/test.jfantasy.org");
+
+        //定义模板
+        FreemarkerTemplate template = new FreemarkerTemplate(configuration.getTemplate("template/test.ftl"));
+        template.add("testData", "我的测试页面");
+
+        //定义 pageService
+        DefaultPageService pageService = new DefaultPageService();
+        pageService.setFileManager(fileManager);
+
+        SimpleUrl url = new SimpleUrl("/test.txt");
+        /**
+         * 创建页面实例
+         */
+        PageInstance pageInstance = pageService.createPageInstance(url,template);
+
+        /**
+         * 生成页面
+         */
+        pageInstance.execute();
+
+        //触发器
+        //1.模板修改后，全部重新生成页面
+        //2.如果页面引用的bean修改或者删除（TemplateData为hibernateBean时），重构生成页面
+        //3.新增bean时，需要指定判断条件（1.什么类型的bean，2.字段判断）
+        //4.删除bean时,需要指定判断条件（1.什么类型的bean，2.字段判断）
+
+        //TODO 如果是列表页面或者详细页面如果设置
+        //实例生成器
+        //1.单例生成
+        //2.Bean关联
+        //3.列表管理
+
+        //生成页面
+
+        //HistoryService historyService = null;
+
+
+        /*
         //添加模板
         Template template = new Template();
         template.setName("测试页面");
@@ -94,6 +126,7 @@ public class SwpTest {
         System.out.println(writer);
 
         System.out.println("-------------------------------------");
+        */
     }
 
 }

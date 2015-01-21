@@ -2,15 +2,10 @@ package com.fantasy.swp.url;
 
 import java.util.Map;
 
-import com.fantasy.swp.PageUrl;
-
-public class SimpleUrl implements PageUrl {
+public class SimpleUrl extends AbstractOutPutUrl {
 
 	private String url;
 
-	public SimpleUrl() {
-	}
-	
 	public SimpleUrl(String url) {
 		this.url = url;
 	}
@@ -19,12 +14,8 @@ public class SimpleUrl implements PageUrl {
 		return url;
 	}
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
-
+	@Override
 	public String getUrl(Map<String, Object> data) {
-		return getUrl();
+		return this.getUrl();
 	}
-
 }

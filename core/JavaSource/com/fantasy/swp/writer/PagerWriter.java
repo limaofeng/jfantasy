@@ -1,17 +1,15 @@
 package com.fantasy.swp.writer;
 
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
+import com.fantasy.swp.util.DataMap;
+import freemarker.template.Template;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.swp.data.SimpleData;
-import com.fantasy.swp.util.DataMap;
-
-import freemarker.template.Template;
 
 public class PagerWriter extends AbstractWriter {
 
@@ -21,7 +19,7 @@ public class PagerWriter extends AbstractWriter {
 	public void execute(Template template, DataMap data) throws IOException {
 		Pager<Object> pager = queryPager.findPager(new Pager<Object>(), filters);
 		do {
-			data.put("pager", SimpleData.getData("pager", pager));
+//			data.put("pager", SimpleData.getData("pager", pager));
 			OutputStream out = this.fileManager.writeFile(pageUrl.getUrl(data));
 			FreeMarkerTemplateUtils.writer(data, template, out);
 			pager.setCurrentPage(pager.getCurrentPage() + 1);

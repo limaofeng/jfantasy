@@ -1,7 +1,7 @@
 package com.fantasy.swp.util;
 
 import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.swp.PageData;
+import com.fantasy.swp.TemplateData;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -10,7 +10,7 @@ import java.util.Set;
 
 public class DataMap implements Map<String, Object> {
 
-	private Map<String, PageData> pageDatas = new HashMap<String, PageData>();
+	private Map<String, TemplateData> pageDatas = new HashMap<String, TemplateData>();
 
 	public boolean containsKey(java.lang.Object key) {
 		return this.pageDatas.containsKey(key);
@@ -36,7 +36,7 @@ public class DataMap implements Map<String, Object> {
 		return this.pageDatas.keySet();
 	}
 
-	public void add(PageData data) {
+	public void add(TemplateData data) {
 		this.pageDatas.put(data.getKey(), data);
 	}
 

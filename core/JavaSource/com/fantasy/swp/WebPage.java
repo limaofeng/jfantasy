@@ -4,8 +4,6 @@ import com.fantasy.swp.util.DataMap;
 import freemarker.template.Configuration;
 import org.apache.log4j.Logger;
 
-import java.io.IOException;
-
 public class WebPage {
 
 	private static final Logger LOG = Logger.getLogger(WebPage.class);
@@ -16,33 +14,33 @@ public class WebPage {
 	
 	private Configuration freemarkerManager;
 	
-	private PageWriter pageWriter;
+	private PageService pageWriter;
 
 	private DataMap globalDatas = new DataMap();
 
 	private DataMap data = new DataMap();
 
-	public void process(){
-		try {
-			this.pageWriter.execute(freemarkerManager.getTemplate(this.template), this.data);
-		} catch (IOException e) {
-			LOG.error(e.getMessage(),e);
-		}
-	}
-	
+//	public void process(){
+//		try {
+//			this.pageWriter.execute(freemarkerManager.getTemplate(this.template), this.data);
+//		} catch (IOException e) {
+//			LOG.error(e.getMessage(),e);
+//		}
+//	}
+//
 	public void setGlobalDatas(DataMap globalDatas) {
 		this.globalDatas = globalDatas;
 	}
 
-	public void addData(PageData data) {
+	public void addData(TemplateData data) {
 		this.data.add(data);
 	}
 
-	public PageWriter getPageWriter() {
+	public PageService getPageWriter() {
 		return pageWriter;
 	}
 
-	public void setPageWriter(PageWriter pageWriter) {
+	public void setPageWriter(PageService pageWriter) {
 		this.pageWriter = pageWriter;
 	}
 
