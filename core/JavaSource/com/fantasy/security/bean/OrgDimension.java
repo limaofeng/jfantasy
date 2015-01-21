@@ -17,7 +17,6 @@ import javax.persistence.Table;
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgDimension extends BaseBusEntity {
-
     /**
      * 维度Id
      */

@@ -13,25 +13,24 @@ import java.util.Map;
 
 public class VerySimpleLeaveProcessTest {
 
-
     @Test
     public void testStartProcess() throws Exception {
         //创建流程引擎，使用内存数据库
         ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration().buildProcessEngine();
         //部署流程定义
         RepositoryService repositoryService = processEngine.getRepositoryService();
-        String bpmnFileName = "com/fantasy/activiti/sayhelloleave.bpmn";
+        String bpmnFileName = "com/fantasy/activiti/SayHelloToLeave.bpmn";
         //repositoryService.createDeployment().addClasspathResource(bpmnFileName).deploy();
-        repositoryService.createDeployment().addInputStream("sayhelloleave.bpmn",this.getClass().getClassLoader().getResourceAsStream(bpmnFileName)).deploy();
+        repositoryService.createDeployment().addInputStream("SayHelloToLeave.bpmn",this.getClass().getClassLoader().getResourceAsStream(bpmnFileName)).deploy();
         //验证已部署的流程
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().singleResult();
-        Assert.assertEquals("leavesayhello",processDefinition.getKey());
+        Assert.assertEquals("SayHelloToLeave",processDefinition.getKey());
         //启动流程并返回流程实例
         RuntimeService runtimeService = processEngine.getRuntimeService();
         Map<String,Object> variables = new HashMap<String, Object>();
         variables.put("applyUser","employee1");
         variables.put("days",3);
-        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("leavesayhello",variables);
+        ProcessInstance processInstance = runtimeService.startProcessInstanceByKey("SayHelloToLeave",variables);
         Assert.assertNotNull(processInstance);
         System.out.println("pid=" + processInstance.getId() + ",pdid=" + processInstance.getProcessDefinitionId());
 
@@ -40,7 +39,18 @@ public class VerySimpleLeaveProcessTest {
         Assert.assertNotNull(taskOfDeptLeader);
         Assert.assertEquals("领导审批",taskOfDeptLeader.getName());
 
-//        taskService.
+        taskService.claim(taskOfDeptLeader.getId(),"leaderUser");
+
+        variables.clear();
+        variables.put("approved",true);
+        taskService.complete(taskOfDeptLeader.getId(),variables);
+
+        taskOfDeptLeader = taskService.createTaskQuery().taskCandidateGroup("deptLeader").singleResult();
+        Assert.assertNull(taskOfDeptLeader);
+
+        HistoryService historyService = processEngine.getHistoryService();
+        long count = historyService.createHistoricProcessInstanceQuery().finished().count();
+        Assert.assertEquals(1,count);
     }
 
 }

@@ -36,20 +36,23 @@ public class OrgRelation extends BaseBusEntity {
      * 组织机构
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORG_ID",foreignKey = @ForeignKey(name="FK_AUTH_ORG_RELATION"))
+    @JoinColumn(name = "ORG_ID", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_RELATION"))
     private Organization organization;
     /**
      * 下级组织机构
      */
     @OneToMany(targetEntity = Organization.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_ORG_CHILDREN", joinColumns = @JoinColumn(name = "ID"), inverseJoinColumns = @JoinColumn(name = "ORG_ID"),foreignKey = @ForeignKey(name="FK_AUTH_ORG_CHILDREN"))
+    @JoinTable(name = "AUTH_ORG_CHILDREN", joinColumns = @JoinColumn(name = "ID"), inverseJoinColumns = @JoinColumn(name = "ORG_ID"), foreignKey = @ForeignKey(name = "FK_AUTH_ORG_CHILDREN"))
     private List<Organization> children;
 
+    @Transient
     private Type type;
 
     /**
      * 机构关系对应的维度
      */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "ORG_DIMENSION_ID", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_DIMENSION"))
     private OrgDimension orgDimension;
 
     public Organization getOrganization() {

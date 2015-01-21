@@ -30,8 +30,12 @@
  		<priority value="DEBUG" />
  		<appender-ref ref="CONSOLE" />
  	</category>
-	<!--
 	<category name="org.hibernate.cache">
+		<priority value="DEBUG" />
+		<appender-ref ref="CONSOLE" />
+	</category>
+	<!--
+	<category name="org.activiti">
 		<priority value="DEBUG" />
 		<appender-ref ref="CONSOLE" />
 	</category>
