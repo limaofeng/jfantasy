@@ -94,6 +94,10 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
             addEventListener("post-commit-update", eventListeners, entityChangedEventListener);
             addEventListener("post-commit-delete", eventListeners, entityChangedEventListener);
         }
+        com.fantasy.swp.listener.EntityChangedEventListener entityChangedEventListener = new com.fantasy.swp.listener.EntityChangedEventListener();
+        addEventListener("post-commit-insert", eventListeners, entityChangedEventListener);
+        addEventListener("post-commit-update", eventListeners, entityChangedEventListener);
+        addEventListener("post-commit-delete", eventListeners, entityChangedEventListener);
         // FileEventListener 监听器,用户转存文件或者删除文件
         /*
         FileEventListener fileEventListener = SpringContextUtil.createBean(FileEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);

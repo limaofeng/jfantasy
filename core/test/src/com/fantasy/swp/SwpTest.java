@@ -39,8 +39,7 @@ public class SwpTest {
         /**
          * 创建页面实例
          */
-        PageInstance pageInstance = pageService.createPageInstance(url,template);
-
+        PageInstance pageInstance = pageService.createPageInstance(url, template);
         /**
          * 生成页面
          */
@@ -56,7 +55,7 @@ public class SwpTest {
         //实例生成器
         //1.单例生成
         //2.Bean关联
-        //3.列表管理
+        //3.列表关联
 
         //生成页面
 

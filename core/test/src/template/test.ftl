@@ -1,2 +1,5 @@
 xxxxxxxx
-${testData}
+${art.title}
+
+
+${art.text}
