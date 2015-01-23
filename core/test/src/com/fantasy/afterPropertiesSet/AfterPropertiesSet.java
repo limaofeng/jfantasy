@@ -18,7 +18,6 @@ import com.fantasy.security.bean.Menu;
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.dao.MenuDao;
 import com.fantasy.security.service.MenuService;
-import com.fantasy.swp.bean.*;
 import com.fantasy.system.bean.DataDictionaryType;
 import com.fantasy.system.bean.Setting;
 import com.fantasy.system.bean.Website;
@@ -213,6 +212,7 @@ public class AfterPropertiesSet {
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
+            /*
             //添加模板
             Template template = new Template();
             template.setName("测试页面");
@@ -252,7 +252,7 @@ public class AfterPropertiesSet {
             pageAnalyzer.setName("页面解析器");
             pageAnalyzer.setClassName("xxxxx");
             page.setPageAnalyzer(pageAnalyzer);
-
+            */
             transactionManager.commit(status);
         } catch (RuntimeException e) {
             transactionManager.rollback(status);

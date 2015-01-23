@@ -1,7 +1,5 @@
 package com.fantasy.swp.backend;
 
-import com.fantasy.swp.WebPage;
-
 /**
  * 重新生成页面
  * 
@@ -11,12 +9,12 @@ import com.fantasy.swp.WebPage;
  * @version 1.0
  */
 public class PageRebuildTask implements Runnable {
-
-	private WebPage page;
-
-	public PageRebuildTask(WebPage page) {
-		this.page = page;
-	}
+//
+//	private WebPage page;
+//
+//	public PageRebuildTask(WebPage page) {
+//		this.page = page;
+//	}
 
 	public void run() {
 //		this.page.process();

@@ -1,6 +1,7 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.system.bean.Website;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -21,19 +22,6 @@ public class Template extends BaseBusEntity {
 
     private static final long serialVersionUID = 6516821318292532274L;
 
-    public enum Type {
-        velocity("velocity"), freeMarker("freeMarker");
-        private String value;
-
-        private Type(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return this.value;
-        }
-    }
-
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -45,21 +33,22 @@ public class Template extends BaseBusEntity {
     @Column(name = "NAME")
     private String name;
     /**
-     * 模板类型
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE")
-    private Type type;
-    /**
      * 描述
      */
     @Column(name = "DESCRIPTION")
     private String description;
     /**
+     * 站点
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WEBSITE_ID")
+    private Website webSite;
+    /**
      * 模板文件存放的位置
      */
-    @Column(name = "FILEPATH")
-    private String filePath;
+    @Lob
+    @Column(name = "CONTENT")
+    private String content;
     /**
      * 数据接口定义
      */
@@ -90,27 +79,19 @@ public class Template extends BaseBusEntity {
         this.description = description;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
     public List<DataInferface> getDataInferfaces() {
         return dataInferfaces;
     }
 
     public void setDataInferfaces(List<DataInferface> dataInferfaces) {
         this.dataInferfaces = dataInferfaces;
+    }
+
+    public Website getWebSite() {
+        return webSite;
+    }
+
+    public void setWebSite(Website webSite) {
+        this.webSite = webSite;
     }
 }

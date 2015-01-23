@@ -83,7 +83,7 @@ public interface WeiXinSession {
      * @param content 图文消息
      * @param toUser  接收人
      */
-    public void sendNewsMessage(News content, String toUser);
+    public void sendNewsMessage(List<News> content, String toUser);
 
     /**
      * 发送图文消息

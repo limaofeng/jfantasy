@@ -6,7 +6,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 /**
- * 页面项
+ * 页面实例
  */
 @Entity
 @Table(name = "SWP_PAGE_ITEM")

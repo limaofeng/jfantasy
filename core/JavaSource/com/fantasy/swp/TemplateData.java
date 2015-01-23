@@ -9,8 +9,6 @@ package com.fantasy.swp;
  */
 public interface TemplateData {
 
-    public String getKey();
-
     public Object getValue();
 
 }

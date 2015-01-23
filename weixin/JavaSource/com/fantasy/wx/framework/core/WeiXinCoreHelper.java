@@ -127,7 +127,7 @@ public interface WeiXinCoreHelper {
      * @param toUser  接收人
      * @throws WeiXinException
      */
-    public void sendNewsMessage(WeiXinSession session, News content, String toUser) throws WeiXinException;
+    public void sendNewsMessage(WeiXinSession session, List<News> content, String toUser) throws WeiXinException;
 
     /**
      * 发送图文消息

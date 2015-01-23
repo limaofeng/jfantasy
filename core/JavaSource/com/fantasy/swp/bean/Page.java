@@ -1,6 +1,7 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.system.bean.Website;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -39,13 +40,14 @@ public class Page extends BaseBusEntity {
      * 对应的数据
      */
     @ManyToMany(targetEntity = Data.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "PAGE_ID"), inverseJoinColumns = @JoinColumn(name = "DATA_ID"),foreignKey = @ForeignKey(name = "FK_PAGE_DATA"))
+    @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "PAGE_ID"), inverseJoinColumns = @JoinColumn(name = "DATA_ID"), foreignKey = @ForeignKey(name = "FK_PAGE_DATA"))
     private List<Data> datas;
-
-    @ManyToOne
-    @JoinColumn(name = "PAGE_ANALYZER_ID")
-    private PageAnalyzer pageAnalyzer;
-
+    /**
+     * 站点
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WEBSITE_ID")
+    private Website webSite;
 
     public Long getId() {
         return id;
@@ -79,11 +81,11 @@ public class Page extends BaseBusEntity {
         this.datas = datas;
     }
 
-    public PageAnalyzer getPageAnalyzer() {
-        return pageAnalyzer;
+    public Website getWebSite() {
+        return webSite;
     }
 
-    public void setPageAnalyzer(PageAnalyzer pageAnalyzer) {
-        this.pageAnalyzer = pageAnalyzer;
+    public void setWebSite(Website webSite) {
+        this.webSite = webSite;
     }
 }

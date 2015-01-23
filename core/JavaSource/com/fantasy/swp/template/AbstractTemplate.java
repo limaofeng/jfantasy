@@ -9,7 +9,7 @@ import java.util.Map;
 
 public abstract class AbstractTemplate<T> implements Template {
 
-    private Map<String,TemplateData> data = new HashMap<String, TemplateData>();
+    private Map<String, TemplateData> data = new HashMap<String, TemplateData>();
 
     public AbstractTemplate() {
     }
@@ -33,7 +33,11 @@ public abstract class AbstractTemplate<T> implements Template {
         return this.data;
     }
 
-    public void add(String key, String value){
-        this.data.put(key,new SimpleData(value));
+    public void add(String key, TemplateData data) {
+        this.data.put(key, data);
+    }
+
+    public void add(String key, String value) {
+        this.add(key, new SimpleData(value));
     }
 }

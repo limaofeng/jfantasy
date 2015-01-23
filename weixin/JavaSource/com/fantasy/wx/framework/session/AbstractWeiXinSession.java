@@ -158,7 +158,7 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
-    public void sendNewsMessage(final News content, final String toUser) {
+    public void sendNewsMessage(final List<News> content, final String toUser) {
         executor.execute(new Runnable() {
             @Override
             public void run() {

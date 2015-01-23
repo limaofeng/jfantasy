@@ -36,18 +36,8 @@ public class DataInferface {
     /**
      * 是否为集合
      */
-    @Column(name = "is_LIST")
-    private boolean list;
-    /**
-     * 数据对应的javaType
-     */
-    @Column(name = "JAVA_TYPE")
-    private String javaType;
-    /**
-     * 数据默认值
-     */
-    @Column(name = "DEFAULT_VALUE")
-    private String defaultValue;
+//    @Column(name = "is_Array")
+//    private DataType type;//pager|array|object|string|number
 
     @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY)
     private List<Data> datas;
@@ -92,27 +82,4 @@ public class DataInferface {
         this.datas = datas;
     }
 
-    public String getJavaType() {
-        return javaType;
-    }
-
-    public void setJavaType(String javaType) {
-        this.javaType = javaType;
-    }
-
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public boolean isList() {
-        return list;
-    }
-
-    public void setList(boolean list) {
-        this.list = list;
-    }
 }
