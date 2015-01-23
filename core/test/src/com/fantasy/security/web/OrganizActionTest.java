@@ -1,14 +1,17 @@
 package com.fantasy.security.web;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.bean.OrgHelpBean;
 import com.fantasy.security.bean.Organization;
 import com.fantasy.security.service.OrgDimensionService;
 import com.fantasy.security.service.OrganizationService;
+import com.fasterxml.jackson.databind.JsonSerializable;
 import com.opensymphony.xwork2.ActionProxy;
 import junit.framework.TestCase;
+import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsSpringJUnit4TestCase;
@@ -27,6 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +85,21 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         String result = proxy.execute();
         //json数据
         LOG.debug("testIndex--------------"+this.response.getContentAsString());
+
+        List<Organization> organizations = (List<Organization>)JSON.deserialize(this.response.getContentAsString());
+        testView(organizations,0);
+        Assert.assertNotNull(organizations);
+
     }
+
+    private void testView(List<Organization> organizations,int layer){
+        layer++;
+        for(Organization organization:organizations){
+            LOG.debug("层级----"+layer+"-------"+organization.getName());
+            testView(organization.getChildren(), layer);
+        }
+    }
+
 
     public void testSave() throws Exception {
         //组织机构 数据

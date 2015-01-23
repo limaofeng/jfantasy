@@ -25,11 +25,7 @@ public class OrganizAction extends ActionSupport {
 
     public String index(List<PropertyFilter> filters){
         filters.add(new PropertyFilter("EQI_layer","1"));
-        List<Organization> organizations = this.organizationService.find(filters);
-        this.attrs.put(ROOT, organizations);
-
-
-        testView(organizations,0);
+        this.attrs.put(ROOT, this.organizationService.find(filters));
         return JSONDATA;
     }
 
@@ -38,13 +34,6 @@ public class OrganizAction extends ActionSupport {
         return JSONDATA;
     }
 
-    private void testView(List<Organization> organizations,int layer){
-        layer++;
-        for(Organization organization:organizations){
-            System.out.println("层级---"+layer+"----"+organization.getName());
-            testView(organization.getChildren(), layer);
-        }
-    }
 
 
     public String save(Organization organization){
