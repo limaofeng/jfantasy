@@ -66,7 +66,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         LOG.debug("默认admin登陆。。。");
-        //testSave();
+        testSave();
     }
 
     @After
@@ -103,15 +103,15 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     public void testSave() throws Exception {
         //组织机构 数据
-        this.request.addParameter("id","jg00002");
-        this.request.addParameter("name","机构00002");
-        this.request.addParameter("description","机构00002");
+        this.request.addParameter("id","jg1");
+        this.request.addParameter("name","机构1");
+        this.request.addParameter("description","机构1");
         this.request.addParameter("type","company");
 
         //对应组织维度 与上级组织机构
         this.request.addParameter("orgHelpBeans[0].orgDimension.id","weidu001");
         //上级组织机构
-        this.request.addParameter("orgHelpBeans[0].organization.id","jg0001");
+        //this.request.addParameter("orgHelpBeans[0].organization.id","jg0001");
         //this.request.addParameter("orgHelpBeans[1].orgDimension.id","weidu002");
         //this.request.addParameter("orgHelpBeans[1].organization.id","jg002");
         ActionProxy proxy = super.getActionProxy("/security/organize/save.do");

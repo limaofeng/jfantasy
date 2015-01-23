@@ -67,8 +67,8 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
 
     public void testSave() throws Exception{
         Website website = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getWebsite();
-        this.request.addParameter("id","weidu003");
-        this.request.addParameter("name", "维度003");
+        this.request.addParameter("id","weidu3");
+        this.request.addParameter("name", "维度3");
         this.request.addParameter("description", "完全不知道说的是啥");
         this.request.addParameter("website.id", website.getId().toString());
         ActionProxy proxy = super.getActionProxy("/security/orgdimension/save.do");
@@ -81,7 +81,7 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
 
     public void testDelete() throws Exception{
         //传参
-        this.request.addParameter("ids","weidu001");
+        this.request.addParameter("ids","weidu3");
         ActionProxy proxy = super.getActionProxy("/security/orgdimension/delete.do");
         Assert.assertNotNull(proxy);
         //返回的数据类型
