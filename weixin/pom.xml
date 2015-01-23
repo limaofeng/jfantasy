@@ -12,13 +12,13 @@
     <packaging>jar</packaging>
     <version>${com.fantasy-version}</version>
 
-    <repositories>
+    <!--<repositories>
         <repository>
             <snapshots />
             <id>sonatype snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
-    </repositories>
+    </repositories>-->
 
     <!-- 跳过该模块的测试 -->
     <build>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>me.chanjar</groupId>
             <artifactId>weixin-java-mp</artifactId>
-            <version>1.0.6-SNAPSHOT</version>
+            <version>1.1.0</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-io</artifactId>
