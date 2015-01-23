@@ -8,6 +8,7 @@ import com.fantasy.wx.bean.MenuWeixin;
 import com.fantasy.wx.dao.MenuDao;
 import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
 import com.fantasy.wx.framework.message.content.Menu;
+import com.fantasy.wx.framework.oauth2.Scope;
 import com.fantasy.wx.framework.session.WeiXinSession;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,6 +156,13 @@ public class MenuWeiXinService  implements InitializingBean {
         }
         session.refreshMenu(menu);
         return 0;
+    }
+
+    public String createOauth2Url(String redirectUri, Scope scope, String state){
+        return session.getAuthorizationUrl(redirectUri,scope,state);
+    }
+    public String createOauth2Url(String redirectUri, Scope scope){
+        return session.getAuthorizationUrl(redirectUri,scope);
     }
 
     /**

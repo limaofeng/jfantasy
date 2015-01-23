@@ -14,7 +14,7 @@ import javax.annotation.Resource;
 /**
  * Created by zzzhong on 2015/1/6.
  */
-public class UserInfoWebInfoService implements IUserInfoService {
+public class UserInfoWeiXinWebService implements IUserInfoService {
     @Resource
     public UserInfoWeiXinService userInfoWeiXinService;
     @Override
