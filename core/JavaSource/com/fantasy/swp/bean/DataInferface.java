@@ -36,8 +36,8 @@ public class DataInferface {
     /**
      * 是否为集合
      */
-    @Column(name = "is_Array")
-    private DataType type;//pager|array|object|string|number
+//    @Column(name = "is_Array")
+//    private DataType type;//pager|array|object|string|number
 
     @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY)
     private List<Data> datas;

@@ -1,7 +1,7 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.wanderer.WebSite;
+import com.fantasy.system.bean.Website;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -40,7 +40,9 @@ public class Template extends BaseBusEntity {
     /**
      * 站点
      */
-    private WebSite webSite;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WEBSITE_ID")
+    private Website webSite;
     /**
      * 模板文件存放的位置
      */
@@ -85,5 +87,11 @@ public class Template extends BaseBusEntity {
         this.dataInferfaces = dataInferfaces;
     }
 
+    public Website getWebSite() {
+        return webSite;
+    }
 
+    public void setWebSite(Website webSite) {
+        this.webSite = webSite;
+    }
 }

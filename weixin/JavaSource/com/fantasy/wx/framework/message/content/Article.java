@@ -96,4 +96,5 @@ public class Article {
     public void setShowCoverPic(boolean showCoverPic) {
         this.showCoverPic = showCoverPic;
     }
+
 }

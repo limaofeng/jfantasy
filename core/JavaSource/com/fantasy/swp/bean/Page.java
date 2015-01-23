@@ -1,6 +1,7 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.system.bean.Website;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -44,7 +45,9 @@ public class Page extends BaseBusEntity {
     /**
      * 站点
      */
-    private WebSite webSite;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WEBSITE_ID")
+    private Website webSite;
 
     public Long getId() {
         return id;
@@ -78,11 +81,11 @@ public class Page extends BaseBusEntity {
         this.datas = datas;
     }
 
-    public WebSite getWebSite() {
+    public Website getWebSite() {
         return webSite;
     }
 
-    public void setWebSite(WebSite webSite) {
+    public void setWebSite(Website webSite) {
         this.webSite = webSite;
     }
 }

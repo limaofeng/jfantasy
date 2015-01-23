@@ -1,5 +1,5 @@
+<#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 xxxxxxxx
-${art.title}
-
-
-${art.text}
+<@s.property value="art.title" />
+<br/>
+<@s.property value="art.text" />

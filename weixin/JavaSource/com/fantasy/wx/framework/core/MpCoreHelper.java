@@ -8,9 +8,7 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.security.bean.enums.Sex;
 import com.fantasy.wx.framework.exception.WeiXinException;
-import com.fantasy.wx.framework.message.MessageFactory;
-import com.fantasy.wx.framework.message.TextMessage;
-import com.fantasy.wx.framework.message.WeiXinMessage;
+import com.fantasy.wx.framework.message.*;
 import com.fantasy.wx.framework.message.content.*;
 import com.fantasy.wx.framework.message.user.Group;
 import com.fantasy.wx.framework.message.user.OpenIdList;
@@ -31,6 +29,7 @@ import me.chanjar.weixin.mp.api.WxMpServiceImpl;
 import me.chanjar.weixin.mp.bean.*;
 import me.chanjar.weixin.mp.bean.custombuilder.MusicBuilder;
 import me.chanjar.weixin.mp.bean.custombuilder.VideoBuilder;
+import me.chanjar.weixin.mp.bean.outxmlbuilder.NewsBuilder;
 import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 import me.chanjar.weixin.mp.bean.result.WxMpOAuth2AccessToken;
 import me.chanjar.weixin.mp.bean.result.WxMpUser;
@@ -125,6 +124,45 @@ public class MpCoreHelper implements WeiXinCoreHelper {
             outMessage = WxMpXmlOutMessage.TEXT()
                     .content(((TextMessage) message).getContent())
                     .fromUser(message.getFromUserName())
+                    .toUser(message.getToUserName())
+                    .build();
+        } else if (message instanceof ImageMessage) {
+            Media media = ((ImageMessage) message).getContent().getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            outMessage = WxMpXmlOutMessage.IMAGE().mediaId(media.getId()).fromUser(message.getFromUserName())
+                    .toUser(message.getToUserName())
+                    .build();
+        } else if (message instanceof VoiceMessage) {
+            Media media = ((VoiceMessage) message).getContent().getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            outMessage = WxMpXmlOutMessage.VOICE().mediaId(media.getId()).fromUser(message.getFromUserName())
+                    .toUser(message.getToUserName())
+                    .build();
+        } else if (message instanceof VideoMessage) {
+            Media media = ((VideoMessage) message).getContent().getMedia();
+            media.setId(this.mediaUpload(session, media.getType(), media.getFileItem()));
+            outMessage = WxMpXmlOutMessage.VIDEO().mediaId(media.getId()).fromUser(message.getFromUserName())
+                    .toUser(message.getToUserName())
+                    .build();
+        } else if (message instanceof MusicMessage) {
+            Music music = ((MusicMessage) message).getContent();
+            Media thumb = music.getThumb();
+            thumb.setId(this.mediaUpload(session, thumb.getType(), thumb.getFileItem()));
+            outMessage = WxMpXmlOutMessage.MUSIC().musicUrl(music.getUrl()).hqMusicUrl(music.getHqUrl()).title(music.getTitle()).description(music.getDescription()).thumbMediaId(thumb.getId()).fromUser(message.getFromUserName())
+                    .toUser(message.getToUserName())
+                    .build();
+        } else if (message instanceof NewsMessage) {
+            List<News> newses = ((NewsMessage) message).getContent();
+            NewsBuilder newsBuilder = WxMpXmlOutMessage.NEWS();
+            for (News news : newses) {
+                WxMpXmlOutNewsMessage.Item item = new WxMpXmlOutNewsMessage.Item();
+                item.setTitle(news.getLink().getTitle());
+                item.setDescription(news.getLink().getDescription());
+                item.setPicUrl(news.getPicUrl());
+                item.setUrl(news.getLink().getUrl());
+                newsBuilder.addArticle(item);
+            }
+            outMessage = newsBuilder.fromUser(message.getFromUserName())
                     .toUser(message.getToUserName())
                     .build();
         } else {
@@ -324,14 +362,18 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public void sendNewsMessage(WeiXinSession session, News content, String toUser) throws WeiXinException {
+    public void sendNewsMessage(WeiXinSession session, List<News> content, String toUser) throws WeiXinException {
         try {
             WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
-            article.setPicUrl(content.getPicUrl());
-            article.setTitle(content.getLink().getTitle());
-            article.setDescription(content.getLink().getDescription());
-            article.setUrl(content.getLink().getUrl());
-            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(WxMpCustomMessage.NEWS().toUser(toUser).addArticle(article).build());
+            me.chanjar.weixin.mp.bean.custombuilder.NewsBuilder newsBuilder = WxMpCustomMessage.NEWS().toUser(toUser);
+            for (News news : content) {
+                article.setPicUrl(news.getPicUrl());
+                article.setTitle(news.getLink().getTitle());
+                article.setDescription(news.getLink().getDescription());
+                article.setUrl(news.getLink().getUrl());
+            }
+            newsBuilder.addArticle(article);
+            getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(newsBuilder.build());
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         } catch (WeiXinException e) {
