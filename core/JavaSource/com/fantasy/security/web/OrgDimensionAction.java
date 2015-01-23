@@ -18,9 +18,9 @@ public class OrgDimensionAction extends ActionSupport {
     @Resource
     private OrgDimensionService orgDimensionService;
 
-    public String search(Pager<OrgDimension> pager,List<PropertyFilter> filters){
-       this.attrs.put(ROOT, this.orgDimensionService.findPager(pager, filters));
-       return JSONDATA;
+    public String index(){
+        this.attrs.put(ROOT,this.orgDimensionService.find());
+        return JSONDATA;
     }
 
     public String save(OrgDimension orgDimension){

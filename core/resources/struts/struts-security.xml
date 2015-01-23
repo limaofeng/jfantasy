@@ -119,7 +119,7 @@
     <!-- 组织维度 -->
     <package name="admin-orgdimension" extends="fantasy-default" namespace="/security/orgdimension">
         <!-- 查询 -->
-        <action name="search" class="com.fantasy.security.web.OrgDimensionAction" method="search" />
+        <action name="index" class="com.fantasy.security.web.OrgDimensionAction" method="index" />
 
         <!-- 保存 -->
         <action name="save" class="com.fantasy.security.web.OrgDimensionAction" method="save"/>
@@ -132,13 +132,14 @@
     <!-- 组织机构 -->
     <package name="admin-organize" extends="fantasy-default" namespace="/security/organize">
         <!-- 查询 -->
-        <action name="search" class="com.fantasy.security.web.OrgDimensionAction" method="search" />
-
+        <action name="index" class="com.fantasy.security.web.OrganizAction" method="index" />
+        <!-- search -->
+        <action name="search" class="com.fantasy.security.web.OrganizAction" method="search" />
         <!-- 保存 -->
-        <action name="save" class="com.fantasy.security.web.OrgDimensionAction" method="save"/>
+        <action name="save" class="com.fantasy.security.web.OrganizAction" method="save"/>
         <!-- 查看 -->
-        <action name="view" class="com.fantasy.security.web.OrgDimensionAction" method="view" />
+        <action name="view" class="com.fantasy.security.web.OrganizAction" method="view" />
         <!-- 删除 -->
-        <action name="delete" class="com.fantasy.security.web.OrgDimensionAction" method="delete"/>
+        <action name="delete" class="com.fantasy.security.web.OrganizAction" method="delete"/>
     </package>
 </struts>

@@ -93,7 +93,7 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
     @Test
     public void testIndex() throws Exception{
         this.request.removeAllParameters();
-        ActionProxy proxy = super.getActionProxy("/security/orgdimension/search.do");
+        ActionProxy proxy = super.getActionProxy("/security/orgdimension/index.do");
         Assert.assertNotNull(proxy);
         //返回的数据类型
         String result = proxy.execute();

@@ -23,9 +23,9 @@ public class OrgDimensionService {
     private OrgDimensionDao orgDimensionDao;
 
 
-    public Pager<OrgDimension> findPager(Pager<OrgDimension> pager,List<PropertyFilter> filters){
-        return  this.orgDimensionDao.findPager(pager, filters);
-    }
+   public List<OrgDimension> find(Criterion...criterions){
+      return this.orgDimensionDao.find(criterions);
+   }
 
     public OrgDimension findUnique(Criterion...criterions){
        return this.orgDimensionDao.findUnique(criterions);
