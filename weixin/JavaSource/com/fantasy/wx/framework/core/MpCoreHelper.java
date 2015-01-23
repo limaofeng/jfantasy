@@ -465,7 +465,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         url += "appid=" + wxMpConfigStorage.getAppId();
         url += "&redirect_uri=" + URIUtil.encodeURIComponent(redirectUri);
         url += "&response_type=code";
-        url += "&scope=" + scope;
+        url += "&scope=" + scope.getValue();
         if (StringUtil.isNotBlank(state)) {
             url += "&state=" + state;
         }

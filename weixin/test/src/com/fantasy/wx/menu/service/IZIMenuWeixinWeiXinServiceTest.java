@@ -94,7 +94,7 @@ public class IZIMenuWeixinWeiXinServiceTest {
     }
     @Test
     public void testUrl(){
-        String url=iMenuWeiXinService.createOauth2Url("http://semilean.eicp.net/iziwx/account/info", Scope.base);
+        String url=iMenuWeiXinService.createOauth2Url("http://semilean.eicp.net:8080/izi/account/info", Scope.userinfo);
         logger.debug(url);
     }
 }
