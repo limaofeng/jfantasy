@@ -57,6 +57,9 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
         UserDetails userDetails = userDetailsService.loadUserByUsername("admin");
         SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
+
+
+
         LOG.debug("默认admin登陆。。。");
     }
 

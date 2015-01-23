@@ -120,7 +120,7 @@ public class OgnlUtil {
             return Ognl.getValue(compile(name), context, root);
         } catch (OgnlException e) {
             logger.error(e.getMessage(), e);
-            throw new IgnoreException(e.getMessage());
+            return null;
         }
     }
 
@@ -138,13 +138,13 @@ public class OgnlUtil {
         }
     }
 
-    public Object compile(String expression){
+    public Object compile(String expression) {
         Object o = this.expressions.get(expression);
         if (o == null) {
             try {
                 this.expressions.putIfAbsent(expression, o = Ognl.parseExpression(expression));
             } catch (OgnlException e) {
-               throw new IgnoreException(e.getMessage());
+                throw new IgnoreException(e.getMessage());
             }
         }
         return o;
@@ -193,7 +193,7 @@ public class OgnlUtil {
         return this.beanInfoCache.get(clazz);
     }
 
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions){
+    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
         if (props == null) {
             return;
         }
@@ -205,21 +205,21 @@ public class OgnlUtil {
             try {
                 internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
             } catch (Exception e) {
-                throw  new IgnoreException(e.getMessage());
+                throw new IgnoreException(e.getMessage());
             }
         }
         Ognl.setRoot(context, oldRoot);
     }
 
-    void internalSetProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions){
+    void internalSetProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
         try {
             setValue(name, context, o, value);
         } catch (OgnlException e) {
             Throwable reason = e.getReason();
             String msg = "Caught OgnlException while setting property '" + name + "' on type '" + o.getClass().getName() + "'.";
             Throwable exception = reason == null ? e : reason;
-            if (throwPropertyExceptions){
-                throw new IgnoreException(msg+exception);
+            if (throwPropertyExceptions) {
+                throw new IgnoreException(msg + exception);
             }
         }
     }
@@ -274,14 +274,14 @@ public class OgnlUtil {
         for (PropertyDescriptor fromPd : fromPds) {
             if (fromPd.getReadMethod() != null) {
                 boolean copy = true;
-                if ((exclusions != null) && (exclusions.contains(fromPd.getName()))){
+                if ((exclusions != null) && (exclusions.contains(fromPd.getName()))) {
                     copy = false;
                 } else if ((inclusions != null) && (!inclusions.contains(fromPd.getName()))) {
                     copy = false;
                 }
                 if (copy) {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
-                    if ((toPd == null) || (toPd.getWriteMethod() == null)){
+                    if ((toPd == null) || (toPd.getWriteMethod() == null)) {
                         continue;
                     }
                     try {

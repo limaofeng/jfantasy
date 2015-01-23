@@ -72,6 +72,12 @@ public class Organization extends BaseBusEntity {
     @Transient
     private List<Organization> children;
 
+    /**
+     * 维度与上级机构
+     */
+    @Transient
+    private List<OrgHelpBean> orgHelpBeans;
+
     public String getId() {
         return id;
     }
@@ -118,5 +124,13 @@ public class Organization extends BaseBusEntity {
 
     public void setType(OrgType type) {
         this.type = type;
+    }
+
+    public List<OrgHelpBean> getOrgHelpBeans() {
+        return orgHelpBeans;
+    }
+
+    public void setOrgHelpBeans(List<OrgHelpBean> orgHelpBeans) {
+        this.orgHelpBeans = orgHelpBeans;
     }
 }
