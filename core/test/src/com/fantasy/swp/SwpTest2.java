@@ -1,5 +1,6 @@
 package com.fantasy.swp;
 
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.context.ActionConstants;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Template;
@@ -72,26 +73,31 @@ public class SwpTest2 extends StrutsSpringJUnit4TestCase {
     }
 
     @Test
-    public void testSearch2() throws Exception {
-        ActionProxy proxy = super.getActionProxy("/swp/template/search.do");
-        Assert.assertNotNull(proxy);
-
-        String result = proxy.execute();
-
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
-    }
-
-    @Test
     public void testDelete() throws Exception {
         this.testSave();
         this.request.removeAllParameters();
-        this.request.addParameter("ids", 2+"");
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_name","ARTICLE_JUNIT_TEST"));
+        List<Template> templates = this.templateService.find(filters);
+        Assert.assertNotNull(templates);
+        for(int i=0; i<templates.size(); i++){
+            this.request.addParameter("ids", templates.get(i).getId()+"");
+        }
         ActionProxy proxy = super.getActionProxy("/swp/template/delete.do");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
         System.out.println("result="+result);
     }
+
+    @Test
+    public void testSearch() throws Exception {
+        ActionProxy proxy = super.getActionProxy("/swp/template/search.do");
+        Assert.assertNotNull(proxy);
+        String result = proxy.execute();
+        System.out.println("result="+result);
+    }
+
 
     private static String getFileContent(String filePath){
         StringBuilder fileSb = new StringBuilder("");
@@ -109,14 +115,4 @@ public class SwpTest2 extends StrutsSpringJUnit4TestCase {
         return fileSb.toString();
     }
 
-    @Test
-    public void testSearch() throws Exception {
-
-        ActionProxy proxy = super.getActionProxy("/swp/template/save.do");
-        Assert.assertNotNull(proxy);
-
-        String result = proxy.execute();
-
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
-    }
 }

@@ -46,9 +46,6 @@ public class TemplateAction extends ActionSupport {
 	 * @return
 	 */
 	public String search(Pager<Template> pager,List<PropertyFilter> filters){
-        Pager<Template> pages = this.templateService.findPager(pager, filters);
-        System.out.println(pages.getPageItems().size());
-        System.out.println(pages.getPageItems().get(0).getContent());
 		this.attrs.put(ROOT,this.templateService.findPager(pager, filters));
 		return JSONDATA;
 	}

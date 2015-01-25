@@ -47,5 +47,8 @@ public class TemplateService {
         }
     }
 
+    public List<Template> find(List<PropertyFilter> filters){
+        return this.templateDao.find(filters);
+    }
 }
 

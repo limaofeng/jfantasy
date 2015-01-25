@@ -2,6 +2,7 @@ package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.system.bean.Website;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SWP_TEMPLATE")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "dataInferfaces","webSite"})
 public class Template extends BaseBusEntity {
 
     private static final long serialVersionUID = 6516821318292532274L;
