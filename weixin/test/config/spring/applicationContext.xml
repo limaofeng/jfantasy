@@ -99,11 +99,6 @@
         <property name="configuration" ref="freemarkerService"/>
     </bean>
 
-    <bean id="shortMessagingService" class="com.fantasy.sms.service.ShortMessagingService">
-        <property name="smsService">
-            <bean class="com.fantasy.sms.service.DefaultSMSService"/>
-        </property>
-    </bean>
 
     <!-- 自定义序列生成器 -->
     <bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">

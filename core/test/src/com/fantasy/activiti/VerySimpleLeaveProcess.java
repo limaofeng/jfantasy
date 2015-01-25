@@ -6,14 +6,13 @@ import org.activiti.engine.*;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
-import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class VerySimpleLeaveProcessTest {
+public class VerySimpleLeaveProcess {
 
-    @Test
+//    @Test
     public void testStartProcess() throws Exception {
         //创建流程引擎，使用内存数据库
         ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration().buildProcessEngine();

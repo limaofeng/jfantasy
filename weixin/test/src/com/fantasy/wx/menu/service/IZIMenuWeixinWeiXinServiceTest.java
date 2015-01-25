@@ -3,7 +3,9 @@ package com.fantasy.wx.menu.service;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.bean.MenuWeixin;
 import com.fantasy.wx.framework.message.content.Menu;
+import com.fantasy.wx.framework.oauth2.Scope;
 import com.fantasy.wx.service.MenuWeiXinService;
+import com.fantasy.wx.service.UserInfoWeiXinService;
 import junit.framework.Assert;
 import me.chanjar.weixin.common.api.WxConsts;
 import org.apache.commons.logging.Log;
@@ -14,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +27,8 @@ public class IZIMenuWeixinWeiXinServiceTest {
 
     @Autowired
     private MenuWeiXinService iMenuWeiXinService;
+    @Resource
+    private UserInfoWeiXinService userInfoWeiXinService;
 
     public void setUp() throws Exception {
         List<MenuWeixin> menuWeixinList = new ArrayList<MenuWeixin>();
@@ -86,5 +91,10 @@ public class IZIMenuWeixinWeiXinServiceTest {
         menus2[2]=Menu.view("问题搜索","http://112.124.22.92:8080/iziwx/question/search_info");
         Menu menu3=new Menu("问答",menus2);
         iMenuWeiXinService.refresh(menu1,menu2,menu3);
+    }
+    @Test
+    public void testUrl(){
+        String url=iMenuWeiXinService.createOauth2Url("http://semilean.eicp.net:8080/izi/account/info", Scope.userinfo);
+        logger.debug(url);
     }
 }

@@ -200,7 +200,7 @@ public class WeixinConfigInit{
         @Override
         public String toString() {
             return "SimpleWxConfigProvider [appId=" + appId + ", secret=" + secret + ", accessToken=" + accessToken
-                    + ", expiresIn=" + expiresIn + ", token=" + token + ", openId=" + openId + "]";
+                      + ", token=" + token + ", openId=" + openId + "]";
         }
 
     }

@@ -10,10 +10,18 @@ public enum Scope {
     /**
      * 不弹出授权页面
      */
-    base,
+    base("snsapi_base"),
     /**
      * 弹出授权页面
      */
-    userinfo
+    userinfo("snsapi_userinfo");
+    private String value;
+    Scope(String value) {
+        this.value=value;
+    }
+
+    public String getValue() {
+        return value;
+    }
 
 }

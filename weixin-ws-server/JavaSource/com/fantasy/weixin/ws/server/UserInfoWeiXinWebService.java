@@ -6,15 +6,15 @@ import com.fantasy.weixin.ws.dto.UserInfoDTO;
 import com.fantasy.wx.bean.Group;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.service.UserInfoWeiXinService;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-
-;
 
 /**
  * Created by zzzhong on 2015/1/6.
  */
-public class UserInfoWebInfoService implements IUserInfoService {
+@Component
+public class UserInfoWeiXinWebService implements IUserInfoService {
     @Resource
     public UserInfoWeiXinService userInfoWeiXinService;
     @Override
