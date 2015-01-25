@@ -1,12 +1,8 @@
 package com.fantasy.swp;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.struts2.context.ActionConstants;
-import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Template;
-import com.fantasy.swp.service.DataInferfaceService;
 import com.fantasy.swp.service.TemplateService;
-import com.fantasy.system.bean.Website;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
@@ -16,24 +12,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockServletConfig;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by wuzhiyong on 2015/1/23.
+ * Created by wml on 2015/1/23.
  */
+@Component
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-public class SwpTest2 extends StrutsSpringJUnit4TestCase {
+public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
-    private DataInferfaceService dataInferfaceService;
     @Resource
     private TemplateService templateService;
 
@@ -54,7 +52,7 @@ public class SwpTest2 extends StrutsSpringJUnit4TestCase {
     public void tearDown() throws Exception {
     }
 
-//    @Test
+    @Test
     public void testSave() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "ARTICLE_JUNIT_TEST");
@@ -66,19 +64,22 @@ public class SwpTest2 extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("dataInferfaces[0].key", "article.title");
         this.request.addParameter("dataInferfaces[1].name", "文章摘要");
         this.request.addParameter("dataInferfaces[1].key", "article.summary");
-        this.request.setContent(SwpTest2.getFileContent(SwpTest2.class.getClass().getResource("/").getPath()+"template/template_test.ftl").getBytes());
+        this.request.setContent(TemplateActionTest.getFileContent(TemplateActionTest.class.getClass().getResource("/").getPath()+"template/template_test.ftl").getBytes());
         ActionProxy proxy = super.getActionProxy("/swp/template/save.do");
         String result = proxy.execute();
-        System.out.println("result="+result);
+        System.out.println("result=" + result);
     }
 
     @Test
     public void testDelete() throws Exception {
-        this.testSave();
         this.request.removeAllParameters();
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQS_name","ARTICLE_JUNIT_TEST"));
         List<Template> templates = this.templateService.find(filters);
+        if(templates==null || templates.size()<=0){
+            this.testSave();
+            templates = this.templateService.find(filters);
+        }
         Assert.assertNotNull(templates);
         for(int i=0; i<templates.size(); i++){
             this.request.addParameter("ids", templates.get(i).getId()+"");

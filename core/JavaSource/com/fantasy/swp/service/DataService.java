@@ -35,5 +35,8 @@ public class DataService {
         }
     }
 
+    public List<Data> find(List<PropertyFilter> filters) {
+        return this.dataDao.find(filters);
+    }
 }
 

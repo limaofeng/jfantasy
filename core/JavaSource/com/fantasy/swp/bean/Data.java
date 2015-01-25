@@ -74,6 +74,8 @@ public class Data extends BaseBusEntity {
     @Column(name = "VALUE", length = 2000)
     private String value;
 
+    @Column(name = "DESCRIPTION")
+    private String description;
 
     public Long getId() {
         return id;
@@ -130,5 +132,13 @@ public class Data extends BaseBusEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
