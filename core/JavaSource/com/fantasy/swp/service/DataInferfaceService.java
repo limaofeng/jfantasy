@@ -37,5 +37,8 @@ public class DataInferfaceService {
         }
     }
 
+    public List<DataInferface> find(List<PropertyFilter> filters) {
+        return this.dataInferfaceDao.find(filters);
+    }
 }
 

@@ -40,5 +40,8 @@ public class _PageService {
     public void generation(Long id) {
     }
 
+    public List<Page> find(List<PropertyFilter> filters) {
+        return this.pageDao.find(filters);
+    }
 }
 

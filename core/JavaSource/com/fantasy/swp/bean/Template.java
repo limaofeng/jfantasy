@@ -2,6 +2,7 @@ package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.system.bean.Website;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -18,6 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SWP_TEMPLATE")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "dataInferfaces","webSite"})
 public class Template extends BaseBusEntity {
 
     private static final long serialVersionUID = 6516821318292532274L;
@@ -54,6 +56,11 @@ public class Template extends BaseBusEntity {
      */
     @OneToMany(mappedBy = "template", fetch = FetchType.LAZY)
     private List<DataInferface> dataInferfaces;
+    /**
+     * 模版路径
+     */
+    @Column(name = "PATH")
+    private String path;
 
     public Long getId() {
         return id;
@@ -93,5 +100,21 @@ public class Template extends BaseBusEntity {
 
     public void setWebSite(Website webSite) {
         this.webSite = webSite;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }
