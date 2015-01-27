@@ -71,7 +71,6 @@ public class Organization extends BaseBusEntity {
      */
     @Transient
     private List<Organization> children;
-
     /**
      * 维度与上级机构
      */
