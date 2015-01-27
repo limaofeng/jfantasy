@@ -59,7 +59,7 @@ public class Template extends BaseBusEntity {
     /**
      * 模版路径
      */
-    @Column(name = "PATH")
+    @Column(name = "PATH", nullable = false, unique = true)
     private String path;
 
     public Long getId() {

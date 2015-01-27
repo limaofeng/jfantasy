@@ -1,5 +1,7 @@
 package com.fantasy.swp;
 
+import com.fantasy.file.FileManager;
+import com.fantasy.file.manager.LocalFileManager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
@@ -76,6 +78,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     public void testSave() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "PAGE_JUNIT_TEST");
+        this.request.addParameter("path", "/template/test.html");
         // 模版
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQS_name","ARTICLE_JUNIT_TEST"));
@@ -145,4 +148,13 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
+    @Test
+    public void testCreate() throws Exception {
+        this.request.addHeader("X-Requested-With", "XMLHttpRequest");
+        this.request.addParameter("ids", "10");
+        ActionProxy proxy = super.getActionProxy("/swp/page/create.do");
+        Assert.assertNotNull(proxy);
+        String result = proxy.execute();
+        System.out.println("result="+result);
+    }
 }

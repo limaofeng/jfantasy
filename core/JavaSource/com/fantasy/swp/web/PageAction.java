@@ -48,6 +48,10 @@ public class PageAction extends ActionSupport {
 		this.pageService.delete(ids);
 		return JSONDATA;
 	}
-	
+
+    public String create(Long[] ids){
+        this.pageService.create(ids);
+        return JSONDATA;
+    }
 }
 

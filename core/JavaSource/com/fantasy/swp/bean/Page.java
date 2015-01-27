@@ -49,6 +49,12 @@ public class Page extends BaseBusEntity {
     @JoinColumn(name = "WEBSITE_ID")
     private Website webSite;
 
+    /**
+     * 文件存储路径
+     */
+    @Column(name = "path")
+    private String path;
+
     public Long getId() {
         return id;
     }
@@ -87,5 +93,13 @@ public class Page extends BaseBusEntity {
 
     public void setWebSite(Website webSite) {
         this.webSite = webSite;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

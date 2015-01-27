@@ -94,7 +94,6 @@ public class TemplateAction extends ActionSupport {
 	}
 	
 	public String delete(Long[] ids){
-        System.out.println("delete.....");
 		this.templateService.delete(ids);
 		return JSONDATA;
 	}

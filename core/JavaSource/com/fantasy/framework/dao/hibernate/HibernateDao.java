@@ -137,7 +137,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
      */
     public void persist(T entity) {
         Assert.notNull(entity, "entity不能为空");
-        getSession().persist(entity);
+        getSession().persist(clean(entity));
     }
 
     /**
@@ -260,7 +260,15 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                             addObjects.add(fk);
                         }
                     }
+                    List<Object> _old_fks = (List<Object>)ognlUtil.getValue(field.getName(), oldEntity);
                     ognlUtil.setValue(field.getName(), oldEntity, addObjects);
+                    //删除原有数据
+                    for(Object _odl : _old_fks){
+                        if(ObjectUtil.find(addObjects,this.getIdName(targetEntityClass),this.getIdValue(targetEntityClass,_odl)) == null){
+                            this.getSession().delete(_odl);
+                            System.out.println("删除数据"+this.getIdValue(targetEntityClass,_odl));
+                        }
+                    }
                 }
             }
             // 用于回显
@@ -704,6 +712,11 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     protected DetachedCriteria distinct(DetachedCriteria dc) {
         dc.setResultTransformer(DetachedCriteria.DISTINCT_ROOT_ENTITY);
         return dc;
+    }
+
+    public String getIdName(Class entityClass) {
+        ClassMetadata meta = getSessionFactory().getClassMetadata(entityClass);
+        return meta.getIdentifierPropertyName();
     }
 
     public String getIdName() {

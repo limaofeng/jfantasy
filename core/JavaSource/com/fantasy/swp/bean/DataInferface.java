@@ -26,7 +26,7 @@ public class DataInferface {
     /**
      * 数据在模板文件中的key
      */
-    @Column(name = "CODE")
+    @Column(name = "CODE", nullable = false)
     private String key;
     /**
      * 表述名称
@@ -38,8 +38,7 @@ public class DataInferface {
      */
 //    @Column(name = "is_Array")
 //    private DataType type;//pager|array|object|string|number
-
-    @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
     private List<Data> datas;
 
     public Template getTemplate() {

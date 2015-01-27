@@ -56,15 +56,15 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
     public void testSave() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "ARTICLE_JUNIT_TEST");
-        this.request.addParameter("description", "新闻文章");
+        this.request.addParameter("description", "新闻文章X5");
         this.request.addParameter("webSite.id", "7");
 //        this.request.addParameter("content", template.getContent());
         this.request.addParameter("path", "/template/template_test.ftl");
-        this.request.addParameter("dataInferfaces[0].name", "文章标题");
-        this.request.addParameter("dataInferfaces[0].key", "article.title");
-        this.request.addParameter("dataInferfaces[1].name", "文章摘要");
-        this.request.addParameter("dataInferfaces[1].key", "article.summary");
-        this.request.setContent(TemplateActionTest.getFileContent(TemplateActionTest.class.getClass().getResource("/").getPath()+"template/template_test.ftl").getBytes());
+        this.request.addParameter("dataInferfaces[0].name", "文章标题X5");
+        this.request.addParameter("dataInferfaces[0].key", "title");
+        this.request.addParameter("dataInferfaces[1].name", "文章摘要X5");
+        this.request.addParameter("dataInferfaces[1].key", "summary");
+        this.request.setContent(TemplateActionTest.getFileContent(TemplateActionTest.class.getClass().getResource("/").getPath()+ "template/template_test_zzzz.ftl").getBytes());
         ActionProxy proxy = super.getActionProxy("/swp/template/save.do");
         String result = proxy.execute();
         System.out.println("result=" + result);
