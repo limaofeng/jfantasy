@@ -41,15 +41,16 @@ public abstract class WebServiceClient {
     protected String axis2xml;
     protected boolean manageSession = false;
     protected ConfigurationContext configurationContext;
+    protected int timeout = 30000;
 
     public WebServiceClient(String serviceName) {
         this.serviceName = serviceName;
     }
 
     public void afterPropertiesSet() throws Exception {
-        assert this.endPointReference != null:"endPointReference不能为空";
-        assert this.targetNamespace != null:"targetNamespace不能为空";
-        assert this.serviceName != null:"serviceName不能为空";
+        assert this.endPointReference != null : "endPointReference不能为空";
+        assert this.targetNamespace != null : "targetNamespace不能为空";
+        assert this.serviceName != null : "serviceName不能为空";
         if (this.axis2xml != null) {
             if (this.axis2xml.startsWith("classpath:")) {
                 this.axis2xml = replace(this.axis2xml, "^classpath:", classes() + "/");
@@ -70,7 +71,7 @@ public abstract class WebServiceClient {
         Options options = serviceClient.getOptions();
         options.setManageSession(manageSession);
         //初始化超时时间
-        options.setTimeOutInMilliSeconds(30000);
+        options.setTimeOutInMilliSeconds(timeout);
         //设置Http客户端连接可以复用
         options.setProperty(HTTPConstants.REUSE_HTTP_CLIENT, Boolean.TRUE);
         this.LOG.debug(this.endPointReference.concat("/").concat(this.serviceName));
@@ -185,4 +186,7 @@ public abstract class WebServiceClient {
         return pattern.matcher(input).replaceFirst(replacement);
     }
 
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 }
