@@ -78,18 +78,23 @@ public class IZIMenuWeixinWeiXinServiceTest {
     }
     @Test
     public void tesTrefresh(){
-        Menu menu1=Menu.view("账户信息","http://112.124.22.92:8080/iziwx/account/info");
-        Menu[] menus=new Menu[3];
-        menus[0]=Menu.view("商场首页","http://112.124.22.92:8080/iziwx/bazaar/index");
-        menus[1]=Menu.view("品牌首页","http://112.124.22.92:8080/iziwx/brand/index");
-        menus[2]=Menu.view("搜索","http://112.124.22.92:8080/iziwx/search/index");
-        Menu menu2=new Menu("分类列表",menus);
-
-        Menu[] menus2=new Menu[3];
-        menus2[0]=Menu.view("问答首页","http://112.124.22.92:8080/iziwx/question/index");
-        menus2[1]=Menu.view("添加问题","http://112.124.22.92:8080/iziwx/question/add");
-        menus2[2]=Menu.view("问题搜索","http://112.124.22.92:8080/iziwx/question/search_info");
-        Menu menu3=new Menu("问答",menus2);
+        Menu[] menus0=new Menu[3];
+        menus0[0]=Menu.view("商场","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2Fsemilean.eicp.net%2Fweb%2Fbazaar%2Findex&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
+        menus0[1]=Menu.view("品牌","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2Fsemilean.eicp.net%2Fweb%2Fbrand%2Findex&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
+        menus0[2]=Menu.view("搜索","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2Fsemilean.eicp.net%2Fweb%2Fsearch%2Findex&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
+        Menu menu1=new Menu("数据库",menus0);
+        Menu[] menus1=new Menu[4];
+        menus1[0]=Menu.view("热门问题","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2Fsemilean.eicp.net%2Fweb%2Fquestion%2Findex&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
+        menus1[1]=Menu.view("我来问","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2Fsemilean.eicp.net%2Fweb%2Fquestion%2Fadd&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
+        menus1[2]=Menu.click("等我答","dengwoda");
+        menus1[3]=Menu.view("搜答案","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2Fsemilean.eicp.net%2Fweb%2Fquestion%2Fsearch_info&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
+        Menu menu2=new Menu("问答",menus1);
+        Menu[] menus2=new Menu[4];
+        menus2[0]=Menu.view("用户中心","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2Fsemilean.eicp.net%2Fweb%2Faccount%2Finfo&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
+        menus2[1]=Menu.click("收藏","shoucang");
+        menus2[2]=Menu.click("私信", "sixin");
+        menus2[3]=Menu.click("提问", "tiwen");
+        Menu menu3=new Menu("我的",menus2);
         iMenuWeiXinService.refresh(menu1,menu2,menu3);
     }
     @Test

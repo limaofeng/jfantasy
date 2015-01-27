@@ -12,7 +12,7 @@
     <packaging>jar</packaging>
     <version>${com.fantasy-version}</version>
 
-    <!--<repositories>
+    <!-- <repositories>
         <repository>
             <snapshots />
             <id>sonatype snapshots</id>
