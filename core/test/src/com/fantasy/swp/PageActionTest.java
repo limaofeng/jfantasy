@@ -115,6 +115,8 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
             }
             this.request.addParameter("datas["+i+"].id", datas.get(0).getId()+"");
         }
+        this.request.addParameter("pageType", "list");
+        this.request.addParameter("pageSize", "3");
         ActionProxy proxy = super.getActionProxy("/swp/page/save.do");
         String result = proxy.execute();
         System.out.println("result=" + result);
@@ -151,7 +153,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     @Test
     public void testCreate() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
-        this.request.addParameter("ids", "10");
+        this.request.addParameter("ids", "18");
         ActionProxy proxy = super.getActionProxy("/swp/page/create.do");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();

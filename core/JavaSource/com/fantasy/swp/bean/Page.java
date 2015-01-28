@@ -18,18 +18,17 @@ public class Page extends BaseBusEntity {
 
     private static final long serialVersionUID = 8032849785819496211L;
 
+
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
     /**
      * 名称
      */
     @Column(name = "NAME")
     private String name;
-
     /**
      * 对应模板
      */
@@ -48,12 +47,16 @@ public class Page extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "WEBSITE_ID")
     private Website webSite;
-
     /**
      * 文件存储路径
      */
     @Column(name = "path")
     private String path;
+    /**
+     * list类型的页面,pageSize默认15条
+     */
+    @Column(name = "PAGE_SIZE",columnDefinition="INT default 15")
+    private int pageSize;
 
     public Long getId() {
         return id;
@@ -101,5 +104,13 @@ public class Page extends BaseBusEntity {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
     }
 }

@@ -11,7 +11,24 @@ import java.util.List;
 @Entity
 @Table(name = "SWP_DATA_INFERFACE")
 public class DataInferface {
+    /**
+     * 数据类型
+     */
+    public enum DataType{
+        common("普通类型"),
+        list("数组类型"),
+        object("对象类型");
 
+        private String value;
+
+        private DataType (String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+    }
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -40,6 +57,12 @@ public class DataInferface {
 //    private DataType type;//pager|array|object|string|number
     @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
     private List<Data> datas;
+    /**
+     * 数据类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "DATA_TYPE",nullable = false)
+    private DataType dataType;
 
     public Template getTemplate() {
         return template;
@@ -81,4 +104,11 @@ public class DataInferface {
         this.datas = datas;
     }
 
+    public DataType getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(DataType dataType) {
+        this.dataType = dataType;
+    }
 }

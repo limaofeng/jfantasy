@@ -71,7 +71,8 @@ public class Data extends BaseBusEntity {
     @JoinColumn(name = "DATAINFERFACE_ID")
     private DataInferface dataInferface;
 
-    @Column(name = "VALUE", length = 2000)
+    @Lob
+    @Column(name = "VALUE")
     private String value;
 
     @Column(name = "DESCRIPTION")

@@ -3,6 +3,9 @@ package com.fantasy.swp;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.service.TemplateService;
+import com.fantasy.system.bean.Website;
+import com.fantasy.system.service.WebsiteService;
+import com.fantasy.system.web.WebsiteActionTest;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
@@ -34,7 +37,10 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
     @Resource
     private TemplateService templateService;
-
+    @Resource
+    private WebsiteService websiteService;
+    @Resource
+    private WebsiteActionTest websiteActionTest;
     @Override
     protected String getConfigPath() {
         return "struts.xml";
@@ -45,6 +51,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         JspSupportServlet jspSupportServlet = new JspSupportServlet();
         jspSupportServlet.init(new MockServletConfig());
         super.setUp();
+        websiteActionTest.setUp();
         //request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
     }
 
@@ -56,14 +63,22 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
     public void testSave() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "ARTICLE_JUNIT_TEST");
-        this.request.addParameter("description", "新闻文章X5");
-        this.request.addParameter("webSite.id", "7");
+        this.request.addParameter("description", "新闻文章X1");
+
+        //测试站点
+        Website website = this.websiteService.get("test");
+        if(website==null){
+            websiteActionTest.testSave();
+            website = this.websiteService.get("test");
+        }
+        this.request.addParameter("webSite.id", website.getId()+"");
 //        this.request.addParameter("content", template.getContent());
-        this.request.addParameter("path", "/template/template_test.ftl");
-        this.request.addParameter("dataInferfaces[0].name", "文章标题X5");
-        this.request.addParameter("dataInferfaces[0].key", "title");
-        this.request.addParameter("dataInferfaces[1].name", "文章摘要X5");
-        this.request.addParameter("dataInferfaces[1].key", "summary");
+        this.request.addParameter("path", "/template/art_test.ftl");
+        this.request.addParameter("dataInferfaces[0].name", "文章列表");
+        this.request.addParameter("dataInferfaces[0].key", "articles");
+        this.request.addParameter("dataInferfaces[0].dataType", "list");
+//        this.request.addParameter("dataInferfaces[1].name", "文章摘要X1");
+//        this.request.addParameter("dataInferfaces[1].key", "summary");
         this.request.setContent(TemplateActionTest.getFileContent(TemplateActionTest.class.getClass().getResource("/").getPath()+ "template/template_test_zzzz.ftl").getBytes());
         ActionProxy proxy = super.getActionProxy("/swp/template/save.do");
         String result = proxy.execute();

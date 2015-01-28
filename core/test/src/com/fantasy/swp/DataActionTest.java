@@ -1,6 +1,9 @@
 package com.fantasy.swp;
 
+import com.fantasy.attr.bean.Article;
+import com.fantasy.attr.service.ArticleService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.swp.bean.*;
 import com.fantasy.swp.service.DataInferfaceService;
 import com.fantasy.swp.service.DataService;
@@ -35,6 +38,8 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
     private DataService dataService;
     @Resource
     private TemplateActionTest templateActionTest;
+    @Resource
+    private ArticleService articleService;
 
     @Before
     public void setUp() throws Exception {
@@ -68,7 +73,16 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
             this.request.removeParameter("value");
 
             this.request.addParameter("dataInferface.id", dataInferfaces.get(i).getId()+"");
-            this.request.addParameter("value", "{'"+dataInferfaces.get(i).getKey()+"':'文章XXX'}");
+            if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.list){ // 数组类型
+                filters = new ArrayList<PropertyFilter>();
+                List<Article> articles = this.articleService.find(filters);
+                this.request.addParameter("value", JSON.serialize(articles));
+            }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.common){  // 普通类型
+                this.request.addParameter("value", dataInferfaces.get(i).getKey()+"XXXXX");
+            }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.object){
+                //
+            }
+
             ActionProxy proxy = super.getActionProxy("/swp/page/data-save.do");
             String result = proxy.execute();
             System.out.println("result=" + result);
