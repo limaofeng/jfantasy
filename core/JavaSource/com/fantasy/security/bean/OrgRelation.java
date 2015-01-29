@@ -57,6 +57,11 @@ public class OrgRelation extends BaseBusEntity {
     @Column(name = "SORT")
     private Integer sort;
     /**
+     * 用于存储关系path
+     */
+    @Column(name = "PATH", nullable = false, length = 3000)
+    private String path;
+    /**
      * 上级关系
      */
     @JsonIgnore
@@ -131,5 +136,13 @@ public class OrgRelation extends BaseBusEntity {
 
     public void setSort(Integer sort) {
         this.sort = sort;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 }

@@ -5,14 +5,14 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>3.0.4.Alphal</version>
+        <version>3.0.5.Alphal</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>fantasy-weixin</artifactId>
     <packaging>jar</packaging>
     <version>${com.fantasy-version}</version>
 
-    <!--<repositories>
+    <!-- <repositories>
         <repository>
             <snapshots />
             <id>sonatype snapshots</id>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>me.chanjar</groupId>
             <artifactId>weixin-java-mp</artifactId>
-            <version>1.1.0</version>
+            <version>1.0.6-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <artifactId>commons-io</artifactId>
