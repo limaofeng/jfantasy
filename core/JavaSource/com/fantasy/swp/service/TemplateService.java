@@ -50,13 +50,16 @@ public class TemplateService {
             List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
             filters.add(new PropertyFilter("EQL_template.id",id+""));
 
-            // 将page中关联的模版置空
             List<Page> pages = pageService.find(filters);
             if(pages!=null && pages.size()>0){
-                for(Page page : pages){
-                    page.setTemplate(null);
-                    pageService.save(page);
+                Long[] dids = new Long[pages.size()];
+                for(int i=0; i<pages.size(); i++){
+//                    //将page中关联的模版置空
+//                    page.setTemplate(null);
+//                    pageService.save(page);
+                    dids[i] = pages.get(i).getId();
                 }
+                pageService.delete(dids);
             }
             // 删除数据定义及数据
             List<DataInferface> dataInferfaces = dataInferfaceService.find(filters);

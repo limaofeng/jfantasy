@@ -12,6 +12,22 @@ import java.util.Map;
 
 public class SpELUtil {
 
+    public static EvaluationContext createEvaluationContext() {
+        StandardEvaluationContext context = new StandardEvaluationContext();
+        context.setVariable("DateUtil", DateUtil.class);
+        context.setVariable("SequenceInfo", SequenceInfo.class);
+        context.setVariable("StringUtil", StringUtil.class);
+        return context;
+    }
+
+    public static EvaluationContext createEvaluationContext(Map<String, Object> data) {
+        EvaluationContext context = createEvaluationContext();
+        for (Map.Entry<String, Object> entry : data.entrySet()){
+            context.setVariable(entry.getKey(), entry.getValue());
+        }
+        return context;
+    }
+
     public static EvaluationContext createEvaluationContext(Object object) {
         StandardEvaluationContext context = new StandardEvaluationContext(object);
         context.setVariable("DateUtil", DateUtil.class);
@@ -32,34 +48,5 @@ public class SpELUtil {
         SpelExpressionParser parser = new SpelExpressionParser();
         return parser.parseExpression(el);
     }
-
-    public static void main(String[] args) {
-//		StandardEvaluationContext context = new StandardEvaluationContext(object);
-//		context.setVariable("DateUtil", DateUtil.class);
-//		context.setVariable("SequenceInfo", SequenceInfo.class);
-//		context.setVariable("StringUtil", StringUtil.class);
-//		return expression.getValue(context, String.class);
-
-
-//		SpelExpressionParser parser = new SpelExpressionParser();
-//		
-//		Expression expression = parser.parseExpression("'SN_' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(123, 5)");
-//		User user = new User();
-//		user.setUsername("xxxx");
-//		
-//		StandardEvaluationContext context = new StandardEvaluationContext(user);
-//		context.setVariable("DateUtil", DateUtil.class);
-//		context.setVariable("StringUtil", StringUtil.class);
-//		
-//		System.out.println(expression.getValue(context,String.class));
-
-//		Goods goods = new Goods();
-//		goods.setMarketable(true);
-//		
-//		SpelExpressionParser parser = new SpelExpressionParser();
-//		System.out.println(getExpression(" marketable = true ").getValue(createEvaluationContext(goods),boolean.class));
-
-    }
-
 
 }

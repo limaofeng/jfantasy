@@ -15,13 +15,41 @@ public class DataInferface {
      * 数据类型
      */
     public enum DataType{
+        /**
+         * 普通类型
+         */
         common("普通类型"),
-        list("数组类型"),
+        /**
+         * 分页类型，有一页数据则会生成一个html
+         */
+        list("分页类型"),
+        /**
+         * 对象类型，有一条数据则会生成一个html
+         */
         object("对象类型");
 
         private String value;
 
         private DataType (String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+    }
+
+    /**
+     * 数据源
+     */
+    public enum DataSource{
+        db("数据库"),
+        func("方法"),
+        stat("静态");
+
+        private String value;
+
+        private DataSource (String value) {
             this.value = value;
         }
 
@@ -63,6 +91,12 @@ public class DataInferface {
     @Enumerated(EnumType.STRING)
     @Column(name = "DATA_TYPE",nullable = false)
     private DataType dataType;
+    /**
+     * 数据源
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "DATA_SOURCE",nullable = false)
+    private DataSource dataSource;
 
     public Template getTemplate() {
         return template;
@@ -110,5 +144,13 @@ public class DataInferface {
 
     public void setDataType(DataType dataType) {
         this.dataType = dataType;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }
