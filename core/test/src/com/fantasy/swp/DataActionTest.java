@@ -78,21 +78,35 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
 
             this.request.addParameter("dataInferface.id", dataInferfaces.get(i).getId()+"");
             if(dataInferfaces.get(i).getDataSource()==DataInferface.DataSource.stat){// 静态
-                if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.list){ // 数组类型
+                if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.list){ // 列表类型
                     filters = new ArrayList<PropertyFilter>();
                     List<Article> articles = this.articleService.find(filters);
                     this.request.addParameter("value", JSON.serialize(articles));
                 }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.common){  // 普通类型
                     this.request.addParameter("value", dataInferfaces.get(i).getKey()+"XXXXX");
+                }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.object){   // 对象类型
+                    filters = new ArrayList<PropertyFilter>();
+                    List<Article> articles = this.articleService.find(filters);
+                    this.request.addParameter("value", JSON.serialize(articles));
                 }
             }else if(dataInferfaces.get(i).getDataSource()==DataInferface.DataSource.func){
-                if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.list){ // 数组类型
+                if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.list){ // 列表类型
 //                    filters = new ArrayList<PropertyFilter>();
 //                    List<Article> articles = this.articleService.find(filters);
                     // "{'func':'#articleService.find(#filters)','params':{filters:[{key:'EQS_creator',value:'hebo'}]}}"
-                    this.request.addParameter("value", "{'func':'#articleService.findUniqueBy(#propertyName,#value)','params':{filters:[{key:'EQS_creator',value:'hebo'}],stat:{propertyName:'title',value:'titleA2'} }}");
+                    this.request.addParameter("value", "{'func':'#articleService.find(#filters)','params':{filters:[{key:'EQS_creator',value:'hebo'}],stat:{propertyName:'title',value:'titleA2'} }}");
                 }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.common){  // 普通类型
                     this.request.addParameter("value", "{'func':'#articleService.findUniqueBy(#propertyName,#value)','params':{filters:[{key:'EQS_creator',value:'hebo'}],stat:{propertyName:'title',value:'titleA2'} }}");
+                }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.object){   // 对象类型
+                    this.request.addParameter("value", "{'func':'#articleService.find(#filters)','params':{filters:[{key:'EQS_creator',value:'hebo'}],stat:{propertyName:'title',value:'titleA2'} }}");
+                }
+            }else if(dataInferfaces.get(i).getDataSource()==DataInferface.DataSource.db){
+                if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.list){ // 列表类型
+                    this.request.addParameter("value", "{'hql':'from Article where creator=hebo','operate':'list'}");
+                }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.common){  // 普通类型
+                    this.request.addParameter("value", "{'hql':'from Article where creator=hebo','operate':'object'}");
+                }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.object){   // 对象类型
+                    this.request.addParameter("value", "{'hql':'from Article where creator=hebo','operate':'object'}");
                 }
             }
 

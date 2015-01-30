@@ -10,6 +10,7 @@ import com.fantasy.swp.PageInstance;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
+import com.fantasy.swp.service.HqlService;
 import com.fantasy.swp.service.SpelService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import freemarker.template.Configuration;
@@ -61,6 +62,8 @@ public class GeneratePage implements PageInstance {
                     this.dealStatSource(dataInferface,data,pagerList);
                 }else if(dataInferface.getDataSource()==DataInferface.DataSource.func){// 数据源为方法
                     this.dealFuncSource(dataInferface,data,pagerList);
+                }else if(dataInferface.getDataSource()==DataInferface.DataSource.db){   // 数据库查询
+                    this.dealDbSource(dataInferface,data,pagerList);
                 }
             }
             // 生成页面
@@ -138,7 +141,19 @@ public class GeneratePage implements PageInstance {
                 }
             }
         }else if(dataInferface.getDataType()==DataInferface.DataType.object){
-
+            List<HashMap> datas = JSON.deserialize(data.getValue(),new TypeReference<List<HashMap>>() {});
+            if(datas==null || datas.size()<=0){
+                return;
+            }
+            for(int i=0; i<datas.size(); i++){
+                if(i==0){
+                    pagerList.get(0).put(dataInferface.getKey(), datas.get(i));
+                }else{
+                    Map<String,Object> _map = new HashMap<String, Object>();
+                    _map.put(dataInferface.getKey(), datas.get(i));
+                    pagerList.add(_map);
+                }
+            }
         }
     }
 
@@ -162,7 +177,8 @@ public class GeneratePage implements PageInstance {
             }else if(obj instanceof Array){
                 datas = Arrays.asList(((Array)obj));
             }else {
-                return;
+                datas = new ArrayList();
+                datas.add(obj);
             }
             int pageSize = page.getPageSize();
             List<Pager> pagers = this.make(datas,pageSize);
@@ -176,7 +192,78 @@ public class GeneratePage implements PageInstance {
                 }
             }
         }else if(dataInferface.getDataType()==DataInferface.DataType.object){
+            List datas;
+            if(obj instanceof List){
+                datas = (List)obj;
+            }else if(obj instanceof Array){
+                datas = Arrays.asList(((Array)obj));
+            }else {
+                datas = new ArrayList();
+                datas.add(obj);
+            }
+            for(int i=0; i<datas.size(); i++){
+                if(i==0){
+                    pagerList.get(0).put(dataInferface.getKey(), datas.get(i));
+                }else{
+                    Map<String,Object> _map = new HashMap<String, Object>();
+                    _map.put(dataInferface.getKey(), datas.get(i));
+                    pagerList.add(_map);
+                }
+            }
+        }
+    }
 
+    private void dealDbSource(DataInferface dataInferface, Data data, List<Map<String, Object>> pagerList) {
+        HqlService hqlService = SpringContextUtil.getBeanByType(HqlService.class);
+        Map<String,Object> params = JSON.deserialize(data.getValue(),new TypeReference<HashMap<String,Object>>() {});
+        String hql = params.get("hql").toString();
+        String operate = params.get("operate").toString();
+        Object obj = hqlService.execute(hql,operate);
+
+        if(dataInferface.getDataType()==DataInferface.DataType.common){       // 普通
+            for(Map<String,Object> map : pagerList){
+                map.put(dataInferface.getKey(), obj);
+            }
+        }else if(dataInferface.getDataType()==DataInferface.DataType.list){   // 列表页
+            List datas;
+            if(obj instanceof List){
+                datas = (List)obj;
+            }else if(obj instanceof Array){
+                datas = Arrays.asList(((Array)obj));
+            }else {
+                datas = new ArrayList();
+                datas.add(obj);
+            }
+            int pageSize = page.getPageSize();
+            List<Pager> pagers = this.make(datas,pageSize);
+            for(int i=0; i<pagers.size(); i++){
+                if(i==0){
+                    pagerList.get(0).put(dataInferface.getKey(), pagers.get(i).getPageItems());
+                }else{
+                    Map<String,Object> _map = new HashMap<String, Object>();
+                    _map.put(dataInferface.getKey(), pagers.get(i).getPageItems());
+                    pagerList.add(_map);
+                }
+            }
+        }else if(dataInferface.getDataType()==DataInferface.DataType.object){
+            List datas;
+            if(obj instanceof List){
+                datas = (List)obj;
+            }else if(obj instanceof Array){
+                datas = Arrays.asList(((Array)obj));
+            }else {
+                datas = new ArrayList();
+                datas.add(obj);
+            }
+            for(int i=0; i<datas.size(); i++){
+                if(i==0){
+                    pagerList.get(0).put(dataInferface.getKey(), datas.get(i));
+                }else{
+                    Map<String,Object> _map = new HashMap<String, Object>();
+                    _map.put(dataInferface.getKey(), datas.get(i));
+                    pagerList.add(_map);
+                }
+            }
         }
     }
 }
