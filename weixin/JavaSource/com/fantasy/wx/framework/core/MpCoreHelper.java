@@ -364,15 +364,15 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     @Override
     public void sendNewsMessage(WeiXinSession session, List<News> content, String toUser) throws WeiXinException {
         try {
-            WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
             me.chanjar.weixin.mp.bean.custombuilder.NewsBuilder newsBuilder = WxMpCustomMessage.NEWS().toUser(toUser);
             for (News news : content) {
+                WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
                 article.setPicUrl(news.getPicUrl());
                 article.setTitle(news.getLink().getTitle());
                 article.setDescription(news.getLink().getDescription());
                 article.setUrl(news.getLink().getUrl());
+                newsBuilder.addArticle(article);
             }
-            newsBuilder.addArticle(article);
             getWeiXinDetails(session.getId()).getWxMpService().customMessageSend(newsBuilder.build());
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
