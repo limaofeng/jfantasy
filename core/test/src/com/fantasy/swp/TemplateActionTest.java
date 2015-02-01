@@ -1,11 +1,11 @@
 package com.fantasy.swp;
 
+import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.service.TemplateService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
-import com.fantasy.system.web.WebsiteActionTest;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
@@ -39,8 +39,6 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
     private TemplateService templateService;
     @Resource
     private WebsiteService websiteService;
-    @Resource
-    private WebsiteActionTest websiteActionTest;
     @Override
     protected String getConfigPath() {
         return "struts.xml";
@@ -51,35 +49,41 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         JspSupportServlet jspSupportServlet = new JspSupportServlet();
         jspSupportServlet.init(new MockServletConfig());
         super.setUp();
-        websiteActionTest.setUp();
         //request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
     }
 
     @After
     public void tearDown() throws Exception {
+        this.testDelete();
+        this.deleteWebsiteTest();
     }
 
     @Test
     public void testSave() throws Exception {
-        this.request.addHeader("X-Requested-With", "XMLHttpRequest");
-        this.request.addParameter("name", "ARTICLE_JUNIT_TEST");
-        this.request.addParameter("description", "新闻文章X1");
+        String templateFile = "template/template_test_common.ftl";
+        String dataType = "common";
+        String dataSource = "func";
+        String path = "/template/art_test.ftl";
 
+        this.request.addHeader("X-Requested-With", "XMLHttpRequest");
+        this.request.addParameter("name", "TEMPLATE_JUNIT_TEST");
+        this.request.addParameter("description", "新闻文章X1");
         //测试站点
-        Website website = this.websiteService.get("test");
+        Website website = this.websiteService.get("SWP_WEBSITE_TEST");
         if(website==null){
-            websiteActionTest.testSave();
-            website = this.websiteService.get("test");
+            website = this.saveWebsiteTest();
         }
         this.request.addParameter("webSite.id", website.getId()+"");
 //        this.request.addParameter("content", template.getContent());
-        this.request.addParameter("path", "/template/art_test.ftl");
-        this.request.addParameter("dataInferfaces[0].name", "文章列表");
-        this.request.addParameter("dataInferfaces[0].key", "articles");
-        this.request.addParameter("dataInferfaces[0].dataType", "list");
-//        this.request.addParameter("dataInferfaces[1].name", "文章摘要X1");
-//        this.request.addParameter("dataInferfaces[1].key", "summary");
-        this.request.setContent(TemplateActionTest.getFileContent(TemplateActionTest.class.getClass().getResource("/").getPath()+ "template/template_test_zzzz.ftl").getBytes());
+        this.request.addParameter("path", path);
+        this.request.addParameter("dataInferfaces[0].name", "文章");
+        this.request.addParameter("dataInferfaces[0].key", "article");
+        // 数据类型
+        this.request.addParameter("dataInferfaces[0].dataType", dataType);
+        // 数据源
+        this.request.addParameter("dataInferfaces[0].dataSource", dataSource);
+
+        this.request.setContent(TemplateActionTest.getFileContent(TemplateActionTest.class.getClass().getResource("/").getPath()+ templateFile).getBytes());
         ActionProxy proxy = super.getActionProxy("/swp/template/save.do");
         String result = proxy.execute();
         System.out.println("result=" + result);
@@ -87,13 +91,13 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
     @Test
     public void testDelete() throws Exception {
-        this.request.removeAllParameters();
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQS_name","ARTICLE_JUNIT_TEST"));
+        filters.add(new PropertyFilter("EQS_name","TEMPLATE_JUNIT_TEST"));
         List<Template> templates = this.templateService.find(filters);
         if(templates==null || templates.size()<=0){
-            this.testSave();
-            templates = this.templateService.find(filters);
+//            this.testSave();
+//            templates = this.templateService.find(filters);
+            return;
         }
         Assert.assertNotNull(templates);
         for(int i=0; i<templates.size(); i++){
@@ -130,5 +134,24 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         }
         return fileSb.toString();
     }
+    private Website saveWebsiteTest(){
+        Website website = new Website();
+        website.setKey("SWP_WEBSITE_TEST");
+        website.setName("swp测试");
+        website.setWeb("http://haolue.jfantasy.org");
+        FileManagerConfig fileManagerConfig = new FileManagerConfig();
+        fileManagerConfig.setId("haolue-default");
+        website.setDefaultFileManager(fileManagerConfig);
+        FileManagerConfig uploadFileManager = new FileManagerConfig();
+        uploadFileManager.setId("haolue-upload");
+        website.setDefaultUploadFileManager(uploadFileManager);
+        return websiteService.save(website);
 
+    }
+    private void deleteWebsiteTest(){
+        Website website = this.websiteService.get("SWP_WEBSITE_TEST");
+        if(website!=null){
+            this.websiteService.delete(website.getId());
+        }
+    }
 }

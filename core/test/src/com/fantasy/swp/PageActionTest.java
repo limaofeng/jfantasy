@@ -1,16 +1,14 @@
 package com.fantasy.swp;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.file.manager.LocalFileManager;
+import com.fantasy.attr.service.ArticleService;
+import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
 import com.fantasy.swp.bean.Template;
-import com.fantasy.swp.service.DataInferfaceService;
-import com.fantasy.swp.service.DataService;
-import com.fantasy.swp.service.TemplateService;
-import com.fantasy.swp.service._PageService;
+import com.fantasy.swp.service.*;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 import com.fantasy.system.web.WebsiteActionTest;
@@ -22,7 +20,6 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
@@ -71,7 +68,9 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-
+        this.templeateTest.testDelete();
+//        this.testDelete();
+        this.deleteWebsiteTest();
     }
 
     @Test
@@ -81,7 +80,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("path", "/template/test.html");
         // 模版
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQS_name","ARTICLE_JUNIT_TEST"));
+        filters.add(new PropertyFilter("EQS_name","TEMPLATE_JUNIT_TEST"));
         List<Template> templates = templateService.find(filters);
         Long templateId;
         if(templates==null || templates.size()<=0){
@@ -94,10 +93,10 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("template.id", templateId+"");
 
         //测试站点
-        Website website = this.websiteService.get("test");
+        Website website = this.websiteService.get("SWP_WEBSITE_TEST");
         if(website==null){
-            websiteActionTest.testSave();
-            website = this.websiteService.get("test");
+            website = this.saveWebsiteTest();
+//            website = this.websiteService.get("SWP_WEBSITE_TEST");
         }
         this.request.addParameter("webSite.id", website.getId()+"");
 
@@ -115,8 +114,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
             }
             this.request.addParameter("datas["+i+"].id", datas.get(0).getId()+"");
         }
-        this.request.addParameter("pageType", "list");
-        this.request.addParameter("pageSize", "3");
+        this.request.addParameter("pageSize", "4");
         ActionProxy proxy = super.getActionProxy("/swp/page/save.do");
         String result = proxy.execute();
         System.out.println("result=" + result);
@@ -128,8 +126,9 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         filters.add(new PropertyFilter("EQS_name","PAGE_JUNIT_TEST"));
         List<Page> pages = this.pageService.find(filters);
         if(pages==null || pages.size()<=0){
-            this.testSave();
-            pages = this.pageService.find(filters);
+//            this.testSave();
+//            pages = this.pageService.find(filters);
+            return;
         }
         Assert.assertNotNull(pages);
         for(int i=0; i<pages.size(); i++){
@@ -152,11 +151,37 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
 
     @Test
     public void testCreate() throws Exception {
+        SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
-        this.request.addParameter("ids", "18");
+        this.request.addParameter("ids", "30");
         ActionProxy proxy = super.getActionProxy("/swp/page/create.do");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();
         System.out.println("result="+result);
+    }
+
+    private Website saveWebsiteTest(){
+        Website website = this.websiteService.get("SWP_WEBSITE_TEST");
+        if(website!=null){
+            return website;
+        }
+        website = new Website();
+        website.setKey("SWP_WEBSITE_TEST");
+        website.setName("swp测试");
+        website.setWeb("http://haolue.jfantasy.org");
+        FileManagerConfig fileManagerConfig = new FileManagerConfig();
+        fileManagerConfig.setId("haolue-default");
+        website.setDefaultFileManager(fileManagerConfig);
+        FileManagerConfig uploadFileManager = new FileManagerConfig();
+        uploadFileManager.setId("haolue-upload");
+        website.setDefaultUploadFileManager(uploadFileManager);
+        return websiteService.save(website);
+
+    }
+    private void deleteWebsiteTest(){
+        Website website = this.websiteService.get("SWP_WEBSITE_TEST");
+        if(website!=null){
+            this.websiteService.delete(website.getId());
+        }
     }
 }

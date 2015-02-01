@@ -17,9 +17,8 @@
                     </td>
                 </tr>
             </#list>
-            <a href="${prePager}">上一页</a>
-            <a href="${nextPager}">下一页</a>
+            <a href="${prePager!''}">上一页</a>
+            <a href="${nextPager!''}">下一页</a>
         </table>
-
     </body>
 </html>
