@@ -60,10 +60,23 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
     @Test
     public void testSave() throws Exception {
+        // 普通类型：common，分页类型：list，对象类型：object
+        String dataType = "object";
+        // 静态:stat，方法:func，hql语句:db
+        String dataSource = "db";
         String templateFile = "template/template_test_common.ftl";
-        String dataType = "common";
-        String dataSource = "func";
-        String path = "/template/art_test.ftl";
+        String path = "/template/art_test_common.ftl";
+        String key = "article";
+        if("object".equals(dataType)){
+            templateFile = "template/template_test_object.ftl";
+            path = "/template/art_test_object.ftl";
+            key = "article";
+        }else if("list".equals(dataType)){
+            templateFile = "template/template_test_list.ftl";
+            path = "/template/art_test_list.ftl";
+            key = "articles";
+        }
+
 
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "TEMPLATE_JUNIT_TEST");
@@ -77,7 +90,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 //        this.request.addParameter("content", template.getContent());
         this.request.addParameter("path", path);
         this.request.addParameter("dataInferfaces[0].name", "文章");
-        this.request.addParameter("dataInferfaces[0].key", "article");
+        this.request.addParameter("dataInferfaces[0].key", key);
         // 数据类型
         this.request.addParameter("dataInferfaces[0].dataType", dataType);
         // 数据源

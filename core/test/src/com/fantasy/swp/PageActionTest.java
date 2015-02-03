@@ -69,7 +69,6 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     @After
     public void tearDown() throws Exception {
         this.templeateTest.testDelete();
-//        this.testDelete();
         this.deleteWebsiteTest();
     }
 
@@ -153,7 +152,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     public void testCreate() throws Exception {
         SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
-        this.request.addParameter("ids", "30");
+        this.request.addParameter("ids", "45");
         ActionProxy proxy = super.getActionProxy("/swp/page/create.do");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();
