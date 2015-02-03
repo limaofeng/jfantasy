@@ -23,9 +23,9 @@ public class LogInterceptor extends LogAspectSupport implements MethodIntercepto
             public Object invoke() {
                 try {
                     return invocation.proceed();
-                } catch (Throwable ex) {
+                } catch (Throwable ex) {//NOSONAR
                     logger.debug(ex.getMessage(), ex);
-                    throw new ThrowableWrapper(ex);//NOSONAR
+                    throw new ThrowableWrapper(ex);
                 }
             }
         };
