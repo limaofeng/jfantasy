@@ -53,11 +53,10 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
     @After
     public void tearDown() throws Exception {
         templateActionTest.testDelete();
-        templateActionTest.tearDown();
         testDelete();
     }
 
-//    @Test
+    @Test
     public void testSave() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("description", "DATA_JUNIT_TEST");
@@ -83,7 +82,7 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
                     List<Article> articles = this.articleService.find(filters);
                     this.request.addParameter("value", JSON.serialize(articles));
                 }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.common){  // 普通类型
-                    this.request.addParameter("value", dataInferfaces.get(i).getKey()+"XXXXX");
+                    this.request.addParameter("value", "{title:'标题',sumary:'xxxxxxxxsumary...'}");
                 }else if(dataInferfaces.get(i).getDataType()==DataInferface.DataType.object){   // 对象类型
                     filters = new ArrayList<PropertyFilter>();
                     List<Article> articles = this.articleService.find(filters);
@@ -117,7 +116,7 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
         }
     }
 
-//    @Test
+    @Test
     public void testDelete() throws Exception {
         this.request.removeAllParameters();
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
@@ -139,7 +138,7 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-//    @Test
+    @Test
     public void testSearch() throws Exception {
         ActionProxy proxy = super.getActionProxy("/swp/page/data-search.do");
         Assert.assertNotNull(proxy);
