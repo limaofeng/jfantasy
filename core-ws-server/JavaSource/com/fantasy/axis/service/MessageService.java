@@ -36,48 +36,49 @@ public class MessageService {
 
     public void log(final MessageContext msgContext, final Message.Type type) {
         final MessageService messageService = SpringContextUtil.getBeanByType(MessageService.class);
+        final Message.ResultType result = msgContext.getFLOW() == MessageContext.IN_FAULT_FLOW || msgContext.getFLOW() == MessageContext.OUT_FAULT_FLOW ? Message.ResultType.fault : Message.ResultType.normal;
+        Message message;
+        if (msgContext.getFLOW() == MessageContext.IN_FLOW || msgContext.getFLOW() == MessageContext.IN_FAULT_FLOW) {
+            if (msgContext.getMessageID() == null) {
+                LOG.error("MessageID is null.");
+                return;
+            }
+            message = new Message();
+            message.setId(msgContext.getMessageID());
+            message.setType(type);
+            message.setRemoteAddr(StringUtil.nullValue(msgContext.getProperty(MessageContext.REMOTE_ADDR)));
+            message.setIn(StringUtil.nullValue(msgContext.getEnvelope()));
+            message.setResult(result);
+        } else {
+            if (msgContext.getRelatesTo() == null) {
+                LOG.error("RelatesTo is null.");
+                return;
+            }
+            String messageID = msgContext.getRelatesTo().getValue();
+            message = messageService.get(messageID);
+            for (int i = 0; i <= 3 && message == null; i++) {
+                try {
+                    Thread.sleep(1000 * 10);
+                } catch (InterruptedException e) {
+                    LOG.debug(e.getMessage());
+                }
+                message = messageService.get(messageID);
+            }
+            if (message == null) {
+                LOG.error(" message is null. ");
+                return;
+            }
+            message.setOut(StringUtil.nullValue(msgContext.getEnvelope()));
+            message.setResult(result);
+        }
+        final Message saveMessage = message;
         executor.execute(new Runnable() {
             @Override
             public void run() {
-                Message.ResultType result = msgContext.getFLOW() == MessageContext.IN_FAULT_FLOW || msgContext.getFLOW() == MessageContext.OUT_FAULT_FLOW ? Message.ResultType.fault : Message.ResultType.normal;
-                Message message;
-                if (msgContext.getFLOW() == MessageContext.IN_FLOW || msgContext.getFLOW() == MessageContext.IN_FAULT_FLOW) {
-                    if (msgContext.getMessageID() == null) {
-                        LOG.error("MessageID is null.");
-                        return;
-                    }
-                    message = new Message();
-                    message.setId(msgContext.getMessageID());
-                    message.setType(type);
-                    message.setRemoteAddr(StringUtil.nullValue(msgContext.getProperty(MessageContext.REMOTE_ADDR)));
-                    message.setIn(StringUtil.nullValue(msgContext.getEnvelope()));
-                    message.setResult(result);
-                } else {
-                    if (msgContext.getRelatesTo() == null) {
-                        LOG.error("RelatesTo is null.");
-                        return;
-                    }
-                    String messageID = msgContext.getRelatesTo().getValue();
-                    message = messageService.get(messageID);
-                    for (int i = 0; i <= 3 && message == null; i++) {
-                        try {
-                            Thread.sleep(1000 * 10);
-                        } catch (InterruptedException e) {
-                            LOG.debug(e.getMessage());
-                        }
-                        message = messageService.get(messageID);
-                    }
-                    if (message == null) {
-                        LOG.error(" message is null. ");
-                        return;
-                    }
-                    message.setOut(StringUtil.nullValue(msgContext.getEnvelope()));
-                    message.setResult(result);
-                }
                 if (LOG.isDebugEnabled()) {
-                    LOG.debug(message);
+                    LOG.debug(saveMessage);
                 }
-                messageService.save(message);
+                messageService.save(saveMessage);
             }
         });
     }
