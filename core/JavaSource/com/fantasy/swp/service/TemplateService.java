@@ -6,6 +6,7 @@ import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
 import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.dao.TemplateDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,11 +18,11 @@ import java.util.List;
 @Transactional
 public class TemplateService {
 
-    @Resource(name = "swp.page.template")
+    @Autowired
     private TemplateDao templateDao;
-    @Resource
+    @Autowired
     private DataInferfaceService dataInferfaceService;
-    @Resource
+    @Autowired
     private _PageService pageService;
 
     public Pager<Template> findPager(Pager<Template> pager, List<PropertyFilter> filters) {

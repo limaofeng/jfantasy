@@ -14,6 +14,7 @@ import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.service.DataInferfaceService;
 import com.fantasy.swp.service.TemplateService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *@Author lsz
@@ -24,9 +25,9 @@ public class TemplateAction extends ActionSupport {
 	
 	private static final long serialVersionUID = -2384754979431858323L;
 	
-	@Resource(name="swp.page.templateService")
+	@Autowired
 	private TemplateService templateService;
-    @Resource
+	@Autowired
     private DataInferfaceService dataInferfaceService;
 	/**
 	 * 首页

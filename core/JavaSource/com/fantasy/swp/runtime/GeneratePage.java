@@ -80,7 +80,6 @@ public class GeneratePage implements PageInstance {
                 FreeMarkerTemplateUtils.writer(dm, configuration.getTemplate(template.getPath()), fileManager.writeFile(fileName));
             }
         } catch (IOException e) {
-            e.printStackTrace();
             logger.error("IOException...writeFile exception..."+e.getMessage());
         }
 

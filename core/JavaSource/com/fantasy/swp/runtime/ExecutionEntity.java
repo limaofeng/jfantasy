@@ -7,6 +7,8 @@ import com.fantasy.swp.PageInstance;
 import com.fantasy.swp.Template;
 import com.fantasy.swp.TemplateData;
 import com.fantasy.swp.template.FreemarkerTemplate;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -16,6 +18,8 @@ import java.util.Map;
  *
  */
 public class ExecutionEntity implements PageInstance {
+
+    private final static Log LOG = LogFactory.getLog(ExecutionEntity.class);
 
     private Template<?> template;
     private OutPutUrl outPutUrl;
@@ -49,7 +53,7 @@ public class ExecutionEntity implements PageInstance {
             try {
                 FreeMarkerTemplateUtils.writer(dataMap, ((FreemarkerTemplate) template).getContent(), fileManager.writeFile(outPutUrl.getUrl(null)));
             } catch (IOException e) {
-                e.printStackTrace();
+                LOG.error(e.getMessage(),e);
             }
         }
     }
