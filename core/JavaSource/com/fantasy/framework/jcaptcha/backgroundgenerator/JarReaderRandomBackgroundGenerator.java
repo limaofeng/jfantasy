@@ -2,11 +2,10 @@ package com.fantasy.framework.jcaptcha.backgroundgenerator;
 
 import com.octo.captcha.CaptchaException;
 import com.octo.captcha.component.image.backgroundgenerator.BackgroundGenerator;
-import com.sun.image.codec.jpeg.JPEGCodec;
-import com.sun.image.codec.jpeg.JPEGImageDecoder;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -17,12 +16,13 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
+//import com.sun.image.codec.jpeg.JPEGCodec;
+
 /**
  * 与FileReaderRandomBackgroundGenerator类似,但是从jar中加载背景图片
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-4-9 上午12:44:51
  */
 public class JarReaderRandomBackgroundGenerator implements BackgroundGenerator {
@@ -131,10 +131,7 @@ public class JarReaderRandomBackgroundGenerator implements BackgroundGenerator {
 
     private static BufferedImage getImage(InputStream is) {
         try {
-            JPEGImageDecoder decoder = JPEGCodec.createJPEGDecoder(is);
-            BufferedImage out = decoder.decodeAsBufferedImage();
-            is.close();
-            return out;
+            return  ImageIO.read(is);
         } catch (IOException e) {
             throw new CaptchaException("Unknown error during file reading ", e);
         }
