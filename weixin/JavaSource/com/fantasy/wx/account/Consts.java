@@ -1,8 +1,7 @@
 package com.fantasy.wx.account;
 
-/**
- * Created by zzzhong on 2015/1/5.
- */
+import com.fantasy.framework.util.common.PropertiesHelper;
+
 public class Consts {
-    public final static String appid="wx0e7cef7ad73417eb";
+    public final static String appid= PropertiesHelper.load("props/application.properties").getProperty("weixin.appid");
 }

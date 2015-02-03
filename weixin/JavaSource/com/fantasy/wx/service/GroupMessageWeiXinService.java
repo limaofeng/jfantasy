@@ -4,21 +4,19 @@ import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.BeanUtil;
-import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.GroupMessage;
 import com.fantasy.wx.bean.GroupNews;
 import com.fantasy.wx.bean.GroupNewsArticle;
 import com.fantasy.wx.bean.Media;
+import com.fantasy.wx.dao.GroupMessageDao;
 import com.fantasy.wx.dao.GroupNewsArticleDao;
 import com.fantasy.wx.dao.GroupNewsDao;
-import com.fantasy.wx.dao.GroupMessageDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.WxMpMassGroupMessage;
 import me.chanjar.weixin.mp.bean.WxMpMassNews;
 import me.chanjar.weixin.mp.bean.WxMpMassOpenIdsMessage;
-import me.chanjar.weixin.mp.bean.result.WxMpMassSendResult;
 import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -36,8 +34,6 @@ import java.util.List;
 public class GroupMessageWeiXinService {
     @Resource
     private GroupMessageDao groupMessageDao;
-    @Resource
-    private WeixinConfigInit config;
     @Resource
     private FileManagerFactory factory;
     @Resource
@@ -144,16 +140,17 @@ public class GroupMessageWeiXinService {
      */
     public int sendNewsOpenIdMessage(List<String> openid, GroupNews news) throws IOException, WeiXinException {
         WxMpMassOpenIdsMessage message = createOpenIdsMessage(openid, WxConsts.MASS_MSG_NEWS);
-        try {
-            //上传图文素材
-            WxMpMassUploadResult result = uploadNews(news);
-            message.setMediaId(result.getMediaId());
-            WxMpMassSendResult massResult = config.getUtil().massOpenIdsMessageSend(message);
-            return Integer.parseInt(massResult.getErrorCode());
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            return e.getError().getErrorCode();
-        }
+//        try {
+//            //上传图文素材
+//            WxMpMassUploadResult result = uploadNews(news);
+//            message.setMediaId(result.getMediaId());
+//            WxMpMassSendResult massResult = config.getUtil().massOpenIdsMessageSend(message);
+//            return Integer.parseInt(massResult.getErrorCode());
+//        } catch (WxErrorException e) {
+//            e.printStackTrace();
+//            return e.getError().getErrorCode();
+//        }
+        return -1;
     }
 
     /**
@@ -178,16 +175,13 @@ public class GroupMessageWeiXinService {
      */
     public int sendNewsGroupMessage(Long groupId, GroupNews news) throws IOException, WeiXinException {
         WxMpMassGroupMessage message = createGroupMessage(groupId, WxConsts.MASS_MSG_TEXT);
-        try {
             //上传图文素材
-            WxMpMassUploadResult result = uploadNews(news);
-            message.setMediaId(result.getMediaId());
-            WxMpMassSendResult massResult = config.getUtil().massGroupMessageSend(message);
-            return Integer.parseInt(massResult.getErrorCode());
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            return e.getError().getErrorCode();
-        }
+//            WxMpMassUploadResult result = uploadNews(news);
+//            message.setMediaId(result.getMediaId());
+//            WxMpMassSendResult massResult = config.getUtil().massGroupMessageSend(message);
+//            return Integer.parseInt(massResult.getErrorCode());
+
+            return -1;
 
     }
 
@@ -211,12 +205,12 @@ public class GroupMessageWeiXinService {
             massNews.addArticle(article);
             groupNewsArticleDao.save(art);
         }
-        WxMpMassUploadResult result = config.getUtil().massNewsUpload(massNews);
-        news.setCreatedAt(result.getCreatedAt());
-        news.setType(result.getType());
-        news.setMediaId(result.getMediaId());
-        groupNewsDao.save(news);
-        return result;
+//        WxMpMassUploadResult result = config.getUtil().massNewsUpload(massNews);
+//        news.setCreatedAt(result.getCreatedAt());
+//        news.setType(result.getType());
+//        news.setMediaId(result.getMediaId());
+//        groupNewsDao.save(news);
+        return null;
     }
 
 
@@ -228,13 +222,9 @@ public class GroupMessageWeiXinService {
      */
     public int sendGroupMessage(WxMpMassGroupMessage message) {
         save(BeanUtil.copyProperties(new GroupMessage(), message));
-        try {
-            WxMpMassSendResult result = config.getUtil().massGroupMessageSend(message);
-            return Integer.parseInt(result.getErrorCode());
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            return e.getError().getErrorCode();
-        }
+//            WxMpMassSendResult result = config.getUtil().massGroupMessageSend(message);
+//            return Integer.parseInt(result.getErrorCode());
+        return -1;
     }
 
     /**
@@ -245,12 +235,8 @@ public class GroupMessageWeiXinService {
      */
     public int sendOpenIdMessage(WxMpMassOpenIdsMessage message) {
         save(BeanUtil.copyProperties(new GroupMessage(), message));
-        try {
-            WxMpMassSendResult massResult = config.getUtil().massOpenIdsMessageSend(message);
-            return Integer.parseInt(massResult.getErrorCode());
-        } catch (WxErrorException e) {
-            e.printStackTrace();
-            return e.getError().getErrorCode();
-        }
+//            WxMpMassSendResult massResult = config.getUtil().massOpenIdsMessageSend(message);
+//            return Integer.parseInt(massResult.getErrorCode());
+            return -1;
     }
 }

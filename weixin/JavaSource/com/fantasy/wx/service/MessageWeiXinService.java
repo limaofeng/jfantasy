@@ -4,28 +4,18 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.Message;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.dao.MessageDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
-import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 /**
  * Created by zzzhong on 2014/8/28.
@@ -37,8 +27,6 @@ public class MessageWeiXinService {
     private MessageDao messageDao;
     @Resource
     private UserInfoWeiXinService userInfoWeiXinService;
-    @Resource
-    private WeixinConfigInit weixinConfigInit;
     @Resource
     private FileUploadService fileUploadService;
 
@@ -130,19 +118,19 @@ public class MessageWeiXinService {
 
     public FileDetail getMedia(String mediaId,String dir) throws WeiXinException {
         FileDetail fileDetail=null;
-        File file=null;
-
-        try {
-            file=weixinConfigInit.getUtil().mediaDownload(mediaId);
-            String rename=Long.toString(new Date().getTime())+Integer.toString(new Random().nextInt(900000)+100000)+"."+ WebUtil.getExtension(file.getName());
-            fileDetail=fileUploadService.upload(file, FileUtil.getMimeType(file),rename,dir);
-        } catch (WxErrorException e) {
-            throw WeiXinException.wxExceptionBuilder(e);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }finally {
-            if(file!=null) file.delete();
-        }
+//        File file=null;
+//
+//        try {
+//            file=weixinConfigInit.getUtil().mediaDownload(mediaId);
+//            String rename=Long.toString(new Date().getTime())+Integer.toString(new Random().nextInt(900000)+100000)+"."+ WebUtil.getExtension(file.getName());
+//            fileDetail=fileUploadService.upload(file, FileUtil.getMimeType(file),rename,dir);
+//        } catch (WxErrorException e) {
+//            throw WeiXinException.wxExceptionBuilder(e);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }finally {
+//            if(file!=null) file.delete();
+//        }
         return fileDetail;
     }
 
@@ -162,19 +150,19 @@ public class MessageWeiXinService {
      * @return 微信返回码0为成功其他为错误码，可参考微信公众平台开发文档
      */
     public int sendTextMessage(String touser, String content) {
-        Message message = createMessage(WxConsts.CUSTOM_MSG_TEXT, touser);
-        message.setContent(content);
-        WxMpService service = weixinConfigInit.getUtil();
-        WxMpCustomMessage customMessage = WxMpCustomMessage.TEXT().toUser(touser).content(content).build();
-        try {
-            service.customMessageSend(customMessage);
-        } catch (WxErrorException e) {
-            if (e.getError().getErrorCode() == 45015) {
-                throw new RuntimeException("该用户48小时之内未与您发送信息");
-            }
-            return e.getError().getErrorCode();
-        }
-        save(message);
+//        Message message = createMessage(WxConsts.CUSTOM_MSG_TEXT, touser);
+//        message.setContent(content);
+//        WxMpService service = weixinConfigInit.getUtil();
+//        WxMpCustomMessage customMessage = WxMpCustomMessage.TEXT().toUser(touser).content(content).build();
+//        try {
+//            service.customMessageSend(customMessage);
+//        } catch (WxErrorException e) {
+//            if (e.getError().getErrorCode() == 45015) {
+//                throw new RuntimeException("该用户48小时之内未与您发送信息");
+//            }
+//            return e.getError().getErrorCode();
+//        }
+//        save(message);
         return 0;
     }
 

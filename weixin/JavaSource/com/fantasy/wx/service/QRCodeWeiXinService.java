@@ -2,11 +2,9 @@ package com.fantasy.wx.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.QRCode;
 import com.fantasy.wx.dao.QRCodeDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
-import me.chanjar.weixin.common.exception.WxErrorException;
 import me.chanjar.weixin.mp.bean.result.WxMpQrCodeTicket;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,9 +22,6 @@ public class QRCodeWeiXinService {
 
     @Resource
     private QRCodeDao qrCodeDao;
-    @Resource
-    private WeixinConfigInit config;
-
     /**
      * 列表查询
      *
@@ -83,13 +78,13 @@ public class QRCodeWeiXinService {
         if (e == null) e = 1800;
         QRCode code = new QRCode();
         qrCodeDao.save(code);
-        try {
-            WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateTmpTicket(new Long(code.getId()).intValue(), e);
-            copyBean(ticket, code, linkKey);
+//        try {
+//            WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateTmpTicket(new Long(code.getId()).intValue(), e);
+//            copyBean(ticket, code, linkKey);
             save(code);
-        } catch (WxErrorException exception) {
-            throw WeiXinException.wxExceptionBuilder(exception);
-        }
+//        } catch (WxErrorException exception) {
+//            throw WeiXinException.wxExceptionBuilder(exception);
+//        }
         return code;
     }
 
@@ -104,13 +99,13 @@ public class QRCodeWeiXinService {
     public QRCode qrCodeCreateLastTicket(String linkKey) throws WeiXinException {
         QRCode code = new QRCode();
         qrCodeDao.save(code);
-        try {
-            WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateLastTicket(code.getId().intValue());
-            copyBean(ticket, code, linkKey);
+//        try {
+//            WxMpQrCodeTicket ticket = config.getUtil().qrCodeCreateLastTicket(code.getId().intValue());
+//            copyBean(ticket, code, linkKey);
             save(code);
-        } catch (WxErrorException exception) {
-            throw WeiXinException.wxExceptionBuilder(exception);
-        }
+//        } catch (WxErrorException exception) {
+//            throw WeiXinException.wxExceptionBuilder(exception);
+//        }
 
 
         return code;
