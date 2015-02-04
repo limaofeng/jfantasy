@@ -15,6 +15,9 @@ import java.io.*;
 import java.sql.*;
 import java.util.List;
 
+/**
+ * 使用db存储文件
+ */
 public class JDBCFileManager implements FileManager, InitializingBean {
 
     private DataSource dataSource;
@@ -107,7 +110,7 @@ public class JDBCFileManager implements FileManager, InitializingBean {
             con = this.dataSource.getConnection();
             con.setAutoCommit(false);
             st = con.createStatement();
-            if (isExistFileByPath(absolutePath)){
+            if (isExistFileByPath(absolutePath)) {
                 st.executeUpdate("update F_FILE set BLOBATTR = empty_blob() where PATH='" + absolutePath + "'");
             } else {
                 st.executeUpdate("insert into F_FILE (PATH, BLOBATTR) values ('" + absolutePath + "', empty_blob())");
@@ -143,42 +146,33 @@ public class JDBCFileManager implements FileManager, InitializingBean {
     }
 
     public List<FileItem> listFiles() {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public List<FileItem> listFiles(String remotePath) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public FileItem getFileItem(String remotePath) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public List<FileItem> listFiles(FileItemSelector selector) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public List<FileItem> listFiles(String remotePath, FileItemSelector selector) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public List<FileItem> listFiles(FileItemFilter filter) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public List<FileItem> listFiles(String remotePath, FileItemFilter filter) {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public void removeFile(String remotePath) {
-        // TODO Auto-generated method stub
-
     }
 }

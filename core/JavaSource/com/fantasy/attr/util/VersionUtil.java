@@ -97,39 +97,6 @@ public class VersionUtil {
             for (Attribute attribute : version.getAttributes()) {
                 final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
                 properties.add(property);
-                /*TODO 添加自动转换类型的拦截器
-                if (!String.class.isAssignableFrom(property.getType())) {
-                    methodInfos.add(new MethodInfo("set" + StringUtil.upperCaseFirst(property.getName()), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(String.class)}), null, new MethodCreator() {
-
-                        @Override
-                        public void execute(MethodVisitor mv) {
-                            String className = AsmContext.getContext().get("className", String.class);
-                            String newClassInternalName = className.replace('.', '/');
-
-                            String fieldName = property.getName();
-                            String descriptor = Type.getDescriptor(String.class);
-                            int[] loadAndReturnOf = AsmUtil.loadAndReturnOf(descriptor);
-
-                            Label l0 = new Label();
-                            Label l1 = new Label();
-                            Label l2 = new Label();
-
-                            mv.visitLabel(l0);
-                            mv.visitVarInsn(Opcodes.ALOAD, Opcodes.F_FULL);
-                            mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND);
-                            mv.visitFieldInsn(Opcodes.PUTFIELD, newClassInternalName, fieldName, descriptor);
-                            mv.visitLabel(l1);
-                            mv.visitInsn(Opcodes.RETURN);
-                            mv.visitLabel(l2);
-//                            mv.visitLocalVariable("this", AsmUtil.getTypeDescriptor(className), null, l0, l2, 0);
-//                            mv.visitLocalVariable(fieldName, descriptor, AsmUtil.getSignature(String.class, new Class<?>[0]), l0, l2, 1);
-                            mv.visitVarInsn(loadAndReturnOf[0], Opcodes.F_APPEND); //ALOAD
-                            mv.visitMaxs(2, 2);
-                        }
-
-                    }));
-                }
-                */
             }
             logger.debug("dynaBeanClass:" + className);
             dynaBeanClassCache.putIfAbsent(className, AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()]), methodInfos.toArray(new MethodInfo[methodInfos.size()])));

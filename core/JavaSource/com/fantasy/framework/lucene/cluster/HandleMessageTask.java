@@ -1,11 +1,8 @@
 package com.fantasy.framework.lucene.cluster;
 
 import com.fantasy.framework.lucene.BuguIndex;
-import com.fantasy.framework.lucene.backend.EntityChangedListener;
-import com.fantasy.framework.lucene.backend.IndexInsertTask;
-import com.fantasy.framework.lucene.backend.IndexRemoveTask;
-import com.fantasy.framework.lucene.backend.IndexUpdateTask;
-import com.fantasy.framework.lucene.backend.RefEntityChangedListener;
+import com.fantasy.framework.lucene.backend.*;
+import com.fantasy.framework.lucene.cache.DaoCache;
 
 public class HandleMessageTask implements Runnable {
 	private ClusterMessage message;
@@ -65,8 +62,7 @@ public class HandleMessageTask implements Runnable {
 		Class<?> clazz = msg.getClazz();
 		String id = msg.getId();
 		if ((clazz != null) && (id != null)) {
-			//TODO 更新 InternalDao dao = DaoCache.getInstance().get(clazz);
-			EntityChangedListener luceneListener = null;//dao.getLuceneListener();
+			EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
 			if (luceneListener != null) {
 				RefEntityChangedListener refListener = luceneListener.getRefListener();
 				if (refListener != null){
