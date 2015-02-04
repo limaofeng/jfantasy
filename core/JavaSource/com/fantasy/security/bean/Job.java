@@ -26,7 +26,7 @@ public class Job extends BaseBusEntity {
     @Column(name = "ID")
     private Long id;
     /**
-     * 岗位简写
+     * 岗位编码
      */
     @Column(name = "CODE")
     private String code;

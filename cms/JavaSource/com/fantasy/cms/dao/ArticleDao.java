@@ -4,6 +4,7 @@ import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.framework.dao.hibernate.HibernateDao;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.lucene.backend.EntityChangedListener;
 import com.fantasy.framework.lucene.dao.LuceneDao;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -95,4 +96,12 @@ public class ArticleDao extends HibernateDao<Article, Long> implements LuceneDao
     public Article get(String id) {
         return this.get(Long.valueOf(id));
     }
+
+    private EntityChangedListener changedListener = new EntityChangedListener(this.entityClass);
+
+    @Override
+    public EntityChangedListener getLuceneListener() {
+        return changedListener;
+    }
+
 }
