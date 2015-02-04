@@ -1,7 +1,6 @@
 package com.fantasy.wx.framework.handler;
 
 import com.fantasy.wx.framework.message.EmptyMessage;
-import com.fantasy.wx.framework.message.ImageMessage;
 import com.fantasy.wx.framework.message.TextMessage;
 import com.fantasy.wx.framework.message.WeiXinMessage;
 import com.fantasy.wx.framework.session.WeiXinSession;
@@ -22,11 +21,4 @@ public class AutoReplyTextHandler extends TextWeiXinHandler {
         return EmptyMessage.get();
     }
 
-    @Override
-    protected WeiXinMessage handleImageMessage(WeiXinSession session, ImageMessage message) {
-
-        message.getContent().getMedia().getFileItem();
-
-        return super.handleImageMessage(session, message);
-    }
 }
