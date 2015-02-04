@@ -19,7 +19,6 @@ import java.util.Properties;
 /**
  * 实体公共属性，自动填充拦截器
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2012-10-28 下午08:09:13
  * @version 1.0

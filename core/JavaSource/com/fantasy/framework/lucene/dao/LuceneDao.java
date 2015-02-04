@@ -13,15 +13,13 @@ public interface LuceneDao<T> {
     /**
      * 不完善 待调整
      *
-     * @param fieldName
-     * @param fieldIdValue
-     * @return
-     * @功能描述
+     * @param fieldName    字段
+     * @param fieldIdValue 字段值
+     * @return List<T>
      */
-    @Deprecated
     List<T> findByField(String fieldName, String fieldIdValue);
 
-    List<T> findByIds(String... id);
+    List<T> findByIds(String... ids);
 
     T get(String id);
 
