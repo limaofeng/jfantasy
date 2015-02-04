@@ -7,7 +7,6 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.GroupMessage;
 import com.fantasy.wx.bean.GroupNews;
 import com.fantasy.wx.bean.GroupNewsArticle;
@@ -36,8 +35,7 @@ public class GroupMessageWeiXinServiceTest {
     private GroupMessageWeiXinService groupMessageWeiXinService;
     @Resource
     private FileUploadService fileUploadService;
-    @Resource
-    private WeixinConfigInit weixinConfigInit;
+
     private static final Log logger = LogFactory.getLog(GroupMessage.class);
 
     @Before
@@ -84,8 +82,8 @@ public class GroupMessageWeiXinServiceTest {
 
     public List<String> createOpenId() {
         List<String> list = new ArrayList<String>();
-        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) weixinConfigInit.getWxMpConfigStorage();
-        list.add(configProvider.getOpenId());
+//        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) weixinConfigInit.getWxMpConfigStorage();
+//        list.add(configProvider.getOpenId());
         return list;
     }
 

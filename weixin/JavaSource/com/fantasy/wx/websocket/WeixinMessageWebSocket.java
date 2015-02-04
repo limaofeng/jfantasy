@@ -1,7 +1,6 @@
 package com.fantasy.wx.websocket;
 
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.Message;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.service.UserInfoWeiXinService;
@@ -23,8 +22,6 @@ import java.util.List;
 public class WeixinMessageWebSocket extends TextWebSocketHandler {
 
     @Resource
-    private WeixinConfigInit config;
-    @Resource
     private UserInfoWeiXinService userInfoWeiXinService;
 
     public WeixinMessageWebSocket() {
@@ -38,9 +35,8 @@ public class WeixinMessageWebSocket extends TextWebSocketHandler {
                 }
                 while (true) {
                     try {
-                        if (config == null) return;
-                        Message message = config.getMessage();
-                        userInfoWeiXinService.setUnReadSize(message.getUserInfo());
+                        Message message = null;//config.getMessage();
+                        //userInfoWeiXinService.setUnReadSize(message.getUserInfo());
                         if (message != null) {
                             for (WebSocketSession ws : sessions) {
                                 if (!ws.isOpen()) {

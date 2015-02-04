@@ -3,7 +3,6 @@ package com.fantasy.wx.user.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.account.init.WeixinConfigInit;
 import com.fantasy.wx.bean.Group;
 import com.fantasy.wx.service.GroupWeiXinService;
 import junit.framework.Assert;
@@ -17,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +25,6 @@ public class WxWxGroupWeiXinServiceTest {
     private static final Log logger = LogFactory.getLog(Group.class);
     @Autowired
     private GroupWeiXinService iGroupWeiXinService;
-    @Resource
-    private WeixinConfigInit config;
 
     @Before
     public void setUp() throws Exception {
@@ -80,10 +76,4 @@ public class WxWxGroupWeiXinServiceTest {
         logger.debug(JSON.serialize(list));
     }
 
-    @Test
-    public void testMoveGroup() throws Exception {
-        WeixinConfigInit.WxXmlMpInMemoryConfigStorage configProvider = (WeixinConfigInit.WxXmlMpInMemoryConfigStorage) config.getWxMpConfigStorage();
-        int i = iGroupWeiXinService.moveGroup(configProvider.getOpenId(), 1L);
-        Assert.assertEquals(i, 0);
-    }
 }
