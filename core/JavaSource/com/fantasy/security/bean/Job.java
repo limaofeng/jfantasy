@@ -43,7 +43,7 @@ public class Job extends BaseBusEntity {
      *组织机构
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="ORGANIZATION_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_JOB_ORGANIZATION"))
+    @JoinColumn(name="ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_JOB_ORGANIZATION"))
     private Organization organization;
 
     public String getCode() {

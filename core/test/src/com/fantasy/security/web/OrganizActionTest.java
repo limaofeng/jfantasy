@@ -45,10 +45,10 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
     private UserDetailsService userDetailsService;
 
     @Resource
-    private OrgDimensionService orgDimensionService;
+    private OrgDimensionService orgDimensionService;//组织维度
 
     @Resource
-    private OrganizationService organizationService;
+    private OrganizationService organizationService;//组织机构
 
 
     @Override
@@ -75,21 +75,26 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     }
 
-    //@Test
+    @Test
     public void testIndex() throws Exception {
         this.request.removeAllParameters();
-        this.request.addParameter("EQS_orgDimension.id","weidu001");
-        ActionProxy proxy = super.getActionProxy("/security/organize/index.do");
-        Assert.assertNotNull(proxy);
-        //返回的数据类型
-        String result = proxy.execute();
-        //json数据
-        LOG.debug("testIndex--------------"+this.response.getContentAsString());
 
-        List<Organization> organizations = (List<Organization>)JSON.deserialize(this.response.getContentAsString());
-        testView(organizations,0);
-        Assert.assertNotNull(organizations);
+        List<OrgDimension> orgDimensions = this.orgDimensionService.find();
 
+        if(!orgDimensions.isEmpty()) {
+            OrgDimension orgDimension = orgDimensions.get(0);
+            this.request.addParameter("EQS_orgDimension.id", orgDimension.getId());
+            ActionProxy proxy = super.getActionProxy("/security/organize/index.do");
+            Assert.assertNotNull(proxy);
+            //返回的数据类型
+            String result = proxy.execute();
+            //json数据
+            LOG.debug("testIndex--------------" + this.response.getContentAsString());
+
+            List<Organization> organizations = (List<Organization>) JSON.deserialize(this.response.getContentAsString());
+            testView(organizations, 0);
+            Assert.assertNotNull(organizations);
+        }
     }
 
     private void testView(List<Organization> organizations,int layer){
@@ -109,20 +114,25 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("type","company");
 
         //对应组织维度 与上级组织机构
-        this.request.addParameter("orgHelpBeans[0].orgDimension.id","weidu001");
-        //上级组织机构
-        //this.request.addParameter("orgHelpBeans[0].organization.id","jg0001");
-        //this.request.addParameter("orgHelpBeans[1].orgDimension.id","weidu002");
-        //this.request.addParameter("orgHelpBeans[1].organization.id","jg002");
-        ActionProxy proxy = super.getActionProxy("/security/organize/save.do");
-        Assert.assertNotNull(proxy);
-        //返回的数据类型
-        String result = proxy.execute();
-        //json数据
-        LOG.debug("testSave--------------"+this.response.getContentAsString());
+        List<OrgDimension> orgDimensions = this.orgDimensionService.find();
+
+        if(!orgDimensions.isEmpty()) {
+            OrgDimension orgDimension = orgDimensions.get(0);
+            this.request.addParameter("orgHelpBeans[0].orgDimension.id", orgDimension.getId());
+            //上级组织机构
+            //this.request.addParameter("orgHelpBeans[0].organization.id","jg0001");
+            //this.request.addParameter("orgHelpBeans[1].orgDimension.id","weidu002");
+            //this.request.addParameter("orgHelpBeans[1].organization.id","jg002");
+            ActionProxy proxy = super.getActionProxy("/security/organize/save.do");
+            Assert.assertNotNull(proxy);
+            //返回的数据类型
+            String result = proxy.execute();
+            //json数据
+            LOG.debug("testSave--------------" + this.response.getContentAsString());
+        }
     }
 
-    @Test
+    //@Test
     public void testSearch() throws Exception{
         ActionProxy proxy = super.getActionProxy("/security/organize/search.do");
         Assert.assertNotNull(proxy);
@@ -158,13 +168,17 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     public void testDelete() throws Exception {
         this.request.removeAllParameters();
-        this.request.addParameter("ids","jg002");
-        ActionProxy proxy = super.getActionProxy("/security/organize/delete.do");
-        Assert.assertNotNull(proxy);
-        //返回的数据类型
-        String result = proxy.execute();
-        //json数据
-        LOG.debug("testDelete--------------"+this.response.getContentAsString());
 
+        List<Organization> organizations = this.organizationService.find(new ArrayList<PropertyFilter>());
+        if(!organizations.isEmpty()) {
+            Organization organization = organizations.get(0);
+            this.request.addParameter("ids",organization.getId());
+            ActionProxy proxy = super.getActionProxy("/security/organize/delete.do");
+            Assert.assertNotNull(proxy);
+            //返回的数据类型
+            String result = proxy.execute();
+            //json数据
+            LOG.debug("testDelete--------------" + this.response.getContentAsString());
+        }
     }
 }

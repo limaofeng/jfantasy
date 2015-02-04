@@ -30,6 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -40,6 +41,9 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
 
     @Resource
     private UserDetailsService userDetailsService;
+
+    @Resource
+    private OrgDimensionService orgDimensionService;
 
     @Override
     protected String getConfigPath() {
@@ -61,14 +65,14 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-       this.testDelete();
+       //this.testDelete();
 
     }
 
     public void testSave() throws Exception{
         Website website = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getWebsite();
-        this.request.addParameter("id","weidu3");
-        this.request.addParameter("name", "维度3");
+        this.request.addParameter("id","weidu1");
+        this.request.addParameter("name", "维度1");
         this.request.addParameter("description", "完全不知道说的是啥");
         this.request.addParameter("website.id", website.getId().toString());
         ActionProxy proxy = super.getActionProxy("/security/orgdimension/save.do");
@@ -81,13 +85,17 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
 
     public void testDelete() throws Exception{
         //传参
-        this.request.addParameter("ids","weidu3");
-        ActionProxy proxy = super.getActionProxy("/security/orgdimension/delete.do");
-        Assert.assertNotNull(proxy);
-        //返回的数据类型
-        String result = proxy.execute();
-        //json数据
-        LOG.debug("testDelete--------------"+this.response.getContentAsString());
+        List<OrgDimension> orgDimensions = this.orgDimensionService.find();
+        if(!orgDimensions.isEmpty()) {
+            OrgDimension orgDimension = orgDimensions.get(0);
+            this.request.addParameter("ids", orgDimension.getId());
+            ActionProxy proxy = super.getActionProxy("/security/orgdimension/delete.do");
+            Assert.assertNotNull(proxy);
+            //返回的数据类型
+            String result = proxy.execute();
+            //json数据
+            LOG.debug("testDelete--------------" + this.response.getContentAsString());
+        }
     }
 
     @Test
@@ -103,14 +111,18 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
 
     @Test
     public void testView() throws Exception{
-        this.request.removeAllParameters();
-        this.request.addParameter("id", "weidu001");
-        ActionProxy proxy = super.getActionProxy("/security/orgdimension/view.do");
-        Assert.assertNotNull(proxy);
-        //返回的数据类型
-        String result = proxy.execute();
-        //json数据
-        LOG.debug("testView--------------"+this.response.getContentAsString());
+        List<OrgDimension> orgDimensions = this.orgDimensionService.find();
+        if(!orgDimensions.isEmpty()) {
+            OrgDimension orgDimension =orgDimensions.get(0);
+            this.request.removeAllParameters();
+            this.request.addParameter("id", orgDimension.getId());
+            ActionProxy proxy = super.getActionProxy("/security/orgdimension/view.do");
+            Assert.assertNotNull(proxy);
+            //返回的数据类型
+            String result = proxy.execute();
+            //json数据
+            LOG.debug("testView--------------" + this.response.getContentAsString());
+        }
     }
 
 }

@@ -142,4 +142,18 @@
         <!-- 删除 -->
         <action name="delete" class="com.fantasy.security.web.OrganizAction" method="delete"/>
     </package>
+
+    <!-- 岗位 -->
+    <package name="admin-job" extends="fantasy-default" namespace="/security/job">
+        <!-- 查询 -->
+        <action name="index" class="com.fantasy.security.web.JobAction" method="index" />
+        <!-- search -->
+        <action name="search" class="com.fantasy.security.web.JobAction" method="search" />
+        <!-- 保存 -->
+        <action name="save" class="com.fantasy.security.web.JobAction" method="save"/>
+        <!-- 查看 -->
+        <action name="view" class="com.fantasy.security.web.JobAction" method="view" />
+        <!-- 删除 -->
+        <action name="delete" class="com.fantasy.security.web.JobAction" method="delete"/>
+    </package>
 </struts>

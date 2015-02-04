@@ -2,6 +2,7 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_ORGANIZATION")
-@JsonIgnoreProperties({"hibernateLazyInitializer","jobs"})
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Organization extends BaseBusEntity {
 
@@ -77,8 +78,9 @@ public class Organization extends BaseBusEntity {
     @Transient
     private List<OrgHelpBean> orgHelpBeans;
 
-
-    @OneToMany(mappedBy = "organization" ,fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OrderBy("sort ASC")
     private List<Job> jobs;
 
 
