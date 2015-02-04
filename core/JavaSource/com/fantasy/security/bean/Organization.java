@@ -2,6 +2,7 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -77,6 +78,12 @@ public class Organization extends BaseBusEntity {
     @Transient
     private List<OrgHelpBean> orgHelpBeans;
 
+    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OrderBy("sort ASC")
+    private List<Job> jobs;
+
+
     public String getId() {
         return id;
     }
@@ -131,5 +138,13 @@ public class Organization extends BaseBusEntity {
 
     public void setOrgHelpBeans(List<OrgHelpBean> orgHelpBeans) {
         this.orgHelpBeans = orgHelpBeans;
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
     }
 }

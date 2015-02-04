@@ -3,10 +3,7 @@ package com.fantasy.security.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 岗位
@@ -35,11 +32,19 @@ public class Job extends BaseBusEntity {
      */
     @Column(name = "NAME")
     private String name;
+
     /**
      * 岗位描述信息
      */
     @Column(name = "DESCRIPTION")
     private String description;
+
+    /**
+     *组织机构
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_JOB_ORGANIZATION"))
+    private Organization organization;
 
     public String getCode() {
         return code;
@@ -71,5 +76,13 @@ public class Job extends BaseBusEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }
