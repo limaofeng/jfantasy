@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_ORGANIZATION")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({"hibernateLazyInitializer","jobs"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Organization extends BaseBusEntity {
 
@@ -77,6 +77,11 @@ public class Organization extends BaseBusEntity {
     @Transient
     private List<OrgHelpBean> orgHelpBeans;
 
+
+    @OneToMany(mappedBy = "organization" ,fetch = FetchType.LAZY,cascade = CascadeType.REMOVE)
+    private List<Job> jobs;
+
+
     public String getId() {
         return id;
     }
@@ -131,5 +136,13 @@ public class Organization extends BaseBusEntity {
 
     public void setOrgHelpBeans(List<OrgHelpBean> orgHelpBeans) {
         this.orgHelpBeans = orgHelpBeans;
+    }
+
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
     }
 }
