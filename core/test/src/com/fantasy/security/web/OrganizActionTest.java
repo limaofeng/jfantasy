@@ -1,6 +1,7 @@
 package com.fantasy.security.web;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.struts2.context.ActionConstants;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.bean.Organization;
@@ -36,13 +37,12 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     @Resource
     private UserDetailsService userDetailsService;
-
     @Resource
     private OrgDimensionService orgDimensionService;//组织维度
-
     @Resource
     private OrganizationService organizationService;//组织机构
-
+    @Resource
+    private OrgDimensionActionTest orgDimensionActionTest;
 
     @Override
     protected String getConfigPath() {
@@ -51,6 +51,8 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     @Before
     public void setUp() throws Exception {
+        orgDimensionActionTest.setUp();
+
         JspSupportServlet jspSupportServlet = new JspSupportServlet();
         jspSupportServlet.init(new MockServletConfig());
         super.setUp();
@@ -60,16 +62,21 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         LOG.debug("默认admin登陆。。。");
         testSave();
+
     }
 
     @After
     public void tearDown() throws Exception {
+        orgDimensionActionTest.tearDown();
+
         this.testDelete();
     }
 
     @Test
     public void testIndex() throws Exception {
         this.request.removeAllParameters();
+        this.response.setCommitted(false);
+        this.response.reset();
 
         List<OrgDimension> orgDimensions = this.orgDimensionService.find();
 
@@ -99,6 +106,9 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
 
     public void testSave() throws Exception {
+        this.request.removeAllParameters();
+        this.response.setCommitted(false);
+        this.response.reset();
         //组织机构 数据
         this.request.addParameter("id", "jg1");
         this.request.addParameter("name", "机构1");
@@ -121,30 +131,43 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
             String result = proxy.execute();
             //json数据
             LOG.debug(result + ":" + this.response.getContentAsString());
+
+            Assert.assertEquals(result, ActionConstants.JSONDATA);
         }
     }
 
     //@Test
     public void testSearch() throws Exception {
+        this.request.removeAllParameters();
+        this.response.setCommitted(false);
+        this.response.reset();
+
         ActionProxy proxy = super.getActionProxy("/security/organize/search.do");
         Assert.assertNotNull(proxy);
         //返回的数据类型
         String result = proxy.execute();
         //json数据
         LOG.debug(result + ":" + this.response.getContentAsString());
+
+        Assert.assertEquals(result, ActionConstants.JSONDATA);
     }
 
 
     //@Test
     public void testView() throws Exception {
         this.request.removeAllParameters();
+        this.response.setCommitted(false);
+        this.response.reset();
+
         this.request.addParameter("id", "jg002");
         ActionProxy proxy = super.getActionProxy("/security/organize/view.do");
         Assert.assertNotNull(proxy);
         //返回的数据类型
         String result = proxy.execute();
         //json数据
-        LOG.debug("testView--------------" + this.response.getContentAsString());
+        LOG.debug(result + ":" + this.response.getContentAsString());
+
+        Assert.assertEquals(result, ActionConstants.JSONDATA);
     }
 
     /**
@@ -161,6 +184,8 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     public void testDelete() throws Exception {
         this.request.removeAllParameters();
+        this.response.setCommitted(false);
+        this.response.reset();
 
         List<Organization> organizations = this.organizationService.find(new ArrayList<PropertyFilter>());
         if (!organizations.isEmpty()) {
@@ -171,7 +196,9 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
             //返回的数据类型
             String result = proxy.execute();
             //json数据
-            LOG.debug("testDelete--------------" + this.response.getContentAsString());
+            LOG.debug(result + ":" + this.response.getContentAsString());
+
+            Assert.assertEquals(result, ActionConstants.JSONDATA);
         }
     }
 }
