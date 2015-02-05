@@ -83,6 +83,7 @@ public class OrganizationService {
                 newRelation.setLayer(parentRelation.getLayer() + 1);
                 //排序
                 newRelation.setSort(parentRelation.getLayer() + 1);
+                newRelation.setPath(parentRelation.getPath() + ","+newRelation.getId());
                 newRelation.setParent(parentRelation);
                 //组织维度
                 newRelation.setOrgDimension(orgHelpBean.getOrgDimension());
@@ -95,6 +96,7 @@ public class OrganizationService {
                 newRelation.setLayer(1);
                 //排序
                 newRelation.setSort(1);
+                newRelation.setPath(organization.getId());
                 //当前组织机构
                 newRelation.setOrganization(organization);
             }

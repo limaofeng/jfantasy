@@ -3,13 +3,9 @@ package com.fantasy.security.web;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.bean.Organization;
-import com.fantasy.security.service.OrgDimensionService;
 import com.fantasy.security.service.OrganizationService;
-import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
-import org.springframework.util.Assert;
 
 import javax.annotation.Resource;
 import java.util.List;
