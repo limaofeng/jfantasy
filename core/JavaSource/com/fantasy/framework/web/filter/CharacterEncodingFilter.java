@@ -1,5 +1,6 @@
 package com.fantasy.framework.web.filter;
 
+import com.fantasy.framework.web.filter.wrapper.CharacterEncodingRequestWrapper;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package com.fantasy.framework.web.filter.xss;
+package com.fantasy.framework.web.filter.wrapper;
 
 import com.fantasy.framework.util.common.Base64Util;
 import com.fantasy.framework.util.common.ClassUtil;

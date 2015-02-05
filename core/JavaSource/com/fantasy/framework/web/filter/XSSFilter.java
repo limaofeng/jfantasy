@@ -8,7 +8,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import com.fantasy.framework.web.filter.xss.*;
+import com.fantasy.framework.web.filter.wrapper.XSSRequestWrapper;
 
 import org.springframework.web.filter.GenericFilterBean;
 

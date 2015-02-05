@@ -1,4 +1,4 @@
-package com.fantasy.framework.web.filter;
+package com.fantasy.framework.web.filter.wrapper;
 
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
