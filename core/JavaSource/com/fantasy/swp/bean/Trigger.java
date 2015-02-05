@@ -15,6 +15,7 @@ public class Trigger extends BaseBusEntity {
     public static enum Type {
         /**
          * 定时触发器
+         * 参考 Spring Quartz
          */
         Scheduled,
         /**
