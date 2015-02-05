@@ -26,11 +26,14 @@ public abstract class AbstracWeiXinHandler implements WeiXinHandler {
             outMessage = handleLinkMessage(session, (LinkMessage) message);
         } else if (message instanceof EventMessage) {
             outMessage = handleEventMessage(session, (EventMessage) message);
-        } else{
+        } else {
             throw new IllegalStateException("Unexpected WeiXin message type: " + message);
         }
         if (outMessage == null || outMessage == EmptyMessage.get()) {
             return null;
+        }
+        if (!(outMessage instanceof AbstractWeiXinMessage)) {
+            return outMessage;
         }
         AbstractWeiXinMessage _outMessage = (AbstractWeiXinMessage) outMessage;
         _outMessage.setFromUserName(message.getToUserName());
