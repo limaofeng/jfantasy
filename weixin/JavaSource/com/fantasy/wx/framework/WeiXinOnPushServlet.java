@@ -1,5 +1,6 @@
 package com.fantasy.wx.framework;
 
+import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.wx.framework.core.WeiXinCoreHelper;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
@@ -58,6 +59,9 @@ public class WeiXinOnPushServlet extends HttpServlet {
             WeiXinMessage returnMessage = weiXinSessionFactory.execute(message);
 
             if (returnMessage != null) {
+                //反向设置 fromUserName 与 toUserName 的信息
+                OgnlUtil.getInstance().setValue("fromUserName", returnMessage, returnMessage.getToUserName());
+                OgnlUtil.getInstance().setValue("toUserName", returnMessage, returnMessage.getFromUserName());
                 String outMessage = helper.buildOutMessage(session, request.getParameter("encrypt_type"), returnMessage);
                 if (LOG.isDebugEnabled()) {
                     LOG.debug("outMessage=" + outMessage);
