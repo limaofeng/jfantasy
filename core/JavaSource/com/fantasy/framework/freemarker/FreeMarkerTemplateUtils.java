@@ -39,9 +39,20 @@ public class FreeMarkerTemplateUtils {
      */
     public static void writer(Object data, Template t, Writer out) {
         try {
-
             Map<String, Object> rootMap = ObjectUtil.toMap(data);
             t.process(rootMap, out);
+        } catch (TemplateException e) {
+            logger.error(e.getMessage(), e);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            StreamUtil.closeQuietly(out);
+        }
+    }
+
+    public static void writer(TemplateModel model, Template t, Writer out) {
+        try {
+            t.process(model, out);
         } catch (TemplateException e) {
             logger.error(e.getMessage(), e);
         } catch (IOException e) {

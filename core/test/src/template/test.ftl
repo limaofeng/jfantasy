@@ -3,3 +3,5 @@ xxxxxxxx
 <@s.property value="art.title" />
 <br/>
 <@s.property value="art.text" />
+<br/>
+<@s.property value="title" />
