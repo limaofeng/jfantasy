@@ -1,22 +1,16 @@
 package com.fantasy.security.web;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.OrgDimension;
-import com.fantasy.security.bean.OrgHelpBean;
 import com.fantasy.security.bean.Organization;
 import com.fantasy.security.service.OrgDimensionService;
 import com.fantasy.security.service.OrganizationService;
-import com.fasterxml.jackson.databind.JsonSerializable;
 import com.opensymphony.xwork2.ActionProxy;
-import junit.framework.TestCase;
-import org.activiti.engine.impl.util.json.JSONObject;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
-import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -30,7 +24,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
-import javax.json.JsonObject;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,8 +64,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-        //this.testDelete();
-
+        this.testDelete();
     }
 
     @Test
@@ -81,7 +73,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
         List<OrgDimension> orgDimensions = this.orgDimensionService.find();
 
-        if(!orgDimensions.isEmpty()) {
+        if (!orgDimensions.isEmpty()) {
             OrgDimension orgDimension = orgDimensions.get(0);
             this.request.addParameter("EQS_orgDimension.id", orgDimension.getId());
             ActionProxy proxy = super.getActionProxy("/security/organize/index.do");
@@ -89,34 +81,34 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
             //返回的数据类型
             String result = proxy.execute();
             //json数据
-            LOG.debug("testIndex--------------" + this.response.getContentAsString());
+            LOG.debug(result + ":" + this.response.getContentAsString());
 
-            List<Organization> organizations = (List<Organization>) JSON.deserialize(this.response.getContentAsString());
-            testView(organizations, 0);
-            Assert.assertNotNull(organizations);
+//            List<Organization> organizations = (List<Organization>) JSON.deserialize(this.response.getContentAsString());
+//            testView(organizations, 0);
+//            Assert.assertNotNull(organizations);
         }
     }
 
-    private void testView(List<Organization> organizations,int layer){
-        layer++;
-        for(Organization organization:organizations){
-            LOG.debug("层级----"+layer+"-------"+organization.getName());
-            testView(organization.getChildren(), layer);
-        }
-    }
+//    private void testView(List<Organization> organizations,int layer){
+//        layer++;
+//        for(Organization organization:organizations){
+//            LOG.debug("层级----"+layer+"-------"+organization.getName());
+//            testView(organization.getChildren(), layer);
+//        }
+//    }
 
 
     public void testSave() throws Exception {
         //组织机构 数据
-        this.request.addParameter("id","jg1");
-        this.request.addParameter("name","机构1");
-        this.request.addParameter("description","机构1");
-        this.request.addParameter("type","company");
+        this.request.addParameter("id", "jg1");
+        this.request.addParameter("name", "机构1");
+        this.request.addParameter("description", "机构1");
+        this.request.addParameter("type", "company");
 
         //对应组织维度 与上级组织机构
         List<OrgDimension> orgDimensions = this.orgDimensionService.find();
 
-        if(!orgDimensions.isEmpty()) {
+        if (!orgDimensions.isEmpty()) {
             OrgDimension orgDimension = orgDimensions.get(0);
             this.request.addParameter("orgHelpBeans[0].orgDimension.id", orgDimension.getId());
             //上级组织机构
@@ -128,40 +120,41 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
             //返回的数据类型
             String result = proxy.execute();
             //json数据
-            LOG.debug("testSave--------------" + this.response.getContentAsString());
+            LOG.debug(result + ":" + this.response.getContentAsString());
         }
     }
 
     //@Test
-    public void testSearch() throws Exception{
+    public void testSearch() throws Exception {
         ActionProxy proxy = super.getActionProxy("/security/organize/search.do");
         Assert.assertNotNull(proxy);
         //返回的数据类型
         String result = proxy.execute();
         //json数据
-        LOG.debug("testSearch--------------"+this.response.getContentAsString());
+        LOG.debug(result + ":" + this.response.getContentAsString());
     }
 
 
     //@Test
     public void testView() throws Exception {
         this.request.removeAllParameters();
-        this.request.addParameter("id","jg002");
+        this.request.addParameter("id", "jg002");
         ActionProxy proxy = super.getActionProxy("/security/organize/view.do");
         Assert.assertNotNull(proxy);
         //返回的数据类型
         String result = proxy.execute();
         //json数据
-        LOG.debug("testView--------------"+this.response.getContentAsString());
+        LOG.debug("testView--------------" + this.response.getContentAsString());
     }
 
     /**
      * 删除全部组织机构 关系也删除
+     *
      * @throws Exception
      */
-    public void testAllDelete() throws Exception{
+    public void testAllDelete() throws Exception {
         List<Organization> organizations = this.organizationService.find(new ArrayList<PropertyFilter>());
-        for(Organization organization:organizations){
+        for (Organization organization : organizations) {
             this.organizationService.delete(organization.getId());
         }
     }
@@ -170,9 +163,9 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         this.request.removeAllParameters();
 
         List<Organization> organizations = this.organizationService.find(new ArrayList<PropertyFilter>());
-        if(!organizations.isEmpty()) {
+        if (!organizations.isEmpty()) {
             Organization organization = organizations.get(0);
-            this.request.addParameter("ids",organization.getId());
+            this.request.addParameter("ids", organization.getId());
             ActionProxy proxy = super.getActionProxy("/security/organize/delete.do");
             Assert.assertNotNull(proxy);
             //返回的数据类型
