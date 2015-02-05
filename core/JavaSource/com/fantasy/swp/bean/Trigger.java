@@ -24,6 +24,7 @@ public class Trigger extends BaseBusEntity {
          * 1.数据类型《classname》
          * 2.变更类型：新增、修改及删除
          * 3.变更范围：某个字段或者几个字段《 可以带条件如 attr > ?  & attr = ? 》
+         * 4.监听范围:page/pageItem
          */
         EntityChanged
     }
