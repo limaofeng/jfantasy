@@ -214,12 +214,10 @@
         <filter-name>jcaptchaFilter</filter-name>
         <url-pattern>/jcaptcha.mpeg</url-pattern>
     </filter-mapping>
-    <!--
     <filter-mapping>
         <filter-name>pageCacheFilter</filter-name>
         <url-pattern>*.html</url-pattern>
     </filter-mapping>
-    -->
     <filter-mapping>
         <filter-name>urlRewriteFilter</filter-name>
         <url-pattern>/*</url-pattern>
