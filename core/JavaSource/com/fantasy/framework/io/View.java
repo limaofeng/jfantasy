@@ -117,6 +117,7 @@ public class View extends AbstractBuffer {
     }
 
     public static class CaseInsensitive extends View implements Buffer.CaseInsensitve {
+
         public CaseInsensitive() {
         }
 
@@ -126,6 +127,11 @@ public class View extends AbstractBuffer {
 
         public CaseInsensitive(Buffer buffer) {
             super(buffer);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
         }
 
         @Override
