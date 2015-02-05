@@ -149,8 +149,9 @@ public class MessageFactory {
     }
 
 
-    public static WeiXinMessage createEventMessage(Long msgId, String fromUserName, Date createTime, String event, String eventKey, String ticket, Double latitude, Double longitude, Double precision) {
+    public static WeiXinMessage createEventMessage(Long msgId, String fromUserName, Date createTime, String event, String eventKey, String ticket, Double latitude, Double longitude, Double precision) throws WeiXinException {
         DefalutEventMessage message = new DefalutEventMessage(msgId, fromUserName, createTime);
+        message.setToUserName(WeiXinSessionUtils.getCurrentSession().getAccountDetails().getPrimitiveId());
         if (latitude != null && longitude != null && precision != null) {
             message.setContent(new EventLocation(event, latitude, longitude, precision));
         } else if (eventKey != null && ticket != null) {
