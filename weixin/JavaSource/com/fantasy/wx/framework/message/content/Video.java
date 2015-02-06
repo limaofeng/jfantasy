@@ -84,7 +84,9 @@ public class Video {
     @Override
     public String toString() {
         return "Video{" +
-                "thumb=" + thumb +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", thumb=" + thumb +
                 ", media=" + media +
                 '}';
     }

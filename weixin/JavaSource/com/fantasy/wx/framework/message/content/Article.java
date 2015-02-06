@@ -97,4 +97,16 @@ public class Article {
         this.showCoverPic = showCoverPic;
     }
 
+    @Override
+    public String toString() {
+        return "Article{" +
+                "thumb=" + thumb +
+                ", author='" + author + '\'' +
+                ", title='" + title + '\'' +
+                ", contentSourceUrl='" + contentSourceUrl + '\'' +
+                ", content='" + content + '\'' +
+                ", digest='" + digest + '\'' +
+                ", showCoverPic=" + showCoverPic +
+                '}';
+    }
 }

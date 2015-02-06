@@ -78,4 +78,15 @@ public class Music {
     public void setThumb(Media thumb) {
         this.thumb = thumb;
     }
+
+    @Override
+    public String toString() {
+        return "Music{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", url='" + url + '\'' +
+                ", hqUrl='" + hqUrl + '\'' +
+                ", thumb=" + thumb +
+                '}';
+    }
 }

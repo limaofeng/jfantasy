@@ -33,4 +33,12 @@ public class News {
     public void setLink(Link link) {
         this.link = link;
     }
+
+    @Override
+    public String toString() {
+        return "News{" +
+                "link=" + link +
+                ", picUrl='" + picUrl + '\'' +
+                '}';
+    }
 }

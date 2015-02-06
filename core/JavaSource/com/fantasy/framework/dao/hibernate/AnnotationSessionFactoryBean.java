@@ -90,14 +90,14 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         // 添加 lucene 索引生成监听
         if (SpringContextUtil.getBeanByType(BuguIndex.class) != null) {
             EntityChangedEventListener entityChangedEventListener = new EntityChangedEventListener();
-            addEventListener("post-commit-insert", eventListeners, entityChangedEventListener);
-            addEventListener("post-commit-update", eventListeners, entityChangedEventListener);
-            addEventListener("post-commit-delete", eventListeners, entityChangedEventListener);
+            addEventListener("post-insert", eventListeners, entityChangedEventListener);
+            addEventListener("post-update", eventListeners, entityChangedEventListener);
+            addEventListener("post-delete", eventListeners, entityChangedEventListener);
         }
         com.fantasy.swp.listener.EntityChangedEventListener entityChangedEventListener = new com.fantasy.swp.listener.EntityChangedEventListener();
-        addEventListener("post-commit-insert", eventListeners, entityChangedEventListener);
-        addEventListener("post-commit-update", eventListeners, entityChangedEventListener);
-        addEventListener("post-commit-delete", eventListeners, entityChangedEventListener);
+        addEventListener("post-insert", eventListeners, entityChangedEventListener);
+        addEventListener("post-update", eventListeners, entityChangedEventListener);
+        addEventListener("post-delete", eventListeners, entityChangedEventListener);
         // FileEventListener 监听器,用户转存文件或者删除文件
         /*
         FileEventListener fileEventListener = SpringContextUtil.createBean(FileEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
@@ -110,9 +110,10 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         for (Map.Entry<String, List<Object>> event : this.eventListeners.entrySet()) {
             for (Object listener : event.getValue()) {
                 if(EventType.SAVE_UPDATE.eventName().equals(event.getKey())){
+                    // instanceof List ? ((List) listener).toArray(new Object[((List) listener).size()]) :listener
                     registry.prependListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
                 }else{
-                    registry.getEventListenerGroup(EventType.resolveEventTypeByName(event.getKey())).appendListener(listener);
+                    registry.appendListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
                 }
             }
         }

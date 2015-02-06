@@ -233,6 +233,12 @@ public class LocalFileManager implements FileManager {
             }
         }
 
+        @Override
+        public String toString() {
+            return "LocalFileItem{" +
+                    "file=" + file.getAbsolutePath() +
+                    '}';
+        }
     }
 
 }
