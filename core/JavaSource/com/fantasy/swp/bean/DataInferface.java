@@ -39,24 +39,6 @@ public class DataInferface {
         }
     }
 
-    /**
-     * 数据源
-     */
-    public enum DataSource{
-        db("数据库"),
-        func("方法"),
-        stat("静态");
-
-        private String value;
-
-        private DataSource (String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return this.value;
-        }
-    }
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -91,12 +73,6 @@ public class DataInferface {
     @Enumerated(EnumType.STRING)
     @Column(name = "DATA_TYPE",nullable = false)
     private DataType dataType;
-    /**
-     * 数据源
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "DATA_SOURCE",nullable = false)
-    private DataSource dataSource;
 
     public Template getTemplate() {
         return template;
@@ -146,11 +122,4 @@ public class DataInferface {
         this.dataType = dataType;
     }
 
-    public DataSource getDataSource() {
-        return dataSource;
-    }
-
-    public void setDataSource(DataSource dataSource) {
-        this.dataSource = dataSource;
-    }
 }

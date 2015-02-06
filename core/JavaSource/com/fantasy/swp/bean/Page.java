@@ -58,6 +58,9 @@ public class Page extends BaseBusEntity {
     @Column(name = "PAGE_SIZE",columnDefinition="INT default 15")
     private int pageSize;
 
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
+    private List<PageItem> pageItems;
+
     public Long getId() {
         return id;
     }
@@ -112,5 +115,13 @@ public class Page extends BaseBusEntity {
 
     public void setPageSize(int pageSize) {
         this.pageSize = pageSize;
+    }
+
+    public List<PageItem> getPageItems() {
+        return pageItems;
+    }
+
+    public void setPageItems(List<PageItem> pageItems) {
+        this.pageItems = pageItems;
     }
 }
