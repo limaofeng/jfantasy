@@ -150,8 +150,6 @@ public class Message extends BaseBusEntity {
                 "id='" + id + '\'' +
                 ", type=" + type +
                 ", remoteAddr='" + remoteAddr + '\'' +
-                ", in='" + in + '\'' +
-                ", out='" + out + '\'' +
                 ", result=" + result +
                 '}';
     }
