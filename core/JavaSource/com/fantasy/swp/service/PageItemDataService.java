@@ -2,9 +2,7 @@ package com.fantasy.swp.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.swp.bean.PageItem;
 import com.fantasy.swp.bean.PageItemData;
-import com.fantasy.swp.dao.PageItemDao;
 import com.fantasy.swp.dao.PageItemDataDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

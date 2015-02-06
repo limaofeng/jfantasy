@@ -69,8 +69,8 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-//        this.templeateTest.testDelete();
-//        this.deleteWebsiteTest();
+        this.templeateTest.testDelete();
+        this.deleteWebsiteTest();
     }
 
     @Test
@@ -96,7 +96,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         if(template.getPageType()== PageType.pagination){
             this.request.addParameter("path", template.getPath().replace(".ftl","_${"+template.getDataKey()+".currentPage}"+".html"));
         }else if(template.getPageType()== PageType.multi){
-
+            this.request.addParameter("path", template.getPath().replace(".ftl","_${"+template.getDataKey()+".id}"+".html"));
         }else{
             this.request.addParameter("path", template.getPath().replace(".ftl",".html"));
         }
@@ -163,7 +163,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     public void testCreate() throws Exception {
         SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
-        this.request.addParameter("ids", "62");
+        this.request.addParameter("ids", "63");
         ActionProxy proxy = super.getActionProxy("/swp/page/create.do");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();

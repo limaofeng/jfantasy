@@ -4,7 +4,7 @@ import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.swp.bean.Template;
-import com.fantasy.swp.service.ReGeneratePageService;
+import com.fantasy.swp.service.GeneratePageService;
 import com.fantasy.swp.service.TemplateService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
@@ -56,27 +56,31 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-//        this.testDelete();
-//        this.deleteWebsiteTest();
+        this.testDelete();
+        this.deleteWebsiteTest();
     }
 
     @Test
     public void testSave() throws Exception {
-        String dataType = "list";
+        String dataType = "object";
 //        // 静态:stat，方法:func，hql语句:db
 //        String dataSource = "db";
-        String templateFile = "template/template_test_common.ftl";
-        String path = "/template/art_test_list.ftl";
-        String key="articles";
-        String pageType = "single";
+        String templateFile = "template/template_test_object.ftl";
+        String path = "/template/article_test_multi.ftl";
+        String key="article";
+        // single,multi,pagination
+        String pageType = "multi";
 
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "TEMPLATE_JUNIT_TEST");
-        this.request.addParameter("description", "新闻文章X1");
+        this.request.addParameter("description", "新闻文章");
 
         this.request.addParameter("pageType", pageType);
         if("pagination".equals(pageType)){
             // 分页
+            this.request.addParameter("dataKey", key);
+        }else if("multi".equals(pageType)){
+            // 多页
             this.request.addParameter("dataKey", key);
         }else if("single".equals(pageType)){
 
@@ -94,7 +98,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         // 数据类型
         this.request.addParameter("dataInferfaces[0].dataType", dataType);
         this.request.addParameter("dataInferfaces[1].name", "某文章");
-        this.request.addParameter("dataInferfaces[1].key", "title");
+        this.request.addParameter("dataInferfaces[1].key", "article2");
         // 数据类型
         this.request.addParameter("dataInferfaces[1].dataType", "common");
         // 数据源
@@ -198,9 +202,9 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         }
     }
 
-
+//    @Test
     public void testRe() throws Exception {
-        ReGeneratePageService reGeneratePage = SpringContextUtil.getBeanByType(ReGeneratePageService.class);
-        reGeneratePage.execute(12L);
+        GeneratePageService reGeneratePage = SpringContextUtil.getBeanByType(GeneratePageService.class);
+        reGeneratePage.reGenerate(17L);
     }
 }

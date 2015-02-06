@@ -37,8 +37,12 @@ public class PageItem extends BaseBusEntity {
      */
     @Column(name = "FILE")
     private String file;
-
-
+    /**
+     * 多页面数据id或code
+     * 分页页面当前页码
+     */
+    @Column(name = "CODE")
+    private String code;
 
     public Page getPage() {
         return page;
@@ -78,5 +82,13 @@ public class PageItem extends BaseBusEntity {
 
     public void setFile(String file) {
         this.file = file;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

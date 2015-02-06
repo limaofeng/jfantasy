@@ -63,6 +63,9 @@ public class GeneratePage implements PageInstance {
             final Map<String, Object> dm = new HashMap<String, Object>();
             for(DataInferface dataInferface : dataInferfaces){
                 Data data = ObjectUtil.find(page.getDatas(), "dataInferface.id", dataInferface.getId());
+                if(dataInferface.getKey().equals(template.getDataKey())){
+                    continue;
+                }
                 dm.put(dataInferface.getKey(), GeneratePageUtil.getValue(data));
             }
 
@@ -90,7 +93,8 @@ public class GeneratePage implements PageInstance {
 //                    this.savePageItem("");
                 }
             }else if(template.getPageType()==PageType.multi){   // 多页面
-                List<Object> list = (List<Object>) dm.get(template.getDataKey());
+                Data data = ObjectUtil.find(page.getDatas(), "dataInferface.key", template.getDataKey());
+                List<Object> list = (List<Object>) GeneratePageUtil.getValue(data);
                 for(Object o : list){
                     final Map<String, Object> pageDataMap = new HashMap<String, Object>();
                     pageDataMap.put(template.getDataKey(), o);
@@ -102,11 +106,12 @@ public class GeneratePage implements PageInstance {
                         }
                     });
                     FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
+                    this.savePageItem(pageDataMap,path,page);
                 }
             }else{   // 单页面
                 String fileName = page.getPath();
                 FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(dm), configuration.getTemplate(template.getPath()), fileManager.writeFile(fileName));
-                this.savePageItem(dm,fileName);
+                this.savePageItem(dm,fileName,page);
             }
         } catch (IOException e) {
             logger.error("IOException...writeFile exception..."+e.getMessage());
@@ -114,7 +119,7 @@ public class GeneratePage implements PageInstance {
 
     }
 
-    private void savePageItem(Map<String,Object> dm,String fileName){
+    private void savePageItem(Map<String,Object> dm,String fileName,Page page){
         PageItemService pageItemService = SpringContextUtil.getBeanByType(PageItemService.class);
         PageItemDataService pageItemDataService = SpringContextUtil.getBeanByType(PageItemDataService.class);
         PageItem pageItem = new PageItem();
@@ -123,8 +128,6 @@ public class GeneratePage implements PageInstance {
         pageItem.setFile(fileName);
         List<PageItemData> pageItemDatas = new ArrayList<PageItemData>();
         pageItem.setPageItemDatas(pageItemDatas);
-
-        pageItemService.save(pageItem);
 
         for (Map.Entry<String, Object> entry : dm.entrySet()) {
             Object hibernateEntityObject = null;
@@ -153,9 +156,18 @@ public class GeneratePage implements PageInstance {
                 pageItemData.setPageItem(pageItem);
                 pageItemData.setClassName(clazz.toString());
                 pageItemData.setBeanId(id.toString());
-                pageItemDataService.save(pageItemData);
                 pageItemDatas.add(pageItemData);
+                if(entry.getKey().equals(page.getTemplate().getDataKey())){
+                    // 多页面或分页
+                    pageItem.setCode(id.toString());
+                }
             }
+        }
+        // 保存pageItem
+        pageItemService.save(pageItem);
+        // 保存pageItemData
+        for(PageItemData pageItemData : pageItemDatas){
+            pageItemDataService.save(pageItemData);
         }
     }
 
