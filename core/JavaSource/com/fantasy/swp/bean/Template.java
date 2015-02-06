@@ -1,6 +1,7 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.swp.bean.enums.PageType;
 import com.fantasy.system.bean.Website;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
@@ -61,6 +62,18 @@ public class Template extends BaseBusEntity {
      */
     @Column(name = "PATH", nullable = false, unique = true)
     private String path;
+    /**
+     * 页面类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PAGE_TYPE")
+    private PageType pageType;
+    /**
+     * Key
+     */
+    @Column(name = "DATA_KEY")
+    private String dataKey;
+
 
     public Long getId() {
         return id;
@@ -116,5 +129,21 @@ public class Template extends BaseBusEntity {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public PageType getPageType() {
+        return pageType;
+    }
+
+    public void setPageType(PageType pageType) {
+        this.pageType = pageType;
+    }
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 }

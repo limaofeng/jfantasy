@@ -8,6 +8,7 @@ import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
 import com.fantasy.swp.bean.Template;
+import com.fantasy.swp.bean.enums.PageType;
 import com.fantasy.swp.service.*;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
@@ -68,34 +69,44 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-        this.templeateTest.testDelete();
-        this.deleteWebsiteTest();
+//        this.templeateTest.testDelete();
+//        this.deleteWebsiteTest();
     }
 
     @Test
     public void testSave() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "PAGE_JUNIT_TEST");
-        this.request.addParameter("path", "/template/test.html");
         // 模版
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQS_name","TEMPLATE_JUNIT_TEST"));
         List<Template> templates = templateService.find(filters);
         Long templateId;
+        Template template = null;
         if(templates==null || templates.size()<=0){
             templeateTest.testSave();
             templates = templateService.find(filters);
-            templateId = templates.get(0).getId();
+            template = templates.get(templates.size()-1);
+            templateId = template.getId();
         }else{
-            templateId = templates.get(0).getId();
+            template = templates.get(templates.size()-1);
+            templateId = template.getId();
         }
+
+        if(template.getPageType()== PageType.pagination){
+            this.request.addParameter("path", template.getPath().replace(".ftl","_${"+template.getDataKey()+".currentPage}"+".html"));
+        }else if(template.getPageType()== PageType.multi){
+
+        }else{
+            this.request.addParameter("path", template.getPath().replace(".ftl",".html"));
+        }
+
         this.request.addParameter("template.id", templateId+"");
 
         //测试站点
         Website website = this.websiteService.get("SWP_WEBSITE_TEST");
         if(website==null){
             website = this.saveWebsiteTest();
-//            website = this.websiteService.get("SWP_WEBSITE_TEST");
         }
         this.request.addParameter("webSite.id", website.getId()+"");
 
@@ -111,9 +122,9 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
                 dataActionTest.testSave();
                 datas = dataService.find(datafilters);
             }
-            this.request.addParameter("datas["+i+"].id", datas.get(0).getId()+"");
+            this.request.addParameter("datas["+i+"].id", datas.get(datas.size()-1).getId()+"");
         }
-        this.request.addParameter("pageSize", "4");
+        this.request.addParameter("pageSize", "3");
         ActionProxy proxy = super.getActionProxy("/swp/page/save.do");
         String result = proxy.execute();
         System.out.println("result=" + result);
@@ -152,7 +163,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     public void testCreate() throws Exception {
         SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
-        this.request.addParameter("ids", "45");
+        this.request.addParameter("ids", "62");
         ActionProxy proxy = super.getActionProxy("/swp/page/create.do");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();

@@ -2,7 +2,9 @@ package com.fantasy.swp;
 
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.swp.bean.Template;
+import com.fantasy.swp.service.ReGeneratePageService;
 import com.fantasy.swp.service.TemplateService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
@@ -54,33 +56,31 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-        this.testDelete();
-        this.deleteWebsiteTest();
+//        this.testDelete();
+//        this.deleteWebsiteTest();
     }
 
     @Test
     public void testSave() throws Exception {
-        // 普通类型：common，分页类型：list，对象类型：object
-        String dataType = "object";
-        // 静态:stat，方法:func，hql语句:db
-        String dataSource = "db";
+        String dataType = "list";
+//        // 静态:stat，方法:func，hql语句:db
+//        String dataSource = "db";
         String templateFile = "template/template_test_common.ftl";
-        String path = "/template/art_test_common.ftl";
-        String key = "article";
-        if("object".equals(dataType)){
-            templateFile = "template/template_test_object.ftl";
-            path = "/template/art_test_object.ftl";
-            key = "article";
-        }else if("list".equals(dataType)){
-            templateFile = "template/template_test_list.ftl";
-            path = "/template/art_test_list.ftl";
-            key = "articles";
-        }
-
+        String path = "/template/art_test_list.ftl";
+        String key="articles";
+        String pageType = "single";
 
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "TEMPLATE_JUNIT_TEST");
         this.request.addParameter("description", "新闻文章X1");
+
+        this.request.addParameter("pageType", pageType);
+        if("pagination".equals(pageType)){
+            // 分页
+            this.request.addParameter("dataKey", key);
+        }else if("single".equals(pageType)){
+
+        }
         //测试站点
         Website website = this.websiteService.get("SWP_WEBSITE_TEST");
         if(website==null){
@@ -89,12 +89,42 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("webSite.id", website.getId()+"");
 //        this.request.addParameter("content", template.getContent());
         this.request.addParameter("path", path);
-        this.request.addParameter("dataInferfaces[0].name", "文章");
+        this.request.addParameter("dataInferfaces[0].name", "文章列表");
         this.request.addParameter("dataInferfaces[0].key", key);
         // 数据类型
         this.request.addParameter("dataInferfaces[0].dataType", dataType);
+        this.request.addParameter("dataInferfaces[1].name", "某文章");
+        this.request.addParameter("dataInferfaces[1].key", "title");
+        // 数据类型
+        this.request.addParameter("dataInferfaces[1].dataType", "common");
         // 数据源
-        this.request.addParameter("dataInferfaces[0].dataSource", dataSource);
+//        this.request.addParameter("dataInferfaces[0].dataSource", dataSource);
+
+//        if("common".equals(dataType)){
+//            this.request.addParameter("dataInferfaces[1].name", "摘要");
+//            this.request.addParameter("dataInferfaces[1].key", "summary");
+//            // 数据类型
+//            this.request.addParameter("dataInferfaces[1].dataType", dataType);
+//            // 数据源
+//            if("db".equals(dataSource)){
+//                this.request.addParameter("dataInferfaces[1].dataSource", "stat");
+//            }else{
+//                this.request.addParameter("dataInferfaces[1].dataSource", dataSource);
+//            }
+//        }else if("list".equals(dataType)){
+//            this.request.addParameter("dataInferfaces[1].name", "上一页");
+//            this.request.addParameter("dataInferfaces[1].key", "prePager");
+//            // 数据类型
+//            this.request.addParameter("dataInferfaces[1].dataType", "common");
+//            // 数据源
+//            this.request.addParameter("dataInferfaces[1].dataSource", "stat");
+//            this.request.addParameter("dataInferfaces[1].name", "下一页");
+//            this.request.addParameter("dataInferfaces[1].key", "nextPager");
+//            // 数据类型
+//            this.request.addParameter("dataInferfaces[1].dataType", "common");
+//            // 数据源
+//            this.request.addParameter("dataInferfaces[1].dataSource", "stat");
+//        }
 
         this.request.setContent(TemplateActionTest.getFileContent(TemplateActionTest.class.getClass().getResource("/").getPath()+ templateFile).getBytes());
         ActionProxy proxy = super.getActionProxy("/swp/template/save.do");
@@ -166,5 +196,11 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         if(website!=null){
             this.websiteService.delete(website.getId());
         }
+    }
+
+
+    public void testRe() throws Exception {
+        ReGeneratePageService reGeneratePage = SpringContextUtil.getBeanByType(ReGeneratePageService.class);
+        reGeneratePage.execute(12L);
     }
 }

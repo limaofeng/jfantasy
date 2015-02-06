@@ -2,24 +2,36 @@ package com.fantasy.swp.runtime;
 
 import com.fantasy.file.FileManager;
 import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
+import com.fantasy.framework.freemarker.TemplateModelUtils;
 import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.swp.PageInstance;
-import com.fantasy.swp.bean.Data;
-import com.fantasy.swp.bean.DataInferface;
-import com.fantasy.swp.bean.Page;
+import com.fantasy.swp.bean.*;
+import com.fantasy.swp.bean.enums.PageType;
 import com.fantasy.swp.service.HqlService;
+import com.fantasy.swp.service.PageItemDataService;
+import com.fantasy.swp.service.PageItemService;
 import com.fantasy.swp.service.SpelService;
+import com.fantasy.swp.util.GeneratePageUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 import java.util.*;
+import java.util.regex.Matcher;
 
 /**
  * 生成静态页面
@@ -44,40 +56,57 @@ public class GeneratePage implements PageInstance {
     public void execute(){
         try {
             // 模版
-            com.fantasy.swp.bean.Template template = page.getTemplate();
+            final com.fantasy.swp.bean.Template template = page.getTemplate();
             // 数据定义
             List<DataInferface> dataInferfaces = template.getDataInferfaces();
-            // 将生成的页面，一条数据即为一个页面
-            List<Map<String,Object>> pagerList = new ArrayList<Map<String, Object>>();
-            // 一个页面的数据
-            Map<String,Object> dataMap = new HashMap<String, Object>();
-            // 默认生成一个页面
-            pagerList.add(dataMap);
-
+            // 所有数据
+            final Map<String, Object> dm = new HashMap<String, Object>();
             for(DataInferface dataInferface : dataInferfaces){
-                // 当前页面数据
                 Data data = ObjectUtil.find(page.getDatas(), "dataInferface.id", dataInferface.getId());
-                if(dataInferface.getDataSource()==DataInferface.DataSource.stat){   // 数据源为静态
-                    // 处理静态数据源，将数据集存入到pagerList
-                    this.dealStatSource(dataInferface,data,pagerList);
-                }else if(dataInferface.getDataSource()==DataInferface.DataSource.func){// 数据源为方法
-                    this.dealFuncSource(dataInferface,data,pagerList);
-                }else if(dataInferface.getDataSource()==DataInferface.DataSource.db){   // 数据库查询
-                    this.dealDbSource(dataInferface,data,pagerList);
-                }
+                dm.put(dataInferface.getKey(), GeneratePageUtil.getValue(data));
             }
-            // 生成页面
-            for(int i=0; i<pagerList.size(); i++){
-                Map<String,Object> dm = pagerList.get(i);
-                String fileName = page.getPath();
-                if(pagerList.size()>1){
-                    String _fileName = fileName.substring(0,fileName.lastIndexOf("."));
-                    fileName = _fileName+"_"+i+".html";
-//                    // 翻页按钮
-//                    dm.put("prePager",_fileName+"_"+(i==0?0:i-1)+".html");
-//                    dm.put("nextPager",_fileName+"_"+(i==pagerList.size()-1?pagerList.size()-1:i+1)+".html");
+
+            if(template.getPageType()==PageType.pagination){    // 分页
+                List<Object> list = (List<Object>) dm.get(template.getDataKey());
+                final Pager pager = new Pager(page.getPageSize());
+                pager.setTotalCount(list.size());
+                pager.setCurrentPage(1);
+                for (int i = 1; i <= pager.getTotalPage(); pager.setCurrentPage(pager.getCurrentPage() + 1),i++) {
+                    int start = pager.getPageSize() * (pager.getCurrentPage()-1);
+                    int end = Math.min(pager.getPageSize() * pager.getCurrentPage(), pager.getTotalCount());
+                    pager.setPageItems(list.subList(start, end));
+                    final Map<String, Object> pageDataMap = new HashMap<String, Object>();
+                    pageDataMap.put(template.getDataKey(),pager);
+                    pageDataMap.putAll(dm);
+                    // /aaaa/xxxx/bbbb/p_${art.id}.html
+                    String path = RegexpUtil.replace(page.getPath(), "\\$\\{([a-zA-Z.]+)\\}", new RegexpUtil.AbstractReplaceCallBack() {
+                        @Override
+                        public String doReplace(String text, int index, Matcher matcher) {
+                        return StringUtil.nullValue(OgnlUtil.getInstance().getValue($(1),pageDataMap));
+                        }
+                    });
+                    FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
+                    // 页面生成成功，记录pageItem
+//                    this.savePageItem("");
                 }
-                FreeMarkerTemplateUtils.writer(dm, configuration.getTemplate(template.getPath()), fileManager.writeFile(fileName));
+            }else if(template.getPageType()==PageType.multi){   // 多页面
+                List<Object> list = (List<Object>) dm.get(template.getDataKey());
+                for(Object o : list){
+                    final Map<String, Object> pageDataMap = new HashMap<String, Object>();
+                    pageDataMap.put(template.getDataKey(), o);
+                    pageDataMap.putAll(dm);
+                    String path = RegexpUtil.replace(page.getPath(), "\\$\\{([a-zA-Z.]+)\\}", new RegexpUtil.AbstractReplaceCallBack() {
+                        @Override
+                        public String doReplace(String text, int index, Matcher matcher) {
+                        return StringUtil.nullValue(OgnlUtil.getInstance().getValue($(1),pageDataMap));
+                        }
+                    });
+                    FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
+                }
+            }else{   // 单页面
+                String fileName = page.getPath();
+                FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(dm), configuration.getTemplate(template.getPath()), fileManager.writeFile(fileName));
+                this.savePageItem(dm,fileName);
             }
         } catch (IOException e) {
             logger.error("IOException...writeFile exception..."+e.getMessage());
@@ -85,184 +114,58 @@ public class GeneratePage implements PageInstance {
 
     }
 
-    private List<Pager> make(List datas, int pageSize){
-        List<Pager> pagers = new ArrayList<Pager>();
-        if(datas==null || datas.size()<=0 || pageSize<=0){
-            Pager pager = new Pager();
-            pager.setPageSize(pageSize);
-            pager.setPageItems(null);
-            pager.setTotalCount(datas==null?0:datas.size());
-            pager.setTotalPage(0);
-            pagers.add(pager);
-            return pagers;
-        }
-        // 总页数
-        int totalPager = datas.size()/pageSize;
-        if(datas.size()%pageSize>0){
-            totalPager += 1;
-        }
-        for(int i=1; i<=totalPager; i++){
-            Pager p = new Pager();
-            p.setTotalPage(totalPager);
-            p.setTotalCount(datas.size());
-            List _dml = new ArrayList();
-            for(int j=0,k=pageSize*(i-1); j<pageSize && (k+j)<datas.size(); j++){
-                _dml.add(datas.get(k+j));
-            }
-            p.setPageItems(_dml);
-            p.setPageSize(pageSize);
-            p.setCurrentPage(i);
-            p.setFirst(1);
-            pagers.add(p);
-        }
-        return pagers;
-    }
+    private void savePageItem(Map<String,Object> dm,String fileName){
+        PageItemService pageItemService = SpringContextUtil.getBeanByType(PageItemService.class);
+        PageItemDataService pageItemDataService = SpringContextUtil.getBeanByType(PageItemDataService.class);
+        PageItem pageItem = new PageItem();
+        pageItem.setPage(page);
+        pageItem.setContent("");
+        pageItem.setFile(fileName);
+        List<PageItemData> pageItemDatas = new ArrayList<PageItemData>();
+        pageItem.setPageItemDatas(pageItemDatas);
 
-    private void dealStatSource(DataInferface dataInferface, Data data,List<Map<String,Object>> pagerList){
-        if(dataInferface.getDataType()==DataInferface.DataType.common){       // 普通
-            for(Map<String,Object> map : pagerList){
-                map.put(dataInferface.getKey(), data.getValue());
-            }
-        }else if(dataInferface.getDataType()==DataInferface.DataType.list){   // 列表页
-            List<HashMap> datas = JSON.deserialize(data.getValue(),new TypeReference<List<HashMap>>() {});
-            if(datas==null || datas.size()<=0){
-                return;
-            }
-            int pageSize = page.getPageSize();
-            List<Pager> pagers = this.make(datas,pageSize);
-            for(int i=0; i<pagers.size(); i++){
-                if(i==0){
-                    pagerList.get(0).put(dataInferface.getKey(), pagers.get(i).getPageItems());
-                }else{
-                    Map<String,Object> _map = new HashMap<String, Object>();
-                    _map.put(dataInferface.getKey(), pagers.get(i).getPageItems());
-                    pagerList.add(_map);
+        pageItemService.save(pageItem);
+
+        for (Map.Entry<String, Object> entry : dm.entrySet()) {
+            Object hibernateEntityObject = null;
+            if(entry.getValue() instanceof List){
+                if(entry.getValue()==null || ((List) entry.getValue()).size()==0){
+                    continue;
                 }
-            }
-        }else if(dataInferface.getDataType()==DataInferface.DataType.object){
-            List<HashMap> datas = JSON.deserialize(data.getValue(),new TypeReference<List<HashMap>>() {});
-            if(datas==null || datas.size()<=0){
-                return;
-            }
-            for(int i=0; i<datas.size(); i++){
-                if(i==0){
-                    pagerList.get(0).put(dataInferface.getKey(), datas.get(i));
-                }else{
-                    Map<String,Object> _map = new HashMap<String, Object>();
-                    _map.put(dataInferface.getKey(), datas.get(i));
-                    pagerList.add(_map);
+                hibernateEntityObject = ((List) entry.getValue()).get(0);
+            }else if(entry.getValue() instanceof Array){
+                if(entry.getValue()==null || ((Object[]) entry.getValue()).length==0){
+                    continue;
                 }
+                hibernateEntityObject = ((Object[]) entry.getValue())[0];
+            }else{
+                hibernateEntityObject = entry.getValue();
+            }
+            Class clazz = ClassUtil.getRealClass(hibernateEntityObject.getClass());
+            Entity entity = (Entity) clazz.getAnnotation(Entity.class);
+            if(entity!=null){
+                Field[] field = ClassUtil.getDeclaredFields(clazz,Id.class);
+                Object id = null;
+                if(field.length == 1){
+                    id = ClassUtil.getValue(hibernateEntityObject,field[0].getName());
+                }
+                PageItemData pageItemData = new PageItemData();
+                pageItemData.setPageItem(pageItem);
+                pageItemData.setClassName(clazz.toString());
+                pageItemData.setBeanId(id.toString());
+                pageItemDataService.save(pageItemData);
+                pageItemDatas.add(pageItemData);
             }
         }
     }
 
-    public void dealFuncSource(DataInferface dataInferface, Data data,List<Map<String,Object>> pagerList){
-        SpelService spelService = SpringContextUtil.getBeanByType(SpelService.class);
-        Map<String,Object> params = JSON.deserialize(data.getValue(),new TypeReference<HashMap<String,Object>>() {});
-        String func = params.get("func").toString();
-        Map<String,Object> paramsMap = (Map<String,Object>)params.get("params");
-        Object obj = spelService.executeMethod(func,paramsMap);
-        if(obj==null){
-            return;
-        }
-        if(dataInferface.getDataType()==DataInferface.DataType.common){       // 普通
-            for(Map<String,Object> map : pagerList){
-                map.put(dataInferface.getKey(), obj);
+    public static void main(String[] args){
+        System.out.println(RegexpUtil.replace("/template/art_test_list_${articles.currentPage}.html", "\\$\\{([a-zA-Z.]+)\\}", new RegexpUtil.AbstractReplaceCallBack() {
+            @Override
+            public String doReplace(String text, int index, Matcher matcher) {
+                return "xxxx";
             }
-        }else if(dataInferface.getDataType()==DataInferface.DataType.list){   // 列表页
-            List datas;
-            if(obj instanceof List){
-                datas = (List)obj;
-            }else if(obj instanceof Array){
-                datas = Arrays.asList(((Array)obj));
-            }else {
-                datas = new ArrayList();
-                datas.add(obj);
-            }
-            int pageSize = page.getPageSize();
-            List<Pager> pagers = this.make(datas,pageSize);
-            for(int i=0; i<pagers.size(); i++){
-                if(i==0){
-                    pagerList.get(0).put(dataInferface.getKey(), pagers.get(i).getPageItems());
-                }else{
-                    Map<String,Object> _map = new HashMap<String, Object>();
-                    _map.put(dataInferface.getKey(), pagers.get(i).getPageItems());
-                    pagerList.add(_map);
-                }
-            }
-        }else if(dataInferface.getDataType()==DataInferface.DataType.object){
-            List datas;
-            if(obj instanceof List){
-                datas = (List)obj;
-            }else if(obj instanceof Array){
-                datas = Arrays.asList(((Array)obj));
-            }else {
-                datas = new ArrayList();
-                datas.add(obj);
-            }
-            for(int i=0; i<datas.size(); i++){
-                if(i==0){
-                    pagerList.get(0).put(dataInferface.getKey(), datas.get(i));
-                }else{
-                    Map<String,Object> _map = new HashMap<String, Object>();
-                    _map.put(dataInferface.getKey(), datas.get(i));
-                    pagerList.add(_map);
-                }
-            }
-        }
+        }));
     }
 
-    private void dealDbSource(DataInferface dataInferface, Data data, List<Map<String, Object>> pagerList) {
-        HqlService hqlService = SpringContextUtil.getBeanByType(HqlService.class);
-        Map<String,Object> params = JSON.deserialize(data.getValue(),new TypeReference<HashMap<String,Object>>() {});
-        String hql = params.get("hql").toString();
-        String operate = params.get("operate").toString();
-        Object obj = hqlService.execute(hql,operate);
-
-        if(dataInferface.getDataType()==DataInferface.DataType.common){       // 普通
-            for(Map<String,Object> map : pagerList){
-                map.put(dataInferface.getKey(), obj);
-            }
-        }else if(dataInferface.getDataType()==DataInferface.DataType.list){   // 列表页
-            List datas;
-            if(obj instanceof List){
-                datas = (List)obj;
-            }else if(obj instanceof Array){
-                datas = Arrays.asList(((Array)obj));
-            }else {
-                datas = new ArrayList();
-                datas.add(obj);
-            }
-            int pageSize = page.getPageSize();
-            List<Pager> pagers = this.make(datas,pageSize);
-            for(int i=0; i<pagers.size(); i++){
-                if(i==0){
-                    pagerList.get(0).put(dataInferface.getKey(), pagers.get(i).getPageItems());
-                }else{
-                    Map<String,Object> _map = new HashMap<String, Object>();
-                    _map.put(dataInferface.getKey(), pagers.get(i).getPageItems());
-                    pagerList.add(_map);
-                }
-            }
-        }else if(dataInferface.getDataType()==DataInferface.DataType.object){
-            List datas;
-            if(obj instanceof List){
-                datas = (List)obj;
-            }else if(obj instanceof Array){
-                datas = Arrays.asList(((Array)obj));
-            }else {
-                datas = new ArrayList();
-                datas.add(obj);
-            }
-            for(int i=0; i<datas.size(); i++){
-                if(i==0){
-                    pagerList.get(0).put(dataInferface.getKey(), datas.get(i));
-                }else{
-                    Map<String,Object> _map = new HashMap<String, Object>();
-                    _map.put(dataInferface.getKey(), datas.get(i));
-                    pagerList.add(_map);
-                }
-            }
-        }
-    }
 }
