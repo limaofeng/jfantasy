@@ -41,4 +41,12 @@ public class Voice {
     public void setMedia(Media media) {
         this.media = media;
     }
+
+    @Override
+    public String toString() {
+        return "Voice{" +
+                "recognition='" + recognition + '\'' +
+                ", media=" + media +
+                '}';
+    }
 }

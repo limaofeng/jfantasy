@@ -62,14 +62,6 @@ public class Media {
         return format;
     }
 
-    @Override
-    public String toString() {
-        return "Media{" +
-                "id='" + id + '\'' +
-                ", format='" + format + '\'' +
-                '}';
-    }
-
     public Type getType() {
         return type;
     }
@@ -92,5 +84,15 @@ public class Media {
 
     public void setFileItem(FileItem fileItem) {
         this.fileItem = fileItem;
+    }
+
+    @Override
+    public String toString() {
+        return "Media{" +
+                "id='" + id + '\'' +
+                ", type=" + type +
+                ", format='" + format + '\'' +
+                ", fileItem=" + fileItem +
+                '}';
     }
 }
