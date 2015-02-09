@@ -2,24 +2,30 @@ package com.fantasy.schedule.service;
 
 import com.fantasy.framework.util.common.DateUtil;
 import junit.framework.Assert;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.quartz.CronExpression;
 import org.quartz.JobKey;
 import org.quartz.TriggerKey;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = {"classpath:spring/applicationContext-schedule.xml"})
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:spring/applicationContext-schedule.xml"})
 public class ScheduleServiceTest {
 
-//    @Resource
+    @Resource
     private ScheduleService scheduleService;
 
-//    @Before
+    @Before
     public void setUp() throws Exception {
-
         Map<String, String> data = new HashMap<String, String>();
         data.put("name", "limaofeng");
         data.put("time", DateUtil.format("yyyy-MM-dd HH:mm:ss"));
@@ -31,7 +37,7 @@ public class ScheduleServiceTest {
         scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 20, 5, _data);
     }
 
-//    @After
+    @After
     public void tearDown() throws Exception {
         // 删除 触发器
         scheduleService.removeTrigdger(TriggerKey.triggerKey("test"));
@@ -45,6 +51,10 @@ public class ScheduleServiceTest {
         Assert.assertTrue(CronExpression.isValidExpression(expression));
     }
 
+    @Test
+    public void run() throws InterruptedException {
+        Thread.sleep(TimeUnit.SECONDS.toMillis(30));
+    }
 
     @Test
     public void testIsStartTimerTisk() throws Exception {
@@ -101,8 +111,4 @@ public class ScheduleServiceTest {
 
     }
 
-    @Test
-    public void testTriggerJob1() throws Exception {
-
-    }
 }
