@@ -8,6 +8,7 @@ public class EntityChangedListener {
 		this.clazz = clazz;
 	}
 
+
 	public void entityInsert(Object entity) {
 
 	}
