@@ -15,6 +15,11 @@
                     ${article.content!' '}
                 </td>
             </tr>
+            <tr>
+                <td>
+                    ${article2.title!' '}
+                </td>
+            </tr>
         </table>
     </body>
 </html>
