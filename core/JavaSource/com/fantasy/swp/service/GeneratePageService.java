@@ -160,7 +160,7 @@ public class GeneratePageService {
                 }
                 PageItemData pageItemData = new PageItemData();
                 pageItemData.setPageItem(pageItem);
-                pageItemData.setClassName(clazz.toString());
+                pageItemData.setClassName(clazz.getName());
                 pageItemData.setBeanId(id.toString());
                 pageItemDataService.save(pageItemData);
                 pageItemDatas.add(pageItemData);

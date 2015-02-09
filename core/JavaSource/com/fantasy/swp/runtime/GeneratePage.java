@@ -154,7 +154,7 @@ public class GeneratePage implements PageInstance {
                 }
                 PageItemData pageItemData = new PageItemData();
                 pageItemData.setPageItem(pageItem);
-                pageItemData.setClassName(clazz.toString());
+                pageItemData.setClassName(clazz.getName());
                 pageItemData.setBeanId(id.toString());
                 pageItemDatas.add(pageItemData);
                 if(entry.getKey().equals(page.getTemplate().getDataKey())){
