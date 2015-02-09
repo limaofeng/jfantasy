@@ -53,7 +53,7 @@ public class ScheduleServiceTest {
 
     @Test
     public void run() throws InterruptedException {
-        Thread.sleep(TimeUnit.SECONDS.toMillis(30));
+        Thread.sleep(TimeUnit.SECONDS.toMillis(20));
     }
 
     @Test
