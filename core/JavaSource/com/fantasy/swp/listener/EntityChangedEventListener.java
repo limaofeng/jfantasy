@@ -1,6 +1,7 @@
 package com.fantasy.swp.listener;
 
 
+import com.fantasy.framework.util.common.ObjectUtil;
 import org.hibernate.event.spi.*;
 import org.hibernate.persister.entity.EntityPersister;
 
@@ -16,8 +17,17 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
 
     }
 
+
+    public boolean modify(PostUpdateEvent event,String property) {
+//        Arrays.binarySearch(event.getPersister().getPropertyNames(),property);
+        int index = ObjectUtil.indexOf(event.getPersister().getPropertyNames(), property);
+        return index != -1 && event.getState()[index].equals(event.getOldState()[index]);
+    }
+
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
+
+
 
     }
 

@@ -1,24 +1,25 @@
 package com.fantasy.mall.goods.dao;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.fantasy.framework.dao.hibernate.HibernateDao;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.lucene.backend.EntityChangedListener;
+import com.fantasy.framework.lucene.dao.LuceneDao;
+import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.mall.goods.bean.Goods;
+import com.fantasy.mall.goods.bean.GoodsCategory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import com.fantasy.framework.dao.hibernate.HibernateDao;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.mall.goods.bean.Goods;
-import com.fantasy.mall.goods.bean.GoodsCategory;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
-public class GoodsDao extends HibernateDao<Goods, Long> {
+public class GoodsDao extends HibernateDao<Goods, Long> implements LuceneDao<Goods> {
 
 	@Override
 	protected Criterion[] buildPropertyFilterCriterions(List<PropertyFilter> filters) {
@@ -64,4 +65,30 @@ public class GoodsDao extends HibernateDao<Goods, Long> {
 		return ((GoodsCategory) this.getSession().createCriteria(GoodsCategory.class).add(Restrictions.eq("sign", sign)).uniqueResult()).getId().toString();
 	}
 
+    @Override
+    public long count() {
+        return this.count(Restrictions.eq("marketable",true));
+    }
+
+    @Override
+    public List<Goods> find(int start, int size) {
+        return this.find(new Criterion[]{Restrictions.eq("marketable",true)},start,size);
+    }
+
+    @Override
+    public List<Goods> findByField(String fieldName, String fieldValue) {
+        return this.find(Restrictions.eq(fieldName,fieldValue));
+    }
+
+    @Override
+    public Goods get(String id) {
+        return this.get(Long.valueOf(id));
+    }
+
+    private EntityChangedListener changedListener = new EntityChangedListener(this.entityClass);
+
+    @Override
+    public EntityChangedListener getLuceneListener() {
+        return changedListener;
+    }
 }

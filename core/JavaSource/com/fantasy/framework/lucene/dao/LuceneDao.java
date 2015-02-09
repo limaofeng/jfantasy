@@ -14,12 +14,12 @@ public interface LuceneDao<T> {
      * 不完善 待调整
      *
      * @param fieldName    字段
-     * @param fieldIdValue 字段值
+     * @param fieldValue 字段值
      * @return List<T>
      */
-    List<T> findByField(String fieldName, String fieldIdValue);
+    List<T> findByField(String fieldName, String fieldValue);
 
-    List<T> findByIds(String... ids);
+    //List<T> findByIds(String... ids);
 
     T get(String id);
 

@@ -87,12 +87,6 @@ public class ArticleDao extends HibernateDao<Article, Long> implements LuceneDao
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     @Override
-    public List<Article> findByIds(String... ids) {
-        return this.find(Restrictions.in(getIdName(), ids));
-    }
-
-    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
-    @Override
     public Article get(String id) {
         return this.get(Long.valueOf(id));
     }
