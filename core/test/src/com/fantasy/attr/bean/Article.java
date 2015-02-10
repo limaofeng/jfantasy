@@ -46,7 +46,7 @@ public class Article extends BaseBusEntity implements DynaBean {
     /**
      * 动态属性集合。
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
     private List<AttributeValue> attributeValues;
 

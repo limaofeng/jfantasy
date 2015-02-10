@@ -46,17 +46,23 @@ public class VersionUtil {
 
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
+        if (version == null) {
+            return ClassUtil.newInstance(clazz);
+        }
         DynaBean dynaBean = newInstance(makeClass(version));
         dynaBean.setVersion(version);
         return clazz.cast(dynaBean);
     }
 
-    private static DynaBean newInstance(Class clazz){
+    private static DynaBean newInstance(Class clazz) {
         return (DynaBean) ClassUtil.newInstance(clazz);
     }
 
     private static DynaBean createDynaBean(Class<?> clazz, String number, DynaBean bean) {
         AttributeVersion version = getVersion(clazz, number);
+        if (version == null) {
+            return bean;
+        }
         DynaBean dynaBean = newInstance(makeClass(version));
         dynaBean.setVersion(version);
         dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
@@ -72,7 +78,12 @@ public class VersionUtil {
 
     public static AttributeVersion getVersion(Class<?> clazz, String number) {
         if (!versionCache.containsKey(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number)) {
-            versionCache.putIfAbsent(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number, getAttributeVersionService().getVersion(clazz, number));
+            AttributeVersion version = getAttributeVersionService().getVersion(clazz, number);
+            if (version == null) {
+                logger.error("未找到" + clazz + "对应的版本[" + number + "]信息");
+                return null;
+            }
+            versionCache.putIfAbsent(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number, version);
         }
         return versionCache.get(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number);
     }
