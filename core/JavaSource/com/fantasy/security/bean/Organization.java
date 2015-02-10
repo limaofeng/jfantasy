@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_ORGANIZATION")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "jobs"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "jobs","orgHelpBeans"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Organization extends BaseBusEntity {
 
