@@ -85,8 +85,9 @@ public class MessageDigestUtil implements InitializingBean {
 
     private void appendHexPair(byte bt, StringBuffer stringbuffer) {
         int b = bt & TWO_BYTES;
-        if (b < PAD_BELOW)
+        if (b < PAD_BELOW){
             stringbuffer.append('0');
+        }
         stringbuffer.append(Integer.toHexString(b));
     }
 

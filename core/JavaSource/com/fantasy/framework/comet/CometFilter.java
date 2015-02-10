@@ -1,14 +1,15 @@
 package com.fantasy.framework.comet;
 
-import java.io.IOException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.springframework.web.filter.GenericFilterBean;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.filter.GenericFilterBean;
+import java.io.IOException;
 
 /**
  * java web 长连接类
@@ -20,11 +21,13 @@ import org.springframework.web.filter.GenericFilterBean;
  */
 public class CometFilter extends GenericFilterBean {
 
+    private static final Log LOGGER = LogFactory.getLog(CometFilter.class);
+
 	public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		
-		System.out.println(request.getRequestURI());
-		System.out.println(request.getRequestURL());
+		LOGGER.debug(request.getRequestURI());
+		LOGGER.debug(request.getRequestURL());
 		
 		chain.doFilter(servletRequest, servletResponse);
 	}

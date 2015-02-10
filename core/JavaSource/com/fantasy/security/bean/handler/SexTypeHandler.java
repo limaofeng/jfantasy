@@ -19,7 +19,9 @@ public class SexTypeHandler extends CharEnumTypeHandler<Sex> {
 						return Character.valueOf('M');
 					case 2:
 						return Character.valueOf('F');
-					}
+                    default:
+
+                    }
 					return Character.valueOf('U');
 				}
 				if ((value instanceof String)) {
@@ -28,6 +30,7 @@ public class SexTypeHandler extends CharEnumTypeHandler<Sex> {
 						return Sex.female;
 					case 'M':
 						return Sex.male;
+                    default:
 						/*
 						 * case 'U': return Sex.unknown;
 						 */

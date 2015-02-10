@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>2.9.0.Alphal</version>
+        <version>3.0.7.Alphal</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>fantasy-core</artifactId>
@@ -89,12 +89,12 @@
             <artifactId>hibernate-ehcache</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-core-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.jackson</groupId>
-            <artifactId>jackson-mapper-asl</artifactId>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
         </dependency>
         <dependency>
             <groupId>org.tuckey</groupId>
@@ -217,14 +217,6 @@
             <artifactId>xml-apis</artifactId>
         </dependency>
         <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet.jsp</groupId>
-            <artifactId>javax.servlet.jsp-api</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.mobicents.external.freetts</groupId>
             <artifactId>freetts</artifactId>
         </dependency>
@@ -248,6 +240,29 @@
             <groupId>jfree</groupId>
             <artifactId>jfreechart</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.apache.struts</groupId>
+            <artifactId>struts2-junit-plugin</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>javax</groupId>
+            <artifactId>javaee-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-engine</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>2.3.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.3.170</version>
+            <scope>test</scope>
+        </dependency>
         <!--
         <dependency>
             <groupId>org.ow2.jotm</groupId>
@@ -269,5 +284,7 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <description>开发框架 - 框架主体,包含支付、用户、会员、权限等功能</description>
 
 </project>

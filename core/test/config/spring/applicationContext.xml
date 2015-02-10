@@ -41,15 +41,16 @@
             </props>
         </property>
         <property name="defaultEncoding" value="utf-8"/>
-        <!--
+
         <property name="templateLoaderPath" value="${freemarker.templatePath}" />
         <property name="preTemplateLoaders">
             <list>
-                <bean class="com.fantasy.framework.freemarker.loader.FileManagerTemplateLoader">
-                    <property name="fileManagerBeanName" value="freemarker" />
+                <bean class="com.fantasy.framework.freemarker.loader.FreemarkerTemplateLoader">
+
                 </bean>
             </list>
         </property>
+        <!--
         -->
     </bean>
 
@@ -99,12 +100,6 @@
         <property name="configuration" ref="freemarkerService"/>
     </bean>
 
-    <bean id="shortMessagingService" class="com.fantasy.sms.service.ShortMessagingService">
-        <property name="smsService">
-            <bean class="com.fantasy.sms.service.DefaultSMSService"/>
-        </property>
-    </bean>
-
     <!-- 自定义序列生成器 -->
     <bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">
         <property name="poolSize" value="${dataBaseKey.poolSize}"/>
@@ -112,6 +107,9 @@
 
     <!-- 支付配置 -->
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+
+    <!-- 用户登陆接口(通过XML文件配置) -->
+    <bean id="userDetailsService" class="com.fantasy.security.userdetails.SimpleUserDetailsService"/>
 
     <!-- 其他需要加载的spring模块 -->
     <import resource="classpath:spring/applicationContext-datasource.xml"/>

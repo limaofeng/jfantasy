@@ -1,12 +1,11 @@
 package com.fantasy.framework.lucene.handler;
 
-import java.util.Iterator;
-import java.util.List;
-
+import com.fantasy.framework.lucene.mapper.FieldUtil;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import java.util.Iterator;
+import java.util.List;
 
 public abstract class ByFieldHandler extends PropertyFieldHandler {
 	protected ByFieldHandler(Object obj, java.lang.reflect.Field field, String prefix) {
@@ -20,8 +19,9 @@ public abstract class ByFieldHandler extends PropertyFieldHandler {
 			for (Iterator<?> i$ = objList.iterator(); i$.hasNext();) {
 				Object o = i$.next();
 				Object value = FieldUtil.get(o, this.field);
-				if (value != null)
-					sb.append(getArrayString(value, type.getComponentType())).append(";");
+				if (value != null){
+                    sb.append(getArrayString(value, type.getComponentType())).append(";");
+                }
 			}
 		} else {
 			for (Iterator<?> i$ = objList.iterator(); i$.hasNext();) {

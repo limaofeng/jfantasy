@@ -16,11 +16,14 @@ import com.fantasy.mall.order.bean.OrderItem;
 import com.fantasy.mall.stock.bean.Stock;
 import com.fantasy.mall.stock.bean.WarningSettings;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Persister;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -34,6 +37,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_PRODUCT")
 @Persister(impl = DynaBeanEntityPersister.class)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "specificationValueStore", "goodsNotifys", "goodsImage", "goodsImageStore", "cartItems", "orderItems", "deliveryItems", "warningSettings"})
 public class Product extends BaseBusEntity implements DynaBean {
 

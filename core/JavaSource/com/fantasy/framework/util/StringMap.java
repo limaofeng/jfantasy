@@ -37,8 +37,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 	}
 
 	public void setIgnoreCase(boolean ic) {
-		if (this._root._children != null)
-			throw new IllegalStateException("Must be set before first put");
+		if (this._root._children != null){
+            throw new IllegalStateException("Must be set before first put");
+        }
 		this._ignoreCase = ic;
 	}
 
@@ -85,8 +86,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 				if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
 					prev = null;
 					ni++;
-					if (ni != node._char.length)
-						break;
+					if (ni != node._char.length){
+                        break;
+                    }
 					ni = -1;
 					break;
 				}
@@ -108,8 +110,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 				break;
 			}
 			if (parent != null) {
-				if (parent._children == null)
-					parent._children = new Node[this._width];
+				if (parent._children == null){
+                    parent._children = new Node[this._width];
+                }
 				parent._children[(c % this._width)] = node;
 				int oi = node._ochar != null ? (node._ochar[0] % this._width) : 0;
 				if ((node._ochar != null) && (node._char[0] % this._width != oi)) {
@@ -117,8 +120,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 						parent._children[oi] = node;
 					} else {
 						Node<V> n = parent._children[oi];
-						while (n._next != null)
-							n = n._next;
+						while (n._next != null){
+                            n = n._next;
+                        }
 						n._next = node;
 					}
 				}
@@ -142,10 +146,12 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 	}
 
 	public V get(Object key) {
-		if (key == null)
-			return this._nullValue;
-		if ((key instanceof String))
-			return get((String) key);
+		if (key == null){
+            return this._nullValue;
+        }
+		if ((key instanceof String)){
+            return get((String) key);
+        }
 		return get(key.toString());
 	}
 
@@ -154,8 +160,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			return this._nullValue;
 		}
 		Map.Entry<String, V> entry = getEntry(key, 0, key.length());
-		if (entry == null)
-			return null;
+		if (entry == null){
+            return null;
+        }
 		return entry.getValue();
 	}
 
@@ -177,24 +184,29 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 				if (node != null) {
 					if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
 						ni++;
-						if (ni != node._char.length)
-							break;
+						if (ni != node._char.length){
+                            break;
+                        }
 						ni = -1;
 					} else {
-						if (ni > 0)
-							return null;
-
+						if (ni > 0){
+                            return null;
+                        }
 						node = node._next;
 						continue;
 					}
-				} else
-					return null;
+				} else{
+                    return null;
+                }
+
 			}
 		}
-		if (ni > 0)
-			return null;
-		if ((node != null) && (node._key == null))
-			return null;
+		if (ni > 0){
+            return null;
+        }
+		if ((node != null) && (node._key == null)){
+            return null;
+        }
 		return node;
 	}
 
@@ -216,24 +228,30 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 				if (node != null) {
 					if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
 						ni++;
-						if (ni != node._char.length)
-							break;
+						if (ni != node._char.length){
+                            break;
+                        }
 						ni = -1;
 					} else {
-						if (ni > 0)
-							return null;
-
+						if (ni > 0){
+                            return null;
+                        }
 						node = node._next;
 						continue;
 					}
-				} else
-					return null;
+				} else{
+                    return null;
+                }
 			}
 		}
-		if (ni > 0)
-			return null;
-		if ((node != null) && (node._key == null))
-			return null;
+		if (ni > 0){
+            return null;
+        }
+
+		if ((node != null) && (node._key == null)){
+            return null;
+        }
+
 		return node;
 	}
 
@@ -252,32 +270,40 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 
 				Node<V> child = node._children == null ? null : node._children[(c % this._width)];
 
-				if ((child == null) && (i > 0))
-					return node;
+				if ((child == null) && (i > 0)){
+                    return node;
+                }
 				node = child;
 			}
 			while (true) {
 				if (node != null) {
 					if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
 						ni++;
-						if (ni != node._char.length)
-							break;
+						if (ni != node._char.length){
+                            break;
+                        }
 						ni = -1;
 					} else {
-						if (ni > 0)
-							return null;
-
+						if (ni > 0){
+                            return null;
+                        }
 						node = node._next;
 						continue;
 					}
-				} else
-					return null;
+				} else{
+                    return null;
+                }
+
 			}
 		}
-		if (ni > 0)
-			return null;
-		if ((node != null) && (node._key == null))
-			return null;
+		if (ni > 0){
+            return null;
+        }
+
+		if ((node != null) && (node._key == null)){
+            return null;
+        }
+
 		return node;
 	}
 
@@ -306,22 +332,27 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 				if (node != null) {
 					if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
 						ni++;
-						if (ni != node._char.length)
-							break;
+						if (ni != node._char.length){
+                            break;
+                        }
 						ni = -1;
 					} else {
-						if (ni > 0)
-							return null;
-
+						if (ni > 0){
+                            return null;
+                        }
 						node = node._next;
 						continue;
 					}
-				} else
-					return null;
+				} else{
+                    return null;
+                }
+
 			}
 		}
-		if (ni > 0)
-			return null;
+		if (ni > 0){
+            return null;
+        }
+
 		if ((node != null) && (node._key == null)) {
 			return null;
 		}
@@ -347,8 +378,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 	}
 
 	public boolean containsKey(Object key) {
-		if (key == null)
-			return this._nullEntry != null;
+		if (key == null){
+            return this._nullEntry != null;
+        }
 		return getEntry(key.toString(), 0, key == null ? 0 : key.toString().length()) != null;
 	}
 
@@ -414,13 +446,15 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			for (int i = 0; i < l; i++) {
 				char c = s.charAt(offset + i);
 				this._char[i] = c;
-				if (!ignoreCase)
-					continue;
+				if (!ignoreCase){
+                    continue;
+                }
 				char o = c;
-				if (Character.isUpperCase(c))
-					o = Character.toLowerCase(c);
-				else if (Character.isLowerCase(c))
-					o = Character.toUpperCase(c);
+				if (Character.isUpperCase(c)){
+                    o = Character.toLowerCase(c);
+                }else if (Character.isLowerCase(c)){
+                    o = Character.toUpperCase(c);
+                }
 				this._ochar[i] = o;
 			}
 		}
@@ -482,11 +516,13 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 
 		private void toString(StringBuilder buf) {
 			buf.append("{[");
-			if (this._char == null)
-				buf.append('-');
-			else
-				for (int i = 0; i < this._char.length; i++)
-					buf.append(this._char[i]);
+			if (this._char == null){
+                buf.append('-');
+            }else{
+                for (int i = 0; i < this._char.length; i++){
+                    buf.append(this._char[i]);
+                }
+            }
 			buf.append(':');
 			buf.append(this._key);
 			buf.append('=');
@@ -495,10 +531,11 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			if (this._children != null) {
 				for (int i = 0; i < this._children.length; i++) {
 					buf.append('|');
-					if (this._children[i] != null)
-						this._children[i].toString(buf);
-					else
-						buf.append("-");
+					if (this._children[i] != null) {
+                        this._children[i].toString(buf);
+                    }else{
+                        buf.append("-");
+                    }
 				}
 			}
 			buf.append('}');

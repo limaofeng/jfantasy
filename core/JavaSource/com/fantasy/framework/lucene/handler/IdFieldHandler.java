@@ -18,8 +18,9 @@ public class IdFieldHandler extends AbstractFieldHandler {
 	
 	private String getEntityId(){
 		Object id = FieldUtil.get(this.obj,this.field);
-		if(id==null)
-			throw new RuntimeException("要索引的对象@Id字段不能为空");
+		if(id==null){
+            throw new RuntimeException("要索引的对象@Id字段不能为空");
+        }
 		return String.valueOf(id);
 	}
 	

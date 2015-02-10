@@ -1,16 +1,12 @@
 package com.fantasy.framework.util.validator.entities;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.validator.Validateable;
 import com.fantasy.framework.util.validator.Validator;
 import com.fantasy.framework.util.validator.exception.Error;
+
+import java.util.*;
 
 public class DefaultValidateable implements Validateable {
 	private Validateable superValidateable;
@@ -42,14 +38,16 @@ public class DefaultValidateable implements Validateable {
 
 	public static void validate(Validateable validateable, FieldValidator fieldValidator, String field, Map<String, List<String>> errorMsg, Object value) {
 		Error[] errors = fieldValidator.validate(validateable, value);
-		if (errors != null)
-			for (Error error : errors)
-				if (error.isStack()) {
-					String fieldName = field + "." + error.getField();
-					getErrorList(errorMsg, fieldName).add(error.getMessage());
-				} else {
-					getErrorList(errorMsg, field).add(error.getMessage());
-				}
+		if (errors != null){
+            for (Error error : errors){
+                if (error.isStack()) {
+                    String fieldName = field + "." + error.getField();
+                    getErrorList(errorMsg, fieldName).add(error.getMessage());
+                } else {
+                    getErrorList(errorMsg, field).add(error.getMessage());
+                }
+            }
+        }
 	}
 
 	public static List<String> getErrorList(Map<String, List<String>> errorMsg, String key) {

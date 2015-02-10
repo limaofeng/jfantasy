@@ -52,7 +52,7 @@ public class FantasyHttpSessionRequestCache extends HttpSessionRequestCache {
 						ClassUtil.setValue(savedRequest, "requestURI", StringUtil.nullValue(ClassUtil.getValue(savedRequest, "contextPath")) + refererUrl);
 					}
 				}
-				System.out.println(savedRequest);
+                logger.debug(savedRequest);
 			}
 		} else {
 			logger.debug("Request not saved as configured RequestMatcher did not match");

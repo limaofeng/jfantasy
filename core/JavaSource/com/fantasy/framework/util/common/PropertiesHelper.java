@@ -54,8 +54,9 @@ public class PropertiesHelper {
     }
 
     public void setProperties(Properties props) {
-        if (props == null)
+        if (props == null){
             throw new IllegalArgumentException("properties must be not null");
+        }
         this.p = props;
     }
 

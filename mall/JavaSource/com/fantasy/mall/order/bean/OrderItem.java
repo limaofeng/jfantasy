@@ -4,10 +4,13 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.Product;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 /**
@@ -20,6 +23,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "MALL_ORDER_ITEM")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "memeo", "order" })
 public class OrderItem extends BaseBusEntity {
 

@@ -4,13 +4,14 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.bean.enums.MenuType;
 import org.apache.struts2.json.annotations.JSON;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -22,6 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_MENU")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "parent"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Menu extends BaseBusEntity {
 
     private static final long serialVersionUID = -3361634609328758218L;
@@ -89,7 +91,6 @@ public class Menu extends BaseBusEntity {
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "PID",foreignKey = @ForeignKey(name="FK_AUTH_MENU_PID"))
-
     private Menu parent;
     /**
      * 菜单是否选中
@@ -176,11 +177,13 @@ public class Menu extends BaseBusEntity {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-        if ((ObjectUtil.isNotNull(this.parent)) && (selected))
+        if ((ObjectUtil.isNotNull(this.parent)) && (selected)){
             this.parent.setSelected(selected);
-        else if ((ObjectUtil.isNotNull(getChildren())) && (!selected))
-            for (Menu menu : getChildren())
+        } else if ((ObjectUtil.isNotNull(getChildren())) && (!selected)){
+            for (Menu menu : getChildren()){
                 menu.setSelected(selected);
+            }
+        }
     }
 
     public void setParent(Menu parent) {

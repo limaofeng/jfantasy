@@ -1,5 +1,7 @@
 package com.fantasy.cms.service;
 
+import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.service.AttributeVersionService;
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.dao.ArticleCategoryDao;
@@ -47,6 +49,9 @@ public class CmsService extends BuguSearcher<Article> {
     @Resource
     private ArticleDao articleDao;
 
+    @Resource
+    private AttributeVersionService versionService;
+
     /**
      * 获取全部栏目
      *
@@ -86,6 +91,17 @@ public class CmsService extends BuguSearcher<Article> {
         if (LOG.isDebugEnabled()) {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
+        if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
+            AttributeVersion version = this.versionService.getVersion(Article.class, category.getCode());
+            if (version == null) {
+                version = new AttributeVersion();
+                version.setClassName(Article.class.getName());
+                version.setNumber(category.getCode());
+            }
+            version.setAttributes(category.getArticleVersion().getAttributes());
+            this.versionService.save(version);
+            category.setArticleVersion(version);
+        }
         List<ArticleCategory> categories;
         boolean root = false;
         if (category.getParent() == null || StringUtil.isBlank(category.getParent().getCode())) {
@@ -101,10 +117,10 @@ public class CmsService extends BuguSearcher<Article> {
         }
         ArticleCategory old = category.getCode() != null ? this.articleCategoryDao.get(category.getCode()) : null;
         // 新增数据
-        if(old == null){
+        if (old == null) {
             category.setSort(categories.size() + 1);
             // 更新数据
-        }else {
+        } else {
             if (category.getSort() != null) {
                 if (ObjectUtil.find(categories, "code", old.getCode()) == null) {// 移动了节点的层级
                     int i = 0;
@@ -113,7 +129,7 @@ public class CmsService extends BuguSearcher<Article> {
                         this.articleCategoryDao.save(m);
                     }
                     categories.add(category.getSort() - 1, category);
-                } else if(!old.getSort().equals(category.getSort())) {
+                } else if (!old.getSort().equals(category.getSort())) {
                     ArticleCategory t = ObjectUtil.remove(categories, "code", old.getCode());
                     if (categories.size() >= category.getSort()) {
                         categories.add(category.getSort() - 1, t);
@@ -147,7 +163,11 @@ public class CmsService extends BuguSearcher<Article> {
      * @return ArticleCategory
      */
     public ArticleCategory get(String code) {
-        return this.articleCategoryDao.get(code);
+        ArticleCategory category = this.articleCategoryDao.get(code);
+        if(category!=null && category.getArticleVersion()!=null){
+            Hibernate.initialize(category.getArticleVersion().getAttributes());
+        }
+        return category;
     }
 
     /**
@@ -305,7 +325,7 @@ public class CmsService extends BuguSearcher<Article> {
                 configuration.getTemplate(newTemplateUrl);
                 return newTemplateUrl;
             } catch (IOException e) {
-                LOG.error(e.getMessage(),e);
+                LOG.debug(e.getMessage());
                 if (category.getParent() == null) {
                     break;
                 }

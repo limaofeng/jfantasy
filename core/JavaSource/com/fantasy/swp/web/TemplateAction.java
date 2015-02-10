@@ -1,16 +1,20 @@
 package com.fantasy.swp.web;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
+import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Template;
+import com.fantasy.swp.service.DataInferfaceService;
 import com.fantasy.swp.service.TemplateService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *@Author lsz
@@ -21,9 +25,10 @@ public class TemplateAction extends ActionSupport {
 	
 	private static final long serialVersionUID = -2384754979431858323L;
 	
-	@Resource(name="swp.page.templateService")
+	@Autowired
 	private TemplateService templateService;
-	
+	@Autowired
+    private DataInferfaceService dataInferfaceService;
 	/**
 	 * 首页
 	 * @return
@@ -57,11 +62,28 @@ public class TemplateAction extends ActionSupport {
 		//Directory directory = fileService.getDirectory("template");
 		//UploadFileManager fileManager = FileManagerFactory.getInstance().getUploadFileManager(directory.getFileManager().getId());
 		//template.setFileDetail(fileManager.writeFile(directory.getDirPath(), file, fileContentType, fileFileName));
-		
+        InputStream in = request.getInputStream();
+        StringBuilder fileSb = new StringBuilder("");
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in));
+            String tmpStr = "";
+            while ((tmpStr = bufferedReader.readLine()) != null) {
+                fileSb.append(tmpStr);
+            }
+            bufferedReader.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        template.setContent(fileSb.toString());
 		this.templateService.save(template);
+        if(template.getDataInferfaces()!=null){
+            for(DataInferface dataInferface : template.getDataInferfaces()){
+                dataInferface.setTemplate(template);
+                this.dataInferfaceService.save(dataInferface);
+            }
+        }
 		return JSONDATA;
 	}
-	
 	/**
 	 * 修改
 	 * @param id

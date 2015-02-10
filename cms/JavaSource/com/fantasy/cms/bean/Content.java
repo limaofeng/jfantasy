@@ -2,9 +2,10 @@ package com.fantasy.cms.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.system.util.SettingUtil;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.io.IOException;
  */
 @Entity
 @Table(name = "CMS_CONTENT")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Content extends BaseBusEntity {
 
     private static final long serialVersionUID = -7570871629827875364L;

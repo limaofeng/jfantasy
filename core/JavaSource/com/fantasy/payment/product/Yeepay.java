@@ -1,10 +1,11 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.MessageDigest;
@@ -33,39 +34,13 @@ public class Yeepay extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPaymentSn(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String r6Order = httpServletRequest.getParameter("r6_Order");
-        if (StringUtils.isEmpty(r6Order)) {
-            return null;
-        }
-        return r6Order;
-    }
+    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+        PaymentContext context = PaymentContext.getContext();
+        PaymentConfig paymentConfig = context.getPaymentConfig();
+        Payment payment = context.getPayment();
+        BigDecimal paymentAmount = payment.getTotalAmount();
+        String paymentSn = payment.getSn();
 
-    @Override
-    public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String r3Amt = httpServletRequest.getParameter("r3_Amt");
-        if (StringUtils.isEmpty(r3Amt)) {
-            return null;
-        }
-        return new BigDecimal(r3Amt);
-    }
-
-    public boolean isPaySuccess(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return false;
-        }
-        String r1Code = httpServletRequest.getParameter("r1_Code");
-        return StringUtils.equals(r1Code, "1");
-    }
-
-    @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest) {
         String p0_Cmd = "Buy";// 业务类型
         String p1_MerId = paymentConfig.getBargainorId();// 商户编号
         String p2_Order = paymentSn;// 支付编号
@@ -105,28 +80,24 @@ public class Yeepay extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest httpServletRequest) {
+    public boolean verifySign(Map<String, String> parameters) {
+        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 获取参数
-        String p1_MerId = httpServletRequest.getParameter("p1_MerId");
-        String r0_Cmd = httpServletRequest.getParameter("r0_Cmd");
-        String r1_Code = httpServletRequest.getParameter("r1_Code");
-        String r2_TrxId = httpServletRequest.getParameter("r2_TrxId");
-        String r3_Amt = httpServletRequest.getParameter("r3_Amt");
-        String r4_Cur = httpServletRequest.getParameter("r4_Cur");
-        String r5_Pid = httpServletRequest.getParameter("r5_Pid");
-        String r6_Order = httpServletRequest.getParameter("r6_Order");
-        String r7_Uid = httpServletRequest.getParameter("r7_Uid");
-        String r8_MP = httpServletRequest.getParameter("r8_MP");
-        String r9_BType = httpServletRequest.getParameter("r9_BType");
-        String hmac = httpServletRequest.getParameter("hmac");
+        String p1_MerId = parameters.get("p1_MerId");
+        String r0_Cmd = parameters.get("r0_Cmd");
+        String r1_Code = parameters.get("r1_Code");
+        String r2_TrxId = parameters.get("r2_TrxId");
+        String r3_Amt = parameters.get("r3_Amt");
+        String r4_Cur = parameters.get("r4_Cur");
+        String r5_Pid = parameters.get("r5_Pid");
+        String r6_Order = parameters.get("r6_Order");
+        String r7_Uid = parameters.get("r7_Uid");
+        String r8_MP = parameters.get("r8_MP");
+        String r9_BType = parameters.get("r9_BType");
+        String hmac = parameters.get("hmac");
 
         // 验证支付签名
         return StringUtils.equals(hmac, hmacSign(p1_MerId + r0_Cmd + r1_Code + r2_TrxId + r3_Amt + r4_Cur + r5_Pid + r6_Order + r7_Uid + r8_MP + r9_BType, paymentConfig.getBargainorKey()));
-    }
-
-    @Override
-    public String getPayreturnMessage(String paymentSn) {
-        return "SUCCESS<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + SettingUtil.get("website", "ShopUrl") + RESULT_URL + "\"><input type=\"hidden\" name=\"paymentsn\" value=\"" + paymentSn + "\" /></form></body></html>";
     }
 
     // HMAC加密算法
@@ -170,15 +141,23 @@ public class Yeepay extends AbstractPaymentProduct {
         StringBuilder stringBuffer = new StringBuilder(digest.length * 2);
         for (byte aDigest : digest) {
             int current = aDigest & 0xff;
-            if (current < 16)
+            if (current < 16){
                 stringBuffer.append("0");
+            }
             stringBuffer.append(Integer.toString(current, 16));
         }
         return stringBuffer.toString();
     }
 
     @Override
-    public String getPaynotifyMessage() {
+    public PayResult parsePayResult(Map<String, String> parameters) {
+        //getPaymentSn
+        //parameters.get("r6_Order")
+        //getPaymentAmount
+        //parameters.get("r3_Amt")
+
+        String r1Code = parameters.get("r1_Code");
+        StringUtils.equals(r1Code, "1");
         return null;
     }
 

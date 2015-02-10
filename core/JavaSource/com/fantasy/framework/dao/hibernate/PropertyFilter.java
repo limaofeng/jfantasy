@@ -1,6 +1,7 @@
 package com.fantasy.framework.dao.hibernate;
 
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
@@ -27,11 +28,11 @@ public class PropertyFilter {
         String matchTypeCode = StringUtils.substringBefore(filterName, "_");
         try {
             this.matchType = Enum.valueOf(MatchType.class, matchTypeCode);
-        } catch (RuntimeException e) {
+        } catch (IgnoreException e) {
             throw new IllegalArgumentException("filter名称" + filterName + "没有按规则编写,无法得到属性比较类型.", e);
         }
         if (!(MatchType.NULL.equals(this.matchType) || MatchType.NOTNULL.equals(this.matchType) || MatchType.EMPTY.equals(this.matchType) || MatchType.NOTEMPTY.equals(this.matchType))) {
-            throw new RuntimeException("没有设置value时,查询条件必须为 is null,not null,empty,not empty");
+            throw new IgnoreException("没有设置value时,查询条件必须为 is null,not null,empty,not empty");
         }
         String propertyNameStr = StringUtils.substringAfter(filterName, "_");
         this.propertyNames = propertyNameStr.split(OR_SEPARATOR);
@@ -41,7 +42,7 @@ public class PropertyFilter {
     public PropertyFilter(String filterName, Enum<?> value) {
         this.initialize(filterName);
         if (this.propertyType != Enum.class) {
-            throw new RuntimeException("查询类型类型必须为枚举类型(E)");
+            throw new IgnoreException("查询类型类型必须为枚举类型(E)");
         }
         this.propertyType = value.getClass();
         this.propertyValue = value;
@@ -50,11 +51,11 @@ public class PropertyFilter {
     public PropertyFilter(String filterName, Enum<?>... value) {
         this.initialize(filterName);
         if (this.propertyType != Enum.class) {
-            throw new RuntimeException("");
+            throw new IgnoreException("");
         }
         this.propertyType = Array.get(value, 0).getClass();
         if (!(MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType))) {
-            throw new RuntimeException("有多个条件时,查询条件必须为 in 或者 not in ");
+            throw new IgnoreException("有多个条件时,查询条件必须为 in 或者 not in ");
         }
         this.propertyValue = value;
     }
@@ -76,7 +77,7 @@ public class PropertyFilter {
     public PropertyFilter(String filterName, String... value) {
         this.initialize(filterName);
         if (!(MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType))) {
-            throw new RuntimeException("有多个条件时,查询条件必须为 in 或者 not in ");
+            throw new IgnoreException("有多个条件时,查询条件必须为 in 或者 not in ");
         }
         Object array = this.propertyType.isAssignableFrom(Enum.class) ? new String[value.length] : ClassUtil.newInstance(this.propertyType, Array.getLength(value));
         for (int i = 0; i < Array.getLength(value); i++) {
@@ -92,12 +93,12 @@ public class PropertyFilter {
         String propertyTypeCode = StringUtils.substring(matchTypeStr, matchTypeStr.length() - 1, matchTypeStr.length());
         try {
             this.matchType = Enum.valueOf(MatchType.class, matchTypeCode);
-        } catch (RuntimeException e) {
+        } catch (IgnoreException e) {
             throw new IllegalArgumentException("filter名称" + filterName + "没有按规则编写,无法得到属性比较类型.", e);
         }
         try {
             this.propertyType = ((PropertyType) Enum.valueOf(PropertyType.class, propertyTypeCode)).getValue();
-        } catch (RuntimeException e) {
+        } catch (IgnoreException e) {
             throw new IllegalArgumentException("filter名称" + filterName + "没有按规则编写,无法得到属性值类型.", e);
         }
         String propertyNameStr = StringUtils.substringAfter(filterName, "_");

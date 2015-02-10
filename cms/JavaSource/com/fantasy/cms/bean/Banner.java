@@ -1,6 +1,7 @@
 package com.fantasy.cms.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CMS_BANNER")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Banner extends BaseBusEntity {
 
     private static final long serialVersionUID = -5628208241667269397L;

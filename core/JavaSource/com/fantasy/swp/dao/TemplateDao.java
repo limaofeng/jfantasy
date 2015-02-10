@@ -10,7 +10,7 @@ import com.fantasy.swp.bean.Template;
  *@Date 2014-1-2 下午4:48:25
  *
  */
-@Repository("swp.page.template")
+@Repository
 public class TemplateDao extends HibernateDao<Template, Long> {
 
 }

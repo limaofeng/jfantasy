@@ -1,12 +1,11 @@
 package com.fantasy.framework.util.web.context;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.Serializable;
 import java.util.AbstractMap;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.servlet.http.HttpServletRequest;
 
 @SuppressWarnings({"rawtypes" })
 public class RequestMap extends AbstractMap implements Serializable {
@@ -36,8 +35,9 @@ public class RequestMap extends AbstractMap implements Serializable {
             while (enumeration.hasMoreElements()) {
                 final String key = enumeration.nextElement().toString();
                 final Object value = request.getAttribute(key);
-                if(ActionContext.CONTAINER.equals(key))
-                	continue;
+                if(ActionContext.CONTAINER.equals(key)){
+                    continue;
+                }
                 entries.add(new Entry() {
                     public boolean equals(Object obj) {
                         if (!(obj instanceof Entry)) {

@@ -34,8 +34,9 @@ public class SequenceService {
 	 */
 	public long next(String key, long poolSize) {
 		Sequence sequence = this.sequenceDao.findUniqueByKey(key);
-		if (ObjectUtil.isNull(sequence))
-			return newkey(key, poolSize);
+		if (ObjectUtil.isNull(sequence)){
+            return newkey(key, poolSize);
+        }
 		sequence.setOriginalValue(sequence.getValue());
 		sequence.setValue(sequence.getValue() + poolSize);
 		int opt = this.sequenceDao.update(sequence);

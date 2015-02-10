@@ -26,8 +26,9 @@ public class SpringExpressionValidator extends FieldValidatorSupport {
         }
 
         if (!SpELUtil.getExpression(expression).getValue(SpELUtil.createEvaluationContext(obj),Boolean.class)) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()){
                 log.debug("Validation failed on expression " + expression + " with validated object " + object);
+            }
             addFieldError(fieldName,object);
         }
     }

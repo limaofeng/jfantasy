@@ -304,4 +304,8 @@
     <include file="struts/struts-schedule.xml"/>
 
     <include file="struts/struts-remind.xml"/>
+
+    <include file="struts/struts-attr.xml"/>
+
+    <include file="struts/struts-swp.xml"/>
 </struts>

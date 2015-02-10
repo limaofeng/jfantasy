@@ -106,6 +106,8 @@
         </action>
         <!-- 数据接口删除 -->
         <action name="face-delete" class="com.fantasy.swp.web.DataInferfaceAction" method="delete"/>
+        <!-- 生成页面 -->
+        <action name="create" class="com.fantasy.swp.web.PageAction" method="create"/>
     </package>
 
     <!-- page 模板 -->

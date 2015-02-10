@@ -10,7 +10,7 @@
 	<appender name="FILE" class="org.apache.log4j.DailyRollingFileAppender">
 		<param name="DatePattern" value=".yyyy-MM-dd" />
 		<param name="Encoding" value="UTF-8" />
-		<param name="File" value="/logs/Fairylang.log" />
+		<param name="File" value="/logs/jfantasy_test.log" />
 		<layout class="org.apache.log4j.PatternLayout">
 			<param name="ConversionPattern" value="%-d{yyyy-MM-dd HH:mm:ss,SSS} %p [%c]%M(line:%L)%m%n" />
 		</layout>
@@ -30,6 +30,16 @@
  		<priority value="DEBUG" />
  		<appender-ref ref="CONSOLE" />
  	</category>
+	<category name="org.hibernate.cache">
+		<priority value="DEBUG" />
+		<appender-ref ref="CONSOLE" />
+	</category>
+	<!--
+	<category name="org.activiti">
+		<priority value="DEBUG" />
+		<appender-ref ref="CONSOLE" />
+	</category>
+	-->
 	<category name="org.mybatis.spring">
 		<priority value="ERROR" />
 		<appender-ref ref="CONSOLE" />

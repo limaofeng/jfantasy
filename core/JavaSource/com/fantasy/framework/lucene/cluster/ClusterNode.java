@@ -1,10 +1,11 @@
 package com.fantasy.framework.lucene.cluster;
 
+import org.apache.log4j.Logger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
-import org.apache.log4j.Logger;
 
 public class ClusterNode {
 	private static final Logger logger = Logger.getLogger(ClusterNode.class);
@@ -22,17 +23,20 @@ public class ClusterNode {
 			channel = SocketChannel.open();
 			channel.configureBlocking(false);
 			SocketAddress address = new InetSocketAddress(this.host, this.port);
-			while ((!channel.connect(address)) && (!channel.finishConnect()));
+			while ((!channel.connect(address)) && (!channel.finishConnect())) {
+                ;
+            }
 			channel.write(BufferUtil.toBuffer(message));
 		} catch (IOException ex) {
 			logger.error("Error when transmit message to host: " + this.host + ", port: " + this.port, ex);
 		} finally {
-			if (channel != null)
-				try {
-					channel.close();
-				} catch (IOException ex) {
-					logger.error("Error when close channel host: " + this.host + ", port: " + this.port, ex);
-				}
+			if (channel != null){
+                try {
+                    channel.close();
+                } catch (IOException ex) {
+                    logger.error("Error when close channel host: " + this.host + ", port: " + this.port, ex);
+                }
+            }
 		}
 	}
 }

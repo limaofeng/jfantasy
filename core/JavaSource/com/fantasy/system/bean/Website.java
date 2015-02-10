@@ -4,7 +4,8 @@ import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.security.bean.Menu;
 import com.fantasy.security.bean.User;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -20,7 +21,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SYS_WEBSITE")
-@JsonIgnoreProperties(value = {"defaultFileManager", "defaultUploadFileManager", "settings", "user"})
+@JsonIgnoreProperties(value = {"defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Website extends BaseBusEntity {
 
     private static final long serialVersionUID = 3763626581086219087L;
@@ -49,26 +51,25 @@ public class Website extends BaseBusEntity {
      * 网站对应的默认文件管理器(发布文章及日志)
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEFAULT_FILEMANAGER", nullable = false,foreignKey = @ForeignKey(name = "FK_WEBSITE_DEF_FMID"))
+    @JoinColumn(name = "DEFAULT_FILEMANAGER", nullable = false, foreignKey = @ForeignKey(name = "FK_WEBSITE_DEF_FMID"))
     private FileManagerConfig defaultFileManager;
     /**
      * 网站对应的默认上传文件管理器(发布文章及日志)
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEFAULT_UPLOAD_FILEMANAGER", nullable = false,foreignKey = @ForeignKey(name = "FK_WEBSITE_DEF_UPLOAD_FMID"))
+    @JoinColumn(name = "DEFAULT_UPLOAD_FILEMANAGER", nullable = false, foreignKey = @ForeignKey(name = "FK_WEBSITE_DEF_UPLOAD_FMID"))
     private FileManagerConfig defaultUploadFileManager;
     /**
      * 菜单根
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "MENU_ID",foreignKey = @ForeignKey(name = "FK_WEBSITE_MENU_PID") )
+    @JoinColumn(name = "MENU_ID", foreignKey = @ForeignKey(name = "FK_WEBSITE_MENU_PID"))
     private Menu rootMenu;
     /**
      * 网站设置
      */
     @OneToMany(mappedBy = "website", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<Setting> settings = new ArrayList<Setting>();
-
     /**
      * 网站用户信息
      */

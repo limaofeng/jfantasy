@@ -1,23 +1,21 @@
 package com.fantasy.framework.struts2.interceptor;
 
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.struts2.ServletActionContext;
-
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ModelDriven;
 import com.opensymphony.xwork2.ValidationAware;
 import com.opensymphony.xwork2.interceptor.MethodFilterInterceptor;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.struts2.ServletActionContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class JSONValidationInterceptor extends MethodFilterInterceptor {
 
@@ -107,8 +105,9 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 			}
 
 			if (validationAware.hasFieldErrors()) {
-				if ((validationAware.hasActionErrors()) || (validationAware.hasActionMessages()))
-					sb.append(",");
+				if ((validationAware.hasActionErrors()) || (validationAware.hasActionMessages())){
+                    sb.append(",");
+                }
 				sb.append("\"fieldErrors\": {");
 				Map<String, List<String>> fieldErrors = validationAware.getFieldErrors();
 
@@ -141,8 +140,9 @@ public class JSONValidationInterceptor extends MethodFilterInterceptor {
 			sb.append(StringEscapeUtils.escapeJavaScript(value));
 			sb.append("\",");
 		}
-		if (values.size() > 0)
-			sb.deleteCharAt(sb.length() - 1);
+		if (values.size() > 0){
+            sb.deleteCharAt(sb.length() - 1);
+        }
 		sb.append("]");
 		return sb.toString();
 	}

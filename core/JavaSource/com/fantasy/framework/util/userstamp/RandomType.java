@@ -20,8 +20,9 @@ public class RandomType {
 			while (t < 12) {
 				int n = r.nextInt(10);
 				if (test[i][n] == -1) {
-					if ((t == 2) || (t == 6))
-						t++;
+					if ((t == 2) || (t == 6)){
+                        t++;
+                    }
 					test[i][n] = (t++);
 				}
 			}

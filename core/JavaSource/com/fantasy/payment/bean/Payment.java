@@ -36,35 +36,76 @@ public class Payment extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
+    /**
+     * 支付编号
+     */
     @Column(name = "SN", nullable = false, updatable = false, unique = true)
     @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'SN_' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('PATMENT-SN'), 5)")})
-    private String sn;// 支付编号
+    private String sn;
+    /**
+     * 交易号（用于记录第三方交易的交易流水号）
+     */
+    @Column(name = "TRADE_NO", updatable = true)
+    private String tradeNo;
+    /**
+     * 支付类型
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "PAYMENT_TYPE", nullable = false, updatable = false)
-    private PaymentType paymentType;// 支付类型
+    private PaymentType paymentType;
+    /**
+     * 支付配置名称
+     */
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false, updatable = false)
-    private String paymentConfigName;// 支付配置名称
+    private String paymentConfigName;
+    /**
+     * 收款银行名称
+     */
     @Column(name = "BANK_NAME", updatable = false)
-    private String bankName;// 收款银行名称
+    private String bankName;
+    /**
+     * 收款银行账号
+     */
     @Column(name = "BANK_ACCOUNT", updatable = false)
-    private String bankAccount;// 收款银行账号
+    private String bankAccount;
+    /**
+     * 支付金额
+     */
     @Column(name = "TOTAL_AMOUNT", nullable = false, updatable = false, precision = 15, scale = 5)
-    private BigDecimal totalAmount;// 支付金额
+    private BigDecimal totalAmount;
+    /**
+     * 支付手续费
+     */
     @Column(name = "PAYMENT_FEE", nullable = false, updatable = false, precision = 15, scale = 5)
-    private BigDecimal paymentFee;// 支付手续费
+    private BigDecimal paymentFee;
+    /**
+     * 付款人
+     */
     @Column(name = "PAYER", updatable = false)
-    private String payer;// 付款人
+    private String payer;
+    /**
+     * 备注
+     */
     @Column(name = "MEMO", updatable = false, length = 3000)
-    private String memo;// 备注
+    private String memo;
+    /**
+     * 支付状态
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "PAYMENT_STATUS", nullable = false)
-    private PaymentStatus paymentStatus;// 支付状态
+    private PaymentStatus paymentStatus;
+    /**
+     * 会员
+     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID",foreignKey =@ForeignKey(name = "FK_PAYMENT_MEMBER") )
-    private Member member;// 会员
+    @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_PAYMENT_MEMBER"))
+    private Member member;
+    /**
+     * 支付方式
+     */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYMENT_CONFIG_ID",foreignKey = @ForeignKey(name = "FK_PAYMENT_PAYMENT_CONFIG"))
-    private PaymentConfig paymentConfig;// 支付方式
+    @JoinColumn(name = "PAYMENT_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_PAYMENT_PAYMENT_CONFIG"))
+    private PaymentConfig paymentConfig;
     /**
      * 订单类型
      */
@@ -194,5 +235,13 @@ public class Payment extends BaseBusEntity {
 
     public void setOrderSn(String orderSn) {
         this.orderSn = orderSn;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
     }
 }

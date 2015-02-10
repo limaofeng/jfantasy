@@ -1,14 +1,14 @@
 package com.fantasy.framework.freemarker.directive;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
-
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 public class OverrideDirective implements TemplateDirectiveModel {
@@ -40,8 +40,9 @@ public class OverrideDirective implements TemplateDirectiveModel {
 		}
 
 		public void render(Writer out) throws TemplateException, IOException {
-			if (body == null)
-				return;
+			if (body == null){
+                return;
+            }
 			TemplateDirectiveBodyOverrideWraper preOverridy = (TemplateDirectiveBodyOverrideWraper) env.getVariable(DirectiveUtils.OVERRIDE_CURRENT_NODE);
 			try {
 				env.setVariable(DirectiveUtils.OVERRIDE_CURRENT_NODE, this);

@@ -80,8 +80,9 @@ public class XmlElement extends Observable implements Cloneable {
 	}
 
 	public void remove() {
-		if (getParentElement() != null)
-			getParentElement().remove(this);
+		if (getParentElement() != null){
+            getParentElement().remove(this);
+        }
 	}
 
 	public List<XmlElement> getChildNodesByTagName(String tagName) {

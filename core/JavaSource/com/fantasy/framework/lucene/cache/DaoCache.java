@@ -1,37 +1,33 @@
 package com.fantasy.framework.lucene.cache;
 
+import com.fantasy.framework.lucene.dao.LuceneDao;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import com.fantasy.framework.lucene.BuguIndex;
-import com.fantasy.framework.lucene.dao.LuceneDao;
-
 public class DaoCache {
 
-	private static DaoCache instance = new DaoCache();
-	private Map<String, LuceneDao<?>> cache;
+    private static DaoCache instance = new DaoCache();
+    private Map<Class<?>, LuceneDao<?>> cache;
 
-	private DaoCache() {
-		this.cache = new ConcurrentHashMap<String, LuceneDao<?>>();
-	}
+    private DaoCache() {
+        this.cache = new ConcurrentHashMap<Class<?>, LuceneDao<?>>();
+    }
 
-	public static DaoCache getInstance() {
-		return instance;
-	}
+    public static DaoCache getInstance() {
+        return instance;
+    }
 
-	@SuppressWarnings("unchecked")
-	public <T> LuceneDao<T> get(Class<T> clazz) {
-		LuceneDao<T> dao = null;
-		String name = clazz.getName();
-		if (this.cache.containsKey(name)) {
-			dao = (LuceneDao<T>) this.cache.get(name);
-		} else {
-			dao = BuguIndex.getInstance().getLuceneDao(clazz);
-			if (dao != null) {
-				this.cache.put(name, dao);
-			}
-		}
-		return dao;
-	}
+    public boolean containsKey(Class<?> clazz){
+        return this.cache.containsKey(clazz);
+    }
 
+    @SuppressWarnings("unchecked")
+    public <T> LuceneDao<T> get(Class<T> clazz) {
+       return (LuceneDao<T>)this.cache.get(clazz);
+    }
+
+    public <T> void put(Class<T> clazz, LuceneDao<T> dao) {
+        this.cache.put(clazz, dao);
+    }
 }

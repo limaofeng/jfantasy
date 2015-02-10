@@ -1,9 +1,9 @@
 package com.fantasy.swp;
 
+import freemarker.template.Template;
+
 import java.io.OutputStream;
 import java.util.List;
-
-import freemarker.template.Template;
 
 /**
  * 模板页
@@ -18,9 +18,9 @@ public class PageTemplate {
 	// 1.模板对应的文件管理器
 	private Template template;
 	// 3.配置数据 如果数据之间有依赖的话。需要配置监听功能。
-	private List<PageData> datas;
+	private List<TemplateData> datas;
 	// 4.配置预览数据
-	private List<PageData> previewDatas;
+	private List<TemplateData> previewDatas;
 	// 5.文件生成地址生成器
 	private String manager;
 

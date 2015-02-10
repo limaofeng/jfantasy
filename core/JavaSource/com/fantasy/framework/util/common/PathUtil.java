@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,8 +31,9 @@ public class PathUtil {
             // TODO 此处与DateUtil获取资源文件的地方需要修改
             String webAppRootKey = PropertiesHelper.load("props/application.properties").getProperty("webAppRootKey", "webapp.root");
             PathUtil.WEBROOT_PATH = System.getProperty(webAppRootKey);
-            if (StringUtil.isNull(PathUtil.WEBROOT_PATH))
-                throw new Exception("根据webAppRootKey[" + webAppRootKey + "]获取WebRoot路径失败");
+            if (StringUtil.isNull(PathUtil.WEBROOT_PATH)){
+                throw new IgnoreException("根据webAppRootKey[" + webAppRootKey + "]获取WebRoot路径失败");
+            }
             PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "WEB-INF" + File.separator;
             PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "classes" + File.separator;
             PathUtil.WEBLIB_PATH = PathUtil.webinf() + "lib" + File.separator;
@@ -55,7 +57,7 @@ public class PathUtil {
                 url = PathUtil.getClassLocationURL(PathUtil.class);
                 if ("jar".equalsIgnoreCase(url.getProtocol())) {
                     String path = PathUtil.getPathFromClass(PathUtil.class);
-                    if(path.contains("WEB-INF")) {
+                    if (path.contains("WEB-INF")) {
                         PathUtil.WEBROOT_PATH = RegexpUtil.replace(path.substring(0, path.lastIndexOf("WEB-INF")), "[\\/]$", "");
                         PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "/WEB-INF";
                         PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "/classes";
@@ -109,7 +111,7 @@ public class PathUtil {
         try {
             return new URL("file://" + PathUtil.classes() + path);
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -135,7 +137,7 @@ public class PathUtil {
             try {
                 path = file.getCanonicalPath();
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e.getMessage(), e);
             }
         }
         return path;
@@ -164,23 +166,28 @@ public class PathUtil {
     }
 
     public static URL getClassLocationURL(Class<?> cls) {
-        if (cls == null)
+        if (cls == null){
             throw new IllegalArgumentException("null input: cls");
+        }
         URL result = null;
         String clsAsResource = cls.getName().replace('.', '/').concat(".class");
         ProtectionDomain pd = cls.getProtectionDomain();
         if (pd != null) {
             CodeSource cs = pd.getCodeSource();
-            if (cs != null)
+            if (cs != null){
                 result = cs.getLocation();
-            if ((result != null) && ("file".equals(result.getProtocol())))
+            }
+            if ((result != null) && ("file".equals(result.getProtocol()))){
                 try {
-                    if ((result.toExternalForm().endsWith(".jar")) || (result.toExternalForm().endsWith(".zip")))
+                    if ((result.toExternalForm().endsWith(".jar")) || (result.toExternalForm().endsWith(".zip"))){
                         result = new URL("jar:".concat(result.toExternalForm()).concat("!/").concat(clsAsResource));
-                    else if (new File(result.getFile()).isDirectory())
+                    } else if (new File(result.getFile()).isDirectory()){
                         result = new URL(result, clsAsResource);
+                    }
                 } catch (MalformedURLException ignored) {
+
                 }
+            }
         }
         if (result == null) {
             ClassLoader clsLoader = cls.getClassLoader();
@@ -202,12 +209,13 @@ public class PathUtil {
     @Deprecated
     public static String getFilePath(String path) {
         StringBuilder result = new StringBuilder();
-        if (path.endsWith(".xml"))
+        if (path.endsWith(".xml")){
             result.append(classes()).append("/").append(path.replace(".xml", "").replace('.', '/').concat(".xml"));
-        else if (path.endsWith(".class"))
+        }else if (path.endsWith(".class")){
             result.append(classes()).append("/").append(path.replace(".class", "").replace('.', '/').concat(".class"));
-        else
+        } else{
             result.append(root()).append("/").append(path);
+        }
         return result.toString();
     }
 
@@ -217,14 +225,16 @@ public class PathUtil {
     }
 
     public static String[] getPackagePath(String packages) {
-        if (packages == null)
+        if (packages == null){
             return null;
+        }
         List<String> pathPrefixes = new ArrayList<String>();
         String pathPrefix;
         for (StringTokenizer st = new StringTokenizer(packages, ", \n\t"); st.hasMoreTokens(); pathPrefixes.add(pathPrefix)) {
             pathPrefix = st.nextToken().replace('.', '/');
-            if (!pathPrefix.endsWith("/"))
+            if (!pathPrefix.endsWith("/")){
                 pathPrefix = pathPrefix + "/";
+            }
         }
         return pathPrefixes.toArray(new String[pathPrefixes.size()]);
     }
@@ -233,7 +243,7 @@ public class PathUtil {
         try {
             return new URL("file:///" + System.getProperty("java.io.tmpdir"));
         } catch (MalformedURLException e) {
-            throw new RuntimeException(e.getMessage(), e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 

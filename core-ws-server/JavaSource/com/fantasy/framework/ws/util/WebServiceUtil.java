@@ -1,11 +1,9 @@
 package com.fantasy.framework.ws.util;
 
 import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.Pager.Order;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.lang.StringUtils;
 
@@ -21,36 +19,26 @@ public class WebServiceUtil {
         page.setPageSize(pager.getPageSize());
         page.setOrderBy(pager.getOrderBy());
         page.setCurrentPage(pager.getCurrentPage());
-        // page.setTotalCount(pager.getTotalCount());
-        // page.setTotalPage(pager.getTotalPage());
         page.setOrder(pager.getOrder());
         return page;
-        //TODO ObjectUtil.copy(new Pager(), pager, "pageItems");
     }
 
-    public static com.fantasy.framework.ws.util.PagerDTO toPager(com.fantasy.framework.ws.util.PagerDTO pager, Pager<?> daoPager) {
-//        ObjectUtil.copy(pager, daoPager, "pagerItems");
-        if (daoPager.getOrders() != null) {
-            List<String> sts = new ArrayList<String>();
-            for (Order order : daoPager.getOrders()) {
-                sts.add(order.name());
-            }
-            pager.setOrders(sts.toArray(new String[sts.size()]));
+    public static <T extends PagerResult> T toPagerResult(Pager<?> daoPager, T pager) {
+        pager.setCurrentPage(daoPager.getCurrentPage());
+        pager.setTotalCount(daoPager.getTotalCount());
+        pager.setTotalPage(daoPager.getTotalPage());
+        pager.setOrderBy(daoPager.getOrderBy());
+        String[] orders = new String[daoPager.getOrders().length];
+        for (int i = 0; i < orders.length; i++) {
+            orders[i] = daoPager.getOrders()[i].name();
         }
-        if (daoPager.getOrder() != null) {
-            pager.setOrder(daoPager.getOrder().name());
-        }
-        pager.setPageItems(JSON.serialize(daoPager.getPageItems()));
+        pager.setOrders(orders);
+        pager.setOrder(daoPager.getOrder().name());
         return pager;
     }
 
-    public static <T> Pager<T> toPager(PagerResult pager, Class<T> clazz) {
-        return null;
-//        return ObjectUtil.copy(new Pager(), pager, "pageItems");
-    }
-
-    public static <T> PagerResult<T> toPager(Pager<?> daoPager, PagerResult<T> pager, Class<T> clazz) {
-
+    public static <T extends PagerResult> T toPagerResult(Pager<?> daoPager, T pager, Object[] dtos) {
+        toPagerResult(daoPager, pager).setPageItems(dtos);
         return pager;
     }
 
@@ -82,24 +70,6 @@ public class WebServiceUtil {
             filters.add(new PropertyFilter(filterName, filterDTO.getPropertyValue()));
         }
         return filters;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T[] toArray(List<?> list, Class<T> clazz) {
-        return (T[]) JSON.deserialize(JSON.serialize(list), ClassUtil.newInstance(clazz, 0).getClass());
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T toBean(T obj) {
-        if (obj == null)
-            return obj;
-        return (T) JSON.deserialize(JSON.serialize(obj), obj.getClass());
-    }
-
-    public static <T> T toBean(Object obj, Class<T> newClass) {
-        if (obj == null)
-            return null;
-        return (T) JSON.deserialize(JSON.serialize(obj), newClass);
     }
 
 }

@@ -21,8 +21,9 @@ public class MyBatisMapperRegistry extends MapperRegistry {
 	}
 
 	public <T> T getMapper(Class<T> type, SqlSession sqlSession) {
-		if (!hasMapper(type))
-			throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
+		if (!hasMapper(type)){
+            throw new BindingException("Type " + type + " is not known to the MapperRegistry.");
+        }
 		try {
 			return MyBatisMapperProxy.newMapperProxy(type, sqlSession);
 		} catch (Exception e) {

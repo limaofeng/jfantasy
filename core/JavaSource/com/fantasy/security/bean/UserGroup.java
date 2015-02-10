@@ -2,8 +2,9 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,6 +16,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_USERGROUP")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "menus", "resources" })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserGroup extends BaseBusEntity {
 
 	private static final long serialVersionUID = 7898475330929818969L;
@@ -135,8 +137,9 @@ public class UserGroup extends BaseBusEntity {
 
 	@JsonIgnore
 	public List<GrantedAuthority> getRoleAuthorities() {
-		if (ObjectUtil.isNull(getRoles()))
-			return new ArrayList<GrantedAuthority>();
+		if (ObjectUtil.isNull(getRoles())){
+            return new ArrayList<GrantedAuthority>();
+        }
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		for (Role role : getRoles()) {
 			grantedAuthorities.addAll(role.getRoleAuthorities());
@@ -149,8 +152,9 @@ public class UserGroup extends BaseBusEntity {
 		List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
 		if (ObjectUtil.isNotNull(getRoles())) {
 			for (Role role : getRoles()) {
-				if (!role.isEnabled())
-					continue;
+				if (!role.isEnabled()){
+                    continue;
+                }
 				grantedAuthorities.addAll(role.getUrlAuthorities());
 			}
 		}
@@ -166,8 +170,9 @@ public class UserGroup extends BaseBusEntity {
 			List<Resource> resources = new ArrayList<Resource>();
 
 			for (Resource re : resources) {
-				if (!re.isEnabled())
-					continue;
+				if (!re.isEnabled()){
+                    continue;
+                }
 				grantedAuthorities.add(re.getUrlAuthoritie());
 			}
 		}

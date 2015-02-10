@@ -31,7 +31,7 @@ public class DialectUtil {
         @Override
         public String doReplace(String text, int index, Matcher matcher) {
             if (RegexpUtil.find(text.toLowerCase(), "^((asc)|(desc))$")) {
-                return text.toLowerCase().equals("asc") ? "desc" : "asc";
+                return "asc".equals(text.toLowerCase()) ? "desc" : "asc";
             }
             return text;
         }

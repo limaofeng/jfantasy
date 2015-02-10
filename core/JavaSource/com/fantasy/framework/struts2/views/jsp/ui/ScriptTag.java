@@ -3,10 +3,11 @@ package com.fantasy.framework.struts2.views.jsp.ui;
 import com.fantasy.framework.struts2.views.components.DynamicScript;
 import com.fantasy.framework.util.common.StringUtil;
 import com.opensymphony.xwork2.util.ValueStack;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import org.apache.struts2.components.Component;
 import org.apache.struts2.views.jsp.ui.AbstractUITag;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 public class ScriptTag extends AbstractUITag {
     private static final long serialVersionUID = 4346490257536592107L;
@@ -26,22 +27,27 @@ public class ScriptTag extends AbstractUITag {
     protected void populateParams() {
 	super.populateParams();
 	DynamicScript dynamicScript = (DynamicScript) this.component;
-	if (StringUtil.isNotBlank(this.type))
-	    dynamicScript.setType(this.type);
-	if (StringUtil.isNotBlank(this.charset))
-	    dynamicScript.setCharset(this.charset);
-	if (StringUtil.isNotBlank(this.namespace))
-	    dynamicScript.setNamespace(this.namespace);
-	if (StringUtil.isNotBlank(this.formId))
-	    dynamicScript.setFormId(this.formId);
-	if (StringUtil.isNotBlank(this.iErrorClass))
-	    dynamicScript.setiErrorClass(this.iErrorClass);
-	if (StringUtil.isNotBlank(this.errorClass))
-	    dynamicScript.setErrorClass(this.errorClass);
+	if (StringUtil.isNotBlank(this.type)){
+        dynamicScript.setType(this.type);
+    }
+	if (StringUtil.isNotBlank(this.charset)){
+        dynamicScript.setCharset(this.charset);
+    }
+	if (StringUtil.isNotBlank(this.namespace)){
+        dynamicScript.setNamespace(this.namespace);
+    }
+	if (StringUtil.isNotBlank(this.formId)){
+        dynamicScript.setFormId(this.formId);
+    }
+	if (StringUtil.isNotBlank(this.iErrorClass)){
+        dynamicScript.setiErrorClass(this.iErrorClass);
+    }
+	if (StringUtil.isNotBlank(this.errorClass)){
+        dynamicScript.setErrorClass(this.errorClass);
+    }
 	if (StringUtil.isNotBlank(this.correctClass)) {
 	    dynamicScript.setCorrectClass(this.correctClass);
 	}
-
 	dynamicScript.setAction(this.action);
     }
 

@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class WebsiteService{
+public class WebsiteService {
 
     private static final Log logger = LogFactory.getLog(WebsiteService.class);
 
@@ -32,12 +32,10 @@ public class WebsiteService{
     @Resource
     private FileManagerService fileManagerService;
 
-
-
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Website findUniqueByKey(String key) {
         Website website = this.websiteDao.findUniqueBy("key", key);
-        for(Setting setting : website.getSettings()){
+        for (Setting setting : website.getSettings()) {
             Hibernate.initialize(setting);
         }
         Hibernate.initialize(website.getRootMenu());
@@ -50,7 +48,13 @@ public class WebsiteService{
         return website;
     }
 
-    public void delete(Long[] ids) {
+    public Website get(String key) {
+        Website website = websiteDao.findUniqueBy("key", key);
+        Hibernate.initialize(website);
+        return website;
+    }
+
+    public void delete(Long... ids) {
         for (Long id : ids) {
             this.websiteDao.delete(id);
         }
@@ -70,7 +74,7 @@ public class WebsiteService{
         return (website == null) || website.getId().equals(id);
     }
 
-    public List<Website> getAll(){
+    public List<Website> getAll() {
         return this.websiteDao.getAll();
     }
 

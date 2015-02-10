@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.hibernate.event.PropertyGeneratorSaveOrUpdatEve
 import com.fantasy.framework.dao.hibernate.generator.SequenceGenerator;
 import com.fantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
 import com.fantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor;
+import com.fantasy.framework.install.ConfigResolver;
 import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.lucene.dao.hibernate.EntityChangedEventListener;
 import com.fantasy.framework.spring.SpringContextUtil;
@@ -58,7 +59,7 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
     public void afterPropertiesSet() throws IOException {
         //========================== 判断是否为扩展模式 ==========================
         if (Mode.extra == packageMode) {
-            this.packagesToScan = StringUtil.add(this.packagesToScan == null ? new String[0] : this.packagesToScan, "com.fantasy.common.bean", "com.fantasy.attr.bean", "com.fantasy.file.bean", "com.fantasy.security.bean", "com.fantasy.framework.dao.mybatis.keygen.bean", "com.fantasy.contacts.bean", "com.fantasy.system.bean", "com.fantasy.cms.bean", "com.fantasy.member.bean", "com.fantasy.mall.*.bean", "com.fantasy.payment.bean", "com.fantasy.swp.bean");
+            this.packagesToScan = StringUtil.add(this.packagesToScan == null ? new String[0] : this.packagesToScan, ConfigResolver.parseConfiguration().getPackagesToScan());
             logger.error(Arrays.toString(packagesToScan));
         }
 
@@ -89,10 +90,14 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         // 添加 lucene 索引生成监听
         if (SpringContextUtil.getBeanByType(BuguIndex.class) != null) {
             EntityChangedEventListener entityChangedEventListener = new EntityChangedEventListener();
-            addEventListener("post-commit-insert", eventListeners, entityChangedEventListener);
-            addEventListener("post-commit-update", eventListeners, entityChangedEventListener);
-            addEventListener("post-commit-delete", eventListeners, entityChangedEventListener);
+            addEventListener("post-insert", eventListeners, entityChangedEventListener);
+            addEventListener("post-update", eventListeners, entityChangedEventListener);
+            addEventListener("post-delete", eventListeners, entityChangedEventListener);
         }
+        com.fantasy.swp.listener.EntityChangedEventListener entityChangedEventListener = new com.fantasy.swp.listener.EntityChangedEventListener();
+        addEventListener("post-insert", eventListeners, entityChangedEventListener);
+        addEventListener("post-update", eventListeners, entityChangedEventListener);
+        addEventListener("post-delete", eventListeners, entityChangedEventListener);
         // FileEventListener 监听器,用户转存文件或者删除文件
         /*
         FileEventListener fileEventListener = SpringContextUtil.createBean(FileEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
@@ -105,9 +110,10 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         for (Map.Entry<String, List<Object>> event : this.eventListeners.entrySet()) {
             for (Object listener : event.getValue()) {
                 if(EventType.SAVE_UPDATE.eventName().equals(event.getKey())){
+                    // instanceof List ? ((List) listener).toArray(new Object[((List) listener).size()]) :listener
                     registry.prependListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
                 }else{
-                    registry.getEventListenerGroup(EventType.resolveEventTypeByName(event.getKey())).appendListener(listener);
+                    registry.appendListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
                 }
             }
         }

@@ -1,18 +1,17 @@
 package com.fantasy.framework.dao.mybatis.interceptors;
 
-import java.util.Properties;
-
+import com.fantasy.framework.dao.MultiDataSourceManager;
+import com.fantasy.framework.dao.annotations.DataSource;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
 
-import com.fantasy.framework.dao.MultiDataSourceManager;
-import com.fantasy.framework.dao.annotations.DataSource;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
+import java.util.Properties;
 
 /**
  * 多数据源拦截器
@@ -30,12 +29,14 @@ public class MultiDataSourceInterceptor implements Interceptor {
 		MappedStatement ms = (MappedStatement) invocation.getArgs()[MAPPED_STATEMENT_INDEX];
 		DataSource dataSource = ClassUtil.getClassGenricType(ClassUtil.forName(RegexpUtil.replace(ms.getId(), ".[_a-zA-Z0-9]+$", "")), DataSource.class);
 		try {
-			if (ObjectUtil.isNotNull(dataSource))
-				MultiDataSourceManager.getManager().push(dataSource);
+			if (ObjectUtil.isNotNull(dataSource)){
+                MultiDataSourceManager.getManager().push(dataSource);
+            }
 			return invocation.proceed();
 		} finally {
-			if (ObjectUtil.isNotNull(dataSource))
-				MultiDataSourceManager.getManager().pop();
+			if (ObjectUtil.isNotNull(dataSource)){
+                MultiDataSourceManager.getManager().pop();
+            }
 		}
 	}
 

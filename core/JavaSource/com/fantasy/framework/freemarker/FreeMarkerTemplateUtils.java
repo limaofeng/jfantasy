@@ -4,6 +4,7 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StreamUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,7 +39,6 @@ public class FreeMarkerTemplateUtils {
      */
     public static void writer(Object data, Template t, Writer out) {
         try {
-
             Map<String, Object> rootMap = ObjectUtil.toMap(data);
             t.process(rootMap, out);
         } catch (TemplateException e) {
@@ -47,6 +47,34 @@ public class FreeMarkerTemplateUtils {
             logger.error(e.getMessage(), e);
         } finally {
             StreamUtil.closeQuietly(out);
+        }
+    }
+
+    public static void writer(TemplateModel model, Template t, Writer out) {
+        try {
+            t.process(model, out);
+        } catch (TemplateException e) {
+            logger.error(e.getMessage(), e);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            StreamUtil.closeQuietly(out);
+        }
+    }
+
+    public static void writer(TemplateModel model, Template t, OutputStream out) {
+        Writer writer = null;
+        try {
+            writer = new BufferedWriter(new OutputStreamWriter(out, t.getEncoding()));
+            t.process(model, writer);
+        } catch (TemplateException e) {
+            logger.error(e.getMessage(), e);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+        } finally {
+            if (writer != null) {
+                StreamUtil.closeQuietly(writer);
+            }
         }
     }
 
@@ -61,8 +89,9 @@ public class FreeMarkerTemplateUtils {
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
         } finally {
-            if (writer != null)
+            if (writer != null) {
                 StreamUtil.closeQuietly(writer);
+            }
         }
     }
 

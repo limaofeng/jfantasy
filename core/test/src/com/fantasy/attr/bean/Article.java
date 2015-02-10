@@ -33,6 +33,10 @@ public class Article extends BaseBusEntity implements DynaBean {
     @IndexProperty(analyze = true, store = true)
     @Column(name = "SUMMARY")
     private String summary;
+
+    @Column(name = "ISSUE")
+    private Boolean issue = false;
+
     /**
      * 数据版本
      */
@@ -42,7 +46,7 @@ public class Article extends BaseBusEntity implements DynaBean {
     /**
      * 动态属性集合。
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @OneToMany(fetch = FetchType.EAGER, cascade = {CascadeType.ALL})
     @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
     private List<AttributeValue> attributeValues;
 
@@ -84,6 +88,14 @@ public class Article extends BaseBusEntity implements DynaBean {
 
     public void setAttributeValues(List<AttributeValue> attributeValues) {
         this.attributeValues = attributeValues;
+    }
+
+    public Boolean getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Boolean issue) {
+        this.issue = issue;
     }
 
     @Override

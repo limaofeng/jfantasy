@@ -1,10 +1,16 @@
 package com.fantasy.framework.comet;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 
 class Producer implements Runnable {
+
+	private final static Log LOG = LogFactory.getLog(Producer.class);
+
 	private BlockingQueue<String> drop;
 	List<String> messages = Arrays.asList(new String[] { "Mares eat oats", "Does eat oats", "Little lambs eat ivy", "Wouldn't you eat ivy too?" });
 
@@ -17,12 +23,12 @@ class Producer implements Runnable {
 			int i = 0;
 			for (String s : this.messages) {
 				this.drop.put(s);
-				System.out.println(this.drop.size());
+                LOG.debug(this.drop.size());
 				Thread.sleep(1000L);
 			}
 			this.drop.put("DONE");
-		} catch (InterruptedException intEx) {
-			intEx.printStackTrace();
+		} catch (InterruptedException e) {
+			LOG.error(e.getMessage(),e);
 		}
 	}
 }

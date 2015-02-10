@@ -8,16 +8,20 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.annotate.*;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
-import org.codehaus.jackson.type.TypeReference;
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Persister;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.OrderBy;
+import javax.persistence.Table;
 import java.io.IOException;
 import java.util.List;
 
@@ -31,6 +35,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_GOODS_CATEGORY")
 @Persister(impl = DynaBeanEntityPersister.class)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "metaKeywords", "metaDescription", "goodsParameterStore", "brandCustomSort", "goods"})
 public class GoodsCategory extends BaseBusEntity implements DynaBean {
 

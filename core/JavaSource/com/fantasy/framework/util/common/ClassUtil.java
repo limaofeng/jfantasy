@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.reflect.ClassFactory;
 import com.fantasy.framework.util.reflect.IClassFactory;
@@ -219,8 +220,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     }
 
     public static boolean isInterface(Field field) {
-        if ((isMap(field)) || (isList(field)))
+        if ((isMap(field)) || (isList(field))){
             return false;
+        }
         if (isArray(field)) {
             return field.getType().getComponentType().isInterface();
         }
@@ -261,7 +263,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             ParameterizedType type = (ParameterizedType) returnType;
             Type[] typeArguments = type.getActualTypeArguments();
             if ((index >= typeArguments.length) || (index < 0)) {
-                throw new RuntimeException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
+                throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
             }
             return (Class<?>) typeArguments[index];
         }
@@ -284,7 +286,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         List<Class> results = new ArrayList<Class>();
         Type[] genericParameterTypes = method.getGenericParameterTypes();
         if ((index >= genericParameterTypes.length) || (index < 0)) {
-            throw new RuntimeException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
+            throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
         }
         Type genericParameterType = genericParameterTypes[index];
         if ((genericParameterType instanceof ParameterizedType)) {
@@ -339,7 +341,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             ParameterizedType aType = (ParameterizedType) genericFieldType;
             Type[] fieldArgTypes = aType.getActualTypeArguments();
             if ((index >= fieldArgTypes.length) || (index < 0)) {
-                throw new RuntimeException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
+                throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
             }
             return (Class<?>) fieldArgTypes[index];
         }
@@ -367,8 +369,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         Annotation[][] annotations = method.getParameterAnnotations();
         for (Annotation[] paramAnnots : annotations) {
             for (Annotation annot : paramAnnots) {
-                if (annotClass.equals(annot.annotationType()))
+                if (annotClass.equals(annot.annotationType())){
                     return paramAnnots;
+                }
             }
         }
         return null;
@@ -430,8 +433,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotClass) {
         for (Annotation annot : annotations) {
-            if (annotClass.equals(annot.annotationType()))
+            if (annotClass.equals(annot.annotationType())){
                 return (T) annot;
+            }
         }
         return null;
     }
@@ -450,8 +454,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         for (StackTraceElement stack : stacks) {
             try {
                 Class<?> clasz = forName(stack.getClassName(), FantasyClassLoader.getClassLoader());
-                if (ObjectUtil.isNull(clasz))
+                if (ObjectUtil.isNull(clasz)){
                     continue;
+                }
                 Annotation annot = clasz.getAnnotation(annotClass);
                 if (ObjectUtil.isNotNull(annot)) {
                     return (T) annot;

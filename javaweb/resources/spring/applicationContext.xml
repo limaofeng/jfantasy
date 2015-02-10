@@ -16,7 +16,7 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
-    <context:component-scan base-package="com.fantasy,com.haolue"/>
+    <context:component-scan base-package="com.fantasy.install,com.springmvc" />
 
     <!-- 可以通过annotation 添加定时任务 @Scheduled(fixedDelay=任务间的延时时间,fixedRate=任务的间隔时间,cron=表达式) -->
     <task:executor id="spring.executor" pool-size="5"/>
@@ -99,12 +99,6 @@
         <property name="configuration" ref="freemarkerService"/>
     </bean>
 
-    <bean id="shortMessagingService" class="com.fantasy.sms.service.ShortMessagingService">
-        <property name="smsService">
-            <bean class="com.fantasy.sms.service.DefaultSMSService"/>
-        </property>
-    </bean>
-
     <!-- 自定义序列生成器 -->
     <bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">
         <property name="poolSize" value="${dataBaseKey.poolSize}"/>
@@ -129,4 +123,5 @@
     <import resource="classpath:spring/applicationContext-websocket.xml"/>
 
     <import resource="classpath:spring/applicationContext-weixin.xml"/>
+
 </beans>

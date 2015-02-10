@@ -2,7 +2,7 @@ package com.fantasy.mall.member.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.mall.goods.bean.Goods;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.List;

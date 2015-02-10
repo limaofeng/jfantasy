@@ -82,8 +82,9 @@ public class MenuService{
     }
 
     private List<Menu> loadMenus(List<Menu> menus, Map<Long, List<Menu>> menuMap) {
-        if (ObjectUtil.isNull(menus))
+        if (ObjectUtil.isNull(menus)){
             return new ArrayList<Menu>();
+        }
         for (Menu menu : menus) {
             menu.setChildren(loadMenus(menuMap.get(menu.getId()), menuMap));
             menuMap.remove(menu.getId());

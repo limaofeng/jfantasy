@@ -1,84 +1,88 @@
 package com.fantasy.security.bean;
 
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
 
 /**
  * 岗位
- * 
- * @功能描述
+ *
  * @author 李茂峰
- * @since 2013-1-22 下午04:00:48
  * @version 1.0
+ * @since 2013-1-22 下午04:00:48
  */
 @Entity
 @Table(name = "AUTH_JOB")
-@JsonIgnoreProperties( { "hibernateLazyInitializer" })
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Job extends BaseBusEntity {
 
-	private static final long serialVersionUID = -7020427994563623645L;
+    private static final long serialVersionUID = -7020427994563623645L;
 
-	/**
-	 * 岗位简写
-	 */
-	@Id
-	@Column(name = "CODE")
-	private String code;
-	/**
-	 * 岗位名称
-	 */
-	@Column(name = "NAME")
-	private String name;
-	/**
-	 * 岗位描述信息
-	 */
-	@Column(name = "DESCRIPTION")
-	private String description;
-	/**
-	 * 所属组织机构
-	 */
-	@Transient
-	private List<Organization> organizations;
+    @Id
+    @Column(name = "ID")
+    private Long id;
+    /**
+     * 岗位编码
+     */
+    @Column(name = "CODE")
+    private String code;
+    /**
+     * 岗位名称
+     */
+    @Column(name = "NAME")
+    private String name;
 
-	public String getCode() {
-		return code;
-	}
+    /**
+     * 岗位描述信息
+     */
+    @Column(name = "DESCRIPTION")
+    private String description;
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    /**
+     *组织机构
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_JOB_ORGANIZATION"))
+    private Organization organization;
 
-	public String getName() {
-		return name;
-	}
+    public String getCode() {
+        return code;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	public String getDescription() {
-		return description;
-	}
+    public String getName() {
+        return name;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	public List<Organization> getOrganizations() {
-		return organizations;
-	}
+    public String getDescription() {
+        return description;
+    }
 
-	public void setOrganizations(List<Organization> organizations) {
-		this.organizations = organizations;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
+    }
 }

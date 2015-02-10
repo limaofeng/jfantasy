@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.ognl;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -119,7 +120,7 @@ public class OgnlUtil {
             return Ognl.getValue(compile(name), context, root);
         } catch (OgnlException e) {
             logger.error(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage());
+            return null;
         }
     }
 
@@ -137,10 +138,14 @@ public class OgnlUtil {
         }
     }
 
-    public Object compile(String expression) throws OgnlException {
+    public Object compile(String expression) {
         Object o = this.expressions.get(expression);
         if (o == null) {
-            this.expressions.putIfAbsent(expression, o = Ognl.parseExpression(expression));
+            try {
+                this.expressions.putIfAbsent(expression, o = Ognl.parseExpression(expression));
+            } catch (OgnlException e) {
+                throw new IgnoreException(e.getMessage());
+            }
         }
         return o;
     }
@@ -188,7 +193,7 @@ public class OgnlUtil {
         return this.beanInfoCache.get(clazz);
     }
 
-    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws Exception {
+    public void setProperties(Map<String, ?> props, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
         if (props == null) {
             return;
         }
@@ -197,20 +202,25 @@ public class OgnlUtil {
         Ognl.setRoot(context, o);
         for (Map.Entry<String, ?> entry : props.entrySet()) {
             String expression = entry.getKey();
-            internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
+            try {
+                internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
+            } catch (Exception e) {
+                throw new IgnoreException(e.getMessage());
+            }
         }
         Ognl.setRoot(context, oldRoot);
     }
 
-    void internalSetProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) throws Exception {
+    void internalSetProperty(String name, Object value, Object o, Map<String, Object> context, boolean throwPropertyExceptions) {
         try {
             setValue(name, context, o, value);
         } catch (OgnlException e) {
             Throwable reason = e.getReason();
             String msg = "Caught OgnlException while setting property '" + name + "' on type '" + o.getClass().getName() + "'.";
             Throwable exception = reason == null ? e : reason;
-            if (throwPropertyExceptions)
-                throw new Exception(msg, exception);
+            if (throwPropertyExceptions) {
+                throw new IgnoreException(msg + exception);
+            }
         }
     }
 
@@ -264,15 +274,16 @@ public class OgnlUtil {
         for (PropertyDescriptor fromPd : fromPds) {
             if (fromPd.getReadMethod() != null) {
                 boolean copy = true;
-                if ((exclusions != null) && (exclusions.contains(fromPd.getName())))
+                if ((exclusions != null) && (exclusions.contains(fromPd.getName()))) {
                     copy = false;
-                else if ((inclusions != null) && (!inclusions.contains(fromPd.getName()))) {
+                } else if ((inclusions != null) && (!inclusions.contains(fromPd.getName()))) {
                     copy = false;
                 }
                 if (copy) {
                     PropertyDescriptor toPd = toPdHash.get(fromPd.getName());
-                    if ((toPd == null) || (toPd.getWriteMethod() == null))
+                    if ((toPd == null) || (toPd.getWriteMethod() == null)) {
                         continue;
+                    }
                     try {
                         Object expr = compile(fromPd.getName());
                         Object value = Ognl.getValue(expr, contextFrom, from);

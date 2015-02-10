@@ -1,7 +1,8 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fantasy.system.bean.Website;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,18 +18,17 @@ public class Page extends BaseBusEntity {
 
     private static final long serialVersionUID = 8032849785819496211L;
 
+
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
     /**
      * 名称
      */
     @Column(name = "NAME")
     private String name;
-
     /**
      * 对应模板
      */
@@ -39,13 +39,27 @@ public class Page extends BaseBusEntity {
      * 对应的数据
      */
     @ManyToMany(targetEntity = Data.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "PAGE_ID"), inverseJoinColumns = @JoinColumn(name = "DATA_ID"),foreignKey = @ForeignKey(name = "FK_PAGE_DATA"))
+    @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "PAGE_ID"), inverseJoinColumns = @JoinColumn(name = "DATA_ID"), foreignKey = @ForeignKey(name = "FK_PAGE_DATA"))
     private List<Data> datas;
+    /**
+     * 站点
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WEBSITE_ID")
+    private Website webSite;
+    /**
+     * 文件存储路径
+     */
+    @Column(name = "path")
+    private String path;
+    /**
+     * list类型的页面,pageSize默认15条
+     */
+    @Column(name = "PAGE_SIZE",columnDefinition="INT default 15")
+    private int pageSize;
 
-    @ManyToOne
-    @JoinColumn(name = "PAGE_ANALYZER_ID")
-    private PageAnalyzer pageAnalyzer;
-
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
+    private List<PageItem> pageItems;
 
     public Long getId() {
         return id;
@@ -79,11 +93,35 @@ public class Page extends BaseBusEntity {
         this.datas = datas;
     }
 
-    public PageAnalyzer getPageAnalyzer() {
-        return pageAnalyzer;
+    public Website getWebSite() {
+        return webSite;
     }
 
-    public void setPageAnalyzer(PageAnalyzer pageAnalyzer) {
-        this.pageAnalyzer = pageAnalyzer;
+    public void setWebSite(Website webSite) {
+        this.webSite = webSite;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public int getPageSize() {
+        return pageSize;
+    }
+
+    public void setPageSize(int pageSize) {
+        this.pageSize = pageSize;
+    }
+
+    public List<PageItem> getPageItems() {
+        return pageItems;
+    }
+
+    public void setPageItems(List<PageItem> pageItems) {
+        this.pageItems = pageItems;
     }
 }

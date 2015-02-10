@@ -1,5 +1,7 @@
 package com.fantasy.framework.comet;
 
+import com.fantasy.framework.error.IgnoreException;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -75,7 +77,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		}
 
 		public boolean addAll(int index, Collection<? extends E> c) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
 		public void clear() {
@@ -103,15 +105,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		}
 
 		public int lastIndexOf(Object o) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
 		public ListIterator<E> listIterator() {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
 		public ListIterator<E> listIterator(int index) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
 		public boolean remove(Object o) {
@@ -144,7 +146,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		}
 
 		public List<E> subList(int fromIndex, int toIndex) {
-			throw new RuntimeException("null method");
+			throw new IgnoreException("null method");
 		}
 
 		public Object[] toArray() {
@@ -161,16 +163,18 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	}
 
 	public LinkedBlockingQueue(int capacity) {
-		if (capacity <= 0)
-			throw new IllegalArgumentException();
+		if (capacity <= 0){
+            throw new IllegalArgumentException();
+        }
 		this.capacity = capacity;
 		this.last = (this.head = new Node<E>());// 初始化链表
 	}
 
 	public LinkedBlockingQueue(Collection<? extends E> c) {
 		this();
-		for (E e : c)
-			add(e);
+		for (E e : c){
+            add(e);
+        }
 	}
 
 	/**
@@ -274,8 +278,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 * @throws InterruptedException
 	 */
 	public void put(E o) throws InterruptedException {
-		if (o == null)
-			throw new NullPointerException();
+		if (o == null){
+            throw new NullPointerException();
+        }
 		int c = -1;
 		ReentrantLock putLock = this.putLock;
 		AtomicInteger count = this.count;
@@ -283,20 +288,23 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		try {
 			try {
 				// 如果链表已满,等待释放
-				while (count.get() == this.capacity)
-					this.notFull.await();
+				while (count.get() == this.capacity){
+                    this.notFull.await();
+                }
 			} catch (InterruptedException ie) {
 				this.notFull.signal();
 				throw ie;
 			}
 			insert(o);// 添加
 			c = count.getAndIncrement();// 获取当前链表数量
-			if (c + 1 < this.capacity)// 判断是否可以继续输入
-				this.notFull.signal();
+			if (c + 1 < this.capacity){
+                this.notFull.signal();
+            }// 判断是否可以继续输入
 		} finally {
 			putLock.unlock();
-			if (c == 0)
-				signalNotEmpty();// 通知输出锁，如果有元素正在等待输出。立即激活该线程
+			if (c == 0){
+                signalNotEmpty();// 通知输出锁，如果有元素正在等待输出。立即激活该线程
+            }
 		}
 	}
 
@@ -315,8 +323,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 * @throws InterruptedException
 	 */
 	public boolean offer(E o, long timeout, TimeUnit unit) throws InterruptedException {
-		if (o == null)
-			throw new NullPointerException();
+		if (o == null){
+            throw new NullPointerException();
+        }
 		long nanos = unit.toNanos(timeout);// 将超时时间转为 毫微秒
 		int c = -1;
 		ReentrantLock putLock = this.putLock;
@@ -325,8 +334,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		try {
 			try {
 				while (count.get() == this.capacity) {// 如果容量已满。
-					if (nanos <= 0)// 等待时间耗尽，返回false
-						return false;
+					if (nanos <= 0){
+                        return false;
+                    }// 等待时间耗尽，返回false
 					nanos = this.notFull.awaitNanos(nanos);// 挂起线程
 				}
 			} catch (InterruptedException ie) {
@@ -335,13 +345,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			}
 			insert(o);
 			c = count.getAndIncrement();
-			if (c + 1 < this.capacity)
-				this.notFull.signal();
+			if (c + 1 < this.capacity){
+                this.notFull.signal();
+            }
 			return c >= 0;
 		} finally {
 			putLock.unlock();
-			if (c == 0)
-				signalNotEmpty();
+			if (c == 0){
+                signalNotEmpty();
+            }
 		}
 	}
 
@@ -354,11 +366,13 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 * @return
 	 */
 	public boolean offer(E o) {
-		if (o == null)
-			throw new NullPointerException();
+		if (o == null){
+            throw new NullPointerException();
+        }
 		AtomicInteger count = this.count;
-		if (count.get() == this.capacity)
-			return false;
+		if (count.get() == this.capacity){
+            return false;
+        }
 		int c = -1;
 		ReentrantLock putLock = this.putLock;
 		putLock.lock();// TODO lock 与 lockInterruptibly 的区别
@@ -366,13 +380,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			if (count.get() < this.capacity) {
 				insert(o);
 				c = count.getAndIncrement();
-				if (c + 1 < this.capacity)
-					this.notFull.signal();
+				if (c + 1 < this.capacity){
+                    this.notFull.signal();
+                }
 			}
 		} finally {
 			putLock.unlock();
-			if (c > 0)
-				signalNotEmpty();
+			if (c > 0){
+                signalNotEmpty();
+            }
 		}
 		return c >= 0;
 	}
@@ -393,20 +409,23 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		try {
 			try {
 				// 如果容量为0,持续等待获取元素
-				while (count.get() == 0)
-					this.notEmpty.await();
+				while (count.get() == 0){
+                    this.notEmpty.await();
+                }
 			} catch (InterruptedException ie) {
 				this.notEmpty.signal();
 				throw ie;
 			}
 			x = extract();// 获取元素
 			c = count.getAndDecrement();// 计数器减1
-			if (c > 1)// 判断是否可以继续输出
-				this.notEmpty.signal();
+			if (c > 1){
+                this.notEmpty.signal();
+            }// 判断是否可以继续输出
 		} finally {
 			takeLock.unlock();
-			if (c == this.capacity)// 如果有线程在等待输入的话，激活线程。因为容量满额时，可能有线程正在等待输入
-				signalNotFull();
+			if (c == this.capacity){
+                signalNotFull();
+            }// 如果有线程在等待输入的话，激活线程。因为容量满额时，可能有线程正在等待输入
 		}
 		return x;
 	}
@@ -432,8 +451,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		try {
 			try {
 				while (count.get() == 0) {
-					if (nanos <= 0)
-						return x;
+					if (nanos <= 0){
+                        return x;
+                    }
 					nanos = this.notEmpty.awaitNanos(nanos);
 				}
 			} catch (InterruptedException ie) {
@@ -442,12 +462,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			}
 			x = extract();// 获取元素
 			c = count.getAndDecrement();// 计数器减1
-			if (c > 1)// 判断是否可以继续输出
-				this.notEmpty.signal();
+			if (c > 1){
+                this.notEmpty.signal();
+            }// 判断是否可以继续输出
 		} finally {
 			takeLock.unlock();
-			if (c == this.capacity)
-				signalNotFull();
+			if (c == this.capacity){
+                signalNotFull();
+            }
+
 		}
 		return x;
 	}
@@ -460,8 +483,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 */
 	public E poll() {
 		AtomicInteger count = this.count;
-		if (count.get() == 0)
-			return null;
+		if (count.get() == 0){
+            return null;
+        }
 		E x = null;
 		int c = -1;
 		ReentrantLock takeLock = this.takeLock;
@@ -470,14 +494,16 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			if (count.get() > 0) {
 				x = extract();
 				c = count.getAndDecrement();
-				if (c <= 1)
-					this.notEmpty.signal();
+				if (c <= 1){
+                    this.notEmpty.signal();
+                }
 			}
 		} finally {
 			takeLock.unlock();
 		}
-		if (c == this.capacity)
-			signalNotFull();
+		if (c == this.capacity){
+            signalNotFull();
+        }
 		return x;
 	}
 
@@ -488,8 +514,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 * @return
 	 */
 	public E peek() {
-		if (this.count.get() == 0)
-			return null;
+		if (this.count.get() == 0){
+            return null;
+        }
 		ReentrantLock takeLock = this.takeLock;
 		takeLock.lock();
 		try {
@@ -514,8 +541,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			int size = this.count.get();
 			Object[] a = new Object[size];
 			int k = 0;
-			for (Node<E> p = this.head.next; p != null; p = p.next)
-				a[(k++)] = p.item;
+			for (Node<E> p = this.head.next; p != null; p = p.next){
+                a[(k++)] = p.item;
+            }
 			return a;
 		} finally {
 			fullyUnlock();
@@ -531,8 +559,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 				a = (T[]) Array.newInstance(a.getClass().getComponentType(), size);
 			}
 			int k = 0;
-			for (Node<E> p = this.head.next; p != null; p = p.next)
-				a[(k++)] = (T) p.item;
+			for (Node<E> p = this.head.next; p != null; p = p.next){
+                a[(k++)] = (T) p.item;
+            }
 			return a;
 		} finally {
 			fullyUnlock();
@@ -560,16 +589,18 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			this.head.next = null;
 			assert (this.head.item == null);
 			this.last = this.head;
-			if (this.count.getAndSet(0) == this.capacity)
-				this.notFull.signalAll();
+			if (this.count.getAndSet(0) == this.capacity){
+                this.notFull.signalAll();
+            }
 		} finally {
 			fullyUnlock();
 		}
 	}
 
 	public int drainTo(Collection<? super E> c) {
-		if (c == null)
-			throw new NullPointerException();
+		if (c == null){
+            throw new NullPointerException();
+        }
 		if (c == this) {
 			throw new IllegalArgumentException();
 		}
@@ -580,8 +611,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			this.head.next = null;
 			assert (this.head.item == null);
 			this.last = this.head;
-			if (this.count.getAndSet(0) == this.capacity)
-				this.notFull.signalAll();
+			if (this.count.getAndSet(0) == this.capacity){
+                this.notFull.signalAll();
+            }
 		} finally {
 			fullyUnlock();
 		}
@@ -595,10 +627,12 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	}
 
 	public int drainTo(Collection<? super E> c, int maxElements) {
-		if (c == null)
-			throw new NullPointerException();
-		if (c == this)
-			throw new IllegalArgumentException();
+		if (c == null){
+            throw new NullPointerException();
+        }
+		if (c == this){
+            throw new IllegalArgumentException();
+        }
 		fullyLock();
 		try {
 			int n = 0;
@@ -612,10 +646,12 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			if (n != 0) {
 				this.head.next = p;
 				assert (this.head.item == null);
-				if (p == null)
-					this.last = this.head;
-				if (this.count.getAndAdd(-n) == this.capacity)
-					this.notFull.signalAll();
+				if (p == null){
+                    this.last = this.head;
+                }
+				if (this.count.getAndAdd(-n) == this.capacity){
+                    this.notFull.signalAll();
+                }
 			}
 			int i = n;
 			return i;
@@ -632,8 +668,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		fullyLock();
 		try {
 			s.defaultWriteObject();
-			for (Node<E> p = this.head.next; p != null; p = p.next)
-				s.writeObject(p.item);
+			for (Node<E> p = this.head.next; p != null; p = p.next){
+                s.writeObject(p.item);
+            }
 			s.writeObject(null);
 		} finally {
 			fullyUnlock();
@@ -656,8 +693,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		this.last = (this.head = new Node<E>());
 		while (true) {
 			E item = (E) s.readObject();
-			if (item == null)
-				break;
+			if (item == null){
+                break;
+            }
 			add(item);
 		}
 	}
@@ -683,16 +721,19 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 */
 	private Node<E> entry(int index) {
 		int size = this.count.get();
-		if ((index < 0) || (index >= size))
-			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+		if ((index < 0) || (index >= size)){
+            throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + size);
+        }
 		Node<E> e = this.head;
-		if (index < size >> 1)
-			for (int i = 0; i <= index; i++)
-				e = e.next;
-		else {
-			for (int i = size; i > index; i--)
-				e = e.previous;
-		}
+		if (index < size >> 1){
+            for (int i = 0; i <= index; i++){
+                e = e.next;
+            }
+        }else {
+            for (int i = size; i > index; i--){
+                e = e.previous;
+            }
+        }
 		return e;
 	}
 
@@ -710,11 +751,13 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 * @return
 	 */
 	public boolean add(int index, E o) {
-		if (o == null)
-			throw new NullPointerException();
+		if (o == null){
+            throw new NullPointerException();
+        }
 		AtomicInteger count = this.count;
-		if (count.get() == this.capacity)
-			return false;
+		if (count.get() == this.capacity){
+            return false;
+        }
 		int c = -1;
 		ReentrantLock putLock = this.putLock;
 		putLock.lock();
@@ -727,14 +770,16 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 					p.previous.next = (p.previous = new Node<E>(o, p, p.previous));
 				}
 				c = count.getAndIncrement();
-				if (c + 1 < this.capacity)
-					this.notFull.signal();
+				if (c + 1 < this.capacity){
+                    this.notFull.signal();
+                }
 			}
 		} finally {
 			putLock.unlock();
 		}
-		if (c == 0)
-			signalNotEmpty();
+		if (c == 0){
+            signalNotEmpty();
+        }
 		return c >= 0;
 	}
 
@@ -743,8 +788,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		try {
 			int index = 0;
 			for (Node<E> e = this.head.next; e != this.head; e = e.next) {
-				if (e.item.equals(o))
-					return index;
+				if (e.item.equals(o)){
+                    return index;
+                }
 				index++;
 			}
 			return -1;
@@ -781,8 +827,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			e.item = null;
 			p.next = e.next;// 上个节点的下一个指向当前节点的下一个节点
 			e.next.previous = p;// 当前节点的下一节点的上节点指向当前节点的上一个节点
-			if (this.count.getAndDecrement() != this.capacity)
-				this.notFull.signalAll();
+			if (this.count.getAndDecrement() != this.capacity){
+                this.notFull.signalAll();
+            }
 			return item;
 		} finally {
 			fullyUnlock();
@@ -798,8 +845,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 	 */
 	@Override
 	public boolean remove(Object o) {
-		if (o == null)
-			return false;
+		if (o == null){
+            return false;
+        }
 		boolean removed = false;
 		fullyLock();
 		try {
@@ -817,8 +865,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 				p.item = null;
 				trail.next = p.next;
 				p.next.previous = trail;
-				if (this.count.getAndDecrement() != this.capacity)
-					this.notFull.signalAll();
+				if (this.count.getAndDecrement() != this.capacity){
+                    this.notFull.signalAll();
+                }
 			}
 		} finally {
 			fullyUnlock();
@@ -842,8 +891,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			takeLock.lock();
 			try {
 				this.current = LinkedBlockingQueue.this.head.next;
-				if (this.current != null)
-					this.currentElement = this.current.item;
+				if (this.current != null){
+                    this.currentElement = this.current.item;
+                }
 			} finally {
 				takeLock.unlock();
 				putLock.unlock();
@@ -860,13 +910,15 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 			putLock.lock();
 			takeLock.lock();
 			try {
-				if (this.current == null)
-					throw new NoSuchElementException();
+				if (this.current == null){
+                    throw new NoSuchElementException();
+                }
 				E x = this.currentElement;
 				this.lastRet = this.current;
 				this.current = this.current.next;
-				if (this.current != null)
-					this.currentElement = this.current.item;
+				if (this.current != null){
+                    this.currentElement = this.current.item;
+                }
 				return x;
 			} finally {
 				takeLock.unlock();
@@ -875,8 +927,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 		}
 
 		public void remove() {
-			if (this.lastRet == null)
-				throw new IllegalStateException();
+			if (this.lastRet == null){
+                throw new IllegalStateException();
+            }
 			ReentrantLock putLock = LinkedBlockingQueue.this.putLock;
 			ReentrantLock takeLock = LinkedBlockingQueue.this.takeLock;
 			putLock.lock();
@@ -894,8 +947,9 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
 					p.item = null;
 					trail.next = p.next;
 					int c = LinkedBlockingQueue.this.count.getAndDecrement();
-					if (c == LinkedBlockingQueue.this.capacity)
-						LinkedBlockingQueue.this.notFull.signalAll();
+					if (c == LinkedBlockingQueue.this.capacity){
+                        LinkedBlockingQueue.this.notFull.signalAll();
+                    }
 				}
 			} finally {
 				takeLock.unlock();

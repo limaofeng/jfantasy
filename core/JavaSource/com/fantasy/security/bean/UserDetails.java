@@ -5,8 +5,9 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.type.TypeReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -20,12 +21,12 @@ import java.util.List;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-3-25 下午03:43:54
  */
 @Entity
 @Table(name = "AUTH_USER_DETAILS")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "user", "avatarStore"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserDetails implements Serializable {
 
     private static final long serialVersionUID = -5738290484268799275L;

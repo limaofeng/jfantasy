@@ -8,7 +8,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.swp.bean.Page;
-import com.fantasy.swp.service.PageService;
+import com.fantasy.swp.service._PageService;
 
 /**
  *@Author lsz
@@ -20,7 +20,7 @@ public class PageAction extends ActionSupport {
 	private static final long serialVersionUID = 4701572340953006744L;
 	
 	@Resource
-	private PageService pageService;
+	private _PageService pageService;
 
 	public String index(){
 		this.search(new Pager<Page>(),new ArrayList<PropertyFilter>());
@@ -48,6 +48,10 @@ public class PageAction extends ActionSupport {
 		this.pageService.delete(ids);
 		return JSONDATA;
 	}
-	
+
+    public String create(Long[] ids){
+        this.pageService.create(ids);
+        return JSONDATA;
+    }
 }
 

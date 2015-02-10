@@ -11,6 +11,33 @@ import java.util.List;
 @Entity
 @Table(name = "SWP_DATA_INFERFACE")
 public class DataInferface {
+    /**
+     * 数据类型
+     */
+    public enum DataType{
+        /**
+         * 普通类型
+         */
+        common("普通类型"),
+        /**
+         * 分页类型，有一页数据则会生成一个html
+         */
+        list("分页类型"),
+        /**
+         * 对象类型，有一条数据则会生成一个html
+         */
+        object("对象类型");
+
+        private String value;
+
+        private DataType (String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+    }
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
@@ -26,7 +53,7 @@ public class DataInferface {
     /**
      * 数据在模板文件中的key
      */
-    @Column(name = "CODE")
+    @Column(name = "CODE", nullable = false)
     private String key;
     /**
      * 表述名称
@@ -36,21 +63,16 @@ public class DataInferface {
     /**
      * 是否为集合
      */
-    @Column(name = "is_LIST")
-    private boolean list;
-    /**
-     * 数据对应的javaType
-     */
-    @Column(name = "JAVA_TYPE")
-    private String javaType;
-    /**
-     * 数据默认值
-     */
-    @Column(name = "DEFAULT_VALUE")
-    private String defaultValue;
-
-    @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY)
+//    @Column(name = "is_Array")
+//    private DataType type;//pager|array|object|string|number
+    @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
     private List<Data> datas;
+    /**
+     * 数据类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "DATA_TYPE",nullable = false)
+    private DataType dataType;
 
     public Template getTemplate() {
         return template;
@@ -92,27 +114,12 @@ public class DataInferface {
         this.datas = datas;
     }
 
-    public String getJavaType() {
-        return javaType;
+    public DataType getDataType() {
+        return dataType;
     }
 
-    public void setJavaType(String javaType) {
-        this.javaType = javaType;
+    public void setDataType(DataType dataType) {
+        this.dataType = dataType;
     }
 
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    public void setDefaultValue(String defaultValue) {
-        this.defaultValue = defaultValue;
-    }
-
-    public boolean isList() {
-        return list;
-    }
-
-    public void setList(boolean list) {
-        this.list = list;
-    }
 }

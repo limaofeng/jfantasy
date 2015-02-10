@@ -5,14 +5,12 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.service.GoodsService;
 import com.fantasy.system.util.SettingUtil;
 
 import javax.annotation.Resource;
-import java.nio.charset.Charset;
 import java.util.List;
 
 public class GoodsAction extends ActionSupport {
@@ -32,12 +30,12 @@ public class GoodsAction extends ActionSupport {
         }
         // 默认选择根目录的第一个分类
         if (ObjectUtil.find(filters, "filterName", "EQL_category.id") == null) {
-            filters.add(new PropertyFilter("EQL_category.id",categories.isEmpty()?rootCode:categories.get(0).getId().toString()));
+            filters.add(new PropertyFilter("EQL_category.id", categories.isEmpty() ? rootCode : categories.get(0).getId().toString()));
         }
         // 设置当前根
         PropertyFilter filter = ObjectUtil.find(filters, "filterName", "EQL_category.id");
         if (filter != null) {
-            this.attrs.put("category", ObjectUtil.find(categories, "id",filter.getPropertyValue(String.class)));
+            this.attrs.put("category", ObjectUtil.find(categories, "id", filter.getPropertyValue(String.class)));
         }
         // 全部分类
         this.attrs.put("categorys", categories);
@@ -53,17 +51,7 @@ public class GoodsAction extends ActionSupport {
      * @return string
      */
     public String index(Pager<Goods> pager, List<PropertyFilter> filters) {
-        PropertyFilter filter = ObjectUtil.find(filters, "filterName", "LIKES_name");
-        if (filter != null && "GET".equalsIgnoreCase(WebUtil.getMethod(request))) {
-            String text = filter.getPropertyValue(String.class);
-            if (Charset.forName("ASCII").newEncoder().canEncode(text)) {
-                text = StringUtil.decodeURI(text, "UTF-8");
-            } else if (Charset.forName("ISO-8859-1").newEncoder().canEncode(text)) {
-                text = WebUtil.transformCoding(text, "ISO-8859-1", "utf-8");
-            }
-            filter.setPropertyValue(text);
-            this.attrs.put("title", text);
-        }
+        PropertyFilter filter;
         if ((filter = ObjectUtil.find(filters, "filterName", "EQL_category.id")) != null) {
             this.attrs.put("category", this.goodsService.getCategory(filter.getPropertyValue(Long.class)));
         } else if ((filter = ObjectUtil.find(filters, "filterName", "EQS_category.sign")) != null) {

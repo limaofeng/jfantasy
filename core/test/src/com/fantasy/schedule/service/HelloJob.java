@@ -10,41 +10,43 @@ import java.util.Map;
 
 public class HelloJob implements Job {
 
-    private final static Log _log = LogFactory.getLog(HelloJob.class);
+    private final static Log LOG = LogFactory.getLog(HelloJob.class);
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobDataMap data = context.getMergedJobDataMap();
-        _log.debug("\n\n-===============Hello World! - " + new Date() + "==================-");
+        StringBuilder log = new StringBuilder();
+        log.append("\n\n-===============Hello World! - ").append(new Date()).append("==================-").append("\n");
         for (Map.Entry<String, Object> entry : data.entrySet()) {
-            System.out.println(entry.getKey() + "=" + entry.getValue());
+            log.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
         }
-        _log.debug("-===============打印详细的job信息==================-");
-        print(context.getJobDetail(), context.getTrigger());
+        log.append("-===============打印详细的job信息==================-").append("\n");
+        print(context.getJobDetail(), context.getTrigger(),log);
+        LOG.debug(log.toString());
     }
 
-    public void print(JobDetail jobDetail, Trigger trigger) {
+    public void print(JobDetail jobDetail, Trigger trigger,StringBuilder log) {
         JobKey jobKey = jobDetail.getKey();
-        _log.debug("jobKey:\t" + jobKey.getGroup() + "." + jobKey.getName());
-        _log.debug("jobClass:\t" + jobDetail.getJobClass());
-        _log.debug("jobDataMap:");
+        log.append("jobKey:\t").append(jobKey.getGroup()).append(".").append(jobKey.getName()).append("\n");
+        log.append("jobClass:\t").append(jobDetail.getJobClass()).append("\n");
+        log.append("jobDataMap:").append("\n");
         for (Map.Entry<String, Object> entry : jobDetail.getJobDataMap().entrySet()) {
-            _log.debug("\t" + entry.getKey() + ":" + entry.getValue());
+            log.append("\t").append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
         }
-        _log.debug("trigger:" + trigger.getKey());
-        _log.debug("previousFireTime:" + DateUtil.format(trigger.getPreviousFireTime(), "yyyy-MM-dd HH:mm:ss"));
-        _log.debug("nextFireTime:" + DateUtil.format(trigger.getNextFireTime(), "yyyy-MM-dd HH:mm:ss"));
-        _log.debug("EndTime:" + DateUtil.format(trigger.getEndTime(), "yyyy-MM-dd HH:mm:ss"));
-        _log.debug("jobDataMap:");
+        log.append("trigger:").append(trigger.getKey()).append("\n");
+        log.append("previousFireTime:").append(DateUtil.format(trigger.getPreviousFireTime(), "yyyy-MM-dd HH:mm:ss")).append("\n");
+        log.append("nextFireTime:").append(DateUtil.format(trigger.getNextFireTime(), "yyyy-MM-dd HH:mm:ss")).append("\n");
+        log.append("EndTime:").append(DateUtil.format(trigger.getEndTime(), "yyyy-MM-dd HH:mm:ss")).append("\n");
+        log.append("jobDataMap:").append("\n");
         for (Map.Entry<String, Object> entry : trigger.getJobDataMap().entrySet()) {
-            _log.debug("\t" + entry.getKey() + ":" + entry.getValue());
+            log.append("\t").append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
         }
         if (trigger instanceof CronTrigger) {
-            _log.debug("cron:" + ((CronTrigger) trigger).getCronExpression());
+            log.append("cron:").append(((CronTrigger) trigger).getCronExpression()).append("\n");
         } else if (trigger instanceof SimpleTrigger) {
             SimpleTrigger simpleTrigger = ((SimpleTrigger) trigger);
-            _log.debug("repeatInterval:" + simpleTrigger.getRepeatInterval());
-            _log.debug("repeatCount:" + (simpleTrigger.getRepeatCount() + 1));
-            _log.debug("timesTriggered:" + simpleTrigger.getTimesTriggered());
+            log.append("repeatInterval:").append(simpleTrigger.getRepeatInterval()).append("\n");
+            log.append("repeatCount:").append(simpleTrigger.getRepeatCount() + 1).append("\n");
+            log.append("timesTriggered:").append(simpleTrigger.getTimesTriggered()).append("\n");
         }
     }
 

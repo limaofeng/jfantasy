@@ -3,8 +3,9 @@ package com.fantasy.file.bean;
 import com.fantasy.file.service.FileService;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.spring.SpringContextUtil;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.List;
@@ -18,6 +19,7 @@ import java.util.List;
 @Table(name = "FILE_FOLDER")
 @IdClass(FolderKey.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Folder extends BaseBusEntity {
 
     private static final long serialVersionUID = -1415999483740197039L;
@@ -186,7 +188,7 @@ public class Folder extends BaseBusEntity {
     }
 
     public synchronized Folder getParentFolder() {
-        if (this.parentFolder == null && !this.absolutePath.equals("/")) {
+        if (this.parentFolder == null && !"/".equals(this.absolutePath)) {
             this.parentFolder = SpringContextUtil.getBeanByType(FileService.class).createFolder(this.getAbsolutePath().replaceFirst("[^/]+/$", ""), this.getFileManagerId());
         }
         return parentFolder;

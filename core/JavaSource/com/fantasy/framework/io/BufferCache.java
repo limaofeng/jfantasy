@@ -21,16 +21,20 @@ public class BufferCache {
         CachedBuffer buffer = new CachedBuffer(value, ordinal);
         this._bufferMap.put(buffer, buffer);
         this._stringMap.put(value, buffer);
-        while (ordinal - this._index.size() >= 0)
+        while (ordinal - this._index.size() >= 0){
             this._index.add(null);
-        if (this._index.get(ordinal) == null)
+        }
+
+        if (this._index.get(ordinal) == null){
             this._index.add(ordinal, buffer);
+        }
         return buffer;
     }
 
     public CachedBuffer get(int ordinal) {
-        if ((ordinal < 0) || (ordinal >= this._index.size()))
+        if ((ordinal < 0) || (ordinal >= this._index.size())){
             return null;
+        }
         return this._index.get(ordinal);
     }
 
@@ -45,8 +49,9 @@ public class BufferCache {
     public Buffer lookup(Buffer buffer) {
         Buffer b = get(buffer);
         if (b == null) {
-            if ((buffer instanceof Buffer.CaseInsensitve))
+            if ((buffer instanceof Buffer.CaseInsensitve)){
                 return buffer;
+            }
             return new View.CaseInsensitive(buffer);
         }
 
@@ -55,8 +60,9 @@ public class BufferCache {
 
     public CachedBuffer getBest(byte[] value, int offset, int maxLength) {
         Map.Entry<String, CachedBuffer> entry = this._stringMap.getBestEntry(value, offset, maxLength);
-        if (entry != null)
+        if (entry != null){
             return entry.getValue();
+        }
         return null;
     }
 
@@ -73,11 +79,13 @@ public class BufferCache {
     }
 
     public int getOrdinal(Buffer buffer) {
-        if ((buffer instanceof CachedBuffer))
+        if ((buffer instanceof CachedBuffer)){
             return ((CachedBuffer) buffer).getOrdinal();
+        }
         buffer = lookup(buffer);
-        if ((buffer != null) && ((buffer instanceof CachedBuffer)))
+        if ((buffer != null) && ((buffer instanceof CachedBuffer))){
             return ((CachedBuffer) buffer).getOrdinal();
+        }
         return -1;
     }
 
@@ -99,14 +107,16 @@ public class BufferCache {
         }
 
         public CachedBuffer getAssociate(Object key) {
-            if (this._associateMap == null)
+            if (this._associateMap == null){
                 return null;
+            }
             return this._associateMap.get(key);
         }
 
         public void setAssociate(Object key, CachedBuffer associate) {
-            if (this._associateMap == null)
+            if (this._associateMap == null){
                 this._associateMap = new HashMap<Object, CachedBuffer>();
+            }
             this._associateMap.put(key, associate);
         }
 

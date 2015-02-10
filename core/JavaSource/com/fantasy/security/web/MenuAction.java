@@ -20,13 +20,13 @@ public class MenuAction extends ActionSupport {
         return SUCCESS;
     }
 
-    public String save(Menu menu) throws Exception {
+    public String save(Menu menu){
         menuService.save(menu);
         this.attrs.put(ROOT, menu);
         return JSONDATA;
     }
 
-    public String delete(Long id) throws Exception {
+    public String delete(Long id){
         this.menuService.delete(id);
         return JSONDATA;
     }

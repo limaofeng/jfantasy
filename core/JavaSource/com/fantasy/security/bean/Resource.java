@@ -5,9 +5,10 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.security.bean.enums.ResourceType;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.annotate.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,7 +21,6 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 访问规则
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2014年4月23日 下午5:53:06
  * @version 1.0
@@ -28,6 +28,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @Entity
 @Table(name = "AUTH_RESOURCE")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "parentResources", "userGroups", "roles" })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Resource extends BaseBusEntity {
 
 	private static final long serialVersionUID = -4031735792597359821L;
@@ -172,8 +173,9 @@ public class Resource extends BaseBusEntity {
 	}
 
 	public void addResource(Resource resource) {
-		if (ObjectUtil.isNull(getSubResources()))
-			setSubResources(new ArrayList<Resource>());
+		if (ObjectUtil.isNull(getSubResources())){
+            setSubResources(new ArrayList<Resource>());
+        }
 		getSubResources().add(resource);
 	}
 
@@ -181,8 +183,9 @@ public class Resource extends BaseBusEntity {
 	public String getRoleAuthorities() {
 		AtomicReference<StringBuffer> roleAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
 		for (Role role : (getRoles() == null ? new ArrayList<Role>() : getRoles())) {
-			if (!role.isEnabled())
-				continue;
+			if (!role.isEnabled()){
+                continue;
+            }
 			List<GrantedAuthority> authorities = role.getRoleAuthorities();
 			for (GrantedAuthority authority : authorities) {
 				roleAuthorities.get().append(authority.getAuthority()).append(",");

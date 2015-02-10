@@ -90,10 +90,8 @@ public class ResourceService {
 						}
 					}
 					// 移除非GROUP资源
-					if (!ResourceType.group.equals(resource.getType())) {
-						if (reIds.indexOf(resource.getId()) == -1) {
+					if (!ResourceType.group.equals(resource.getType()) && reIds.indexOf(resource.getId()) == -1) {
 							reIds.add(resource.getId());
-						}
 					}
 				}
 				// 移除被引用的资源
@@ -112,12 +110,15 @@ public class ResourceService {
 	public Map<String, String> loadUrlAuthorities() {
 		Map<String, String> urlAuthorities = new HashMap<String, String>();
 		for (Resource resource : loadResourcesByUrl()) {
-			if (!resource.isEnabled())
-				continue;
-			if (urlAuthorities.containsKey(resource.getValue()))
-				continue;
-			if (StringUtils.isNotBlank(resource.getAuthorities()))
-				urlAuthorities.put(resource.getValue(), resource.getAuthorities());
+			if (!resource.isEnabled()){
+                continue;
+            }
+			if (urlAuthorities.containsKey(resource.getValue())){
+                continue;
+            }
+			if (StringUtils.isNotBlank(resource.getAuthorities())){
+                urlAuthorities.put(resource.getValue(), resource.getAuthorities());
+            }
 		}
 		return urlAuthorities;
 	}

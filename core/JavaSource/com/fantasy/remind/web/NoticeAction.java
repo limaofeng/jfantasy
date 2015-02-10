@@ -3,15 +3,14 @@ package com.fantasy.remind.web;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.remind.bean.Model;
 import com.fantasy.remind.bean.Notice;
 import com.fantasy.remind.service.ModelService;
 import com.fantasy.remind.service.NoticeService;
-import net.sf.ehcache.search.expression.Not;
 
 import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 提醒 action
@@ -24,21 +23,13 @@ public class NoticeAction extends ActionSupport {
     @Resource
     private ModelService modelService;
 
-    public String index() throws Exception {
+    public String index(){
         this.search(new Pager<Notice>(),new ArrayList<PropertyFilter>());
         this.attrs.put("pager", this.attrs.get(ROOT));
         this.attrs.remove(ROOT);
         this.searchModel(new Pager<Model>(),new ArrayList<PropertyFilter>());
         this.attrs.put("models",this.attrs.get(ROOT));
         this.attrs.remove(ROOT);
-        Notice notice2=new Notice();
-        notice2.setModel(new Model("shuju"));
-        Map<String,String> map=new HashMap<String, String>();
-        map.put("key","123"+new Date().toString());
-        map.put("content","/web");
-        map.put("id","11");
-        notice2.setReplaceMap(JSON.serialize(map));
-        noticeService.save(notice2);
         return SUCCESS;
     }
 
@@ -59,7 +50,7 @@ public class NoticeAction extends ActionSupport {
         return JSONDATA;
     }
 
-    public String save(Notice notice) throws Exception {
+    public String save(Notice notice){
         this.noticeService.save(notice);
         return JSONDATA;
     }
@@ -78,7 +69,7 @@ public class NoticeAction extends ActionSupport {
         return JSONDATA;
     }
 
-    public String saveModel(Model model) throws Exception {
+    public String saveModel(Model model){
         this.modelService.save(model);
         return JSONDATA;
     }
@@ -96,7 +87,7 @@ public class NoticeAction extends ActionSupport {
         return JSONDATA;
     }
 
-    public String go(Long id) throws Exception {
+    public String go(Long id){
         Notice n=this.noticeService.get(id);
         n.setIsRead(true);
         this.noticeService.save(n);

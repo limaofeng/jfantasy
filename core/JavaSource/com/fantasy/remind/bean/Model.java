@@ -4,10 +4,10 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.commons.lang.StringUtils;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.type.TypeReference;
 
 import javax.persistence.*;
 import java.util.List;
@@ -115,7 +115,9 @@ public class Model extends BaseBusEntity {
             });
             this.avatar = fileDetails.isEmpty() ? null : fileDetails.get(0);
         }
-        if(this.avatar==null) return null;
+        if(this.avatar==null){
+            return null;
+        }
         return RegexpUtil.replace(this.avatar.getAbsolutePath(), "[.][a-zA-Z]{1,}$", "_250x153$0");
     }
 }

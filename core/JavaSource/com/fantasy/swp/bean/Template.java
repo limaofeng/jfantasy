@@ -1,6 +1,9 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.swp.bean.enums.PageType;
+import com.fantasy.system.bean.Website;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,22 +20,10 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SWP_TEMPLATE")
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "dataInferfaces","webSite"})
 public class Template extends BaseBusEntity {
 
     private static final long serialVersionUID = 6516821318292532274L;
-
-    public enum Type {
-        velocity("velocity"), freeMarker("freeMarker");
-        private String value;
-
-        private Type(String value) {
-            this.value = value;
-        }
-
-        public String getValue() {
-            return this.value;
-        }
-    }
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
@@ -45,26 +36,44 @@ public class Template extends BaseBusEntity {
     @Column(name = "NAME")
     private String name;
     /**
-     * 模板类型
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE")
-    private Type type;
-    /**
      * 描述
      */
     @Column(name = "DESCRIPTION")
     private String description;
     /**
+     * 站点
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WEBSITE_ID")
+    private Website webSite;
+    /**
      * 模板文件存放的位置
      */
-    @Column(name = "FILEPATH")
-    private String filePath;
+    @Lob
+    @Column(name = "CONTENT")
+    private String content;
     /**
      * 数据接口定义
      */
     @OneToMany(mappedBy = "template", fetch = FetchType.LAZY)
     private List<DataInferface> dataInferfaces;
+    /**
+     * 模版路径
+     */
+    @Column(name = "PATH", nullable = false, unique = true)
+    private String path;
+    /**
+     * 页面类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PAGE_TYPE")
+    private PageType pageType;
+    /**
+     * Key
+     */
+    @Column(name = "DATA_KEY")
+    private String dataKey;
+
 
     public Long getId() {
         return id;
@@ -90,27 +99,51 @@ public class Template extends BaseBusEntity {
         this.description = description;
     }
 
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public String getFilePath() {
-        return filePath;
-    }
-
-    public void setFilePath(String filePath) {
-        this.filePath = filePath;
-    }
-
     public List<DataInferface> getDataInferfaces() {
         return dataInferfaces;
     }
 
     public void setDataInferfaces(List<DataInferface> dataInferfaces) {
         this.dataInferfaces = dataInferfaces;
+    }
+
+    public Website getWebSite() {
+        return webSite;
+    }
+
+    public void setWebSite(Website webSite) {
+        this.webSite = webSite;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public PageType getPageType() {
+        return pageType;
+    }
+
+    public void setPageType(PageType pageType) {
+        this.pageType = pageType;
+    }
+
+    public String getDataKey() {
+        return dataKey;
+    }
+
+    public void setDataKey(String dataKey) {
+        this.dataKey = dataKey;
     }
 }

@@ -1,11 +1,11 @@
 package com.fantasy.framework.util.common;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.jdbc.support.JdbcUtils;
+
+import java.sql.Connection;
+import java.sql.SQLException;
 
 public abstract class JdbcUtil extends JdbcUtils {
 
@@ -13,8 +13,9 @@ public abstract class JdbcUtil extends JdbcUtils {
 
 	public static void rollback(Connection con) {
 		try {
-			if (con != null)
-				con.rollback();
+			if (con != null){
+                con.rollback();
+            }
 		} catch (SQLException e) {
 			logger.error(e.getMessage(), e);
 		}

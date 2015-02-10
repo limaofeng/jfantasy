@@ -33,6 +33,25 @@ public class Data extends BaseBusEntity {
         }
     }
 
+    /**
+     * 数据源
+     */
+    public enum DataSource{
+        db("数据库"),
+        func("方法"),
+        stat("静态");
+
+        private String value;
+
+        private DataSource (String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return this.value;
+        }
+    }
+
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -71,9 +90,18 @@ public class Data extends BaseBusEntity {
     @JoinColumn(name = "DATAINFERFACE_ID")
     private DataInferface dataInferface;
 
-    @Column(name = "VALUE", length = 2000)
+    @Lob
+    @Column(name = "VALUE")
     private String value;
 
+    @Column(name = "DESCRIPTION")
+    private String description;
+    /**
+     * 数据源
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "DATA_SOURCE",nullable = false)
+    private DataSource dataSource;
 
     public Long getId() {
         return id;
@@ -130,5 +158,21 @@ public class Data extends BaseBusEntity {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public DataSource getDataSource() {
+        return dataSource;
+    }
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 }

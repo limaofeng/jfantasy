@@ -1,6 +1,7 @@
 package com.fantasy.system.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,11 +11,11 @@ import javax.persistence.*;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2014-2-17 上午11:16:22
  */
 @Entity
 @Table(name = "SYS_SETTING", uniqueConstraints = {@UniqueConstraint(columnNames = {"WEBSITE_ID", "CODE"})})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Setting extends BaseBusEntity {
 
     private static final long serialVersionUID = 4751489388437713481L;

@@ -35,8 +35,9 @@ public class Serie {
 	}
 
 	public void setData(BigDecimal[] bigDecimals) {
-		for (BigDecimal f : bigDecimals)
-			addData(new Data(f));
+		for (BigDecimal f : bigDecimals){
+            addData(new Data(f));
+        }
 	}
 
 	public void setData(float[] fs) {
@@ -48,12 +49,14 @@ public class Serie {
 	}
 
 	public void setData(String p, float[] fs) {
-		for (float f : fs)
-			addData(new Data(p, f));
+		for (float f : fs){
+            addData(new Data(p, f));
+        }
 	}
 
 	public void setData(String[] names, float[] fs) {
-		for (int i = 0; i < names.length; i++)
-			addData(new Data(names[i], "y", fs[i]));
+		for (int i = 0; i < names.length; i++){
+            addData(new Data(names[i], "y", fs[i]));
+        }
 	}
 }

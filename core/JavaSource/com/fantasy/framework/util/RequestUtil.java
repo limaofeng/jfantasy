@@ -1,12 +1,10 @@
 package com.fantasy.framework.util;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.web.bind.ServletRequestUtils;
+import java.io.UnsupportedEncodingException;
 
 @Deprecated
 public class RequestUtil extends ServletRequestUtils {
@@ -19,11 +17,12 @@ public class RequestUtil extends ServletRequestUtils {
 
 			if ((arrayTemp != null) && (arrayTemp.length > 0)) {
 				for (int num = 0; num < arrayTemp.length; num++) {
-					if (num == arrayTemp.length - 1)
-						bufResult.append(arrayTemp[num]);
-					else {
-						bufResult.append(arrayTemp[num] + ",");
-					}
+					if (num == arrayTemp.length - 1){
+                        bufResult.append(arrayTemp[num]);
+                    }else {
+                        bufResult.append(arrayTemp[num] + ",");
+                    }
+
 				}
 			}
 			strResult = bufResult.toString();
@@ -39,8 +38,8 @@ public class RequestUtil extends ServletRequestUtils {
 		return str;
 	}
 
-	public static void main(String[] args) throws UnsupportedEncodingException {
+	/*public static void main(String[] args) throws UnsupportedEncodingException {
 		System.out.println(URLDecoder.decode("中文", "UTF-8"));
 		System.out.println(new String("中文".getBytes("8859_1"), "UTF-8"));
-	}
+	}*/
 }

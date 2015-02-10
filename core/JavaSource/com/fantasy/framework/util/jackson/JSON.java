@@ -1,18 +1,20 @@
 package com.fantasy.framework.util.jackson;
 
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.deserializer.DateDeserializer;
+import com.fantasy.framework.util.jackson.serializer.DateSerializer;
 import com.fantasy.framework.util.jackson.serializer.StringUnicodeSerializer;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.codehaus.jackson.JsonParser;
-import org.codehaus.jackson.map.DeserializationConfig;
-import org.codehaus.jackson.map.ObjectMapper;
-import org.codehaus.jackson.map.SerializationConfig;
-import org.codehaus.jackson.map.ser.CustomSerializerFactory;
-import org.codehaus.jackson.type.TypeReference;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -61,23 +63,22 @@ public class JSON {
             @Override
             public void callback(ObjectMapper objectMapper) {
                 // 当找不到对应的序列化器时 忽略此字段
-                objectMapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+                objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 // 允许非空字段
                 objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
                 // 允许单引号
                 objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
                 // 失败在未知属性
-                objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                //使Jackson JSON支持Unicode编码非ASCII字符
+                SimpleModule module = new SimpleModule();
+                module.addSerializer(String.class, new StringUnicodeSerializer());
+                module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
+                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
+                objectMapper.registerModule(module);
+                //设置null值不参与序列化(字段不被显示)
+//                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
-                CustomSerializerFactory serializerFactory = new HibernateAwareSerializerFactory();
-                serializerFactory.addSpecificMapping(String.class, new StringUnicodeSerializer());
-                objectMapper.setSerializerFactory(serializerFactory);
-
-                DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
-                SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
-
-                objectMapper.setDeserializationConfig(deserializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                objectMapper.setSerializationConfig(serializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
             }
         });
         // text 显示时不采用 unicode 中文的方式
@@ -85,19 +86,18 @@ public class JSON {
             @Override
             public void callback(ObjectMapper objectMapper) {
                 // 当找不到对应的序列化器时 忽略此字段
-                objectMapper.configure(SerializationConfig.Feature.FAIL_ON_EMPTY_BEANS, false);
+                objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 // 允许非空字段
                 objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
                 // 允许单引号
                 objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
                 // 失败在未知属性
-                objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                SimpleModule module = new SimpleModule();
+                module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
+                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
+                objectMapper.registerModule(module);
 
-                DeserializationConfig deserializationConfig = objectMapper.getDeserializationConfig();
-                SerializationConfig serializationConfig = objectMapper.getSerializationConfig();
-
-                objectMapper.setDeserializationConfig(deserializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-                objectMapper.setSerializationConfig(serializationConfig.withDateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
             }
         });
     }

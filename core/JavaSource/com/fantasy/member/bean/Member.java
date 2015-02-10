@@ -5,7 +5,8 @@ import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.UserGroup;
 import com.fantasy.security.userdetails.FantasyUserDetails;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -24,6 +25,7 @@ import java.util.List;
 @Entity
 @Table(name = "MEM_MEMBER")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "orders", "userGroups", "roles", "authorities", "favoriteGoods", "receivers" })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity implements FantasyUserDetails {
 
 	private static final long serialVersionUID = 3467098645319732251L;

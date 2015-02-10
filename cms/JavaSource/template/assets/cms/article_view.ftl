@@ -1,11 +1,7 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <div class="pad10L pad10R">
-    <div class="infobox warning-bg mrg10B">
-        <p><i class="glyph-icon icon-exclamation mrg10R"></i>To view the available grid system options &amp; configurations you can visit the <a title="Fides Admin Grid System documentation" target="_blank" href="grid.html">Fides Admin Grid System documentation</a> page.</p>
-    </div>
     <div class="example-box">
-    <@s.form id="saveForm" namespace="/cms" action="article_save" method="post" cssClass="center-margin">
-        <a href="javascript:;" class="btn small hover-black float-right back-page" title="" style="margin-top: -30px;margin-right: 30px">
+        <a href="javascript:;" class="btn small hover-black float-right back-page" title="" style="margin-top: -0px;margin-right: 30px">
             <i class="glyph-icon icon-reply"></i>
         </a>
         <div class="col-md-6 pad10T">
@@ -17,7 +13,7 @@
                 </div>
                 <div class="form-input col-md-10">
                     <div class="append-left">
-                        <@s.property value="art.title"/>
+                        <@s.textfield name="title" id="title" value="%{art.title}" disabled="true"/>
                     </div>
                 </div>
             </div>
@@ -29,7 +25,7 @@
                 </div>
                 <div class="form-input col-md-10">
                     <div class="append-left">
-                        <@s.property value="art.summary"/>
+                        <@s.textfield name="summary" id="summary" value="%{art.summary}" disabled="true"/>
                     </div>
                 </div>
             </div>
@@ -41,7 +37,7 @@
                 </div>
                 <div class="form-input col-md-10">
                     <div class="append-left">
-                        <@s.property value="art.keywords"/>
+                        <@s.textfield name="keywords" value="%{art.keywords}" disabled="true"/>
                     </div>
                 </div>
             </div>
@@ -54,7 +50,7 @@
                 </div>
                 <div class="form-input col-md-10 ">
                     <div class="append-left">
-                        <@s.property value="art.releaseDate"/>
+                        <input type="text" class="datepicker" data-date-format="yyyy-mm-dd" value="<@s.property value="art.releaseDate"/>" name="releaseDate" disabled="true"/>
                     </div>
                 </div>
             </div>
@@ -66,7 +62,7 @@
                 </div>
                 <div class="form-input col-md-10 ">
                     <div class="append-left">
-                        <@s.property value="art.author"/>
+                        <@s.textfield name="author" value="%{art.author}" disabled="true"/>
                     </div>
                 </div>
             </div>
@@ -87,8 +83,8 @@
         <div class="col-md-6 form-vertical">
             <div class="form-row">
                 <div class="form-label col-md-2"></div>
-                <div class="form-input col-md-10">
-                    <@s.img src="%{art.logoImage.absolutePath}" ratio="160x160" cssClass="img-thumbnail"/>
+                <div class="form-input col-md-10" id="imageUploader">
+                <@s.img src="%{art.articleImage.absolutePath}" ratio="160x160" cssClass="img-thumbnail"/>
                 </div>
             </div>
         </div>
@@ -98,33 +94,8 @@
                 </label>
             </div>
             <div class="form-input col-md-10">
-                <@s.textarea cssClass="ckeditor" name="content.content" cssStyle="width:900px;height:360px;"  value="%{art.content.content}" disabled="true"/>
+                <@s.textarea cssClass="ckeditor" name="content" cssStyle="width:900px;height:360px;"  value="%{art.content.text}" disabled="true"/>
             </div>
         </div>
-        <div class="form-row" style="text-align: center;">
-            <div>
-                <div style="float: left;padding-right: 50px;">
-                    <a href="javascript:void(0);" class="btn medium primary-bg radius-all-4 menu-save4"  onclick="$('#saveForm').submit();return false;" title="保存"  >
-                        <span class="glyph-icon icon-separator">
-                             <i class="glyph-icon icon-save"></i>
-                        </span>
-                         <span class="button-content">
-                             <@s.text name="operation.save"/>
-                         </span>
-                    </a>
-                </div>
-                <div style="float: left;">
-                    <a href="javascript:void(0);" class="btn medium primary-bg radius-all-4 switch menu-view back-page "  title="返回" >
-                        <span class="glyph-icon icon-separator">
-                              <i class="glyph-icon icon-reply"></i>
-                        </span>
-                         <span class="button-content">
-                             <@s.text name="operation.back"/>
-                         </span>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </@s.form>
     </div>
 </div>

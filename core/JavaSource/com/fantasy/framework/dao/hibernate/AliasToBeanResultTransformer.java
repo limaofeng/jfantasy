@@ -44,8 +44,9 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
     private Map<String, Type> propertyTypes = new HashMap<String, Type>();
 
     public AliasToBeanResultTransformer(Class<?> resultClass) {
-        if (resultClass == null)
+        if (resultClass == null){
             throw new IllegalArgumentException("resultClass cannot be null");
+        }
         this.resultClass = resultClass;
         this.propertyAccessor = new ChainedPropertyAccessor(new PropertyAccessor[]{PropertyAccessorFactory.getPropertyAccessor(resultClass, null), PropertyAccessorFactory.getPropertyAccessor("field")});
 
@@ -54,8 +55,9 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
             Column column = ClassUtil.getFieldGenericType(field, Column.class);
             propertyNames.put(column.name(), field.getName());
             Type type = getHibernateType(field.getType());
-            if (type != null)
+            if (type != null){
                 propertyTypes.put(column.name(), type);
+            }
         }
     }
 
@@ -117,8 +119,9 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
     }
 
     protected void custom(SQLQuery query) {
-        for (Map.Entry<String, Type> entry : propertyTypes.entrySet())
+        for (Map.Entry<String, Type> entry : propertyTypes.entrySet()){
             query.addScalar(entry.getKey(), entry.getValue());
+        }
     }
 
 }

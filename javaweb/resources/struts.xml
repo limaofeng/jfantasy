@@ -20,4 +20,6 @@
 
     <include file="struts/struts-attr.xml"/>
 
+	<include file="struts/struts-axis.xml"/>
+
 </struts>

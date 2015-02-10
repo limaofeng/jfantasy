@@ -18,8 +18,9 @@ public class HtmlConverter extends DefaultTypeConverter {
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (String.class.isAssignableFrom(toType)) {
             String html = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
-            if (StringUtil.isBlank(html))
+            if (StringUtil.isBlank(html)){
                 return html;
+            }
             String contextPath = ActionContext.getContext().getHttpRequest().getContextPath();
             TagNode tagNode = HtmlCleanerUtil.htmlCleaner(html);
             if (StringUtil.isNotBlank(contextPath)) {
@@ -31,8 +32,7 @@ public class HtmlConverter extends DefaultTypeConverter {
                 }
             }
             html = HtmlCleanerUtil.getAsString(HtmlCleanerUtil.findFristTagNode(tagNode, "//body"));
-            html = RegexpUtil.replace(html, "^<[?]xml version=\"1.0\" encoding=\"[a-zA-Z0-9_-]+\"[?]>(\\n)+", "");
-            html = RegexpUtil.replace(html, "^<body>", "");
+            html = RegexpUtil.replace(html, "^\n{0,}<body>", "");
             html = RegexpUtil.replace(html, "</body>$", "");
             return html;
         }

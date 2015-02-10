@@ -4,35 +4,53 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.file.ws.IFileUploadService;
 import com.fantasy.file.ws.dto.FileDTO;
+import com.fantasy.framework.util.common.BeanUtil;
+import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
-import com.fantasy.framework.ws.util.WebServiceUtil;
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axis2.context.MessageContext;
+import org.springframework.stereotype.Component;
 
 import javax.activation.DataHandler;
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.xml.ws.WebServiceException;
+import java.io.*;
 
-public class FileUploadWebService implements IFileUploadService{
+@Component
+public class FileUploadWebService implements IFileUploadService {
 
-	@Resource
-	private transient FileUploadService fileUploadService;
-	
-	@Override
-	public FileDTO upload(String fileName,String contentType, String dir,String attchmentID) throws IOException {
-		MessageContext msgCtx = MessageContext.getCurrentMessageContext();
+    @Resource
+    private transient FileUploadService fileUploadService;
+
+    public FileDTO uploadFile(String fileName, String contentType, String dir, String attchmentID) {
+        MessageContext msgCtx = MessageContext.getCurrentMessageContext();
         Attachments attachment = msgCtx.getAttachmentMap();
-		DataHandler dataHandler = attachment.getDataHandler(attchmentID);
+        System.out.println(attachment.getAllContentIDs());
+        DataHandler dataHandler = attachment.getDataHandler(attchmentID);
+        try {
+            File tmp = FileUtil.tmp();
+            dataHandler.writeTo(new FileOutputStream(tmp));
+            FileDetail fileDetail = fileUploadService.upload(tmp, contentType, fileName, dir);
+            FileUtil.delFile(tmp);
+            return BeanUtil.copyProperties(new FileDTO(), fileDetail);
+        } catch (Exception e) {
+            throw new WebServiceException(e.getMessage(), e);
+        }
+    }
 
-		File tmp = FileUtil.tmp();
-		dataHandler.writeTo(new FileOutputStream(tmp));
-
-        FileDetail fileDetail = fileUploadService.upload(tmp,contentType,fileName,dir);
-		FileUtil.delFile(tmp);
-		//查询上传文件对应的记录
-		return WebServiceUtil.toBean(fileDetail,FileDTO.class);
-	}
+    public String upload(DataHandler dataHandler,String fileName,String dir) {
+        try {
+            File tmp = FileUtil.tmp();
+            FileOutputStream out = new FileOutputStream(tmp);
+            dataHandler.writeTo(out);
+            StreamUtil.closeQuietly(out);
+            fileUploadService.upload(tmp, dataHandler.getContentType(), fileName, dir);
+            FileDetail fileDetail = fileUploadService.upload(tmp, dataHandler.getContentType(), fileName, dir);
+            FileUtil.delFile(tmp);
+            return fileDetail.getAbsolutePath();
+        }catch (IOException e){
+            throw new WebServiceException(e.getMessage(), e);
+        }
+    }
 
 }

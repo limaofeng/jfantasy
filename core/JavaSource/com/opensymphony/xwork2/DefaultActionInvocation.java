@@ -137,9 +137,9 @@ public class DefaultActionInvocation implements ActionInvocation {
     }
 
     public void setResultCode(String resultCode) {
-        if (isExecuted())
+        if (isExecuted()){
             throw new IllegalStateException("Result has already been executed.");
-
+        }
         this.resultCode = resultCode;
     }
 
@@ -339,10 +339,8 @@ public class DefaultActionInvocation implements ActionInvocation {
                             rootObject = action;
                         }
                     }
-                    if (rootObject == null) {
-                        if (action instanceof RequestAware) {
+                    if (rootObject == null && action instanceof RequestAware) {
                             rootObject = ClassUtil.getValue(action, "attrs");
-                        }
                     }
                     // 剥离formbean
                     ValueStack stack = this.getStack();
@@ -363,7 +361,7 @@ public class DefaultActionInvocation implements ActionInvocation {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(),e);
         } finally {
             UtilTimerStack.pop(timerKey);
         }

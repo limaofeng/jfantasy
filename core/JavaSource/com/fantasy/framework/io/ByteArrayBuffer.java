@@ -70,16 +70,18 @@ public class ByteArrayBuffer extends AbstractBuffer {
     }
 
     public void compact() {
-        if (isReadOnly())
+        if (isReadOnly()){
             throw new IllegalStateException("READONLY");
+        }
         int s = markIndex() >= 0 ? markIndex() : getIndex();
         if (s > 0) {
             int length = putIndex() - s;
             if (length > 0) {
                 System.arraycopy(this._bytes, s, this._bytes, 0, length);
             }
-            if (markIndex() > 0)
+            if (markIndex() > 0){
                 setMarkIndex(markIndex() - s);
+            }
             setGetIndex(getIndex() - s);
             setPutIndex(putIndex() - s);
         }
@@ -115,8 +117,10 @@ public class ByteArrayBuffer extends AbstractBuffer {
             byte b1 = this._bytes[i];
             bi--;
             byte b2 = b.peek(bi);
-            if (b1 != b2)
+            if (b1 != b2){
                 return false;
+            }
+
         }
         return true;
     }
@@ -132,9 +136,9 @@ public class ByteArrayBuffer extends AbstractBuffer {
 
         if ((this._hash != 0) && ((b instanceof AbstractBuffer))) {
             AbstractBuffer ab = (AbstractBuffer) b;
-            if ((ab._hash != 0) && (this._hash != ab._hash))
+            if ((ab._hash != 0) && (this._hash != ab._hash)){
                 return false;
-
+            }
         }
 
         int get = getIndex();
@@ -147,12 +151,15 @@ public class ByteArrayBuffer extends AbstractBuffer {
                 bi--;
                 byte b2 = b.peek(bi);
                 if (b1 != b2) {
-                    if ((97 <= b1) && (b1 <= 122))
+                    if ((97 <= b1) && (b1 <= 122)){
                         b1 = (byte) (b1 - 97 + 65);
-                    if ((97 <= b2) && (b2 <= 122))
+                    }
+                    if ((97 <= b2) && (b2 <= 122)){
                         b2 = (byte) (b2 - 97 + 65);
-                    if (b1 != b2)
+                    }
+                    if (b1 != b2){
                         return false;
+                    }
                 }
             }
         } else {
@@ -161,12 +168,17 @@ public class ByteArrayBuffer extends AbstractBuffer {
                 bi--;
                 byte b2 = barray[bi];
                 if (b1 != b2) {
-                    if ((97 <= b1) && (b1 <= 122))
+                    if ((97 <= b1) && (b1 <= 122)){
                         b1 = (byte) (b1 - 97 + 65);
-                    if ((97 <= b2) && (b2 <= 122))
+                    }
+                    if ((97 <= b2) && (b2 <= 122)){
                         b2 = (byte) (b2 - 97 + 65);
-                    if (b1 != b2)
+                    }
+
+                    if (b1 != b2){
                         return false;
+                    }
+
                 }
             }
         }
@@ -182,12 +194,14 @@ public class ByteArrayBuffer extends AbstractBuffer {
             int get = getIndex();
             for (int i = putIndex(); i-- > get; ) {
                 byte b = this._bytes[i];
-                if ((97 <= b) && (b <= 122))
+                if ((97 <= b) && (b <= 122)){
                     b = (byte) (b - 97 + 65);
+                }
                 this._hash = (31 * this._hash + b);
             }
-            if (this._hash == 0)
+            if (this._hash == 0){
                 this._hash = -1;
+            }
             this._hashGet = this._get;
             this._hashPut = this._put;
         }
@@ -250,12 +264,15 @@ public class ByteArrayBuffer extends AbstractBuffer {
     }
 
     public void wrap(byte[] b, int off, int len) {
-        if (b == null)
+        if (b == null){
             throw new IllegalArgumentException();
-        if (isReadOnly())
+        }
+        if (isReadOnly()){
             throw new IllegalStateException("READONLY");
-        if (isImmutable())
+        }
+        if (isImmutable()){
             throw new IllegalStateException("IMMUTABLE");
+        }
         this._bytes = b;
         clear();
         setGetIndex(off);
@@ -263,10 +280,12 @@ public class ByteArrayBuffer extends AbstractBuffer {
     }
 
     public void wrap(byte[] b) {
-        if (isReadOnly())
+        if (isReadOnly()){
             throw new IllegalStateException("READONLY");
-        if (isImmutable())
+        }
+        if (isImmutable()){
             throw new IllegalStateException("IMMUTABLE");
+        }
         this._bytes = b;
         setGetIndex(0);
         setPutIndex(b.length);
@@ -278,8 +297,9 @@ public class ByteArrayBuffer extends AbstractBuffer {
     }
 
     public int readFrom(InputStream in, int max) throws IOException {
-        if ((max < 0) || (max > space()))
+        if ((max < 0) || (max > space())){
             max = space();
+        }
         int p = putIndex();
 
         int len = 0;
@@ -287,19 +307,22 @@ public class ByteArrayBuffer extends AbstractBuffer {
         int available = max;
         while (total < max) {
             len = in.read(this._bytes, p, available);
-            if (len < 0)
+            if (len < 0){
                 break;
+            }
             if (len > 0) {
                 p += len;
                 total += len;
                 available -= len;
                 setPutIndex(p);
             }
-            if (in.available() <= 0)
+            if (in.available() <= 0){
                 break;
+            }
         }
-        if ((len < 0) && (total == 0))
+        if ((len < 0) && (total == 0)){
             return -1;
+        }
         return total;
     }
 

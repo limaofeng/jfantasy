@@ -4,6 +4,7 @@ import com.fantasy.framework.ws.util.PagerDTO;
 import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.mall.goods.ws.dto.GoodsCategoryDTO;
 import com.fantasy.mall.goods.ws.dto.GoodsDTO;
+import com.fantasy.mall.goods.ws.dto.GoodsPagerResult;
 
 public interface IGoodsService {
 
@@ -14,7 +15,7 @@ public interface IGoodsService {
      * @param filters 过滤条件(比较符+该字段类型+字段名称..具体看PropertyFilter对象)
      * @return pager对象(pager中PageItems是返回数据)
      */
-    public PagerDTO findPager(PagerDTO pager, PropertyFilterDTO[] filters);
+    public GoodsPagerResult findPager(PagerDTO pager, PropertyFilterDTO[] filters);
 
 
     /**

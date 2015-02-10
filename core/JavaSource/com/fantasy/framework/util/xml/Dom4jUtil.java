@@ -1,17 +1,14 @@
 package com.fantasy.framework.util.xml;
 
+import com.fantasy.framework.error.IgnoreException;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.dom4j.*;
+import org.dom4j.io.SAXReader;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.dom4j.Attribute;
-import org.dom4j.Document;
-import org.dom4j.Element;
-import org.dom4j.ProcessingInstruction;
-import org.dom4j.VisitorSupport;
-import org.dom4j.io.SAXReader;
 
 public final class Dom4jUtil {
 
@@ -22,7 +19,7 @@ public final class Dom4jUtil {
 			return new SAXReader().read(inputStream);
 		} catch (Exception e) {
 			logger.error(e);
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -31,22 +28,22 @@ public final class Dom4jUtil {
 			return new SAXReader().read(url);
 		} catch (Exception e) {
 			logger.error(e);
-			throw new RuntimeException(e.getMessage());
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
 	@SuppressWarnings("unchecked")
 	public static void readNode(Element root, String prefix) {
-		if (root == null)
-			return;
+		if (root == null){
+            return;
+        }
 		// 获取属性
 		List<Attribute> attrs = root.attributes();
 		if (attrs != null && attrs.size() > 0) {
-			System.err.print(prefix);
+			logger.error(prefix);
 			for (Attribute attr : attrs) {
-				System.err.print(attr.getValue() + " ");
+				logger.error(attr.getValue() + " ");
 			}
-			System.err.println();
 		}
 		// 获取他的子节点
 		List<Element> childNodes = root.elements();
@@ -56,28 +53,22 @@ public final class Dom4jUtil {
 		}
 	}
 
-	public static void main(String[] args) {
-		Document document = Dom4jUtil.reader(Dom4jUtil.class.getResourceAsStream("test.xml"));
-		document.accept(new MyVistor()) ;  
-//		Dom4jUtil.readNode(document.getRootElement(), "");
-	}
-
 	public static class MyVistor extends VisitorSupport {
 		public void visit(Attribute node) {
-			System.out.println("Attibute: " + node.getName() + "=" + node.getValue());
+			logger.debug("Attibute: " + node.getName() + "=" + node.getValue());
 		}
 
 		public void visit(Element node) {
 			if (node.isTextOnly()) {
-				System.out.println("Element: " + node.getName() + "=" + node.getText());
+				logger.debug("Element: " + node.getName() + "=" + node.getText());
 			} else {
-				System.out.println("root:"+node.getName());
+				logger.debug("root:"+node.getName());
 			}
 		}
 
 		@Override
 		public void visit(ProcessingInstruction node) {
-			System.out.println("PI:" + node.getTarget() + " " + node.getText());
+			logger.debug("PI:" + node.getTarget() + " " + node.getText());
 		}
 	}
 

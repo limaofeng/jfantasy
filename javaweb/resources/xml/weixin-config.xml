@@ -1,9 +1,0 @@
-<xml>
-    <appId>wx0e7cef7ad73417eb</appId>
-    <secret>e932af31311aeebf76e21a539d9f1944</secret>
-    <token>公众号Token</token>
-    <aesKey>公众号EncodingAESKey</aesKey>
-    <accessToken>可以不填写</accessToken>
-    <expiresIn>可以不填写</expiresIn>
-    <openId>o8W9zt_0puksLdwJlqTGXdH9ViRU</openId>
-</xml>

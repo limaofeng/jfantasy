@@ -1,11 +1,11 @@
 package com.fantasy.framework.lucene.handler;
 
+import com.fantasy.framework.lucene.mapper.DataType;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.sql.Timestamp;
 import java.util.Date;
-
-import com.fantasy.framework.lucene.mapper.DataType;
 
 public abstract class AbstractFieldHandler implements FieldHandler {
 	protected static final String JOIN = ";";
@@ -28,8 +28,9 @@ public abstract class AbstractFieldHandler implements FieldHandler {
 			}
 		} else if (DataType.isTimestamp(type)) {
 			Timestamp[] arr = (Timestamp[]) (Timestamp[]) value;
-			for (Timestamp e : arr)
-				sb.append(e.getTime()).append(";");
+			for (Timestamp e : arr){
+                sb.append(e.getTime()).append(";");
+            }
 		} else {
 			int len = Array.getLength(value);
 			for (int i = 0; i < len; i++) {

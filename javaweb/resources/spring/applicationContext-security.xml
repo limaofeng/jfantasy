@@ -28,7 +28,7 @@
     <!-- 忘记密码-->
     <s:http pattern="/findpwd/retrievePassword.do" security="none"/>
     <!--微信请求项目地址过滤-->
-    <s:http pattern="/weixin/client/**" security="none"/>
+    <s:http pattern="/weixin/message/*" security="none"/>
 
     <!-- 管理端登陆配置 -->
     <s:http pattern="/**" auto-config="true" use-expressions="true" entry-point-ref="authenticationEntryPoint">

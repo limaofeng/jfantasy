@@ -1,6 +1,7 @@
 package com.fantasy.framework.util.common;
 
 import com.fantasy.framework.dao.mybatis.keygen.GUIDKeyGenerator;
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
@@ -64,7 +65,7 @@ public final class ObjectUtil {
             }
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
-            throw new RuntimeException(e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -81,8 +82,9 @@ public final class ObjectUtil {
         AtomicReference<StringBuffer> stringBuffer = new AtomicReference<StringBuffer>(new StringBuffer());
         for (T t : objs) {
             String temp = StringUtil.defaultValue(OgnlUtil.getInstance().getValue(fieldName, t), "");
-            if (StringUtil.isBlank(temp))
+            if (StringUtil.isBlank(temp)){
                 continue;
+            }
             stringBuffer.get().append(sign).append(temp);
         }
         return stringBuffer.get().toString().replaceFirst(sign, "");
@@ -142,8 +144,9 @@ public final class ObjectUtil {
         AtomicReference<StringBuffer> stringBuffer = new AtomicReference<StringBuffer>(new StringBuffer());
         for (T t : objs) {
             String temp = StringUtil.isBlank(fieldName) ? t.toString() : StringUtil.defaultValue(OgnlUtil.getInstance().getValue(fieldName, t), "");
-            if (StringUtil.isBlank(temp))
+            if (StringUtil.isBlank(temp)){
                 continue;
+            }
             stringBuffer.get().append(sign).append(temp);
         }
         return stringBuffer.get().toString().replaceFirst(sign, "");
@@ -274,7 +277,7 @@ public final class ObjectUtil {
         }
         for (T t : list) {
             Object v = OgnlUtil.getInstance().getValue(field, t);
-            if (value.equals(v)) {
+            if (v == value || value.equals(v)) {
                 return t;
             }
         }
@@ -282,13 +285,15 @@ public final class ObjectUtil {
     }
 
     public static <T> T find(T[] list, String field, Object value) {
-        if (list == null)
+        if (list == null){
             return null;
+        }
         for (T t : list) {
-            if (t == null)
+            if (t == null){
                 continue;
+            }
             Object v = OgnlUtil.getInstance().getValue(field, t);
-            if (value.equals(v)) {
+            if (v == value || value.equals(v)) {
                 return t;
             }
         }
@@ -307,10 +312,12 @@ public final class ObjectUtil {
     public static <T> int indexOf(T[] objs, T o) {
         for (int i = 0; i < objs.length; i++) {
             if (ClassUtil.isList(o)) {
-                if (!ClassUtil.isList(objs[i]) || ((List<Object>) o).size() == 0)
+                if (!ClassUtil.isList(objs[i]) || ((List<Object>) o).size() == 0){
                     continue;
-                if (((List<Object>) o).size() != ((List<Object>) objs[i]).size())
+                }
+                if (((List<Object>) o).size() != ((List<Object>) objs[i]).size()){
                     continue;
+                }
                 int num = 0;
                 for (Object obj : (List<Object>) o) {
                     if (indexOf((List<Object>) objs[i], obj) > -1) {
@@ -321,8 +328,10 @@ public final class ObjectUtil {
                     return i;
                 }
             } else {
-                if (objs[i].equals(o))
+                if (objs[i].equals(o)){
                     return i;
+                }
+
             }
         }
         return -1;
@@ -335,8 +344,9 @@ public final class ObjectUtil {
     public static <T> int indexOf(List<T> objs, T obj, String property) {
         for (int i = 0; i < objs.size(); i++) {
             Object value = ClassUtil.getValue(objs.get(i), property);
-            if (isNull(value))
+            if (isNull(value)){
                 continue;
+            }
             if (value.equals(ClassUtil.getValue(obj, property))) {
                 return i;
             }
@@ -362,7 +372,7 @@ public final class ObjectUtil {
         try {
             BeanUtil.setValue(obj, fieldName, value);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new IgnoreException(e.getMessage());
         }
     }
 
@@ -451,9 +461,9 @@ public final class ObjectUtil {
             return -1;
         }
         Object[] ary = {f1, f2};
-        if (((f1 instanceof String)) && ((f2 instanceof String)))
+        if (((f1 instanceof String)) && ((f2 instanceof String))){
             Arrays.sort(ary, Collator.getInstance(Locale.CHINA));
-        else {
+        } else {
             Arrays.sort(ary);
         }
         if (ary[0].equals(f1)) {
@@ -481,8 +491,9 @@ public final class ObjectUtil {
         Map<String, Object> rootMap = new HashMap<String, Object>();
         Property[] properties = ClassUtil.getPropertys(data);
         for (Property property : properties) {
-            if (property.isRead())
+            if (property.isRead()){
                 rootMap.put(property.getName(), property.getValue(data));
+            }
         }
         return rootMap;
     }
@@ -515,9 +526,9 @@ public final class ObjectUtil {
     public static <T> void join(List<T> dest, List<T> orig, String property) {
         List<T> news = new ArrayList<T>();
         for (T o : orig) {
-            if (StringUtil.isNotBlank(property) && (indexOf(dest, o, property) == -1))
+            if (StringUtil.isNotBlank(property) && (indexOf(dest, o, property) == -1)){
                 news.add(o);
-            else if (dest.indexOf(o) == -1) {
+            }else if (dest.indexOf(o) == -1) {
                 news.add(o);
             }
         }
@@ -527,9 +538,9 @@ public final class ObjectUtil {
     public static <T> void join(List<T> dest, List<T> orig, Expression exper) {
         List<T> news = new ArrayList<T>();
         for (T o : orig) {
-            if (isNotNull(exper) && (indexOf(dest, exper, o) == -1))
+            if (isNotNull(exper) && (indexOf(dest, exper, o) == -1)){
                 news.add(o);
-            else if (dest.indexOf(o) == -1) {
+            }else if (dest.indexOf(o) == -1) {
                 news.add(o);
             }
         }
@@ -551,12 +562,13 @@ public final class ObjectUtil {
      * @return boolean
      */
     public static <T> Boolean exists(List<T> list, Object object) {
-        for (Object t : list)
+        for (Object t : list){
             if (t.getClass().isEnum() && t.toString().equals(object)) {
                 return true;
             } else if (t.equals(object)) {
                 return true;
             }
+        }
         return false;
     }
 

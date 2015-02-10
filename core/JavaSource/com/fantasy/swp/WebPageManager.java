@@ -38,7 +38,7 @@ public class WebPageManager/* implements InitializingBean, ApplicationListener<A
 
 	private Map<String, FileManager> fileManagers = new HashMap<String, FileManager>();
 
-	private Map<String, PageWriter> pageWriters = new HashMap<String, PageWriter>();
+	private Map<String, PageService> pageWriters = new HashMap<String, PageService>();
 
 	@SuppressWarnings("unchecked")
 	private Map<String, Class> pageDataClazzs = new HashMap<String, Class>();

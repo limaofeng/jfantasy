@@ -1,5 +1,7 @@
 package com.fantasy.file.interceptor;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -11,19 +13,21 @@ import com.fantasy.file.bean.FileDetail;
 @Aspect
 public class WriteFileInterceptor {
 
+    private static final Log LOGGER = LogFactory.getLog(WriteFileInterceptor.class);
+
 	@After("execution(public void com.fantasy.file.FileManager.writeFile(java.lang.String,java.io.File))")
 	public void writeFile(JoinPoint point) throws Throwable {
-		System.out.println(point.getTarget());
-		System.out.println(point.getKind());
+        LOGGER.debug(point.getTarget());
+		LOGGER.debug(point.getKind());
 		for(int i=0;i<point.getArgs().length;i++){
-			System.out.println(point.getArgs()[i]);
+			LOGGER.debug(point.getArgs()[i]);
 		}
 		FileContext fileContext = FileContext.getContext();
 		FileDetail fileDetail = fileContext.peek();
 		if (fileDetail == null) {
 			//File file = ((File) pjp.getArgs()[1]);
 //			Object fm = point.getTarget();
-			System.out.println("拼装临时 FileDetail 对象");
+			LOGGER.debug("拼装临时 FileDetail 对象");
 		}
 	}
 

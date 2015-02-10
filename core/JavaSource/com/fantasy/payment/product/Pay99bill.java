@@ -1,12 +1,13 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.order.OrderDetails;
+import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -29,54 +30,27 @@ public class Pay99bill extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPaymentSn(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String orderId = httpServletRequest.getParameter("orderId");
-        if (StringUtils.isEmpty(orderId)) {
-            return null;
-        }
-        return orderId;
-    }
+    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+        PaymentContext context = PaymentContext.getContext();
+        PaymentConfig paymentConfig = context.getPaymentConfig();
+        OrderDetails orderDetails = context.getOrderDetails();
+        Payment payment = context.getPayment();
 
-    @Override
-    public BigDecimal getPaymentAmount(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return null;
-        }
-        String payAmount = httpServletRequest.getParameter("payAmount");
-        if (StringUtils.isEmpty(payAmount)) {
-            return null;
-        }
-        return new BigDecimal(payAmount);
-    }
-
-    public boolean isPaySuccess(HttpServletRequest httpServletRequest) {
-        if (httpServletRequest == null) {
-            return false;
-        }
-        String payResult = httpServletRequest.getParameter("payResult");
-        return StringUtils.equals(payResult, "10");
-    }
-
-    @Override
-    public Map<String, String> getParameterMap(PaymentConfig paymentConfig, String paymentSn, BigDecimal paymentAmount, HttpServletRequest httpServletRequest) {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         String dateString = simpleDateFormat.format(new Date());
-        String totalAmountString = paymentAmount.multiply(new BigDecimal(100)).setScale(0).toString();
+        String totalAmountString = String.format("%.2f", orderDetails.getPayableFee());
 
         String inputCharset = "1";// 字符集编码（1：UTF-8、2：GBK、3：GB2312）
-        String bgUrl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String bgUrl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + payment.getSn();// 回调处理URL
         String version = "v2.0";// 网关版本
         String language = "1";// 显示语言种类（1：中文）
         String signType = "1";// 签名类型（1：MD5）
         String merchantAcctId = paymentConfig.getBargainorId();// 收款方账号
-        AtomicReference<String> orderId = new AtomicReference<String>(paymentSn);// 支付编号
+        AtomicReference<String> orderId = new AtomicReference<String>(payment.getSn());// 支付编号
         AtomicReference<String> orderAmount = new AtomicReference<String>(totalAmountString);// 总金额（单位：分）
         AtomicReference<String> orderTime = new AtomicReference<String>(dateString);// 订单提交时间
-        AtomicReference<String> productName = new AtomicReference<String>(paymentSn);// 商品名称
-        AtomicReference<String> productDesc = new AtomicReference<String>(paymentSn);// 商品描述
+        AtomicReference<String> productName = new AtomicReference<String>(payment.getSn());// 商品名称
+        AtomicReference<String> productDesc = new AtomicReference<String>(payment.getSn());// 商品描述
         String payType = "00";// 支付方式（00：显示所有支付方式、10：只显示银行卡支付方式、11：只显示电话银行支付方式、12：只显示快钱账户支付方式、13：只显示线下支付方式、14：只显示B2B支付方式）
         String redoFlag = "0";// 同一订单重复提交（1：禁止、0：允许）
         String key = paymentConfig.getBargainorKey();// 密钥
@@ -120,25 +94,26 @@ public class Pay99bill extends AbstractPaymentProduct {
     }
 
     @Override
-    public boolean verifySign(PaymentConfig paymentConfig, HttpServletRequest httpServletRequest) {
+    public boolean verifySign(Map<String, String> parameters) {
+        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 获取参数
-        String merchantAcctId = httpServletRequest.getParameter("merchantAcctId");
-        String version = httpServletRequest.getParameter("version");
-        String language = httpServletRequest.getParameter("language");
-        String signType = httpServletRequest.getParameter("signType");
-        String payType = httpServletRequest.getParameter("payType");
-        String bankId = httpServletRequest.getParameter("bankId");
-        String orderId = httpServletRequest.getParameter("orderId");
-        String orderTime = httpServletRequest.getParameter("orderTime");
-        String orderAmount = httpServletRequest.getParameter("orderAmount");
-        String dealId = httpServletRequest.getParameter("dealId");
-        String bankDealId = httpServletRequest.getParameter("bankDealId");
-        String dealTime = httpServletRequest.getParameter("dealTime");
-        String payAmount = httpServletRequest.getParameter("payAmount");
-        String fee = httpServletRequest.getParameter("fee");
-        String payResult = httpServletRequest.getParameter("payResult");
-        String errCode = httpServletRequest.getParameter("errCode");
-        String signMsg = httpServletRequest.getParameter("signMsg");
+        String merchantAcctId = parameters.get("merchantAcctId");
+        String version = parameters.get("version");
+        String language = parameters.get("language");
+        String signType = parameters.get("signType");
+        String payType = parameters.get("payType");
+        String bankId = parameters.get("bankId");
+        String orderId = parameters.get("orderId");
+        String orderTime = parameters.get("orderTime");
+        String orderAmount = parameters.get("orderAmount");
+        String dealId = parameters.get("dealId");
+        String bankDealId = parameters.get("bankDealId");
+        String dealTime = parameters.get("dealTime");
+        String payAmount = parameters.get("payAmount");
+        String fee = parameters.get("fee");
+        String payResult = parameters.get("payResult");
+        String errCode = parameters.get("errCode");
+        String signMsg = parameters.get("signMsg");
 
         // 验证支付签名
         Map<String, String> signMap = new LinkedHashMap<String, String>();
@@ -163,13 +138,20 @@ public class Pay99bill extends AbstractPaymentProduct {
     }
 
     @Override
-    public String getPaynotifyMessage() {
+    public String getPaynotifyMessage(String paymentSn) {
         return null;
     }
 
     @Override
     public String getPayreturnMessage(String paymentSn) {
-        return "<result>1</result><redirecturl>" + SettingUtil.get("website", "ShopUrl") + RESULT_URL + "?paymentsn=" + paymentSn + "</redirecturl>";
+        return "<result>1</result><redirecturl>" + PaymentContext.getContext().getShowPaymentUrl(paymentSn) + "</redirecturl>";
+    }
+
+    @Override
+    public PayResult parsePayResult(Map<String, String> parameters) {
+        String payResult = parameters.get("payResult");
+        StringUtils.equals(payResult, "10");
+        return null;
     }
 
 }

@@ -1,51 +1,28 @@
 package com.fantasy.framework.ws.axis2.handlers;
 
-import org.apache.axiom.soap.SOAPEnvelope;
+import com.fantasy.axis.bean.Message;
+import com.fantasy.axis.service.MessageService;
+import com.fantasy.framework.spring.SpringContextUtil;
+import org.apache.axiom.util.UIDGenerator;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.engine.Handler;
 import org.apache.axis2.handlers.AbstractHandler;
-import org.apache.axis2.transport.http.HTTPConstants;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 public class LogHandler extends AbstractHandler implements Handler {
-	private static final Log log = LogFactory.getLog(LogHandler.class);
-	private String name;
 
-	public String getName() {
-		return this.name;
-	}
+    private MessageService messageService;
 
-	public Handler.InvocationResponse invoke(MessageContext msgContext) throws AxisFault {
-		HttpServletRequest request = (HttpServletRequest) msgContext.getProperty(HTTPConstants.MC_HTTP_SERVLETREQUEST);
-		HttpServletResponse response = (HttpServletResponse) msgContext.getProperty(HTTPConstants.MC_HTTP_SERVLETRESPONSE);
-		System.out.println("******************************************");
-		System.out.println("response:" + response);
-		System.out.println("request:" + request);
-		System.out.println("REMOTE_ADDR:" + msgContext.getProperty("REMOTE_ADDR"));
-		System.out.println("******************************************");
+    public Handler.InvocationResponse invoke(MessageContext msgContext) throws AxisFault {
+        //如果没有 MessageID, 设置一个新的id
+        if (msgContext.getFLOW() == MessageContext.IN_FLOW && msgContext.getMessageID() == null) {
+            msgContext.setMessageID(UIDGenerator.generateURNString());
+        }
+        if (messageService == null) {
+            messageService = SpringContextUtil.getBeanByType(MessageService.class);
+        }
+        messageService.log(msgContext, Message.Type.server);
+        return Handler.InvocationResponse.CONTINUE;
+    }
 
-		log.info(msgContext.getEnvelope().toString());
-
-		SOAPEnvelope envelope = msgContext.getEnvelope();
-		try {
-			if (request == null)
-				System.out.println(envelope);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return Handler.InvocationResponse.CONTINUE;
-	}
-
-	public void revoke(MessageContext msgContext) {
-		log.info(msgContext.getEnvelope().toString());
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
 }

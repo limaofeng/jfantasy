@@ -5,13 +5,14 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.userdetails.FantasyUserDetails;
 import com.fantasy.system.bean.Website;
-import org.codehaus.jackson.JsonGenerator;
-import org.codehaus.jackson.JsonProcessingException;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
-import org.codehaus.jackson.map.JsonSerializer;
-import org.codehaus.jackson.map.SerializerProvider;
-import org.codehaus.jackson.map.annotate.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
@@ -25,6 +26,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "userGroups", "password", "menus", "authorities" ,"logoImageStore"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements FantasyUserDetails {
 
 	private static final long serialVersionUID = 5507435998232223911L;
@@ -224,11 +226,15 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 	public List<Menu> getMenus() {
 		if (this.menus == null) {
 			this.menus = new ArrayList<Menu>();
-			for (Role role : this.getRoles()) {
-				ObjectUtil.join(this.menus, role.getMenus(), "id");
+			if(this.getRoles() != null) {
+				for (Role role : this.getRoles()) {
+					ObjectUtil.join(this.menus, role.getMenus(), "id");
+				}
 			}
-			for (UserGroup userGroup : this.getUserGroups()) {
-				ObjectUtil.join(this.menus, userGroup.getMenus(), "id");
+			if(this.getUserGroups() != null) {
+				for (UserGroup userGroup : this.getUserGroups()) {
+					ObjectUtil.join(this.menus, userGroup.getMenus(), "id");
+				}
 			}
 		}
 		return this.menus;

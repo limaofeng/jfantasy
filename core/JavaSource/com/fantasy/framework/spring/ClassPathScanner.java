@@ -41,16 +41,20 @@ public class ClassPathScanner implements ResourceLoaderAware {
         return instance;
     }
 
+    private final static String CLASSPATH = "classpath*:";
+
     public Set<String> findTargetClassNames(String basepackage) {
         Set<String> candidates = new LinkedHashSet<String>();
         try {
-            String packageSearchPath = "classpath*:" + ClassUtil.convertClassNameToResourcePath(basepackage) + "/" + this.resourcePattern;
+            String packageSearchPath = CLASSPATH + ClassUtil.convertClassNameToResourcePath(basepackage) + "/" + this.resourcePattern;
             Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
             for (Resource resource : resources) {
                 MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
                 String clazzName = metadataReader.getClassMetadata().getClassName();
                 candidates.add(clazzName);
-                logger.debug("Find Class " + clazzName);
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Find Class : " + clazzName);
+                }
             }
         } catch (IOException ex) {
             throw new BeanDefinitionStoreException("I/O failure during classpath scanning", ex);
@@ -73,8 +77,9 @@ public class ClassPathScanner implements ResourceLoaderAware {
             Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
             for (Resource resource : resources) {
                 MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
-                if (!metadataReader.getAnnotationMetadata().hasAnnotation(anno.getName()))
+                if (!metadataReader.getAnnotationMetadata().hasAnnotation(anno.getName())) {
                     continue;
+                }
                 try {
                     String clazzName = metadataReader.getClassMetadata().getClassName();
                     candidates.add(Class.forName(clazzName));
@@ -83,7 +88,7 @@ public class ClassPathScanner implements ResourceLoaderAware {
                 }
             }
         } catch (IOException ex) {
-            throw new BeanDefinitionStoreException("I/O failure during classpath scanning", ex);
+            throw new BeanDefinitionStoreException("I/O failure during classpath scanning", ex);//NOSONAR
         }
         return candidates;
     }
@@ -110,15 +115,17 @@ public class ClassPathScanner implements ResourceLoaderAware {
             for (Resource resource : resources) {
                 MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
                 ClassMetadata classMetadata = metadataReader.getClassMetadata();
-                if (classMetadata.isInterface())
+                if (classMetadata.isInterface()) {
                     continue;
+                }
                 String clazzName = metadataReader.getClassMetadata().getClassName();
                 try {
                     Class<?> clazz = Class.forName(clazzName);
-                    if (interfaceClass.isAssignableFrom(clazz))
+                    if (interfaceClass.isAssignableFrom(clazz)) {
                         candidates.add(clazz);
+                    }
                 } catch (ClassNotFoundException localClassNotFoundException) {
-                    localClassNotFoundException.printStackTrace();
+                    logger.error(localClassNotFoundException.getMessage(), localClassNotFoundException);
                 } catch (NoClassDefFoundError e) {
                     logger.error(e.getMessage(), e);
                 }

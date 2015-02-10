@@ -21,7 +21,6 @@ public class NumberUtil {
 	private final static byte[] hex = "0123456789ABCDEF".getBytes();
 	public static final int INTEGER_MAX = 99999;
 	private static Random random = new Random();
-
 	public static int randomInt() {
 		return random.nextInt();
 	}
@@ -156,10 +155,12 @@ public class NumberUtil {
 	 * @return {int}
 	 */
 	private static int parse(char c) {
-		if (c >= 'a')
-			return (c - 'a' + 10) & 0x0f;
-		if (c >= 'A')
-			return (c - 'A' + 10) & 0x0f;
+		if (c >= 'a'){
+            return (c - 'a' + 10) & 0x0f;
+        }
+		if (c >= 'A'){
+            return (c - 'A' + 10) & 0x0f;
+        }
 		return (c - '0') & 0x0f;
 	}
 
@@ -259,11 +260,11 @@ public class NumberUtil {
 			chinese = chinese.replaceAll(numberChinese[0] + "{1,}", numberChinese[0]);// 多个零改写为零
 			chinese = chinese.replaceAll(numberChinese[0] + unitChinese[0], unitChinese[0]);// 零元改写为元
 			chinese = chinese.replaceAll("^" + unitChinese[0], "");// 以元打头的去掉
-			chinese += "00".equals(number) ? unitChinese[8] : ((numberChinese[Integer.valueOf(number.substring(0, 1))] + (number.substring(0, 1).equals("0") ? "" : unitChinese[6])) + (number.substring(1).equals("0") ? "" : (numberChinese[Integer.valueOf(number.substring(1))] + unitChinese[7])));
+			chinese += "00".equals(number) ? unitChinese[8] : ((numberChinese[Integer.valueOf(number.substring(0, 1))] + ("0".equals(number.substring(0, 1)) ? "" : unitChinese[6])) + ("0".equals(number.substring(1)) ? "" : (numberChinese[Integer.valueOf(number.substring(1))] + unitChinese[7])));
 		}
 		return chinese.replaceAll("^" + numberChinese[0], "");// 以零打头的去掉
 	}
-
+/*
 	public static void main(String[] args) {
 
 		System.out.println(percent(23d,123d));
@@ -272,5 +273,5 @@ public class NumberUtil {
 		System.out.println(toRMB("11"));
 
 		System.out.println(toRMB("11010001000.11"));
-	}
+	}*/
 }

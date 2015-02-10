@@ -74,7 +74,7 @@
                 $(this).attr('href', $(this).data('href') + '?categoryCode=' + categoryCode);
             }
 
-        }).target('after:#page-content');
+        });
 
         $("#batchMove").click(function(){
             moveCategoryTree.setJSON(categoryTree.getNodes());
@@ -117,7 +117,7 @@
 <div id="searchFormPanel" class="button-panel pad5A">
 <@s.form id="searchForm" namespace="/cms/article" action="search" method="post">
     <@s.hidden name="EQS_category.code" value="%{category.code}"/>
-    <a title="<@s.text name='operation.add.article' />" class="btn medium primary-bg dd-add" href="<@s.url namespace="/cms/article" action="article_add"/>" >
+    <a title="<@s.text name='operation.add.article' />" class="btn medium primary-bg dd-add" href="<@s.url namespace="/cms/article" action="article_add"/>" target="after:closest('#page-content')">
         <span class="button-content">
             <i class="glyph-icon icon-plus float-left"></i>
             <@s.text name='operation.add.article' />

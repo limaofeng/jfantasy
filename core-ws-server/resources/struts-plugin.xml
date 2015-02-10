@@ -1,0 +1,22 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+    <!-- axis webService 接口管理 -->
+    <package name="axis-service" extends="fantasy-default" namespace="/axis">
+        <!-- 列表页 -->
+        <action name="index" class="com.fantasy.axis.web.MessageAction" method="index">
+            <result type="freemarker">/template/%{pageTheme}/axis/message.ftl</result>
+        </action>
+
+        <!-- search -->
+        <action name="search" class="com.fantasy.axis.web.MessageAction" method="search"/>
+        <!-- view 查看 -->
+        <action name="view" class="com.fantasy.axis.web.MessageAction" method="view">
+            <result type="freemarker">/template/%{pageTheme}/axis/message_view.ftl</result>
+        </action>
+
+        <action name="delete" class="com.fantasy.axis.web.MessageAction" method="delete"/>
+    </package>
+
+</struts>

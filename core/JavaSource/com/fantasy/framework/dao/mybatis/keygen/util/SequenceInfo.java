@@ -73,9 +73,9 @@ public class SequenceInfo {
      */
     public void retrieveFromDB() {
         long keyFromDB;
-        if ((this.service.exists(this.keyName)) || (this.nextKey > this.keyMax))
+        if ((this.service.exists(this.keyName)) || (this.nextKey > this.keyMax)){
             keyFromDB = getKeyinfo(this.keyName, this.poolSize);
-        else {
+        }else {
             keyFromDB = createKey(this.keyName, this.poolSize);
         }
         this.keyMax = keyFromDB;

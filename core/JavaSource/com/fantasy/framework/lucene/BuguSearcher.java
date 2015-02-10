@@ -273,8 +273,9 @@ public abstract class BuguSearcher<T> {
 					} catch (Exception ex) {
 						logger.error("Something is wrong when getting the highlighter result", ex);
 					}
-					if (!StringUtil.isEmpty(result))
-						FieldUtil.set(obj, field, result);
+					if (!StringUtil.isEmpty(result)){
+                        FieldUtil.set(obj, field, result);
+                    }
 				}
 			}
 		}

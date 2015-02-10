@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.reflect;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import net.sf.cglib.reflect.FastClass;
@@ -109,17 +110,18 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return this.clazz.newInstance();
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
 	public T newInstance(Object object) {
 		try {
-			if (object == null)
-				return newInstance();
+			if (object == null){
+                return newInstance();
+            }
 			return newInstance(object.getClass(), object);
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -127,7 +129,7 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return this.constructors.get(type).newInstance(new Object[] { object });
 		} catch (Exception e) {
-			throw new RuntimeException(e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -144,8 +146,9 @@ public class FastClasses<T> implements IClass<T> {
 
 	public MethodProxy getMethod(String methodName) {
 		MethodProxy methodProxy = (MethodProxy) this.methodProxys.get(methodName + "()");
-		if (ObjectUtil.isNotNull(methodProxy))
-			return methodProxy;
+		if (ObjectUtil.isNotNull(methodProxy)){
+            return methodProxy;
+        }
 		for (Map.Entry<String, MethodProxy> entry : this.methodProxys.entrySet()) {
 			if (entry.getKey().equals(methodName) || entry.getKey().startsWith(methodName + "(")) {
 				return entry.getValue();
@@ -170,26 +173,28 @@ public class FastClasses<T> implements IClass<T> {
 
 	public void setValue(Object target, String name, Object value) {
 		Field field = null;
-		if (!this.fields.containsKey(name))
-			try {
-				field = ClassUtil.getDeclaredField(this.fastClass.getJavaClass(), name);
-				if (!field.isAccessible()) {
-					field.setAccessible(true);
-				}
-				this.fields.put(name, field);
-			} catch (Exception e) {
-				logger.error(e);
-				this.fields.put(name, field);
-			}
-		else
-			field = (Field) this.fields.get(name);
+		if (!this.fields.containsKey(name)){
+            try {
+                field = ClassUtil.getDeclaredField(this.fastClass.getJavaClass(), name);
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
+                this.fields.put(name, field);
+            } catch (Exception e) {
+                logger.error(e);
+                this.fields.put(name, field);
+            }
+        }else{
+            field = (Field) this.fields.get(name);
+        }
 		try {
-			if (field != null)
-				field.set(target, value);
-			else
-				throw new Exception("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!");
+			if (field != null) {
+                field.set(target, value);
+            }else{
+                throw new IgnoreException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!");
+            }
 		} catch (Exception e) {
-			throw new RuntimeException(e.getMessage(), e);
+			throw new IgnoreException(e.getMessage());
 		}
 	}
 
@@ -212,17 +217,18 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return field != null ? field.get(target) : null;
 		} catch (Exception ex) {
-			throw new RuntimeException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!", ex);
+			throw new IgnoreException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!"+ex.getMessage());
 		}
 	}
 
 	public T newInstance(Class<?>[] parameterTypes, Object[] parameters) {
-		if (parameterTypes.length == 0)
-			return newInstance();
+		if (parameterTypes.length == 0){
+            return newInstance();
+        }
 		if (parameterTypes.length == 1) {
 			return newInstance(parameterTypes[0], parameters[0]);
 		}
-		throw new RuntimeException("还不支持多个参数的构造器");
+		throw new IgnoreException("还不支持多个参数的构造器");
 	}
 
 	public Field[] getDeclaredFields() {

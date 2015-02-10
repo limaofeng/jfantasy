@@ -2,7 +2,6 @@ package com.fantasy.framework.util.web;
 
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
@@ -19,6 +18,7 @@ import java.net.*;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * web 工具类<br/>
@@ -50,7 +50,6 @@ public class WebUtil {
      *
      * @param request HttpServletRequest
      * @return {String}
-     * @功能描述
      */
     public static String getExtension(HttpServletRequest request) {
         return getExtension(request.getRequestURI());
@@ -61,7 +60,6 @@ public class WebUtil {
      *
      * @param requestUri 请求路径
      * @return {String}
-     * @功能描述
      */
     public static String getExtension(String requestUri) {
         if (RegexpUtil.isMatch(requestUri, "[^/]{1,}[.]([^./]{1,})$")) {
@@ -82,14 +80,10 @@ public class WebUtil {
         scheme = scheme.toLowerCase();
         StringBuilder url = new StringBuilder();
         url.append(scheme).append("://").append(serverName);
-        if ("http".equals(scheme)) {
-            if (serverPort != 80) {
-                url.append(":").append(serverPort);
-            }
-        } else if ("https".equals(scheme)) {
-            if (serverPort != 443) {
-                url.append(":").append(serverPort);
-            }
+        if ("http".equals(scheme) && serverPort != 80) {
+            url.append(":").append(serverPort);
+        } else if ("https".equals(scheme) && serverPort != 443) {
+            url.append(":").append(serverPort);
         }
         url.append(contextPath);
         return url.toString();
@@ -100,7 +94,6 @@ public class WebUtil {
      *
      * @param request HttpServletRequest
      * @return {String}
-     * @功能描述
      */
     public static String getServerName(HttpServletRequest request) {
         return getServerName(request.getRequestURL().toString());
@@ -146,19 +139,22 @@ public class WebUtil {
      * @param request 路径
      * @return {String}
      */
-    public static String getPort(HttpServletRequest request) {
-        return String.valueOf(request.getLocalPort());
+    public static int getPort(HttpServletRequest request) {
+        return request.getLocalPort();
     }
 
-    @Deprecated
-    public static String getResponsePath(String filePath) {
-        return filePath.replaceAll("\\\\", "/").replaceFirst(PathUtil.root().replaceAll("\\\\", "/"), "").replaceAll("\\\\", "/");
-    }
-
-    @Deprecated
-    public static boolean acceptEncoding(HttpServletRequest request) {
-        String encoding = request.getHeader("Accept-Encoding");
-        return (encoding != null) && (encoding.contains("gzip"));
+    /**
+     * HTTP Header中Accept-Encoding 是浏览器发给服务器,声明浏览器支持的编码类型.常见的有
+     * Accept-Encoding: compress, gzip //支持compress 和gzip类型
+     * Accept-Encoding:　//默认是identity
+     * Accept-Encoding: *　//支持所有类型 Accept-Encoding: compress;q=0.5, gzip;q=1.0//按顺序支持 gzip , compress
+     * Accept-Encoding: gzip;q=1.0, identity; q=0.5, *;q=0 // 按顺序支持 gzip , identity
+     *
+     * @param request HTTP 请求对象
+     * @return Accept-Encoding
+     */
+    public static String getAcceptEncoding(HttpServletRequest request) {
+        return request.getHeader("Accept-Encoding");
     }
 
     public static String getReferer(HttpServletRequest request) {
@@ -172,9 +168,10 @@ public class WebUtil {
     public static Cookie getCookie(HttpServletRequest request, String name) {
         Cookie[] cookies = getCookies(request);
         if (cookies != null) {
-            for (int i = 0; i < cookies.length; i++) {
-                if (cookies[i].getName().equals(name))
-                    return cookies[i];
+            for (Cookie cooky : cookies) {
+                if (cooky.getName().equals(name)){
+                    return cooky;
+                }
             }
         }
         return null;
@@ -211,26 +208,28 @@ public class WebUtil {
     }
 
     public static boolean isSelfIp(String ip) {
-        Enumeration<NetworkInterface> netInterfaces = null;
         try {
-            netInterfaces = NetworkInterface.getNetworkInterfaces();
+            if (InetAddress.getLocalHost().getHostAddress().equals(ip.trim())) {
+                return true;
+            }
+            Enumeration<NetworkInterface> netInterfaces = NetworkInterface.getNetworkInterfaces();
             while (netInterfaces.hasMoreElements()) {
                 NetworkInterface ni = netInterfaces.nextElement();
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
                     InetAddress ia = ips.nextElement();
-                    if (ia instanceof Inet4Address && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
+                    if (ia instanceof Inet4Address && ia.getHostAddress().equals(ip.trim())  && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
                         // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
                         // System.out.println("IP:"
                         // + ia.getHostAddress());
                         // System.out.println("--------------------------------------------");
-                        if (ia.getHostAddress().equals(ip.trim())) {
                             return true;
-                        }
                     }
                 }
             }
         } catch (SocketException e) {
+            logger.error(e.getMessage(), e);
+        } catch (UnknownHostException e) {
             logger.error(e.getMessage(), e);
         }
         return false;
@@ -243,7 +242,7 @@ public class WebUtil {
      */
     public static String[] getServerIps() {
         String[] serverIps = new String[0];
-        Enumeration<NetworkInterface> netInterfaces = null;
+        Enumeration<NetworkInterface> netInterfaces;
         try {
             netInterfaces = NetworkInterface.getNetworkInterfaces();
             while (netInterfaces.hasMoreElements()) {
@@ -251,7 +250,8 @@ public class WebUtil {
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
                     InetAddress ia = ips.nextElement();
-                    if (ia instanceof Inet4Address && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {// 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
+                    // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
+                    if (ia instanceof Inet4Address && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
                         serverIps = ObjectUtil.join(serverIps, ia.getHostAddress());
                     }
                 }
@@ -273,33 +273,33 @@ public class WebUtil {
     public static String getOsVersion(HttpServletRequest request) {
         String useros = request.getHeader("User-Agent").toLowerCase();
         String osVersion = "unknown";
-        if (useros.indexOf("nt 6.1") > 0)
+        if (useros.indexOf("nt 6.1") > 0){
             osVersion = "Windows 7";
-        else if (useros.indexOf("nt 6.0") > 0)
+        }else if (useros.indexOf("nt 6.0") > 0){
             osVersion = "Windows Vista/Server 2008";
-        else if (useros.indexOf("nt 5.2") > 0)
+        } else if (useros.indexOf("nt 5.2") > 0){
             osVersion = "Windows Server 2003";
-        else if (useros.indexOf("nt 5.1") > 0)
+        } else if (useros.indexOf("nt 5.1") > 0){
             osVersion = "Windows XP";
-        else if (useros.indexOf("nt 5") > 0)
+        } else if (useros.indexOf("nt 5") > 0){
             osVersion = "Windows 2000";
-        else if (useros.indexOf("nt 4") > 0)
+        } else if (useros.indexOf("nt 4") > 0){
             osVersion = "Windows nt4";
-        else if (useros.indexOf("me") > 0)
+        }else if (useros.indexOf("me") > 0){
             osVersion = "Windows Me";
-        else if (useros.indexOf("98") > 0)
+        } else if (useros.indexOf("98") > 0){
             osVersion = "Windows 98";
-        else if (useros.indexOf("95") > 0)
+        }else if (useros.indexOf("95") > 0){
             osVersion = "Windows 95";
-        else if (useros.indexOf("ipad") > 0)
+        } else if (useros.indexOf("ipad") > 0){
             osVersion = "iPad";
-        else if (useros.indexOf("macintosh") > 0)
+        } else if (useros.indexOf("macintosh") > 0){
             osVersion = "Mac";
-        else if (useros.indexOf("unix") > 0)
+        } else if (useros.indexOf("unix") > 0){
             osVersion = "UNIX";
-        else if (useros.indexOf("linux") > 0)
+        } else if (useros.indexOf("linux") > 0){
             osVersion = "Linux";
-        else if (useros.indexOf("sunos") > 0) {
+        }else if (useros.indexOf("sunos") > 0) {
             osVersion = "SunOS";
         } else if (useros.indexOf("iPhone") > 0) {
             osVersion = "iPhone";
@@ -331,9 +331,9 @@ public class WebUtil {
                     val = pair.split("=")[1];
                 }
             }
-            if (!params.containsKey(key))
+            if (!params.containsKey(key)){
                 params.put(key, new String[]{val});
-            else {
+            }  else {
                 params.put(key, ObjectUtil.join(params.get(key), val));
             }
         }
@@ -353,10 +353,11 @@ public class WebUtil {
             return null;
         }
         for (Map.Entry<String, String[]> entry : parseQuery(query).entrySet()) {
-            if (entry.getValue().length == 1)
+            if (entry.getValue().length == 1){
                 OgnlUtil.getInstance().setValue(entry.getKey(), t, (entry.getValue())[0]);
-            else
+            }else {
                 OgnlUtil.getInstance().setValue(entry.getKey(), t, entry.getValue());
+            }
         }
         return t;
     }
@@ -376,12 +377,21 @@ public class WebUtil {
         if (params.containsKey("sort")) {
             String value = (params.get("sort"))[0];
             if (value.startsWith(orderBy)) {
-                return queryString.replace("sort=" + value, "sort=" + orderBy + (value.split("-")[1].equals("asc") ? "-desc" : "-asc"));
+                return queryString.replace("sort=" + value, "sort=" + orderBy + ("asc".equals(value.split("-")[1]) ? "-desc" : "-asc"));
             }
             return queryString.replace("sort=" + value, "sort=" + orderBy + "-asc");
         }
 
         return queryString.replace("&$", "").concat("&sort=" + orderBy + "-asc");
+    }
+
+    public static Map<String, String> getParameterMap(HttpServletRequest request) {
+        Map<String, String> parameter = new LinkedHashMap<String, String>();
+        Set<Map.Entry<String, String[]>> entries = request.getParameterMap().entrySet();
+        for (Map.Entry<String, String[]> entry : entries) {
+            parameter.put(entry.getKey(), entry.getValue()[0]);
+        }
+        return parameter;
     }
 
     public static class UserAgent {
@@ -436,21 +446,21 @@ public class WebUtil {
 
     }
 
-    public static String filename(String name) {
+    public static String filename(String name,HttpServletRequest request) {
         try {
-            return Browser.mozilla == browser(getRequest()) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
+            return Browser.mozilla == browser(request) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             logger.error(e);
             return name;
         }
     }
 
-    public static String getValue(byte[] bytes, String charset) {
+    public static String filename(String name) {
         try {
-            return new String(bytes, charset);
+            return Browser.mozilla == browser(getRequest()) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
         } catch (UnsupportedEncodingException e) {
             logger.error(e);
-            return new String(bytes);
+            return name;
         }
     }
 

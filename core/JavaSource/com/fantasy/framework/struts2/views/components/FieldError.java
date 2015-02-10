@@ -1,17 +1,15 @@
 package com.fantasy.framework.struts2.views.components;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.components.UIBean;
+import com.opensymphony.xwork2.util.ValueStack;
 import org.apache.struts2.components.Param.UnnamedParametric;
+import org.apache.struts2.components.UIBean;
 import org.apache.struts2.views.annotations.StrutsTag;
 import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
-import com.opensymphony.xwork2.util.ValueStack;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
 
 @StrutsTag(name = "fielderror", tldTagClass = "org.apache.struts2.views.jsp.ui.FieldErrorTag", description = "Render field error (all or partial depending on param tag nested)if they exists")
 public class FieldError extends UIBean implements UnnamedParametric {
@@ -39,8 +37,9 @@ public class FieldError extends UIBean implements UnnamedParametric {
     }
 
     public void addParameter(Object value) {
-	if (value != null)
-	    this.errorFieldNames.add(value.toString());
+	if (value != null){
+        this.errorFieldNames.add(value.toString());
+    }
     }
 
     public List<String> getFieldErrorFieldNames() {

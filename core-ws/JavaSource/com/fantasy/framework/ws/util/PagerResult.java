@@ -2,8 +2,9 @@ package com.fantasy.framework.ws.util;
 
 import java.util.Arrays;
 
-public class PagerResult<T> extends WSResult {
+public abstract class PagerResult<T> extends WSResult {
 
+    private T[] pageItems;
     /**
      * 最大数据条数
      */
@@ -36,15 +37,6 @@ public class PagerResult<T> extends WSResult {
      */
     public PagerResult() {
         this.pageSize = 15;
-    }
-
-    /**
-     * 初始化传入每页显示条数
-     *
-     * @param pageSize 显示条数
-     */
-    public PagerResult(int pageSize) {
-        this.pageSize = pageSize;
     }
 
     /**
@@ -151,6 +143,14 @@ public class PagerResult<T> extends WSResult {
 
     public void setOrders(String[] orders) {
         this.orders = orders;
+    }
+
+    public T[] getPageItems(){
+        return pageItems;
+    }
+
+    public void setPageItems(T[] pageItems){
+        this.pageItems = pageItems;
     }
 
     @Override

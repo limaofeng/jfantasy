@@ -29,7 +29,7 @@
                 <prop key="format_sql">true</prop>
             </props>
         </property>
-        <property name="packagesToScan" value="com.fantasy.wx.message.bean,com.fantasy.wx.user.bean,com.fantasy.wx.config.bean"/>
+        <property name="packagesToScan" value="com.fantasy.wx.bean"/>
     </bean>
 
     <bean abstract="true" name="hibernateDao" class="com.fantasy.framework.dao.hibernate.HibernateDao">

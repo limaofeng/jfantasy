@@ -1,9 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:tx="http://www.springframework.org/schema/tx"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
        default-lazy-init="true">
 
-    <bean id="weixinConfigInit" class="com.fantasy.wx.config.init.WeixinConfigInit" />
+    <bean class="com.fantasy.wx.framework.factory.WeiXinSessionFactoryBean">
+        <property name="messageHandler">
+            <bean class="com.fantasy.wx.framework.handler.AutoReplyTextHandler"/>
+
+        </property>
+        <!--<property name="eventListeners">
+            <map>
+                <entry key="subscribe">
+                    <bean class=""/>
+                </entry>
+            </map>
+        </property>-->
+        <property name="accountDetailsService">
+            <bean class="com.fantasy.wx.framework.account.SimpleAccountDetailsService">
+                <property name="accounts">
+                    <list>
+                        <bean class="com.fantasy.wx.bean.Account">
+                            <property name="appId" value="wxcbc2c9fb9d585cd3"/>
+                            <property name="type" value="service"/>
+                            <property name="secret" value="4b224fb5b08f2380572e45baecda63ba"/>
+                            <property name="token" value="haolue_token"/>
+                            <property name="aesKey" value="tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6"/>
+                            <property name="primitiveId" value="gh_3d6114f11c71"/>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+        </property>
+    </bean>
 
 </beans>

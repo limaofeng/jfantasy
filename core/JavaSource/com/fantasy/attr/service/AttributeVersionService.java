@@ -4,6 +4,7 @@ import com.fantasy.attr.bean.Attribute;
 import com.fantasy.attr.bean.AttributeType;
 import com.fantasy.attr.bean.AttributeVersion;
 import com.fantasy.attr.bean.Converter;
+import com.fantasy.attr.dao.AttributeDao;
 import com.fantasy.attr.dao.AttributeVersionDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -27,6 +28,9 @@ public class AttributeVersionService {
     @Resource
     private AttributeVersionDao attributeVersionDao;
 
+    @Resource
+    private AttributeDao attributeDao;
+
     public List<AttributeVersion> search(List<PropertyFilter> filters, String orderBy, String order, int size) {
         return this.attributeVersionDao.find(filters, orderBy, order, 0, size);
     }
@@ -36,6 +40,9 @@ public class AttributeVersionService {
     }
 
     public AttributeVersion save(AttributeVersion version) {
+        for (Attribute attribute : version.getAttributes()) {
+            attributeDao.save(attribute);
+        }
         this.attributeVersionDao.save(version);
         return version;
     }
@@ -54,6 +61,11 @@ public class AttributeVersionService {
 
     public List<AttributeVersion> getVersions(Class<?> entityClass) {
         return this.attributeVersionDao.find(Restrictions.eq("className", entityClass.getName()));
+    }
+
+
+    public List<AttributeVersion> getVersions(List<PropertyFilter> filter, String orderBy, String order, int size) {
+        return this.attributeVersionDao.find(filter, orderBy, order, 0, size);
     }
 
     /**

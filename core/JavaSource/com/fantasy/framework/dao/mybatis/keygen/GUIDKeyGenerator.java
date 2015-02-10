@@ -1,21 +1,19 @@
 package com.fantasy.framework.dao.mybatis.keygen;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.security.SecureRandom;
-import java.sql.Statement;
-import java.util.Random;
-
+import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.MessageDigestUtil;
 import ognl.Ognl;
-
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.InitializingBean;
 
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.MessageDigestUtil;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+import java.security.SecureRandom;
+import java.sql.Statement;
+import java.util.Random;
 
 /**
  * GUID序列生成器
@@ -71,8 +69,9 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 		sb.append(raw.substring(16, 20));
 		sb.append("-");
 		sb.append(raw.substring(20));
-		if (logger.isDebugEnabled())
-			logger.debug("生成的GUID:" + sb.toString());
+		if (logger.isDebugEnabled()){
+            logger.debug("生成的GUID:" + sb.toString());
+        }
 		return sb.toString();
 	}
 
@@ -80,11 +79,11 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 		StringBuffer sbValueBeforeMD5 = new StringBuffer(128);
 		long time = System.currentTimeMillis();
 		long rand = 0L;
-		if (this.secure)
-			rand = this.secureRandom.nextLong();
-		else {
-			rand = random.nextLong();
-		}
+		if (this.secure){
+            rand = this.secureRandom.nextLong();
+        }else {
+            rand = random.nextLong();
+        }
 		sbValueBeforeMD5.append(s_id);
 		sbValueBeforeMD5.append(":");
 		sbValueBeforeMD5.append(Long.toString(time));

@@ -1,21 +1,12 @@
 package com.fantasy.contacts.bean;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
-
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fantasy.framework.dao.BaseBusEntity;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 地址薄(Address Book)
@@ -141,8 +132,9 @@ public class Book extends BaseBusEntity {
 
 	@Override
 	public boolean equals(Object obj) {
-		if(obj == null || this.getId() == null || !(obj instanceof Book) || ((Book) obj).getId() == null)
-			return super.equals(obj);
+		if(obj == null || this.getId() == null || !(obj instanceof Book) || ((Book) obj).getId() == null){
+            return super.equals(obj);
+        }
 		return this.getId().equals(((Book) obj).getId());
 	}
 

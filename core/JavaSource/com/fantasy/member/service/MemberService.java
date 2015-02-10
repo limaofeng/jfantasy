@@ -111,6 +111,10 @@ public class MemberService {
 		this.mailSendService.sendHtmlEmail(title, ftl, map, member.getDetails().getEmail());
 	}
 
+	public List<Member> find(Criterion... criterions){
+		return this.memberDao.find(criterions);
+	}
+
 	/**
 	 * 验证邮箱是否已被验证使用
 	 * 
@@ -190,8 +194,9 @@ public class MemberService {
 	@Cacheable(value = "fantasy.security.memberService", key = "'findUniqueByUsername' + #username ")
 	public Member findUniqueByUsername(String username) {
 		Member member = this.memberDao.findUniqueBy("username", username);
-		if (member == null)
-			return member;
+		if (member == null){
+            return member;
+        }
 		SpringSecurityUtils.getAuthorities(member);
 		return member;
 	}

@@ -26,10 +26,12 @@ public class FieldErrorTag extends AbstractUITag {
 		FieldError fieldError = (FieldError) this.component;
 		fieldError.setFieldName(this.fieldName);
 		fieldError.setEscape(this.escape);
-		if (StringUtil.isNotBlank(this.tagName))
-			fieldError.setTagName(this.tagName);
-		if ((StringUtil.isBlank(fieldError.getId())) && (StringUtil.isNotBlank(this.fieldName)))
-			fieldError.setId(RegexpUtil.replace(RegexpUtil.replace(this.fieldName, "\\.", "_"), "\\[|\\]", "").concat("Tip"));
+		if (StringUtil.isNotBlank(this.tagName)){
+            fieldError.setTagName(this.tagName);
+        }
+		if ((StringUtil.isBlank(fieldError.getId())) && (StringUtil.isNotBlank(this.fieldName))){
+            fieldError.setId(RegexpUtil.replace(RegexpUtil.replace(this.fieldName, "\\.", "_"), "\\[|\\]", "").concat("Tip"));
+        }
 	}
 
 	public void setFieldName(String fieldName) {

@@ -1,17 +1,12 @@
 package com.fantasy.common.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
-import org.hibernate.annotations.GenericGenerator;
-
 import com.fantasy.common.service.FtpServiceFactory;
 import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+
+import javax.persistence.*;
 
 /**
  * Ftp 连接配置
@@ -23,6 +18,7 @@ import com.fantasy.framework.dao.BaseBusEntity;
  */
 @Entity
 @Table(name = "FTP_CONFIG")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FtpConfig extends BaseBusEntity {
 
 	private static final long serialVersionUID = 5513428236803813302L;

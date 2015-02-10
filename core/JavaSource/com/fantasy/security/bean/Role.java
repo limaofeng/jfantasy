@@ -4,8 +4,9 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.member.bean.Member;
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_ROLE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "menus", "resources", "users", "members"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Role extends BaseBusEntity {
 
     private static final long serialVersionUID = 4870450046611332600L;
@@ -151,8 +153,9 @@ public class Role extends BaseBusEntity {
     public List<GrantedAuthority> getUrlAuthorities() {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>(getResources().size());
         for (Resource resource : getResources()) {
-            if (!resource.isEnabled())
+            if (!resource.isEnabled()){
                 continue;
+            }
             grantedAuthorities.add(resource.getUrlAuthoritie());
         }
         return grantedAuthorities;

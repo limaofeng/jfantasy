@@ -2,7 +2,8 @@ package com.fantasy.file.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
@@ -15,6 +16,7 @@ import javax.persistence.*;
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEDETAIL")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "folder", "realPath"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
 public class FileDetail extends BaseBusEntity {
 
     private static final long serialVersionUID = -3377507500960127984L;

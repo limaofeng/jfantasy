@@ -1,0 +1,104 @@
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+        "http://struts.apache.org/dtds/struts-2.3.dtd">
+<struts>
+
+    <package name="fides" extends="fantasy-default" namespace="/">
+        <action name="question" class="com.fantasy.question.web.QuestionAction" method="question">
+            <result type="freemarker">/template/%{pageTheme}/question/question.ftl</result>
+        </action>
+    </package>
+
+    <!-- 问题管理 -->
+    <package name="fides_question" extends="fantasy-default" namespace="/question">
+        <!-- 问题管理列表 -->
+        <action name="index" class="com.fantasy.question.web.QuestionAction" method="index">
+            <result type="freemarker">
+                %{@com.fantasy.question.service.QuestionService@getTemplatePath("/template/"+pageTheme+"/question/question_index{sign}.ftl",category)}
+            </result>
+        </action>
+
+        <!-- 问题查询 -->
+        <action name="search" class="com.fantasy.question.web.QuestionAction" method="search"/>
+
+        <!-- 问题添加页面 -->
+        <action name="add" class="com.fantasy.question.web.QuestionAction" method="categoryEdit">
+            <result type="freemarker">
+                %{@com.fantasy.question.service.QuestionService@getTemplatePath("/template/"+pageTheme+"/question/question_add{sign}.ftl",category)}
+            </result>
+        </action>
+
+        <!-- 问题保存 -->
+        <action name="save" class="com.fantasy.question.web.QuestionAction" method="save"/>
+
+        <!-- 问题编辑页面 -->
+        <action name="edit" class="com.fantasy.question.web.QuestionAction" method="get">
+            <result type="freemarker">
+                %{@com.fantasy.question.service.QuestionService@getTemplatePath("/template/"+pageTheme+"/question/question_edit{sign}.ftl",goods)}
+            </result>
+        </action>
+
+
+        <action name="askquestion" class="com.fantasy.question.web.QuestionAction" method="askQuestion">
+            <result type="freemarker">/template/%{pageTheme}/question/ask_question.ftl</result>
+        </action>
+
+        <!-- 问题详细页面 -->
+        <action name="view" class="com.fantasy.question.web.QuestionAction" method="get">
+            <result type="freemarker">/template/%{pageTheme}/question/question_view.ftl</result>
+        </action>
+
+        <!-- 问题删除 -->
+        <action name="delete" class="com.fantasy.question.web.QuestionAction" method="delete"/>
+
+        <!-- 问题移动 -->
+        <action name="move" class="com.fantasy.question.web.QuestionAction" method="moveQuestion"/>
+
+        <!--关闭问题 -->
+        <action name="close" class="com.fantasy.question.web.QuestionAction" method="close"/>
+        <!--打开问题 -->
+        <action name="run" class="com.fantasy.question.web.QuestionAction" method="run"/>
+    </package>
+
+
+    <!--问题分类 -->
+    <package name="fides_question-category" extends="fantasy-default" namespace="/question/category">
+        <!-- 问题分类添加页面 -->
+        <action name="add" class="com.fantasy.question.web.QuestionAction" method="categoryEdit">
+            <result type="freemarker">/template/%{pageTheme}/question/category_add.ftl</result>
+        </action>
+
+        <!-- 添加根-->
+        <action name="root_add" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/question/category_add.ftl</result>
+        </action>
+
+        <!-- 问题分类保存 -->
+        <action name="save" class="com.fantasy.question.web.QuestionAction" method="categorySave"/>
+
+        <!-- 问题分类移动 -->
+        <action name="move" class="com.fantasy.question.web.QuestionAction" method="categorySave"/>
+
+        <!-- 问题分类编辑页面 -->
+        <action name="edit" class="com.fantasy.question.web.QuestionAction" method="categoryEdit">
+            <result type="freemarker">/template/%{pageTheme}/question/category_edit.ftl</result>
+        </action>
+
+        <!-- 问题分类删除 -->
+        <action name="delete" class="com.fantasy.question.web.QuestionAction" method="categoryDelete"/>
+    </package>
+
+
+    <package name="fides_answer" extends="fantasy-default" namespace="/answer">
+        <action name="save" class="com.fantasy.question.web.AnswerAction" method="save"/>
+        <!-- 答案保存 -->
+    </package>
+
+    <package name="fides_answeradditional" extends="fantasy-default" namespace="/answeradditional">
+        <action name="save" class="com.fantasy.question.web.AnswerAdditionalAction" method="save"/>
+        <!-- 追问保存 -->
+
+        <action name="zhuida" class="com.fantasy.question.web.AnswerAdditionalAction" method="zhuida"/>
+        <!-- 追答保存 -->
+
+    </package>
+</struts>

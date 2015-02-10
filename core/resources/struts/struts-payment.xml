@@ -29,7 +29,7 @@
     </package>
 
     <!-- 支付方式配置 -->
-    <package name="fides-payment-config" extends="fantasy-default" namespace="/system/payconfig">
+    <package name="payment-config" extends="fantasy-default" namespace="/system/payconfig">
         <!-- 首页 -->
         <action name="index" class="com.fantasy.payment.web.PaymentConfigAction" method="index">
             <result type="freemarker">/template/%{pageTheme}/payment/payment_config.ftl</result>
