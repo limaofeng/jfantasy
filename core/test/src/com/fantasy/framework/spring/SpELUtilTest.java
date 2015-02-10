@@ -1,5 +1,6 @@
 package com.fantasy.framework.spring;
 
+import com.fantasy.attr.bean.Article;
 import com.fantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
@@ -46,6 +47,16 @@ public class SpELUtilTest {
 
     @Test
     public void testGetExpression() throws Exception {
+        Article article = new Article();
+        article.setSummary("aaa");
+        article.setIssue(true);
+        EvaluationContext context = SpELUtil.createEvaluationContext(article);
+        Expression expression = SpELUtil.getExpression(" summary=='aaa' and issue==true ");
 
+        Boolean retVal = expression.getValue(context,Boolean.class);
+
+        LOG.debug("value = " + retVal);
+
+        Assert.assertTrue(retVal);
     }
 }

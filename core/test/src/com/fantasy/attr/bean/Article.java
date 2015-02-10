@@ -33,6 +33,10 @@ public class Article extends BaseBusEntity implements DynaBean {
     @IndexProperty(analyze = true, store = true)
     @Column(name = "SUMMARY")
     private String summary;
+
+    @Column(name = "ISSUE")
+    private Boolean issue;
+
     /**
      * 数据版本
      */
@@ -84,6 +88,14 @@ public class Article extends BaseBusEntity implements DynaBean {
 
     public void setAttributeValues(List<AttributeValue> attributeValues) {
         this.attributeValues = attributeValues;
+    }
+
+    public Boolean getIssue() {
+        return issue;
+    }
+
+    public void setIssue(Boolean issue) {
+        this.issue = issue;
     }
 
     @Override
