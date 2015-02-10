@@ -446,6 +446,15 @@ public class WebUtil {
 
     }
 
+    public static String filename(String name,HttpServletRequest request) {
+        try {
+            return Browser.mozilla == browser(request) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            logger.error(e);
+            return name;
+        }
+    }
+
     public static String filename(String name) {
         try {
             return Browser.mozilla == browser(getRequest()) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
