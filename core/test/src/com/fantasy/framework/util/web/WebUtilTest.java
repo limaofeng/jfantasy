@@ -216,9 +216,6 @@ public class WebUtilTest {
     public void testFilename() throws Exception {
         String filename = WebUtil.filename(new String("测试文件名称".getBytes(), "iso8859-1"),request);
         LOG.debug(filename);
-
-        filename = WebUtil.filename(new String("测试文件名称".getBytes(), "iso8859-1"));
-        LOG.debug(filename);
     }
 
     @Test
