@@ -136,5 +136,29 @@
         <action name="delete" class="com.fantasy.swp.web.TemplateAction" method="delete"/>
     </package>
 
+    <package name="admin-trigger" extends="fantasy-default" namespace="/swp/trigger">
+        <action name="index" class="com.fantasy.swp.web.TriggerAction" method="index">
+            <result type="freemarker">/template/%{pageTheme}/trigger/trigger.ftl</result>
+        </action>
+
+        <action name="search" class="com.fantasy.swp.web.TriggerAction" method="search"/>
+
+        <action name="edit" class="com.fantasy.swp.web.TriggerAction" method="edit">
+            <result type="freemarker">/template/%{pageTheme}/trigger/trigger_edit.ftl</result>
+        </action>
+
+        <action name="add" class="com.fantasy.framework.struts2.ActionSupport">
+            <result type="freemarker">/template/%{pageTheme}/trigger/trigger_add.ftl</result>
+        </action>
+
+        <action name="view" class="com.fantasy.swp.web.TriggerAction" method="edit">
+            <result type="freemarker">/template/%{pageTheme}/trigger/trigger_view.ftl</result>
+        </action>
+
+        <action name="save" class="com.fantasy.swp.web.TriggerAction" method="save"/>
+
+        <action name="delete" class="com.fantasy.swp.web.TriggerAction" method="delete"/>
+    </package>
+
 
 </struts>
