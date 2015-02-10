@@ -2,11 +2,13 @@ package com.fantasy.security.web;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.bean.Organization;
 import com.fantasy.security.service.OrgDimensionService;
 import com.fantasy.security.service.OrganizationService;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -69,7 +71,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
     public void tearDown() throws Exception {
         orgDimensionActionTest.tearDown();
 
-        this.testDelete();
+        //this.testDelete();
     }
 
     @Test
@@ -88,21 +90,22 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
             //返回的数据类型
             String result = proxy.execute();
             //json数据
-            LOG.debug(result + ":" + this.response.getContentAsString());
+            String json =this.response.getContentAsString();
+            LOG.debug(result + ":" + json);
 
-//            List<Organization> organizations = (List<Organization>) JSON.deserialize(this.response.getContentAsString());
-//            testView(organizations, 0);
-//            Assert.assertNotNull(organizations);
+            List<Organization> organizations = JSON.deserialize(json, new TypeReference<List<Organization>>() {});
+            testView(organizations, 0);
+            Assert.assertNotNull(organizations);
         }
     }
 
-//    private void testView(List<Organization> organizations,int layer){
-//        layer++;
-//        for(Organization organization:organizations){
-//            LOG.debug("层级----"+layer+"-------"+organization.getName());
-//            testView(organization.getChildren(), layer);
-//        }
-//    }
+    private void testView(List<Organization> organizations,int layer){
+        layer++;
+        for(Organization organization:organizations){
+            LOG.debug("层级----"+layer+"-------"+organization.getName());
+            testView(organization.getChildren(), layer);
+        }
+    }
 
 
     public void testSave() throws Exception {
