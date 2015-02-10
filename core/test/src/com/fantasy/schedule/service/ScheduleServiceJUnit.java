@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-schedule.xml"})
-public class ScheduleServiceTest {
+public class ScheduleServiceJUnit {
 
     @Resource
     private ScheduleService scheduleService;
