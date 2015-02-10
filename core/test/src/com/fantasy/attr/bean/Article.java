@@ -35,7 +35,7 @@ public class Article extends BaseBusEntity implements DynaBean {
     private String summary;
 
     @Column(name = "ISSUE")
-    private Boolean issue;
+    private Boolean issue = false;
 
     /**
      * 数据版本
