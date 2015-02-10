@@ -1,15 +1,13 @@
 package com.fantasy.framework.util.common;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-
 import org.apache.commons.codec.DecoderException;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.binary.Hex;
 import org.apache.commons.lang.StringEscapeUtils;
 
-import com.fantasy.framework.util.common.encode.ParseEncoding;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 
 public class EncodeUtil {
 
@@ -81,9 +79,4 @@ public class EncodeUtil {
 		return StringEscapeUtils.unescapeXml(xmlEscaped);
 	}
 
-	private static final ParseEncoding parseEncoding = new ParseEncoding();
-
-	public static String getEncoding(String str) {
-		return StringUtil.isBlank(str) ? DEFAULT_URL_ENCODING : parseEncoding.getEncoding(str.getBytes());
-	}
 }
