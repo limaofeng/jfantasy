@@ -36,7 +36,7 @@ public class ScheduleService {
      */
     public static String cron(String cron, int i) {
         String str = "";
-        if ("".equals(cron) || cron == null){
+        if ("".equals(cron) || cron == null) {
             return str;
         }
         String[] crons = cron.split(" ");
@@ -213,6 +213,16 @@ public class ScheduleService {
         }
     }
 
+    /**
+     * 添加触发器
+     *
+     * @param jobKey     jobKey
+     * @param triggerKey triggerKey
+     * @param interval   触发间隔时间
+     * @param times      触发次数(次数为0触发一次)
+     * @param args       每次触发附带的额外数据
+     * @return Trigger
+     */
     public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int times, Map<String, String> args) {
         return this.addTrigger(jobKey, triggerKey, interval, times, emptyString, args);
     }

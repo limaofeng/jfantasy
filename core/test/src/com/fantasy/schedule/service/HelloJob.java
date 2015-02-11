@@ -45,7 +45,7 @@ public class HelloJob implements Job {
         } else if (trigger instanceof SimpleTrigger) {
             SimpleTrigger simpleTrigger = ((SimpleTrigger) trigger);
             log.append("repeatInterval:").append(simpleTrigger.getRepeatInterval()).append("\n");
-            log.append("repeatCount:").append(simpleTrigger.getRepeatCount() + 1).append("\n");
+            log.append("repeatCount:").append(simpleTrigger.getRepeatCount()).append("\n");
             log.append("timesTriggered:").append(simpleTrigger.getTimesTriggered()).append("\n");
         }
     }
