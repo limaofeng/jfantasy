@@ -69,7 +69,7 @@ public class TriggerActionTest extends StrutsSpringJUnit4TestCase {
     @Test
     public void testIndex() throws Exception {
         this.testSave();
-        this.request.addParameter("EQS_value","title");
+        this.request.addParameter("EQS_value","title,content");
         ActionProxy proxy = super.getActionProxy("/swp/trigger/index.do");
         Assert.assertNotNull(proxy);
         LOG.debug("返回数据类型："+proxy.execute());
@@ -81,7 +81,7 @@ public class TriggerActionTest extends StrutsSpringJUnit4TestCase {
     public void testGet() throws Exception{
         this.testSave();
         List<PropertyFilter> filter = new ArrayList<PropertyFilter>();
-        filter.add(new PropertyFilter("EQS_value","title"));
+        filter.add(new PropertyFilter("EQS_value","title,content"));
         Pager<Trigger> pager = triggerService.findPager(new Pager<Trigger>(1),filter);
         Assert.assertNotNull("查询数据为空",pager.getPageItems());
         this.request.addParameter("id",pager.getPageItems().get(0).getId().toString());
@@ -92,7 +92,7 @@ public class TriggerActionTest extends StrutsSpringJUnit4TestCase {
 
     public void testDelete() throws Exception{
         List<PropertyFilter> filter = new ArrayList<PropertyFilter>();
-        filter.add(new PropertyFilter("EQS_value","title"));
+        filter.add(new PropertyFilter("EQS_value","title,content"));
         Pager<Trigger> pager = triggerService.findPager(new Pager<Trigger>(1),filter);
         this.request.addParameter("ids",pager.getPageItems().get(0).getId().toString());
         ActionProxy proxy = super.getActionProxy("/swp/trigger/delete.do");
