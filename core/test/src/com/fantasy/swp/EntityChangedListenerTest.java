@@ -38,11 +38,10 @@ public class EntityChangedListenerTest {
     @Test
     public void testUpdate(){
         List<Article> articleList = this.articleService.find(new ArrayList<PropertyFilter>());
-        if(articleList!=null){
+        if(!articleList.isEmpty()){
             Article article = articleList.get(0);
             article.setTitle("改变title数据"+new Date());
             this.articleService.save(article);
         }
-
     }
 }
