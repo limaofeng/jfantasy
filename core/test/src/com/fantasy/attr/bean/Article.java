@@ -104,7 +104,6 @@ public class Article extends BaseBusEntity implements DynaBean {
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", summary='" + summary + '\'' +
-                ", attributeValues=" + attributeValues +
                 '}';
     }
 }
