@@ -4,6 +4,7 @@ import com.fantasy.attr.service.ArticleService;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
@@ -22,6 +23,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.mock.web.MockServletConfig;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
@@ -55,12 +59,17 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     private DataService dataService;
     @Resource
     private _PageService pageService;
-
+    @Resource
+    private UserDetailsService userDetailsService;
     @Before
     public void setUp() throws Exception {
         JspSupportServlet jspSupportServlet = new JspSupportServlet();
         jspSupportServlet.init(new MockServletConfig());
         super.setUp();
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername("admin");
+        SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
+        request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
         templeateTest.setUp();
         websiteActionTest.setUp();
@@ -69,8 +78,8 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-        this.templeateTest.testDelete();
-        this.deleteWebsiteTest();
+//        this.templeateTest.testDelete();
+//        this.deleteWebsiteTest();
     }
 
     @Test
@@ -163,8 +172,16 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
     public void testCreate() throws Exception {
         SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
-        this.request.addParameter("ids", "63");
+        this.request.addParameter("ids", "71");
         ActionProxy proxy = super.getActionProxy("/swp/page/create.do");
+        Assert.assertNotNull(proxy);
+        String result = proxy.execute();
+        System.out.println("result="+result);
+    }
+
+    @Test
+    public void testIndex() throws Exception {
+        ActionProxy proxy = super.getActionProxy("/swp/page/index.do");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();
         System.out.println("result="+result);
@@ -188,6 +205,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         return websiteService.save(website);
 
     }
+
     private void deleteWebsiteTest(){
         Website website = this.websiteService.get("SWP_WEBSITE_TEST");
         if(website!=null){

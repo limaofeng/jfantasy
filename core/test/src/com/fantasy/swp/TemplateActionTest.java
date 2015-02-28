@@ -56,20 +56,20 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-        this.testDelete();
-        this.deleteWebsiteTest();
+//        this.testDelete();
+//        this.deleteWebsiteTest();
     }
 
     @Test
     public void testSave() throws Exception {
-        String dataType = "object";
+        String dataType = "list";
 //        // 静态:stat，方法:func，hql语句:db
 //        String dataSource = "db";
-        String templateFile = "template/template_test_object.ftl";
-        String path = "/template/article_test_multi.ftl";
+        String templateFile = "template/template_test_common.ftl";
+        String path = "/template/article_test_sigle.ftl";
         String key="article";
         // single,multi,pagination
-        String pageType = "multi";
+        String pageType = "single";
 
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "TEMPLATE_JUNIT_TEST");
@@ -98,7 +98,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         // 数据类型
         this.request.addParameter("dataInferfaces[0].dataType", dataType);
         this.request.addParameter("dataInferfaces[1].name", "某文章");
-        this.request.addParameter("dataInferfaces[1].key", "article2");
+        this.request.addParameter("dataInferfaces[1].key", "title");
         // 数据类型
         this.request.addParameter("dataInferfaces[1].dataType", "common");
         // 数据源

@@ -6,7 +6,10 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import com.fantasy.framework.freemarker.loader.FreemarkerTemplateLoader;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.security.SpringSecurityUtils;
+import com.fantasy.security.userdetails.AdminUser;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
@@ -14,6 +17,7 @@ import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.dao.PageDao;
 import com.fantasy.swp.runtime.GeneratePage;
 import freemarker.template.Configuration;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,19 +60,13 @@ public class _PageService {
 
     public void create(Long[] ids){
         try {
-            FileManager fileManager = new LocalFileManager("E:/aa");
+//            AdminUser adminUser = (AdminUser)SpringSecurityUtils.getCurrentUser();
+//            String username = adminUser.getUser().getUsername();
+            FileManager fileManager = SpringContextUtil.getBeanByType(LocalFileManager.class);
             for(Long id : ids){
                 Page page = this.pageDao.get(id);
                 GeneratePage generatePage = new GeneratePage(page,fileManager);
                 generatePage.execute();
-//                Map<String,Object> dataMap = new HashMap<String, Object>();
-//                Template template = page.getTemplate();
-//                List<DataInferface> dataInferfaces = template.getDataInferfaces();
-//                for(DataInferface dataInferface : dataInferfaces){
-//                    Data data = ObjectUtil.find(page.getDatas(),"dataInferface.id",dataInferface.getId());
-//                    dataMap.put(dataInferface.getKey(),data.getValue());
-//                }
-//                FreeMarkerTemplateUtils.writer(dataMap, configuration.getTemplate(template.getPath()), fileManager.writeFile(page.getPath()));
             }
         } catch (Exception e) {
             e.printStackTrace();
