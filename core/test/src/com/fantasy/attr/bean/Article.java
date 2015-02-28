@@ -33,7 +33,9 @@ public class Article extends BaseBusEntity implements DynaBean {
     @IndexProperty(analyze = true, store = true)
     @Column(name = "SUMMARY")
     private String summary;
-
+    /**
+     * 发布标识
+     */
     @Column(name = "ISSUE")
     private Boolean issue = false;
 
