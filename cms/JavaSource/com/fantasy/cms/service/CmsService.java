@@ -325,7 +325,7 @@ public class CmsService extends BuguSearcher<Article> {
                 configuration.getTemplate(newTemplateUrl);
                 return newTemplateUrl;
             } catch (IOException e) {
-                LOG.debug(e.getMessage());
+                LOG.error(e.getMessage(),e);
                 if (category.getParent() == null) {
                     break;
                 }
