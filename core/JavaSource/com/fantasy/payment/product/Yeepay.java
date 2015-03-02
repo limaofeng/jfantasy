@@ -22,11 +22,9 @@ public class Yeepay extends AbstractPaymentProduct {
 
     public static final String PAYMENT_URL = "https://www.yeepay.com/app-merchant-proxy/node";// 支付请求URL
     public static final String RETURN_URL = "/shop/payment!payreturn.action";// 回调处理URL
-    public static final String NOTIFY_URL = "/shop/payment!paynotify.action";// 消息通知URL
-    public static final String SHOW_URL = "/";// 商品显示URL
 
     // 支持货币种类
-    public static final CurrencyType[] currencyType = {CurrencyType.CNY};
+    // public static final CurrencyType[] currencyType = {CurrencyType.CNY};
 
     @Override
     public String getPaymentUrl() {
@@ -43,12 +41,12 @@ public class Yeepay extends AbstractPaymentProduct {
 
         String p0_Cmd = "Buy";// 业务类型
         String p1_MerId = paymentConfig.getBargainorId();// 商户编号
-        String p2_Order = paymentSn;// 支付编号
+        //String p2_Order = paymentSn;// 支付编号
         String p3_Amt = paymentAmount.toString();// 总金额（单位：元）
         String p4_Cur = "CNY";// 支付币种（CNY：人民币）
-        String p5_Pid = paymentSn;// 商品名称
+        String p5_Pid = paymentSn + ":商品名称";// 商品名称
         String p6_Pcat = "";// 商品种类
-        String p7_Pdesc = paymentSn;// 商品描述
+        String p7_Pdesc = paymentSn + ":商品描述";// 商品描述
         String p8_Url = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String p9_SAF = "0";// 是否需要填写送货地址（1：是、0：否）
         String pa_MP = "shop" + "xx";// 商户数据
@@ -57,13 +55,14 @@ public class Yeepay extends AbstractPaymentProduct {
         String key = paymentConfig.getBargainorKey();// 密钥
 
         // 生成签名
-        String hmac = hmacSign(p0_Cmd + p1_MerId + p2_Order + p3_Amt + p4_Cur + p5_Pid + p6_Pcat + p7_Pdesc + p8_Url + p9_SAF + pa_MP + pd_FrpId + pr_NeedResponse, key);
+        /*p2_Order == paymentSn */
+        String hmac = hmacSign(p0_Cmd + p1_MerId + paymentSn + p3_Amt + p4_Cur + p5_Pid + p6_Pcat + p7_Pdesc + p8_Url + p9_SAF + pa_MP + pd_FrpId + pr_NeedResponse, key);
 
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("p0_Cmd", p0_Cmd);
         parameterMap.put("p1_MerId", p1_MerId);
-        parameterMap.put("p2_Order", p2_Order);
+        parameterMap.put("p2_Order", paymentSn);
         parameterMap.put("p3_Amt", p3_Amt);
         parameterMap.put("p4_Cur", p4_Cur);
         parameterMap.put("p5_Pid", p5_Pid);
@@ -155,10 +154,12 @@ public class Yeepay extends AbstractPaymentProduct {
         //parameters.get("r6_Order")
         //getPaymentAmount
         //parameters.get("r3_Amt")
-
+        PayResult payResult = new PayResult();
+        payResult.setTradeNo(parameters.get("r6_Order"));//交易流水号
+        payResult.setTotalFee(BigDecimal.valueOf(Double.valueOf(parameters.get("r3_Amt"))));//交易金额
         String r1Code = parameters.get("r1_Code");
-        StringUtils.equals(r1Code, "1");
-        return null;
+        payResult.setStatus(StringUtils.equals(r1Code, "1")?PayResult.PayStatus.success:PayResult.PayStatus.failure);
+        return payResult;
     }
 
 }
