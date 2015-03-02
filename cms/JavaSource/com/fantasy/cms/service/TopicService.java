@@ -21,16 +21,21 @@ public class TopicService {
     private TopicDao topicDao;
 
     public Pager<Topic> findPager(Pager<Topic> pager, List<PropertyFilter> filters) {
-        return topicDao.findPager(pager,filters);
+        return topicDao.findPager(pager, filters);
     }
 
     public void delete(String... codes) {
+        for (String code : codes) {
+            this.topicDao.delete(code);
+        }
     }
 
     public void save(Topic topic) {
+        topicDao.save(topic);
     }
 
     public Topic get(String code) {
         return this.topicDao.get(code);
     }
+
 }
