@@ -6,8 +6,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
-import java.util.Iterator;
-
 public class LinkedQueueTest {
 
     private static Log logger = LogFactory.getLog(LinkedQueueTest.class);
@@ -52,11 +50,9 @@ public class LinkedQueueTest {
 
         logger.error("queue size : " + queue.size());
 
-        Iterator<User> iterator = queue.iterator();
-        while (iterator.hasNext()){
-            User user = iterator.next();
+        for (User user : queue) {
             logger.error(user.getNickName());
-            Assert.assertEquals(user.getNickName(),"test-2");
+            Assert.assertEquals(user.getNickName(), "test-2");
         }
     }
 }
