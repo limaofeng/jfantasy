@@ -92,6 +92,9 @@ public class PageBeanService {
 
     public IPageItem getPageItem(String path, Long pageId) {
         PageItem pageItem = pageItemService.findUniqueByPath(path,pageId);
+        if(pageItem==null){
+            return null;
+        }
         PageItemBean iPageItem = new PageItemBean();
         iPageItem.setPageItem(pageItem);
         return iPageItem;

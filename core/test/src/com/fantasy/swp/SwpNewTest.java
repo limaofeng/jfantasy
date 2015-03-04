@@ -36,13 +36,12 @@ public class SwpNewTest {
         ISwpWebsite swpWebsite = swpWebsiteFactory.getInstance("haolue");
 
         //1.添加模板 - 包括添加数据定义 - 指定模板类型（单页、多页、分页）
-        String templatePath = "template/template_test_new_pagnation.ftl";
+        String templatePath = "template/template_test_new_multi.ftl";
         String html = FileUtil.readFile(SwpNewTest.class.getClass().getResource("/").getPath()+templatePath);
         List<DataInferface> dataInferfaces = new ArrayList<DataInferface>();
         DataInferface dataInferface = new DataInferface();
-        String dataKey = "articles";
-        dataInferface.setKey(dataKey);
-        dataInferface.setName("文章-分页");
+        dataInferface.setKey("article");
+        dataInferface.setName("文章");
         dataInferface.setDataType(DataInferface.DataType.list);
         DataInferface dataInferface3 = new DataInferface();
         dataInferface3.setKey("title");
@@ -57,10 +56,11 @@ public class SwpNewTest {
         dataInferfaces.add(dataInferface3);
         dataInferfaces.add(dataInferface4);
 
-        swpWebsite.addPaginationTemplate(templatePath,html,dataInferfaces,dataKey);
+        String dataKey = "article";
+        swpWebsite.addMultiTemplate(templatePath,html,dataInferfaces,dataKey);
         //2.添加page - 指定数据定义的数据 - 配置page的触发器
         SpelService.setServer("cmsService", SpringContextUtil.getBeanByType(ArticleService.class));
-        String url = "xxx/article/pagination/${pager.currentPage}.html";
+        String url = "xxx/article/multi_${"+dataKey+".id}.html";
         List<Data> datas = new ArrayList<Data>();
         Data data = new Data();
         data.setDataInferface(dataInferface);
@@ -79,8 +79,7 @@ public class SwpNewTest {
         datas.add(data3);
         datas.add(data4);
 
-        int size = 3;
-        swpWebsite.createPaginationPage(url,templatePath,"SWP_JUNIT_TEST_",datas,size);
+        swpWebsite.createMultiPage(url,templatePath,"SWP_JUNIT_TEST_",datas);
         //3.通过page生成页面
         IPage ipage = swpWebsite.getPgae(url);
         List<IPageItem> ipageItems = ipage.createPageItems();
@@ -92,8 +91,8 @@ public class SwpNewTest {
         SpelService.setServer("cmsService", SpringContextUtil.getBeanByType(ArticleService.class));
         //4.通过pageItem重新生成页面
         ISwpWebsite swpWebsite = swpWebsiteFactory.getInstance("haolue");
-        IPage ipage = swpWebsite.getPgae("xxx/article/single.html");
-        IPageItem iPageItem = ipage.getPageItem("xxx/article/single.html");
+        IPage ipage = swpWebsite.getPgae("xxx/article/multi_${article.id}.html");
+        IPageItem iPageItem = ipage.getPageItem("xxx/article/multi_110.html");
         iPageItem.refash();
         System.out.println("===============createByItem end===============");
     }
@@ -102,7 +101,7 @@ public class SwpNewTest {
     public void deleteTemplate(){
         System.out.println("===============deleteTemplate start===============");
         ISwpWebsite swpWebsite = swpWebsiteFactory.getInstance("haolue");
-        String templatePath = "template/template_test_new_pagnation.ftl";
+        String templatePath = "template/template_test_new_multi.ftl";
         swpWebsite.removeTemplate(templatePath);
         System.out.println("===============deleteTemplate end===============");
     }
@@ -110,7 +109,7 @@ public class SwpNewTest {
     public void deletePage(){
         System.out.println("===============deletePage start===============");
         ISwpWebsite swpWebsite = swpWebsiteFactory.getInstance("haolue");
-        String url = "xxx/article/pagination/${pager.currentPage}.html";
+        String url = "xxx/article/multi_${article.id}.html";
         swpWebsite.removePage(url);
         System.out.println("===============deletePage end===============");
     }
@@ -260,6 +259,66 @@ public class SwpNewTest {
         IPage ipage = swpWebsite.getPgae(url);
         List<IPageItem> ipageItems = ipage.createPageItems();
 
+        //4.分页************************************************************************
+        ISwpWebsite swpWebsite = swpWebsiteFactory.getInstance("haolue");
 
+        //1.添加模板 - 包括添加数据定义 - 指定模板类型（单页、多页、分页）
+        String templatePath = "template/template_test_new_pagnation.ftl";
+        String html = FileUtil.readFile(SwpNewTest.class.getClass().getResource("/").getPath()+templatePath);
+        List<DataInferface> dataInferfaces = new ArrayList<DataInferface>();
+        DataInferface dataInferface = new DataInferface();
+        String dataKey = "articles";
+        dataInferface.setKey(dataKey);
+        dataInferface.setName("文章-分页");
+        dataInferface.setDataType(DataInferface.DataType.list);
+        DataInferface dataInferface3 = new DataInferface();
+        dataInferface3.setKey("title");
+        dataInferface3.setName("标题");
+        dataInferface3.setDataType(DataInferface.DataType.common);
+        DataInferface dataInferface4 = new DataInferface();
+        dataInferface4.setKey("summary");
+        dataInferface4.setName("摘要");
+        dataInferface4.setDataType(DataInferface.DataType.common);
+
+        dataInferfaces.add(dataInferface);
+        dataInferfaces.add(dataInferface3);
+        dataInferfaces.add(dataInferface4);
+
+        swpWebsite.addPaginationTemplate(templatePath,html,dataInferfaces,dataKey);
+        //2.添加page - 指定数据定义的数据 - 配置page的触发器
+        SpelService.setServer("cmsService", SpringContextUtil.getBeanByType(ArticleService.class));
+        String url = "xxx/article/pagination/${pager.currentPage}.html";
+        List<Data> datas = new ArrayList<Data>();
+        Data data = new Data();
+        data.setDataInferface(dataInferface);
+        data.setDataSource(Data.DataSource.func);
+        data.setValue("{'func':'#cmsService.find(#filters,#orderby,#order,#size)','params':{filters:[],stat:{'orderby':'id','order':'desc','size':10} }}");
+        Data data3 = new Data();
+        data3.setDataInferface(dataInferface3);
+        data3.setDataSource(Data.DataSource.stat);
+        data3.setValue("张三2");
+        Data data4 = new Data();
+        data4.setDataInferface(dataInferface4);
+        data4.setDataSource(Data.DataSource.stat);
+        data4.setValue("摘要XXXXXXX2");
+
+        datas.add(data);
+        datas.add(data3);
+        datas.add(data4);
+
+        int size = 3;
+        swpWebsite.createPaginationPage(url,templatePath,"SWP_JUNIT_TEST_",datas,size);
+        //3.通过page生成页面
+        IPage ipage = swpWebsite.getPgae(url);
+        List<IPageItem> ipageItems = ipage.createPageItems();
+
+
+
+        SpelService.setServer("cmsService", SpringContextUtil.getBeanByType(ArticleService.class));
+        //4.通过pageItem重新生成页面
+        ISwpWebsite swpWebsite = swpWebsiteFactory.getInstance("haolue");
+        IPage ipage = swpWebsite.getPgae("xxx/article/pagination/${pager.currentPage}.html");
+        IPageItem iPageItem = ipage.getPageItem("xxx/article/pagination/1.html");
+        iPageItem.refash();
      */
 }
