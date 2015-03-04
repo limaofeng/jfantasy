@@ -56,7 +56,7 @@ public class PageItemServiceTest extends StrutsSpringJUnit4TestCase {
         this.testDelete();
     }
 
-    @Test
+//    @Test
     public void testSave() throws Exception {
         PageItem pageItem = new PageItem();
         pageItem.setFile("/file/test_file.html");
