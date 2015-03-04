@@ -60,7 +60,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 //        this.deleteWebsiteTest();
     }
 
-    @Test
+//    @Test
     public void testSave() throws Exception {
         String dataType = "list";
 //        // 静态:stat，方法:func，hql语句:db
@@ -157,7 +157,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-    @Test
+//    @Test
     public void testSearch() throws Exception {
         ActionProxy proxy = super.getActionProxy("/swp/template/search.do");
         Assert.assertNotNull(proxy);

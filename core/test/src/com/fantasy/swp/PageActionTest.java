@@ -82,7 +82,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
 //        this.deleteWebsiteTest();
     }
 
-    @Test
+//    @Test
     public void testSave() throws Exception {
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("name", "PAGE_JUNIT_TEST");
@@ -160,7 +160,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-    @Test
+//    @Test
     public void testSearch() throws Exception {
         ActionProxy proxy = super.getActionProxy("/swp/page/search.do");
         Assert.assertNotNull(proxy);
@@ -168,7 +168,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-    @Test
+//    @Test
     public void testCreate() throws Exception {
         SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
@@ -179,7 +179,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-    @Test
+//    @Test
     public void testIndex() throws Exception {
         ActionProxy proxy = super.getActionProxy("/swp/page/index.do");
         Assert.assertNotNull(proxy);

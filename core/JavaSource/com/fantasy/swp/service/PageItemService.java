@@ -4,6 +4,8 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.bean.PageItem;
 import com.fantasy.swp.dao.PageItemDao;
+import org.hibernate.Hibernate;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,8 +33,12 @@ public class PageItemService {
 
     public void delete(Long[] ids) {
         for (Long id : ids) {
-            this.pageItemDao.delete(id);
+            this.delete(id);
         }
+    }
+
+    public void delete(Long id){
+        this.pageItemDao.delete(id);
     }
 
     public List<PageItem> find(List<PropertyFilter> filters) {
@@ -40,7 +46,23 @@ public class PageItemService {
     }
 
     public PageItem get(Long id) {
-        return this.pageItemDao.get(id);
+        PageItem pageItem = this.pageItemDao.get(id);
+        if(pageItem!=null){
+            Hibernate.initialize(pageItem.getPage().getTemplate().getDataInferfaces());
+            Hibernate.initialize(pageItem.getPage().getWebSite().getDefaultFileManager());
+            Hibernate.initialize(pageItem.getPage().getDatas());
+        }
+        return pageItem;
+    }
+
+    public PageItem findUniqueByPath(String path, Long pageId) {
+        PageItem pageItem = this.pageItemDao.findUnique(Restrictions.eq("file", path),Restrictions.eq("page.id", pageId));
+        if(pageItem!=null){
+            Hibernate.initialize(pageItem.getPage().getTemplate().getDataInferfaces());
+            Hibernate.initialize(pageItem.getPage().getWebSite().getDefaultFileManager());
+            Hibernate.initialize(pageItem.getPage().getDatas());
+        }
+        return pageItem;
     }
 }
 

@@ -1,7 +1,9 @@
 package com.fantasy.framework.freemarker.loader;
 
+import com.fantasy.swp.SwpContext;
 import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.service.TemplateService;
+import com.fantasy.system.bean.Website;
 import freemarker.cache.TemplateLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -24,7 +26,8 @@ public class FreemarkerTemplateLoader implements TemplateLoader {
 
     @Override
     public Object findTemplateSource(String name) throws IOException {
-        Template template = templateService.findUniqueByPath(name.startsWith("/") ? name : ("/" + name));
+        Website website = SwpContext.getContext().getWebsite();
+        Template template = this.templateService.findUniqueByPath(name.startsWith("/") ? name : ("/" + name),website.getId());
         if(template == null){
             return null;
         }

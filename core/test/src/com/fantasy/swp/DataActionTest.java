@@ -52,11 +52,11 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-//        templateActionTest.testDelete();
-//        testDelete();
+        templateActionTest.testDelete();
+        testDelete();
     }
 
-    @Test
+//    @Test
     public void testSave() throws Exception {
         String dataSource = "func";
 
@@ -132,7 +132,7 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-    @Test
+//    @Test
     public void testSearch() throws Exception {
         ActionProxy proxy = super.getActionProxy("/swp/page/data-search.do");
         Assert.assertNotNull(proxy);
@@ -155,7 +155,7 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
         return "{title:'xxxTitle'}";
     }
 
-    @Test
+//    @Test
     public void testCms(){
 
     }

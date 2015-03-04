@@ -61,4 +61,7 @@ public class ArticleService {
     public List<Article> find(List<PropertyFilter> filters) {
         return this.articleDao.find(filters,"id","asc",0,10);
     }
+    public List<Article> find(List<PropertyFilter> filters,String orderby, String order, int size) {
+        return this.articleDao.find(filters,orderby,order,0,size);
+    }
 }
