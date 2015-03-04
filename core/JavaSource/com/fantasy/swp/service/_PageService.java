@@ -78,6 +78,7 @@ public class _PageService {
         if(page!=null){
             Hibernate.initialize(page.getWebSite().getDefaultFileManager());
             Hibernate.initialize(page.getTemplate().getDataInferfaces());
+            Hibernate.initialize(page.getPageItems());
             Hibernate.initialize(page.getDatas());
             for(Data data : page.getDatas()){
                 Hibernate.initialize(data.getDataInferface());

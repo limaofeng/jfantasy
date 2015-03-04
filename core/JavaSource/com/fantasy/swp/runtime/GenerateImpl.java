@@ -12,13 +12,13 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
-import com.fantasy.swp.IData;
 import com.fantasy.swp.IGenerate;
 import com.fantasy.swp.bean.*;
 import com.fantasy.swp.bean.enums.PageType;
 import com.fantasy.swp.exception.SwpException;
 import com.fantasy.swp.service.PageItemDataService;
 import com.fantasy.swp.service.PageItemService;
+import com.fantasy.swp.service._PageService;
 import com.fantasy.swp.util.GeneratePageUtil;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
@@ -29,7 +29,6 @@ import javax.annotation.Resource;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -52,7 +51,8 @@ public class GenerateImpl implements IGenerate {
     private Configuration configuration;
     @Resource
     private PageItemService pageItemService;
-
+    @Resource
+    private _PageService pageService;
     @Override
     public Page create(Page page){
         List<PageItem> pageItems = new ArrayList<PageItem>();
@@ -95,9 +95,10 @@ public class GenerateImpl implements IGenerate {
                         }
                     });
                     FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
-                    // 页面生成成功，记录pageItem
                     pageDataMap.remove("pager");
-                    this.savePageItem(pageDataMap,path,page,pager.getCurrentPage());
+                    // 页面生成成功，记录pageItem
+                    PageItem pageItem = this.savePageItem(pageDataMap,path,page,pager.getCurrentPage());
+                    pageItems.add(pageItem);
                 }
             }else if(template.getPageType()==PageType.multi){   // 多页面
                 Data data = ObjectUtil.find(page.getDatas(), "dataInferface.key", template.getDataKey());
@@ -113,7 +114,8 @@ public class GenerateImpl implements IGenerate {
                         }
                     });
                     FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
-                    this.savePageItem(pageDataMap,path,page);
+                    PageItem pageItem = this.savePageItem(pageDataMap,path,page);
+                    pageItems.add(pageItem);
                 }
             }else{   // 单页面
                 String fileName = page.getPath();
@@ -158,29 +160,32 @@ public class GenerateImpl implements IGenerate {
             dm.put(dataInferface.getKey(), GeneratePageUtil.getValue(data));
         }
 
+        PageItem backPageItem = null;
         if(template.getPageType()== PageType.pagination){    // 分页
-            List<Object> list = (List<Object>) dm.get(template.getDataKey());
+            Data data = ObjectUtil.find(page.getDatas(), "dataInferface.key", template.getDataKey());
+            List<Object> list = (List<Object>) GeneratePageUtil.getValue(data);
             final Pager pager = new Pager(page.getPageSize());
             pager.setTotalCount(list.size());
-            pager.setCurrentPage(1);
-            for (int i = 1; i <= pager.getTotalPage(); pager.setCurrentPage(pager.getCurrentPage() + 1),i++) {
-                int start = pager.getPageSize() * (pager.getCurrentPage()-1);
-                int end = Math.min(pager.getPageSize() * pager.getCurrentPage(), pager.getTotalCount());
-                pager.setPageItems(list.subList(start, end));
-                final Map<String, Object> pageDataMap = new HashMap<String, Object>();
-                pageDataMap.put(template.getDataKey(),pager);
-                pageDataMap.putAll(dm);
-                // /aaaa/xxxx/bbbb/p_${art.id}.html
-                String path = RegexpUtil.replace(page.getPath(), "\\$\\{([a-zA-Z.]+)\\}", new RegexpUtil.AbstractReplaceCallBack() {
-                    @Override
-                    public String doReplace(String text, int index, Matcher matcher) {
-                        return StringUtil.nullValue(OgnlUtil.getInstance().getValue($(1), pageDataMap));
-                    }
-                });
-                FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
-                // 页面生成成功，记录pageItem
-                this.updatePageItem(pageDataMap,path,page,pageItemId);
-            }
+            pager.setCurrentPage(Integer.parseInt(pageItem.getCode()));
+
+            int start = pager.getPageSize() * (pager.getCurrentPage()-1);
+            int end = Math.min(pager.getPageSize() * pager.getCurrentPage(), pager.getTotalCount());
+            pager.setPageItems(list.subList(start, end));
+            final Map<String, Object> pageDataMap = new HashMap<String, Object>();
+            pageDataMap.put(template.getDataKey(),pager.getPageItems());
+            pageDataMap.putAll(dm);
+            pageDataMap.put("pager",pager);
+            // /aaaa/xxxx/bbbb/p_${art.id}.html
+            String path = RegexpUtil.replace(page.getPath(), "\\$\\{([a-zA-Z.]+)\\}", new RegexpUtil.AbstractReplaceCallBack() {
+                @Override
+                public String doReplace(String text, int index, Matcher matcher) {
+                    return StringUtil.nullValue(OgnlUtil.getInstance().getValue($(1), pageDataMap));
+                }
+            });
+            FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
+            pageDataMap.remove("pager");
+            // 页面生成成功，记录pageItem
+            backPageItem = this.savePageItem(pageDataMap,path,page,pager.getCurrentPage(),pageItemId);
         }else if(template.getPageType()==PageType.multi){   // 多页面
             Data data = ObjectUtil.find(datas, "dataInferface.key", template.getDataKey());
             List<Object> list = (List<Object>) GeneratePageUtil.getValue(data);
@@ -198,86 +203,129 @@ public class GenerateImpl implements IGenerate {
                 }
             });
             FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(pageDataMap), configuration.getTemplate(template.getPath()), fileManager.writeFile(path));
-            this.updatePageItem(pageDataMap,path,page,pageItemId);
+            backPageItem = this.savePageItem(pageDataMap,path,page,null,pageItemId);
         }else{   // 单页面
             String fileName = page.getPath();
             FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(dm), configuration.getTemplate(template.getPath()), fileManager.writeFile(fileName));
-            this.updatePageItem(dm,fileName,page,pageItemId);
+            backPageItem = this.savePageItem(dm,fileName,page,null,pageItemId);
         }
-        return null;
+        Page backPage = pageService.findUniqueByPath(page.getPath(),page.getWebSite().getId());
+        return backPage;
     }
 
-    /**
-     *
-     * @param dm
-     * @param fileName
-     * @param page
-     * @param pageItemId
-     */
-    private void updatePageItem(Map<String,Object> dm,String fileName,Page page, Long pageItemId){
-        // 删除
-        if(pageItemId!=null && pageItemId>0){
-            Long[] ids = {pageItemId};
-            this.pageItemService.delete(ids);
-        }
-        // 新增
-        PageItemService pageItemService = SpringContextUtil.getBeanByType(PageItemService.class);
-        PageItemDataService pageItemDataService = SpringContextUtil.getBeanByType(PageItemDataService.class);
-        PageItem pageItem = new PageItem();
-        pageItem.setPage(page);
-        pageItem.setContent("");
-        pageItem.setFile(fileName);
-        List<PageItemData> pageItemDatas = new ArrayList<PageItemData>();
-        pageItem.setPageItemDatas(pageItemDatas);
-
-        pageItemService.save(pageItem);
-
-        for (Map.Entry<String, Object> entry : dm.entrySet()) {
-            Object hibernateEntityObject = null;
-            if(entry.getValue() instanceof List){
-                if(entry.getValue()==null || ((List) entry.getValue()).size()==0){
-                    continue;
-                }
-                hibernateEntityObject = ((List) entry.getValue()).get(0);
-            }else if(entry.getValue() instanceof Array){
-                if(entry.getValue()==null || ((Object[]) entry.getValue()).length==0){
-                    continue;
-                }
-                hibernateEntityObject = ((Object[]) entry.getValue())[0];
-            }else{
-                hibernateEntityObject = entry.getValue();
-            }
-            Class clazz = ClassUtil.getRealClass(hibernateEntityObject.getClass());
-            Entity entity = (Entity) clazz.getAnnotation(Entity.class);
-            if(entity!=null){
-                Field[] field = ClassUtil.getDeclaredFields(clazz,Id.class);
-                Object id = null;
-                if(field.length == 1){
-                    id = ClassUtil.getValue(hibernateEntityObject,field[0].getName());
-                }
-                PageItemData pageItemData = new PageItemData();
-                pageItemData.setPageItem(pageItem);
-                pageItemData.setClassName(clazz.getName());
-                pageItemData.setBeanId(id.toString());
-                pageItemDataService.save(pageItemData);
-                pageItemDatas.add(pageItemData);
-            }
-        }
-    }
+//    /**
+//     *
+//     * @param dm
+//     * @param fileName
+//     * @param page
+//     * @param pageItemId
+//     */
+//    private void updatePageItem(Map<String,Object> dm,String fileName,Page page, Long pageItemId){
+//        // 删除
+//        if(pageItemId!=null && pageItemId>0){
+//            Long[] ids = {pageItemId};
+//            this.pageItemService.delete(ids);
+//        }
+//        // 新增
+//        PageItemService pageItemService = SpringContextUtil.getBeanByType(PageItemService.class);
+//        PageItemDataService pageItemDataService = SpringContextUtil.getBeanByType(PageItemDataService.class);
+//        PageItem pageItem = new PageItem();
+//        pageItem.setPage(page);
+//        pageItem.setContent("");
+//        pageItem.setFile(fileName);
+//        List<PageItemData> pageItemDatas = new ArrayList<PageItemData>();
+//        pageItem.setPageItemDatas(pageItemDatas);
+//
+////        for (Map.Entry<String, Object> entry : dm.entrySet()) {
+////            Object hibernateEntityObject = null;
+////            if(entry.getValue() instanceof List){
+////                if(entry.getValue()==null || ((List) entry.getValue()).size()==0){
+////                    continue;
+////                }
+////                hibernateEntityObject = ((List) entry.getValue()).get(0);
+////            }else if(entry.getValue() instanceof Array){
+////                if(entry.getValue()==null || ((Object[]) entry.getValue()).length==0){
+////                    continue;
+////                }
+////                hibernateEntityObject = ((Object[]) entry.getValue())[0];
+////            }else{
+////                hibernateEntityObject = entry.getValue();
+////            }
+////            Class clazz = ClassUtil.getRealClass(hibernateEntityObject.getClass());
+////            Entity entity = (Entity) clazz.getAnnotation(Entity.class);
+////            if(entity!=null){
+////                Field[] field = ClassUtil.getDeclaredFields(clazz,Id.class);
+////                Object id = null;
+////                if(field.length == 1){
+////                    id = ClassUtil.getValue(hibernateEntityObject,field[0].getName());
+////                }
+////                PageItemData pageItemData = new PageItemData();
+////                pageItemData.setPageItem(pageItem);
+////                pageItemData.setClassName(clazz.getName());
+////                pageItemData.setBeanId(id.toString());
+////                pageItemDataService.save(pageItemData);
+////                pageItemDatas.add(pageItemData);
+////            }
+////        }
+//        for (Map.Entry<String, Object> entry : dm.entrySet()) {
+//            if(entry.getValue() instanceof List){
+//                if(entry.getValue()==null || ((List) entry.getValue()).size()==0){
+//                    continue;
+//                }
+//                List<Object> objs= ((List) entry.getValue());
+//                for(Object obj : objs){
+//                    PageItemData pageItemData = this.getPageItemData(obj,pageItem,page.getTemplate().getPageType(),page.getPageSize());
+//                    if(pageItemData!=null){
+//                        pageItemDatas.add(pageItemData);
+//                    }
+//                }
+//            }else if(entry.getValue() instanceof Array){
+//                if(entry.getValue()==null || ((Object[]) entry.getValue()).length==0){
+//                    continue;
+//                }
+//                Object []objs = ((Object[]) entry.getValue());
+//                for(Object obj : objs){
+//                    PageItemData pageItemData = this.getPageItemData(obj,pageItem,page.getTemplate().getPageType(),page.getPageSize());
+//                    if(pageItemData!=null){
+//                        pageItemDatas.add(pageItemData);
+//                    }
+//                }
+//            }else{
+////                hibernateEntityObject = entry.getValue();
+//                PageItemData pageItemData = this.getPageItemData(entry.getValue(),pageItem);
+//                if(pageItemData!=null){
+//                    pageItemDatas.add(pageItemData);
+//                }
+//            }
+//        }
+//        // 保存pageItem
+//        pageItemService.save(pageItem);
+//        // 保存pageItemData
+//        for(PageItemData pageItemData : pageItemDatas){
+//            pageItemDataService.save(pageItemData);
+//        }
+//    }
 
     private PageItem savePageItem(Map<String,Object> dm,String fileName,Page page){
-        return this.savePageItem(dm,fileName,page,null);
+        return this.savePageItem(dm,fileName,page,null,null);
     }
     private PageItem savePageItem(Map<String,Object> dm,String fileName,Page page,Integer currentPage){
+        return this.savePageItem(dm,fileName,page,currentPage,null);
+    }
+    private PageItem savePageItem(Map<String,Object> dm,String fileName,Page page,Integer currentPage, Long pageItemId){
         PageItemService pageItemService = SpringContextUtil.getBeanByType(PageItemService.class);
 
-        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQL_page.id",page.getId()+""));
-        filters.add(new PropertyFilter("EQS_file",fileName));
-        List<PageItem> items = pageItemService.find(filters);
-        if(items!=null && items.size()>0){
-            for(PageItem item : items){
-                pageItemService.delete(item.getId());
+        if(pageItemId!=null){
+            pageItemService.delete(pageItemId);
+        }else{
+            List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+            filters.add(new PropertyFilter("EQL_page.id",page.getId()+""));
+            filters.add(new PropertyFilter("EQS_file",fileName));
+            List<PageItem> items = pageItemService.find(filters);
+            if(items!=null && items.size()>0){
+                for(PageItem item : items){
+                    pageItemService.delete(item.getId());
+                }
             }
         }
 
@@ -296,9 +344,14 @@ public class GenerateImpl implements IGenerate {
                 }
                 List<Object> objs= ((List) entry.getValue());
                 for(Object obj : objs){
-                    PageItemData pageItemData = this.getPageItemData(obj,pageItem,page.getTemplate().getPageType(),page.getPageSize());
-                    if(pageItemData!=null){
-                        pageItemDatas.add(pageItemData);
+                    PageItemData pageItemData = this.getPageItemData(obj);
+                    if(pageItemData==null){
+                        continue;
+                    }
+                    pageItemData.setPageItem(pageItem);
+                    pageItemDatas.add(pageItemData);
+                    if(page.getTemplate().getPageType()==PageType.multi && entry.getKey().equals(page.getTemplate().getDataKey())){
+                        pageItem.setCode(pageItemData.getBeanId() + "");
                     }
                 }
             }else if(entry.getValue() instanceof Array){
@@ -307,18 +360,30 @@ public class GenerateImpl implements IGenerate {
                 }
                 Object []objs = ((Object[]) entry.getValue());
                 for(Object obj : objs){
-                    PageItemData pageItemData = this.getPageItemData(obj,pageItem,page.getTemplate().getPageType(),page.getPageSize());
-                    if(pageItemData!=null){
-                        pageItemDatas.add(pageItemData);
+                    PageItemData pageItemData = this.getPageItemData(obj);
+                    if(pageItemData==null){
+                        continue;
+                    }
+                    pageItemData.setPageItem(pageItem);
+                    pageItemDatas.add(pageItemData);
+                    if(page.getTemplate().getPageType()==PageType.multi && entry.getKey().equals(page.getTemplate().getDataKey())){
+                        pageItem.setCode(pageItemData.getBeanId()+"");
                     }
                 }
             }else{
 //                hibernateEntityObject = entry.getValue();
-                PageItemData pageItemData = this.getPageItemData(entry.getValue(),pageItem);
+                PageItemData pageItemData = this.getPageItemData(entry.getValue());
                 if(pageItemData!=null){
+                    pageItemData.setPageItem(pageItem);
                     pageItemDatas.add(pageItemData);
+                    if(page.getTemplate().getPageType()==PageType.multi && entry.getKey().equals(page.getTemplate().getDataKey())){
+                        pageItem.setCode(pageItemData.getBeanId()+"");
+                    }
                 }
             }
+        }
+        if(page.getTemplate().getPageType()==PageType.pagination){  // 分页页面
+            pageItem.setCode(currentPage+"");
         }
         // 保存pageItem
         pageItemService.save(pageItem);
@@ -329,10 +394,7 @@ public class GenerateImpl implements IGenerate {
         return pageItem;
     }
 
-    private PageItemData getPageItemData(Object hibernateEntityObject, PageItem pageItem){
-        return this.getPageItemData(hibernateEntityObject,pageItem,null,null);
-    }
-    private PageItemData getPageItemData(Object hibernateEntityObject, PageItem pageItem, PageType pageType,Integer currentPage){
+    private PageItemData getPageItemData(Object hibernateEntityObject){
         Class clazz = ClassUtil.getRealClass(hibernateEntityObject.getClass());
         Entity entity = (Entity) clazz.getAnnotation(Entity.class);
         if(entity!=null){
@@ -342,15 +404,10 @@ public class GenerateImpl implements IGenerate {
                 id = ClassUtil.getValue(hibernateEntityObject,fields[0].getName());
             }
             PageItemData pageItemData = new PageItemData();
-            pageItemData.setPageItem(pageItem);
             pageItemData.setClassName(clazz.getName());
             pageItemData.setBeanId(id.toString());
 //            pageItemDatas.add(pageItemData);
-            if(pageType==PageType.multi){   // 多页面
-                pageItem.setCode(id.toString());
-            }else if(pageType==PageType.pagination){  // 分页页面
-                pageItem.setCode(currentPage+"");
-            }
+
             return pageItemData;
         }
         return null;
