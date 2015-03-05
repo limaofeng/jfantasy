@@ -1,5 +1,8 @@
 package com.fantasy.swp.service;
 
+import com.fantasy.file.FileManager;
+import com.fantasy.file.bean.FileManagerConfig;
+import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.IPage;
 import com.fantasy.swp.IPageItem;
@@ -26,6 +29,8 @@ public class PageBeanService {
     private PageItemService pageItemService;
     @Resource
     private DataService dataService;
+    @Resource
+    private FileManagerFactory fileManagerFactory;
 
     public List<IPage> listPage(){
         List<Page> pages = pageService.find(new ArrayList<PropertyFilter>());
@@ -98,5 +103,19 @@ public class PageBeanService {
         PageItemBean iPageItem = new PageItemBean();
         iPageItem.setPageItem(pageItem);
         return iPageItem;
+    }
+
+    /**
+     * 删除文件
+     * @param url
+     * @param website
+     */
+    public void removeFile(String url, Website website) {
+        FileManager fileManager = fileManagerFactory.getFileManager(website.getDefaultFileManager().getId());
+        Page page = this.pageService.findUniqueByPath(url,website.getId());
+        List<PageItem> pageItems = page.getPageItems();
+        for(PageItem pageItem : pageItems){
+            fileManager.removeFile(pageItem.getFile());
+        }
     }
 }

@@ -146,11 +146,13 @@ public class SwpWebsite implements ISwpWebsite {
 
     @Override
     public void removePage(String url) {
+        this.pageBeanService.removeFile(url,website);
         this.pageBeanService.remove(url,this.website.getId());
     }
 
     @Override
     public void removeTemplate(String path) {
+        this.templateBeanService.removeFile(path,website);
         this.templateBeanService.remove(path,this.website.getId());
     }
 

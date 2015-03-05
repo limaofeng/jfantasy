@@ -1,11 +1,12 @@
 package com.fantasy.swp.service;
 
 
+import com.fantasy.file.FileManager;
+import com.fantasy.file.bean.FileManagerConfig;
+import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.ITemplage;
-import com.fantasy.swp.bean.DataInferface;
-import com.fantasy.swp.bean.Template;
-import com.fantasy.swp.bean.TemplateBean;
+import com.fantasy.swp.bean.*;
 import com.fantasy.swp.bean.enums.PageType;
 import com.fantasy.system.bean.Website;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,10 @@ public class TemplateBeanService {
     private TemplateService templateService;
     @Resource
     private DataInferfaceService dataInferfaceService;
+    @Resource
+    private FileManagerFactory fileManagerFactory;
+    @Resource
+    private _PageService pageService;
 
     public List<ITemplage> listTemplate() {
         List<Template> templates = this.templateService.find(new ArrayList<PropertyFilter>());
@@ -69,5 +74,27 @@ public class TemplateBeanService {
                 dataInferfaceService.save(inferface);
             }
         }
+    }
+
+    /**
+     * 删除模板文件及所有page文件
+     * @param path
+     * @param website
+     */
+    public void removeFile(String path, Website website) {
+        FileManager fileManager = this.fileManagerFactory.getFileManager(website.getDefaultFileManager().getId());
+        Template template = this.templateService.findUniqueByPath(path,website.getId());
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQL_template.id",template.getId()+""));
+        List<Page> pages = this.pageService.find(filters);
+        // 删除page文件
+        for(Page page : pages){
+            List<PageItem> pageItems = page.getPageItems();
+            for(PageItem pageItem : pageItems){
+                fileManager.removeFile(pageItem.getFile());
+            }
+        }
+        // 删除模板文件
+        fileManager.removeFile(path);
     }
 }
