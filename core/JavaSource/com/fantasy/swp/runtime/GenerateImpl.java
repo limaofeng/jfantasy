@@ -24,6 +24,7 @@ import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.persistence.Entity;
@@ -41,6 +42,7 @@ import java.util.regex.Matcher;
  * Created by wuzhiyong on 2015/3/2.
  */
 @Component
+@Transactional
 public class GenerateImpl implements IGenerate {
 
     private static Log logger = LogFactory.getLog(GeneratePage.class);
