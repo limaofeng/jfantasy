@@ -15,7 +15,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import javax.transaction.Transactional;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Transactional
 public class FileUploadService {
 
     private static final Log logger = LogFactory.getLog(FileUploadService.class);
@@ -53,75 +51,83 @@ public class FileUploadService {
      * @throws IOException
      */
     public FileDetail upload(File attach, String contentType, String fileName, String dir, String entireFileName, String entireFileDir, String entireFileHash, String partFileHash, Integer total, Integer index) throws IOException {
-        //判断是否为分段上传
-        boolean isPart = StringUtil.isNotBlank(entireFileHash) && StringUtil.isNotBlank(partFileHash) && StringUtil.isNotBlank(entireFileName) && StringUtil.isNotBlank(entireFileDir) && ObjectUtil.isNotNull(total) && StringUtil.isNotNull(index);
-        //生成分段上传的文件名
-        if (isPart && "blob".equalsIgnoreCase(fileName)) {
-            fileName = entireFileName + ".part" + StringUtil.addZeroLeft(index.toString(), total.toString().length());
-        }
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("上传文件参数:{fileName:" + contentType + ",contentType:" + fileName + ",dir:" + dir + ",isPart:" + isPart + "}");
-        }
-
-        //上传文件信息
-        FileDetail fileDetail;
-
-        if (isPart) {//如果为分段上传
-            //获取文件上传目录的配置信息
-            Directory directory = fileService.getDirectory(dir);
-            FileManager fileManager = FileManagerFactory.getInstance().getUploadFileManager(directory.getFileManager().getId());
-
-            FilePart filePart = filePartService.findByPartFileHash(entireFileHash, partFileHash);
-            if (filePart == null || (fileDetail = fileService.get(FileDetailKey.newInstance(filePart.getAbsolutePath(), filePart.getFileManagerId()))) == null) {//分段已上传信息
-                fileDetail = this.upload(attach, contentType, fileName, dir);
-                filePartService.save(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()), entireFileHash, partFileHash, total, index);
+        try {
+            //判断是否为分段上传
+            boolean isPart = StringUtil.isNotBlank(entireFileHash) && StringUtil.isNotBlank(partFileHash) && StringUtil.isNotBlank(entireFileName) && StringUtil.isNotBlank(entireFileDir) && ObjectUtil.isNotNull(total) && StringUtil.isNotNull(index);
+            //生成分段上传的文件名
+            if (isPart && "blob".equalsIgnoreCase(fileName)) {
+                fileName = entireFileName + ".part" + StringUtil.addZeroLeft(index.toString(), total.toString().length());
             }
-            //查询上传的片段
-            List<FilePart> fileParts = filePartService.find(entireFileHash);
-            FilePart _part = ObjectUtil.remove(fileParts, "index", 0);
-            if (_part == null) {
-                List<FilePart> joinFileParts = new ArrayList<FilePart>();
-                ObjectUtil.join(joinFileParts, fileParts, "index");
 
-                if (joinFileParts.size() == total) {
-                    //临时文件
-                    File tmp = FileUtil.tmp();
-                    //合并 Part 文件
-                    FileOutputStream out = new FileOutputStream(tmp);
-                    for (FilePart _filePart : joinFileParts) {
-                        InputStream in = fileManager.readFile(_filePart.getAbsolutePath());
-                        StreamUtil.copy(in, out);
-                        StreamUtil.closeQuietly(in);
-                        fileManager.removeFile(_filePart.getAbsolutePath());
-                        ObjectUtil.remove(fileParts, SpELUtil.getExpression(" absolutePath == #value.getAbsolutePath() and fileManagerId == #value.getFileManagerId() "), filePart);
+            if (logger.isDebugEnabled()) {
+                logger.debug("上传文件参数:{fileName:" + contentType + ",contentType:" + fileName + ",dir:" + dir + ",isPart:" + isPart + "}");
+            }
+
+            //上传文件信息
+            FileDetail fileDetail;
+
+            if (isPart) {//如果为分段上传
+                //获取文件上传目录的配置信息
+                Directory directory = fileService.getDirectory(dir);
+                FileManager fileManager = FileManagerFactory.getInstance().getUploadFileManager(directory.getFileManager().getId());
+
+                FilePart filePart = filePartService.findByPartFileHash(entireFileHash, partFileHash);
+                if (filePart == null || (fileDetail = fileService.get(FileDetailKey.newInstance(filePart.getAbsolutePath(), filePart.getFileManagerId()))) == null) {//分段已上传信息
+                    fileDetail = this.upload(attach, contentType, fileName, dir);
+                    filePartService.save(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()), entireFileHash, partFileHash, total, index);
+                }
+                //查询上传的片段
+                List<FilePart> fileParts = filePartService.find(entireFileHash);
+                FilePart _part = ObjectUtil.remove(fileParts, "index", 0);
+                if (_part == null) {
+                    List<FilePart> joinFileParts = new ArrayList<FilePart>();
+                    ObjectUtil.join(joinFileParts, fileParts, "index");
+
+                    if (joinFileParts.size() == total) {
+                        //临时文件
+                        File tmp = FileUtil.tmp();
+                        //合并 Part 文件
+                        FileOutputStream out = new FileOutputStream(tmp);
+                        for (FilePart _filePart : joinFileParts) {
+                            InputStream in = fileManager.readFile(_filePart.getAbsolutePath());
+                            StreamUtil.copy(in, out);
+                            StreamUtil.closeQuietly(in);
+                            fileManager.removeFile(_filePart.getAbsolutePath());
+                            ObjectUtil.remove(fileParts, SpELUtil.getExpression(" absolutePath == #value.getAbsolutePath() and fileManagerId == #value.getFileManagerId() "), filePart);
+                        }
+                        StreamUtil.closeQuietly(out);
+
+                        //保存合并后的新文件
+                        fileDetail = this.upload(tmp, contentType, entireFileName, entireFileDir);
+
+                        //删除临时文件
+                        FileUtil.delFile(tmp);
+
+                        //删除 Part 文件
+                        for (FilePart _filePart : fileParts) {
+                            fileManager.removeFile(_filePart.getAbsolutePath());
+                        }
+
+                        //在File_PART 表冗余一条数据 片段为 0
+                        filePartService.save(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()), entireFileHash, entireFileHash, total, 0);
                     }
-                    StreamUtil.closeQuietly(out);
-
-                    //保存合并后的新文件
-                    fileDetail = this.upload(tmp, contentType, entireFileName, entireFileDir);
-
-                    //删除临时文件
-                    FileUtil.delFile(tmp);
-
+                } else {
                     //删除 Part 文件
                     for (FilePart _filePart : fileParts) {
                         fileManager.removeFile(_filePart.getAbsolutePath());
                     }
-
-                    //在File_PART 表冗余一条数据 片段为 0
-                    filePartService.save(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()), entireFileHash, entireFileHash, total, 0);
                 }
             } else {
-                //删除 Part 文件
-                for (FilePart _filePart : fileParts) {
-                    fileManager.removeFile(_filePart.getAbsolutePath());
-                }
+                fileDetail = this.upload(attach, contentType, fileName, dir);
             }
-        } else {
-            fileDetail = this.upload(attach, contentType, fileName, dir);
+            return fileDetail;
+        }catch (RuntimeException e){
+            logger.error(e.getMessage(),e);
+            throw e;
+        }catch (IOException e){
+            logger.error(e.getMessage(),e);
+            throw e;
         }
-        return fileDetail;
     }
 
     public FileDetail upload(File attach, String contentType, String fileName, String dir) throws IOException {
