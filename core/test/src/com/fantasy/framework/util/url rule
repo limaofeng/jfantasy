@@ -1,11 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE urlrewrite PUBLIC "-//tuckey.org//DTD UrlRewrite 3.0//EN" "http://tuckey.org/res/dtds/urlrewrite3.0.dtd">
-<urlrewrite>
-	<!-- 抓取页面时生成的链接中带链接 -->
-	<outbound-rule encodefirst="false">
-		<from>^(.*);jsessionid=.*$</from>
-		<to>$1</to>
-	</outbound-rule>
 
     <rule>
         <name>Test Rule1</name>
@@ -27,7 +19,7 @@
         <from>/chairs/setValue.do</from>
         <set name="categoryId">1234</set>
         <set name="usingFilter">yes</set>
-        <to>/tiaosession.jsp</to><!-- %{context-path} -->
+        <to>/tiaosession.jsp</to>
     </rule>
     <rule>
         <from>/chairs/index.do</from>
@@ -131,17 +123,13 @@
         <from>/page-not-for-devils(0-9)?</from>
         <to>/devils-page</to>
     </outbound-rule>
-<!-- 
+<!--
     <outbound-rule encodefirst="true">
         <condition name="user-agent">googlebot.*</condition>
         <from>^(.*);jsessionid=.*$</from>
         <to>$1</to>
     </outbound-rule>
  -->
-    <outbound-rule encodefirst="false">
-        <from>^(.*);jsessionid=.*$</from>
-        <to>$1</to>
-    </outbound-rule>
 
 
     <!--
@@ -177,7 +165,3 @@
     browsers whose user agent srtings match Mozilla/1, Mozilla/2, Mozilla/3 or Mozilla/4.
 
     -->
-
-
-</urlrewrite>
-
