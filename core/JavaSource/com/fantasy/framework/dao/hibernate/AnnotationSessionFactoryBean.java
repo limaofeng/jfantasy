@@ -256,4 +256,9 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         this.eventListeners = eventListeners;
     }
 
+    @Override
+    public void setEntityInterceptor(Interceptor entityInterceptor) {
+        this.entityInterceptor = entityInterceptor;
+    }
+
 }

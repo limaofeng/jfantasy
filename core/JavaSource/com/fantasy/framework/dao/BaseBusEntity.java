@@ -10,8 +10,6 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class BaseBusEntity implements Serializable {
 
-	private static final long serialVersionUID = -8354372889916193074L;
-
 	/**
 	 * 创建人
 	 */
