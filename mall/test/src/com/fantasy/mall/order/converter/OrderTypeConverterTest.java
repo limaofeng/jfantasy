@@ -1,14 +1,14 @@
 package com.fantasy.mall.order.converter;
 
-import com.fantasy.attr.bean.Attribute;
-import com.fantasy.attr.bean.AttributeType;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.bean.Converter;
-import com.fantasy.attr.service.AttributeService;
-import com.fantasy.attr.service.AttributeTypeService;
-import com.fantasy.attr.service.AttributeVersionService;
-import com.fantasy.attr.service.ConverterService;
-import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.bean.Converter;
+import com.fantasy.attr.storage.service.AttributeService;
+import com.fantasy.attr.storage.service.AttributeTypeService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
+import com.fantasy.attr.storage.service.ConverterService;
+import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.common.service.AreaService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;

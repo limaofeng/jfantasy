@@ -1,9 +1,9 @@
 package com.fantasy.mall.order.bean;
 
-import com.fantasy.attr.DynaBean;
-import com.fantasy.attr.DynaBeanEntityPersister;
-import com.fantasy.attr.bean.AttributeValue;
-import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.framework.DynaBean;
+import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
+import com.fantasy.attr.storage.bean.AttributeValue;
+import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.common.bean.Area;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;

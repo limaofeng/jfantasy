@@ -1,8 +1,8 @@
 package com.fantasy.framework.struts2.interceptor;
 
-import com.fantasy.attr.DynaBean;
-import com.fantasy.attr.bean.Attribute;
-import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.attr.framework.DynaBean;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.dao.hibernate.PropertyFilter.MatchType;

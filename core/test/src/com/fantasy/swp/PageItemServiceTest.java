@@ -1,9 +1,9 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.bean.Article;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.service.ArticleService;
-import com.fantasy.attr.service.AttributeVersionService;
+import com.fantasy.attr.storage.bean.Article;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.service.ArticleService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.bean.Page;

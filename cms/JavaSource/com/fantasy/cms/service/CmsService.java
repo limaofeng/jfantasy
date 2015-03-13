@@ -1,7 +1,7 @@
 package com.fantasy.cms.service;
 
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.service.AttributeVersionService;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.dao.ArticleCategoryDao;

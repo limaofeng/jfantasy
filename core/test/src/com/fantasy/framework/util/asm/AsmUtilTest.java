@@ -1,8 +1,8 @@
 package com.fantasy.framework.util.asm;
 
-import com.fantasy.attr.bean.AttributeType;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import junit.framework.Assert;
@@ -76,12 +76,12 @@ public class AsmUtilTest implements Opcodes {
         attributeType1.setName("测试数据类型");
         attributeType1.setDataType(Integer.class.getName());
 
-        com.fantasy.attr.bean.Attribute attribute = new com.fantasy.attr.bean.Attribute();
+        com.fantasy.attr.storage.bean.Attribute attribute = new com.fantasy.attr.storage.bean.Attribute();
         attribute.setCode("test");
         attribute.setName("测试字段");
         attribute.setAttributeType(attributeType);
 
-        com.fantasy.attr.bean.Attribute attribute1 = new com.fantasy.attr.bean.Attribute();
+        com.fantasy.attr.storage.bean.Attribute attribute1 = new com.fantasy.attr.storage.bean.Attribute();
         attribute1.setCode("testInt");
         attribute1.setName("测试字段");
         attribute1.setAttributeType(attributeType1);

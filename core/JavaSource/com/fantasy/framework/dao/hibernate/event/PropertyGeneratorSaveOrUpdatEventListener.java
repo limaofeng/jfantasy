@@ -1,5 +1,6 @@
 package com.fantasy.framework.dao.hibernate.event;
 
+import com.fantasy.framework.dao.hibernate.generator.SequenceGenerator;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
@@ -18,6 +19,8 @@ import org.hibernate.type.Type;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
 
 import javax.persistence.Id;
+import javax.persistence.Column;
+import javax.persistence.Table;
 import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -68,7 +71,7 @@ public class PropertyGeneratorSaveOrUpdatEventListener extends DefaultSaveOrUpda
 						if (!field.isAnnotationPresent(Id.class)) {
 							GenericGenerator annotGenerator = field.getAnnotation(GenericGenerator.class);
 							Properties properties = new Properties();
-							properties.put("entity_name", object.getClass().getName() + "_" + field.getName());
+                            properties.put(SequenceGenerator.KEY_NAME, object.getClass().getAnnotation(Table.class).name() + ":" + field.getAnnotation(Column.class).name());
 							for (Parameter parameter : annotGenerator.parameters()) {
 								properties.put(parameter.name(), parameter.value());
 							}

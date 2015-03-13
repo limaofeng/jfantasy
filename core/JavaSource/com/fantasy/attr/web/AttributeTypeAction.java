@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import com.fantasy.attr.bean.AttributeType;
-import com.fantasy.attr.service.AttributeTypeService;
+import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;

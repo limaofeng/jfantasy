@@ -1,7 +1,7 @@
 package com.fantasy.framework.dao.hibernate;
 
-import com.fantasy.attr.DynaBean;
-import com.fantasy.attr.DynaBeanQueryManager;
+import com.fantasy.attr.framework.DynaBean;
+import com.fantasy.attr.framework.query.DynaBeanQueryManager;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;

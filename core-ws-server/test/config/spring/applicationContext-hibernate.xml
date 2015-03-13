@@ -33,7 +33,7 @@
                 <entry key="haolue-sequence" value="com.haolue.izi.id.IdGenerater"/>
             </map>
         </property>-->
-        <property name="packagesToScan" value="com.fantasy.*.bean"/>
+        <property name="packagesToScan" value="com.fantasy.attr.storage.bean"/>
 	</bean>
 	<bean abstract="true" name="hibernateDao" class="com.fantasy.framework.dao.hibernate.HibernateDao">
 		<property name="sessionFactory" ref="sessionFactory" />

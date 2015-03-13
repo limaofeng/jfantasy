@@ -1,10 +1,10 @@
 package com.fantasy.afterPropertiesSet;
 
-import com.fantasy.attr.bean.AttributeType;
-import com.fantasy.attr.bean.Converter;
-import com.fantasy.attr.dao.AttributeTypeDao;
-import com.fantasy.attr.dao.ConverterDao;
-import com.fantasy.attr.typeConverter.PrimitiveTypeConverter;
+import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.bean.Converter;
+import com.fantasy.attr.storage.dao.AttributeTypeDao;
+import com.fantasy.attr.storage.dao.ConverterDao;
+import com.fantasy.attr.framework.converter.PrimitiveTypeConverter;
 import com.fantasy.common.bean.FtpConfig;
 import com.fantasy.common.dao.AreaDao;
 import com.fantasy.common.service.AreaService;

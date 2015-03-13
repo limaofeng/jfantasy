@@ -1,7 +1,7 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.bean.Article;
-import com.fantasy.attr.service.ArticleService;
+import com.fantasy.attr.storage.bean.Article;
+import com.fantasy.attr.storage.service.ArticleService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.swp.bean.Data;

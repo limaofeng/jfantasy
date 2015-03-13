@@ -1,12 +1,10 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.service.ArticleService;
+import com.fantasy.attr.storage.service.ArticleService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
-import com.fantasy.swp.bean.Page;
-import com.fantasy.swp.bean.PageBean;
 import com.fantasy.swp.exception.SwpException;
 import com.fantasy.swp.factory.SwpWebsiteFactory;
 import com.fantasy.swp.service.SpelService;

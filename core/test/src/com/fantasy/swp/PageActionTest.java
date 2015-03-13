@@ -1,6 +1,6 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.service.ArticleService;
+import com.fantasy.attr.storage.service.ArticleService;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;

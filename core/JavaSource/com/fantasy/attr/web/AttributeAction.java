@@ -1,9 +1,9 @@
 package com.fantasy.attr.web;
 
-import com.fantasy.attr.bean.Attribute;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.service.AttributeService;
-import com.fantasy.attr.service.AttributeVersionService;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.service.AttributeService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
