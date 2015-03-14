@@ -1,6 +1,7 @@
 package com.fantasy.attr.storage.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,7 +15,7 @@ import java.util.List;
  * 动态属性版本表
  */
 @Entity
-@Table(name = "ATTR_VERSION",uniqueConstraints = {@UniqueConstraint(columnNames = {"CLASS_NAME","NUMBER"})})
+@Table(name = "ATTR_VERSION",uniqueConstraints = {@UniqueConstraint(columnNames = {"TARGET_CLASS_NAME","NUMBER"})})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "attributes"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AttributeVersion extends BaseBusEntity {
@@ -27,8 +28,8 @@ public class AttributeVersion extends BaseBusEntity {
     /**
      * 对应的className
      */
-    @Column(name = "CLASS_NAME", length = 150)
-    private String className;
+    @Column(name = "TARGET_CLASS_NAME", length = 150)
+    private String targetClassName;
     /**
      * 版本号
      */
@@ -54,12 +55,12 @@ public class AttributeVersion extends BaseBusEntity {
         this.id = id;
     }
 
-    public String getClassName() {
-        return className;
+    public String getTargetClassName() {
+        return targetClassName;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setTargetClassName(String targetClassName) {
+        this.targetClassName = targetClassName;
     }
 
     public String getNumber() {
@@ -86,6 +87,10 @@ public class AttributeVersion extends BaseBusEntity {
         this.attributeSort = attributeSort;
     }
 
+    @Transient
+    public String getClassName(){
+        return this.getTargetClassName() + ClassUtil.CGLIB_CLASS_SEPARATOR + this.getNumber();
+    }
 
     @JsonIgnore
     public String[] getAttributeSorts(){

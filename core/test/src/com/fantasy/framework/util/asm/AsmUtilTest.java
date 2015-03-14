@@ -66,7 +66,7 @@ public class AsmUtilTest implements Opcodes {
     public void test() throws IOException, InterruptedException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         AttributeVersion version = new AttributeVersion();
         version.setNumber("temp");
-        version.setClassName(Article.class.getName());
+        version.setTargetClassName(Article.class.getName());
 
         AttributeType attributeType = new AttributeType();
         attributeType.setName("测试数据类型");
@@ -88,7 +88,7 @@ public class AsmUtilTest implements Opcodes {
 
         version.setAttributes(Arrays.asList(attribute,attribute1));
 
-        Class clzz = VersionUtil.makeClass(version);
+        Class clzz = VersionUtil.makeClass(version.getClassName());
 
 //        logger.debug(AsmUtil.trace(Article.class));
 

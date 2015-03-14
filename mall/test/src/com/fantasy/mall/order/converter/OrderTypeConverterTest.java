@@ -93,7 +93,7 @@ public class OrderTypeConverterTest {
 
         AttributeVersion version = new AttributeVersion();
         version.setNumber("1.0.beta");
-        version.setClassName(Order.class.getName());
+        version.setTargetClassName(Order.class.getName());
         version.setAttributes(new ArrayList<Attribute>());
         version.getAttributes().add(attribute);
         attributeVersionService.save(version);

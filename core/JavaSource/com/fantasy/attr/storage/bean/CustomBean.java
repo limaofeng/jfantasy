@@ -1,38 +1,36 @@
 package com.fantasy.attr.storage.bean;
 
-import com.fantasy.attr.framework.DynaBean;
-import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "CUSTOM_BEAN")
-@Persister(impl = DynaBeanEntityPersister.class)
-public class CustomBean extends BaseBusEntity implements DynaBean {
+public class CustomBean extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
     /**
-     * 数据版本
+     * 自定义 bean 的名称
      */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_VERSION"))
-    private AttributeVersion version;
-
+    @Column(name = "NAME")
+    private String name;
     /**
-     * 动态属性集合。
+     * 自定义类的
      */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    private List<AttributeValue> attributeValues;
+    @Column(name = "CLASS_NAME")
+    private String className;
+    /**
+     * 属性
+     */
+    @ManyToMany(targetEntity = Attribute.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
+    private List<Attribute> attributes;
 
     public Long getId() {
         return id;
@@ -42,24 +40,28 @@ public class CustomBean extends BaseBusEntity implements DynaBean {
         this.id = id;
     }
 
-    @Override
-    public AttributeVersion getVersion() {
-        return version;
+    public String getClassName() {
+        return className;
     }
 
-    @Override
-    public void setVersion(AttributeVersion version) {
-        this.version = version;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
-    @Override
-    public List<AttributeValue> getAttributeValues() {
-        return attributeValues;
+    public List<Attribute> getAttributes() {
+        return attributes;
     }
 
-    @Override
-    public void setAttributeValues(List<AttributeValue> attributeValues) {
-        this.attributeValues = attributeValues;
+    public void setAttributes(List<Attribute> attributes) {
+        this.attributes = attributes;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

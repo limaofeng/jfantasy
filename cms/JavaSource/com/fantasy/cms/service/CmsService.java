@@ -95,7 +95,7 @@ public class CmsService extends BuguSearcher<Article> {
             AttributeVersion version = this.versionService.getVersion(Article.class, category.getCode());
             if (version == null) {
                 version = new AttributeVersion();
-                version.setClassName(Article.class.getName());
+                version.setTargetClassName(Article.class.getName());
                 version.setNumber(category.getCode());
             }
             version.setAttributes(category.getArticleVersion().getAttributes());

@@ -60,7 +60,7 @@ public class AttributeVersionService {
     }
 
     public List<AttributeVersion> getVersions(Class<?> entityClass) {
-        return this.attributeVersionDao.find(Restrictions.eq("className", entityClass.getName()));
+        return this.attributeVersionDao.find(Restrictions.eq("targetClassName", entityClass.getName()));
     }
 
 
@@ -76,7 +76,7 @@ public class AttributeVersionService {
      * @return AttributeVersion
      */
     public AttributeVersion getVersion(Class clazz, String number) {
-        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("className", clazz.getName()), Restrictions.eq("number", number));
+        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", clazz.getName()), Restrictions.eq("number", number));
         if (version == null) {
             return null;
         }

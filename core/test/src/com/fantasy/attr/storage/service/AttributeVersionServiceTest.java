@@ -103,7 +103,7 @@ public class AttributeVersionServiceTest {
 
         AttributeVersion version = new AttributeVersion();
         version.setNumber("1.0");
-        version.setClassName(Article.class.getName());
+        version.setTargetClassName(Article.class.getName());
         version.setAttributes(new ArrayList<Attribute>());
         version.getAttributes().add(attribute);
         version.getAttributes().add(userAttribute);
@@ -115,6 +115,10 @@ public class AttributeVersionServiceTest {
     public void tearDown() throws Exception {
         for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
             this.articleService.delete(art.getId());
+        }
+
+        for(Converter converter : converterService.find(Restrictions.eq("name", "测试转换器"))){
+            this.converterService.delete(converter.getId());
         }
 
         AttributeVersion version = attributeVersionService.getVersion(Article.class, "1.0");

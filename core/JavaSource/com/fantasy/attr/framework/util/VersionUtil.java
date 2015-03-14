@@ -7,9 +7,7 @@ import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.asm.AsmUtil;
-import com.fantasy.framework.util.asm.MethodInfo;
-import com.fantasy.framework.util.asm.Property;
+import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -22,51 +20,44 @@ import org.apache.commons.logging.LogFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 public class VersionUtil {
 
     private static final Log logger = LogFactory.getLog(VersionUtil.class);
 
-    private static final ConcurrentMap<String, Class> dynaBeanClassCache = new ConcurrentHashMap<String, Class>();
-    private static final ConcurrentMap<String, AttributeVersion> versionCache = new ConcurrentHashMap<String, AttributeVersion>();
     private static AttributeVersionService attributeVersionService;
 
     public static DynaBean makeDynaBean(DynaBean bean) {
         if (bean.getVersion() == null) {
             return bean;
         }
-        return createDynaBean(ClassUtil.getRealClass(bean), bean.getVersion().getNumber(), bean);
+        DynaBean dynaBean = makeDynaBean(ClassUtil.forName(bean.getVersion().getTargetClassName()), bean.getVersion().getNumber());
+        return createDynaBean(dynaBean, bean);
     }
 
-    public static DynaBean makeDynaBean(Class<DynaBean> clazz, String number) {
-        return createDynaBean(clazz, number);
+    public static DynaBean makeDynaBean(Class<?> clazz, String number) {
+        AttributeVersion version = getVersion(clazz, number);
+        return createDynaBean(makeClass(version.getClassName()), version);
     }
 
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
-        if (version == null) {
-            return ClassUtil.newInstance(clazz);
-        }
-        DynaBean dynaBean = newInstance(makeClass(version));
+        return clazz.cast(createDynaBean(makeClass(version.getClassName()), version));
+    }
+
+    public static DynaBean createDynaBean(Class clazz, AttributeVersion version) {
+        DynaBean dynaBean = newInstance(clazz);
         dynaBean.setVersion(version);
-        return clazz.cast(dynaBean);
+        return dynaBean;
     }
 
     private static DynaBean newInstance(Class clazz) {
         return (DynaBean) ClassUtil.newInstance(clazz);
     }
 
-    private static DynaBean createDynaBean(Class<?> clazz, String number, DynaBean bean) {
-        AttributeVersion version = getVersion(clazz, number);
-        if (version == null) {
-            return bean;
-        }
-        DynaBean dynaBean = newInstance(makeClass(version));
-        dynaBean.setVersion(version);
+    private static DynaBean createDynaBean(DynaBean dynaBean, DynaBean bean) {
         dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
-        for (Attribute attribute : version.getAttributes()) {
+        for (Attribute attribute : bean.getVersion().getAttributes()) {
             AttributeValue sourceValue = ObjectUtil.find(bean.getAttributeValues(), "attribute.code", attribute.getCode());
             if (sourceValue != null && StringUtil.isNotBlank(sourceValue.getValue())) {
                 getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), dynaBean, sourceValue.getValue());
@@ -77,15 +68,12 @@ public class VersionUtil {
     }
 
     public static AttributeVersion getVersion(Class<?> clazz, String number) {
-        if (!versionCache.containsKey(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number)) {
-            AttributeVersion version = getAttributeVersionService().getVersion(clazz, number);
-            if (version == null) {
-                logger.error("未找到" + clazz + "对应的版本[" + number + "]信息");
-                return null;
-            }
-            versionCache.putIfAbsent(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number, version);
+        AttributeVersion version = getAttributeVersionService().getVersion(clazz, number);
+        if (version == null) {
+            logger.error("未找到" + clazz + "对应的版本[" + number + "]信息");
+            return null;
         }
-        return versionCache.get(clazz.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + number);
+        return version;
     }
 
     private synchronized static AttributeVersionService getAttributeVersionService() {
@@ -96,24 +84,18 @@ public class VersionUtil {
     }
 
     public static Class makeClass(Class<?> clazz, String number) {
-        return makeClass(getVersion(clazz, number));
+        return makeClass(getVersion(clazz, number).getClassName());
     }
 
-    public static Class makeClass(AttributeVersion version) {
-        String className = version.getClassName() + ClassUtil.CGLIB_CLASS_SEPARATOR + version.getNumber();
-        if (!dynaBeanClassCache.containsKey(className)) {
-            String superClass = version.getClassName();
-            List<Property> properties = new ArrayList<Property>();
-            List<MethodInfo> methodInfos = new ArrayList<MethodInfo>();
-            for (Attribute attribute : version.getAttributes()) {
-                final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
-                properties.add(property);
-            }
-            logger.debug("dynaBeanClass:" + className);
-            dynaBeanClassCache.putIfAbsent(className, AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()]), methodInfos.toArray(new MethodInfo[methodInfos.size()])));
+    public static Class makeClass(String className) {
+        try {
+            return FantasyClassLoader.getClassLoader().loadClass(className);
+        } catch (ClassNotFoundException e) {
+            logger.error(e.getMessage(), e);
+            return null;
         }
-        return dynaBeanClassCache.get(className);
     }
+
 
     public static OgnlUtil getOgnlUtil(AttributeType attributeType) {
         if (!OgnlUtil.containsKey("attr-" + attributeType.getId())) {
