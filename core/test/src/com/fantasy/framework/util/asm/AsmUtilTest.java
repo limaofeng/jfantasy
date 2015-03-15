@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.asm;
 
+import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.util.common.ClassUtil;
@@ -12,7 +13,9 @@ import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class AsmUtilTest implements Opcodes {
 
@@ -87,6 +90,8 @@ public class AsmUtilTest implements Opcodes {
 
         version.setAttributes(Arrays.asList(attribute,attribute1));
 
+        makeClass(version);
+
         Class clzz = ClassUtil.forName(version.getClassName());
 
 //        logger.debug(AsmUtil.trace(Article.class));
@@ -106,6 +111,17 @@ public class AsmUtilTest implements Opcodes {
 
         Assert.assertEquals(123,OgnlUtil.getInstance().getValue("testInt",o));
 
+    }
+
+    public static Class makeClass(AttributeVersion version) {
+        String className = version.getClassName();
+        String superClass = version.getTargetClassName();
+        List<Property> properties = new ArrayList<Property>();
+        for (Attribute attribute : version.getAttributes()) {
+            final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
+            properties.add(property);
+        }
+        return AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()]));
     }
 
 }
