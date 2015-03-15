@@ -145,7 +145,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static Class<?> forName(String className) {
         try {
-            return forName(className, FantasyClassLoader.getClassLoader());
+            return StringUtil.isNotBlank(className) ? forName(className, FantasyClassLoader.getClassLoader()) : null;
         } catch (ClassNotFoundException e) {
             logger.error(e.getMessage());
         }
@@ -220,7 +220,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     }
 
     public static boolean isInterface(Field field) {
-        if ((isMap(field)) || (isList(field))){
+        if ((isMap(field)) || (isList(field))) {
             return false;
         }
         if (isArray(field)) {
@@ -369,7 +369,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         Annotation[][] annotations = method.getParameterAnnotations();
         for (Annotation[] paramAnnots : annotations) {
             for (Annotation annot : paramAnnots) {
-                if (annotClass.equals(annot.annotationType())){
+                if (annotClass.equals(annot.annotationType())) {
                     return paramAnnots;
                 }
             }
@@ -433,7 +433,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotClass) {
         for (Annotation annot : annotations) {
-            if (annotClass.equals(annot.annotationType())){
+            if (annotClass.equals(annot.annotationType())) {
                 return (T) annot;
             }
         }
@@ -454,7 +454,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         for (StackTraceElement stack : stacks) {
             try {
                 Class<?> clasz = forName(stack.getClassName(), FantasyClassLoader.getClassLoader());
-                if (ObjectUtil.isNull(clasz)){
+                if (ObjectUtil.isNull(clasz)) {
                     continue;
                 }
                 Annotation annot = clasz.getAnnotation(annotClass);
