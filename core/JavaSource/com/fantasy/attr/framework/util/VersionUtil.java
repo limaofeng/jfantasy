@@ -30,17 +30,17 @@ public class VersionUtil {
         if (bean.getVersion() == null) {
             return bean;
         }
-        DynaBean dynaBean = makeDynaBean(ClassUtil.forName(bean.getVersion().getTargetClassName()), bean.getVersion().getNumber());
+        DynaBean dynaBean = makeDynaBean(bean.getVersion().getTargetClassName(), bean.getVersion().getNumber());
         return createDynaBean(dynaBean, bean);
     }
 
-    public static DynaBean makeDynaBean(Class<?> clazz, String number) {
-        AttributeVersion version = getVersion(clazz, number);
+    public static DynaBean makeDynaBean(String className, String number) {
+        AttributeVersion version = getVersion(className, number);
         return createDynaBean(ClassUtil.forName(version.getClassName()), version);
     }
 
     public static <T> T createDynaBean(Class<T> clazz, String number) {
-        AttributeVersion version = getVersion(clazz, number);
+        AttributeVersion version = getVersion(clazz.getName(), number);
         return clazz.cast(createDynaBean(ClassUtil.forName(version.getClassName()), version));
     }
 
@@ -66,10 +66,10 @@ public class VersionUtil {
         return dynaBean;
     }
 
-    public static AttributeVersion getVersion(Class<?> clazz, String number) {
-        AttributeVersion version = getAttributeVersionService().getVersion(clazz, number);
+    public static AttributeVersion getVersion(String className, String number) {
+        AttributeVersion version = getAttributeVersionService().getVersion(className, number);
         if (version == null) {
-            logger.error("未找到" + clazz + "对应的版本[" + number + "]信息");
+            logger.error("未找到" + className + "对应的版本[" + number + "]信息");
             return null;
         }
         return version;
@@ -83,7 +83,7 @@ public class VersionUtil {
     }
 
     public static Class makeClass(Class<?> clazz, String number) {
-        return ClassUtil.forName(getVersion(clazz, number).getClassName());
+        return ClassUtil.forName(getVersion(clazz.getName(), number).getClassName());
     }
 
     public static OgnlUtil getOgnlUtil(AttributeType attributeType) {
@@ -97,7 +97,7 @@ public class VersionUtil {
         //TODO 如果不缓存，查询时可能有性能问题
         List<AttributeVersion> versions = getAttributeVersionService().getVersions(entityClass);
         for (AttributeVersion version : versions) {
-            AttributeVersion attributeVersion = VersionUtil.getVersion(entityClass, version.getNumber());
+            AttributeVersion attributeVersion = VersionUtil.getVersion(entityClass.getName(), version.getNumber());
             String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
             Attribute attribute = ObjectUtil.find(attributeVersion.getAttributes(), "code", simpleName);
             if (attribute != null) {

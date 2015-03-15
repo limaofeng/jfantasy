@@ -71,12 +71,12 @@ public class AttributeVersionService {
     /**
      * 通过 version id 加载全部版本相关的完整数据
      *
-     * @param clazz  版本对应的 class
+     * @param className  版本对应的 class
      * @param number 版本号
      * @return AttributeVersion
      */
-    public AttributeVersion getVersion(Class clazz, String number) {
-        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", clazz.getName()), Restrictions.eq("number", number));
+    public AttributeVersion getVersion(String className, String number) {
+        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", className), Restrictions.eq("number", number));
         if (version == null) {
             return null;
         }

@@ -121,7 +121,7 @@ public class AttributeVersionServiceTest {
             this.converterService.delete(converter.getId());
         }
 
-        AttributeVersion version = attributeVersionService.getVersion(Article.class, "1.0");
+        AttributeVersion version = attributeVersionService.getVersion(Article.class.getName(), "1.0");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
                 this.converterService.delete(converter.getId());
