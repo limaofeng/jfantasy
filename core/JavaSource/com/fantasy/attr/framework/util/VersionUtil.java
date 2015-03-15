@@ -7,7 +7,6 @@ import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -37,12 +36,12 @@ public class VersionUtil {
 
     public static DynaBean makeDynaBean(Class<?> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
-        return createDynaBean(makeClass(version.getClassName()), version);
+        return createDynaBean(ClassUtil.forName(version.getClassName()), version);
     }
 
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz, number);
-        return clazz.cast(createDynaBean(makeClass(version.getClassName()), version));
+        return clazz.cast(createDynaBean(ClassUtil.forName(version.getClassName()), version));
     }
 
     public static DynaBean createDynaBean(Class clazz, AttributeVersion version) {
@@ -84,18 +83,8 @@ public class VersionUtil {
     }
 
     public static Class makeClass(Class<?> clazz, String number) {
-        return makeClass(getVersion(clazz, number).getClassName());
+        return ClassUtil.forName(getVersion(clazz, number).getClassName());
     }
-
-    public static Class makeClass(String className) {
-        try {
-            return FantasyClassLoader.getClassLoader().loadClass(className);
-        } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage(), e);
-            return null;
-        }
-    }
-
 
     public static OgnlUtil getOgnlUtil(AttributeType attributeType) {
         if (!OgnlUtil.containsKey("attr-" + attributeType.getId())) {
