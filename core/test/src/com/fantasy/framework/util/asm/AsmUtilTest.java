@@ -2,7 +2,6 @@ package com.fantasy.framework.util.asm;
 
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import junit.framework.Assert;
@@ -88,7 +87,7 @@ public class AsmUtilTest implements Opcodes {
 
         version.setAttributes(Arrays.asList(attribute,attribute1));
 
-        Class clzz = VersionUtil.makeClass(version.getClassName());
+        Class clzz = ClassUtil.forName(version.getClassName());
 
 //        logger.debug(AsmUtil.trace(Article.class));
 
