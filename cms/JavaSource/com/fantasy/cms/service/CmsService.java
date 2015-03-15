@@ -92,7 +92,7 @@ public class CmsService extends BuguSearcher<Article> {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
         if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
-            AttributeVersion version = this.versionService.getVersion(Article.class, category.getCode());
+            AttributeVersion version = this.versionService.getVersion(Article.class.getName(), category.getCode());
             if (version == null) {
                 version = new AttributeVersion();
                 version.setTargetClassName(Article.class.getName());
