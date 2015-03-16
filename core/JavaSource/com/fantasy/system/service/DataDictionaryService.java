@@ -238,6 +238,17 @@ public class DataDictionaryService implements InitializingBean {
         return SpringContextUtil.getBeanByType(DataDictionaryService.class).allTypes();
     }
 
+
+    /**
+     * 根据上级CODE 分类 查询下级分类
+     * @param code
+     * @return
+     */
+    public List<DataDictionaryType> getDataDictionaryTypeByCode(String code){
+        return  this.dataDictionaryTypeDao.findUnique(Restrictions.eq("code",code)).getChildren();
+    }
+
+
     /**
      * 根据配置项类型和编码获取配置项
      *
