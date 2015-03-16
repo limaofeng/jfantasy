@@ -1,8 +1,8 @@
 package com.fantasy.framework.struts2.interceptor;
 
-import com.fantasy.attr.DynaBean;
-import com.fantasy.attr.bean.Attribute;
-import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.attr.framework.DynaBean;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.dao.hibernate.PropertyFilter.MatchType;
@@ -384,7 +384,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             Object parameterObject = parameters.get(paramName + ".version.number") != null ? parameters.get(paramName + ".version.number") : parameters.get("version.number");
             String versionNumber = parameterObject == null ? null : (ClassUtil.isArray(parameterObject) ? Array.get(parameterObject, 0) : parameterObject).toString();
             if (StringUtil.isNotBlank(versionNumber)) {
-                return VersionUtil.makeDynaBean((Class<DynaBean>)parameterType, versionNumber);
+                return VersionUtil.makeDynaBean(parameterType.getName(), versionNumber);
             } else {
                 return bean;
             }

@@ -11,9 +11,14 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * 该类逻辑有待验证
+ * @param <V>
+ */
+@Deprecated
 public class StringMap<V> extends AbstractMap<String, V> implements Externalizable {
-	public static final boolean CASE_INSENSTIVE = true;
-	protected static final int __HASH_WIDTH = 17;
+//	public static final boolean CASE_INSENSTIVE = true;
+//	protected static final int __HASH_WIDTH = 17;
 	protected int _width = 17;
 	protected Node<V> _root = new Node<V>();
 	protected boolean _ignoreCase = false;

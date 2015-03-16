@@ -45,10 +45,24 @@ public class Trigger extends BaseBusEntity {
      */
     @Column(name = "VALUE")
     private String value;
+
+    /**
+     * 优先条件
+     */
+    @Column(name = "PRIORITYCONDITION")
+    private String priorityCondition;
     /**
      * 触发器描述
      */
     private String description;
+
+    /**
+     * 对应的page
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="PAGE_ID",foreignKey = @ForeignKey(name="FK_PAGE_TRIGGER"))
+    private Page page;
+
     /*
     Schedule editor
     1.Daily
@@ -87,5 +101,21 @@ public class Trigger extends BaseBusEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Page getPage() {
+        return page;
+    }
+
+    public void setPage(Page page) {
+        this.page = page;
+    }
+
+    public String getPriorityCondition() {
+        return priorityCondition;
+    }
+
+    public void setPriorityCondition(String priorityCondition) {
+        this.priorityCondition = priorityCondition;
     }
 }

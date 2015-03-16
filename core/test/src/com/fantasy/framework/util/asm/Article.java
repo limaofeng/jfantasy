@@ -1,7 +1,7 @@
 package com.fantasy.framework.util.asm;
 
 
-import com.fantasy.attr.bean.AttributeValue;
+import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.framework.lucene.annotations.Indexed;
 
 import java.util.List;

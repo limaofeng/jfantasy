@@ -126,14 +126,27 @@ public class FileManagerFactory implements InitializingBean {
      */
     public FileManager initialize(FileManagerConfig config) {
         String beanId = config.getId();
-        if (FileManagerType.virtual == config.getType()) {
-            return initialize(beanId, config);
-        } else if (FileManagerType.local == config.getType()) {// 本地文件管理
-            return initialize(beanId, config.getLocalDefaultDir());
-        } else if (FileManagerType.ftp == config.getType()) {// FTP文件管理
-            return initialize(beanId, ftpServiceFactory.getFtpService(config.getFtpConfig().getId()));
-        } else if (FileManagerType.jdbc == config.getType()) {// JDBC文件管理
-            return null;
+        if (logger.isDebugEnabled()) {
+            StringBuffer log = new StringBuffer();
+            log.append("\r\n初始化文件管理器(").append(beanId).append("):");
+            log.append("\r\n名称:").append(config.getName());
+            log.append("\r\n类型:").append(config.getType().getValue());
+            log.append("\r\n地址:").append(config.getLocalDefaultDir());
+            log.append("\r\n描述:").append(config.getDescription());
+            logger.debug(log);
+        }
+        try {
+            if (FileManagerType.virtual == config.getType()) {
+                return initialize(beanId, config);
+            } else if (FileManagerType.local == config.getType()) {// 本地文件管理
+                return initialize(beanId, config.getLocalDefaultDir());
+            } else if (FileManagerType.ftp == config.getType()) {// FTP文件管理
+                return initialize(beanId, ftpServiceFactory.getFtpService(config.getFtpConfig().getId()));
+            } else if (FileManagerType.jdbc == config.getType()) {// JDBC文件管理
+                return null;
+            }
+        }catch (Exception e){
+            logger.error(e.getMessage(),e);
         }
         throw new IgnoreException(config.getType() + " 对应的FileManagerType不存在!");
     }

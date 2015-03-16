@@ -89,6 +89,11 @@
     <!-- 文件管理器 -->
     <bean id="fileManagerFactory" class="com.fantasy.file.service.FileManagerFactory" lazy-init="false"/>
 
+    <!-- 文件默认存储路径 -->
+    <bean id="fileManager" class="com.fantasy.file.manager.LocalFileManager" lazy-init="false">
+        <constructor-arg name="defaultDir" value="${filemanager.path}" />
+    </bean>
+
     <!-- 邮件服务接口类 -->
     <bean id="mailSendService" class="com.fantasy.framework.service.MailSendService">
         <property name="hostname" value="${mail.hostname}"/>

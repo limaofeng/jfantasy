@@ -4,6 +4,7 @@ import com.fantasy.file.FileManager;
 import com.fantasy.file.manager.LocalFileManager;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import com.fantasy.framework.freemarker.TemplateModelUtils;
+import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import freemarker.template.Configuration;
 import org.junit.Test;
@@ -27,7 +28,7 @@ public class Freemarker {
 
     @Test
     public void writer() throws IOException, ServletException {
-        FileManager fileManager = new LocalFileManager("/Users/lmf/Downloads/test.jfantasy.org");
+        FileManager fileManager = new LocalFileManager(PathUtil.classes() + "/test.jfantasy.org");
 
         Map<String,Object> data = new HashMap<String, Object>();
         data.put("art", JSON.deserialize("{title:\"测试title\",text:\"text测试\"}"));

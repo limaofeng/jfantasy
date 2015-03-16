@@ -1,6 +1,6 @@
 package com.fantasy.cms.bean;
 
-import com.fantasy.attr.bean.AttributeVersion;
+import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
 import com.fantasy.framework.lucene.annotations.IndexProperty;

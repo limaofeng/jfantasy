@@ -38,7 +38,7 @@ import java.util.regex.Matcher;
 @Transactional
 public class GeneratePageService {
 
-    private FileManager fileManager = new LocalFileManager("E:/aa");
+    private FileManager fileManager = SpringContextUtil.getBeanByType(LocalFileManager.class);
     @Resource
     private PageItemService pageItemService;
 

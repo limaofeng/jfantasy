@@ -2,7 +2,7 @@ package com.fantasy.attr.web.validator;
 
 import javax.annotation.Resource;
 
-import com.fantasy.attr.service.AttributeService;
+import com.fantasy.attr.storage.service.AttributeService;
 import com.fantasy.framework.util.common.StringUtil;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;

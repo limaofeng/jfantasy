@@ -32,7 +32,7 @@ public class Page extends BaseBusEntity {
     /**
      * 对应模板
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEMPLATE_ID")
     private Template template;
     /**
@@ -60,6 +60,12 @@ public class Page extends BaseBusEntity {
 
     @OneToMany(mappedBy = "page", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
     private List<PageItem> pageItems;
+
+    /**
+     * 对应的触发器规则
+     */
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Trigger> triggers;
 
     public Long getId() {
         return id;
@@ -123,5 +129,14 @@ public class Page extends BaseBusEntity {
 
     public void setPageItems(List<PageItem> pageItems) {
         this.pageItems = pageItems;
+    }
+
+
+    public List<Trigger> getTriggers() {
+        return triggers;
+    }
+
+    public void setTriggers(List<Trigger> triggers) {
+        this.triggers = triggers;
     }
 }

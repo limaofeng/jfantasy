@@ -36,7 +36,7 @@ public class ScheduleService {
      */
     public static String cron(String cron, int i) {
         String str = "";
-        if ("".equals(cron) || cron == null){
+        if ("".equals(cron) || cron == null) {
             return str;
         }
         String[] crons = cron.split(" ");
@@ -213,13 +213,23 @@ public class ScheduleService {
         }
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int times, Map<String, String> args) {
-        return this.addTrigger(jobKey, triggerKey, interval, times, emptyString, args);
+    /**
+     * 添加触发器
+     *
+     * @param jobKey     jobKey
+     * @param triggerKey triggerKey
+     * @param interval   触发间隔时间
+     * @param repeatCount      触发次数(次数为0触发一次)
+     * @param args       每次触发附带的额外数据
+     * @return Trigger
+     */
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int repeatCount, Map<String, String> args) {
+        return this.addTrigger(jobKey, triggerKey, interval, repeatCount, emptyString, args);
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int times, String triggerDescription, Map<String, String> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, long interval, int repeatCount, String triggerDescription, Map<String, String> args) {
         try {
-            Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(simpleSchedule().withIntervalInMilliseconds(interval).withRepeatCount(times).withMisfireHandlingInstructionFireNow()).build();
+            Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(simpleSchedule().withIntervalInMilliseconds(interval).withRepeatCount(repeatCount).withMisfireHandlingInstructionFireNow()).build();
             this.scheduler.scheduleJob(trigger);
             this.scheduler.resumeTrigger(triggerKey);
             return trigger;
@@ -229,9 +239,9 @@ public class ScheduleService {
         }
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, int times, String triggerDescription, Map<String, String> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, int repeatCount, String triggerDescription, Map<String, String> args) {
         try {
-            Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).withRepeatCount(times)).build();
+            Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).withRepeatCount(repeatCount)).build();
             this.scheduler.scheduleJob(trigger);
             this.scheduler.resumeTrigger(triggerKey);
             return trigger;
@@ -241,9 +251,9 @@ public class ScheduleService {
         }
     }
 
-    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, TimeOfDay timeOfDay, int times, String triggerDescription, Map<String, String> args) {
+    public Trigger addTrigger(JobKey jobKey, TriggerKey triggerKey, int interval, DateBuilder.IntervalUnit unit, TimeOfDay timeOfDay, int repeatCount, String triggerDescription, Map<String, String> args) {
         try {
-            Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).startingDailyAt(timeOfDay).withRepeatCount(times)).build();
+            Trigger trigger = TriggerBuilder.newTrigger().forJob(jobKey).withIdentity(triggerKey).usingJobData(new JobDataMap(args)).withDescription(triggerDescription).withSchedule(dailyTimeIntervalSchedule().withInterval(interval, unit).startingDailyAt(timeOfDay).withRepeatCount(repeatCount)).build();
             this.scheduler.scheduleJob(trigger);
             this.scheduler.resumeTrigger(triggerKey);
             return trigger;

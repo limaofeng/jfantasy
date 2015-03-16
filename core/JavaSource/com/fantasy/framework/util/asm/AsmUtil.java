@@ -34,7 +34,6 @@ public class AsmUtil implements Opcodes {
      * @param className  新生产className
      * @param properties bean 属性
      * @return 新生成的 class
-     * @功能描述
      */
     public static Class<?> makeClass(String className, Property... properties) {
         return makeClass(className, Object.class.getName(), properties, new MethodInfo[0]);

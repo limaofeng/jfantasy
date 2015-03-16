@@ -13,6 +13,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -34,7 +36,15 @@ public class ScheduleServiceJUnit {
         // 添加触发器
         Map<String, String> _data = new HashMap<String, String>();
         _data.put("name", "limaofeng-1");
-        scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 20, 5, _data);
+        scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 1000, 0, _data);
+
+        Date date = DateUtil.now();
+        String expression = DateUtil.format(DateUtil.add(date, Calendar.SECOND,5),"ss mm HH dd MM ? yyyy");
+        _data.put("title","五秒后触发");
+        scheduleService.addTrigger(JobKey.jobKey("junit", "test"),TriggerKey.triggerKey("cron"),expression,_data);
+
+        _data.put("title","立即触发");
+        scheduleService.triggerJob(JobKey.jobKey("junit", "test"),_data);
     }
 
     @After

@@ -9,6 +9,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.web.WebUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -184,6 +185,7 @@ public class FileService {
         if (directory == null) {
             throw new IOException("目录配置[key=" + dirKey + "]未找到!");
         }
+        Hibernate.initialize(directory.getFileManager());
         return directory;
     }
 

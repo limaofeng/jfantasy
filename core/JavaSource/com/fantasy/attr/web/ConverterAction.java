@@ -1,7 +1,7 @@
 package com.fantasy.attr.web;
 
-import com.fantasy.attr.bean.Converter;
-import com.fantasy.attr.service.ConverterService;
+import com.fantasy.attr.storage.bean.Converter;
+import com.fantasy.attr.storage.service.ConverterService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;

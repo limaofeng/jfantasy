@@ -1,5 +1,6 @@
 package com.fantasy.framework.dao.hibernate;
 
+import com.fantasy.attr.storage.listener.VersionChangedEventListener;
 import com.fantasy.framework.dao.hibernate.event.PropertyGeneratorSaveOrUpdatEventListener;
 import com.fantasy.framework.dao.hibernate.generator.SequenceGenerator;
 import com.fantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
@@ -98,6 +99,12 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         addEventListener("post-insert", eventListeners, entityChangedEventListener);
         addEventListener("post-update", eventListeners, entityChangedEventListener);
         addEventListener("post-delete", eventListeners, entityChangedEventListener);
+
+        VersionChangedEventListener versionChangedEventListener = new VersionChangedEventListener();
+        addEventListener("post-insert", eventListeners, versionChangedEventListener);
+        addEventListener("post-update", eventListeners, versionChangedEventListener);
+        addEventListener("post-delete", eventListeners, versionChangedEventListener);
+
         // FileEventListener 监听器,用户转存文件或者删除文件
         /*
         FileEventListener fileEventListener = SpringContextUtil.createBean(FileEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
@@ -254,6 +261,11 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
 
     public void setEventListeners(Map<String, List<Object>> eventListeners) {
         this.eventListeners = eventListeners;
+    }
+
+    @Override
+    public void setEntityInterceptor(Interceptor entityInterceptor) {
+        this.entityInterceptor = entityInterceptor;
     }
 
 }
