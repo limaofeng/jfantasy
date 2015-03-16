@@ -55,7 +55,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).newInstance();
         } catch (Exception e) {
-            logger.error("创建类:" + clazz.getName() + "\t时出现异常!", e);
+            logger.error("创建类:" + clazz + "\t时出现异常!", e);
         }
         return null;
     }

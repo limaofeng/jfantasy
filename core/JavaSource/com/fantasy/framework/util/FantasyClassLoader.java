@@ -58,6 +58,7 @@ public class FantasyClassLoader extends ClassLoader {
                 loadclass.clear();
             }
             loadclass.add(classname);
+            unloadclass.remove(classname);
             return classLoader.loadClass(classpath, classname);
         } finally {
             lock.unlock();
@@ -80,6 +81,7 @@ public class FantasyClassLoader extends ClassLoader {
                 loadclass.clear();
             }
             loadclass.add(classname);
+            unloadclass.remove(classname);
             return classLoader.loadClass(classdata, classname);
         } finally {
             lock.unlock();
