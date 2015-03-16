@@ -148,7 +148,7 @@ public class FileUploadService {
             UploadFileManager uploadFileManager = ((UploadFileManager) fileManager);
             fileDetail = fileService.getFileDetailByMd5(md5, fileManagerId);
             if (fileDetail == null) {
-                realPath = separator + "files" + separator + DateUtil.format("yyyy-MM-dd") + separator + md5;
+                realPath = separator + DateUtil.format("yyyy-MM-dd") + separator + md5;
                 uploadFileManager.writeFile(realPath, attach);
             } else {
                 realPath = fileDetail.getRealPath();
