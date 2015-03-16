@@ -133,7 +133,7 @@ public class OrderTypeConverterTest {
         }).getPageItems(),"id",Long.class));
 
         // 删除测试数据版本
-        AttributeVersion version = attributeVersionService.getVersion(Order.class, "1.0.beta");
+        AttributeVersion version = attributeVersionService.getVersion(Order.class.getName(), "1.0.beta");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
                 this.converterService.delete(converter.getId());
