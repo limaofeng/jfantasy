@@ -101,13 +101,7 @@ public class AttributeVersionServiceTest {
         userAttribute.setNotTemporary(false);
         attributeService.save(userAttribute);
 
-        AttributeVersion version = new AttributeVersion();
-        version.setNumber("1.0");
-        version.setTargetClassName(Article.class.getName());
-        version.setAttributes(new ArrayList<Attribute>());
-        version.getAttributes().add(attribute);
-        version.getAttributes().add(userAttribute);
-        attributeVersionService.save(version);
+        attributeVersionService.save(Article.class.getName(),"1.0",attribute,userAttribute);
 
     }
 
@@ -121,7 +115,7 @@ public class AttributeVersionServiceTest {
             this.converterService.delete(converter.getId());
         }
 
-        AttributeVersion version = attributeVersionService.getVersion(Article.class.getName(), "1.0");
+        AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(Article.class.getName(), "1.0");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
                 this.converterService.delete(converter.getId());

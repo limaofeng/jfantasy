@@ -95,6 +95,10 @@ public class AttributeVersionService {
         return this.attributeVersionDao.find(filter, orderBy, order, 0, size);
     }
 
+    public AttributeVersion findUniqueByTargetClassName(String targetClassName){
+        return this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", targetClassName), Restrictions.eq("type", AttributeVersion.Type.custom));
+    }
+
     /**
      * 通过 version id 加载全部版本相关的完整数据
      *
@@ -102,7 +106,7 @@ public class AttributeVersionService {
      * @param number 版本号
      * @return AttributeVersion
      */
-    public AttributeVersion getVersion(String className, String number) {
+    public AttributeVersion findUniqueByTargetClassName(String className, String number) {
         AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", className), Restrictions.eq("number", number));
         if (version == null) {
             return null;

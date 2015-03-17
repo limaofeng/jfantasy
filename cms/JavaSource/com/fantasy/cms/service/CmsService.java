@@ -1,6 +1,5 @@
 package com.fantasy.cms.service;
 
-import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
@@ -92,15 +91,7 @@ public class CmsService extends BuguSearcher<Article> {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
         if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
-            AttributeVersion version = this.versionService.getVersion(Article.class.getName(), category.getCode());
-            if (version == null) {
-                version = new AttributeVersion();
-                version.setTargetClassName(Article.class.getName());
-                version.setNumber(category.getCode());
-            }
-            version.setAttributes(category.getArticleVersion().getAttributes());
-            this.versionService.save(version);
-            category.setArticleVersion(version);
+            category.setArticleVersion(this.versionService.save(Article.class.getName(),category.getCode(),category.getArticleVersion().getAttributes()));
         }
         List<ArticleCategory> categories;
         boolean root = false;

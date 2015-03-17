@@ -23,7 +23,7 @@ public class CustomBeanDefinition extends BaseBusEntity {
     /**
      * 自定义类的
      */
-    @Column(name = "CLASS_NAME")
+    @Column(name = "CLASS_NAME", unique = true)
     private String className;
     /**
      * 数据版本
@@ -35,7 +35,7 @@ public class CustomBeanDefinition extends BaseBusEntity {
      * 属性
      */
     @ManyToMany(targetEntity = Attribute.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
+    @JoinTable(name = "CUSTOM_BEAN_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
     private List<Attribute> attributes;
 
     public Long getId() {

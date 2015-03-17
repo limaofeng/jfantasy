@@ -50,7 +50,7 @@ public class AttributeVersionAction extends ActionSupport {
 	 * @return
 	 */
 	public String save(AttributeVersion attribute) {
-		this.attrs.put(ROOT, versionService.save(attribute));
+//		this.attrs.put(ROOT, versionService.save(attribute));
 		return JSONDATA;
 	}
 	/**
@@ -98,7 +98,7 @@ public class AttributeVersionAction extends ActionSupport {
         }else{
             version.setAttributeSort(version.getAttributeSort()+","+attr.getId());
         }
-        this.versionService.save(version);
+//        this.versionService.save(version);
         return JSONDATA;
     }
 
@@ -131,7 +131,7 @@ public class AttributeVersionAction extends ActionSupport {
             version.setAttributeSort(version.getAttributeSort().replace(","+attr.getId(),""));
         }
         //保存版本
-        this.versionService.save(version);
+//        this.versionService.save(version);
 
         //移除临时属性
         if(!attr.getNotTemporary()){
@@ -145,7 +145,7 @@ public class AttributeVersionAction extends ActionSupport {
 
         version.setAttributeSort(attrIds);
         //保存版本
-        this.versionService.save(version);
+//        this.versionService.save(version);
         return JSONDATA;
     }
 

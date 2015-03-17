@@ -1,7 +1,10 @@
 package com.fantasy.attr.framework;
 
+import com.fantasy.attr.framework.util.AttributeTypeUtils;
 import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.FantasyClassLoader;
@@ -20,6 +23,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -33,6 +37,8 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
 
     @Autowired
     private AttributeVersionService attributeVersionService;
+    @Autowired
+    private AttributeTypeService attributeTypeService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -41,6 +47,8 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
+            this.initAttributeTypes();
+
             List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
             for (AttributeVersion version : versions) {
                 if (ClassUtil.forName(version.getTargetClassName()) == null) {
@@ -54,9 +62,28 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         }
     }
 
+    public void initAttributeTypes() {
+        List<AttributeType> attributeTypes = new ArrayList<AttributeType>();
+
+        attributeTypes.add(AttributeTypeUtils.primitive("Integer", Integer.class));
+        attributeTypes.add(AttributeTypeUtils.primitive("Integer[]", Integer[].class));
+        attributeTypes.add(AttributeTypeUtils.primitive("Float", Float.class));
+        attributeTypes.add(AttributeTypeUtils.primitive("Float[]", Float[].class));
+        attributeTypes.add(AttributeTypeUtils.primitive("String", String.class));
+        attributeTypes.add(AttributeTypeUtils.primitive("String[]", String[].class));
+        attributeTypes.add(AttributeTypeUtils.primitive("Date", Date.class));
+        attributeTypes.add(AttributeTypeUtils.primitive("Date[]", Date[].class));
+
+        for (AttributeType attributeType : attributeTypes) {
+            if (attributeTypeService.findUniqueByJavaType(attributeType.getDataType()) == null) {
+                attributeTypeService.save(attributeType);
+            }
+        }
+    }
+
     public static Class makeClass(AttributeVersion version) {
         String className = version.getClassName();
-        String superClass = version.getTargetClassName();
+        String superClass = version.getType() == AttributeVersion.Type.custom ? Object.class.getName() : version.getTargetClassName();
         List<Property> properties = new ArrayList<Property>();
         for (Attribute attribute : version.getAttributes()) {
             final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));

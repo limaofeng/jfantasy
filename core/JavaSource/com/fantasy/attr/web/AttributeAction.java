@@ -85,7 +85,7 @@ public class AttributeAction extends ActionSupport {
             }else{
                 version.setAttributeSort(version.getAttributeSort()+","+attribute.getId());
             }
-            this.versionService.save(version);
+            this.versionService.save(version.getTargetClassName(),version.getNumber(),version.getAttributes());
         }
 		return JSONDATA;
 	}

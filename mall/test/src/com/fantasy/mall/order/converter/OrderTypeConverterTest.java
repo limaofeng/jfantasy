@@ -96,7 +96,7 @@ public class OrderTypeConverterTest {
         version.setTargetClassName(Order.class.getName());
         version.setAttributes(new ArrayList<Attribute>());
         version.getAttributes().add(attribute);
-        attributeVersionService.save(version);
+//        attributeVersionService.save(version);
 
         DeliveryCorp corp = new DeliveryCorp();
         corp.setName("测试物流公司");
@@ -133,7 +133,7 @@ public class OrderTypeConverterTest {
         }).getPageItems(),"id",Long.class));
 
         // 删除测试数据版本
-        AttributeVersion version = attributeVersionService.getVersion(Order.class.getName(), "1.0.beta");
+        AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(Order.class.getName(), "1.0.beta");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
                 this.converterService.delete(converter.getId());
