@@ -20,7 +20,7 @@ import java.util.List;
 @Transactional
 public class BrandService {
 
-	@Resource
+	@Autowired
 	private BrandDao brandDao;
 
 	/**

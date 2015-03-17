@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  */
 @Component
 public class UserInfoWeiXinWebService implements IUserInfoService {
-    @Resource
+    @Autowired
     public UserInfoWeiXinService userInfoWeiXinService;
     @Override
     public UserInfoDTO getUserInfo(String openId) {

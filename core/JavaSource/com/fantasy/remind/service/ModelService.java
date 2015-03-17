@@ -18,7 +18,7 @@ import java.util.List;
 @Transactional
 public class ModelService {
 
-    @Resource
+    @Autowired
     private ModelDao modelDao;
 
     /**

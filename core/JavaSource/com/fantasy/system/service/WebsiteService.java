@@ -25,11 +25,11 @@ public class WebsiteService {
 
     private static final Log logger = LogFactory.getLog(WebsiteService.class);
 
-    @Resource
+    @Autowired
     private WebsiteDao websiteDao;
-    @Resource
+    @Autowired
     private SettingDao settingDao;
-    @Resource
+    @Autowired
     private FileManagerService fileManagerService;
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

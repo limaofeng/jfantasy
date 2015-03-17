@@ -19,10 +19,10 @@ import java.util.List;
 @Transactional
 public class OrgDimensionService {
 
-    @Resource
+    @Autowired
     private OrgDimensionDao orgDimensionDao;
 
-    @Resource
+    @Autowired
     private OrgRelationDao orgRelationDao;
 
 

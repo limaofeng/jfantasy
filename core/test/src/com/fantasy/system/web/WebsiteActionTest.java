@@ -38,7 +38,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
 
     private final static Log LOG = LogFactory.getLog(WebsiteActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
     private WebsiteService websiteService;

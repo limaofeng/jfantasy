@@ -10,7 +10,7 @@ import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
 
 public class WebsiteCodeUniqueValidator extends FieldValidatorSupport {
 
-	@Resource
+	@Autowired
 	private WebsiteService websiteService;
 
 	@Override

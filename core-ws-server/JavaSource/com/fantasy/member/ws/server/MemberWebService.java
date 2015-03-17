@@ -31,13 +31,13 @@ public class MemberWebService implements IMemberService {
 
     private final static Log logger = LogFactory.getLog(MemberWebService.class);
 
-    @Resource
+    @Autowired
     private MemberService memberService;
 
-    @Resource
+    @Autowired
     private AreaService areaService;//地区信息
 
-    @Resource
+    @Autowired
     private transient FileUploadService fileUploadService;
 
     @Override

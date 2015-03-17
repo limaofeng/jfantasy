@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ConverterAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private ConverterService converterService;
     /**
      * 转换器首页

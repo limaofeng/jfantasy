@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  */
 public class UserInfoServiceTest {
     private final static Log LOG = LogFactory.getLog(UserInfoServiceTest.class);
-    @Resource
+    @Autowired
     private UserInfoService userInfoService;
     @Before
     public void init() throws Exception {

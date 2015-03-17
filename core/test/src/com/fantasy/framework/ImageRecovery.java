@@ -24,7 +24,7 @@ public class ImageRecovery {
 
     private final static Log logger = LogFactory.getLog(ImageRecovery.class);
 
-    @Resource
+    @Autowired
     private FileService fileService;
 
     @Test

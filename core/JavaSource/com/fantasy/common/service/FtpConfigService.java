@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class FtpConfigService {
 
-	@Resource
+	@Autowired
 	private FtpConfigDao ftpConfigDao;
 
 	public Pager<FtpConfig> findPager(Pager<FtpConfig> pager, List<PropertyFilter> filters) {

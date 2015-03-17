@@ -25,11 +25,11 @@ import java.util.List;
 public class MediaWeiXinService {
     @Autowired
     private MediaDao mediaDao;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
-//    @Resource
+//    @Autowired
 //    private WeixinConfigInit weixinConfigInit;
-    @Resource
+    @Autowired
     private FileManagerFactory factory;
 
     public Pager<Media> findPager(Pager<Media> pager, List<PropertyFilter> filters) {

@@ -14,7 +14,7 @@ public class SettingAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 8465525245080349916L;
 	
-	@Resource
+	@Autowired
 	private transient SettingService settingService;
 	
 	/**

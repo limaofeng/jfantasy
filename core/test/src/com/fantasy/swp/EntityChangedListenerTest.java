@@ -20,7 +20,7 @@ import java.util.Date;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class EntityChangedListenerTest {
 
-    @Resource
+    @Autowired
     private ArticleService articleService;
 
     private Article article;

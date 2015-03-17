@@ -27,10 +27,10 @@ import com.fantasy.mall.stock.dao.StockDao;
 @Transactional
 public class StockService {
 
-	@Resource
+	@Autowired
 	private StockDao stockDao;
 
-	@Resource
+	@Autowired
 	private ProductDao productDao;
 
 	/**

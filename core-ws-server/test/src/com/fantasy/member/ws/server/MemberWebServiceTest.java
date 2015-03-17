@@ -27,10 +27,10 @@ public class MemberWebServiceTest {
 
     private final static Log logger = LogFactory.getLog(MemberWebServiceTest.class);
 
-    @Resource
+    @Autowired
     private IMemberService iMemberService;
 
-    @Resource
+    @Autowired
     private MemberService memberService;
 
     @org.junit.Before

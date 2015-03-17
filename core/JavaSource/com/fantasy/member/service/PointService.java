@@ -17,7 +17,7 @@ import com.fantasy.member.dao.PointDao;
 @Transactional
 @Service("PointService")
 public class PointService {
-	@Resource
+	@Autowired
 	private PointDao pointDao;
 
 	public List<Point> consume(List<PropertyFilter> filters, int start, int size) {

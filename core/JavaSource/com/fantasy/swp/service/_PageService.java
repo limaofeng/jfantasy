@@ -21,7 +21,7 @@ import java.util.List;
 @Transactional
 public class _PageService {
 
-    @Resource
+    @Autowired
     private PageDao pageDao;
 
     public Pager<Page> findPager(Pager<Page> pager, List<PropertyFilter> filters) {

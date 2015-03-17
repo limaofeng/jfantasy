@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class DictionaryWebService implements IDictionaryService {
 
-    @Resource
+    @Autowired
     private DataDictionaryService dataDictionaryService;
 
     @Override

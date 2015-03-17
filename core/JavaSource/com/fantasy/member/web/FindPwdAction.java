@@ -16,7 +16,7 @@ public class FindPwdAction extends ActionSupport {
 
 	private static final long serialVersionUID = -7467306241895113610L;
 
-	@Resource
+	@Autowired
 	private MemberService memberService;// 会员
 
 	/**

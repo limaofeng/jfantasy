@@ -14,7 +14,7 @@ import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
  */
 public class GoodsCategorySignUniqueValidator extends FieldValidatorSupport {
 
-	@Resource
+	@Autowired
 	private GoodsService goodsService;
 
 	@Override

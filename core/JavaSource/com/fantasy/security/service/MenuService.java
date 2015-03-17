@@ -26,7 +26,7 @@ import java.util.Map;
 @Transactional
 public class MenuService{
 
-    @Resource
+    @Autowired
     private MenuDao menuDao;
 
     private static final Log logger = LogFactory.getLog(MenuService.class);

@@ -29,7 +29,7 @@ public class UserInfoWeiXinService implements InitializingBean{
 
     private WeiXinSession session;
 
-    @Resource
+    @Autowired
     private UserInfoDao userInfoDao;
 
     @Override

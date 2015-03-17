@@ -23,17 +23,17 @@ public class MemberAction extends ActionSupport {
 
 	private static final long serialVersionUID = 8858968932197738213L;
 
-	@Resource
+	@Autowired
 	private MemberService memberService;
     /*
-	@Resource
+	@Autowired
 	private CartService cartService;
-	@Resource
+	@Autowired
 	private GoodsService goodsService;
-	@Resource
+	@Autowired
 	private OrderService orderService;
 
-	@Resource
+	@Autowired
 	private ReceiverService receiverService;
 	*/
 

@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 
 public class UserCenterAction extends ActionSupport{
 
-    @Resource
+    @Autowired
     private UserService userService;
 
     public String retrievePassword(String email){

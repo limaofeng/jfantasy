@@ -21,7 +21,7 @@ public class RoleService{
 	private static final Log logger = LogFactory.getLog(RoleService.class);
 
 
-	@Resource
+	@Autowired
 	private RoleDao roleDao;
 
 	public List<Role> getAll() {

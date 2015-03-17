@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class ArticleService {
 
-    @Resource
+    @Autowired
     private ArticleDao articleDao;
 
     public void save(Article article) {

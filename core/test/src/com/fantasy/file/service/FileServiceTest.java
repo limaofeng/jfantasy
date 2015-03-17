@@ -29,9 +29,9 @@ public class FileServiceTest {
 
     private final static Log logger = LogFactory.getLog(FileServiceTest.class);
 
-    @Resource
+    @Autowired
     private FileService fileService;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
 
     //测试数据

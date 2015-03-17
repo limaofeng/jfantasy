@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext-schedule.xml"})
 public class ScheduleServiceJUnit {
 
-    @Resource
+    @Autowired
     private ScheduleService scheduleService;
 
     @Before

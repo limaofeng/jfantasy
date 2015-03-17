@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @Aspect
 public class OrderSubmitInterceptor {
 
-    @Resource
+    @Autowired
     private ProductService productService;
 
     /**

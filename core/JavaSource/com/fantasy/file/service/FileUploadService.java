@@ -28,9 +28,9 @@ public class FileUploadService {
     private static final Log logger = LogFactory.getLog(FileUploadService.class);
 
     private final static String separator = "/";
-    @Resource
+    @Autowired
     private transient FileService fileService;
-    @Resource
+    @Autowired
     private transient FilePartService filePartService;
 
     /**

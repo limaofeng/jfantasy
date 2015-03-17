@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 public class SequenceGenerator implements IdentifierGenerator, Configurable {
 
-	@Resource
+	@Autowired
 	private DataBaseKeyGenerator baseKeyGenerator;
 
 	public final static String KEY_NAME = "keyName";

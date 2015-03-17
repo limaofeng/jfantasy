@@ -37,9 +37,9 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
+    @Autowired
     private TemplateService templateService;
-    @Resource
+    @Autowired
     private WebsiteService websiteService;
     @Override
     protected String getConfigPath() {

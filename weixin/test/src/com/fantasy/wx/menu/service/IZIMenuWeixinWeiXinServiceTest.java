@@ -27,7 +27,7 @@ public class IZIMenuWeixinWeiXinServiceTest {
 
     @Autowired
     private MenuWeiXinService iMenuWeiXinService;
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
     public void setUp() throws Exception {

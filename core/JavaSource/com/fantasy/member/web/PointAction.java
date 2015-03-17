@@ -23,9 +23,9 @@ public class PointAction extends ActionSupport{
 
 	private static final long serialVersionUID = 5645930554474803633L;
 
-	@Resource
+	@Autowired
 	private PointService pointService;
-	@Resource
+	@Autowired
 	private MemberService memberService;
 	
 	public String index(Long id){

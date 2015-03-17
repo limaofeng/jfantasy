@@ -16,7 +16,7 @@ import com.fantasy.member.service.MemberService;
 @Aspect
 public class PointInterceptor {
 
-	@Resource
+	@Autowired
 	private MemberService memberService;
 
 	@After("execution(public * com.fantasy.member.service.PointService.save(com.fantasy.member.bean.Point))")

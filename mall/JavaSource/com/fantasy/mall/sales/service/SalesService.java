@@ -27,11 +27,11 @@ import com.fantasy.mall.sales.dao.SalesDao;
 @Service
 @Transactional
 public class SalesService {
-	@Resource
+	@Autowired
 	private SalesDao salesDao;
-	@Resource
+	@Autowired
 	private GoodsService goodsService;
-	@Resource
+	@Autowired
 	private ProductService productService;
 
 	public Sales addSales(Sales.Type type, String sn, TimeUnit timeUnit, String time, Integer quantity, BigDecimal amount) {

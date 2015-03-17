@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class DataDictionaryTypeConverter extends DefaultTypeConverter {
 
-    @Resource
+    @Autowired
     private DataDictionaryService dataDictionaryService;
 
     @Transactional

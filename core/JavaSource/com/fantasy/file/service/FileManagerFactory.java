@@ -46,9 +46,9 @@ public class FileManagerFactory implements InitializingBean {
 
     public final static String WEBROOT_FILEMANAGER_ID = "WEBROOT";
 
-    @Resource
+    @Autowired
     private FileManagerService fileManagerService;
-    @Resource
+    @Autowired
     private FtpServiceFactory ftpServiceFactory;
 
     private final static ConcurrentMap<String, FileManager> fileManagerCache = new ConcurrentHashMap<String, FileManager>();

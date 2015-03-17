@@ -18,9 +18,9 @@ public class PaymentConfigAction extends ActionSupport {
 
     private static final long serialVersionUID = 2346365431436263753L;
 
-    @Resource
+    @Autowired
     private PaymentConfigService configService;
-    @Resource
+    @Autowired
     private PaymentService paymentService;
 
     /**

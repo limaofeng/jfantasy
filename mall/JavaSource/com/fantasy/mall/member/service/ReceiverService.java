@@ -20,7 +20,7 @@ import com.fantasy.security.SpringSecurityUtils;
 @Transactional
 public class ReceiverService {
 
-	@Resource
+	@Autowired
 	private ReceiverDao receiverDao;
 
 	public Receiver save(Receiver receiver) {

@@ -21,7 +21,7 @@ public class FreemarkerTemplateLoader implements TemplateLoader {
 
     private final static Log logger = LogFactory.getLog(FileManagerTemplateLoader.class);
 
-    @Resource
+    @Autowired
     private TemplateService templateService;
 
     @Override

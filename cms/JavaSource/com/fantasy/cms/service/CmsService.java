@@ -43,12 +43,12 @@ public class CmsService extends BuguSearcher<Article> {
 
     private static final Log LOG = LogFactory.getLog(CmsService.class);
 
-    @Resource
+    @Autowired
     private ArticleCategoryDao articleCategoryDao;
-    @Resource
+    @Autowired
     private ArticleDao articleDao;
 
-    @Resource
+    @Autowired
     private AttributeVersionService versionService;
 
     /**

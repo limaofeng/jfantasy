@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 public class SettingCodeUniqueValidator extends FieldValidatorSupport {
 
-	@Resource
+	@Autowired
 	private SettingService settingService;
 
 	@Override

@@ -20,7 +20,7 @@ import java.util.List;
 @Transactional
 public class QRCodeWeiXinService {
 
-    @Resource
+    @Autowired
     private QRCodeDao qrCodeDao;
     /**
      * 列表查询

@@ -14,7 +14,7 @@ import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
  */
 public class FileManagerValidaotr extends FieldValidatorSupport {
 	
-	@Resource
+	@Autowired
 	private FileManagerService managerService;
 	
 	@Override

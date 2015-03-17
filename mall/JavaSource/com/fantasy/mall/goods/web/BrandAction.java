@@ -20,10 +20,10 @@ public class BrandAction extends ActionSupport {
 
     private static final long serialVersionUID = -3032805252418268707L;
 
-    @Resource
+    @Autowired
     private BrandService brandService;
 
-    @Resource
+    @Autowired
     private GoodsService goodsService;
 
     /**

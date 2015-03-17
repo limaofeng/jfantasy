@@ -11,7 +11,7 @@ public class MenuAction extends ActionSupport {
 
     private static final long serialVersionUID = -7890092416209211498L;
 
-    @Resource
+    @Autowired
     private transient MenuService menuService;
 
 

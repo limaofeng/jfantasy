@@ -19,7 +19,7 @@ import java.io.*;
 @Component
 public class FileUploadWebService implements IFileUploadService {
 
-    @Resource
+    @Autowired
     private transient FileUploadService fileUploadService;
 
     public FileDTO uploadFile(String fileName, String contentType, String dir, String attchmentID) {

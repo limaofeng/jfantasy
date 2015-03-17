@@ -32,13 +32,13 @@ import java.util.List;
 @Service
 @Transactional
 public class GroupMessageWeiXinService {
-    @Resource
+    @Autowired
     private GroupMessageDao groupMessageDao;
-    @Resource
+    @Autowired
     private FileManagerFactory factory;
-    @Resource
+    @Autowired
     private GroupNewsDao groupNewsDao;
-    @Resource
+    @Autowired
     private GroupNewsArticleDao groupNewsArticleDao;
     @Autowired
     private MediaWeiXinService mediaWeiXinService;

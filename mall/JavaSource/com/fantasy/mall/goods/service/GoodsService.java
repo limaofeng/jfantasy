@@ -73,13 +73,13 @@ public class GoodsService implements InitializingBean {
         }
     }
 
-    @Resource
+    @Autowired
     private GoodsDao goodsDao;
-    @Resource
+    @Autowired
     private GoodsCategoryDao goodsCategoryDao;
-    @Resource
+    @Autowired
     private ProductService productService;
-    @Resource
+    @Autowired
     private SalesService salesService;
 
     /**

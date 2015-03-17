@@ -16,7 +16,7 @@ public class UserAction extends ActionSupport {
 
 	private static final long serialVersionUID = 4738280714802564952L;
 
-	@Resource(name = "fantasy.auth.UserService")
+	@Autowired(name = "fantasy.auth.UserService")
 	private transient UserService userService;
 
 	/**

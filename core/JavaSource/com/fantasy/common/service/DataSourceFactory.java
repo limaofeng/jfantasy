@@ -22,7 +22,7 @@ public class DataSourceFactory {
     private Map<String, String> drivers = new HashMap<String, String>();
     private Map<String, String> driverUrls = new HashMap<String, String>();
 
-    @Resource
+    @Autowired
     private JdbcConfigService jdbcConfigService;
 
     public DataSourceFactory() {

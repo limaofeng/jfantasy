@@ -31,9 +31,9 @@ public class BannerServiceTest {
 
     private static Log logger = LogFactory.getLog(BannerServiceTest.class);
 
-    @Resource
+    @Autowired
     private BannerService bannerService;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
 
     @Before

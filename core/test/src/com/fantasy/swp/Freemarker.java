@@ -23,7 +23,7 @@ import java.util.Map;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class Freemarker {
 
-    @Resource
+    @Autowired
     private transient Configuration configuration;
 
     @Test

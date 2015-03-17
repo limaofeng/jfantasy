@@ -20,7 +20,7 @@ import static junit.framework.Assert.assertNotNull;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class OrderServiceTest {
 
-    @Resource
+    @Autowired
     private OrderService orderService;
 
     @Before

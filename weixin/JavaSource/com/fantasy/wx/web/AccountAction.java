@@ -23,7 +23,7 @@ import java.util.List;
 public class AccountAction extends ActionSupport {
 
 
-    @Resource
+    @Autowired
     private AccountWeiXinService iConfigService;
 
     public String index() {

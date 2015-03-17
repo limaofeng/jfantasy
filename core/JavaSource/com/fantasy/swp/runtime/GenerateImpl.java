@@ -47,13 +47,13 @@ public class GenerateImpl implements IGenerate {
 
     private static Log logger = LogFactory.getLog(GeneratePage.class);
 
-    @Resource
+    @Autowired
     private FileManagerFactory fileManagerFactory;
-    @Resource
+    @Autowired
     private Configuration configuration;
-    @Resource
+    @Autowired
     private PageItemService pageItemService;
-    @Resource
+    @Autowired
     private _PageService pageService;
     @Override
     public Page create(Page page){

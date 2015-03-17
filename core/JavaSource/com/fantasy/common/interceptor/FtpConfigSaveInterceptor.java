@@ -14,7 +14,7 @@ import com.fantasy.common.service.FtpServiceFactory;
 @Aspect
 public class FtpConfigSaveInterceptor {
 
-	@Resource
+	@Autowired
 	private FtpServiceFactory ftpServiceFactory;
 	
 	@After("execution(public * com.fantasy.common.service.FtpConfigService.save(..))")

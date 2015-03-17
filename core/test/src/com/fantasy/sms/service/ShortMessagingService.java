@@ -44,11 +44,11 @@ public class ShortMessagingService {
 
 	private static final Log logger = LogFactory.getLog(ShortMessagingService.class);
 
-	@Resource
+	@Autowired
 	private CaptchaDao captchaDao;
-	@Resource
+	@Autowired
 	private CaptchaConfigService captchaConfigService;
-	@Resource
+	@Autowired
 	private LogMobileDao logMobileDao;
 
 	/**

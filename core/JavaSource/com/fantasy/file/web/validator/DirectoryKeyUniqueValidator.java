@@ -9,7 +9,7 @@ import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
 
 public class DirectoryKeyUniqueValidator extends FieldValidatorSupport {
 
-	@Resource
+	@Autowired
 	private DirectoryService directoryService;
 	
 	@Override

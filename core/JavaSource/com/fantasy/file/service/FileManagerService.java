@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class FileManagerService {
 
-	@Resource
+	@Autowired
 	private FileManagerConfigDao fileManagerConfigDao;
 
 	public Pager<FileManagerConfig> findPager(Pager<FileManagerConfig> pager, List<PropertyFilter> filters) {

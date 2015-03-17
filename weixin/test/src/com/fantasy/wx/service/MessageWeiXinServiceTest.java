@@ -23,7 +23,7 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class MessageWeiXinServiceTest {
     private static final Log logger = LogFactory.getLog(Message.class);
-    @Resource
+    @Autowired
     private MessageWeiXinService messageWeiXinService;
 
     @Before

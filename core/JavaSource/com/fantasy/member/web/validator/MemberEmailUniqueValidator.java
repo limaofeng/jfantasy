@@ -19,7 +19,7 @@ import com.opensymphony.xwork2.validator.ValidationException;
  */
 public class MemberEmailUniqueValidator extends AjaxValidatorSupport {
 
-	@Resource
+	@Autowired
 	private MemberService memberService;
 
 	@Override

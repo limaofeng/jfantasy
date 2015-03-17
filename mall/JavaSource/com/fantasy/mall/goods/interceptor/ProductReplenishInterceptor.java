@@ -17,9 +17,9 @@ import javax.annotation.Resource;
 @Aspect
 public class ProductReplenishInterceptor {
 
-    @Resource
+    @Autowired
     private ProductService productService;
-    @Resource
+    @Autowired
     private GoodsService goodsService;
 
     /**

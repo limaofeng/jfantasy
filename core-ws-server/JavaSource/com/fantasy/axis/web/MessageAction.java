@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class MessageAction extends ActionSupport {
 
-    @Resource(name="axis.MessageService")
+    @Autowired(name="axis.MessageService")
     private MessageService messageService;
 
     /**

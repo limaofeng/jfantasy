@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class WeixinMessageWebSocket extends TextWebSocketHandler {
 
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
     public WeixinMessageWebSocket() {

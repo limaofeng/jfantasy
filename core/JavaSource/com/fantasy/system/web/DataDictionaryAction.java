@@ -13,7 +13,7 @@ import java.util.List;
 
 public class DataDictionaryAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private transient DataDictionaryService dataDictionaryService;
 
     /**

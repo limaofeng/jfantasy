@@ -28,12 +28,12 @@ public class UserService {
 
     private static final Log logger = LogFactory.getLog(UserService.class);
 
-    @Resource
+    @Autowired
     private MailSendService mailSendService;
 
-    @Resource
+    @Autowired
     private UserDao userDao;
-    @Resource
+    @Autowired
     private RoleService roleService;
 
     /**

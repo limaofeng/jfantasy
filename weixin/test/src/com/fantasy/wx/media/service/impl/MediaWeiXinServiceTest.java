@@ -26,9 +26,9 @@ import java.util.Random;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class MediaWeiXinServiceTest {
 
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
-    @Resource
+    @Autowired
     private MediaWeiXinService wxMediaWeiXinService;
 
     @After

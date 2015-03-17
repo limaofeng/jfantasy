@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class PaymentConfigService {
 
-    @Resource
+    @Autowired
     private PaymentConfigDao paymentConfigDao;
     /**
      * findPager

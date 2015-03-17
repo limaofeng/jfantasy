@@ -20,7 +20,7 @@ import java.util.List;
 @Transactional
 public class AttributeService {
 
-	@Resource
+	@Autowired
 	private AttributeDao attributeDao;
 	/**
 	 * 保存属性

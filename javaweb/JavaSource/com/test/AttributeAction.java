@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 
 public class AttributeAction extends ActionSupport{
 
-    @Resource
+    @Autowired
     private CmsService cmsService;
 
     public String save(Article article) throws Exception {

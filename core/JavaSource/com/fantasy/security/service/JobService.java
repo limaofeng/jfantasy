@@ -18,7 +18,7 @@ import java.util.List;
 @Transactional
 public class JobService  {
 
-    @Resource
+    @Autowired
     private JobDao jobDao;
 
 

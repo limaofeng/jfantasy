@@ -10,7 +10,7 @@ import java.util.List;
 
 public class JdbcConfigAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private JdbcConfigService jdbcConfigService;
 
     public String index(List<PropertyFilter> filters) {

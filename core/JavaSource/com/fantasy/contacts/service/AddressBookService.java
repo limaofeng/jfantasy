@@ -18,15 +18,15 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 
-@Service("ab.AddressBookService")
+@Service
 @Transactional
 public class AddressBookService {
 
-	@Resource
+	@Autowired
 	private BookDao bookDao;
-	@Resource
+	@Autowired
 	private GroupDao groupDao;
-	@Resource
+	@Autowired
 	private LinkmanDao linkmanDao;
 
 	public AddressBook getAddressBook(String owner, String ownerType) {

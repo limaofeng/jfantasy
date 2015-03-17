@@ -28,7 +28,7 @@ import java.util.concurrent.ConcurrentMap;
 @Lazy(false)
 public class FtpServiceFactory {
 
-	@Resource
+	@Autowired
 	private FtpConfigService ftpConfigService;
 
 	private final static ConcurrentMap<Long, FTPService> ftpServiceCache = new ConcurrentHashMap<Long, FTPService>();
@@ -96,7 +96,7 @@ public class FtpServiceFactory {
 
 		private static final long serialVersionUID = -8410630987365469163L;
 
-		@Resource
+		@Autowired
 		private FtpServiceFactory ftpServiceFactory;
 
         @Override

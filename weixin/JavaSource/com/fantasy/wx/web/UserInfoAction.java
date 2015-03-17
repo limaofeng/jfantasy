@@ -14,7 +14,7 @@ import java.util.List;
 
 public class UserInfoAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
     public String index() {

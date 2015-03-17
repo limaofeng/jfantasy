@@ -32,16 +32,16 @@ import java.util.List;
 @Transactional
 public class QuestionWebService implements IQuestionService {
 
-    @Resource
+    @Autowired
     private QuestionService questionService;
 
-    @Resource
+    @Autowired
     private AnswerService answerService;
 
-    @Resource
+    @Autowired
     private MemberService memberService;
 
-    @Resource
+    @Autowired
     private AnswerAdditionalService answerAdditionalService;
 
     @Override

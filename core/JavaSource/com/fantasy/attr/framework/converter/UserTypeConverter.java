@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class UserTypeConverter extends DefaultTypeConverter {
 
-    @Resource
+    @Autowired
     private UserService userService;
 
     @Transactional

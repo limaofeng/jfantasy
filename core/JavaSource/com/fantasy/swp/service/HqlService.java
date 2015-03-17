@@ -23,7 +23,7 @@ public class HqlService{
 
     protected SessionFactory sessionFactory;
 
-    @Resource
+    @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

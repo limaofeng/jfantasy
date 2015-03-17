@@ -20,7 +20,7 @@ public class ConverterService{
 
 	private static final Log logger = LogFactory.getLog(ConverterService.class);
 
-	@Resource
+	@Autowired
 	private ConverterDao converterDao;
 
     /**

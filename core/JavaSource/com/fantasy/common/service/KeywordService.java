@@ -29,9 +29,9 @@ import com.fantasy.framework.util.common.StringUtil;
 @Transactional
 public class KeywordService implements InitializingBean {
 
-	@Resource
+	@Autowired
 	private KeywordsDao keywordsDao;
-	@Resource
+	@Autowired
 	private HotKeywordsDao hotKeywordsDao;
 
 	@Override

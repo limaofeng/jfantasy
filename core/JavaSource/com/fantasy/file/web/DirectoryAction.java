@@ -14,7 +14,7 @@ public class DirectoryAction extends ActionSupport {
 
 	private static final long serialVersionUID = 7523936626517724295L;
 	
-	@Resource
+	@Autowired
 	private transient DirectoryService directoryService;
 	
 	public String index(Pager<Directory> pager, List<PropertyFilter> filters) {

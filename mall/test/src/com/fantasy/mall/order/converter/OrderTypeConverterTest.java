@@ -41,19 +41,19 @@ public class OrderTypeConverterTest {
 
     private final static Log logger = LogFactory.getLog(OrderTypeConverterTest.class);
 
-    @Resource
+    @Autowired
     private AttributeVersionService attributeVersionService;
-    @Resource
+    @Autowired
     private ConverterService converterService;
-    @Resource
+    @Autowired
     private AttributeTypeService attributeTypeService;
-    @Resource
+    @Autowired
     private AttributeService attributeService;
-    @Resource
+    @Autowired
     private OrderService orderService;
-    @Resource
+    @Autowired
     private DeliveryService deliveryService;
-    @Resource
+    @Autowired
     private AreaService areaService;
 
     @Before

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class CaptchaService {
 
-	@Resource
+	@Autowired
 	private CaptchaDao captchaDao;
 
 

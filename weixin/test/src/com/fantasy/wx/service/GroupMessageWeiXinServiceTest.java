@@ -31,9 +31,9 @@ import java.util.Random;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class GroupMessageWeiXinServiceTest {
-    @Resource
+    @Autowired
     private GroupMessageWeiXinService groupMessageWeiXinService;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
 
     private static final Log logger = LogFactory.getLog(GroupMessage.class);

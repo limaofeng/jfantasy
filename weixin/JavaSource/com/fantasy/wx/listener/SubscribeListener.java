@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * Created by zzzhong on 2015/1/6.
  */
 public class SubscribeListener implements SubscribeEventListener {
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
     @Override

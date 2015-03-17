@@ -21,9 +21,9 @@ import java.util.List;
 @Component
 public class GoodsWebService implements IGoodsService {
 
-	@Resource
+	@Autowired
 	private GoodsService goodsService;
-	@Resource
+	@Autowired
 	private BrandService brandService;
 	
 	@Override

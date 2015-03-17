@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class CmsWebService implements ICmsService {
 
-    @Resource
+    @Autowired
     private CmsService cmsService;
 
     @Override

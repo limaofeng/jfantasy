@@ -16,7 +16,7 @@ import java.util.List;
 @Transactional
 public class JdbcConfigService {
 
-    @Resource
+    @Autowired
     private JdbcConfigDao jdbcConfigDao;
 
     public List<JdbcConfig> find(){

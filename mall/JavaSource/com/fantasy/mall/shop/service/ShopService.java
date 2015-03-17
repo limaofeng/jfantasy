@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 @Transactional
 public class ShopService {
 
-    @Resource
+    @Autowired
     private ShopDao shopDao;
 
 }

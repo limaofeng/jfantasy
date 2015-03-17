@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class PageItemBeanService {
 
-    @Resource
+    @Autowired
     private GenerateImpl generate;
 
     public void refash(Long id) throws SwpException, IOException {

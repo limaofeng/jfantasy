@@ -10,7 +10,7 @@ import java.util.List;
 
 public class LogMobileService {
 
-	@Resource
+	@Autowired
 	private LogMobileDao logMobileDao;
 
     public Pager<LogMobile> findPager(Pager<LogMobile> pager, List<PropertyFilter> filters) {

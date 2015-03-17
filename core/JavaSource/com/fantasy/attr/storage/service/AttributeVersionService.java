@@ -26,10 +26,10 @@ import java.util.List;
 @Transactional
 public class AttributeVersionService {
 
-    @Resource
+    @Autowired
     private AttributeVersionDao attributeVersionDao;
 
-    @Resource
+    @Autowired
     private AttributeDao attributeDao;
 
     public List<AttributeVersion> search(List<PropertyFilter> filters, String orderBy, String order, int size) {

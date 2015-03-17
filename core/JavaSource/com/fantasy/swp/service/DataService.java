@@ -14,7 +14,7 @@ import java.util.List;
 @Transactional
 public class DataService {
 
-    @Resource
+    @Autowired
     private DataDao dataDao;
 
     public Pager<Data> findPager(Pager<Data> pager, List<PropertyFilter> filters) {

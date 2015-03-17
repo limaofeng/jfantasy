@@ -24,7 +24,7 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class WeixinConfigServiceTest {
     private static final Log logger = LogFactory.getLog(Account.class);
-    @Resource
+    @Autowired
     private AccountWeiXinService iConfigService;
 
     @Before

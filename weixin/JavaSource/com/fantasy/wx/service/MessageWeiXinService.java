@@ -23,11 +23,11 @@ import java.util.List;
 @Service("wxMessageService")
 @Transactional
 public class MessageWeiXinService {
-    @Resource
+    @Autowired
     private MessageDao messageDao;
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
 
     /**

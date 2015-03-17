@@ -25,7 +25,7 @@ import java.util.List;
 public class UserInfoWeiXinServiceTest {
 
     private static final Log logger = LogFactory.getLog(UserInfo.class);
-    @Resource
+    @Autowired
     private UserInfoWeiXinService iUserInfoService;
 
     @Before

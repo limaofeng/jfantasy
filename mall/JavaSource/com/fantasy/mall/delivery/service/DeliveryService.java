@@ -29,16 +29,16 @@ import java.util.List;
 @Transactional
 public class DeliveryService {
 
-    @Resource(name = "mall.dao.DeliveryCorpDao")
+    @Autowired(name = "mall.dao.DeliveryCorpDao")
     private DeliveryCorpDao deliveryCorpDao;
-    @Resource(name = "mall.dao.DeliveryTypeDao")
+    @Autowired(name = "mall.dao.DeliveryTypeDao")
     private DeliveryTypeDao deliveryTypeDao;
-    @Resource
+    @Autowired
     private DeliveryItemDao deliveryItemDao;
 
-    @Resource
+    @Autowired
     private ShippingDao shippingDao;
-    @Resource
+    @Autowired
     private OrderService orderService;
 
     public List<DeliveryType> listDeliveryType() {

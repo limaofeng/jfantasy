@@ -19,7 +19,7 @@ public class DataAction extends ActionSupport {
 	
 	private static final long serialVersionUID = -5178279947544914476L;
 	
-	@Resource
+	@Autowired
 	private DataService dataService;
 	
 	public String index(List<PropertyFilter> filters){

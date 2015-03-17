@@ -58,7 +58,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         return this.sessionFactory;
     }
 
-    @Resource
+    @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

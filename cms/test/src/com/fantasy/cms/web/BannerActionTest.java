@@ -33,11 +33,11 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
 
     private final static Log LOG = LogFactory.getLog(BannerActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
-    @Resource
+    @Autowired
     private BannerService bannerService;
 
 

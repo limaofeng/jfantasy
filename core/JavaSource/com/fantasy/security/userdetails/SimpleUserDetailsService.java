@@ -18,7 +18,7 @@ public class SimpleUserDetailsService implements UserDetailsService {
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	@Resource(name="fantasy.auth.UserService")
+	@Autowired(name="fantasy.auth.UserService")
 	private UserService userService;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

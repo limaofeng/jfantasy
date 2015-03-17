@@ -23,7 +23,7 @@ import com.fantasy.mall.goods.service.GoodsService;
 @Aspect
 public class GoodsParameterValueInterceptor {
 	
-	@Resource
+	@Autowired
 	private GoodsService goodsService; 
 
 	@SuppressWarnings("unchecked")

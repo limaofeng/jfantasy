@@ -28,9 +28,9 @@ import com.fantasy.mall.sales.bean.Sales.Type;
 @Repository
 public class SalesDao extends HibernateDao<Sales, Long> {
 
-	@Resource
+	@Autowired
 	private OrderDao orderDao;
-	@Resource
+	@Autowired
 	private GoodsDao goodsDao;
 
 	@Override

@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class WebAccessLogAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private WebAccessLogService webAccessLogService;
 
     public String index(Pager<WebAccessLog> pager,List<PropertyFilter> filters){

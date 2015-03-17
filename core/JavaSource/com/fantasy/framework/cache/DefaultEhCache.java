@@ -11,7 +11,7 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DefaultEhCache implements Cache {
 
-    @Resource(name = "ehcache")
+    @Autowired(name = "ehcache")
     protected CacheManager cacheManager;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final String id;

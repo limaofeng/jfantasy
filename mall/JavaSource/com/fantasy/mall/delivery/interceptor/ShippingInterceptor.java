@@ -20,11 +20,11 @@ import javax.annotation.Resource;
 @Aspect
 public class ShippingInterceptor {
 
-	@Resource
+	@Autowired
 	private ProductService productService;
-	@Resource
+	@Autowired
 	private OrderService orderService;
-	@Resource
+	@Autowired
 	private StockService stockService;
 
 	/**

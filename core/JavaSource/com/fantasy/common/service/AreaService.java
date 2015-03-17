@@ -25,7 +25,7 @@ import java.util.List;
 @Transactional
 public class AreaService{
 
-    @Resource
+    @Autowired
     private AreaDao areaDao;
 
     private static final Log logger = LogFactory.getLog(AreaService.class);

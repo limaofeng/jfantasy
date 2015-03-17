@@ -15,10 +15,10 @@ public class ProductAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3032805252418268707L;
 
-	@Resource(name="goods.productService")
+	@Autowired(name="goods.productService")
 	private ProductService productService;
 	
-	@Resource
+	@Autowired
 	private GoodsService goodsService;
 
 	/**

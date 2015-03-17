@@ -15,9 +15,9 @@ public class RoleAction extends ActionSupport {
 
     private static final long serialVersionUID = 4738280714802564952L;
 
-    @Resource(name = "fantasy.auth.RoleService")
+    @Autowired(name = "fantasy.auth.RoleService")
     private transient RoleService roleService;
-    @Resource
+    @Autowired
     private transient ResourceService resourceService;
 
     /**

@@ -39,11 +39,11 @@ public class MemberService {
 
 	private final static String DEFAULT_ROLE_CODE = "MEMBER";
 
-	@Resource
+	@Autowired
 	private MemberDao memberDao;
-	@Resource
+	@Autowired
 	private RoleService roleService;
-	@Resource
+	@Autowired
 	private MailSendService mailSendService;
 
 	/**

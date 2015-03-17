@@ -24,10 +24,10 @@ import java.util.List;
 @Transactional
 public class OrganizationService {
 
-    @Resource
+    @Autowired
     private OrganizationDao organizationDao;
 
-    @Resource
+    @Autowired
     private OrgRelationDao orgRelationDao;
 
 

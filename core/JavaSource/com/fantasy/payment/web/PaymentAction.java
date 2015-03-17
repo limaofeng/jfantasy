@@ -22,9 +22,9 @@ public class PaymentAction extends ActionSupport {
 
     private static final long serialVersionUID = -4817743897444468581L;
 
-    @Resource
+    @Autowired
     private PaymentService paymentService;
-    @Resource
+    @Autowired
     private PaymentConfiguration paymentConfiguration;
 
     public String execute(String sn) throws Exception {

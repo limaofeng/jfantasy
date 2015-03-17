@@ -19,13 +19,13 @@ import java.util.List;
 @Service
 @Transactional
 public class TemplateBeanService {
-    @Resource
+    @Autowired
     private TemplateService templateService;
-    @Resource
+    @Autowired
     private DataInferfaceService dataInferfaceService;
-    @Resource
+    @Autowired
     private FileManagerFactory fileManagerFactory;
-    @Resource
+    @Autowired
     private _PageService pageService;
 
     public List<ITemplage> listTemplate() {

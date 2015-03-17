@@ -19,9 +19,9 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 @Transactional
 public class DirectoryService {
 
-	@Resource
+	@Autowired
 	private DirectoryDao directoryDao;
-	@Resource
+	@Autowired
 	private FileManagerConfigDao fmcDao;
 
 	public Pager<Directory> findPager(Pager<Directory> pager, List<PropertyFilter> filters) {

@@ -21,7 +21,7 @@ public class CmsAction extends ActionSupport {
 
     private static final long serialVersionUID = 3799834983783507214L;
 
-    @Resource
+    @Autowired
     private transient CmsService cmsService;
 
     /**

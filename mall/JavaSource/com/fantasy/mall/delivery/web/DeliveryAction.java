@@ -16,7 +16,7 @@ public class DeliveryAction extends ActionSupport {
 
 	private static final long serialVersionUID = -28409081520692372L;
 
-	@Resource
+	@Autowired
 	private DeliveryService deliveryService;
 
 	/**

@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class OrderTypeConverter extends DefaultTypeConverter {
 
-    @Resource
+    @Autowired
     private OrderService orderService;
 
     @Transactional

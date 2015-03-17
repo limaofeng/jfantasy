@@ -22,7 +22,7 @@ public class DataBaseKeyGenerator {
 		return dataBaseKeyGenerator;
 	}
 
-	@Resource
+	@Autowired
 	private SequenceService sequenceService;
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)

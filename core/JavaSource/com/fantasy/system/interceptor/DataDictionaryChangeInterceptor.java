@@ -12,7 +12,7 @@ import javax.annotation.Resource;
 @Aspect
 public class DataDictionaryChangeInterceptor {
 
-    @Resource
+    @Autowired
     private ScheduleService scheduleService;
 
     @After("execution(public * com.fantasy.system.service.DataDictionaryService.save(..))")

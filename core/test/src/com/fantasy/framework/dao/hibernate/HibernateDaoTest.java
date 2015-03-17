@@ -18,7 +18,7 @@ public class HibernateDaoTest extends TestCase {
 
     private final static Log logger = LogFactory.getLog(HibernateDaoTest.class);
 
-    @Resource
+    @Autowired
     public DataDictionaryService dataDictionaryService;
 
     @Test

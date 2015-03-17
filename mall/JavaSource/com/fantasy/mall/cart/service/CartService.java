@@ -19,9 +19,9 @@ import java.util.List;
 @Transactional
 public class CartService {
 
-	@Resource
+	@Autowired
 	private CartDao cartDao;
-	@Resource
+	@Autowired
 	private CartItemDao cartItemDao;
 
 	public void save(Cart cart) {

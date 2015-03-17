@@ -29,9 +29,9 @@ import java.util.Map;
 @Transactional
 public class NoticeService {
 
-    @Resource
+    @Autowired
     private NoticeDao noticeDao;
-    @Resource
+    @Autowired
     private ModelDao modelDao;
     private LinkedQueue<Notice> noticeQueue = new LinkedQueue<Notice>();
 

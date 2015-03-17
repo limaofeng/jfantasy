@@ -9,7 +9,7 @@ import javax.annotation.Resource;
 
 public class UsernameNotExistsValidator extends AjaxValidatorSupport {
 
-	@Resource(name = "fantasy.auth.UserService")
+	@Autowired(name = "fantasy.auth.UserService")
 	private UserService userService;
 
 	public UsernameNotExistsValidator() {

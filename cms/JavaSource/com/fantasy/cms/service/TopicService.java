@@ -17,7 +17,7 @@ import java.util.List;
 @Transactional
 public class TopicService {
 
-    @Resource
+    @Autowired
     private TopicDao topicDao;
 
     public Pager<Topic> findPager(Pager<Topic> pager, List<PropertyFilter> filters) {

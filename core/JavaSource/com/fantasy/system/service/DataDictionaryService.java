@@ -32,13 +32,13 @@ public class DataDictionaryService implements InitializingBean {
 
     public static final JobKey jobKey = JobKey.jobKey("DataDictionary", "SYSTEM");
 
-    @Resource
+    @Autowired
     private ScheduleService scheduleService;
 
-    @Resource
+    @Autowired
     private DataDictionaryTypeDao dataDictionaryTypeDao;
 
-    @Resource
+    @Autowired
     private DataDictionaryDao dataDictionaryDao;
 
     @Override

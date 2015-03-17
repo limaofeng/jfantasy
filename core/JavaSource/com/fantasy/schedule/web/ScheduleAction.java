@@ -23,9 +23,9 @@ import static org.quartz.TriggerBuilder.newTrigger;
 public class ScheduleAction extends ActionSupport {
 
     private final static Log logger = LogFactory.getLog(ScheduleAction.class);
-    @Resource
+    @Autowired
     private Scheduler scheduler;
-    @Resource
+    @Autowired
     private ScheduleService scheduleService;
 
     public String index() throws Exception {

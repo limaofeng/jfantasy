@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 public class SqlConsoleAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private DataSourceFactory dataSourceFactory;
 
     public String run(Long id, String sql, int maxRow) throws SQLException {

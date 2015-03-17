@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  */
 public class OrgDimensionAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private OrgDimensionService orgDimensionService;
 
     public String index() {

@@ -26,7 +26,7 @@ public class AttributeTypeService {
 
     private static final Log logger = LogFactory.getLog(AttributeTypeService.class);
 
-    @Resource
+    @Autowired
     private AttributeTypeDao attributeTypeDao;
 
     public Pager<AttributeType> findPager(Pager<AttributeType> pager, List<PropertyFilter> filters) {

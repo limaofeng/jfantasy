@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class FilePartService {
 
-    @Resource
+    @Autowired
     private FilePartDao filePartDao;
 
     public void save(FileDetailKey key, String entireFileHash, String partFileHash, Integer total, Integer index) {

@@ -14,7 +14,7 @@ import java.util.List;
  */
 public class TopicAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private TopicService topicService;
 
     /**

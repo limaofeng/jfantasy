@@ -28,13 +28,13 @@ public class OrderAction extends ActionSupport {
 
     private static final long serialVersionUID = 5809261416684874733L;
 
-    @Resource
+    @Autowired
     private OrderService orderService;
-    @Resource
+    @Autowired
     private ReceiverService receiverService;
-    @Resource
+    @Autowired
     private ProductService productService;
-    @Resource
+    @Autowired
     private DeliveryService deliveryService;
 
     /**

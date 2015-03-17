@@ -22,7 +22,7 @@ import java.util.List;
 @ContextConfiguration(locations = { "classpath:com/fantasy/framework/util/generate/applicationContext-gc.xml" })
 public class GeneraterUtil {
 
-    @Resource
+    @Autowired
     private ColumnMapper tabColumnMapper;
 
     @Before

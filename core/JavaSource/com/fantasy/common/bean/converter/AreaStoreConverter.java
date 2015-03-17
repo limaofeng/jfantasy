@@ -15,7 +15,7 @@ import com.fantasy.framework.util.jackson.JSON;
 
 public class AreaStoreConverter extends DefaultTypeConverter {
 
-	@Resource
+	@Autowired
 	public AreaService areaService;
 
 	@SuppressWarnings("rawtypes")

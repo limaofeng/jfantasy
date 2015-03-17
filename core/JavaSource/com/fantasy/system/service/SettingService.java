@@ -21,7 +21,7 @@ import java.util.List;
 @Lazy(false)
 public class SettingService {
 
-    @Resource
+    @Autowired
     private SettingDao settingDao;
 
     public Setting get(Long id) {

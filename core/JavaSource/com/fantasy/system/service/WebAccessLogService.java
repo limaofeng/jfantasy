@@ -22,7 +22,7 @@ import java.util.Map;
 @Transactional
 public class WebAccessLogService {
 
-    @Resource
+    @Autowired
     private WebAccessLogDao webAccessLogDao;
 
     public void log(HttpServletRequest request) {

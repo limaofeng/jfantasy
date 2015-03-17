@@ -26,10 +26,10 @@ import java.util.List;
 @Transactional
 public class BannerService {
 
-	@Resource
+	@Autowired
 	private BannerDao bannerDao;
 
-	@Resource
+	@Autowired
 	private BannerItemDao bannerItemDao;
 
 	public Pager<Banner> findPager(Pager<Banner> pager, List<PropertyFilter> filters) {

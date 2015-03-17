@@ -16,7 +16,7 @@ public class CaptchaConfigService {
 
 	private static final Log logger = LogFactory.getLog(CaptchaConfigService.class);
 	
-	@Resource
+	@Autowired
 	private CaptchaConfigDao captchaConfigDao;
 
 	private ConcurrentMap<String, WordGenerator> wordGeneratorCache = new ConcurrentHashMap<String, WordGenerator>();

@@ -10,7 +10,7 @@ import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
 
 public class CmsActicleCategoryCodeUniqueValidator extends FieldValidatorSupport {
 
-	@Resource
+	@Autowired
 	private CmsService cmsService;
 
 	@Override

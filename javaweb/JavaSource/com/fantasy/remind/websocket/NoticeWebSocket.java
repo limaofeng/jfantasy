@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Component
 public class NoticeWebSocket extends TextWebSocketHandler {
-    @Resource
+    @Autowired
     private NoticeService noticeService;
     private List<WebSocketSession> sessions = new ArrayList<WebSocketSession>();
     public NoticeWebSocket() {

@@ -26,9 +26,9 @@ public class NoticeServiceTest {
 
     private static final Log logger = LogFactory.getLog(Model.class);
 
-    @Resource
+    @Autowired
     private NoticeService noticeService;
-    @Resource
+    @Autowired
     private ModelService modelService;
 
     @Before

@@ -7,7 +7,7 @@ import javax.annotation.Resource;
 
 public class ShopAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private ShopService shopService;
 
 }

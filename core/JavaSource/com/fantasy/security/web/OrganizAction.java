@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class OrganizAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private OrganizationService organizationService;
 
 

@@ -30,7 +30,7 @@ import com.fantasy.mall.sales.service.SalesService;
  */
 public class SalesAction extends ActionSupport {
 
-	@Resource
+	@Autowired
 	private SalesService salesService;
 
 	private static final long serialVersionUID = 3966151832335206089L;

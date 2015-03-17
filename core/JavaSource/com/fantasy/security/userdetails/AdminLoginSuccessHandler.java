@@ -17,9 +17,9 @@ import java.io.IOException;
 
 public class AdminLoginSuccessHandler extends FantasyLoginSuccessHandler{
 
-	@Resource(name="fantasy.auth.UserService")
+	@Autowired(name="fantasy.auth.UserService")
 	private UserService userService;
-	@Resource
+	@Autowired
 	private WebAccessLogService accessLogService;
 	
 	@Override

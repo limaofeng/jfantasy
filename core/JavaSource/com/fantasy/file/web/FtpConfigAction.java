@@ -12,7 +12,7 @@ public class FtpConfigAction extends ActionSupport {
 
 	private static final long serialVersionUID = 1L;
 
-	@Resource
+	@Autowired
 	private FtpConfigService ftpConfigService;
 
     public String queryList(List<PropertyFilter> filters){

@@ -12,7 +12,7 @@ public class MemberCenterAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 1187554261166469122L;
 
-	@Resource
+	@Autowired
 	private MemberService memberService;// 会员
 
 	/**

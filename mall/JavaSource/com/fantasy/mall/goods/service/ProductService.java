@@ -19,7 +19,7 @@ import java.util.List;
 @Service("goods.productService")
 @Transactional
 public class ProductService {
-	@Resource(name = "goods.productDao")
+	@Autowired(name = "goods.productDao")
 	private ProductDao productDao;
 
 	public Pager<Product> findPager(Pager<Product> pager, List<PropertyFilter> filters) {

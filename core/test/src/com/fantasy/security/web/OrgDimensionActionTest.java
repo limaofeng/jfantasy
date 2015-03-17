@@ -36,10 +36,10 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
 
     private static final Log LOG = LogFactory.getLog(OrgDimensionActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Resource
+    @Autowired
     private OrgDimensionService orgDimensionService;
 
     @Override

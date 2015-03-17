@@ -26,7 +26,7 @@ public class SecurityMetadataSource implements FilterInvocationSecurityMetadataS
 
 	private Lock lock = new ReentrantLock();
 
-	@Resource
+	@Autowired
 	private ResourceService resourceService;
 
 	private Cache cache;

@@ -31,7 +31,7 @@ public class InitializeShopCartLoginSuccessHandler implements AuthenticationSucc
 
 	private static final Log logger = LogFactory.getLog(InitializeShopCartLoginSuccessHandler.class);
 
-	@Resource
+	@Autowired
 	private CartService cartService;
 
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

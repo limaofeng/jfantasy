@@ -16,9 +16,9 @@ import java.io.IOException;
 
 public class MemberLoginSuccessHandler extends FantasyLoginSuccessHandler {
 
-	@Resource
+	@Autowired
 	private MemberService memberService;
-	@Resource
+	@Autowired
 	private WebAccessLogService accessLogService;
 
 	@Override

@@ -26,13 +26,13 @@ public class CustomBeanDefinitionServiceTest {
 
     private final static Log LOG = LogFactory.getLog(AttributeVersionServiceTest.class);
 
-    @Resource
+    @Autowired
     private AttributeService attributeService;
-    @Resource
+    @Autowired
     private ConverterService converterService;
-    @Resource
+    @Autowired
     private AttributeTypeService attributeTypeService;
-    @Resource
+    @Autowired
     private CustomBeanDefinitionService customBeanDefinitionService;
 
     private List<Attribute> attributes = new ArrayList<Attribute>();

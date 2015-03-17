@@ -16,7 +16,7 @@ import java.util.List;
 @Transactional
 public class PageItemService {
 
-    @Resource
+    @Autowired
     private PageItemDao pageItemDao;
 
     public Pager<PageItem> findPager(Pager<PageItem> pager, List<PropertyFilter> filters) {

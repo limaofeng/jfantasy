@@ -16,10 +16,10 @@ import java.util.List;
 public class AttributeVersionAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3032805252418268707L;
-	@Resource
+	@Autowired
 	private AttributeVersionService versionService;
 
-    @Resource
+    @Autowired
     private AttributeService attributeService;
 
 	/**

@@ -16,9 +16,9 @@ import javax.annotation.Resource;
 @Aspect
 public class PaymentInterceptor {
 
-    @Resource
+    @Autowired
     private PaymentConfiguration paymentConfiguration;
-    @Resource
+    @Autowired
     private PaymentService paymentService;
 
 

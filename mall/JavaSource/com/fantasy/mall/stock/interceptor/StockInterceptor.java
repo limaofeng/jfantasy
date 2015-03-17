@@ -23,7 +23,7 @@ import com.fantasy.mall.stock.bean.Stock;
 @Aspect
 public class StockInterceptor {
 
-	@Resource
+	@Autowired
 	private ProductService productService;
 
 	/**

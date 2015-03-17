@@ -33,13 +33,13 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class DataActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
+    @Autowired
     private DataInferfaceService dataInferfaceService;
-    @Resource
+    @Autowired
     private DataService dataService;
-    @Resource
+    @Autowired
     private TemplateActionTest templateActionTest;
-    @Resource
+    @Autowired
     private ArticleService articleService;
 
     @Before

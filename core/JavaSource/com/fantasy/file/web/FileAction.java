@@ -32,11 +32,11 @@ public class FileAction extends ActionSupport {
 
     private static final long serialVersionUID = -8084517912796997973L;
 
-    @Resource
+    @Autowired
     private transient FileService fileService;
-    @Resource
+    @Autowired
     private transient FileUploadService fileUploadService;
-    @Resource
+    @Autowired
     private transient FilePartService filePartService;
 
     /**

@@ -39,9 +39,9 @@ public class UploadFileManager implements FileManager {
 
     private final static String separator = "/";
 
-    @Resource
+    @Autowired
     private FileService fileService;
-    @Resource
+    @Autowired
     private FilePartService filePartService;
 
     public FileManagerConfig getConfig() {

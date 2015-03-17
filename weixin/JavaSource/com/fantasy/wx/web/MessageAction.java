@@ -17,9 +17,9 @@ import java.util.List;
  * Created by zzzhong on 2014/9/23.
  */
 public class MessageAction extends ActionSupport {
-    @Resource
+    @Autowired
     private MessageWeiXinService messageWeiXinService;
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
 

@@ -33,13 +33,13 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
 
     private static final Log LOG = LogFactory.getLog(OrgDimensionActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Resource
+    @Autowired
     private OrganizationService organizationService;//组织机构
 
-    @Resource
+    @Autowired
     private JobService jobService;//岗位
 
 

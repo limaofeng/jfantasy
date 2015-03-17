@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class FileDetailStoreConverter extends DefaultTypeConverter {
 
-	@Resource
+	@Autowired
 	private FileService fileService;
 	private Class<? extends FileDetail> clazz;
 

@@ -19,7 +19,7 @@ import com.fantasy.framework.util.common.StringUtil;
 public class AttributeTypeAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3032805252418268707L;
-	@Resource
+	@Autowired
 	private AttributeTypeService attributeTypeService;
 
 	/**

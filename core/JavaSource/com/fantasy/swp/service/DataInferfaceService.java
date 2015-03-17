@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class DataInferfaceService {
 
-    @Resource
+    @Autowired
     private DataInferfaceDao dataInferfaceDao;
 
 

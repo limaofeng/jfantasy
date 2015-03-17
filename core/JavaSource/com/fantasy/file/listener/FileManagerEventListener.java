@@ -11,7 +11,7 @@ public class FileManagerEventListener implements PostInsertEventListener, PostUp
 
 	private static final long serialVersionUID = 1082020263270806626L;
 
-	@Resource
+	@Autowired
 	private FileManagerFactory factory;
 	
 	@Override

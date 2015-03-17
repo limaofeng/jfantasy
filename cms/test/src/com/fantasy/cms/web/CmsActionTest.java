@@ -34,9 +34,9 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class CmsActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
-    @Resource
+    @Autowired
     private CmsService cmsService;
 
     private final static Log LOG = LogFactory.getLog(CmsActionTest.class);

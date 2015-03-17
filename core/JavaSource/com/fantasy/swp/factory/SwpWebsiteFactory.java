@@ -15,11 +15,11 @@ import javax.annotation.Resource;
 @Component
 public class SwpWebsiteFactory {
 
-    @Resource
+    @Autowired
     private WebsiteService websiteService;
-    @Resource
+    @Autowired
     private TemplateBeanService templateBeanService;
-    @Resource
+    @Autowired
     private PageBeanService pageBeanService;
 
     public ISwpWebsite getInstance(String code){

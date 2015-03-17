@@ -28,7 +28,7 @@ public class GoodsServiceTest {
 
     private static final Log logger = LogFactory.getLog(GoodsService.class);
 
-    @Resource
+    @Autowired
     private GoodsService goodsService;
 
     @Before

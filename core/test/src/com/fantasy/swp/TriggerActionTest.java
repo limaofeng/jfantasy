@@ -35,7 +35,7 @@ public class TriggerActionTest extends StrutsSpringJUnit4TestCase {
 
     private static final Log LOG = LogFactory.getLog(TriggerActionTest.class);
 
-    @Resource
+    @Autowired
     private TriggerService triggerService;
     @Override
     protected String getConfigPath() {

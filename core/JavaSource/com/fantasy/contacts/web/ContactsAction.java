@@ -20,7 +20,7 @@ public class ContactsAction extends ActionSupport {
      */
     private static final long serialVersionUID = 6209999459091063429L;
 
-    @Resource(name = "ab.AddressBookService")
+    @Autowired(name = "ab.AddressBookService")
     private transient AddressBookService addressBookService;
 
     public String index() throws Exception {

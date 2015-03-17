@@ -18,9 +18,9 @@ import java.util.List;
 
 public class NoticeAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private NoticeService noticeService;
-    @Resource
+    @Autowired
     private ModelService modelService;
 
     public String index(){

@@ -31,17 +31,17 @@ public class AttributeVersionServiceTest {
 
     private final static Log logger = LogFactory.getLog(AttributeVersionServiceTest.class);
 
-    @Resource
+    @Autowired
     private AttributeVersionService attributeVersionService;
-    @Resource
+    @Autowired
     private ArticleService articleService;
-    @Resource
+    @Autowired
     private ConverterService converterService;
-    @Resource
+    @Autowired
     private AttributeTypeService attributeTypeService;
-    @Resource
+    @Autowired
     private AttributeService attributeService;
-    @Resource
+    @Autowired
     private UserService userService;
 
     @Before

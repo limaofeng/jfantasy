@@ -39,13 +39,13 @@ public class PaymentService {
 
     private final static Log LOG = LogFactory.getLog(PaymentService.class);
 
-    @Resource
+    @Autowired
     private PaymentDao paymentDao;
-    @Resource
+    @Autowired
     private PaymentConfigService paymentConfigService;
-    @Resource
+    @Autowired
     private PaymentConfiguration paymentConfiguration;
-    @Resource
+    @Autowired
     private MemberService memberService;
 
     /**

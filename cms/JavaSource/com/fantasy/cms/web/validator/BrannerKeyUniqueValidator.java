@@ -9,7 +9,7 @@ import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
 
 public class BrannerKeyUniqueValidator extends FieldValidatorSupport {
 
-	@Resource
+	@Autowired
 	private BannerService bannerService;
 
 	@Override
