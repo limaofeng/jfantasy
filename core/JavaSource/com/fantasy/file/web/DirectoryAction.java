@@ -2,7 +2,7 @@ package com.fantasy.file.web;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.file.bean.Directory;
 import com.fantasy.file.service.DirectoryService;

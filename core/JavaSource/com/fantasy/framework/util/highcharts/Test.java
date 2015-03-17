@@ -1,6 +1,6 @@
 package com.fantasy.framework.util.highcharts;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;

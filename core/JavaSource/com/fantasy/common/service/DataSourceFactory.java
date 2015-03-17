@@ -6,7 +6,7 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;

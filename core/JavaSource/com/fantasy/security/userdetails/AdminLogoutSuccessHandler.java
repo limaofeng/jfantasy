@@ -5,7 +5,7 @@ import com.fantasy.security.web.authentication.handler.FantasyLogoutSuccessHandl
 import com.fantasy.system.service.WebAccessLogService;
 import org.springframework.security.core.Authentication;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

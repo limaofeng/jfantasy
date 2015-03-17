@@ -5,7 +5,7 @@ import com.fantasy.security.bean.Menu;
 import com.fantasy.security.service.MenuService;
 import org.hibernate.criterion.Criterion;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MenuAction extends ActionSupport {
 

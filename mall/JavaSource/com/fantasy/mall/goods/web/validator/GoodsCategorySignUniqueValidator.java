@@ -1,6 +1,6 @@
 package com.fantasy.mall.goods.web.validator;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.mall.goods.service.GoodsService;

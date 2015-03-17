@@ -8,7 +8,7 @@ import com.fantasy.remind.bean.Notice;
 import com.fantasy.remind.service.ModelService;
 import com.fantasy.remind.service.NoticeService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 

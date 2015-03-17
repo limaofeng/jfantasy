@@ -1,6 +1,6 @@
 package com.fantasy.mall.stock.interceptor;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;

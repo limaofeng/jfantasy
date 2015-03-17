@@ -7,7 +7,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.system.bean.WebAccessLog;
 import com.fantasy.system.service.WebAccessLogService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**

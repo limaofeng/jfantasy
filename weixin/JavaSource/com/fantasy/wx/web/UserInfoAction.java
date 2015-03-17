@@ -8,7 +8,7 @@ import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.service.UserInfoWeiXinService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 

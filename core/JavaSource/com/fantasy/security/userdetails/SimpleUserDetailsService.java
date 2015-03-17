@@ -2,7 +2,7 @@ package com.fantasy.security.userdetails;
 
 import java.util.Locale;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.core.SpringSecurityMessageSource;

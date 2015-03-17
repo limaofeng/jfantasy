@@ -4,7 +4,7 @@ import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.FileManagerService;
 import com.fantasy.framework.struts2.ActionSupport;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FileManagerAction extends ActionSupport {
 

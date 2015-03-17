@@ -2,7 +2,7 @@ package com.fantasy.swp.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;

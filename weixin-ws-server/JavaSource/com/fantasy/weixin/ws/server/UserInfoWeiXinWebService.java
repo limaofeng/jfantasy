@@ -8,7 +8,7 @@ import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.service.UserInfoWeiXinService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by zzzhong on 2015/1/6.

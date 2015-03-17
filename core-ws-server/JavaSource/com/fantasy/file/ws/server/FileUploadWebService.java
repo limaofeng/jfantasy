@@ -12,7 +12,7 @@ import org.apache.axis2.context.MessageContext;
 import org.springframework.stereotype.Component;
 
 import javax.activation.DataHandler;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.ws.WebServiceException;
 import java.io.*;
 

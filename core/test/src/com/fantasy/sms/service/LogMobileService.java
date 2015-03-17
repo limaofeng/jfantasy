@@ -5,7 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.sms.bean.LogMobile;
 import com.fantasy.sms.dao.LogMobileDao;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class LogMobileService {

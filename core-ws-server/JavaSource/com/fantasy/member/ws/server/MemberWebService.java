@@ -20,7 +20,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;

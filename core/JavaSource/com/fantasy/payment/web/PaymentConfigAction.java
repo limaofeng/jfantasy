@@ -9,7 +9,7 @@ import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentConfigService;
 import com.fantasy.payment.service.PaymentService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

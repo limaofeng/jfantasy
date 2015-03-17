@@ -11,7 +11,7 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.userdetails.SimpleUser;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class ContactsAction extends ActionSupport {

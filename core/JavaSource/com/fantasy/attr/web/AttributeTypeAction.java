@@ -2,7 +2,7 @@ package com.fantasy.attr.web;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.service.AttributeTypeService;

@@ -7,7 +7,7 @@ import com.fantasy.security.service.UserService;
 import ognl.DefaultTypeConverter;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Member;
 import java.util.Map;
 

@@ -11,7 +11,7 @@ import com.fantasy.payment.service.PaymentConfiguration;
 import com.fantasy.payment.order.OrderDetailsService;
 import com.fantasy.payment.service.PaymentService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 

@@ -7,7 +7,7 @@ import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 站点工厂

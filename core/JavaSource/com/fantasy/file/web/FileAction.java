@@ -18,7 +18,7 @@ import com.fantasy.framework.util.web.WebUtil.Browser;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;

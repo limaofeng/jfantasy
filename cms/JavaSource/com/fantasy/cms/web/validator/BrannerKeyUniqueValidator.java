@@ -1,5 +1,5 @@
 package com.fantasy.cms.web.validator;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.fantasy.cms.service.BannerService;
 import com.fantasy.framework.util.common.StringUtil;
 import com.opensymphony.xwork2.validator.ValidationException;

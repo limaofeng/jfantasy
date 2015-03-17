@@ -5,7 +5,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.security.service.UserService;
 import com.opensymphony.xwork2.validator.ValidationException;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class UsernameNotExistsValidator extends AjaxValidatorSupport {
 

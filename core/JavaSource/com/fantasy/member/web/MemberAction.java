@@ -7,7 +7,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 

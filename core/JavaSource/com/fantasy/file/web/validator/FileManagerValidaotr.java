@@ -1,6 +1,6 @@
 package com.fantasy.file.web.validator;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.FileManagerService;
 import com.fantasy.framework.util.common.StringUtil;

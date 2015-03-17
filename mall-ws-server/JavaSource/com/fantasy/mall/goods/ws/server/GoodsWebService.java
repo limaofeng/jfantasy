@@ -15,7 +15,7 @@ import com.fantasy.mall.goods.ws.dto.GoodsDTO;
 import com.fantasy.mall.goods.ws.dto.GoodsPagerResult;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Component

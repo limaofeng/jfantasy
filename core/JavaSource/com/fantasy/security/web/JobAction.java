@@ -6,7 +6,7 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.security.bean.Job;
 import com.fantasy.security.service.JobService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**

@@ -5,7 +5,7 @@ import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class AttributeAction extends ActionSupport{
 

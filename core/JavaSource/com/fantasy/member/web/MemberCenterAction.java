@@ -6,7 +6,7 @@ import com.fantasy.member.service.MemberService;
 import com.fantasy.member.userdetails.MemberUser;
 import com.fantasy.security.SpringSecurityUtils;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MemberCenterAction extends ActionSupport {
 	

@@ -5,7 +5,7 @@ import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
 import com.fantasy.system.service.DataDictionaryService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Author lsz

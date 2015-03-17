@@ -4,7 +4,7 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class WebsiteAction extends ActionSupport {
 

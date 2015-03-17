@@ -5,7 +5,7 @@ import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.service.OrgDimensionService;
 import org.hibernate.criterion.Restrictions;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by yhx on 2015/1/21.

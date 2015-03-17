@@ -1,6 +1,6 @@
 package com.fantasy.cms.web.validator;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.util.common.StringUtil;

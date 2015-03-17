@@ -5,7 +5,7 @@ import com.fantasy.file.service.FileManagerFactory;
 import org.hibernate.event.spi.*;
 import org.hibernate.persister.entity.EntityPersister;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FileManagerEventListener implements PostInsertEventListener, PostUpdateEventListener, PostDeleteEventListener {
 

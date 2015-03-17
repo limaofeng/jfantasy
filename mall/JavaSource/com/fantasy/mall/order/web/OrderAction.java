@@ -2,7 +2,7 @@ package com.fantasy.mall.order.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.mall.delivery.bean.DeliveryType;
 import org.hibernate.criterion.Criterion;

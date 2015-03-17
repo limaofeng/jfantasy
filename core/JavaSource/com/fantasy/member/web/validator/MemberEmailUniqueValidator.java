@@ -1,6 +1,6 @@
 package com.fantasy.member.web.validator;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.criterion.Restrictions;
 

@@ -10,7 +10,7 @@ import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.service.GoodsService;
 import com.fantasy.system.util.SettingUtil;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class GoodsAction extends ActionSupport {
