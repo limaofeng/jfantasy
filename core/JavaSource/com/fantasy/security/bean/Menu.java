@@ -3,11 +3,9 @@ package com.fantasy.security.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.bean.enums.MenuType;
+import com.fasterxml.jackson.annotation.*;
 import org.apache.struts2.json.annotations.JSON;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -84,13 +82,15 @@ public class Menu extends BaseBusEntity {
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
+    @JsonBackReference
     private List<Menu> children;
     /**
      * 上级菜单
      */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "PID",foreignKey = @ForeignKey(name="FK_AUTH_MENU_PID"))
+    @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_AUTH_MENU_PID"))
+    @JsonManagedReference
     private Menu parent;
     /**
      * 菜单是否选中
@@ -177,11 +177,11 @@ public class Menu extends BaseBusEntity {
 
     public void setSelected(boolean selected) {
         this.selected = selected;
-        if ((ObjectUtil.isNotNull(this.parent)) && (selected)){
-            this.parent.setSelected(selected);
-        } else if ((ObjectUtil.isNotNull(getChildren())) && (!selected)){
-            for (Menu menu : getChildren()){
-                menu.setSelected(selected);
+        if ((ObjectUtil.isNotNull(this.parent)) && (selected)) {
+            this.parent.setSelected(true);
+        } else if ((ObjectUtil.isNotNull(getChildren())) && (!selected)) {
+            for (Menu menu : getChildren()) {
+                menu.setSelected(false);
             }
         }
     }
