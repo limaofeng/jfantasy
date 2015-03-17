@@ -37,7 +37,7 @@ import java.util.List;
  * @version 1.0
  * @since 2013-5-28 下午03:05:30
  */
-@Service("fantasy.cms.CmsService")
+@Service
 @Transactional
 public class CmsService extends BuguSearcher<Article> {
 

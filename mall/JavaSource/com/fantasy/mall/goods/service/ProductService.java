@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 货品 service
  */
-@Service("goods.productService")
+@Service
 @Transactional
 public class ProductService {
 	@Autowired

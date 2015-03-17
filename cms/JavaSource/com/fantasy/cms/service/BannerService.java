@@ -22,7 +22,7 @@ import java.util.List;
  * @author li_huang
  * 
  */
-@Service("fantasy.cms.BannerService")
+@Service
 @Transactional
 public class BannerService {
 

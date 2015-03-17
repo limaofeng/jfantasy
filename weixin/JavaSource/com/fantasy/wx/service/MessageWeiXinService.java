@@ -17,10 +17,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-/**
- * Created by zzzhong on 2014/8/28.
- */
-@Service("wxMessageService")
+@Service
 @Transactional
 public class MessageWeiXinService {
     @Autowired

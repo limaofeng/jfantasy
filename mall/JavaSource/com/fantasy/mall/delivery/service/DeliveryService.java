@@ -22,10 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA. User: lmf Date: 13-11-20 Time: 下午5:06 To change this template use File | Settings | File Templates.
- */
-@Service("mall.service.DeliveryService")
+@Service
 @Transactional
 public class DeliveryService {
 

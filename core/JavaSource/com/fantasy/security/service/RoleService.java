@@ -14,7 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
-@Service("fantasy.auth.RoleService")
+@Service
 @Transactional
 public class RoleService{
 

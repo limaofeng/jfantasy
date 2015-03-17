@@ -5,19 +5,16 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
 import com.fantasy.swp.bean.Template;
-import com.fantasy.swp.bean.enums.PageType;
 import com.fantasy.swp.dao.TemplateDao;
-import com.fantasy.system.bean.Website;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("swp.page.templateService")
+@Service
 @Transactional
 public class TemplateService {
 

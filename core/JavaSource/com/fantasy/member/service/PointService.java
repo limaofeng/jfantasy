@@ -15,7 +15,7 @@ import com.fantasy.member.bean.Point;
 import com.fantasy.member.dao.PointDao;
 
 @Transactional
-@Service("PointService")
+@Service
 public class PointService {
 	@Autowired
 	private PointDao pointDao;

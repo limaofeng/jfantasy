@@ -7,3 +7,5 @@
 jslib
 *.iml
 target
+
+atlassian-ide-plugin.xml
