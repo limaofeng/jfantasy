@@ -1,23 +1,21 @@
 package com.fantasy.member.web;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import com.fantasy.system.service.DataDictionaryService;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.bean.MemberDetails;
 import com.fantasy.member.service.MemberService;
 import com.fantasy.member.userdetails.MemberUser;
 import com.fantasy.security.SpringSecurityUtils;
+import com.fantasy.system.service.DataDictionaryService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.List;
 
 /**
  * @Author lsz
@@ -30,9 +28,9 @@ public class RegisterAction extends ActionSupport {
 
 	@Autowired
 	private MemberService memberService;// 会员
-	@Autowired(name = "memberUserDetailsService")
+	@Autowired
 	private UserDetailsService userDetailsService;
-	@Autowired(name = "memberSuccessHandlers")
+	@Autowired
 	private List<AuthenticationSuccessHandler> successHandlers;
 
 	/**

@@ -23,7 +23,7 @@ public class MessageService {
 
     private static final Log LOG = LogFactory.getLog(MessageService.class);
 
-    @Autowired(name = "spring.executor")
+    @Autowired
     private SchedulingTaskExecutor executor;
 
     @Autowired

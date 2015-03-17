@@ -9,7 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class UsernameNotExistsValidator extends AjaxValidatorSupport {
 
-	@Autowired(name = "fantasy.auth.UserService")
+	@Autowired
 	private UserService userService;
 
 	public UsernameNotExistsValidator() {

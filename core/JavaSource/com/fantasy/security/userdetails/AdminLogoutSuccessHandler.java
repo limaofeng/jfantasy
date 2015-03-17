@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class AdminLogoutSuccessHandler extends FantasyLogoutSuccessHandler{
 
-	@Autowired(name="fantasy.auth.UserService")
+	@Autowired
 	private UserService userService;
 	@Autowired
 	private WebAccessLogService accessLogService;

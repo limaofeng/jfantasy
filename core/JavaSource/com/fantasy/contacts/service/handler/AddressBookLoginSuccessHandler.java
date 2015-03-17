@@ -17,7 +17,7 @@ public class AddressBookLoginSuccessHandler implements AuthenticationSuccessHand
 
 	public static final String CURRENT_USER_BOOK_KEY = "contacts";
 
-	@Autowired(name="ab.AddressBookService")
+	@Autowired
 	private AddressBookService bookService;
 
 	@SuppressWarnings("unchecked")

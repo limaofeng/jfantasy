@@ -29,9 +29,9 @@ import java.util.List;
 @Transactional
 public class DeliveryService {
 
-    @Autowired(name = "mall.dao.DeliveryCorpDao")
+    @Autowired
     private DeliveryCorpDao deliveryCorpDao;
-    @Autowired(name = "mall.dao.DeliveryTypeDao")
+    @Autowired
     private DeliveryTypeDao deliveryTypeDao;
     @Autowired
     private DeliveryItemDao deliveryItemDao;
