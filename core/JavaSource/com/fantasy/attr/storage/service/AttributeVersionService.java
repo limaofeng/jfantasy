@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -39,7 +40,33 @@ public class AttributeVersionService {
         return attributeVersionDao.findPager(pager, filters);
     }
 
-    public AttributeVersion save(AttributeVersion version) {
+    public AttributeVersion save(String targetClassName,String number,Attribute... attributes) {
+        return this.save(targetClassName,number, Arrays.asList(attributes));
+    }
+
+    public AttributeVersion save(String targetClassName,Attribute... attributes) {
+        return this.save(targetClassName, Arrays.asList(attributes));
+    }
+
+    public AttributeVersion save(String targetClassName,List<Attribute> attributes) {
+        AttributeVersion version = new AttributeVersion();
+        version.setTargetClassName(targetClassName);
+        version.setNumber("");
+        version.setType(AttributeVersion.Type.custom);
+        version.setAttributes(attributes);
+        for (Attribute attribute : version.getAttributes()) {
+            attributeDao.save(attribute);
+        }
+        this.attributeVersionDao.save(version);
+        return version;
+    }
+
+    public AttributeVersion save(String targetClassName,String number,List<Attribute> attributes) {
+        AttributeVersion version = new AttributeVersion();
+        version.setTargetClassName(targetClassName);
+        version.setNumber(number);
+        version.setType(AttributeVersion.Type.ext);
+        version.setAttributes(attributes);
         for (Attribute attribute : version.getAttributes()) {
             attributeDao.save(attribute);
         }
