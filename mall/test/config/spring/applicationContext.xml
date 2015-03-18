@@ -100,5 +100,7 @@
 	<import resource="classpath:spring/applicationContext-mybatis.xml" />
 
 	<import resource="classpath:spring/applicationContext-hibernate.xml" />
+
+    <import resource="applicationContext-schedule.xml"/>
 	
 </beans>

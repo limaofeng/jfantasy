@@ -20,7 +20,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = {"classpath:spring/applicationContext-schedule.xml"})
+@ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class ScheduleServiceJUnit {
 
     @Autowired

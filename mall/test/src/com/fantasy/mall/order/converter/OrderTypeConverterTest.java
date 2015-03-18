@@ -91,12 +91,7 @@ public class OrderTypeConverterTest {
         attribute.setNotTemporary(false);
         attributeService.save(attribute);
 
-        AttributeVersion version = new AttributeVersion();
-        version.setNumber("1.0.beta");
-        version.setTargetClassName(Order.class.getName());
-        version.setAttributes(new ArrayList<Attribute>());
-        version.getAttributes().add(attribute);
-//        attributeVersionService.save(version);
+        attributeVersionService.save(Order.class.getName(),"1.0.beta",attribute);
 
         DeliveryCorp corp = new DeliveryCorp();
         corp.setName("测试物流公司");
