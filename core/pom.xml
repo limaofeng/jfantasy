@@ -283,6 +283,11 @@
             <version>1.7</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+            <version>1.4.4</version>
+        </dependency>
     </dependencies>
 
     <description>开发框架 - 框架主体,包含支付、用户、会员、权限等功能</description>
