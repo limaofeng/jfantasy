@@ -18,14 +18,20 @@ public class CustomBean extends BaseBusEntity {
     /**
      * 自定义 bean 的名称
      */
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DEFINITION_ID")
     private CustomBeanDefinition definition;
     /**
+     * 对应的版本
+     */
+    @Column(name = "VERSION_ID", unique = true)
+    private Long version;
+    /**
      * 属性
      */
-    @ManyToMany(targetEntity = Attribute.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
-    private List<AttributeValue> attributes;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    private List<AttributeValue> attributeValues;
 
     public Long getId() {
         return id;
@@ -35,4 +41,27 @@ public class CustomBean extends BaseBusEntity {
         this.id = id;
     }
 
+    public List<AttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
+
+    public void setAttributeValues(List<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
+    }
+
+    public Long getVersion() {
+        return version;
+    }
+
+    public void setVersion(Long version) {
+        this.version = version;
+    }
+
+    public CustomBeanDefinition getDefinition() {
+        return definition;
+    }
+
+    public void setDefinition(CustomBeanDefinition definition) {
+        this.definition = definition;
+    }
 }

@@ -20,7 +20,6 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
     @Autowired
     private FileService fileService;
 
-
     @SuppressWarnings("rawtypes")
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (toType == FileDetail.class) {
