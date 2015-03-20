@@ -6,13 +6,13 @@ import com.fantasy.wx.framework.message.content.Event;
 import com.fantasy.wx.framework.session.WeiXinSession;
 import com.fantasy.wx.service.UserInfoWeiXinService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Created by zzzhong on 2015/1/6.
  */
 public class SubscribeListener implements SubscribeEventListener {
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
     @Override

@@ -31,7 +31,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,19 +41,19 @@ public class OrderTypeConverterTest {
 
     private final static Log logger = LogFactory.getLog(OrderTypeConverterTest.class);
 
-    @Resource
+    @Autowired
     private AttributeVersionService attributeVersionService;
-    @Resource
+    @Autowired
     private ConverterService converterService;
-    @Resource
+    @Autowired
     private AttributeTypeService attributeTypeService;
-    @Resource
+    @Autowired
     private AttributeService attributeService;
-    @Resource
+    @Autowired
     private OrderService orderService;
-    @Resource
+    @Autowired
     private DeliveryService deliveryService;
-    @Resource
+    @Autowired
     private AreaService areaService;
 
     @Before
@@ -91,12 +91,7 @@ public class OrderTypeConverterTest {
         attribute.setNotTemporary(false);
         attributeService.save(attribute);
 
-        AttributeVersion version = new AttributeVersion();
-        version.setNumber("1.0.beta");
-        version.setTargetClassName(Order.class.getName());
-        version.setAttributes(new ArrayList<Attribute>());
-        version.getAttributes().add(attribute);
-        attributeVersionService.save(version);
+        attributeVersionService.save(Order.class.getName(),"1.0.beta",attribute);
 
         DeliveryCorp corp = new DeliveryCorp();
         corp.setName("测试物流公司");
@@ -133,7 +128,7 @@ public class OrderTypeConverterTest {
         }).getPageItems(),"id",Long.class));
 
         // 删除测试数据版本
-        AttributeVersion version = attributeVersionService.getVersion(Order.class.getName(), "1.0.beta");
+        AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(Order.class.getName(), "1.0.beta");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
                 this.converterService.delete(converter.getId());

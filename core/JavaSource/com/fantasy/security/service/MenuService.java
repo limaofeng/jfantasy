@@ -15,18 +15,18 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("fantasy.auth.MenuService")
+@Service
 @Transactional
 public class MenuService{
 
-    @Resource
+    @Autowired
     private MenuDao menuDao;
 
     private static final Log logger = LogFactory.getLog(MenuService.class);

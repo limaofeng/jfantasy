@@ -1,6 +1,6 @@
 package com.fantasy.file.web.validator;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.FileManagerService;
 import com.fantasy.framework.util.common.StringUtil;
@@ -14,7 +14,7 @@ import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
  */
 public class FileManagerValidaotr extends FieldValidatorSupport {
 	
-	@Resource
+	@Autowired
 	private FileManagerService managerService;
 	
 	@Override

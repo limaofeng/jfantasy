@@ -28,7 +28,7 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -39,15 +39,15 @@ import java.util.List;
 @Transactional
 public class OrderService {
 
-    @Resource
+    @Autowired
     private OrderDao orderDao;
-    @Resource
+    @Autowired
     private OrderItemDao orderItemDao;
-    @Resource
+    @Autowired
     private ReceiverService receiverService;
-    @Resource
+    @Autowired
     private ProductService productService;
-    @Resource
+    @Autowired
     private DeliveryService deliveryService;
 
     private static final String defaultCashOnDeliveryName = "货到付款";

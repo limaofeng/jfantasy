@@ -3,7 +3,7 @@ package com.fantasy.mall.stock.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -21,9 +21,9 @@ import com.fantasy.mall.stock.service.StockService;
 public class StockAction extends ActionSupport {
 	private static final long serialVersionUID = 4849845824503845413L;
 	
-	@Resource
+	@Autowired
 	private StockService stockService;
-	@Resource
+	@Autowired
 	private ProductService productService;
 	
 	/**

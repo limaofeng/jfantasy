@@ -14,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -44,11 +44,11 @@ public class ShortMessagingService {
 
 	private static final Log logger = LogFactory.getLog(ShortMessagingService.class);
 
-	@Resource
+	@Autowired
 	private CaptchaDao captchaDao;
-	@Resource
+	@Autowired
 	private CaptchaConfigService captchaConfigService;
-	@Resource
+	@Autowired
 	private LogMobileDao logMobileDao;
 
 	/**

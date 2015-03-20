@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,9 +37,9 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
+    @Autowired
     private TemplateService templateService;
-    @Resource
+    @Autowired
     private WebsiteService websiteService;
     @Override
     protected String getConfigPath() {

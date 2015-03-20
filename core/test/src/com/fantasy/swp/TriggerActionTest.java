@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,7 +35,7 @@ public class TriggerActionTest extends StrutsSpringJUnit4TestCase {
 
     private static final Log LOG = LogFactory.getLog(TriggerActionTest.class);
 
-    @Resource
+    @Autowired
     private TriggerService triggerService;
     @Override
     protected String getConfigPath() {

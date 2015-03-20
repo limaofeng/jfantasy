@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +31,17 @@ public class AttributeVersionServiceTest {
 
     private final static Log logger = LogFactory.getLog(AttributeVersionServiceTest.class);
 
-    @Resource
+    @Autowired
     private AttributeVersionService attributeVersionService;
-    @Resource
+    @Autowired
     private ArticleService articleService;
-    @Resource
+    @Autowired
     private ConverterService converterService;
-    @Resource
+    @Autowired
     private AttributeTypeService attributeTypeService;
-    @Resource
+    @Autowired
     private AttributeService attributeService;
-    @Resource
+    @Autowired
     private UserService userService;
 
     @Before
@@ -101,13 +101,7 @@ public class AttributeVersionServiceTest {
         userAttribute.setNotTemporary(false);
         attributeService.save(userAttribute);
 
-        AttributeVersion version = new AttributeVersion();
-        version.setNumber("1.0");
-        version.setTargetClassName(Article.class.getName());
-        version.setAttributes(new ArrayList<Attribute>());
-        version.getAttributes().add(attribute);
-        version.getAttributes().add(userAttribute);
-        attributeVersionService.save(version);
+        attributeVersionService.save(Article.class.getName(),"1.0",attribute,userAttribute);
 
     }
 
@@ -121,7 +115,7 @@ public class AttributeVersionServiceTest {
             this.converterService.delete(converter.getId());
         }
 
-        AttributeVersion version = attributeVersionService.getVersion(Article.class.getName(), "1.0");
+        AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(Article.class.getName(), "1.0");
         if (version == null) {
             for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
                 this.converterService.delete(converter.getId());

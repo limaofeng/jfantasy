@@ -6,7 +6,7 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +22,7 @@ public class DataSourceFactory {
     private Map<String, String> drivers = new HashMap<String, String>();
     private Map<String, String> driverUrls = new HashMap<String, String>();
 
-    @Resource
+    @Autowired
     private JdbcConfigService jdbcConfigService;
 
     public DataSourceFactory() {

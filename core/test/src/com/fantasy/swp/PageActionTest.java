@@ -30,7 +30,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,23 +43,23 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class PageActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
+    @Autowired
     private TemplateActionTest templeateTest;
-    @Resource
+    @Autowired
     private WebsiteActionTest websiteActionTest;
-    @Resource
+    @Autowired
     private TemplateService templateService;
-    @Resource
+    @Autowired
     private WebsiteService websiteService;
-    @Resource
+    @Autowired
     private DataInferfaceService dataInferfaceService;
-    @Resource
+    @Autowired
     private DataActionTest dataActionTest;
-    @Resource
+    @Autowired
     private DataService dataService;
-    @Resource
+    @Autowired
     private _PageService pageService;
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
     @Before
     public void setUp() throws Exception {

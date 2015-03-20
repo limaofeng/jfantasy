@@ -7,14 +7,14 @@ import com.fantasy.swp.dao.DataDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
 @Transactional
 public class DataService {
 
-    @Resource
+    @Autowired
     private DataDao dataDao;
 
     public Pager<Data> findPager(Pager<Data> pager, List<PropertyFilter> filters) {

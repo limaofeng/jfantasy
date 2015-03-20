@@ -11,7 +11,7 @@ import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
@@ -20,7 +20,7 @@ public class ConverterService{
 
 	private static final Log logger = LogFactory.getLog(ConverterService.class);
 
-	@Resource
+	@Autowired
 	private ConverterDao converterDao;
 
     /**

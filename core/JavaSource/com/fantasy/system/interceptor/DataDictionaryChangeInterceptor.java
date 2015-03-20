@@ -6,13 +6,13 @@ import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Component
 @Aspect
 public class DataDictionaryChangeInterceptor {
 
-    @Resource
+    @Autowired
     private ScheduleService scheduleService;
 
     @After("execution(public * com.fantasy.system.service.DataDictionaryService.save(..))")

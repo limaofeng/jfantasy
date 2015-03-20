@@ -21,7 +21,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,9 +31,9 @@ import java.util.Random;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class GroupMessageWeiXinServiceTest {
-    @Resource
+    @Autowired
     private GroupMessageWeiXinService groupMessageWeiXinService;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
 
     private static final Log logger = LogFactory.getLog(GroupMessage.class);

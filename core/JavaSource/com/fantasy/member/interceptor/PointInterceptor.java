@@ -1,6 +1,6 @@
 package com.fantasy.member.interceptor;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
@@ -16,7 +16,7 @@ import com.fantasy.member.service.MemberService;
 @Aspect
 public class PointInterceptor {
 
-	@Resource
+	@Autowired
 	private MemberService memberService;
 
 	@After("execution(public * com.fantasy.member.service.PointService.save(com.fantasy.member.bean.Point))")

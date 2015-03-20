@@ -26,7 +26,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,13 +37,13 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     private static final Log LOG = LogFactory.getLog(OrgDimensionActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
-    @Resource
+    @Autowired
     private OrgDimensionService orgDimensionService;//组织维度
-    @Resource
+    @Autowired
     private OrganizationService organizationService;//组织机构
-    @Resource
+    @Autowired
     private OrgDimensionActionTest orgDimensionActionTest;
 
     @Override

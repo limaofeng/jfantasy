@@ -2,7 +2,7 @@ package com.fantasy.mall.member.service;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -20,7 +20,7 @@ import com.fantasy.security.SpringSecurityUtils;
 @Transactional
 public class ReceiverService {
 
-	@Resource
+	@Autowired
 	private ReceiverDao receiverDao;
 
 	public Receiver save(Receiver receiver) {

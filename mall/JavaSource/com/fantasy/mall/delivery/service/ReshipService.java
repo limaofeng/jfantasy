@@ -10,10 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by hebo on 2014/8/13.
- */
-@Service("mall.service.ReshipService")
+@Service
 @Transactional
 public class ReshipService {
 

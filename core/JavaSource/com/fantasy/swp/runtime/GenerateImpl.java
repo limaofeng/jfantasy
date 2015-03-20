@@ -26,7 +26,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.IOException;
@@ -47,13 +47,13 @@ public class GenerateImpl implements IGenerate {
 
     private static Log logger = LogFactory.getLog(GeneratePage.class);
 
-    @Resource
+    @Autowired
     private FileManagerFactory fileManagerFactory;
-    @Resource
+    @Autowired
     private Configuration configuration;
-    @Resource
+    @Autowired
     private PageItemService pageItemService;
-    @Resource
+    @Autowired
     private _PageService pageService;
     @Override
     public Page create(Page page){

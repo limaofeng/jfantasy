@@ -8,7 +8,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import ognl.DefaultTypeConverter;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class FileDetailTypeConverter extends DefaultTypeConverter {
 
-    @Resource
+    @Autowired
     private FileService fileService;
 
 

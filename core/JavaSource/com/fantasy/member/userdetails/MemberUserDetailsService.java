@@ -2,7 +2,7 @@ package com.fantasy.member.userdetails;
 
 import java.util.Locale;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.core.SpringSecurityMessageSource;
@@ -18,7 +18,7 @@ public class MemberUserDetailsService implements UserDetailsService {
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	@Resource
+	@Autowired
 	private MemberService memberService;
 
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

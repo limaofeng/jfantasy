@@ -7,7 +7,7 @@ import com.octo.captcha.component.word.wordgenerator.WordGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
@@ -16,7 +16,7 @@ public class CaptchaConfigService {
 
 	private static final Log logger = LogFactory.getLog(CaptchaConfigService.class);
 	
-	@Resource
+	@Autowired
 	private CaptchaConfigDao captchaConfigDao;
 
 	private ConcurrentMap<String, WordGenerator> wordGeneratorCache = new ConcurrentHashMap<String, WordGenerator>();

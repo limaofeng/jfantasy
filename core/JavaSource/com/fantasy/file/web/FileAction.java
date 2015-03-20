@@ -18,7 +18,7 @@ import com.fantasy.framework.util.web.WebUtil.Browser;
 import com.opensymphony.xwork2.ActionContext;
 import org.apache.struts2.ServletActionContext;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -32,11 +32,11 @@ public class FileAction extends ActionSupport {
 
     private static final long serialVersionUID = -8084517912796997973L;
 
-    @Resource
+    @Autowired
     private transient FileService fileService;
-    @Resource
+    @Autowired
     private transient FileUploadService fileUploadService;
-    @Resource
+    @Autowired
     private transient FilePartService filePartService;
 
     /**

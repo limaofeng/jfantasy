@@ -5,13 +5,13 @@ import com.fantasy.file.service.FileManagerFactory;
 import org.hibernate.event.spi.*;
 import org.hibernate.persister.entity.EntityPersister;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FileManagerEventListener implements PostInsertEventListener, PostUpdateEventListener, PostDeleteEventListener {
 
 	private static final long serialVersionUID = 1082020263270806626L;
 
-	@Resource
+	@Autowired
 	private FileManagerFactory factory;
 	
 	@Override

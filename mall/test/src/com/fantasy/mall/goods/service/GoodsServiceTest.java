@@ -16,7 +16,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -28,7 +28,7 @@ public class GoodsServiceTest {
 
     private static final Log logger = LogFactory.getLog(GoodsService.class);
 
-    @Resource
+    @Autowired
     private GoodsService goodsService;
 
     @Before

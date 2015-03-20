@@ -10,16 +10,16 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
  * 货品 service
  */
-@Service("goods.productService")
+@Service
 @Transactional
 public class ProductService {
-	@Resource(name = "goods.productDao")
+	@Autowired
 	private ProductDao productDao;
 
 	public Pager<Product> findPager(Pager<Product> pager, List<PropertyFilter> filters) {

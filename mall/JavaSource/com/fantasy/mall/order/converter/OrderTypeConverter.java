@@ -6,7 +6,7 @@ import com.fantasy.mall.order.service.OrderService;
 import ognl.DefaultTypeConverter;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Member;
 import java.util.Map;
 
@@ -15,7 +15,7 @@ import java.util.Map;
  */
 public class OrderTypeConverter extends DefaultTypeConverter {
 
-    @Resource
+    @Autowired
     private OrderService orderService;
 
     @Transactional

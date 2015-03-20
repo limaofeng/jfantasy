@@ -11,7 +11,7 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.userdetails.SimpleUser;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class ContactsAction extends ActionSupport {
@@ -20,7 +20,7 @@ public class ContactsAction extends ActionSupport {
      */
     private static final long serialVersionUID = 6209999459091063429L;
 
-    @Resource(name = "ab.AddressBookService")
+    @Autowired
     private transient AddressBookService addressBookService;
 
     public String index() throws Exception {

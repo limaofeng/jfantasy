@@ -12,20 +12,20 @@ import com.fantasy.system.bean.Website;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Transactional
 public class TemplateBeanService {
-    @Resource
+    @Autowired
     private TemplateService templateService;
-    @Resource
+    @Autowired
     private DataInferfaceService dataInferfaceService;
-    @Resource
+    @Autowired
     private FileManagerFactory fileManagerFactory;
-    @Resource
+    @Autowired
     private _PageService pageService;
 
     public List<ITemplage> listTemplate() {

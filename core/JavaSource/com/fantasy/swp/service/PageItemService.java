@@ -9,14 +9,14 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
 @Transactional
 public class PageItemService {
 
-    @Resource
+    @Autowired
     private PageItemDao pageItemDao;
 
     public Pager<PageItem> findPager(Pager<PageItem> pager, List<PropertyFilter> filters) {

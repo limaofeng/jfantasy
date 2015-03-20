@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
@@ -25,11 +25,11 @@ import java.util.List;
 @Transactional
 public class FileService {
 
-    @Resource
+    @Autowired
     private FolderDao folderDao;
-    @Resource
+    @Autowired
     private FileDetailDao fileDetailDao;
-    @Resource
+    @Autowired
     private DirectoryDao directoryDao;
 
     public FileDetail saveFileDetail(String absolutePath, String fileName, String contentType, long length, String md5, String realPath, String fileManagerId, String description) {

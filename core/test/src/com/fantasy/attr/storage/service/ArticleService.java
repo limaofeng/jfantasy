@@ -7,7 +7,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.transaction.Transactional;
 import java.util.List;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class ArticleService {
 
-    @Resource
+    @Autowired
     private ArticleDao articleDao;
 
     public void save(Article article) {

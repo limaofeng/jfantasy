@@ -33,7 +33,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -73,13 +73,13 @@ public class GoodsService implements InitializingBean {
         }
     }
 
-    @Resource
+    @Autowired
     private GoodsDao goodsDao;
-    @Resource
+    @Autowired
     private GoodsCategoryDao goodsCategoryDao;
-    @Resource
+    @Autowired
     private ProductService productService;
-    @Resource
+    @Autowired
     private SalesService salesService;
 
     /**

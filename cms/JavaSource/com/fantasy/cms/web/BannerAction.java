@@ -6,7 +6,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
@@ -18,7 +18,7 @@ import java.util.List;
 public class BannerAction extends ActionSupport {
 	private static final long serialVersionUID = 3799834983783507214L;
 
-	@Resource
+	@Autowired
 	private transient BannerService bannerService;
 
 

@@ -12,24 +12,24 @@ import com.fantasy.swp.runtime.GenerateImpl;
 import com.fantasy.system.bean.Website;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Component
 public class PageBeanService {
-    @Resource
+    @Autowired
     private _PageService pageService;
-    @Resource
+    @Autowired
     private TemplateService templateService;
-    @Resource
+    @Autowired
     private GenerateImpl generate;
-    @Resource
+    @Autowired
     private PageItemService pageItemService;
-    @Resource
+    @Autowired
     private DataService dataService;
-    @Resource
+    @Autowired
     private FileManagerFactory fileManagerFactory;
 
     public List<IPage> listPage(){

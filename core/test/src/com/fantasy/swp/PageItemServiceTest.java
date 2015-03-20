@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +31,17 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class PageItemServiceTest extends StrutsSpringJUnit4TestCase {
-    @Resource
+    @Autowired
     private PageItemService pageItemService;
-    @Resource
+    @Autowired
     private PageItemDataService pageItemDataService;
-    @Resource
+    @Autowired
     private _PageService pageService;
-    @Resource
+    @Autowired
     private PageActionTest pageActionTest;
-    @Resource
+    @Autowired
     private AttributeVersionService attributeVersionService;
-    @Resource
+    @Autowired
     private ArticleService articleService;
 
     @Before

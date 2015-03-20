@@ -5,13 +5,13 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.Element;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class DefaultEhCache implements Cache {
 
-    @Resource(name = "ehcache")
+    @Autowired
     protected CacheManager cacheManager;
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     private final String id;

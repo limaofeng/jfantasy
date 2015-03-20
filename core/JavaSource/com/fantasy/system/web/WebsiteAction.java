@@ -4,13 +4,13 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class WebsiteAction extends ActionSupport {
 
     private static final long serialVersionUID = 8465525245080349916L;
 
-    @Resource
+    @Autowired
     private transient WebsiteService websiteService;
 
     /**

@@ -67,7 +67,7 @@ public class VersionUtil {
     }
 
     public static AttributeVersion getVersion(String className, String number) {
-        AttributeVersion version = getAttributeVersionService().getVersion(className, number);
+        AttributeVersion version = getAttributeVersionService().findUniqueByTargetClassName(className, number);
         if (version == null) {
             logger.error("未找到" + className + "对应的版本[" + number + "]信息");
             return null;

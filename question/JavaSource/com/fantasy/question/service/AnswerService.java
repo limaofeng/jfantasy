@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("IziAnswerService")
+@Service
 @Transactional
 public class AnswerService {
 

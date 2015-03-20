@@ -27,7 +27,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 
@@ -38,7 +38,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
 
     private final static Log LOG = LogFactory.getLog(WebsiteActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
     @Autowired
     private WebsiteService websiteService;

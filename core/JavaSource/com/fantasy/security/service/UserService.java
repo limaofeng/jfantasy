@@ -19,21 +19,21 @@ import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
-@Service("fantasy.auth.UserService")
+@Service
 @Transactional
 public class UserService {
 
     private static final Log logger = LogFactory.getLog(UserService.class);
 
-    @Resource
+    @Autowired
     private MailSendService mailSendService;
 
-    @Resource
+    @Autowired
     private UserDao userDao;
-    @Resource
+    @Autowired
     private RoleService roleService;
 
     /**
