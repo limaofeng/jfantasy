@@ -48,11 +48,13 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             this.initAttributeTypes();
-
             List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
             for (AttributeVersion version : versions) {
                 if (ClassUtil.forName(version.getTargetClassName()) == null) {
                     LOG.debug("target:" + version.getTargetClassName());
+                    continue;
+                }
+                if (ClassUtil.forName(version.getClassName()) != null) {
                     continue;
                 }
                 makeClass(version);
@@ -83,12 +85,21 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         }
     }
 
-    public static Class makeClass(AttributeVersion version) {
+    public Class makeClass(AttributeVersion version) {
         String className = version.getClassName();
         String superClass = version.getType() == AttributeVersion.Type.custom ? Object.class.getName() : version.getTargetClassName();
         List<Property> properties = new ArrayList<Property>();
         for (Attribute attribute : version.getAttributes()) {
-            properties.add(new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType())));
+            String attrClassName = attribute.getAttributeType().getDataType();
+            Class<?> javaType = ClassUtil.forName(attrClassName);
+            if (javaType == null) {
+                LOG.debug(" javaType : " + attrClassName + " load Failure ！ ");
+                javaType = makeClass(attrClassName);
+            }
+            if (javaType == null) {
+                continue;
+            }
+            properties.add(new Property(attribute.getCode(), javaType));
         }
         Class[] iters = new Class[0];
         if (version.getType() == AttributeVersion.Type.custom) {
@@ -98,6 +109,21 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         Class clazz = AsmUtil.makeClass(className, superClass, iters, properties.toArray(new Property[properties.size()]));
         LOG.debug("dynaBeanClass:" + clazz);
         return clazz;
+    }
+
+    private Class<?> makeClass(String attrClassName) {
+        AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(attrClassName);
+        if (version != null) {
+            return makeClass(version);
+        }
+        int index = attrClassName.indexOf(ClassUtil.CGLIB_CLASS_SEPARATOR);
+        if (index != -1) {
+            version = attributeVersionService.findUniqueByTargetClassName(attrClassName.substring(0, index), attrClassName.substring(index + ClassUtil.CGLIB_CLASS_SEPARATOR.length()));
+            if (version != null) {
+                return makeClass(version);
+            }
+        }
+        return null;
     }
 
     @Override
