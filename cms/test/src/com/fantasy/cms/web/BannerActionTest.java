@@ -5,7 +5,7 @@ import com.fantasy.cms.service.BannerService;
 import com.fantasy.cms.service.BannerServiceTest;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
-import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.opensymphony.xwork2.Action;

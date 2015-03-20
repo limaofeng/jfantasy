@@ -1,6 +1,6 @@
 package com.fantasy.framework.struts2;
 
-import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.opensymphony.xwork2.Preparable;
 import com.opensymphony.xwork2.inject.Inject;
@@ -68,9 +68,4 @@ public class ActionSupport extends com.opensymphony.xwork2.ActionSupport impleme
         return this.extension;
     }
 
-    public Map<String,Object> jsonRoot(String key, Object value) {
-        Map<String,Object> root = new HashMap<String, Object>();
-        root.put(key,value);
-        return root;
-    }
 }

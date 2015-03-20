@@ -1,6 +1,6 @@
 package com.fantasy.security.web.validator;
 
-import com.fantasy.framework.struts2.validator.validators.AjaxValidatorSupport;
+import com.fantasy.framework.struts2.core.validator.validators.AjaxValidatorSupport;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.security.service.UserService;
 import com.opensymphony.xwork2.validator.ValidationException;

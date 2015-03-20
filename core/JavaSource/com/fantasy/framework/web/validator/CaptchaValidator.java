@@ -4,8 +4,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.ServletActionContext;
 
-import com.fantasy.framework.struts2.validator.AjaxValidatorAction;
-import com.fantasy.framework.struts2.validator.validators.AjaxValidatorSupport;
+import com.fantasy.framework.struts2.core.validator.AjaxValidatorAction;
+import com.fantasy.framework.struts2.core.validator.validators.AjaxValidatorSupport;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.octo.captcha.service.CaptchaService;
