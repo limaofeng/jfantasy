@@ -2,10 +2,10 @@
     <thead>
     <tr>
         <th class="pad15L" style="width:20px;"><input id="allChecked" type="checkbox" checkAll=".select_box" class="bg-white custom-checkbox"></th>
-        <th class="sort" orderBy="title"><@s.text name="cms.banner.bannerItem.title"/></th>
-        <th class="sort" orderBy="summary"><@s.text name="cms.banner.bannerItem.summary"/></th>
-        <th><@s.text name="cms.banner.bannerItem.url"/></th>
-        <th><@s.text name="cms.banner.caozuo"/></th>
+        <th class="sort" orderBy="title">标题</th>
+        <th class="sort" orderBy="summary">摘要</th>
+        <th>url</th>
+        <th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -37,7 +37,7 @@
             <div class="form-row">
                 <div class="form-label col-md-3">
                     <label for="">
-                    <@s.text name="banner.bannerItem.title"/>：
+                        标题：
                     </label>
                 </div>
                 <div class="form-input col-md-9">
@@ -49,7 +49,7 @@
             <div class="form-row">
                 <div class="form-label col-md-3">
                     <label for="">
-                    <@s.text name="banner.bannerItem.summary"/>：
+                        摘要：
                     </label>
                 </div>
                 <div class="form-input col-md-9">
@@ -61,7 +61,7 @@
             <div class="form-row">
                 <div class="form-label col-md-3">
                     <label for="">
-                    <@s.text name="banner.bannerItem.url"/>：
+                        url：
                     </label>
                 </div>
                 <div class="form-input col-md-9">
@@ -82,7 +82,7 @@
                                      <i class="glyph-icon icon-plus"></i>
                                 </span>
                                 <span class="button-content">
-                                <@s.text name="banner.bannerItem.add"/>
+                                         添加新的广告位
                                  </span>
                         </a>
                         <a href="javascript:;" class="btn medium bg-blue radius-all-4 mrg5A ui-state-default formEdit">
@@ -90,7 +90,7 @@
                                      <i class="glyph-icon icon-edit mrg5R"></i>
                                 </span>
                                 <span class="button-content">
-                                <@s.text name="banner.bannerItem.edit"/>
+                                         编辑广告位
                                  </span>
                         </a>
                     </div>
@@ -112,7 +112,7 @@
         <div class="form-row">
             <div class="form-label col-md-3">
                 <label for="">
-                <@s.text name="banner.bannerItem.title"/>：
+                    标题：
                 </label>
             </div>
             <div class="form-input col-md-9">
@@ -124,7 +124,7 @@
         <div class="form-row">
             <div class="form-label col-md-3">
                 <label for="">
-                <@s.text name="banner.bannerItem.summary"/>：
+                    摘要：
                 </label>
             </div>
             <div class="form-input col-md-9">
@@ -136,7 +136,7 @@
         <div class="form-row">
             <div class="form-label col-md-3">
                 <label for="">
-                <@s.text name="banner.bannerItem.url"/>：
+                    url：
                 </label>
             </div>
             <div class="form-input col-md-9">
@@ -157,7 +157,7 @@
                                  <i class="glyph-icon icon-save"></i>
                             </span>
                             <span class="button-content">
-                                     <@s.text name="banner.bannerItem.savetp"/>
+                                     保存广告位
                              </span>
                     </a>
                     <a href="javascript:;" class="btn medium bg-blue radius-all-4 mrg5A ui-state-default ">
@@ -165,8 +165,8 @@
                                  <i class="glyph-icon icon-reply"></i>
                             </span>
                             <span class="button-content">
-                                     <@s.text name="banner.bannerItem.reset"/>
-                            </span>
+                                     重置广告位
+                             </span>
                     </a>
                 </div>
             </div>
