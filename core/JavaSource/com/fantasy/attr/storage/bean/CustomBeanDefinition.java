@@ -28,7 +28,7 @@ public class CustomBeanDefinition extends BaseBusEntity {
     /**
      * 数据版本
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_CUSTOM_BEAN_DEFINITION_VERSION"))
     private AttributeVersion version;
     /**
@@ -37,6 +37,12 @@ public class CustomBeanDefinition extends BaseBusEntity {
     @ManyToMany(targetEntity = Attribute.class, fetch = FetchType.LAZY)
     @JoinTable(name = "CUSTOM_BEAN_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
     private List<Attribute> attributes;
+
+    /**
+     * 属性
+     */
+    @OneToMany(mappedBy = "definition", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<CustomBean> customBeans;
 
     public Long getId() {
         return id;
@@ -76,5 +82,13 @@ public class CustomBeanDefinition extends BaseBusEntity {
 
     public void setVersion(AttributeVersion version) {
         this.version = version;
+    }
+
+    public List<CustomBean> getCustomBeans() {
+        return customBeans;
+    }
+
+    public void setCustomBeans(List<CustomBean> customBeans) {
+        this.customBeans = customBeans;
     }
 }

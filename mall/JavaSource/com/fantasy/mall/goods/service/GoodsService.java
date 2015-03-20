@@ -48,7 +48,7 @@ import java.util.List;
 @Transactional
 public class GoodsService implements InitializingBean {
 
-    private static final Log logger = LogFactory.getLog(GoodsService.class);
+    private static final Log LOG = LogFactory.getLog(GoodsService.class);
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -65,7 +65,7 @@ public class GoodsService implements InitializingBean {
                 category.setSign("root");
                 category.setName("商品分类根目录");
                 save(category);
-                logger.debug(log);
+                LOG.debug(log);
             }
             // 初始化商品图片目录
         } finally {
@@ -552,6 +552,7 @@ public class GoodsService implements InitializingBean {
                 configuration.getTemplate(newTemplateUrl);
                 return newTemplateUrl;
             } catch (IOException e) {
+                LOG.error(e.getMessage());
                 if (category.getParent() == null) {
                     break;
                 }

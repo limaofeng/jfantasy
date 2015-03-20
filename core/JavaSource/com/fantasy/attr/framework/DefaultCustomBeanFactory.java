@@ -75,9 +75,11 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         attributeTypes.add(AttributeTypeUtils.primitive("Date[]", Date[].class));
 
         for (AttributeType attributeType : attributeTypes) {
-            if (attributeTypeService.findUniqueByJavaType(attributeType.getDataType()) == null) {
-                attributeTypeService.save(attributeType);
+            AttributeType _attributeType = attributeTypeService.findUniqueByJavaType(attributeType.getDataType());
+            if (_attributeType != null) {
+                attributeType.setId(_attributeType.getId());
             }
+            attributeTypeService.save(attributeType);
         }
     }
 
@@ -86,10 +88,14 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         String superClass = version.getType() == AttributeVersion.Type.custom ? Object.class.getName() : version.getTargetClassName();
         List<Property> properties = new ArrayList<Property>();
         for (Attribute attribute : version.getAttributes()) {
-            final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
-            properties.add(property);
+            properties.add(new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType())));
         }
-        Class clazz = AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()]));
+        Class[] iters = new Class[0];
+        if (version.getType() == AttributeVersion.Type.custom) {
+            properties.add(new Property("id", Long.class));
+            iters = new Class[]{CustomBean.class};
+        }
+        Class clazz = AsmUtil.makeClass(className, superClass, iters, properties.toArray(new Property[properties.size()]));
         LOG.debug("dynaBeanClass:" + clazz);
         return clazz;
     }

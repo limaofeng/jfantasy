@@ -1,14 +1,15 @@
 package com.fantasy.attr.storage.service;
 
+import com.fantasy.attr.framework.CustomBean;
 import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
 import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -22,18 +23,18 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-public class CustomBeanDefinitionServiceTest {
+public class CustomBeanServiceTest {
 
-    private final static Log LOG = LogFactory.getLog(AttributeVersionServiceTest.class);
+    private final static Log LOG = LogFactory.getLog(CustomBeanServiceTest.class);
 
     @Autowired
     private AttributeService attributeService;
     @Autowired
-    private ConverterService converterService;
-    @Autowired
     private AttributeTypeService attributeTypeService;
     @Autowired
     private CustomBeanDefinitionService customBeanDefinitionService;
+    @Autowired
+    private CustomBeanService customBeanService;
 
     private List<Attribute> attributes = new ArrayList<Attribute>();
 
@@ -55,37 +56,52 @@ public class CustomBeanDefinitionServiceTest {
         attributeService.save(attribute);
 
         attributes.add(attribute);
+
+        customBeanDefinitionService.save(className, "测试", attributes);
     }
 
     @After
     public void tearDown() throws Exception {
         this.customBeanDefinitionService.delete(className);
 
-        for(Attribute attribute : attributes){
+        for (Attribute attribute : attributes) {
             this.attributeService.delete(attribute.getId());
+        }
+
+        for (CustomBeanDefinition definition : this.customBeanDefinitionService.find(Restrictions.isNull("className"))) {
+            this.customBeanDefinitionService.delete(definition.getId());
         }
 
     }
 
     @Test
-    public void testSave() throws Exception {
-        CustomBeanDefinition definition = customBeanDefinitionService.save(className, "测试", attributes);
+    public void save() {
+        CustomBean object = ClassUtil.newInstance(className, CustomBean.class);
+        OgnlUtil.getInstance().setValue("number", object, "1");
+        LOG.debug(object);
+        customBeanService.save(object);
 
-        Assert.assertNotNull(definition);
+        Long id = object.getId();
 
-        Class clazz = ClassUtil.forName(className);
+        LOG.debug("保存数据的ID:" + id);
 
-        Assert.assertNotNull(clazz);
+        Assert.assertNotNull(object.getId());
 
-        Object o = ClassUtil.newInstance(clazz);
+        Assert.assertEquals(1, OgnlUtil.getInstance().getValue("number", object));
 
-        LOG.debug(o);
+        OgnlUtil.getInstance().setValue("number", object, "2");
 
-        OgnlUtil.getInstance().setValue("number", o, "10");
+        customBeanService.save(object);
 
-        Assert.assertNotNull(o);
+        Assert.assertEquals(id, object.getId());
 
-        LOG.debug(JSON.set("text").serialize(o));
+        Assert.assertEquals(2, OgnlUtil.getInstance().getValue("number", object));
+
+        object = customBeanService.get(id);
+
+        Assert.assertEquals(id, object.getId());
+
+        Assert.assertEquals(2, OgnlUtil.getInstance().getValue("number", object));
 
     }
 

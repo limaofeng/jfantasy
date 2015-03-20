@@ -5,6 +5,7 @@ import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
 import com.fantasy.attr.storage.dao.CustomBeanDefinitionDao;
 import com.fantasy.framework.util.common.ObjectUtil;
+import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -44,6 +45,7 @@ public class CustomBeanDefinitionService {
         CustomBeanDefinition definition = ObjectUtil.defaultValue(this.findUniqueByClassName(className), new CustomBeanDefinition());
         definition.setVersion(version);
         definition.setName(name);
+        definition.setClassName(className);
         definition.setAttributes(version.getAttributes());
         customBeanDefinitionDao.save(definition);
         return definition;
@@ -54,14 +56,17 @@ public class CustomBeanDefinitionService {
     }
 
     public void delete(String className) {
-        AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(className);
-        if (version != null) {
-            attributeVersionService.delete(version.getId());
-        }
         CustomBeanDefinition definition = findUniqueByClassName(className);
         if (definition != null) {
             customBeanDefinitionDao.delete(definition.getId());
         }
     }
 
+    public void delete(Long id) {
+        customBeanDefinitionDao.delete(id);
+    }
+
+    public List<CustomBeanDefinition> find(Criterion... criterions) {
+        return this.customBeanDefinitionDao.find(criterions);
+    }
 }

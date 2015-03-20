@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -40,15 +41,15 @@ public class AttributeVersionService {
         return attributeVersionDao.findPager(pager, filters);
     }
 
-    public AttributeVersion save(String targetClassName,String number,Attribute... attributes) {
-        return this.save(targetClassName,number, Arrays.asList(attributes));
+    public AttributeVersion save(String targetClassName, String number, Attribute... attributes) {
+        return this.save(targetClassName, number, Arrays.asList(attributes));
     }
 
-    public AttributeVersion save(String targetClassName,Attribute... attributes) {
+    public AttributeVersion save(String targetClassName, Attribute... attributes) {
         return this.save(targetClassName, Arrays.asList(attributes));
     }
 
-    public AttributeVersion save(String targetClassName,List<Attribute> attributes) {
+    public AttributeVersion save(String targetClassName, List<Attribute> attributes) {
         AttributeVersion version = new AttributeVersion();
         version.setTargetClassName(targetClassName);
         version.setNumber("");
@@ -61,7 +62,7 @@ public class AttributeVersionService {
         return version;
     }
 
-    public AttributeVersion save(String targetClassName,String number,List<Attribute> attributes) {
+    public AttributeVersion save(String targetClassName, String number, List<Attribute> attributes) {
         AttributeVersion version = new AttributeVersion();
         version.setTargetClassName(targetClassName);
         version.setNumber(number);
@@ -95,15 +96,33 @@ public class AttributeVersionService {
         return this.attributeVersionDao.find(filter, orderBy, order, 0, size);
     }
 
-    public AttributeVersion findUniqueByTargetClassName(String targetClassName){
-        return this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", targetClassName), Restrictions.eq("type", AttributeVersion.Type.custom));
+    public AttributeVersion findUniqueByTargetClassName(String targetClassName) {
+        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", targetClassName), Restrictions.eq("type", AttributeVersion.Type.custom));
+        if (version == null) {
+            return null;
+        }
+        AttributeVersion _rev = BeanUtil.copyProperties(new AttributeVersion(), version);
+        List<Attribute> attributes = new ArrayList<Attribute>();
+        for (Attribute attribute : version.getAttributes()) {
+            Hibernate.initialize(attribute);
+            attributes.add(BeanUtil.copyProperties(new Attribute(), attribute));
+            AttributeType attributeType = attribute.getAttributeType();
+            Hibernate.initialize(attributeType);
+            Hibernate.initialize(attributeType.getConverter());
+            Converter converter = BeanUtil.copyProperties(new Converter(), attributeType.getConverter());
+            attributeType = BeanUtil.copyProperties(new AttributeType(), attributeType);
+            attributeType.setConverter(converter);
+            attributes.get(attributes.size() - 1).setAttributeType(attributeType);
+        }
+        _rev.setAttributes(attributes);
+        return _rev;
     }
 
     /**
      * 通过 version id 加载全部版本相关的完整数据
      *
-     * @param className  版本对应的 class
-     * @param number 版本号
+     * @param className 版本对应的 class
+     * @param number    版本号
      * @return AttributeVersion
      */
     public AttributeVersion findUniqueByTargetClassName(String className, String number) {
