@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.criterion.Restrictions;
 
-import com.fantasy.framework.struts2.validator.validators.AjaxValidatorSupport;
+import com.fantasy.framework.struts2.core.validator.validators.AjaxValidatorSupport;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;

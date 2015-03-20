@@ -3,7 +3,7 @@ package com.fantasy.system.web;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.FileManagerService;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
@@ -27,7 +27,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Arrays;
 import java.util.List;
 

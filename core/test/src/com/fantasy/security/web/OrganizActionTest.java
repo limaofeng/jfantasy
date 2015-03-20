@@ -1,7 +1,7 @@
 package com.fantasy.security.web;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.OrgDimension;

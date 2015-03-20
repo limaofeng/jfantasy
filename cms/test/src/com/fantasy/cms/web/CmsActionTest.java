@@ -4,7 +4,7 @@ import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.opensymphony.xwork2.Action;
