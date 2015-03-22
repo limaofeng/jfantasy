@@ -1,11 +1,13 @@
 package com.fantasy.attr.framework;
 
+import com.fantasy.attr.framework.converter.PrimitiveTypeConverter;
 import com.fantasy.attr.framework.util.AttributeTypeUtils;
 import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.attr.storage.service.AttributeVersionService;
+import com.fantasy.attr.storage.service.ConverterService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.asm.AsmUtil;
@@ -39,6 +41,8 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     private AttributeVersionService attributeVersionService;
     @Autowired
     private AttributeTypeService attributeTypeService;
+    @Autowired
+    private ConverterService converterService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -65,6 +69,8 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     }
 
     public void initAttributeTypes() {
+        converterService.save(PrimitiveTypeConverter.class,"基本数据类型转换器","class");
+
         List<AttributeType> attributeTypes = new ArrayList<AttributeType>();
 
         attributeTypes.add(AttributeTypeUtils.primitive("Integer", Integer.class));

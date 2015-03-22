@@ -53,7 +53,7 @@ public class SequenceService {
      */
     public long newkey(String key, long poolSize) {
         String[] keys = RegexpUtil.split(key,":");
-        int index = keys.length == 2 ? this.sequenceDao.queryTableSequence(keys[0], keys[1]) : 0;
+        int index = keys.length == 2 ? ObjectUtil.defaultValue(this.sequenceDao.queryTableSequence(keys[0], keys[1]),0) : 0;
         int opt = this.sequenceDao.insert(new Sequence(key, index + poolSize));
         if (opt == 0) {
             return this.sequenceDao.findUniqueByKey(key).getValue();

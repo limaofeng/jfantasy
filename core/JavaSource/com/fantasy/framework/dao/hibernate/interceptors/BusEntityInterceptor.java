@@ -1,22 +1,20 @@
 package com.fantasy.framework.dao.hibernate.interceptors;
 
-import java.io.Serializable;
-import java.util.Date;
-
-import org.hibernate.EmptyInterceptor;
-import org.hibernate.type.Type;
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.security.SpringSecurityUtils;
+import org.hibernate.EmptyInterceptor;
+import org.hibernate.type.Type;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * 实体公共属性，自动填充拦截器
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2012-10-28 下午08:07:30
  * @version 1.0

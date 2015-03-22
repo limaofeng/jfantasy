@@ -12,9 +12,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -30,8 +29,8 @@ public class MessageService {
     private MessageDao messageDao;
 
 
-    public Pager<Message> findPager(Pager<Message> pager,List<PropertyFilter> filters){
-       return this.messageDao.findPager(pager,filters);
+    public Pager<Message> findPager(Pager<Message> pager, List<PropertyFilter> filters) {
+        return this.messageDao.findPager(pager, filters);
     }
 
     public void log(final MessageContext msgContext, final Message.Type type) {
@@ -91,8 +90,8 @@ public class MessageService {
         this.messageDao.save(message);
     }
 
-    public void delete(String... ids){
-        for(String id:ids){
+    public void delete(String... ids) {
+        for (String id : ids) {
             this.messageDao.delete(id);
         }
     }

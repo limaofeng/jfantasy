@@ -29,8 +29,8 @@ public class CustomBeanDefinitionService {
      * @param name       中文描述
      * @param attributes 自定义字段
      */
-    public void save(String className, String name, Attribute... attributes) {
-        this.save(className, name, Arrays.asList(attributes));
+    public CustomBeanDefinition save(String className, String name, Attribute... attributes) {
+        return this.save(className, name, Arrays.asList(attributes));
     }
 
     /**

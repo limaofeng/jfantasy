@@ -1,7 +1,7 @@
 package com.fantasy.attr.storage.service;
 
-import com.fantasy.attr.storage.bean.Attribute;
-import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.framework.util.AttributeUtils;
+import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.jackson.JSON;
@@ -17,9 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class CustomBeanDefinitionServiceTest {
@@ -27,49 +24,29 @@ public class CustomBeanDefinitionServiceTest {
     private final static Log LOG = LogFactory.getLog(AttributeVersionServiceTest.class);
 
     @Autowired
-    private AttributeService attributeService;
-    @Autowired
-    private ConverterService converterService;
-    @Autowired
-    private AttributeTypeService attributeTypeService;
-    @Autowired
     private CustomBeanDefinitionService customBeanDefinitionService;
+    @Autowired
+    private AttributeVersionService attributeVersionService;
 
-    private List<Attribute> attributes = new ArrayList<Attribute>();
-
-    private String className = "org.jfantasy.test.UserDel";
+    private String className = "org.jfantasy.test.TestCustomBean";
 
     @Before
     public void setUp() throws Exception {
         this.tearDown();
-
-        AttributeType attributeType = attributeTypeService.findUniqueByJavaType(Integer.class);
-
-        Attribute attribute = new Attribute();
-        attribute.setCode("number");
-        attribute.setName("数字字段");
-        attribute.setDescription("test");
-        attribute.setAttributeType(attributeType);
-        attribute.setNonNull(true);
-        attribute.setNotTemporary(false);
-        attributeService.save(attribute);
-
-        attributes.add(attribute);
     }
 
     @After
     public void tearDown() throws Exception {
         this.customBeanDefinitionService.delete(className);
-
-        for(Attribute attribute : attributes){
-            this.attributeService.delete(attribute.getId());
+        AttributeVersion version = this.attributeVersionService.findUniqueByTargetClassName(className);
+        if(version!=null){
+            this.attributeVersionService.delete(version.getId());
         }
-
     }
 
     @Test
     public void testSave() throws Exception {
-        CustomBeanDefinition definition = customBeanDefinitionService.save(className, "测试", attributes);
+        CustomBeanDefinition definition = customBeanDefinitionService.save(className, "测试", AttributeUtils.integer("number","数字字段","test"));
 
         Assert.assertNotNull(definition);
 

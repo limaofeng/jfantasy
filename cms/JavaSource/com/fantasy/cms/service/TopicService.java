@@ -7,7 +7,8 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**

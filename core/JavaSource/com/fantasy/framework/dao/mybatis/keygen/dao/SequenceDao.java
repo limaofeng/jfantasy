@@ -42,5 +42,5 @@ public interface SequenceDao extends SqlMapper {
      * @param key   字段
      * @return max id
      */
-    public int queryTableSequence(@Param("table") String table, @Param("key") String key);
+    public Integer queryTableSequence(@Param("table") String table, @Param("key") String key);
 }
