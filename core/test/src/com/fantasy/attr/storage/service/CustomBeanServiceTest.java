@@ -1,8 +1,7 @@
 package com.fantasy.attr.storage.service;
 
 import com.fantasy.attr.framework.CustomBean;
-import com.fantasy.attr.storage.bean.Attribute;
-import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.framework.util.AttributeUtils;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
@@ -17,9 +16,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
@@ -36,37 +32,18 @@ public class CustomBeanServiceTest {
     @Autowired
     private CustomBeanService customBeanService;
 
-    private List<Attribute> attributes = new ArrayList<Attribute>();
-
-    private String className = "org.jfantasy.test.UserDel";
+    private String className = "org.jfantasy.test.CustomBean";
 
     @Before
     public void setUp() throws Exception {
         this.tearDown();
 
-        AttributeType attributeType = attributeTypeService.findUniqueByJavaType(Integer.class);
-
-        Attribute attribute = new Attribute();
-        attribute.setCode("number");
-        attribute.setName("数字字段");
-        attribute.setDescription("test");
-        attribute.setAttributeType(attributeType);
-        attribute.setNonNull(true);
-        attribute.setNotTemporary(false);
-        attributeService.save(attribute);
-
-        attributes.add(attribute);
-
-        customBeanDefinitionService.save(className, "测试", attributes);
+        customBeanDefinitionService.save(className, "测试", AttributeUtils.integer("number","数字字段","test"));
     }
 
     @After
     public void tearDown() throws Exception {
         this.customBeanDefinitionService.delete(className);
-
-        for (Attribute attribute : attributes) {
-            this.attributeService.delete(attribute.getId());
-        }
 
         for (CustomBeanDefinition definition : this.customBeanDefinitionService.find(Restrictions.isNull("className"))) {
             this.customBeanDefinitionService.delete(definition.getId());

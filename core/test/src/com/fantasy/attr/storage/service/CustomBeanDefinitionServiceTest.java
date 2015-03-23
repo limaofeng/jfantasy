@@ -1,7 +1,6 @@
 package com.fantasy.attr.storage.service;
 
 import com.fantasy.attr.framework.util.AttributeUtils;
-import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.jackson.JSON;
@@ -38,10 +37,6 @@ public class CustomBeanDefinitionServiceTest {
     @After
     public void tearDown() throws Exception {
         this.customBeanDefinitionService.delete(className);
-        AttributeVersion version = this.attributeVersionService.findUniqueByTargetClassName(className);
-        if(version!=null){
-            this.attributeVersionService.delete(version.getId());
-        }
     }
 
     @Test

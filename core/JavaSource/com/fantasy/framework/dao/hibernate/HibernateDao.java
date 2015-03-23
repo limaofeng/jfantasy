@@ -262,13 +262,14 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                     }
                     List<Object> _old_fks = (List<Object>)ognlUtil.getValue(field.getName(), oldEntity);
                     ognlUtil.setValue(field.getName(), oldEntity, addObjects);
+                    /*
                     //删除原有数据
                     for(Object _odl : _old_fks){
                         if(ObjectUtil.find(addObjects,this.getIdName(targetEntityClass),this.getIdValue(targetEntityClass,_odl)) == null){
                             this.getSession().delete(_odl);
                             System.out.println("删除数据"+this.getIdValue(targetEntityClass,_odl));
                         }
-                    }
+                    }*/
                 }
             }
             // 用于回显
