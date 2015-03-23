@@ -32,9 +32,7 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
 import javax.servlet.http.HttpServletRequest;
-import java.net.URLDecoder;
 import java.util.HashMap;
-import java.util.StringTokenizer;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -80,7 +78,7 @@ import java.util.StringTokenizer;
  * The following URL's will invoke its methods:
  * </p>
  * <ul>
- * <li><code>GET:    /movies                => method="index"</code></li>
+ * <li><code>GET:    /movies                => method="search"</code></li>
  * <li><code>GET:    /movies/Thrillers      => method="show", id="Thrillers"</code></li>
  * <li><code>GET:    /movies/Thrillers;edit => method="edit", id="Thrillers"</code></li>
  * <li><code>GET:    /movies/Thrillers/edit => method="edit", id="Thrillers"</code></li>
@@ -100,7 +98,7 @@ public class RestActionMapper extends DefaultActionMapper {
     protected static final Logger LOG = LoggerFactory.getLogger(RestActionMapper.class);
     public static final String HTTP_METHOD_PARAM = "_method";
     private String idParameterName = "id";
-    private String indexMethodName = "index";
+    private String indexMethodName = "search";
     private String getMethodName = "show";
     private String postMethodName = "create";
     private String editMethodName = "edit";
@@ -180,6 +178,7 @@ public class RestActionMapper extends DefaultActionMapper {
     }
 
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
+        /*
         if (!isSlashesInActionNames()) {
             throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
         }
@@ -209,7 +208,7 @@ public class RestActionMapper extends DefaultActionMapper {
 
                     // Index e.g. foo/
                     if (isGet(request)) {
-                        mapping.setMethod("index");
+                        mapping.setMethod("search");
 
                         // Creating a new entry on POST e.g. foo/
                     } else if (isPost(request)) {
@@ -290,7 +289,7 @@ public class RestActionMapper extends DefaultActionMapper {
         }
 
         return mapping;
-        /*
+        */
         ActionMapping mapping = new ActionMapping();
         String uri = getUri(request);
 
@@ -404,15 +403,28 @@ public class RestActionMapper extends DefaultActionMapper {
         }
         // if action name isn't specified, it can be a normal request, to static resource, return null to allow handle that case
         return null;
-        */
+    }
+
+    private void handleDynamicMethodInvocation(ActionMapping mapping, String name) {
+        int exclamation = name.lastIndexOf("!");
+        if (exclamation != -1) {
+            mapping.setName(name.substring(0, exclamation));
+            if (allowDynamicMethodCalls) {
+                mapping.setMethod(name.substring(exclamation + 1));
+            } else {
+                mapping.setMethod(null);
+            }
+        }
     }
 
     /**
      * Parses the name and namespace from the uri.  Uses the configured package
      * namespaces to determine the name and id parameter, to be parsed later.
      *
-     * @param uri     The uri
-     * @param mapping The action mapping to populate
+     * @param uri
+     *            The uri
+     * @param mapping
+     *            The action mapping to populate
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping,
                                          ConfigurationManager configManager) {
