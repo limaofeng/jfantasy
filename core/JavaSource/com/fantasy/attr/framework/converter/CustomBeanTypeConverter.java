@@ -23,9 +23,9 @@ public class CustomBeanTypeConverter extends DefaultTypeConverter {
 
     @Transactional
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        if (toType == CustomBean.class) {
-            return customBeanService.get((Long) value);
-        } else if (toType == CustomBean[].class) {
+        if (CustomBean.class.isAssignableFrom(toType)) {
+            return customBeanService.get(Long.valueOf(value.toString()));
+        } else if (CustomBean[].class.isAssignableFrom(toType)) {
             String[] ids = value.toString().split(",");
             List<CustomBean> customBeanList = new ArrayList<CustomBean>();
             for (String id : ids) {
