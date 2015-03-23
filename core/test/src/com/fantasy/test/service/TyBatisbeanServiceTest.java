@@ -58,6 +58,19 @@ public class TyBatisbeanServiceTest {
     }
 
     @Test
+    public void testFindSimplePager() {
+        Pager<TyBatisbean> pager = tMyBatisbeanService.findSimplePager(new Pager<TyBatisbean>(), "test");
+        logger.debug("pager : " + pager);
+        for (int i = 1; i <= pager.getTotalPage(); i++) {
+            logger.debug("显示第" + i + "页的数据:" + pager);
+            for (TyBatisbean t : pager.getPageItems()) {
+                logger.debug(t);
+            }
+        }
+        logger.debug("pager : " + pager);
+    }
+
+    @Test
     public void testSelectAll() {
         List<TyBatisbean> tyBatisbeanList = tMyBatisbeanService.selectAll();
         logger.debug("size : " + tyBatisbeanList.size());
