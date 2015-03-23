@@ -31,7 +31,7 @@
         <com.fantasy-version>3.0.9.Alphal</com.fantasy-version>
         <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
-        <org.hibernate-version>4.3.5.Final</org.hibernate-version>
+        <org.hibernate-version>4.3.8.Final</org.hibernate-version>
         <commons-beanutils-version>1.8.3</commons-beanutils-version>
         <commons-httpclient-version>3.1</commons-httpclient-version>
         <org.apache.struts-version>2.3.8</org.apache.struts-version>
