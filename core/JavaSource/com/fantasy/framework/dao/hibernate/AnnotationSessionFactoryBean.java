@@ -98,10 +98,6 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
             addEventListener("post-update", eventListeners, entityChangedEventListener);
             addEventListener("post-delete", eventListeners, entityChangedEventListener);
         }
-        com.fantasy.swp.listener.EntityChangedEventListener entityChangedEventListener = new com.fantasy.swp.listener.EntityChangedEventListener();
-        addEventListener("post-insert", eventListeners, entityChangedEventListener);
-        addEventListener("post-update", eventListeners, entityChangedEventListener);
-        addEventListener("post-delete", eventListeners, entityChangedEventListener);
 
         VersionChangedEventListener versionChangedEventListener = new VersionChangedEventListener();
         addEventListener("post-insert", eventListeners, versionChangedEventListener);
