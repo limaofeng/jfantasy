@@ -59,6 +59,11 @@ public class AttributeVersion extends BaseBusEntity {
     @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
     private List<Attribute> attributes;
     /**
+     * 版本对应的 attr values
+     */
+    @OneToMany(mappedBy = "version",fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<AttributeValue> attributeValues;
+    /**
      * 属性在版本中的排序规则
      */
     @Column(name = "ATTRIBUTE_SORT", length = 100)
@@ -110,6 +115,14 @@ public class AttributeVersion extends BaseBusEntity {
 
     public void setType(Type type) {
         this.type = type;
+    }
+
+    public List<AttributeValue> getAttributeValues() {
+        return attributeValues;
+    }
+
+    public void setAttributeValues(List<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
     }
 
     @Transient

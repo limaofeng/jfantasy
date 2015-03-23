@@ -24,10 +24,6 @@ public class CustomBeanServiceTest {
     private final static Log LOG = LogFactory.getLog(CustomBeanServiceTest.class);
 
     @Autowired
-    private AttributeService attributeService;
-    @Autowired
-    private AttributeTypeService attributeTypeService;
-    @Autowired
     private CustomBeanDefinitionService customBeanDefinitionService;
     @Autowired
     private CustomBeanService customBeanService;
@@ -63,6 +59,8 @@ public class CustomBeanServiceTest {
         LOG.debug("保存数据的ID:" + id);
 
         Assert.assertNotNull(object.getId());
+
+        object = customBeanService.get(id);
 
         Assert.assertEquals(1, OgnlUtil.getInstance().getValue("number", object));
 

@@ -2,7 +2,6 @@ package com.fantasy.attr.storage.service;
 
 import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.attr.storage.bean.*;
-import com.fantasy.attr.storage.dao.AttributeValueDao;
 import com.fantasy.attr.storage.dao.CustomBeanDao;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -25,8 +24,6 @@ public class CustomBeanService {
     private CustomBeanDefinitionService customBeanDefinitionService;
     @Autowired
     private AttributeVersionService attributeVersionService;
-    @Autowired
-    private AttributeValueDao attributeValueDao;
 
     public void save(com.fantasy.attr.framework.CustomBean customBean) {
         CustomBeanDefinition definition = customBeanDefinitionService.findUniqueByClassName(customBean.getClass().getName());
@@ -44,26 +41,10 @@ public class CustomBeanService {
             _customBean.setDefinition(definition);
             _customBean.setVersion(version.getId());
             customBeanDao.save(_customBean);
-        }else{
-//            attributeValues = customBeanDao.get(customBean.getId()).getAttributeValues();
-            for (Attribute attribute : version.getAttributes()) {
-                AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
-                if (attributeValue == null) {
-                    attributeValue = new AttributeValue();
-                    attributeValue.setAttribute(attribute);
-                    attributeValue.setVersion(version);
-                    attributeValue.setTargetId(_customBean.getId());
-                    attributeValues.add(attributeValue);
-                }
-                String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), customBean, String.class);
-                if (StringUtil.isNotBlank(value)) {
-                    attributeValue.setValue(value);
-                    attributeValueDao.save(attributeValue);
-                }
-            }
             _customBean.setAttributeValues(attributeValues);
-            this.customBeanDao.save(_customBean);
-            return;
+            customBean.setId(_customBean.getId());
+        }else{
+            attributeValues = this.customBeanDao.get(customBean.getId()).getAttributeValues();
         }
         for (Attribute attribute : version.getAttributes()) {
             AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
@@ -78,15 +59,8 @@ public class CustomBeanService {
             String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), customBean, String.class);
             if (StringUtil.isNotBlank(value)) {
                 attributeValue.setValue(value);
-                attributeValueDao.save(attributeValue);
             }
         }
-        _customBean.setAttributeValues(attributeValues);
-        customBean.setId(_customBean.getId());
-    }
-
-    public void save() {
-
     }
 
     public void delete(Long... ids) {

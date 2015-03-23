@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @since 2012-11-4 下午06:10:12
  */
 @Entity
-@Table(name = "ATTR_ATTRIBUTE_VALUE")//, uniqueConstraints = {@UniqueConstraint(columnNames = {"VERSION_ID", "ATTRIBUTE_ID", "TARGET_ID"})}
+@Table(name = "ATTR_ATTRIBUTE_VALUE", uniqueConstraints = {@UniqueConstraint(columnNames = {"VERSION_ID", "ATTRIBUTE_ID", "TARGET_ID"})})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AttributeValue extends BaseBusEntity {
 
@@ -28,19 +28,19 @@ public class AttributeValue extends BaseBusEntity {
     /**
      * 属性对象
      */
-    @JoinColumn(name = "ATTRIBUTE_ID", foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VALUE_ATTRIBUTE"))
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ATTRIBUTE_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VALUE_ATTRIBUTE"))
+    @ManyToOne(fetch = FetchType.LAZY)
     private Attribute attribute;
     /**
      * 数据版本
      */
-    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VALUE_VERSION"))
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "VERSION_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VALUE_VERSION"))
+    @ManyToOne(fetch = FetchType.LAZY)
     private AttributeVersion version;
     /**
      * 关联对象对应的id
      */
-    @Column(name = "TARGET_ID", nullable = false)
+    @Column(name = "TARGET_ID", updatable = false)
     private Long targetId;
     /**
      * 属性值
