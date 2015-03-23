@@ -3,6 +3,7 @@ package com.fantasy.framework.struts2;
 import com.fantasy.framework.struts2.core.FantasyActionInvocation;
 import com.fantasy.framework.struts2.rest.RestActionInvocation;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.opensymphony.xwork2.ActionInvocation;
 import com.opensymphony.xwork2.ActionProxy;
@@ -29,7 +30,7 @@ public class FantasyActionProxyFactory extends DefaultActionProxyFactory {
     @Override
     public ActionProxy createActionProxy(String namespace, String actionName, String methodName, Map<String, Object> extraContext, boolean executeResult, boolean cleanupContext) {
         ActionMapping mapping = (ActionMapping) extraContext.get("struts.actionMapping");
-        if (ObjectUtil.indexOf(this.extensions, mapping.getExtension()) != -1) {
+        if (StringUtil.isBlank(methodName) || ObjectUtil.indexOf(this.extensions, mapping.getExtension()) != -1) {
             ActionInvocation inv = new FantasyActionInvocation(extraContext, true);
             container.inject(inv);
             return createActionProxy(inv, namespace, actionName, methodName, executeResult, cleanupContext);

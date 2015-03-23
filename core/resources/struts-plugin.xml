@@ -63,9 +63,11 @@
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
+                <!--
                 <interceptor-ref name="messages">
                     <param name="operationMode">AUTOMATIC</param>
                 </interceptor-ref>
+                -->
                 <interceptor-ref name="prepare"/>
                 <interceptor-ref name="i18n"/>
                 <interceptor-ref name="chain"/>
