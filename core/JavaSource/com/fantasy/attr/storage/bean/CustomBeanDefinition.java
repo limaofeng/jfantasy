@@ -35,7 +35,7 @@ public class CustomBeanDefinition extends BaseBusEntity {
      * 属性
      */
     @ManyToMany(targetEntity = Attribute.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "CUSTOM_BEAN_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
+    @JoinTable(name = "CUSTOM_BEAN_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_CUSTOM_BEAN_ATTRIBUTE"))
     private List<Attribute> attributes;
 
     /**

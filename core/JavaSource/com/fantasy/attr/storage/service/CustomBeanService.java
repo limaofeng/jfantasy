@@ -2,6 +2,7 @@ package com.fantasy.attr.storage.service;
 
 import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.attr.storage.bean.*;
+import com.fantasy.attr.storage.dao.AttributeValueDao;
 import com.fantasy.attr.storage.dao.CustomBeanDao;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -9,7 +10,6 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -25,6 +25,8 @@ public class CustomBeanService {
     private CustomBeanDefinitionService customBeanDefinitionService;
     @Autowired
     private AttributeVersionService attributeVersionService;
+    @Autowired
+    private AttributeValueDao attributeValueDao;
 
     public void save(com.fantasy.attr.framework.CustomBean customBean) {
         CustomBeanDefinition definition = customBeanDefinitionService.findUniqueByClassName(customBean.getClass().getName());
@@ -35,34 +37,51 @@ public class CustomBeanService {
         if (version == null) {
             return;
         }
-        CustomBean _customBean = customBean.getId() != null ? customBeanDao.get(customBean.getId()) : new CustomBean();
-        if (_customBean == null) {
-            _customBean = new CustomBean();
-            _customBean.setId(null);
-        }
-        _customBean.setDefinition(definition);
-        _customBean.setVersion(version.getId());
-        if (_customBean.getId() == null) {
-            customBeanDao.save(_customBean);
-        }
+        CustomBean _customBean = new CustomBean();
         List<AttributeValue> attributeValues = new ArrayList<AttributeValue>();
+        _customBean.setId(customBean.getId());
+        if (_customBean.getId() == null) {
+            _customBean.setDefinition(definition);
+            _customBean.setVersion(version.getId());
+            customBeanDao.save(_customBean);
+        }else{
+//            attributeValues = customBeanDao.get(customBean.getId()).getAttributeValues();
+            for (Attribute attribute : version.getAttributes()) {
+                AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
+                if (attributeValue == null) {
+                    attributeValue = new AttributeValue();
+                    attributeValue.setAttribute(attribute);
+                    attributeValue.setVersion(version);
+                    attributeValue.setTargetId(_customBean.getId());
+                    attributeValues.add(attributeValue);
+                }
+                String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), customBean, String.class);
+                if (StringUtil.isNotBlank(value)) {
+                    attributeValue.setValue(value);
+                    attributeValueDao.save(attributeValue);
+                }
+            }
+            _customBean.setAttributeValues(attributeValues);
+            this.customBeanDao.save(_customBean);
+            return;
+        }
         for (Attribute attribute : version.getAttributes()) {
-            AttributeValue attributeValue = ObjectUtil.find(_customBean.getAttributeValues(), "attribute.code", attribute.getCode());
+            AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
             if (attributeValue == null) {
                 attributeValue = new AttributeValue();
                 attributeValue.setAttribute(attribute);
                 attributeValue.setValue(OgnlUtil.getInstance().getValue(attribute.getCode(), customBean).toString());
                 attributeValue.setVersion(version);
                 attributeValue.setTargetId(_customBean.getId());
+                attributeValues.add(attributeValue);
             }
             String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), customBean, String.class);
             if (StringUtil.isNotBlank(value)) {
                 attributeValue.setValue(value);
-                attributeValues.add(attributeValue);
+                attributeValueDao.save(attributeValue);
             }
         }
         _customBean.setAttributeValues(attributeValues);
-        customBeanDao.save(_customBean);
         customBean.setId(_customBean.getId());
     }
 

@@ -10,6 +10,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,6 +55,7 @@ public class AttributeTypeService {
         return this.attributeTypeDao.findUniqueBy("dataType", javaClass.getName());
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED,readOnly = true)
     public AttributeType findUniqueByJavaType(String javaClassName) {
         return this.attributeTypeDao.findUniqueBy("dataType", javaClassName);
     }

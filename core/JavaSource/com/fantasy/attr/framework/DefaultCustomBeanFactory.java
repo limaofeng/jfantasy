@@ -8,7 +8,6 @@ import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.attr.storage.service.ConverterService;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.asm.AsmUtil;
 import com.fantasy.framework.util.asm.Property;
@@ -19,10 +18,6 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -46,30 +41,22 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            this.initAttributeTypes();
-            List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
-            for (AttributeVersion version : versions) {
-                if (ClassUtil.forName(version.getTargetClassName()) == null) {
-                    LOG.debug("target:" + version.getTargetClassName());
-                    continue;
-                }
-                if (ClassUtil.forName(version.getClassName()) != null) {
-                    continue;
-                }
-                makeClass(version);
+        this.initAttributeTypes();
+        List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
+        for (AttributeVersion version : versions) {
+            if (ClassUtil.forName(version.getTargetClassName()) == null) {
+                LOG.debug("target:" + version.getTargetClassName());
+                continue;
             }
-        } finally {
-            transactionManager.commit(status);
+            if (ClassUtil.forName(version.getClassName()) != null) {
+                continue;
+            }
+            makeClass(version);
         }
     }
 
     public void initAttributeTypes() {
-        converterService.save(PrimitiveTypeConverter.class,"基本数据类型转换器","class");
+        converterService.save(PrimitiveTypeConverter.class, "基本数据类型转换器", "class");
 
         List<AttributeType> attributeTypes = new ArrayList<AttributeType>();
 

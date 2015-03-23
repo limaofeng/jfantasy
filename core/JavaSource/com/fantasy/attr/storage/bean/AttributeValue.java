@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @since 2012-11-4 下午06:10:12
  */
 @Entity
-@Table(name = "ATTR_ATTRIBUTE_VALUE", uniqueConstraints = {@UniqueConstraint(columnNames = {"VERSION_ID", "ATTRIBUTE_ID", "TARGET_ID"})})
+@Table(name = "ATTR_ATTRIBUTE_VALUE")//, uniqueConstraints = {@UniqueConstraint(columnNames = {"VERSION_ID", "ATTRIBUTE_ID", "TARGET_ID"})}
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AttributeValue extends BaseBusEntity {
 
