@@ -11,8 +11,9 @@ public class ArticleAction extends ActionSupport {
     private CmsService cmsService;
 
     public String view(Long id) {
-        this.attrs.put(ROOT, cmsService.get(id));
-        return JSONDATA;
+//        this.attrs.put(ROOT, cmsService.get(id));
+        System.out.println(id);
+        return SUCCESS;
     }
 
 }

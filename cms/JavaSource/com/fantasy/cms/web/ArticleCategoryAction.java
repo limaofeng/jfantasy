@@ -17,28 +17,28 @@ public class ArticleCategoryAction extends ActionSupport {
 
     public String create(ArticleCategory category){
         System.out.println(category);
-        return JSONDATA;
+        return SUCCESS;
     }
 
     public String search(Pager<ArticleCategory> pager,List<PropertyFilter> filters){
         System.out.println(JSON.text().serialize(pager));
         this.attrs.put(ROOT,this.cmsService.getCategorys());
-        return JSONDATA;
+        return SUCCESS;
     }
 
     public String view(String id) {
         this.attrs.put(ROOT, cmsService.get(id));
-        return JSONDATA;
+        return SUCCESS;
     }
 
     public String delete(String id){
         System.out.println(id);
-        return JSONDATA;
+        return SUCCESS;
     }
 
     public String update(ArticleCategory category) {
         System.out.println(category);
-        return JSONDATA;
+        return SUCCESS;
     }
 
 }

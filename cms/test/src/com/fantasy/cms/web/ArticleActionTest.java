@@ -57,7 +57,7 @@ public class ArticleActionTest  extends StrutsSpringJUnit4TestCase {
 
     @Test
     public void testView() throws Exception {
-//        this.request.addParameter("id",articles.get(0).getId().toString());
+        this.request.setMethod("GET");
 
         ActionProxy proxy = super.getActionProxy("/cms/articles/1");
         Assert.assertNotNull(proxy);

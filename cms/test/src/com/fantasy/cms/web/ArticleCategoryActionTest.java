@@ -3,8 +3,8 @@ package com.fantasy.cms.web;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
-import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.security.SpringSecurityUtils;
+import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -70,7 +70,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
 
         LOG.debug("content:" + this.response.getContentAsString());
 
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
+        Assert.assertEquals(Action.SUCCESS, result);
     }
 
     @Test
@@ -88,7 +88,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
 
         LOG.debug("content:" + this.response.getContentAsString());
 
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
+        Assert.assertEquals(Action.SUCCESS, result);
     }
 
     @Test
@@ -104,7 +104,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
 
         LOG.debug("content:" + this.response.getContentAsString());
 
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
+        Assert.assertEquals(Action.SUCCESS, result);
     }
 
     @Test
@@ -122,7 +122,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
 
         LOG.debug("content:" + this.response.getContentAsString());
 
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
+        Assert.assertEquals(Action.SUCCESS, result);
     }
 
     @Test
@@ -136,7 +136,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
 
         LOG.debug("content:" + this.response.getContentAsString());
 
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
+        Assert.assertEquals(Action.SUCCESS, result);
     }
 
 }
