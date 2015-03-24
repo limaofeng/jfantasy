@@ -71,6 +71,7 @@
 			<bean class="org.wltea.analyzer.lucene.IKAnalyzer" />
 		</property>
 		<property name="directoryPath" value="${buguIndex.directoryPath}" />
+        <property name="executor" ref="executor"/>
 	</bean>
 	
 	<!-- 文件管理器 -->
@@ -101,6 +102,6 @@
 
 	<import resource="classpath:spring/applicationContext-hibernate.xml" />
 
-    <import resource="applicationContext-schedule.xml"/>
+    <import resource="classpath:spring/applicationContext-schedule.xml"/>
 	
 </beans>

@@ -186,11 +186,12 @@ public class RestActionMapper extends DefaultActionMapper {
 
                         // Creating a new entry on POST e.g. foo/
                     } else if (isPost(request)) {
+                        id = StringUtil.isBlank(id) ? null : id;
                         mapping.setMethod(this.postMethodName);
 
                         // Removing an item e.g. foo/
                     } else if (isDelete(request)) {
-                        id = null;
+                        id = StringUtil.isBlank(id) ? null : id;
                         mapping.setMethod(this.deleteMethodName);
                     }
 

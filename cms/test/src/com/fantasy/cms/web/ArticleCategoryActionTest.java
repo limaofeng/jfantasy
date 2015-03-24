@@ -81,7 +81,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("name", "JUnit测试");
         this.request.addParameter("description", "test");
 
-        ActionProxy proxy = super.getActionProxy("/cms/categorys/");
+        ActionProxy proxy = super.getActionProxy("/cms/categorys");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();

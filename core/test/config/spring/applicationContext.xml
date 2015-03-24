@@ -76,6 +76,7 @@
         </property>
         <property name="basePackage" value="com.fantasy.cms"/>
         <property name="directoryPath" value="${buguIndex.directoryPath}"/>
+        <property name="executor" ref="executor"/>
     </bean>
 
     <!-- 文件管理器 -->

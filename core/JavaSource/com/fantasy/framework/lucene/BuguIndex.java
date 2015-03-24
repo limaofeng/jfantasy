@@ -23,7 +23,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -32,6 +31,8 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -68,7 +69,7 @@ public class BuguIndex implements InitializingBean {
     /**
      * 线程池
      */
-    private SchedulingTaskExecutor executor;
+    private Executor executor;
     /**
      * 定时任务
      */
@@ -120,7 +121,7 @@ public class BuguIndex implements InitializingBean {
                     BuguIndex.this.rebuild();
                 }
 
-            }, 1000 * 30);
+            });
         }
     }
 
@@ -144,6 +145,10 @@ public class BuguIndex implements InitializingBean {
      * 初始化方法
      */
     public void open() {
+        if(this.executor == null){
+            this.executor = Executors.newFixedThreadPool(10);
+        }
+        this.scheduler = Executors.newSingleThreadScheduledExecutor();
         this.scheduler.scheduleAtFixedRate(new IndexReopenTask(), this.period, this.period, TimeUnit.MILLISECONDS);
         if (this.clusterConfig != null) {
             this.clusterConfig.validate();
@@ -181,7 +186,7 @@ public class BuguIndex implements InitializingBean {
         }
     }
 
-    public SchedulingTaskExecutor getExecutor() {
+    public Executor getExecutor() {
         return this.executor;
     }
 
@@ -235,6 +240,10 @@ public class BuguIndex implements InitializingBean {
 
     public File getOpenFolder(String remotePath) {
         return FileUtil.createFolder(StringUtil.defaultValue(PathUtil.webinf(), PathUtil.classes()) + this.directoryPath + remotePath);
+    }
+
+    public void setExecutor(Executor executor) {
+        this.executor = executor;
     }
 
 }
