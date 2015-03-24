@@ -8,6 +8,7 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ArticleCategoryAction extends ActionSupport {
@@ -31,8 +32,8 @@ public class ArticleCategoryAction extends ActionSupport {
         return SUCCESS;
     }
 
-    public String delete(String id){
-        System.out.println(id);
+    public String delete(String... id){
+        System.out.println(Arrays.toString(id));
         return SUCCESS;
     }
 

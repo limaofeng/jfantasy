@@ -187,6 +187,11 @@ public class RestActionMapper extends DefaultActionMapper {
                         // Creating a new entry on POST e.g. foo/
                     } else if (isPost(request)) {
                         mapping.setMethod(this.postMethodName);
+
+                        // Removing an item e.g. foo/
+                    } else if (isDelete(request)) {
+                        id = null;
+                        mapping.setMethod(this.deleteMethodName);
                     }
 
                 } else if (lastSlashPos > -1) {

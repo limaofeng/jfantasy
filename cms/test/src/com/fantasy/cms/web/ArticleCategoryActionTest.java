@@ -126,10 +126,27 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
     }
 
     @Test
+    public void testBatchDelete() throws Exception {
+        this.request.setMethod("DELETE");
+
+        this.request.addParameter("id","test1");
+        this.request.addParameter("id","test2");
+
+        ActionProxy proxy = super.getActionProxy("/cms/categorys");
+        Assert.assertNotNull(proxy);
+
+        String result = proxy.execute();
+
+        LOG.debug("content:" + this.response.getContentAsString());
+
+        Assert.assertEquals(Action.SUCCESS, result);
+    }
+
+    @Test
     public void testDelete() throws Exception {
         this.request.setMethod("DELETE");
 
-        ActionProxy proxy = super.getActionProxy("/cms/categorys/test");
+        ActionProxy proxy = super.getActionProxy("/cms/categorys/test1");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
