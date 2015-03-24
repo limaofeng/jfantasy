@@ -22,7 +22,7 @@ import freemarker.template.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.IOException;
@@ -39,7 +39,7 @@ import java.util.regex.Matcher;
 public class GeneratePageService {
 
     private FileManager fileManager = SpringContextUtil.getBeanByType(LocalFileManager.class);
-    @Resource
+    @Autowired
     private PageItemService pageItemService;
 
     public void reGenerate(Long pageItemId) throws IOException {

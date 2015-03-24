@@ -1,7 +1,6 @@
 package com.fantasy.cms.service;
 
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.service.AttributeVersionService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.dao.ArticleCategoryDao;
@@ -27,7 +26,7 @@ import org.htmlcleaner.TagNode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
@@ -38,18 +37,18 @@ import java.util.List;
  * @version 1.0
  * @since 2013-5-28 下午03:05:30
  */
-@Service("fantasy.cms.CmsService")
+@Service
 @Transactional
 public class CmsService extends BuguSearcher<Article> {
 
     private static final Log LOG = LogFactory.getLog(CmsService.class);
 
-    @Resource
+    @Autowired
     private ArticleCategoryDao articleCategoryDao;
-    @Resource
+    @Autowired
     private ArticleDao articleDao;
 
-    @Resource
+    @Autowired
     private AttributeVersionService versionService;
 
     /**
@@ -92,15 +91,7 @@ public class CmsService extends BuguSearcher<Article> {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
         if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
-            AttributeVersion version = this.versionService.getVersion(Article.class, category.getCode());
-            if (version == null) {
-                version = new AttributeVersion();
-                version.setClassName(Article.class.getName());
-                version.setNumber(category.getCode());
-            }
-            version.setAttributes(category.getArticleVersion().getAttributes());
-            this.versionService.save(version);
-            category.setArticleVersion(version);
+            category.setArticleVersion(this.versionService.save(Article.class.getName(),category.getCode(),category.getArticleVersion().getAttributes()));
         }
         List<ArticleCategory> categories;
         boolean root = false;
@@ -325,7 +316,7 @@ public class CmsService extends BuguSearcher<Article> {
                 configuration.getTemplate(newTemplateUrl);
                 return newTemplateUrl;
             } catch (IOException e) {
-                LOG.error(e.getMessage(),e);
+                LOG.error(e.getMessage());
                 if (category.getParent() == null) {
                     break;
                 }

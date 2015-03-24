@@ -2,7 +2,7 @@ package com.fantasy.file.service;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.Hibernate;
 import org.springframework.stereotype.Service;
@@ -19,9 +19,9 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 @Transactional
 public class DirectoryService {
 
-	@Resource
+	@Autowired
 	private DirectoryDao directoryDao;
-	@Resource
+	@Autowired
 	private FileManagerConfigDao fmcDao;
 
 	public Pager<Directory> findPager(Pager<Directory> pager, List<PropertyFilter> filters) {

@@ -55,7 +55,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).newInstance();
         } catch (Exception e) {
-            logger.error("创建类:" + clazz.getName() + "\t时出现异常!", e);
+            logger.error("创建类:" + clazz + "\t时出现异常!", e);
         }
         return null;
     }
@@ -127,6 +127,15 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return null;
     }
 
+    public static <T> T newInstance(String className,Class<T> tClass) {
+        try {
+            return tClass.cast(newInstance(FantasyClassLoader.getClassLoader().loadClass(className)));
+        } catch (ClassNotFoundException e) {
+            logger.error(e);
+        }
+        return null;
+    }
+
     public static Property[] getPropertys(Object target) {
         return getPropertys(target.getClass());
     }
@@ -145,7 +154,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static Class<?> forName(String className) {
         try {
-            return forName(className, FantasyClassLoader.getClassLoader());
+            return StringUtil.isNotBlank(className) ? forName(className, FantasyClassLoader.getClassLoader()) : null;
         } catch (ClassNotFoundException e) {
             logger.error(e.getMessage());
         }
@@ -220,7 +229,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     }
 
     public static boolean isInterface(Field field) {
-        if ((isMap(field)) || (isList(field))){
+        if ((isMap(field)) || (isList(field))) {
             return false;
         }
         if (isArray(field)) {
@@ -369,7 +378,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         Annotation[][] annotations = method.getParameterAnnotations();
         for (Annotation[] paramAnnots : annotations) {
             for (Annotation annot : paramAnnots) {
-                if (annotClass.equals(annot.annotationType())){
+                if (annotClass.equals(annot.annotationType())) {
                     return paramAnnots;
                 }
             }
@@ -433,7 +442,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotClass) {
         for (Annotation annot : annotations) {
-            if (annotClass.equals(annot.annotationType())){
+            if (annotClass.equals(annot.annotationType())) {
                 return (T) annot;
             }
         }
@@ -454,7 +463,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         for (StackTraceElement stack : stacks) {
             try {
                 Class<?> clasz = forName(stack.getClassName(), FantasyClassLoader.getClassLoader());
-                if (ObjectUtil.isNull(clasz)){
+                if (ObjectUtil.isNull(clasz)) {
                     continue;
                 }
                 Annotation annot = clasz.getAnnotation(annotClass);

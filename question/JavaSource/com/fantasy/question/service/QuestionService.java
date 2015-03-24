@@ -28,9 +28,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import java.io.IOException;
 import java.util.List;
 
-/**
- * Created by hebo on 2014/9/20.
- */
+
 @Service
 @Transactional
 public class QuestionService  implements InitializingBean{

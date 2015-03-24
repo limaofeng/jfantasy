@@ -1,9 +1,9 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.bean.Article;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.service.ArticleService;
-import com.fantasy.attr.service.AttributeVersionService;
+import com.fantasy.attr.storage.bean.Article;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.service.ArticleService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.swp.bean.Page;
@@ -12,7 +12,7 @@ import com.fantasy.swp.bean.PageItemData;
 import com.fantasy.swp.service.PageItemDataService;
 import com.fantasy.swp.service.PageItemService;
 import com.fantasy.swp.service._PageService;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Before;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,17 +31,17 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class PageItemServiceTest extends StrutsSpringJUnit4TestCase {
-    @Resource
+    @Autowired
     private PageItemService pageItemService;
-    @Resource
+    @Autowired
     private PageItemDataService pageItemDataService;
-    @Resource
+    @Autowired
     private _PageService pageService;
-    @Resource
+    @Autowired
     private PageActionTest pageActionTest;
-    @Resource
+    @Autowired
     private AttributeVersionService attributeVersionService;
-    @Resource
+    @Autowired
     private ArticleService articleService;
 
     @Before

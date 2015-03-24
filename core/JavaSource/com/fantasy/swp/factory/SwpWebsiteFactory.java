@@ -7,7 +7,7 @@ import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 站点工厂
@@ -15,11 +15,11 @@ import javax.annotation.Resource;
 @Component
 public class SwpWebsiteFactory {
 
-    @Resource
+    @Autowired
     private WebsiteService websiteService;
-    @Resource
+    @Autowired
     private TemplateBeanService templateBeanService;
-    @Resource
+    @Autowired
     private PageBeanService pageBeanService;
 
     public ISwpWebsite getInstance(String code){

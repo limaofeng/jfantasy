@@ -9,7 +9,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -23,9 +23,9 @@ import static org.quartz.TriggerBuilder.newTrigger;
 public class ScheduleAction extends ActionSupport {
 
     private final static Log logger = LogFactory.getLog(ScheduleAction.class);
-    @Resource
+    @Autowired
     private Scheduler scheduler;
-    @Resource
+    @Autowired
     private ScheduleService scheduleService;
 
     public String index() throws Exception {

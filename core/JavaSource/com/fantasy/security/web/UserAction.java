@@ -8,7 +8,7 @@ import com.fantasy.security.bean.User;
 import com.fantasy.security.service.UserService;
 import com.fantasy.security.userdetails.AdminUser;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class UserAction extends ActionSupport {
 
 	private static final long serialVersionUID = 4738280714802564952L;
 
-	@Resource(name = "fantasy.auth.UserService")
+	@Autowired
 	private transient UserService userService;
 
 	/**

@@ -8,14 +8,14 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
 @Transactional
 public class FilePartService {
 
-    @Resource
+    @Autowired
     private FilePartDao filePartDao;
 
     public void save(FileDetailKey key, String entireFileHash, String partFileHash, Integer total, Integer index) {

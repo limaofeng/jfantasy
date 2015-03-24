@@ -1,12 +1,12 @@
 package com.fantasy.framework.util.highcharts;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Test {
-	@Resource
+	@Autowired
 	public static void main(String[] args) {
 		Chart chart = new Chart("VONB-Daily柱图");
 		chart.setCategories(new String[] { "JAN", "FEB" });

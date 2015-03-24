@@ -20,7 +20,7 @@ import com.fantasy.question.ws.dto.QuestionPagerResult;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,16 +32,16 @@ import java.util.List;
 @Transactional
 public class QuestionWebService implements IQuestionService {
 
-    @Resource
+    @Autowired
     private QuestionService questionService;
 
-    @Resource
+    @Autowired
     private AnswerService answerService;
 
-    @Resource
+    @Autowired
     private MemberService memberService;
 
-    @Resource
+    @Autowired
     private AnswerAdditionalService answerAdditionalService;
 
     @Override

@@ -9,7 +9,7 @@ import com.fantasy.system.service.DataDictionaryService;
 import ognl.DefaultTypeConverter;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class DataDictionaryTypeConverter extends DefaultTypeConverter {
 
-    @Resource
+    @Autowired
     private DataDictionaryService dataDictionaryService;
 
     @Transactional

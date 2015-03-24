@@ -1,5 +1,6 @@
 package com.fantasy.attr.typeConverter;
 
+import com.fantasy.attr.framework.converter.UserTypeConverter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.security.bean.User;

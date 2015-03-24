@@ -8,7 +8,7 @@ import com.fantasy.wx.bean.Account;
 import com.fantasy.wx.service.AccountWeiXinService;
 import org.quartz.JobExecutionException;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +23,7 @@ import java.util.List;
 public class AccountAction extends ActionSupport {
 
 
-    @Resource
+    @Autowired
     private AccountWeiXinService iConfigService;
 
     public String index() {

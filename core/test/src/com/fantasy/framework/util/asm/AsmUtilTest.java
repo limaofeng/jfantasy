@@ -1,8 +1,8 @@
 package com.fantasy.framework.util.asm;
 
-import com.fantasy.attr.bean.AttributeType;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import junit.framework.Assert;
@@ -13,7 +13,9 @@ import org.junit.Test;
 import org.objectweb.asm.Opcodes;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class AsmUtilTest implements Opcodes {
 
@@ -66,7 +68,7 @@ public class AsmUtilTest implements Opcodes {
     public void test() throws IOException, InterruptedException, ClassNotFoundException, IllegalAccessException, InstantiationException {
         AttributeVersion version = new AttributeVersion();
         version.setNumber("temp");
-        version.setClassName(Article.class.getName());
+        version.setTargetClassName(Article.class.getName());
 
         AttributeType attributeType = new AttributeType();
         attributeType.setName("测试数据类型");
@@ -76,19 +78,21 @@ public class AsmUtilTest implements Opcodes {
         attributeType1.setName("测试数据类型");
         attributeType1.setDataType(Integer.class.getName());
 
-        com.fantasy.attr.bean.Attribute attribute = new com.fantasy.attr.bean.Attribute();
+        com.fantasy.attr.storage.bean.Attribute attribute = new com.fantasy.attr.storage.bean.Attribute();
         attribute.setCode("test");
         attribute.setName("测试字段");
         attribute.setAttributeType(attributeType);
 
-        com.fantasy.attr.bean.Attribute attribute1 = new com.fantasy.attr.bean.Attribute();
+        com.fantasy.attr.storage.bean.Attribute attribute1 = new com.fantasy.attr.storage.bean.Attribute();
         attribute1.setCode("testInt");
         attribute1.setName("测试字段");
         attribute1.setAttributeType(attributeType1);
 
         version.setAttributes(Arrays.asList(attribute,attribute1));
 
-        Class clzz = VersionUtil.makeClass(version);
+        makeClass(version);
+
+        Class clzz = ClassUtil.forName(version.getClassName());
 
 //        logger.debug(AsmUtil.trace(Article.class));
 
@@ -107,6 +111,17 @@ public class AsmUtilTest implements Opcodes {
 
         Assert.assertEquals(123,OgnlUtil.getInstance().getValue("testInt",o));
 
+    }
+
+    public static Class makeClass(AttributeVersion version) {
+        String className = version.getClassName();
+        String superClass = version.getTargetClassName();
+        List<Property> properties = new ArrayList<Property>();
+        for (Attribute attribute : version.getAttributes()) {
+            final Property property = new Property(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()));
+            properties.add(property);
+        }
+        return AsmUtil.makeClass(className, superClass, properties.toArray(new Property[properties.size()]));
     }
 
 }

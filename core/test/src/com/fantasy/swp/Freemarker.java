@@ -12,7 +12,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.HashMap;
@@ -23,7 +23,7 @@ import java.util.Map;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class Freemarker {
 
-    @Resource
+    @Autowired
     private transient Configuration configuration;
 
     @Test

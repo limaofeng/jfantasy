@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
@@ -28,9 +28,9 @@ import com.fantasy.mall.sales.bean.Sales.Type;
 @Repository
 public class SalesDao extends HibernateDao<Sales, Long> {
 
-	@Resource
+	@Autowired
 	private OrderDao orderDao;
-	@Resource
+	@Autowired
 	private GoodsDao goodsDao;
 
 	@Override

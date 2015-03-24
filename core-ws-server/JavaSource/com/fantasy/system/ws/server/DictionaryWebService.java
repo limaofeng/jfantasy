@@ -10,13 +10,13 @@ import com.fantasy.system.ws.dto.DataDictionaryDTO;
 import com.fantasy.system.ws.dto.DataDictionaryTypeDTO;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Component
 public class DictionaryWebService implements IDictionaryService {
 
-    @Resource
+    @Autowired
     private DataDictionaryService dataDictionaryService;
 
     @Override

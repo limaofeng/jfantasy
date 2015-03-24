@@ -11,7 +11,7 @@ import com.fantasy.payment.service.PaymentConfiguration;
 import com.fantasy.payment.order.OrderDetailsService;
 import com.fantasy.payment.service.PaymentService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
@@ -22,9 +22,9 @@ public class PaymentAction extends ActionSupport {
 
     private static final long serialVersionUID = -4817743897444468581L;
 
-    @Resource
+    @Autowired
     private PaymentService paymentService;
-    @Resource
+    @Autowired
     private PaymentConfiguration paymentConfiguration;
 
     public String execute(String sn) throws Exception {

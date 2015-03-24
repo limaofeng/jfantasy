@@ -13,7 +13,7 @@ import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.type.Type;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.Serializable;
 import java.util.Properties;
 
@@ -26,16 +26,16 @@ import java.util.Properties;
  */
 public class SequenceGenerator implements IdentifierGenerator, Configurable {
 
-	@Resource
+	@Autowired
 	private DataBaseKeyGenerator baseKeyGenerator;
 
-	private final static String KEY_NAME = "keyName";
+	public final static String KEY_NAME = "keyName";
 
 	private String keyName;
 
 	@Override
 	public void configure(Type type, Properties params, Dialect d) throws MappingException {
-		this.keyName = params.getProperty(KEY_NAME);
+		this.keyName =  StringUtil.defaultValue(params.getProperty(KEY_NAME),params.getProperty("target_table")+":"+params.getProperty("target_column")).toLowerCase();
 	}
 
 	public Serializable generate(SessionImplementor session, Object object) throws HibernateException {

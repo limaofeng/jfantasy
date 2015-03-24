@@ -5,7 +5,7 @@
 			<packagesToScan>
 				<list>
 					<value>com.fantasy.common.bean</value>
-					<value>com.fantasy.attr.bean</value>
+					<value>com.fantasy.attr.storage.bean</value>
 					<value>com.fantasy.file.bean</value>
 					<value>com.fantasy.security.bean</value>
 					<value>com.fantasy.framework.dao.mybatis.keygen.bean</value>

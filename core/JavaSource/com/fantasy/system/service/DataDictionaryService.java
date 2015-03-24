@@ -21,7 +21,7 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
@@ -32,13 +32,13 @@ public class DataDictionaryService implements InitializingBean {
 
     public static final JobKey jobKey = JobKey.jobKey("DataDictionary", "SYSTEM");
 
-    @Resource
+    @Autowired
     private ScheduleService scheduleService;
 
-    @Resource
+    @Autowired
     private DataDictionaryTypeDao dataDictionaryTypeDao;
 
-    @Resource
+    @Autowired
     private DataDictionaryDao dataDictionaryDao;
 
     @Override
@@ -237,6 +237,17 @@ public class DataDictionaryService implements InitializingBean {
     public static List<DataDictionaryType> types() {
         return SpringContextUtil.getBeanByType(DataDictionaryService.class).allTypes();
     }
+
+
+    /**
+     * 根据上级CODE 分类 查询下级分类
+     * @param code
+     * @return
+     */
+    public List<DataDictionaryType> getDataDictionaryTypeByCode(String code){
+        return  this.dataDictionaryTypeDao.findUnique(Restrictions.eq("code",code)).getChildren();
+    }
+
 
     /**
      * 根据配置项类型和编码获取配置项

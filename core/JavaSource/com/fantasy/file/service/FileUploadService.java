@@ -14,7 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,9 +28,9 @@ public class FileUploadService {
     private static final Log logger = LogFactory.getLog(FileUploadService.class);
 
     private final static String separator = "/";
-    @Resource
+    @Autowired
     private transient FileService fileService;
-    @Resource
+    @Autowired
     private transient FilePartService filePartService;
 
     /**
@@ -148,7 +148,7 @@ public class FileUploadService {
             UploadFileManager uploadFileManager = ((UploadFileManager) fileManager);
             fileDetail = fileService.getFileDetailByMd5(md5, fileManagerId);
             if (fileDetail == null) {
-                realPath = separator + "files" + separator + DateUtil.format("yyyy-MM-dd") + separator + md5;
+                realPath = separator + DateUtil.format("yyyy-MM-dd") + separator + md5;
                 uploadFileManager.writeFile(realPath, attach);
             } else {
                 realPath = fileDetail.getRealPath();

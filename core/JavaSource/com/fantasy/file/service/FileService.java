@@ -9,6 +9,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.web.WebUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -16,7 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
@@ -24,11 +25,11 @@ import java.util.List;
 @Transactional
 public class FileService {
 
-    @Resource
+    @Autowired
     private FolderDao folderDao;
-    @Resource
+    @Autowired
     private FileDetailDao fileDetailDao;
-    @Resource
+    @Autowired
     private DirectoryDao directoryDao;
 
     public FileDetail saveFileDetail(String absolutePath, String fileName, String contentType, long length, String md5, String realPath, String fileManagerId, String description) {
@@ -184,6 +185,7 @@ public class FileService {
         if (directory == null) {
             throw new IOException("目录配置[key=" + dirKey + "]未找到!");
         }
+        Hibernate.initialize(directory.getFileManager());
         return directory;
     }
 

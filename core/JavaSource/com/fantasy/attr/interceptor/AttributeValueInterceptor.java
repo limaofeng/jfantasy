@@ -1,11 +1,11 @@
 package com.fantasy.attr.interceptor;
 
-import com.fantasy.attr.DynaBean;
-import com.fantasy.attr.DynaBeanQuery;
-import com.fantasy.attr.DynaBeanQueryManager;
-import com.fantasy.attr.bean.Attribute;
-import com.fantasy.attr.bean.AttributeValue;
-import com.fantasy.attr.util.VersionUtil;
+import com.fantasy.attr.framework.DynaBean;
+import com.fantasy.attr.framework.query.DynaBeanQuery;
+import com.fantasy.attr.framework.query.DynaBeanQueryManager;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeValue;
+import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.HibernateDao;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;

@@ -1,13 +1,13 @@
 package com.fantasy.attr.web;
 
-import com.fantasy.attr.bean.Converter;
-import com.fantasy.attr.service.ConverterService;
+import com.fantasy.attr.storage.bean.Converter;
+import com.fantasy.attr.storage.service.ConverterService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
@@ -17,7 +17,7 @@ import java.util.List;
  */
 public class ConverterAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private ConverterService converterService;
     /**
      * 转换器首页

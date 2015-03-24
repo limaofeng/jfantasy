@@ -5,12 +5,12 @@ import com.fantasy.system.service.SettingService;
 import com.opensymphony.xwork2.validator.ValidationException;
 import com.opensymphony.xwork2.validator.validators.FieldValidatorSupport;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 
 public class SettingCodeUniqueValidator extends FieldValidatorSupport {
 
-	@Resource
+	@Autowired
 	private SettingService settingService;
 
 	@Override

@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-@Service("fantasy.auth.ResourceService")
+@Service
 @Transactional
 public class ResourceService {
 

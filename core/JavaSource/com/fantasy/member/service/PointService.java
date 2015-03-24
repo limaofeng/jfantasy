@@ -3,7 +3,7 @@ package com.fantasy.member.service;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,9 +15,9 @@ import com.fantasy.member.bean.Point;
 import com.fantasy.member.dao.PointDao;
 
 @Transactional
-@Service("PointService")
+@Service
 public class PointService {
-	@Resource
+	@Autowired
 	private PointDao pointDao;
 
 	public List<Point> consume(List<PropertyFilter> filters, int start, int size) {

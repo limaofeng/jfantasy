@@ -10,7 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +26,7 @@ public class WeiXinOnPushServlet extends HttpServlet {
 
     private final static Log LOG = LogFactory.getLog(WeiXinOnPushServlet.class);
 
-    @Resource
+    @Autowired
     private WeiXinSessionFactory weiXinSessionFactory;
 
     private String defaultAppId = "wxcbc2c9fb9d585cd3";

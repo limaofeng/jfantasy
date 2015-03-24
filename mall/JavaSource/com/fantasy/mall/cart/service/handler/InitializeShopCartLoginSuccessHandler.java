@@ -2,7 +2,7 @@ package com.fantasy.mall.cart.service.handler;
 
 import java.io.IOException;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,7 +31,7 @@ public class InitializeShopCartLoginSuccessHandler implements AuthenticationSucc
 
 	private static final Log logger = LogFactory.getLog(InitializeShopCartLoginSuccessHandler.class);
 
-	@Resource
+	@Autowired
 	private CartService cartService;
 
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

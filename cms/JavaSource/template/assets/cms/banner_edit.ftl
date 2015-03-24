@@ -48,7 +48,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.key"/>：
+                                    编码：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">
@@ -62,7 +62,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.name"/>：
+                                    名称：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">
@@ -76,7 +76,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.size"/>：
+                                    图片大小：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">
@@ -102,7 +102,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.description"/>：
+                                    描述：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">

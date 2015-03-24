@@ -10,16 +10,13 @@
 	<constant name="struts.serve.static.browserCache" value="true" />
 	<constant name="struts.i18n.encoding" value="UTF-8" />
 	<constant name="struts.action.excludePattern" value="/static/.*,/error/.*" />
-	<constant name="struts.action.extension" value="do,validata" />
+    <constant name="struts.action.extension" value="do,,json" />
 	<constant name="struts.enable.SlashesInActionNames" value="true"/>
     <!--
     <constant name="fantasy.page.theme" value="tocer"/>
     -->
 
-    <include file="struts/struts-order.xml"/>
+    <include file="struts/struts-rest.xml"/>
 
-    <include file="struts/struts-attr.xml"/>
-
-	<include file="struts/struts-axis.xml"/>
 
 </struts>

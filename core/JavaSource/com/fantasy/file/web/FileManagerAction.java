@@ -4,13 +4,13 @@ import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.FileManagerService;
 import com.fantasy.framework.struts2.ActionSupport;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class FileManagerAction extends ActionSupport {
 
 	private static final long serialVersionUID = 4509625889822157981L;
 
-	@Resource
+	@Autowired
 	private FileManagerService fileManagerService;
 
 	/**

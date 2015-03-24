@@ -34,21 +34,34 @@ public class AsmUtil implements Opcodes {
      * @param className  新生产className
      * @param properties bean 属性
      * @return 新生成的 class
-     * @功能描述
      */
     public static Class<?> makeClass(String className, Property... properties) {
-        return makeClass(className, Object.class.getName(), properties, new MethodInfo[0]);
+        return makeClass(className, Object.class.getName(), new Class[0], properties, new MethodInfo[0]);
+    }
+
+    public static Class<?> makeClass(String className, Class[] interfaces, Property... properties) {
+        return makeClass(className, Object.class.getName(), interfaces, properties, new MethodInfo[0]);
     }
 
     public static Class<?> makeClass(String className, String superClassName, Property... properties) {
-        return makeClass(className, superClassName, properties, new MethodInfo[0]);
+        return makeClass(className, superClassName, new Class[0], properties, new MethodInfo[0]);
     }
 
-    public static Class<?> makeClass(String className, String superClassName, Property[] properties, MethodInfo[] methodInfos) {
+    public static Class<?> makeClass(String className, String superClassName, Class[] interfaces, Property... properties) {
+        return makeClass(className, superClassName, interfaces, properties, new MethodInfo[0]);
+    }
+
+    public static Class<?> makeClass(String className, String superClassName, Class[] interfaces, Property[] properties, MethodInfo[] methodInfos) {
         ClassWriter cw = new ClassWriter(F_FULL);
 
         String newClassInternalName = className.replace('.', '/');
         String superClassInternalName = Type.getInternalName(ClassUtil.forName(superClassName));
+
+        String[] iters = new String[interfaces.length];
+        for (int i = 0, len = interfaces.length; i < len; i++) {
+            Class inter = interfaces[i];
+            iters[i] = inter.getName().replace('.', '/');
+        }
 
         AsmContext.getContext().set("className", className);
         AsmContext.getContext().set("superClassName", superClassName);
@@ -59,7 +72,7 @@ public class AsmUtil implements Opcodes {
         /**
          * 注：第一个参数为版本号
          */
-        cw.visit(V1_6, ACC_PUBLIC, newClassInternalName, null, superClassInternalName, new String[0]);
+        cw.visit(V1_6, ACC_PUBLIC, newClassInternalName, null, superClassInternalName, iters);
 
         cw.visitSource(RegexpUtil.parseGroup(className, "\\.([A-Za-z0-9_$]+)$", 1) + ".java", null);
 

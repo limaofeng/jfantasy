@@ -1,25 +1,25 @@
 package com.fantasy.attr.web;
 
-import com.fantasy.attr.bean.Attribute;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.service.AttributeService;
-import com.fantasy.attr.service.AttributeVersionService;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.service.AttributeService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AttributeVersionAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3032805252418268707L;
-	@Resource
+	@Autowired
 	private AttributeVersionService versionService;
 
-    @Resource
+    @Autowired
     private AttributeService attributeService;
 
 	/**
@@ -50,7 +50,7 @@ public class AttributeVersionAction extends ActionSupport {
 	 * @return
 	 */
 	public String save(AttributeVersion attribute) {
-		this.attrs.put(ROOT, versionService.save(attribute));
+//		this.attrs.put(ROOT, versionService.save(attribute));
 		return JSONDATA;
 	}
 	/**
@@ -98,7 +98,7 @@ public class AttributeVersionAction extends ActionSupport {
         }else{
             version.setAttributeSort(version.getAttributeSort()+","+attr.getId());
         }
-        this.versionService.save(version);
+//        this.versionService.save(version);
         return JSONDATA;
     }
 
@@ -131,7 +131,7 @@ public class AttributeVersionAction extends ActionSupport {
             version.setAttributeSort(version.getAttributeSort().replace(","+attr.getId(),""));
         }
         //保存版本
-        this.versionService.save(version);
+//        this.versionService.save(version);
 
         //移除临时属性
         if(!attr.getNotTemporary()){
@@ -145,7 +145,7 @@ public class AttributeVersionAction extends ActionSupport {
 
         version.setAttributeSort(attrIds);
         //保存版本
-        this.versionService.save(version);
+//        this.versionService.save(version);
         return JSONDATA;
     }
 

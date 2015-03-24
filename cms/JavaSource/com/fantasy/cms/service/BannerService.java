@@ -12,7 +12,7 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,14 +22,14 @@ import java.util.List;
  * @author li_huang
  * 
  */
-@Service("fantasy.cms.BannerService")
+@Service
 @Transactional
 public class BannerService {
 
-	@Resource
+	@Autowired
 	private BannerDao bannerDao;
 
-	@Resource
+	@Autowired
 	private BannerItemDao bannerItemDao;
 
 	public Pager<Banner> findPager(Pager<Banner> pager, List<PropertyFilter> filters) {

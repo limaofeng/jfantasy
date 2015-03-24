@@ -8,7 +8,7 @@ import freemarker.cache.TemplateLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -21,7 +21,7 @@ public class FreemarkerTemplateLoader implements TemplateLoader {
 
     private final static Log logger = LogFactory.getLog(FileManagerTemplateLoader.class);
 
-    @Resource
+    @Autowired
     private TemplateService templateService;
 
     @Override

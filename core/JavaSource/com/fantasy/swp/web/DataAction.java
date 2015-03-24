@@ -2,7 +2,7 @@ package com.fantasy.swp.web;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -19,7 +19,7 @@ public class DataAction extends ActionSupport {
 	
 	private static final long serialVersionUID = -5178279947544914476L;
 	
-	@Resource
+	@Autowired
 	private DataService dataService;
 	
 	public String index(List<PropertyFilter> filters){

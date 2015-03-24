@@ -27,29 +27,26 @@
 		<param name="sql" value="INSERT INTO TBL_CORE_AUDIT_LOG(id,priority,log_date,class_name,method,msg,user_id,url,parameter,ip,module_name,oper_type) VALUES (SEQ_TBL_AUDITLOG_PK.nextval,'%p',to_date('%d{yyyy-MM-dd HH:mm:ss}', 'yyyy-MM-dd HH24:Mi.SS'),'%C','%M','%m','%X{userId}','%X{url}','%X{parameter}','%X{ip}','%X{moduleName}','%X{operType}')" />
 	</appender>
 	-->
-<!-- 	<category name="org.springframework"> -->
-<!-- 		<priority value="ERROR" /> -->
-<!-- 		<appender-ref ref="CONSOLE" /> -->
-<!-- 	</category>	 -->
+    <category name="com.fantasy">
+        <priority value="DEBUG" />
+    </category>
+    <category name="org.springframework">
+ 		<priority value="ERROR" />
+ 	</category>
 	<category name="org.mybatis.spring">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.Connection">
 		<priority value="DEBUG" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.Statement">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.PreparedStatement">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.ResultSet">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	
 	<root>
