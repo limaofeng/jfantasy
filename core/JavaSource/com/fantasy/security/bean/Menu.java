@@ -4,7 +4,6 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.bean.enums.MenuType;
 import com.fasterxml.jackson.annotation.*;
-import org.apache.struts2.json.annotations.JSON;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -154,7 +153,6 @@ public class Menu extends BaseBusEntity {
         return this.sort;
     }
 
-    @JSON(serialize = false)
     public List<Menu> getChildren() {
         return children;
     }
@@ -197,7 +195,6 @@ public class Menu extends BaseBusEntity {
     }
 
     @JsonIgnore
-    @JSON(serialize = false)
     public GrantedAuthority getMenuAuthoritie() {
         return new SimpleGrantedAuthority("MENU_" + getId());
     }

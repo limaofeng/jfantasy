@@ -42,7 +42,7 @@
 
     <!--<include file=""file-->
 
-    <package name="fantasy-default" extends="json-default" abstract="true">
+    <package name="fantasy-default" extends="struts-default" abstract="true">
 
         <result-types>
             <result-type name="json" class="com.fantasy.framework.struts2.core.result.JSONResult"/>

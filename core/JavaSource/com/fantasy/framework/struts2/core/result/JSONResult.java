@@ -183,7 +183,7 @@ public class JSONResult implements Result {
 		// excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties 不能使用
 		// JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties);
 		// json = addCallbackIfApplicable(request, json);
-		return JSON.serialize(rootObject);
+		return JSON.text().serialize(rootObject);
 	}
 
 	protected boolean enableGzip(HttpServletRequest request) {

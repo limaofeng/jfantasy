@@ -21,6 +21,7 @@
 
 package com.fantasy.framework.struts2.rest;
 
+import com.fantasy.framework.util.common.StringUtil;
 import com.opensymphony.xwork2.config.Configuration;
 import com.opensymphony.xwork2.config.ConfigurationManager;
 import com.opensymphony.xwork2.config.entities.PackageConfig;
@@ -32,7 +33,9 @@ import org.apache.struts2.dispatcher.mapper.ActionMapping;
 import org.apache.struts2.dispatcher.mapper.DefaultActionMapper;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 import java.util.HashMap;
+import java.util.StringTokenizer;
 
 /**
  * <!-- START SNIPPET: description -->
@@ -82,7 +85,6 @@ import java.util.HashMap;
  * <li><code>GET:    /movies/Thrillers      => method="show", id="Thrillers"</code></li>
  * <li><code>GET:    /movies/Thrillers;edit => method="edit", id="Thrillers"</code></li>
  * <li><code>GET:    /movies/Thrillers/edit => method="edit", id="Thrillers"</code></li>
- * <li><code>GET:    /movies/new            => method="editNew"</code></li>
  * <li><code>POST:   /movies                => method="create"</code></li>
  * <li><code>PUT:    /movies/Thrillers      => method="update", id="Thrillers"</code></li>
  * <li><code>DELETE: /movies/Thrillers      => method="destroy", id="Thrillers"</code></li>
@@ -96,19 +98,13 @@ import java.util.HashMap;
 public class RestActionMapper extends DefaultActionMapper {
 
     protected static final Logger LOG = LoggerFactory.getLogger(RestActionMapper.class);
-    public static final String HTTP_METHOD_PARAM = "_method";
+    public static final String HTTP_METHOD_PARAM = "__http_method";
     private String idParameterName = "id";
     private String indexMethodName = "search";
-    private String getMethodName = "show";
+    private String getMethodName = "view";
     private String postMethodName = "create";
-    private String editMethodName = "edit";
-    private String newMethodName = "editNew";
-    private String deleteMethodName = "destroy";
+    private String deleteMethodName = "delete";
     private String putMethodName = "update";
-    private String optionsMethodName = "options";
-    private String postContinueMethodName = "createContinue";
-    private String putContinueMethodName = "updateContinue";
-    private boolean allowDynamicMethodCalls = true;
 
     public RestActionMapper() {
     }
@@ -137,16 +133,6 @@ public class RestActionMapper extends DefaultActionMapper {
         this.postMethodName = postMethodName;
     }
 
-    @Inject(required = false, value = "struts.mapper.editMethodName")
-    public void setEditMethodName(String editMethodName) {
-        this.editMethodName = editMethodName;
-    }
-
-    @Inject(required = false, value = "struts.mapper.newMethodName")
-    public void setNewMethodName(String newMethodName) {
-        this.newMethodName = newMethodName;
-    }
-
     @Inject(required = false, value = "struts.mapper.deleteMethodName")
     public void setDeleteMethodName(String deleteMethodName) {
         this.deleteMethodName = deleteMethodName;
@@ -157,28 +143,12 @@ public class RestActionMapper extends DefaultActionMapper {
         this.putMethodName = putMethodName;
     }
 
-    @Inject(required = false, value = "struts.mapper.optionsMethodName")
-    public void setOptionsMethodName(String optionsMethodName) {
-        this.optionsMethodName = optionsMethodName;
-    }
-
-    @Inject(required = false, value = "struts.mapper.postContinueMethodName")
-    public void setPostContinueMethodName(String postContinueMethodName) {
-        this.postContinueMethodName = postContinueMethodName;
-    }
-
-    @Inject(required = false, value = "struts.mapper.putContinueMethodName")
-    public void setPutContinueMethodName(String putContinueMethodName) {
-        this.putContinueMethodName = putContinueMethodName;
-    }
-
     @Inject(required = false, value = StrutsConstants.STRUTS_ENABLE_DYNAMIC_METHOD_INVOCATION)
     public void setAllowDynamicMethodCalls(String allowDynamicMethodCalls) {
         this.allowDynamicMethodCalls = "true".equalsIgnoreCase(allowDynamicMethodCalls);
     }
 
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
-        /*
         if (!isSlashesInActionNames()) {
             throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
         }
@@ -188,7 +158,11 @@ public class RestActionMapper extends DefaultActionMapper {
             return null;
         }
 
-        String actionName = mapping.getName();
+        String actionName =  mapping.getName();
+
+        if(StringUtil.isBlank(mapping.getExtension()) && !actionName.contains("/") && !actionName.endsWith("/")){
+            actionName = (actionName + "/");
+        }
 
         String id = null;
 
@@ -197,40 +171,36 @@ public class RestActionMapper extends DefaultActionMapper {
 
             int lastSlashPos = actionName.lastIndexOf('/');
             if (lastSlashPos > -1) {
-                id = actionName.substring(lastSlashPos+1);
+                id = actionName.substring(lastSlashPos + 1);
             }
 
 
             // If a method hasn't been explicitly named, try to guess using ReST-style patterns
             if (mapping.getMethod() == null) {
 
-                if (lastSlashPos == actionName.length() -1) {
+                if (lastSlashPos == actionName.length() - 1) {
 
                     // Index e.g. foo/
                     if (isGet(request)) {
-                        mapping.setMethod("search");
+                        mapping.setMethod(this.indexMethodName);
 
                         // Creating a new entry on POST e.g. foo/
                     } else if (isPost(request)) {
-                        mapping.setMethod("create");
+                        mapping.setMethod(this.postMethodName);
                     }
 
                 } else if (lastSlashPos > -1) {
                     // Viewing the form to create a new item e.g. foo/new
-                    if (isGet(request) && "new".equals(id)) {
-                        mapping.setMethod("editNew");
-
-                        // Viewing an item e.g. foo/1
-                    } else if (isGet(request)) {
-                        mapping.setMethod("view");
+                    if (isGet(request)) {
+                        mapping.setMethod(this.getMethodName);
 
                         // Removing an item e.g. foo/1
                     } else if (isDelete(request)) {
-                        mapping.setMethod("remove");
+                        mapping.setMethod(this.deleteMethodName);
 
                         // Updating an item e.g. foo/1
-                    }  else if (isPut(request)) {
-                        mapping.setMethod("update");
+                    } else if (isPut(request)) {
+                        mapping.setMethod(this.putMethodName);
                     }
 
                 }
@@ -252,7 +222,7 @@ public class RestActionMapper extends DefaultActionMapper {
             int actionSlashPos = actionName.lastIndexOf('/', lastSlashPos - 1);
             if (actionSlashPos > 0 && actionSlashPos < lastSlashPos) {
                 String params = actionName.substring(0, actionSlashPos);
-                HashMap<String,String> parameters = new HashMap<String,String>();
+                HashMap<String, String> parameters = new HashMap<String, String>();
                 try {
                     StringTokenizer st = new StringTokenizer(params, "/");
                     boolean isNameTok = true;
@@ -284,147 +254,18 @@ public class RestActionMapper extends DefaultActionMapper {
                         LOG.warn("Unable to determine parameters from the url", e);
                     }
                 }
-                mapping.setName(actionName.substring(actionSlashPos+1));
+                mapping.setName(actionName.substring(actionSlashPos + 1));
             }
         }
-
         return mapping;
-        */
-        ActionMapping mapping = new ActionMapping();
-        String uri = getUri(request);
-
-        uri = dropExtension(uri, mapping);
-        if (uri == null) {
-            return null;
-        }
-
-        parseNameAndNamespace(uri, mapping, configManager);
-
-        handleSpecialParameters(request, mapping);
-
-        if (mapping.getName() == null) {
-            return null;
-        }
-
-        // handle "name!method" convention.
-        handleDynamicMethodInvocation(mapping, mapping.getName());
-
-        String fullName = mapping.getName();
-        // Only try something if the action name is specified
-        if (fullName != null && fullName.length() > 0) {
-
-            // cut off any ;jsessionid= type appendix but allow the rails-like ;edit
-            int scPos = fullName.indexOf(';');
-            if (scPos > -1 && !"edit".equals(fullName.substring(scPos + 1))) {
-                fullName = fullName.substring(0, scPos);
-            }
-
-            int lastSlashPos = fullName.lastIndexOf('/');
-            String id = null;
-            if (lastSlashPos > -1) {
-
-                // fun trickery to parse 'actionName/id/methodName' in the case of 'animals/dog/edit'
-                int prevSlashPos = fullName.lastIndexOf('/', lastSlashPos - 1);
-                if (prevSlashPos > -1) {
-                    mapping.setMethod(fullName.substring(lastSlashPos + 1));
-                    fullName = fullName.substring(0, lastSlashPos);
-                    lastSlashPos = prevSlashPos;
-                }
-                id = fullName.substring(lastSlashPos + 1);
-            }
-
-
-            // If a method hasn't been explicitly named, try to guess using ReST-style patterns
-            if (mapping.getMethod() == null) {
-
-                if (isOptions(request)) {
-                    mapping.setMethod(optionsMethodName);
-
-                    // Handle uris with no id, possibly ending in '/'
-                } else if (lastSlashPos == -1 || lastSlashPos == fullName.length() - 1) {
-
-                    // Index e.g. foo
-                    if (isGet(request)) {
-                        mapping.setMethod(indexMethodName);
-
-                        // Creating a new entry on POST e.g. foo
-                    } else if (isPost(request)) {
-                        if (isExpectContinue(request)) {
-                            mapping.setMethod(postContinueMethodName);
-                        } else {
-                            mapping.setMethod(postMethodName);
-                        }
-                    }
-
-                    // Handle uris with an id at the end
-                } else if (id != null) {
-
-                    // Viewing the form to edit an item e.g. foo/1;edit
-                    if (isGet(request) && id.endsWith(";edit")) {
-                        id = id.substring(0, id.length() - ";edit".length());
-                        mapping.setMethod(editMethodName);
-
-                        // Viewing the form to create a new item e.g. foo/new
-                    } else if (isGet(request) && "new".equals(id)) {
-                        mapping.setMethod(newMethodName);
-
-                        // Removing an item e.g. foo/1
-                    } else if (isDelete(request)) {
-                        mapping.setMethod(deleteMethodName);
-
-                        // Viewing an item e.g. foo/1
-                    } else if (isGet(request)) {
-                        mapping.setMethod(getMethodName);
-
-                        // Updating an item e.g. foo/1
-                    } else if (isPut(request)) {
-                        if (isExpectContinue(request)) {
-                            mapping.setMethod(putContinueMethodName);
-                        } else {
-                            mapping.setMethod(putMethodName);
-                        }
-                    }
-                }
-            }
-
-            // cut off the id parameter, even if a method is specified
-            if (id != null) {
-                if (!"new".equals(id)) {
-                    if (mapping.getParams() == null) {
-                        mapping.setParams(new HashMap<String,Object>());
-                    }
-                    mapping.getParams().put(idParameterName, new String[]{id});
-                }
-                fullName = fullName.substring(0, lastSlashPos);
-            }
-
-            mapping.setName(fullName);
-            return mapping;
-        }
-        // if action name isn't specified, it can be a normal request, to static resource, return null to allow handle that case
-        return null;
-    }
-
-    private void handleDynamicMethodInvocation(ActionMapping mapping, String name) {
-        int exclamation = name.lastIndexOf("!");
-        if (exclamation != -1) {
-            mapping.setName(name.substring(0, exclamation));
-            if (allowDynamicMethodCalls) {
-                mapping.setMethod(name.substring(exclamation + 1));
-            } else {
-                mapping.setMethod(null);
-            }
-        }
     }
 
     /**
      * Parses the name and namespace from the uri.  Uses the configured package
      * namespaces to determine the name and id parameter, to be parsed later.
      *
-     * @param uri
-     *            The uri
-     * @param mapping
-     *            The action mapping to populate
+     * @param uri     The uri
+     * @param mapping The action mapping to populate
      */
     protected void parseNameAndNamespace(String uri, ActionMapping mapping,
                                          ConfigurationManager configManager) {
