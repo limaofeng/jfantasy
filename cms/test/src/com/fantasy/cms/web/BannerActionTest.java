@@ -12,7 +12,7 @@ import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

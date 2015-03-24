@@ -9,7 +9,7 @@ import com.fantasy.security.service.OrganizationService;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Assert;

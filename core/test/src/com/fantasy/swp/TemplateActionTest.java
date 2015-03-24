@@ -9,7 +9,7 @@ import com.fantasy.swp.service.TemplateService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 import com.opensymphony.xwork2.ActionProxy;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Assert;

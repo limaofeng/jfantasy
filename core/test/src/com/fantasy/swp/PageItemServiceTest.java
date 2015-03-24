@@ -12,7 +12,7 @@ import com.fantasy.swp.bean.PageItemData;
 import com.fantasy.swp.service.PageItemDataService;
 import com.fantasy.swp.service.PageItemService;
 import com.fantasy.swp.service._PageService;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Before;
