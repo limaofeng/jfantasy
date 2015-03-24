@@ -4,14 +4,14 @@ import com.fantasy.common.service.DataSourceFactory;
 import com.fantasy.common.service.SqlResultData;
 import com.fantasy.framework.struts2.ActionSupport;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public class SqlConsoleAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private DataSourceFactory dataSourceFactory;
 
     public String run(Long id, String sql, int maxRow) throws SQLException {

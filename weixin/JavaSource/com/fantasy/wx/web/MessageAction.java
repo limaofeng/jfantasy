@@ -9,7 +9,7 @@ import com.fantasy.wx.service.MessageWeiXinService;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.service.UserInfoWeiXinService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,9 +17,9 @@ import java.util.List;
  * Created by zzzhong on 2014/9/23.
  */
 public class MessageAction extends ActionSupport {
-    @Resource
+    @Autowired
     private MessageWeiXinService messageWeiXinService;
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
 

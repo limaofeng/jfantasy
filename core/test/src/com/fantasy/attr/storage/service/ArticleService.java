@@ -7,15 +7,16 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 @Service
 @Transactional
 public class ArticleService {
 
-    @Resource
+    @Autowired
     private ArticleDao articleDao;
 
     public void save(Article article) {
@@ -49,9 +50,10 @@ public class ArticleService {
     }
 
     public List<Article> find(List<PropertyFilter> filters) {
-        return this.articleDao.find(filters,"id","asc",0,10);
+        return this.articleDao.find(filters, "id", "asc", 0, 10);
     }
-    public List<Article> find(List<PropertyFilter> filters,String orderby, String order, int size) {
-        return this.articleDao.find(filters,orderby,order,0,size);
+
+    public List<Article> find(List<PropertyFilter> filters, String orderby, String order, int size) {
+        return this.articleDao.find(filters, orderby, order, 0, size);
     }
 }

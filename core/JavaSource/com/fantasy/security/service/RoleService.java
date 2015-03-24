@@ -11,17 +11,17 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
-@Service("fantasy.auth.RoleService")
+@Service
 @Transactional
 public class RoleService{
 
 	private static final Log logger = LogFactory.getLog(RoleService.class);
 
 
-	@Resource
+	@Autowired
 	private RoleDao roleDao;
 
 	public List<Role> getAll() {

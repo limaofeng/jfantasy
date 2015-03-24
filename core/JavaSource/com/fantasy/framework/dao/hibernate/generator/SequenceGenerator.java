@@ -13,7 +13,7 @@ import org.hibernate.id.Configurable;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.type.Type;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.Serializable;
 import java.util.Properties;
 
@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 public class SequenceGenerator implements IdentifierGenerator, Configurable {
 
-	@Resource
+	@Autowired
 	private DataBaseKeyGenerator baseKeyGenerator;
 
 	public final static String KEY_NAME = "keyName";

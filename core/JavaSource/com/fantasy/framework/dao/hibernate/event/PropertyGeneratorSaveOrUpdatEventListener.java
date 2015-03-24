@@ -17,6 +17,7 @@ import org.hibernate.id.factory.IdentifierGeneratorFactory;
 import org.hibernate.proxy.HibernateProxy;
 import org.hibernate.type.Type;
 import org.springframework.orm.hibernate4.LocalSessionFactoryBean;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.Id;
 import javax.persistence.Column;
@@ -36,6 +37,7 @@ import java.util.concurrent.ConcurrentMap;
  * @since 2013-10-9 下午10:12:33
  * @version 1.0
  */
+@Component
 public class PropertyGeneratorSaveOrUpdatEventListener extends DefaultSaveOrUpdateEventListener {
 
 	private static final long serialVersionUID = -2369176546449741726L;

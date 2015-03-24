@@ -20,6 +20,14 @@
             </result>
         </action>
 
+        <action name="articles" class="com.fantasy.cms.web.ArticleAction">
+            <result type="json"/>
+        </action>
+
+        <action name="categorys" class="com.fantasy.cms.web.ArticleCategoryAction">
+            <result type="json"/>
+        </action>
+
     </package>
     <!-- 文章管理 -->
     <package name="fides-cms-article" extends="fantasy-default" namespace="/cms/article">

@@ -8,7 +8,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 订单提交后
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @Aspect
 public class OrderSubmitInterceptor {
 
-    @Resource
+    @Autowired
     private ProductService productService;
 
     /**

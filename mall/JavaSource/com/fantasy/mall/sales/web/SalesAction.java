@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
@@ -30,7 +30,7 @@ import com.fantasy.mall.sales.service.SalesService;
  */
 public class SalesAction extends ActionSupport {
 
-	@Resource
+	@Autowired
 	private SalesService salesService;
 
 	private static final long serialVersionUID = 3966151832335206089L;

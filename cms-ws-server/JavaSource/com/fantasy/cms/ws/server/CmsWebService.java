@@ -17,13 +17,13 @@ import com.fantasy.framework.ws.util.PropertyFilterDTO;
 import com.fantasy.framework.ws.util.WebServiceUtil;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Component
 public class CmsWebService implements ICmsService {
 
-    @Resource
+    @Autowired
     private CmsService cmsService;
 
     @Override

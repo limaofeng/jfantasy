@@ -4,13 +4,13 @@ import com.fantasy.mall.shop.dao.ShopDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Service
 @Transactional
 public class ShopService {
 
-    @Resource
+    @Autowired
     private ShopDao shopDao;
 
 }

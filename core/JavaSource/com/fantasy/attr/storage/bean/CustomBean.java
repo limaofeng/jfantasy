@@ -18,19 +18,20 @@ public class CustomBean extends BaseBusEntity {
     /**
      * 自定义 bean 的名称
      */
-    @Column(name = "NAME")
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "DEFINITION_ID")
+    private CustomBeanDefinition definition;
     /**
-     * 自定义类的
+     * 对应的版本
      */
-    @Column(name = "CLASS_NAME")
-    private String className;
+    @Column(name = "VERSION_ID", unique = true)
+    private Long version;
     /**
      * 属性
      */
-    @ManyToMany(targetEntity = Attribute.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
-    private List<Attribute> attributes;
+    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
+    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
+    private List<AttributeValue> attributeValues;
 
     public Long getId() {
         return id;
@@ -40,28 +41,27 @@ public class CustomBean extends BaseBusEntity {
         this.id = id;
     }
 
-    public String getClassName() {
-        return className;
+    public List<AttributeValue> getAttributeValues() {
+        return attributeValues;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setAttributeValues(List<AttributeValue> attributeValues) {
+        this.attributeValues = attributeValues;
     }
 
-    public List<Attribute> getAttributes() {
-        return attributes;
+    public Long getVersion() {
+        return version;
     }
 
-    public void setAttributes(List<Attribute> attributes) {
-        this.attributes = attributes;
+    public void setVersion(Long version) {
+        this.version = version;
     }
 
-    public String getName() {
-        return name;
+    public CustomBeanDefinition getDefinition() {
+        return definition;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDefinition(CustomBeanDefinition definition) {
+        this.definition = definition;
     }
-
 }

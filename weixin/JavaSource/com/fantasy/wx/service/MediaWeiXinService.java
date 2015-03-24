@@ -12,7 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -25,11 +25,11 @@ import java.util.List;
 public class MediaWeiXinService {
     @Autowired
     private MediaDao mediaDao;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
-//    @Resource
+//    @Autowired
 //    private WeixinConfigInit weixinConfigInit;
-    @Resource
+    @Autowired
     private FileManagerFactory factory;
 
     public Pager<Media> findPager(Pager<Media> pager, List<PropertyFilter> filters) {

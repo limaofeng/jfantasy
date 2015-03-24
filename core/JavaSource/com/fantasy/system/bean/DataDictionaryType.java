@@ -2,10 +2,8 @@ package com.fantasy.system.bean;
 
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -60,7 +58,7 @@ public class DataDictionaryType extends BaseBusEntity {
 
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime desc")
-    @JoinColumn(name = "TYPE",foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE"))
+    @JoinColumn(name = "TYPE", foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE"))
     private List<DataDictionary> dataDictionaries;
 
     /**
@@ -68,7 +66,8 @@ public class DataDictionaryType extends BaseBusEntity {
      */
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "PCODE",foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE_PID") )
+    @JoinColumn(name = "PCODE", foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE_PID"))
+    @JsonManagedReference
     private DataDictionaryType parent;
     /**
      * 下级数据字典
@@ -76,6 +75,7 @@ public class DataDictionaryType extends BaseBusEntity {
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
+    @JsonBackReference
     private List<DataDictionaryType> children;
 
     public String getCode() {

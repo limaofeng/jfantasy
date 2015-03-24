@@ -2,7 +2,7 @@ package com.fantasy.mall.stock.service;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,10 +27,10 @@ import com.fantasy.mall.stock.dao.StockDao;
 @Transactional
 public class StockService {
 
-	@Resource
+	@Autowired
 	private StockDao stockDao;
 
-	@Resource
+	@Autowired
 	private ProductDao productDao;
 
 	/**

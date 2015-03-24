@@ -7,7 +7,7 @@ import com.fantasy.payment.dao.PaymentConfigDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Transactional
 public class PaymentConfigService {
 
-    @Resource
+    @Autowired
     private PaymentConfigDao paymentConfigDao;
     /**
      * findPager

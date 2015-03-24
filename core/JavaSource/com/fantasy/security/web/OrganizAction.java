@@ -7,7 +7,7 @@ import com.fantasy.security.bean.Organization;
 import com.fantasy.security.service.OrganizationService;
 import org.hibernate.criterion.Restrictions;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class OrganizAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private OrganizationService organizationService;
 
 

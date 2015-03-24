@@ -1,12 +1,11 @@
 package com.fantasy.security.service;
 
-import java.util.List;
-
+import com.fantasy.security.bean.UserGroup;
 import org.springframework.stereotype.Service;
 
-import com.fantasy.security.bean.UserGroup;
+import java.util.List;
 
-@Service("fantasy.auth.UserGroupService")
+@Service
 public class UserGroupService{
 
 	public List<UserGroup> getUserGroupsByResourceId(Long id) {

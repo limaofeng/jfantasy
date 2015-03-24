@@ -12,7 +12,7 @@ import com.fantasy.file.service.FilePartService;
 import com.fantasy.file.service.FileService;
 import com.fantasy.framework.error.IgnoreException;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +39,9 @@ public class UploadFileManager implements FileManager {
 
     private final static String separator = "/";
 
-    @Resource
+    @Autowired
     private FileService fileService;
-    @Resource
+    @Autowired
     private FilePartService filePartService;
 
     public FileManagerConfig getConfig() {

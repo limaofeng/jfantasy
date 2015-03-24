@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
@@ -29,6 +29,6 @@ public class WebsiteServiceTest {
     @Test
     @Transactional
     public void testGetAll() throws Exception {
-        LOG.debug(JSON.serialize( websiteService.getAll()));
+        LOG.debug(JSON.serialize(websiteService.getAll()));
     }
 }

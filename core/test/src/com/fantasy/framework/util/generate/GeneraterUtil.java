@@ -13,7 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.List;
 
@@ -22,7 +22,7 @@ import java.util.List;
 @ContextConfiguration(locations = { "classpath:com/fantasy/framework/util/generate/applicationContext-gc.xml" })
 public class GeneraterUtil {
 
-    @Resource
+    @Autowired
     private ColumnMapper tabColumnMapper;
 
     @Before

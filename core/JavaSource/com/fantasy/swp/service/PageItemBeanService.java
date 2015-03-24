@@ -6,7 +6,7 @@ import com.fantasy.swp.exception.SwpException;
 import com.fantasy.swp.runtime.GenerateImpl;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
@@ -14,7 +14,7 @@ import java.util.List;
 @Component
 public class PageItemBeanService {
 
-    @Resource
+    @Autowired
     private GenerateImpl generate;
 
     public void refash(Long id) throws SwpException, IOException {

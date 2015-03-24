@@ -16,7 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
@@ -25,11 +25,11 @@ public class WebsiteService {
 
     private static final Log logger = LogFactory.getLog(WebsiteService.class);
 
-    @Resource
+    @Autowired
     private WebsiteDao websiteDao;
-    @Resource
+    @Autowired
     private SettingDao settingDao;
-    @Resource
+    @Autowired
     private FileManagerService fileManagerService;
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)

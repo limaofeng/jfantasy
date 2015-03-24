@@ -9,14 +9,14 @@ import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
 @Transactional
 public class JdbcConfigService {
 
-    @Resource
+    @Autowired
     private JdbcConfigDao jdbcConfigDao;
 
     public List<JdbcConfig> find(){

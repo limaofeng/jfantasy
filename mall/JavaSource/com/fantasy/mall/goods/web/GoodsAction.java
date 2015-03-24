@@ -10,14 +10,14 @@ import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.service.GoodsService;
 import com.fantasy.system.util.SettingUtil;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class GoodsAction extends ActionSupport {
 
     private static final long serialVersionUID = -3032805252418268707L;
 
-    @Resource
+    @Autowired
     private GoodsService goodsService;
 
     public String goods(Pager<Goods> pager, List<PropertyFilter> filters) {

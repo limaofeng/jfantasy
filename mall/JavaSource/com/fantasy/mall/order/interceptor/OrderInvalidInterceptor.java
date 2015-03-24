@@ -8,7 +8,7 @@ import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 订单失效(关闭)
@@ -21,9 +21,9 @@ import javax.annotation.Resource;
 @Aspect
 public class OrderInvalidInterceptor {
 
-    @Resource
+    @Autowired
     private OrderService orderService;
-    @Resource
+    @Autowired
     private ProductService productService;
 
     /**

@@ -3,7 +3,7 @@ package com.fantasy.common.service;
 import java.util.Collections;
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
@@ -29,9 +29,9 @@ import com.fantasy.framework.util.common.StringUtil;
 @Transactional
 public class KeywordService implements InitializingBean {
 
-	@Resource
+	@Autowired
 	private KeywordsDao keywordsDao;
-	@Resource
+	@Autowired
 	private HotKeywordsDao hotKeywordsDao;
 
 	@Override

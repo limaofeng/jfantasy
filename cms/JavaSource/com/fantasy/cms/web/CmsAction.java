@@ -10,7 +10,7 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.system.util.SettingUtil;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +21,7 @@ public class CmsAction extends ActionSupport {
 
     private static final long serialVersionUID = 3799834983783507214L;
 
-    @Resource
+    @Autowired
     private transient CmsService cmsService;
 
     /**

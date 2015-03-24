@@ -5,14 +5,14 @@ import com.fantasy.cms.service.BannerService;
 import com.fantasy.cms.service.BannerServiceTest;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
-import com.fantasy.framework.struts2.context.ActionConstants;
+import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,7 +22,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,11 +33,11 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
 
     private final static Log LOG = LogFactory.getLog(BannerActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
-    @Resource
+    @Autowired
     private FileUploadService fileUploadService;
-    @Resource
+    @Autowired
     private BannerService bannerService;
 
 

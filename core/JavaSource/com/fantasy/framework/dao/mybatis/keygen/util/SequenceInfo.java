@@ -68,14 +68,12 @@ public class SequenceInfo {
 
     /**
      * 从数据库检索
-     *
-     * @功能描述
      */
     public void retrieveFromDB() {
         long keyFromDB;
-        if ((this.service.exists(this.keyName)) || (this.nextKey > this.keyMax)){
+        if ((this.service.exists(this.keyName)) || (this.nextKey > this.keyMax)) {
             keyFromDB = getKeyinfo(this.keyName, this.poolSize);
-        }else {
+        } else {
             keyFromDB = createKey(this.keyName, this.poolSize);
         }
         this.keyMax = keyFromDB;

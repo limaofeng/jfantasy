@@ -5,13 +5,13 @@ import com.fantasy.security.bean.Menu;
 import com.fantasy.security.service.MenuService;
 import org.hibernate.criterion.Criterion;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class MenuAction extends ActionSupport {
 
     private static final long serialVersionUID = -7890092416209211498L;
 
-    @Resource
+    @Autowired
     private transient MenuService menuService;
 
 

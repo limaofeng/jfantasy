@@ -21,7 +21,7 @@ import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,9 +46,9 @@ public class FileManagerFactory implements InitializingBean {
 
     public final static String WEBROOT_FILEMANAGER_ID = "WEBROOT";
 
-    @Resource
+    @Autowired
     private FileManagerService fileManagerService;
-    @Resource
+    @Autowired
     private FtpServiceFactory ftpServiceFactory;
 
     private final static ConcurrentMap<String, FileManager> fileManagerCache = new ConcurrentHashMap<String, FileManager>();

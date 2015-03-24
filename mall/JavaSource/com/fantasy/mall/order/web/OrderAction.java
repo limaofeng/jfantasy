@@ -2,7 +2,7 @@ package com.fantasy.mall.order.web;
 
 import java.util.ArrayList;
 import java.util.List;
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.mall.delivery.bean.DeliveryType;
 import org.hibernate.criterion.Criterion;
@@ -28,13 +28,13 @@ public class OrderAction extends ActionSupport {
 
     private static final long serialVersionUID = 5809261416684874733L;
 
-    @Resource
+    @Autowired
     private OrderService orderService;
-    @Resource
+    @Autowired
     private ReceiverService receiverService;
-    @Resource
+    @Autowired
     private ProductService productService;
-    @Resource
+    @Autowired
     private DeliveryService deliveryService;
 
     /**

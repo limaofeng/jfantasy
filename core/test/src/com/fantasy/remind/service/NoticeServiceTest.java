@@ -14,7 +14,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -26,9 +26,9 @@ public class NoticeServiceTest {
 
     private static final Log logger = LogFactory.getLog(Model.class);
 
-    @Resource
+    @Autowired
     private NoticeService noticeService;
-    @Resource
+    @Autowired
     private ModelService modelService;
 
     @Before

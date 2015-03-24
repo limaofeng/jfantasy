@@ -9,7 +9,7 @@ import com.fantasy.system.service.WebAccessLogService;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,9 +17,9 @@ import java.io.IOException;
 
 public class AdminLoginSuccessHandler extends FantasyLoginSuccessHandler{
 
-	@Resource(name="fantasy.auth.UserService")
+	@Autowired
 	private UserService userService;
-	@Resource
+	@Autowired
 	private WebAccessLogService accessLogService;
 	
 	@Override

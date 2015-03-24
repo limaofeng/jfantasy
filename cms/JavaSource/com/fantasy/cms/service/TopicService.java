@@ -6,8 +6,9 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
-import javax.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ import java.util.List;
 @Transactional
 public class TopicService {
 
-    @Resource
+    @Autowired
     private TopicDao topicDao;
 
     public Pager<Topic> findPager(Pager<Topic> pager, List<PropertyFilter> filters) {
