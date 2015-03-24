@@ -32,8 +32,6 @@ import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -70,11 +68,7 @@ public class BuguIndex implements InitializingBean {
     /**
      * 线程池
      */
-    private ExecutorService executor;
-    /**
-     * 线程池大小
-     */
-    private int threadPoolSize = 10;
+    private SchedulingTaskExecutor executor;
     /**
      * 定时任务
      */
@@ -120,7 +114,6 @@ public class BuguIndex implements InitializingBean {
             BuguIndex.instance = this;
         }
         if (this.rebuild) {
-            SchedulingTaskExecutor executor = SpringContextUtil.getBean("spring.executor", SchedulingTaskExecutor.class);
             executor.execute(new Runnable() {
 
                 public void run() {
@@ -151,8 +144,6 @@ public class BuguIndex implements InitializingBean {
      * 初始化方法
      */
     public void open() {
-        this.executor = Executors.newFixedThreadPool(this.threadPoolSize);
-        this.scheduler = Executors.newSingleThreadScheduledExecutor();
         this.scheduler.scheduleAtFixedRate(new IndexReopenTask(), this.period, this.period, TimeUnit.MILLISECONDS);
         if (this.clusterConfig != null) {
             this.clusterConfig.validate();
@@ -163,12 +154,6 @@ public class BuguIndex implements InitializingBean {
      * 关闭方法
      */
     public void close() {
-        if (this.executor != null) {
-            this.executor.shutdown();
-        }
-        if (this.scheduler != null) {
-            this.scheduler.shutdown();
-        }
         if (this.clusterConfig != null) {
             this.clusterConfig.invalidate();
         }
@@ -196,12 +181,8 @@ public class BuguIndex implements InitializingBean {
         }
     }
 
-    public ExecutorService getExecutor() {
+    public SchedulingTaskExecutor getExecutor() {
         return this.executor;
-    }
-
-    public void setThreadPoolSize(int threadPoolSize) {
-        this.threadPoolSize = threadPoolSize;
     }
 
     public double getBufferSizeMB() {
