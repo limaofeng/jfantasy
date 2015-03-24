@@ -9,3 +9,5 @@ jslib
 target
 
 atlassian-ide-plugin.xml
+
+rebel.xml
