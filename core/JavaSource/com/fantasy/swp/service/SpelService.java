@@ -51,20 +51,20 @@ public class SpelService {
 
     public Object executeMethod(String mothod,Map<String,Object> data){
         EvaluationContext context = SpELUtil.createEvaluationContext(this.getAllServer());
-        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        if(data != null) {
-            for (Map.Entry<String, Object> entry : data.entrySet()) {
-                if ("filters".equals(entry.getKey())) {    // List<PropertyFilter>条件
-                    List<Map<String, String>> _params = (List<Map<String, String>>) entry.getValue();
-                    for (int i = 0; i < _params.size(); i++) {
-                        PropertyFilter filter = new PropertyFilter(_params.get(i).get("key"), _params.get(i).get("value"));
+        if(data!=null){
+            List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+            for (Map.Entry<String, Object> entry : data.entrySet()){
+                if("filters".equals(entry.getKey())){    // List<PropertyFilter>条件
+                    List<Map<String,String>> _params = (List<Map<String,String>>)entry.getValue();
+                    for(int i=0; i<_params.size(); i++){
+                        PropertyFilter filter = new PropertyFilter(_params.get(i).get("key"),_params.get(i).get("value"));
                         filters.add(filter);
                     }
-                    context.setVariable("filters", filters);
-                } else if ("stat".equals(entry.getKey())) {  // 静态
-                    Map<String, Object> _v = (Map<String, Object>) entry.getValue();
-                    for (Map.Entry<String, Object> _entry : _v.entrySet()) {
-                        context.setVariable(_entry.getKey(), _entry.getValue());
+                    context.setVariable("filters",filters);
+                }else if("stat".equals(entry.getKey())){  // 静态
+                    Map<String,Object> _v = (Map<String,Object>)entry.getValue();
+                    for (Map.Entry<String, Object> _entry : _v.entrySet()){
+                        context.setVariable(_entry.getKey(),_entry.getValue());
                     }
                 }
             }
