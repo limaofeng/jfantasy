@@ -32,8 +32,9 @@ public class JobService  {
     }
 
 
-    public void save(Job job){
+    public Job save(Job job){
         this.jobDao.save(job);
+        return job;
     }
 
 

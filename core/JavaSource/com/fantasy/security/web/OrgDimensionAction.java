@@ -1,38 +1,46 @@
 package com.fantasy.security.web;
 
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.service.OrgDimensionService;
 import org.hibernate.criterion.Restrictions;
-
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+
 /**
- * Created by yhx on 2015/1/21.
+ * 组织维度Action
  */
 public class OrgDimensionAction extends ActionSupport {
 
     @Autowired
     private OrgDimensionService orgDimensionService;
 
-    public String index() {
-        this.attrs.put(ROOT, this.orgDimensionService.find());
-        return JSONDATA;
+    public String search(Pager<OrgDimension> pager,List<PropertyFilter> filters) {
+        this.attrs.put(ROOT, this.orgDimensionService.findPager(pager,filters));
+        return SUCCESS;
     }
 
-    public String save(OrgDimension orgDimension) {
+    public String create(OrgDimension orgDimension) {
         this.orgDimensionService.save(orgDimension);
-        return JSONDATA;
+        return SUCCESS;
+    }
+
+    public String update(OrgDimension orgDimension) {
+        this.orgDimensionService.save(orgDimension);
+        return SUCCESS;
     }
 
     public String view(String id) {
         this.attrs.put(ROOT, this.orgDimensionService.findUnique(Restrictions.eq("id", id)));
-        return JSONDATA;
+        return SUCCESS;
     }
 
-    public String delete(String... ids) {
-        this.orgDimensionService.delete(ids);
-        return JSONDATA;
+    public String delete(String... id) {
+        this.orgDimensionService.delete(id);
+        return SUCCESS;
     }
 
 

@@ -140,7 +140,8 @@ public class OrganizationService {
                     this.orgRelationDao.delete(orgRelation);
                 }
             }
-            this.organizationDao.delete(findUnique(Restrictions.eq("id", id)));
+            Organization organization = this.findUnique(Restrictions.eq("id",id));
+            this.organizationDao.delete(organization);
         }
     }
 

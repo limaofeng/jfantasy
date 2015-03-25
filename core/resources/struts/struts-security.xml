@@ -117,43 +117,23 @@
     </package>
 
     <!-- 组织维度 -->
-    <package name="admin-orgdimension" extends="fantasy-default" namespace="/security/orgdimension">
-        <!-- 查询 -->
-        <action name="index" class="com.fantasy.security.web.OrgDimensionAction" method="index" />
-
-        <!-- 保存 -->
-        <action name="save" class="com.fantasy.security.web.OrgDimensionAction" method="save"/>
-        <!-- 查看 -->
-        <action name="view" class="com.fantasy.security.web.OrgDimensionAction" method="view" />
-        <!-- 删除 -->
-        <action name="delete" class="com.fantasy.security.web.OrgDimensionAction" method="delete"/>
+    <package name="admin-orgdimension" extends="fantasy-default" namespace="/security">
+        <action name="orgdimensions" class="com.fantasy.security.web.OrgDimensionAction">
+            <result type="json"/>
+        </action>
     </package>
 
     <!-- 组织机构 -->
-    <package name="admin-organize" extends="fantasy-default" namespace="/security/organize">
-        <!-- 查询 -->
-        <action name="index" class="com.fantasy.security.web.OrganizAction" method="index" />
-        <!-- search -->
-        <action name="search" class="com.fantasy.security.web.OrganizAction" method="search" />
-        <!-- 保存 -->
-        <action name="save" class="com.fantasy.security.web.OrganizAction" method="save"/>
-        <!-- 查看 -->
-        <action name="view" class="com.fantasy.security.web.OrganizAction" method="view" />
-        <!-- 删除 -->
-        <action name="delete" class="com.fantasy.security.web.OrganizAction" method="delete"/>
+    <package name="admin-organize" extends="fantasy-default" namespace="/security">
+        <action name="organizations" class="com.fantasy.security.web.OrganizAction">
+            <result type="json"/>
+        </action>
     </package>
 
     <!-- 岗位 -->
-    <package name="admin-job" extends="fantasy-default" namespace="/security/job">
-        <!-- 查询 -->
-        <action name="index" class="com.fantasy.security.web.JobAction" method="index" />
-        <!-- search -->
-        <action name="search" class="com.fantasy.security.web.JobAction" method="search" />
-        <!-- 保存 -->
-        <action name="save" class="com.fantasy.security.web.JobAction" method="save"/>
-        <!-- 查看 -->
-        <action name="view" class="com.fantasy.security.web.JobAction" method="view" />
-        <!-- 删除 -->
-        <action name="delete" class="com.fantasy.security.web.JobAction" method="delete"/>
+    <package name="admin-job" extends="fantasy-default" namespace="/security">
+        <action name="jobs" class="com.fantasy.security.web.JobAction">
+            <result type="json"/>
+        </action>
     </package>
 </struts>

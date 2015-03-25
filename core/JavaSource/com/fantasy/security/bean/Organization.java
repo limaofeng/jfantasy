@@ -80,7 +80,6 @@ public class Organization extends BaseBusEntity {
 
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    @OrderBy("sort ASC")
     private List<Job> jobs;
 
 

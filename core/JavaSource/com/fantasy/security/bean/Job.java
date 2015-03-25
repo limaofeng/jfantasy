@@ -2,6 +2,7 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -20,7 +21,9 @@ public class Job extends BaseBusEntity {
     private static final long serialVersionUID = -7020427994563623645L;
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", insertable = true, updatable = false)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
      * 岗位编码

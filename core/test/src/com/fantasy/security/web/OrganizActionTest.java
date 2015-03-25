@@ -1,24 +1,24 @@
 package com.fantasy.security.web;
 
+import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.struts2.core.context.ActionConstants;
-import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.bean.Organization;
 import com.fantasy.security.service.OrgDimensionService;
 import com.fantasy.security.service.OrganizationService;
-import com.fasterxml.jackson.core.type.TypeReference;
+import com.fantasy.security.userdetails.AdminUser;
+import com.fantasy.system.bean.Website;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -26,7 +26,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +42,6 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
     private OrgDimensionService orgDimensionService;//组织维度
     @Autowired
     private OrganizationService organizationService;//组织机构
-    @Autowired
-    private OrgDimensionActionTest orgDimensionActionTest;
 
     @Override
     protected String getConfigPath() {
@@ -53,8 +50,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
 
     @Before
     public void setUp() throws Exception {
-        orgDimensionActionTest.setUp();
-
+        /* orgDimensionActionTest.setUp();*/
         JspSupportServlet jspSupportServlet = new JspSupportServlet();
         jspSupportServlet.init(new MockServletConfig());
         super.setUp();
@@ -63,41 +59,33 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         LOG.debug("默认admin登陆。。。");
+        //创建维度
+        Website website = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getWebsite();
+        OrgDimension orgDimension = new OrgDimension();
+        orgDimension.setId("Testweidu");
+        orgDimension.setName("维度测试");
+        orgDimension.setDescription("维度测试");
+        orgDimension.setWebsite(website);
+        this.orgDimensionService.save(orgDimension);
+        //创建组织结构
         testSave();
 
     }
 
     @After
     public void tearDown() throws Exception {
-        orgDimensionActionTest.tearDown();
+        this.testDelete();
 
-        //this.testDelete();
-    }
-
-    @Test
-    public void testIndex() throws Exception {
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
-
-        List<OrgDimension> orgDimensions = this.orgDimensionService.find();
-
-        if (!orgDimensions.isEmpty()) {
-            OrgDimension orgDimension = orgDimensions.get(0);
-            this.request.addParameter("EQS_orgDimension.id", orgDimension.getId());
-            ActionProxy proxy = super.getActionProxy("/security/organize/index.do");
-            Assert.assertNotNull(proxy);
-            //返回的数据类型
-            String result = proxy.execute();
-            //json数据
-            String json =this.response.getContentAsString();
-            LOG.debug(result + ":" + json);
-
-            List<Organization> organizations = JSON.deserialize(json, new TypeReference<List<Organization>>() {});
-            testView(organizations, 0);
-            Assert.assertNotNull(organizations);
+        //最后删除维度和维度之间的关系
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_id","Testweidu"));
+        Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
+        if(!pager.getPageItems().isEmpty()){
+            this.orgDimensionService.delete(pager.getPageItems().get(0).getId());
         }
+
     }
+
 
     private void testView(List<Organization> organizations,int layer){
         layer++;
@@ -113,64 +101,51 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         this.response.setCommitted(false);
         this.response.reset();
         //组织机构 数据
+        this.request.setMethod("POST");
         this.request.addParameter("id", "jg1");
         this.request.addParameter("name", "机构1");
         this.request.addParameter("description", "机构1");
         this.request.addParameter("type", "company");
-
         //对应组织维度 与上级组织机构
-        List<OrgDimension> orgDimensions = this.orgDimensionService.find();
-
-        if (!orgDimensions.isEmpty()) {
-            OrgDimension orgDimension = orgDimensions.get(0);
-            this.request.addParameter("orgHelpBeans[0].orgDimension.id", orgDimension.getId());
-            //上级组织机构
-            //this.request.addParameter("orgHelpBeans[0].organization.id","jg0001");
-            //this.request.addParameter("orgHelpBeans[1].orgDimension.id","weidu002");
-            //this.request.addParameter("orgHelpBeans[1].organization.id","jg002");
-            ActionProxy proxy = super.getActionProxy("/security/organize/save.do");
-            Assert.assertNotNull(proxy);
-            //返回的数据类型
-            String result = proxy.execute();
-            //json数据
-            LOG.debug(result + ":" + this.response.getContentAsString());
-
-            Assert.assertEquals(result, ActionConstants.JSONDATA);
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_id","Testweidu"));
+        Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
+        if(!pager.getPageItems().isEmpty()) {
+            this.request.addParameter("orgHelpBeans[0].orgDimension.id", pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/security/organizations/");
+            LOG.debug("返回数据类型：" + proxy.execute());
+            LOG.debug("testSave返回数据：" + this.response.getContentAsString());
         }
     }
 
-    //@Test
+    @Test
     public void testSearch() throws Exception {
         this.request.removeAllParameters();
         this.response.setCommitted(false);
         this.response.reset();
-
-        ActionProxy proxy = super.getActionProxy("/security/organize/search.do");
-        Assert.assertNotNull(proxy);
-        //返回的数据类型
-        String result = proxy.execute();
-        //json数据
-        LOG.debug(result + ":" + this.response.getContentAsString());
-
-        Assert.assertEquals(result, ActionConstants.JSONDATA);
+        this.request.setMethod("GET");
+        this.request.addParameter("EQS_id","jg1");
+        ActionProxy proxy = super.getActionProxy("/security/organizations");
+        LOG.debug("返回数据类型：" + proxy.execute());
+        LOG.debug("testSearch返回数据：" + this.response.getContentAsString());
     }
 
 
-    //@Test
+    @Test
     public void testView() throws Exception {
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_id","jg1"));
+        Pager<Organization> pager = this.organizationService.findPager(new Pager<Organization>(1),filters);
+        if(!pager.getPageItems().isEmpty()){
+            this.request.removeAllParameters();
+            this.response.setCommitted(false);
+            this.response.reset();
+            this.request.setMethod("GET");
+            ActionProxy proxy = super.getActionProxy("/security/organizations/"+pager.getPageItems().get(0).getId());
+            LOG.debug("返回数据类型："+proxy.execute());
+            LOG.debug("testView返回数据："+this.response.getContentAsString());
+        }
 
-        this.request.addParameter("id", "jg002");
-        ActionProxy proxy = super.getActionProxy("/security/organize/view.do");
-        Assert.assertNotNull(proxy);
-        //返回的数据类型
-        String result = proxy.execute();
-        //json数据
-        LOG.debug(result + ":" + this.response.getContentAsString());
-
-        Assert.assertEquals(result, ActionConstants.JSONDATA);
     }
 
     /**
@@ -186,22 +161,19 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
     }
 
     public void testDelete() throws Exception {
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
-
-        List<Organization> organizations = this.organizationService.find(new ArrayList<PropertyFilter>());
-        if (!organizations.isEmpty()) {
-            Organization organization = organizations.get(0);
-            this.request.addParameter("ids", organization.getId());
-            ActionProxy proxy = super.getActionProxy("/security/organize/delete.do");
-            Assert.assertNotNull(proxy);
-            //返回的数据类型
-            String result = proxy.execute();
-            //json数据
-            LOG.debug(result + ":" + this.response.getContentAsString());
-
-            Assert.assertEquals(result, ActionConstants.JSONDATA);
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_id","jg1"));
+        Pager<Organization> pager = this.organizationService.findPager(new Pager<Organization>(1),filters);
+        if(!pager.getPageItems().isEmpty()){
+            this.request.removeAllParameters();
+            this.response.setCommitted(false);
+            this.response.reset();
+            this.request.setMethod("DELETE");
+            ActionProxy proxy = super.getActionProxy("/security/organizations/"+pager.getPageItems().get(0).getId());
+            LOG.debug("返回数据类型："+proxy.execute());
+            LOG.debug("testDelete返回数据："+this.response.getContentAsString());
         }
+
+
     }
 }
