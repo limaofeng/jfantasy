@@ -3,6 +3,7 @@ package com.fantasy.swp.service;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.service.UserService;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -51,8 +52,8 @@ public class SpelService {
 
     public Object executeMethod(String mothod,Map<String,Object> data){
         EvaluationContext context = SpELUtil.createEvaluationContext(this.getAllServer());
-        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         if(data!=null){
+            List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
             for (Map.Entry<String, Object> entry : data.entrySet()){
                 if("filters".equals(entry.getKey())){    // List<PropertyFilter>条件
                     List<Map<String,String>> _params = (List<Map<String,String>>)entry.getValue();
