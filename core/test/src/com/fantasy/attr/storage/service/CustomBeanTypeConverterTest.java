@@ -19,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -47,17 +46,18 @@ public class CustomBeanTypeConverterTest {
 
     @Before
     public void setUp() throws Exception{
+        //创建动态bean及字段
         customBeanDefinitionService.save(className, "测试", AttributeUtils.string("number","String字段","test"));
-
-        //动态bean
-        //1.定义扩展版本 添加属性  attrType = L className   attr = xxx
         //定义转换器
         converterService.save(CustomBeanTypeConverter.class, "动态bean转换器", "");
-
+        //定义动态bean数据类型
+            //单个对象
         attributeTypeService.save(ClassUtil.forName(className), "UserDel", "UserDel", CustomBeanTypeConverter.class);
-        attributeTypeService.save(Array.newInstance(ClassUtil.forName(className)).getClass(), "UserDel", "UserDel", CustomBeanTypeConverter.class);
-
+            //数组对象
+        //attributeTypeService.save(Array.newInstance(ClassUtil.forName(className)).getClass(), "UserDel", "UserDel", CustomBeanTypeConverter.class);
+        //定义数据版本 添加属性
         attributeVersionService.save(Article.class.getName(),"fantasy_article_v1",AttributeUtils.bean("moneys","UserDelBean","", ClassUtil.forName(className)));
+        //  attributeVersionService.save(Article.class.getName(),"fantasy_article_v1",AttributeUtils.bean("moneys","UserDelBean","", Array.newInstance(ClassUtil.forName(className)).getClass().getName())));
     }
 
 

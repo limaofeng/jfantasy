@@ -35,7 +35,7 @@ public class CustomBeanTypeConverter extends DefaultTypeConverter {
         } else if (value instanceof CustomBean && toType == String.class) {
             CustomBean customBean = (CustomBean) value;
             customBeanService.save(customBean);
-            return customBean.getId();
+            return customBean.getId().toString();
         } else if (value instanceof CustomBean[] && toType == String.class) {
             StringBuilder stringBuilder = new StringBuilder();
             for (CustomBean customBean : (CustomBean[]) value) {

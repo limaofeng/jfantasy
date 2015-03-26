@@ -42,7 +42,7 @@ public class AttributeTypeService {
     }
 
     public AttributeType save(Class<?> javaType, String name, String description, Class<? extends TypeConverter> converter) {
-        AttributeType attributeType = this.attributeTypeDao.findUniqueBy("dataType", javaType);
+        AttributeType attributeType = this.attributeTypeDao.findUniqueBy("dataType", javaType.getName());
         if (attributeType == null) {
             attributeType = new AttributeType();
         }
