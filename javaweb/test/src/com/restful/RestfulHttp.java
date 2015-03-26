@@ -21,7 +21,7 @@ import java.util.Map;
  * Created by hebo on 2015/3/22.
  * restful测试
  */
-public class RestfulTest {
+public class RestfulHttp {
 
     public static void main(String[] args) throws Exception{
        Map<String, Object> params = new HashMap<String, Object>();
