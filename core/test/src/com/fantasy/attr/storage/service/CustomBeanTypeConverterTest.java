@@ -38,6 +38,9 @@ public class CustomBeanTypeConverterTest {
     private AttributeVersionService attributeVersionService;
     @Autowired
     private ConverterService converterService;
+
+    @Autowired
+    private AttributeService attributeService;
     @Autowired
     private AttributeTypeService attributeTypeService;
     @Autowired
@@ -74,6 +77,8 @@ public class CustomBeanTypeConverterTest {
             this.articleService.delete(article.getId());
         }
         this.customBeanDefinitionService.delete(className);
+        this.attributeService.delete(attributeService.findByCode("moneys").getId());
+        this.attributeVersionService.delete(attributeVersionService.findUniqueByTargetClassName("com.fantasy.attr.storage.bean.Article","fantasy_article_v1").getId());
 
         for (CustomBeanDefinition definition : this.customBeanDefinitionService.find(Restrictions.isNull("className"))) {
             this.customBeanDefinitionService.delete(definition.getId());
