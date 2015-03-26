@@ -18,6 +18,17 @@ public class AttributeUtils {
         return attribute;
     }
 
+    public static Attribute bean(String code, String name, String description, Class<?> javaType) {
+        Attribute attribute = new Attribute();
+        attribute.setCode(code);
+        attribute.setName(name);
+        attribute.setDescription(description);
+        attribute.setAttributeType(AttributeTypeUtils.get(javaType));
+        attribute.setNonNull(true);
+        attribute.setNotTemporary(false);
+        return attribute;
+    }
+
     public static Attribute integer(String code, String name, String description) {
         Attribute attribute = new Attribute();
         attribute.setCode(code);
