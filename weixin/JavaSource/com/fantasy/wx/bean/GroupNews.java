@@ -1,5 +1,6 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "WX_GROUP_NEWS")
-public class GroupNews {
+public class GroupNews   extends BaseBusEntity {
     //自动保存的字段------------------------------------start
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)

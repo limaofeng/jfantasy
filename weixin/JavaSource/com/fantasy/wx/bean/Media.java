@@ -1,5 +1,6 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity(name="WxMedia")
 @Table(name = "WX_MEDIA")
-public class Media {
+public class Media  extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)

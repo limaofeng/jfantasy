@@ -1,5 +1,7 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.framework.dao.BaseBusEntity;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -11,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity(name= "WxGroup")
 @Table(name = "WX_GROUP")
-public class Group {
+public class Group  extends BaseBusEntity {
     public Group() {
     }
     public Group(Long id, String name) {

@@ -1,5 +1,6 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,14 +11,12 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "WX_QRCode")
-public class QRCode {
+public class QRCode  extends BaseBusEntity {
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-    @Column(name = "CREATE_TIME")
-    protected Date createTime;
     /**
      * 二维码的有效时间，以秒为单位。最大不超过1800。
      */
@@ -65,14 +64,6 @@ public class QRCode {
 
     public void setLinkKey(String linkKey) {
         this.linkKey = linkKey;
-    }
-
-    public Date getCreateTime() {
-        return createTime;
-    }
-
-    public void setCreateTime(Date createTime) {
-        this.createTime = createTime;
     }
 
     public String getImgPath() {
