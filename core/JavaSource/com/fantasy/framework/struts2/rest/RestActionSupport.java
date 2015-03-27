@@ -21,14 +21,12 @@
 
 package com.fantasy.framework.struts2.rest;
 
-import java.lang.reflect.Method;
+import com.fantasy.framework.struts2.ActionSupport;
+import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.struts2.ServletActionContext;
-
-import com.opensymphony.xwork2.ActionSupport;
+import java.lang.reflect.Method;
 
 /**
  * Extends {@link ActionSupport} to provides a default implementation of the index method that can be invoked for

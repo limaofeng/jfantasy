@@ -20,7 +20,6 @@ import org.apache.struts2.json.JSONException;
 import org.apache.struts2.json.JSONUtil;
 import org.apache.struts2.json.JSONWriter;
 import org.apache.struts2.json.SerializationParams;
-import org.apache.struts2.json.smd.SMDGenerator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,10 +42,8 @@ public class JSONResult implements Result {
 	private String root;
 	private boolean wrapWithComments;
 	private boolean prefix;
-	private boolean enableSMD = false;
 	private boolean enableGZIP = false;
 	private boolean ignoreHierarchy = true;
-	private boolean ignoreInterfaces = true;
 	private boolean enumAsBean = JSONWriter.ENUM_AS_BEAN_DEFAULT;
 	private boolean noCache = false;
 	private boolean excludeNullProperties = false;
@@ -135,6 +132,14 @@ public class JSONResult implements Result {
 		HttpServletRequest request = (HttpServletRequest) actionContext.get(StrutsStatics.HTTP_REQUEST);
 		HttpServletResponse response = (HttpServletResponse) actionContext.get(StrutsStatics.HTTP_RESPONSE);
 
+		Object action = invocation.getAction();
+		if (action instanceof ValidationAware) {
+			ValidationAware aware = (ValidationAware) action;
+			if(aware.hasActionErrors() || aware.hasFieldErrors()){
+				response.setStatus(403);
+			}
+		}
+
 		try {
 			Object rootObject;
 			rootObject = readRootObject(invocation);
@@ -147,23 +152,12 @@ public class JSONResult implements Result {
 
 	@SuppressWarnings("unchecked")
 	protected Object readRootObject(ActionInvocation invocation) {
-		Object rootObject;
-		if (enableSMD) {
-			rootObject = buildSMDObject(invocation);
-		}
-		rootObject = findRootObject(invocation);
+		Object rootObject = findRootObject(invocation);
 		Map<String, Object> rootMap = ClassUtil.isMap(rootObject) ? (Map<String, Object>) rootObject : ObjectUtil.toMap(rootObject);
 		for (Map.Entry<String, Object> entry : rootMap.entrySet()) {
 			if (RegexpUtil.find(entry.getKey(), "^fantasy\\.", "^com\\.", "^struts\\.", ".*Filter\\..*", "^_", "^org\\.")) {
 				rootMap.remove(entry.getKey());
 			}
-		}
-		Object action = invocation.getAction();
-		if (action instanceof ValidationAware) {
-			ValidationAware aware = (ValidationAware) action;
-			rootMap.put("success", !(aware.hasActionErrors() || aware.hasFieldErrors()));
-		} else {
-			rootMap.put("success", true);
 		}
 		return rootMap.containsKey(ActionSupport.ROOT) ? rootMap.get(ActionSupport.ROOT) : rootMap;
 	}
@@ -180,10 +174,9 @@ public class JSONResult implements Result {
 	}
 
 	protected String createJSONString(HttpServletRequest request, Object rootObject) throws JSONException {
-		// excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties 不能使用
+		// TODO excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties 不能使用
 		// JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties);
-		// json = addCallbackIfApplicable(request, json);
-		return JSON.text().serialize(rootObject);
+		return addCallbackIfApplicable(request, JSON.text().serialize(rootObject));
 	}
 
 	protected boolean enableGzip(HttpServletRequest request) {
@@ -192,10 +185,6 @@ public class JSONResult implements Result {
 
 	protected void writeToResponse(HttpServletResponse response, String json, boolean gzip) throws IOException {
 		JSONUtil.writeJSONToResponse(new SerializationParams(response, getEncoding(), isWrapWithComments(), json, false, gzip, noCache, statusCode, errorCode, prefix, contentType, wrapPrefix, wrapSuffix));
-	}
-
-	protected org.apache.struts2.json.smd.SMD buildSMDObject(ActionInvocation invocation) {
-		return new SMDGenerator(findRootObject(invocation), excludeProperties, ignoreInterfaces).generate(invocation);
 	}
 
 	/**
@@ -262,31 +251,8 @@ public class JSONResult implements Result {
 		this.wrapWithComments = wrapWithComments;
 	}
 
-	/**
-	 * @return Result has SMD generation enabled
-	 */
-	public boolean isEnableSMD() {
-		return this.enableSMD;
-	}
-
-	/**
-	 * Enable SMD generation for action, which can be used for JSON-RPC
-	 * 
-	 * @param enableSMD
-	 */
-	public void setEnableSMD(boolean enableSMD) {
-		this.enableSMD = enableSMD;
-	}
-
 	public void setIgnoreHierarchy(boolean ignoreHierarchy) {
 		this.ignoreHierarchy = ignoreHierarchy;
-	}
-
-	/**
-	 * Controls whether interfaces should be inspected for method annotations You may need to set to this true if your action is a proxy as annotations on methods are not inherited
-	 */
-	public void setIgnoreInterfaces(boolean ignoreInterfaces) {
-		this.ignoreInterfaces = ignoreInterfaces;
 	}
 
 	/**

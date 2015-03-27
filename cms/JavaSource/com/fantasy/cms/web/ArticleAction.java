@@ -4,13 +4,13 @@ import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.struts2.ActionSupport;
+import com.fantasy.framework.struts2.rest.RestActionSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 
-public class ArticleAction extends ActionSupport {
+public class ArticleAction extends RestActionSupport {
 
     @Autowired
     private CmsService cmsService;
@@ -21,8 +21,7 @@ public class ArticleAction extends ActionSupport {
     }
 
     public String create(Article article){
-        String title = article.getTitle();
-        this.attrs.put(ROOT,title);
+        this.attrs.put(ROOT,article);
         return SUCCESS;
     }
 
