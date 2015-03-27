@@ -22,6 +22,8 @@
 
     <!-- 跳过该模块的测试 -->
     <build>
+        <sourceDirectory>JavaSource</sourceDirectory>
+        <testSourceDirectory>test/src</testSourceDirectory>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

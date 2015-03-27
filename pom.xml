@@ -65,7 +65,6 @@
         </extensions>
         <directory>target</directory>
         <finalName>${project.artifactId}-${project.version}</finalName>
-        <sourceDirectory>JavaSource</sourceDirectory>
         <resources>
             <resource>
                 <directory>resources</directory>
@@ -82,7 +81,6 @@
             </resource>
         </resources>
         <outputDirectory>target/classes</outputDirectory>
-        <testSourceDirectory>test/src</testSourceDirectory>
         <testResources>
             <testResource>
                 <directory>test/config</directory>
