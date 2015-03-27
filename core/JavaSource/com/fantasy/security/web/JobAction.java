@@ -6,33 +6,31 @@ import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.security.bean.Job;
 import com.fantasy.security.service.JobService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
- * Created by yhx on 2015/2/4.
+ * 岗位Action
  */
 public class JobAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private JobService jobService;
 
 
-    public String index(Pager<Job> pager,List<PropertyFilter> filters){
-        this.search(pager,filters);
-        this.attrs.put("pager",this.attrs.get(ROOT));
-        this.attrs.remove(ROOT);
+    public String search(Pager<Job> pager,List<PropertyFilter> filters){
+        this.attrs.put(ROOT,this.jobService.findPager(pager,filters));
         return SUCCESS;
     }
 
-    public String search(Pager<Job> pager,List<PropertyFilter> filters){
-        this.attrs.put(ROOT,this.jobService.findPager(pager,filters));
-        return JSONDATA;
+    public String create(Job job){
+        this.attrs.put(ROOT, this.jobService.save(job));
+        return SUCCESS;
     }
 
-    public String save(Job job){
-        this.jobService.save(job);
-        return JSONDATA;
+    public String update(Job job){
+        this.attrs.put(ROOT, this.jobService.save(job));
+        return SUCCESS;
     }
 
     public String view(Long id){
@@ -40,9 +38,9 @@ public class JobAction extends ActionSupport {
         return SUCCESS;
     }
 
-    public String delete(Long...ids){
-        this.jobService.delete(ids);
-        return JSONDATA;
+    public String delete(Long...id){
+        this.jobService.delete(id);
+        return SUCCESS;
     }
 
 

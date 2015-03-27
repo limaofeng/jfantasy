@@ -7,7 +7,7 @@ import com.fantasy.security.bean.Role;
 import com.fantasy.security.service.ResourceService;
 import com.fantasy.security.service.RoleService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,9 +15,9 @@ public class RoleAction extends ActionSupport {
 
     private static final long serialVersionUID = 4738280714802564952L;
 
-    @Resource(name = "fantasy.auth.RoleService")
+    @Autowired
     private transient RoleService roleService;
-    @Resource
+    @Autowired
     private transient ResourceService resourceService;
 
     /**

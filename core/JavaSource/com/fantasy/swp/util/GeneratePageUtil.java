@@ -25,7 +25,8 @@ public class GeneratePageUtil {
                 return JSON.deserialize(data.getValue(), new TypeReference<List<HashMap>>() {
                 });
             }
-            return JSON.deserialize(data.getValue());
+            return data.getValue();
+//            return JSON.deserialize(data.getValue());
         }else if(data.getDataSource()==Data.DataSource.func){// 数据源为方法
             SpelService spelService = SpringContextUtil.getBeanByType(SpelService.class);
             Map<String,Object> params = JSON.deserialize(data.getValue(),new TypeReference<HashMap<String,Object>>() {});

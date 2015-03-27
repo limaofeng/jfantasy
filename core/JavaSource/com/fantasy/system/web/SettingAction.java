@@ -2,7 +2,7 @@ package com.fantasy.system.web;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -14,7 +14,7 @@ public class SettingAction extends ActionSupport {
 	
 	private static final long serialVersionUID = 8465525245080349916L;
 	
-	@Resource
+	@Autowired
 	private transient SettingService settingService;
 	
 	/**

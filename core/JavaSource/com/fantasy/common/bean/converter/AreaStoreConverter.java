@@ -4,7 +4,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Member;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import ognl.DefaultTypeConverter;
 
@@ -15,7 +15,7 @@ import com.fantasy.framework.util.jackson.JSON;
 
 public class AreaStoreConverter extends DefaultTypeConverter {
 
-	@Resource
+	@Autowired
 	public AreaService areaService;
 
 	@SuppressWarnings("rawtypes")

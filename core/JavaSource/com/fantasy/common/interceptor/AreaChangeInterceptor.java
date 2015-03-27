@@ -47,7 +47,7 @@ public class AreaChangeInterceptor implements InitializingBean {
 	}
 
 	public void runJavaScript() {
-		SchedulingTaskExecutor executor = SpringContextUtil.getBean("spring.executor", SchedulingTaskExecutor.class);
+		SchedulingTaskExecutor executor = SpringContextUtil.getBeanByType(SchedulingTaskExecutor.class);
 		executor.execute(runJavaScript);
 	}
 

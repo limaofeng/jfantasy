@@ -2,10 +2,10 @@ package com.fantasy.attr.web;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.fantasy.attr.bean.AttributeType;
-import com.fantasy.attr.service.AttributeTypeService;
+import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
@@ -19,7 +19,7 @@ import com.fantasy.framework.util.common.StringUtil;
 public class AttributeTypeAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3032805252418268707L;
-	@Resource
+	@Autowired
 	private AttributeTypeService attributeTypeService;
 
 	/**

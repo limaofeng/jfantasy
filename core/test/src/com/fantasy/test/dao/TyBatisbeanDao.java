@@ -60,4 +60,7 @@ public interface TyBatisbeanDao extends SqlMapper {
      * @return Pager<TyBatisbean>
      */
     public Pager<TyBatisbean> findPager(Pager<TyBatisbean> pager, TyBatisbean tyBatisbean);
+
+    Pager<TyBatisbean> findSimplePager(Pager<TyBatisbean> pager, String value);
+
 }

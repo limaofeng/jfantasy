@@ -8,14 +8,14 @@ import com.fantasy.framework.spring.SpringContextUtil;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
 @Transactional
 public class FtpConfigService {
 
-	@Resource
+	@Autowired
 	private FtpConfigDao ftpConfigDao;
 
 	public Pager<FtpConfig> findPager(Pager<FtpConfig> pager, List<PropertyFilter> filters) {

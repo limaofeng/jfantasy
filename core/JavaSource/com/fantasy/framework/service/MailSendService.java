@@ -1,7 +1,6 @@
 package com.fantasy.framework.service;
 
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.regexp.RegexpCst;
 import com.fantasy.framework.util.regexp.RegexpUtil;
@@ -21,7 +20,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 import java.util.regex.Pattern;
 
 /**
@@ -29,7 +27,6 @@ import java.util.regex.Pattern;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-6-4 下午04:07:27
  */
 public class MailSendService implements InitializingBean {
@@ -56,6 +53,8 @@ public class MailSendService implements InitializingBean {
         Assert.notNull(this.from, "Property 'from' is required");
         Assert.notNull(this.displayName, "Property 'displayName' is required");
     }
+
+    private Executor executor;
 
     protected Email createEmail(EmailType type, String... tos) throws EmailException {
         Email email = EmailType.createEmail(type);
@@ -84,7 +83,7 @@ public class MailSendService implements InitializingBean {
                     email.addTo(toEmail, toDisplayName);
                 }
             } else {
-                if (validateEmail(to)){
+                if (validateEmail(to)) {
                     email.addTo(to);
                 }
             }
@@ -160,7 +159,7 @@ public class MailSendService implements InitializingBean {
         try {
             HtmlEmail email = (HtmlEmail) this.createEmail(EmailType.html, to);
             email.setSubject(title);
-            email.setContent(message,EmailConstants.TEXT_HTML);
+            email.setContent(message, EmailConstants.TEXT_HTML);
             send(email);
         } catch (EmailException e) {
             logger.error(e.getMessage(), e);
@@ -177,7 +176,7 @@ public class MailSendService implements InitializingBean {
         try {
             HtmlEmail email = (HtmlEmail) this.createEmail(EmailType.html, to);
             email.setSubject(title);
-            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model),EmailConstants.TEXT_HTML);
+            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model), EmailConstants.TEXT_HTML);
             send(email);
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -199,7 +198,7 @@ public class MailSendService implements InitializingBean {
         try {
             HtmlEmail email = (HtmlEmail) this.createEmail(EmailType.html, to);
             email.setSubject(title);
-            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model),EmailConstants.TEXT_HTML);
+            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model), EmailConstants.TEXT_HTML);
             // 添加附件
             if (attachs != null && attachs.length > 0) {
                 for (EmailAttachment attachment : attachs) {
@@ -227,7 +226,7 @@ public class MailSendService implements InitializingBean {
         try {
             HtmlEmail email = (HtmlEmail) this.createEmail(EmailType.html, to);
             email.setSubject(title);
-            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model),EmailConstants.TEXT_HTML);
+            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model), EmailConstants.TEXT_HTML);
             if (attachs != null && attachs.length > 0) {
                 for (Attachment attachment : attachs) {// 添加流形式的附件
                     if (attachment.getInputStream() != null) {
@@ -248,20 +247,7 @@ public class MailSendService implements InitializingBean {
     }
 
     private void send(Email email) {
-        getExecutor().execute(new SendEmailTask(email));
-    }
-
-    private Executor executor;
-
-    private Executor getExecutor() {
-        if (executor != null){
-            return executor;
-        }
-        executor = SpringContextUtil.getBean("spring.executor", Executor.class);
-        if(executor == null){
-            executor = Executors.newFixedThreadPool(5);
-        }
-        return executor;
+        executor.execute(new SendEmailTask(email));
     }
 
     public void setHostname(String hostname) {
@@ -406,6 +392,10 @@ public class MailSendService implements InitializingBean {
                 logger.error(e.getMessage(), e);
             }
         }
+    }
+
+    public void setExecutor(Executor taskExecutor) {
+        this.executor = taskExecutor;
     }
 
 }

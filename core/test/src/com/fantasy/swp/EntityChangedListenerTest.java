@@ -1,7 +1,7 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.bean.Article;
-import com.fantasy.attr.service.ArticleService;
+import com.fantasy.attr.storage.bean.Article;
+import com.fantasy.attr.storage.service.ArticleService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +9,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Date;
 
 /**
@@ -20,7 +20,7 @@ import java.util.Date;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class EntityChangedListenerTest {
 
-    @Resource
+    @Autowired
     private ArticleService articleService;
 
     private Article article;

@@ -45,7 +45,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.key"/>:
+                                    编码：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">
@@ -59,7 +59,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.name"/>:
+                                    名称：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">
@@ -73,7 +73,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.size"/>:
+                                    图片大小：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">
@@ -99,7 +99,7 @@ $(function(){
                         <div class="form-row">
                             <div class="form-label col-md-3">
                                 <label for="">
-                                    <@s.text name="banner.description"/>:
+                                    描述：
                                 </label>
                             </div>
                             <div class="form-input col-md-9">
@@ -110,71 +110,6 @@ $(function(){
                         </div>
                     </div>
                 </div>
-
-               <#-- <div class="form-label">
-                    <label>添加广告图：</label>
-                </div>
-            <div id="goodsImageUploader"></div>-->
-            <table id="view" class="formTable">
-                <caption>广告项列表<a href="javascript:void(0)" class="add-item" style="padding-left:50px;">  <@s.text name="banner.bannerItem.add"/></a></caption>
-                <tr class="template" name="update" >
-                    <td>
-                        <input name="bannerItems[#index].id" class="view-field" type="hidden" mapping="id" />
-                        <input name="bannerItems[#index].bannerImageStore" class="view-field"  type="hidden" mapping="bannerImageStore"/>
-                        <table class="formTable">
-                            <tr>
-                                <td class="formItem_title w100"><@s.text name="banner.bannerItem.title"/>:</td>
-                                <td class="formItem_content">
-                                    <span><input name="bannerItems[#index].title" class="view-field w250" type="text" mapping="title"/></span>
-                                    <div style="float:right;padding-right:20px;">
-                                        <a href="javascript:void(0)" class="cancel" style="padding-left:5px;">取消</a>/
-                                        <span class="delete-div"><a class="delete" href="javascript:void(0)">删除</a>/</span>
-                                        <a href="javascript:void(0)" class="save" template="update" style="float:right;padding-right:5px;">保存</a>
-                                    </div>
-                                </td>
-                                <td class="formItem_content" rowspan="3">
-                                    <div id="uploader"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="formItem_title w100"><@s.text name="banner.bannerItem.url"/>:</td>
-                                <td class="formItem_content"><input name="bannerItems[#index].url" class="view-field w250" type="text" mapping="url"/>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr class="template" name="default" >
-                    <td>
-                        <input name="bannerItems[#index].id" class="view-field" type="hidden" mapping="id" />
-                        <input name="bannerItems[#index].title" class="view-field" type="hidden" mapping="title" />
-                        <input name="bannerItems[#index].bannerImageStore" class="view-field" type="hidden" mapping="bannerImageStore" />
-                        <input name="bannerItems[#index].summary" class="view-field" type="hidden" mapping="summary"/>
-                        <input name="bannerItems[#index].url" class="view-field w250" type="hidden" mapping="url"/>
-                        <table class="formTable">
-                            <tr>
-                                <td class="formItem_title w100"><@s.text name="banner.bannerItem.title"/>:</td>
-                                <td class="formItem_content">
-                                    <span>{title}</span>
-                                    <div style="float:right;padding-right:20px;">
-                                        <a class="delete" href="javascript:void(0)">删除</a>/
-                                        <a href="javascript:void(0)" class="switch only" template='update' style="float:right;padding-right:5px;">编辑</a>
-                                    </div>
-                                </td>
-                                <td class="formItem_content" rowspan="3">
-                                    <div id="uploader"></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="formItem_title w100"><@s.text name="banner.bannerItem.url"/>:</td>
-                                <td class="formItem_content">{url}</td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
-                <tr class="empty"><td class="norecord" colspan="4">暂无数据</td></tr>
-            </table>
-
         <#include "bannerParameter.ftl">
         <div class="form-row" style="text-align: center;">
             <div>
@@ -184,7 +119,7 @@ $(function(){
                                  <i class="glyph-icon icon-save"></i>
                             </span>
                              <span class="button-content">
-                                 <@s.text name="banner.bannerItem.save"/>
+                                    保存
                              </span>
                     </a>
                 </div>
@@ -194,7 +129,7 @@ $(function(){
                                   <i class="glyph-icon icon-reply"></i>
                             </span>
                              <span class="button-content">
-                                 <@s.text name="banner.bannerItem.return"/>
+                                    返回
                              </span>
                     </a>
                 </div>

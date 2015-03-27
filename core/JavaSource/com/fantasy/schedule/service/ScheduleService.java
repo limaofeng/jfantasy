@@ -22,7 +22,7 @@ import static org.quartz.SimpleScheduleBuilder.simpleSchedule;
 @Service
 public class ScheduleService {
 
-    @Autowired(required = false)
+    @Autowired
     private Scheduler scheduler;
 
     private final static Log logger = LogFactory.getLog(ScheduleService.class);

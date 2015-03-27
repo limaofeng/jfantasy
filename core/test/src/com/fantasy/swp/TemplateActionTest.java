@@ -9,7 +9,7 @@ import com.fantasy.swp.service.TemplateService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 import com.opensymphony.xwork2.ActionProxy;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,9 +37,9 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
+    @Autowired
     private TemplateService templateService;
-    @Resource
+    @Autowired
     private WebsiteService websiteService;
     @Override
     protected String getConfigPath() {
@@ -60,7 +60,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
 //        this.deleteWebsiteTest();
     }
 
-    @Test
+//    @Test
     public void testSave() throws Exception {
         String dataType = "list";
 //        // 静态:stat，方法:func，hql语句:db
@@ -157,7 +157,7 @@ public class TemplateActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-    @Test
+//    @Test
     public void testSearch() throws Exception {
         ActionProxy proxy = super.getActionProxy("/swp/template/search.do");
         Assert.assertNotNull(proxy);

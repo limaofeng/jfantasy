@@ -5,7 +5,7 @@ import com.fantasy.security.web.authentication.handler.FantasyLogoutSuccessHandl
 import com.fantasy.system.service.WebAccessLogService;
 import org.springframework.security.core.Authentication;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,9 +13,9 @@ import java.io.IOException;
 
 public class MemberLogOutSuccessHandler extends FantasyLogoutSuccessHandler {
 
-	@Resource
+	@Autowired
 	private MemberService memberService;
-	@Resource
+	@Autowired
 	private WebAccessLogService accessLogService;
 
 	@Override

@@ -3,7 +3,7 @@ package com.fantasy.mall.delivery.web;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -19,7 +19,7 @@ public class DeliveryTypeAction extends ActionSupport {
 
 	private static final long serialVersionUID = -2840908152069230972L;
 
-	@Resource
+	@Autowired
 	private DeliveryService deliveryService;
 
 	/**

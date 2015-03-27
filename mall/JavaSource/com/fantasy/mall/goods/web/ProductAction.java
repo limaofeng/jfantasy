@@ -1,24 +1,23 @@
 package com.fantasy.mall.goods.web;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.Resource;
-
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.mall.goods.bean.Product;
 import com.fantasy.mall.goods.service.GoodsService;
 import com.fantasy.mall.goods.service.ProductService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3032805252418268707L;
 
-	@Resource(name="goods.productService")
+	@Autowired
 	private ProductService productService;
 	
-	@Resource
+	@Autowired
 	private GoodsService goodsService;
 
 	/**

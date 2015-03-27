@@ -9,7 +9,7 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Component
 public class NoticeWebSocket extends TextWebSocketHandler {
-    @Resource
+    @Autowired
     private NoticeService noticeService;
     private List<WebSocketSession> sessions = new ArrayList<WebSocketSession>();
     public NoticeWebSocket() {

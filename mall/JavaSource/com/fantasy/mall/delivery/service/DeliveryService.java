@@ -18,27 +18,24 @@ import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.List;
 
-/**
- * Created with IntelliJ IDEA. User: lmf Date: 13-11-20 Time: 下午5:06 To change this template use File | Settings | File Templates.
- */
-@Service("mall.service.DeliveryService")
+@Service
 @Transactional
 public class DeliveryService {
 
-    @Resource(name = "mall.dao.DeliveryCorpDao")
+    @Autowired
     private DeliveryCorpDao deliveryCorpDao;
-    @Resource(name = "mall.dao.DeliveryTypeDao")
+    @Autowired
     private DeliveryTypeDao deliveryTypeDao;
-    @Resource
+    @Autowired
     private DeliveryItemDao deliveryItemDao;
 
-    @Resource
+    @Autowired
     private ShippingDao shippingDao;
-    @Resource
+    @Autowired
     private OrderService orderService;
 
     public List<DeliveryType> listDeliveryType() {

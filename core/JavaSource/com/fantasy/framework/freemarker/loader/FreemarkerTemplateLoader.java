@@ -1,12 +1,14 @@
 package com.fantasy.framework.freemarker.loader;
 
+import com.fantasy.swp.SwpContext;
 import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.service.TemplateService;
+import com.fantasy.system.bean.Website;
 import freemarker.cache.TemplateLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,12 +21,13 @@ public class FreemarkerTemplateLoader implements TemplateLoader {
 
     private final static Log logger = LogFactory.getLog(FileManagerTemplateLoader.class);
 
-    @Resource
+    @Autowired
     private TemplateService templateService;
 
     @Override
     public Object findTemplateSource(String name) throws IOException {
-        Template template = templateService.findUniqueByPath(name.startsWith("/") ? name : ("/" + name));
+        Website website = SwpContext.getContext().getWebsite();
+        Template template = this.templateService.findUniqueByPath(name.startsWith("/") ? name : ("/" + name),website.getId());
         if(template == null){
             return null;
         }

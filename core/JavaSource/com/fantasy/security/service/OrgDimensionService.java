@@ -1,15 +1,17 @@
 package com.fantasy.security.service;
 
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.bean.OrgDimension;
 import com.fantasy.security.bean.OrgRelation;
 import com.fantasy.security.dao.OrgDimensionDao;
 import com.fantasy.security.dao.OrgRelationDao;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,15 +21,20 @@ import java.util.List;
 @Transactional
 public class OrgDimensionService {
 
-    @Resource
+    @Autowired
     private OrgDimensionDao orgDimensionDao;
 
-    @Resource
+    @Autowired
     private OrgRelationDao orgRelationDao;
 
 
    public List<OrgDimension> find(Criterion...criterions){
       return this.orgDimensionDao.find(criterions);
+   }
+
+
+   public Pager<OrgDimension> findPager(Pager<OrgDimension> pager,List<PropertyFilter> filters){
+       return this.orgDimensionDao.findPager(pager,filters);
    }
 
     public OrgDimension findUnique(Criterion...criterions){

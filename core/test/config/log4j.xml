@@ -28,11 +28,10 @@
 	-->
  	<category name="com.fantasy">
  		<priority value="DEBUG" />
- 		<appender-ref ref="CONSOLE" />
+        <appender-ref ref="CONSOLE" />
  	</category>
 	<category name="org.hibernate.cache">
 		<priority value="DEBUG" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<!--
 	<category name="org.activiti">
@@ -42,27 +41,23 @@
 	-->
 	<category name="org.mybatis.spring">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.Connection">
 		<priority value="DEBUG" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.Statement">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.PreparedStatement">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	<category name="java.sql.ResultSet">
 		<priority value="ERROR" />
-		<appender-ref ref="CONSOLE" />
 	</category>
 	
 	<root>
 		<priority value="WARN" />
+        <appender-ref ref="CONSOLE" />
 	</root>
 	
 </log4j:configuration>

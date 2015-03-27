@@ -6,7 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +17,7 @@ public class AddressBookLoginSuccessHandler implements AuthenticationSuccessHand
 
 	public static final String CURRENT_USER_BOOK_KEY = "contacts";
 
-	@Resource(name="ab.AddressBookService")
+	@Autowired
 	private AddressBookService bookService;
 
 	@SuppressWarnings("unchecked")

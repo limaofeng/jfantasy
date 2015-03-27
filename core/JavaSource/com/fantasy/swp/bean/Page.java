@@ -32,7 +32,7 @@ public class Page extends BaseBusEntity {
     /**
      * 对应模板
      */
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEMPLATE_ID")
     private Template template;
     /**

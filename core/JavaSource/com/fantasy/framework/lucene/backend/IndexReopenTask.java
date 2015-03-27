@@ -1,15 +1,14 @@
 package com.fantasy.framework.lucene.backend;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
+import com.fantasy.framework.lucene.cache.IndexSearcherCache;
 import org.apache.log4j.Logger;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.IndexSearcher;
 
-import com.fantasy.framework.lucene.cache.IndexSearcherCache;
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 public class IndexReopenTask implements Runnable {
 
@@ -38,7 +37,7 @@ public class IndexReopenTask implements Runnable {
 						logger.error("Something is wrong when decrease the reference of the lucene IndexReader", ex);
 					}
 					IndexSearcher newSearcher = new IndexSearcher(newReader);
-					searcherCache.put((String) entry.getKey(), newSearcher);
+					searcherCache.put(entry.getKey(), newSearcher);
 				}
 			}
 		} finally {

@@ -2,7 +2,7 @@ package com.fantasy.file.web;
 
 import java.util.List;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import com.fantasy.file.bean.Directory;
 import com.fantasy.file.service.DirectoryService;
@@ -14,7 +14,7 @@ public class DirectoryAction extends ActionSupport {
 
 	private static final long serialVersionUID = 7523936626517724295L;
 	
-	@Resource
+	@Autowired
 	private transient DirectoryService directoryService;
 	
 	public String index(Pager<Directory> pager, List<PropertyFilter> filters) {

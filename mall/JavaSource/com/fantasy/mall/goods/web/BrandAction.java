@@ -10,7 +10,7 @@ import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.service.BrandService;
 import com.fantasy.mall.goods.service.GoodsService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
@@ -20,10 +20,10 @@ public class BrandAction extends ActionSupport {
 
     private static final long serialVersionUID = -3032805252418268707L;
 
-    @Resource
+    @Autowired
     private BrandService brandService;
 
-    @Resource
+    @Autowired
     private GoodsService goodsService;
 
     /**

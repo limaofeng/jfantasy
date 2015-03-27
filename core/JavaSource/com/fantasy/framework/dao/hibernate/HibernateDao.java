@@ -1,7 +1,7 @@
 package com.fantasy.framework.dao.hibernate;
 
-import com.fantasy.attr.DynaBean;
-import com.fantasy.attr.DynaBeanQueryManager;
+import com.fantasy.attr.framework.DynaBean;
+import com.fantasy.attr.framework.query.DynaBeanQueryManager;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
@@ -27,7 +27,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -58,7 +58,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         return this.sessionFactory;
     }
 
-    @Resource
+    @Autowired
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }

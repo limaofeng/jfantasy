@@ -1,5 +1,23 @@
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.3//EN" "http://struts.apache.org/dtds/struts-2.3.dtd">
 <struts>
+
+    <bean type="com.opensymphony.xwork2.ActionProxyFactory" name="fantasy" class="com.fantasy.framework.struts2.FantasyActionProxyFactory" />
+
+    <bean class="com.fantasy.framework.struts2.views.freemarker.FantasyFreemarkerManager" name="fantasy.freemarkermanager"/>
+
+    <bean class="com.fantasy.framework.struts2.core.validator.FantasyAnnotationActionValidatorManager" name="fantasy.actionValidatorManager" type="com.opensymphony.xwork2.validator.ActionValidatorManager"/>
+
+    <bean class="com.fantasy.framework.struts2.core.conversion.FantasyXWorkConverter" name="fantasy.struts" type="com.opensymphony.xwork2.conversion.impl.XWorkConverter"/>
+
+    <bean type="org.apache.struts2.dispatcher.mapper.ActionMapper" name="rest" class="com.fantasy.framework.struts2.rest.RestActionMapper" />
+
+    <bean type="com.fantasy.framework.struts2.rest.ContentTypeHandlerManager" class="com.fantasy.framework.struts2.rest.DefaultContentTypeHandlerManager" />
+
+    <bean type="com.fantasy.framework.struts2.rest.handler.ContentTypeHandler" name="xml" class="com.fantasy.framework.struts2.rest.handler.XStreamHandler" />
+    <bean type="com.fantasy.framework.struts2.rest.handler.ContentTypeHandler" name="json" class="com.fantasy.framework.struts2.rest.handler.JacksonLibHandler" />
+    <bean type="com.fantasy.framework.struts2.rest.handler.ContentTypeHandler" name="html" class="com.fantasy.framework.struts2.rest.handler.HtmlHandler" />
+    <bean type="com.fantasy.framework.struts2.rest.handler.ContentTypeHandler" name="x-www-form-urlencoded" class="com.fantasy.framework.struts2.rest.handler.FormUrlEncodedHandler" />
+    <bean type="com.fantasy.framework.struts2.rest.handler.ContentTypeHandler" name="multipart/form-data" class="com.fantasy.framework.struts2.rest.handler.MultipartFormDataHandler" />
 
     <constant name="fantasy.page.theme" value="assets"/>
     <constant name="fantasy.page.templateDir" value="/WEB-INF/classes"/>
@@ -14,35 +32,44 @@
     <!-- 该属性设置Struts 2是否允许在Action名中使用斜线，该属性的默认值是false。如果开发者希望允许在Action名中使用斜线，则可设置该属性为true。 -->
     <constant name="struts.enable.SlashesInActionNames" value="true"/>
 
-    <bean class="com.fantasy.framework.struts2.views.freemarker.FantasyFreemarkerManager" name="fantasy.freemarkermanager"/>
-
-    <bean class="com.fantasy.framework.struts2.validator.FantasyAnnotationActionValidatorManager" name="fantasy.actionValidatorManager" type="com.opensymphony.xwork2.validator.ActionValidatorManager"/>
-
-    <bean class="com.fantasy.framework.struts2.conversion.FantasyXWorkConverter" name="fantasy.struts" type="com.opensymphony.xwork2.conversion.impl.XWorkConverter"/>
+    <constant name="struts.actionProxyFactory" value="fantasy" />
+    <constant name="struts.rest.defaultExtension" value="" />
+    <constant name="struts.rest.logger" value="true" />
+    <constant name="struts.rest.defaultErrorResultName" value="default-error" />
+    <constant name="struts.mapper.class" value="rest" />
+    <constant name="struts.mapper.idParameterName" value="id" />
+    <constant name="struts.action.extension" value="xhtml,,xml,json" />
 
     <!--<include file=""file-->
 
-    <package name="fantasy-default" extends="json-default" abstract="true">
+    <package name="fantasy-default" extends="struts-default" abstract="true">
 
         <result-types>
-            <result-type name="json" class="com.fantasy.framework.struts2.result.JSONResult"/>
+            <result-type name="json" class="com.fantasy.framework.struts2.core.result.JSONResult"/>
             <result-type name="freemarker" class="com.fantasy.framework.struts2.views.freemarker.FantasyFreemarkerResult"/>
         </result-types>
 
         <interceptors>
-            <interceptor name="params" class="com.fantasy.framework.struts2.interceptor.ParametersInterceptor"/>
-            <interceptor name="fileUpload" class="com.fantasy.framework.struts2.interceptor.FileUploadInterceptor"/>
-            <interceptor name="scriptValidation" class="com.fantasy.framework.struts2.interceptor.ScriptValidationInterceptor"/>
-            <interceptor name="jsonValidation" class="com.fantasy.framework.struts2.interceptor.JSONValidationInterceptor"/>
-            <interceptor name="exception" class="com.fantasy.framework.struts2.interceptor.ExceptionMappingInterceptor"/>
-            <interceptor name="validation" class="com.fantasy.framework.struts2.interceptor.validation.FantasyAnnotationValidationInterceptor"/>
-            <interceptor name="workflow" class="com.fantasy.framework.struts2.interceptor.FantasyWorkflowInterceptor"/>
+            <interceptor name="params" class="com.fantasy.framework.struts2.core.interceptor.ParametersInterceptor"/>
+            <interceptor name="fileUpload" class="com.fantasy.framework.struts2.core.interceptor.FileUploadInterceptor"/>
+            <interceptor name="scriptValidation" class="com.fantasy.framework.struts2.core.interceptor.ScriptValidationInterceptor"/>
+            <interceptor name="jsonValidation" class="com.fantasy.framework.struts2.core.interceptor.JSONValidationInterceptor"/>
+            <interceptor name="exception" class="com.fantasy.framework.struts2.core.interceptor.ExceptionMappingInterceptor"/>
+            <interceptor name="validation" class="com.fantasy.framework.struts2.core.interceptor.validation.FantasyAnnotationValidationInterceptor"/>
+            <interceptor name="workflow" class="com.fantasy.framework.struts2.core.interceptor.FantasyWorkflowInterceptor"/>
+            <interceptor name="rest" class="com.fantasy.framework.struts2.rest.ContentTypeInterceptor"/>
+            <interceptor name="messages" class="org.apache.struts2.interceptor.MessageStoreInterceptor" />
             <interceptor-stack name="defaultStack">
                 <interceptor-ref name="exception"/>
                 <interceptor-ref name="alias"/>
                 <interceptor-ref name="servletConfig"/>
-                <interceptor-ref name="i18n"/>
+                <!--
+                <interceptor-ref name="messages">
+                    <param name="operationMode">AUTOMATIC</param>
+                </interceptor-ref>
+                -->
                 <interceptor-ref name="prepare"/>
+                <interceptor-ref name="i18n"/>
                 <interceptor-ref name="chain"/>
                 <interceptor-ref name="debugging"/>
                 <interceptor-ref name="scriptValidation"/>
@@ -57,6 +84,7 @@
                 <interceptor-ref name="params">
                     <param name="excludeParams">dojo\..*,^struts\..*</param>
                 </interceptor-ref>
+                <interceptor-ref name="rest" />
                 <interceptor-ref name="conversionError"/>
                 <interceptor-ref name="validation">
                     <param name="excludeMethods">input,back,cancel,browse</param>
@@ -68,6 +96,10 @@
             </interceptor-stack>
         </interceptors>
 
+        <default-interceptor-ref name="defaultStack"/>
+
+        <default-class-ref class="com.fantasy.framework.struts2.ActionSupport"/>
+
         <global-results>
             <result name="script" type="freemarker">
                 <param name="contentType">text/javascript</param>
@@ -77,7 +109,6 @@
                 <param name="excludeProperties">com.*,_*</param>
             </result>
             <result name="text" type="plainText"/>
-            <result name="error" type="freemarker">/template/error/error.ftl</result>
         </global-results>
 
         <global-exception-mappings>
@@ -100,7 +131,7 @@
 
         <action name="*" class="com.fantasy.common.web.CommonAction" method="{1}"/>
 
-        <action name="ajaxValidator" class="com.fantasy.framework.struts2.validator.AjaxValidatorAction" method="ajaxValidator">
+        <action name="ajaxValidator" class="com.fantasy.framework.struts2.core.validator.AjaxValidatorAction" method="ajaxValidator">
             <result type="json">
                 <param name="ignoreHierarchy">false</param>
                 <param name="includeProperties">success</param>

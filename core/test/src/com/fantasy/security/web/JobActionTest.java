@@ -1,16 +1,23 @@
 package com.fantasy.security.web;
 
+import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.Job;
+import com.fantasy.security.bean.OrgDimension;
+import com.fantasy.security.bean.OrgHelpBean;
 import com.fantasy.security.bean.Organization;
 import com.fantasy.security.service.JobService;
+import com.fantasy.security.service.OrgDimensionService;
 import com.fantasy.security.service.OrganizationService;
+import com.fantasy.security.userdetails.AdminUser;
+import com.fantasy.system.bean.Website;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
+import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -23,7 +30,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +40,16 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
 
     private static final Log LOG = LogFactory.getLog(OrgDimensionActionTest.class);
 
-    @Resource
+    @Autowired
     private UserDetailsService userDetailsService;
 
-    @Resource
+    @Autowired
     private OrganizationService organizationService;//组织机构
 
-    @Resource
+    @Autowired
+    private OrgDimensionService orgDimensionService;//组织维度
+
+    @Autowired
     private JobService jobService;//岗位
 
 
@@ -58,65 +68,83 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
         SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         LOG.debug("默认admin登陆。。。");
+        //创建维度
+        Website website = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getWebsite();
+        OrgDimension orgDimension = new OrgDimension();
+        orgDimension.setId("Testweidu");
+        orgDimension.setName("维度测试");
+        orgDimension.setDescription("维度测试");
+        orgDimension.setWebsite(website);
+        this.orgDimensionService.save(orgDimension);
+        //添加组织机构
+        Organization organization = new Organization();
+        organization.setId("Testzhuzhi");
+        organization.setName("测试组织机构");
+        organization.setDescription("测试组织机构");
+        organization.setType(Organization.OrgType.company);
+        List<OrgHelpBean> orgHelpBeans = new ArrayList<OrgHelpBean>();
+        OrgHelpBean orgHelpBean = new OrgHelpBean();
+        orgHelpBean.setOrgDimension(this.orgDimensionService.findUnique(Restrictions.eq("id",orgDimension.getId())));
+        orgHelpBeans.add(orgHelpBean);
+        organization.setOrgHelpBeans(orgHelpBeans);
+        this.organizationService.save(organization);
+        //创建岗位
         testSave();
     }
 
     @After
     public void tearDown() throws Exception {
-        //this.testDelete();
+        this.testDelete();
+        this.organizationService.delete("Testzhuzhi");
+        this.orgDimensionService.delete("Testweidu");
     }
 
     @Test
-    public void testIndex() throws Exception {
-        ActionProxy proxy = super.getActionProxy("/security/job/index.do");
+    public void testSearch() throws Exception {
+        this.request.setMethod("GET");
+        this.request.addParameter("EQS_code","xmjl001");
+        ActionProxy proxy = super.getActionProxy("/security/jobs");
         Assert.assertNotNull(proxy);
-        String result = proxy.execute();
-        LOG.debug("testIndex--------------"+this.response.getContentAsString());
+        LOG.debug("返回数据类型：" + proxy.execute());
+        LOG.debug("testSearch返回数据："+this.response.getContentAsString());
     }
 
     public void testSave() throws Exception {
+        this.request.setMethod("POST");
         this.request.addParameter("name","项目经理");
         this.request.addParameter("code","xmjl001");
         this.request.addParameter("description","项目经理描述001");
-        List<Organization> organizations = this.organizationService.find(new ArrayList<PropertyFilter>());
-        if(!organizations.isEmpty()) {
-            Organization organization = organizations.get(0);
-            this.request.addParameter("organization.id",organization.getId());
-            ActionProxy proxy = super.getActionProxy("/security/job/save.do");
-            Assert.assertNotNull(proxy);
-            //返回的数据类型
-            String result = proxy.execute();
-            //json数据
-            LOG.debug("testSave--------------" + this.response.getContentAsString());
-        }
+        Organization organization = this.organizationService.findUnique(Restrictions.eq("id","Testzhuzhi"));
+        this.request.addParameter("organization.id",organization.getId());
+        ActionProxy proxy = super.getActionProxy("/security/jobs/");
+        LOG.debug("返回数据类型：" + proxy.execute());
+        LOG.debug("testSave返回数据："+this.response.getContentAsString());
     }
 
-    //@Test
+    @Test
     public void testView() throws Exception {
-        List<Job> jobs = this.jobService.find();
-        if(!jobs.isEmpty()){
-            Job job =jobs.get(0);
-            this.request.addParameter("id",job.getId().toString());
-            ActionProxy proxy = super.getActionProxy("/security/job/view.do");
-            Assert.assertNotNull(proxy);
-            //返回的数据类型
-            String result = proxy.execute();
-            //json数据
-            LOG.debug("testView--------------" + this.response.getContentAsString());
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_code","xmjl001"));
+        Pager<Job> pager = this.jobService.findPager(new Pager<Job>(1),filters);
+        if(!pager.getPageItems().isEmpty()){
+            this.request.setMethod("GET");
+            ActionProxy proxy = super.getActionProxy("/security/jobs/"+pager.getPageItems().get(0).getId());
+            LOG.debug("返回数据类型：" + proxy.execute());
+            LOG.debug("testView返回数据："+this.response.getContentAsString());
         }
+
     }
 
     public void testDelete() throws Exception {
-        List<Job> jobs = this.jobService.find();
-        if(!jobs.isEmpty()){
-            Job job =jobs.get(0);
-            this.request.addParameter("ids",job.getId().toString());
-            ActionProxy proxy = super.getActionProxy("/security/job/delete.do");
-            Assert.assertNotNull(proxy);
-            //返回的数据类型
-            String result = proxy.execute();
-            //json数据
-            LOG.debug("testView--------------" + this.response.getContentAsString());
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_code","xmjl001"));
+        Pager<Job> pager = this.jobService.findPager(new Pager<Job>(1),filters);
+        if(!pager.getPageItems().isEmpty()){
+            this.request.setMethod("DELETE");
+            ActionProxy proxy = super.getActionProxy("/security/jobs/"+pager.getPageItems().get(0).getId());
+            LOG.debug("返回数据类型：" + proxy.execute());
+            LOG.debug("testDelete返回数据："+this.response.getContentAsString());
         }
+
     }
 }

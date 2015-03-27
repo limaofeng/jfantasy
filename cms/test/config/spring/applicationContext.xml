@@ -16,11 +16,6 @@
 	<!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
 	<context:component-scan base-package="com.fantasy" />
 
-	<!-- 可以通过annotation 添加定时任务 @Scheduled(fixedDelay=任务间的延时时间,fixedRate=任务的间隔时间,cron=表达式)
-	<task:executor id="spring.executor" pool-size="5" />
-	<task:scheduler id="spring.scheduler" pool-size="10" />
-	<task:annotation-driven scheduler="spring.scheduler" executor="spring.executor" />-->
-
 	<!-- 加载 properties文件 -->
 	<context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties" />
 
@@ -76,6 +71,7 @@
 			<bean class="org.wltea.analyzer.lucene.IKAnalyzer" />
 		</property>
 		<property name="directoryPath" value="${buguIndex.directoryPath}" />
+        <property name="executor" ref="executor"/>
 	</bean>
 	
 	<!-- 文件管理器 -->
@@ -108,5 +104,7 @@
 	<import resource="classpath:spring/applicationContext-mybatis.xml" />
 
 	<import resource="classpath:spring/applicationContext-hibernate.xml" />
+
+    <import resource="classpath:spring/applicationContext-schedule.xml"/>
 	
 </beans>

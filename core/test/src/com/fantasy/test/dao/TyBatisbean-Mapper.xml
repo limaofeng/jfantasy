@@ -23,6 +23,11 @@
         </where>
     </select>
 
+    <select id="findSimplePager" parameterType="string" resultMap="TestResultMap">
+        SELECT * FROM test_bean
+        WHERE T_VALUE = #{value} or T_VALUE = #{value}
+        ORDER BY T_KEY ASC
+    </select>
 
     <select id="findPager" parameterType="com.fantasy.test.bean.TyBatisbean" resultMap="TestResultMap" flushCache="true">
         SELECT * FROM test_bean

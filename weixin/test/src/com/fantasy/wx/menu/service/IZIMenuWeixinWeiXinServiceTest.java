@@ -16,7 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +27,7 @@ public class IZIMenuWeixinWeiXinServiceTest {
 
     @Autowired
     private MenuWeiXinService iMenuWeiXinService;
-    @Resource
+    @Autowired
     private UserInfoWeiXinService userInfoWeiXinService;
 
     public void setUp() throws Exception {

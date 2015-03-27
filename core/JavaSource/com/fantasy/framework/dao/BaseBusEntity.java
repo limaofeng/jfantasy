@@ -10,30 +10,28 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class BaseBusEntity implements Serializable {
 
-	private static final long serialVersionUID = -8354372889916193074L;
-
-	/**
-	 * 创建人
-	 */
-	@Column(name = "CREATOR", length = 20)
-	private String creator;
-	/**
-	 * 创建时间
-	 */
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(updatable = false, name = "CREATE_TIME")
-	private Date createTime;
-	/**
-	 * 最后修改人
-	 */
-	@Column(name = "MODIFIER", length = 20)
-	private String modifier;
-	/**
-	 * 最后修改时间
-	 */
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(name = "MODIFY_TIME")
-	private Date modifyTime;
+    /**
+     * 创建人
+     */
+    @Column(updatable = false, name = "CREATOR", length = 20)
+    private String creator;
+    /**
+     * 创建时间
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(updatable = false, name = "CREATE_TIME")
+    private Date createTime;
+    /**
+     * 最后修改人
+     */
+    @Column(name = "MODIFIER", length = 20)
+    private String modifier;
+    /**
+     * 最后修改时间
+     */
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "MODIFY_TIME")
+    private Date modifyTime;
 
     public Date getCreateTime() {
         if (this.createTime == null) {
@@ -50,35 +48,35 @@ public abstract class BaseBusEntity implements Serializable {
         }
     }
 
-	public Date getModifyTime() {
+    public Date getModifyTime() {
         if (this.modifyTime == null) {
             return null;
         }
         return (Date) this.modifyTime.clone();
-	}
+    }
 
-	public void setModifyTime(Date modifyTime) {
+    public void setModifyTime(Date modifyTime) {
         if (modifyTime == null) {
             this.modifyTime = null;
         } else {
             this.modifyTime = (Date) modifyTime.clone();
         }
-	}
+    }
 
-	public String getCreator() {
-		return this.creator;
-	}
+    public String getCreator() {
+        return this.creator;
+    }
 
-	public void setCreator(String creator) {
-		this.creator = creator;
-	}
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
 
-	public String getModifier() {
-		return this.modifier;
-	}
+    public String getModifier() {
+        return this.modifier;
+    }
 
-	public void setModifier(String modifier) {
-		this.modifier = modifier;
-	}
+    public void setModifier(String modifier) {
+        this.modifier = modifier;
+    }
 
 }

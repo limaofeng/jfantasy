@@ -15,7 +15,7 @@ import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -25,7 +25,7 @@ import java.util.List;
 public class UserInfoWeiXinServiceTest {
 
     private static final Log logger = LogFactory.getLog(UserInfo.class);
-    @Resource
+    @Autowired
     private UserInfoWeiXinService iUserInfoService;
 
     @Before

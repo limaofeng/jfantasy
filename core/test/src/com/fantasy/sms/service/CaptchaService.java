@@ -5,12 +5,12 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.sms.bean.Captcha;
 import com.fantasy.sms.dao.CaptchaDao;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class CaptchaService {
 
-	@Resource
+	@Autowired
 	private CaptchaDao captchaDao;
 
 

@@ -5,12 +5,12 @@ import com.fantasy.common.service.JdbcConfigService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 public class JdbcConfigAction extends ActionSupport {
 
-    @Resource
+    @Autowired
     private JdbcConfigService jdbcConfigService;
 
     public String index(List<PropertyFilter> filters) {

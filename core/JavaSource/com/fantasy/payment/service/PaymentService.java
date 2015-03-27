@@ -24,7 +24,7 @@ import org.htmlcleaner.TagNode;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +39,13 @@ public class PaymentService {
 
     private final static Log LOG = LogFactory.getLog(PaymentService.class);
 
-    @Resource
+    @Autowired
     private PaymentDao paymentDao;
-    @Resource
+    @Autowired
     private PaymentConfigService paymentConfigService;
-    @Resource
+    @Autowired
     private PaymentConfiguration paymentConfiguration;
-    @Resource
+    @Autowired
     private MemberService memberService;
 
     /**

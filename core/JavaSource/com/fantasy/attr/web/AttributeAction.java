@@ -1,25 +1,25 @@
 package com.fantasy.attr.web;
 
-import com.fantasy.attr.bean.Attribute;
-import com.fantasy.attr.bean.AttributeVersion;
-import com.fantasy.attr.service.AttributeService;
-import com.fantasy.attr.service.AttributeVersionService;
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.service.AttributeService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AttributeAction extends ActionSupport {
 
 	private static final long serialVersionUID = -3032805252418268707L;
-	@Resource
+	@Autowired
 	private transient AttributeService attributeService;
 
-    @Resource
+    @Autowired
     private transient AttributeVersionService versionService;
 	
 	/**
@@ -85,7 +85,7 @@ public class AttributeAction extends ActionSupport {
             }else{
                 version.setAttributeSort(version.getAttributeSort()+","+attribute.getId());
             }
-            this.versionService.save(version);
+            this.versionService.save(version.getTargetClassName(),version.getNumber(),version.getAttributes());
         }
 		return JSONDATA;
 	}

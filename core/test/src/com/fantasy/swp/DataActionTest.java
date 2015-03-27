@@ -1,7 +1,7 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.bean.Article;
-import com.fantasy.attr.service.ArticleService;
+import com.fantasy.attr.storage.bean.Article;
+import com.fantasy.attr.storage.service.ArticleService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.swp.bean.Data;
@@ -9,7 +9,7 @@ import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.service.DataInferfaceService;
 import com.fantasy.swp.service.DataService;
 import com.opensymphony.xwork2.ActionProxy;
-import org.apache.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Assert;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,13 +33,13 @@ import java.util.List;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class DataActionTest extends StrutsSpringJUnit4TestCase {
 
-    @Resource
+    @Autowired
     private DataInferfaceService dataInferfaceService;
-    @Resource
+    @Autowired
     private DataService dataService;
-    @Resource
+    @Autowired
     private TemplateActionTest templateActionTest;
-    @Resource
+    @Autowired
     private ArticleService articleService;
 
     @Before
@@ -52,11 +52,11 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
 
     @After
     public void tearDown() throws Exception {
-//        templateActionTest.testDelete();
-//        testDelete();
+        templateActionTest.testDelete();
+        testDelete();
     }
 
-    @Test
+//    @Test
     public void testSave() throws Exception {
         String dataSource = "func";
 
@@ -132,7 +132,7 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
         System.out.println("result="+result);
     }
 
-    @Test
+//    @Test
     public void testSearch() throws Exception {
         ActionProxy proxy = super.getActionProxy("/swp/page/data-search.do");
         Assert.assertNotNull(proxy);
@@ -155,7 +155,7 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
         return "{title:'xxxTitle'}";
     }
 
-    @Test
+//    @Test
     public void testCms(){
 
     }

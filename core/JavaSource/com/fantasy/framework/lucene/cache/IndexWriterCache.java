@@ -29,11 +29,11 @@ public class IndexWriterCache {
 	public IndexWriter get(String name) {
 		IndexWriter writer = null;
 		if (this.cache.containsKey(name)){
-            writer = (IndexWriter) this.cache.get(name);
+            writer = this.cache.get(name);
         }else {
             synchronized (this) {
                 if (this.cache.containsKey(name)) {
-                    writer = (IndexWriter) this.cache.get(name);
+                    writer = this.cache.get(name);
                 } else {
                     BuguIndex index = BuguIndex.getInstance();
                     IndexWriterConfig cfg = new IndexWriterConfig(index.getVersion(), index.getAnalyzer());

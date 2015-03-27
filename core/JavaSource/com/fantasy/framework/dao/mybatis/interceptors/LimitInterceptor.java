@@ -5,15 +5,20 @@ import com.fantasy.framework.dao.mybatis.dialect.Dialect;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.PropertiesHelper;
+import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.ibatis.builder.SqlSourceBuilder;
-import org.apache.ibatis.scripting.xmltags.DynamicContext;
-import org.apache.ibatis.scripting.xmltags.SqlNode;
+import org.apache.ibatis.builder.StaticSqlSource;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.parameter.ParameterHandler;
 import org.apache.ibatis.mapping.MappedStatement;
+import org.apache.ibatis.mapping.ParameterMapping;
 import org.apache.ibatis.mapping.SqlSource;
 import org.apache.ibatis.plugin.*;
 import org.apache.ibatis.scripting.defaults.DefaultParameterHandler;
+import org.apache.ibatis.scripting.defaults.RawSqlSource;
+import org.apache.ibatis.scripting.xmltags.DynamicContext;
+import org.apache.ibatis.scripting.xmltags.DynamicSqlSource;
+import org.apache.ibatis.scripting.xmltags.SqlNode;
 import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.RowBounds;
 import org.apache.log4j.Logger;
@@ -26,6 +31,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.regex.Matcher;
 
 /**
  * 扩展翻页实现
@@ -119,13 +125,13 @@ public class LimitInterceptor implements Interceptor {
             logger.error(e.getMessage(), e);
         } finally {
             try {
-                if (rs != null){
+                if (rs != null) {
                     rs.close();
                 }
-                if (statement != null){
+                if (statement != null) {
                     statement.close();
                 }
-                if (connection != null){
+                if (connection != null) {
                     connection.close();
                 }
             } catch (SQLException e) {
@@ -195,10 +201,26 @@ public class LimitInterceptor implements Interceptor {
      */
     private String getMapperSQL(MappedStatement mappedStatement, Object parameterObject) {
         SqlSource nowSqlSource = mappedStatement.getSqlSource();
-        SqlNode sqlNode = (SqlNode) ClassUtil.getValue(nowSqlSource, "rootSqlNode");
-        DynamicContext context = new DynamicContext(mappedStatement.getConfiguration(), parameterObject);
-        sqlNode.apply(context);
-        return context.getSql();
+        if (nowSqlSource instanceof DynamicSqlSource) {
+            SqlNode sqlNode = (SqlNode) ClassUtil.getValue(nowSqlSource, "rootSqlNode");
+            DynamicContext context = new DynamicContext(mappedStatement.getConfiguration(), parameterObject);
+            sqlNode.apply(context);
+            return context.getSql();
+        } else if (nowSqlSource instanceof RawSqlSource) {
+            if (ClassUtil.getValue(nowSqlSource, "sqlSource") instanceof StaticSqlSource) {
+                String sql = (String) ClassUtil.getValue(ClassUtil.getValue(nowSqlSource, "sqlSource"), "sql");
+                final List<ParameterMapping> parameterMappings = (List<ParameterMapping>) ClassUtil.getValue(ClassUtil.getValue(nowSqlSource, "sqlSource"), "parameterMappings");
+                return RegexpUtil.replace(sql, "\\?", new RegexpUtil.AbstractReplaceCallBack() {
+                    @Override
+                    public String doReplace(String text, int index, Matcher matcher) {
+                        return "#{" + parameterMappings.get(index).getProperty() + "}";
+                    }
+                });
+            }
+            throw new RuntimeException("不支持 [" + nowSqlSource.getClass() + "]，联系开发人员");
+        } else {
+            throw new RuntimeException("不支持 [" + nowSqlSource.getClass() + "]，联系开发人员");
+        }
     }
 
     /**

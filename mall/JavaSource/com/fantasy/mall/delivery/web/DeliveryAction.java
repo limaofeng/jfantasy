@@ -5,7 +5,7 @@ import com.fantasy.mall.delivery.bean.Reship;
 import com.fantasy.mall.delivery.bean.Shipping;
 import com.fantasy.mall.delivery.service.DeliveryService;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * 配送管理 <br/>
@@ -16,7 +16,7 @@ public class DeliveryAction extends ActionSupport {
 
 	private static final long serialVersionUID = -28409081520692372L;
 
-	@Resource
+	@Autowired
 	private DeliveryService deliveryService;
 
 	/**

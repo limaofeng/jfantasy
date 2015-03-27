@@ -1,6 +1,6 @@
 package com.fantasy.framework.spring;
 
-import com.fantasy.attr.bean.Article;
+import com.fantasy.attr.storage.bean.Article;
 import com.fantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;

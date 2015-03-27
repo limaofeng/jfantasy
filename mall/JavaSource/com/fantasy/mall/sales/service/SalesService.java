@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-import javax.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projection;
@@ -27,11 +27,11 @@ import com.fantasy.mall.sales.dao.SalesDao;
 @Service
 @Transactional
 public class SalesService {
-	@Resource
+	@Autowired
 	private SalesDao salesDao;
-	@Resource
+	@Autowired
 	private GoodsService goodsService;
-	@Resource
+	@Autowired
 	private ProductService productService;
 
 	public Sales addSales(Sales.Type type, String sn, TimeUnit timeUnit, String time, Integer quantity, BigDecimal amount) {
