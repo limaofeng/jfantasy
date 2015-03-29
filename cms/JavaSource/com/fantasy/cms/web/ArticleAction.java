@@ -39,9 +39,7 @@ public class ArticleAction extends RestActionSupport {
     }
 
     public String view(Long id){
-        Article article = new Article();
-        article.setId(id);
-        this.attrs.put(ROOT, article);
+        this.attrs.put(ROOT, this.cmsService.get(id));
         return SUCCESS;
     }
 

@@ -59,7 +59,7 @@ public class MemberAction extends ActionSupport {
 	public String search(Pager<Member> pager, List<PropertyFilter> filters) {
 		if(StringUtil.isNotBlank(pager.getOrderBy())){
 			pager.setOrderBy("createTime");
-			pager.setOrder(Pager.Order.desc);
+			pager.setOrders(Pager.Order.desc);
 		}
 		pager = memberService.findPager(pager, filters);
 		this.attrs.put(ROOT, pager);

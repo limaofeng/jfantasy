@@ -39,7 +39,7 @@ public class PointAction extends ActionSupport{
 		filters.add(new PropertyFilter("EQL_member.id",id.toString()));
 		if(StringUtil.isBlank(pager.getOrderBy())){
 			pager.setOrderBy("id");
-			pager.setOrder(Order.desc);
+			pager.setOrders(Order.desc);
 		}
 		this.attrs.put(ROOT,this.pointService.findPager(pager, filters));
 		this.attrs.put("member",this.memberService.get(id));

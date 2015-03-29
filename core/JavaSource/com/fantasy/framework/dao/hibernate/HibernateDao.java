@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.lang.reflect.Array;
@@ -155,7 +156,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         OgnlUtil ognlUtil = OgnlUtil.getInstance();
         Serializable id = getIdValue(this.entityClass, entity);
         T oldEntity = null;
-        if (ObjectUtil.isNotNull(id)){
+        if (ObjectUtil.isNotNull(id)) {
             oldEntity = (T) getSession().get(this.entityClass, id);
         }// 添加新对象时
         if (entity == oldEntity) {
@@ -260,13 +261,13 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                             addObjects.add(fk);
                         }
                     }
-                    List<Object> _old_fks = (List<Object>)ognlUtil.getValue(field.getName(), oldEntity);
+                    List<Object> _old_fks = (List<Object>) ognlUtil.getValue(field.getName(), oldEntity);
                     ognlUtil.setValue(field.getName(), oldEntity, addObjects);
                     //删除原有数据
-                    for(Object _odl : _old_fks){
-                        if(ObjectUtil.find(addObjects,this.getIdName(targetEntityClass),this.getIdValue(targetEntityClass,_odl)) == null){
+                    for (Object _odl : _old_fks) {
+                        if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), this.getIdValue(targetEntityClass, _odl)) == null) {
                             this.getSession().delete(_odl);
-                            System.out.println("删除数据"+this.getIdValue(targetEntityClass,_odl));
+                            System.out.println("删除数据" + this.getIdValue(targetEntityClass, _odl));
                         }
                     }
                 }
@@ -285,7 +286,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Field[] manyToOneFields = ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class);
             for (Field field : manyToOneFields) {
                 Object fk = ognlUtil.getValue(field.getName(), entity);
-                if (fk == null){
+                if (fk == null) {
                     continue;
                 }
                 Serializable fkId = getIdValue(field.getType(), fk);
@@ -607,13 +608,13 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 Criterion criterion = (Criterion) ReflectionUtils.getFieldValue(c, "criterion");
                 if ((criterion instanceof InExpression)) {
                     String propertyName = (String) ReflectionUtils.getFieldValue(criterion, "propertyName");
-                    if (propertyName.lastIndexOf('.') > 0){
+                    if (propertyName.lastIndexOf('.') > 0) {
                         addCriterion(dc, cascadeCriterions, c, propertyName);
                     }
                 }
             } else {
                 String propertyName = (String) ReflectionUtils.getFieldValue(c, "propertyName");
-                if (propertyName.lastIndexOf('.') > 0){
+                if (propertyName.lastIndexOf('.') > 0) {
                     addCriterion(dc, cascadeCriterions, c, propertyName);
                 } else {
                     dc.add(c);
@@ -780,13 +781,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         c.setMaxResults(pager.getPageSize());
         if (pager.isOrderBySetted()) {
             String[] orderByArray = StringUtil.tokenizeToStringArray(pager.getOrderBy());
-            String[] orderArray = pager.getOrders().length > 0 ? new String[pager.getOrders().length] : new String[]{pager.getOrder().name()};
-            for (int i = 0, len = pager.getOrders().length; i < len; i++) {
-                orderArray[i] = pager.getOrders()[i].name();
-            }
-            Assert.isTrue(orderByArray.length == orderArray.length, "分页多重排序参数中,排序字段与排序方向的个数不相等");
+            Assert.isTrue(orderByArray.length == pager.getOrders().length, "分页多重排序参数中,排序字段与排序方向的个数不相等");
             for (int i = 0; i < orderByArray.length; i++) {
-                if ("asc".equals(orderArray[i])) {
+                if ("asc".equals(pager.getOrders()[i].name())) {
                     c.addOrder(Order.asc(orderByAlias(orderByArray[i])));
                 } else {
                     c.addOrder(Order.desc(orderByAlias(orderByArray[i])));
@@ -797,7 +794,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     }
 
     private String orderByAlias(String orderBy) {
-        if (!orderBy.contains(".")){
+        if (!orderBy.contains(".")) {
             return orderBy;
         }
         String newOrderBy = RegexpUtil.replace(RegexpUtil.replace(orderBy, "([a-zA-Z0-9]+)[.]", new RegexpUtil.AbstractReplaceCallBack() {
@@ -819,9 +816,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         String[] orderArray = StringUtil.tokenizeToStringArray(order);
         Assert.isTrue(orderByArray.length == orderArray.length, "分页多重排序参数中,排序字段与排序方向的个数不相等");
         for (int i = 0; i < orderByArray.length; i++) {
-            if ("asc".equals(orderArray[i])){
+            if ("asc".equals(orderArray[i])) {
                 c.addOrder(Order.asc(orderByAlias(orderByArray[i])));
-            }else {
+            } else {
                 c.addOrder(Order.desc(orderByAlias(orderByArray[i])));
             }
         }
@@ -837,7 +834,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new IgnoreException("hql can't be auto count, hql is:" + countHql+""+e.getMessage());
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage());
         }
     }
 
@@ -850,7 +847,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new IgnoreException("hql can't be auto count, hql is:" + countHql+""+e.getMessage());
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage());
         }
     }
 
@@ -871,7 +868,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         if (projection == null) {
             c.setResultTransformer(CriteriaSpecification.ROOT_ENTITY);
         }
-        if (transformer != null){
+        if (transformer != null) {
             c.setResultTransformer(transformer);
         }
         try {
@@ -926,7 +923,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         String[] orderByArray = StringUtil.tokenizeToStringArray(orderBy);
         String[] orderArray = StringUtil.tokenizeToStringArray(order);
         for (int i = 0; i < orderByArray.length; i++) {
-            if ("asc".equals(orderArray[i])){
+            if ("asc".equals(orderArray[i])) {
                 c.addOrder(Order.asc(orderByAlias(orderByArray[i])));
             } else {
                 c.addOrder(Order.desc(orderByAlias(orderByArray[i])));
@@ -963,13 +960,13 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     protected Criterion[] buildPropertyFilterCriterions(List<PropertyFilter> filters) {
         List<Criterion> criterionList = new ArrayList<Criterion>();
         for (PropertyFilter filter : filters) {
-            if (StringUtil.isBlank(filter.getPropertyValue())){
+            if (StringUtil.isBlank(filter.getPropertyValue())) {
                 continue;
             }
             if (!filter.isMultiProperty()) {
                 Object propertyValue = getPropertyValue(filter);
                 Criterion criterion = buildPropertyFilterCriterion(filter.getPropertyName(), propertyValue, filter.getMatchType());
-                if (criterion == null){
+                if (criterion == null) {
                     continue;
                 }
                 criterionList.add(criterion);
@@ -977,7 +974,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 Disjunction disjunction = Restrictions.disjunction();
                 for (String param : filter.getPropertyNames()) {
                     Criterion criterion = buildPropertyFilterCriterion(param, filter.getPropertyValue(), filter.getMatchType());
-                    if (criterion == null){
+                    if (criterion == null) {
                         continue;
                     }
                     disjunction.add(criterion);
@@ -1035,19 +1032,19 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         Assert.hasText(propertyName, "propertyName不能为空");
         Criterion criterion = null;
         try {
-            if (PropertyFilter.MatchType.EQ.equals(matchType)){
+            if (PropertyFilter.MatchType.EQ.equals(matchType)) {
                 criterion = Restrictions.eq(propertyName, propertyValue);
-            }else if (PropertyFilter.MatchType.LIKE.equals(matchType)){
+            } else if (PropertyFilter.MatchType.LIKE.equals(matchType)) {
                 criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.ANYWHERE);
-            }else if (PropertyFilter.MatchType.LE.equals(matchType)){
+            } else if (PropertyFilter.MatchType.LE.equals(matchType)) {
                 criterion = Restrictions.le(propertyName, propertyValue);
-            }else if (PropertyFilter.MatchType.LT.equals(matchType)){
+            } else if (PropertyFilter.MatchType.LT.equals(matchType)) {
                 criterion = Restrictions.lt(propertyName, propertyValue);
-            }else if (PropertyFilter.MatchType.GE.equals(matchType)){
+            } else if (PropertyFilter.MatchType.GE.equals(matchType)) {
                 criterion = Restrictions.ge(propertyName, propertyValue);
-            }else if (PropertyFilter.MatchType.GT.equals(matchType)){
+            } else if (PropertyFilter.MatchType.GT.equals(matchType)) {
                 criterion = Restrictions.gt(propertyName, propertyValue);
-            }else if (PropertyFilter.MatchType.IN.equals(matchType)) {
+            } else if (PropertyFilter.MatchType.IN.equals(matchType)) {
                 if (Array.getLength(propertyValue) == 0) {
                     return null;
                 }
@@ -1057,19 +1054,19 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                     return null;
                 }
                 criterion = Restrictions.not(Restrictions.in(propertyName, (Object[]) propertyValue));
-            } else if (PropertyFilter.MatchType.NE.equals(matchType)){
+            } else if (PropertyFilter.MatchType.NE.equals(matchType)) {
                 criterion = Restrictions.ne(propertyName, propertyValue);
-            }else if (PropertyFilter.MatchType.NULL.equals(matchType)){
+            } else if (PropertyFilter.MatchType.NULL.equals(matchType)) {
                 criterion = Restrictions.isNull(propertyName);
-            } else if (PropertyFilter.MatchType.NOTNULL.equals(matchType)){
+            } else if (PropertyFilter.MatchType.NOTNULL.equals(matchType)) {
                 criterion = Restrictions.isNotNull(propertyName);
-            }else if (PropertyFilter.MatchType.EMPTY.equals(matchType)){
+            } else if (PropertyFilter.MatchType.EMPTY.equals(matchType)) {
                 criterion = Restrictions.isEmpty(propertyName);
-            } else if (PropertyFilter.MatchType.NOTEMPTY.equals(matchType)){
+            } else if (PropertyFilter.MatchType.NOTEMPTY.equals(matchType)) {
                 criterion = Restrictions.isNotEmpty(propertyName);
-            }else if (PropertyFilter.MatchType.BETWEEN.equals(matchType)){
+            } else if (PropertyFilter.MatchType.BETWEEN.equals(matchType)) {
                 criterion = Restrictions.between(propertyName, Array.get(propertyValue, 0), Array.get(propertyValue, 1));
-            } else if (PropertyFilter.MatchType.SQL.equals(matchType)){
+            } else if (PropertyFilter.MatchType.SQL.equals(matchType)) {
                 criterion = Restrictions.sqlRestriction("ERROR");
             }
         } catch (Exception e) {

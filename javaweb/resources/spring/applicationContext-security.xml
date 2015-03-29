@@ -32,11 +32,13 @@
 
     <!-- 管理端登陆配置 -->
     <s:http pattern="/**" auto-config="true" use-expressions="true" entry-point-ref="authenticationEntryPoint">
+        <!--
         <s:session-management>
             <s:concurrency-control max-sessions="1" session-registry-ref="sessionRegistry"/>
         </s:session-management>
+        -->
         <!-- -->
-        <s:intercept-url pattern="/dashboard.do" access="hasAnyRole('ROLE_SYSTEM')"/>
+        <s:intercept-url pattern="/**" access="hasAnyRole('ROLE_SYSTEM')"/>
         <!-- 如果需要验证验证码,在配置该行 -->
         <!-- 在EXCEPTION_TRANSLATION_FILTER之后添加一个过滤器  -->
         <s:custom-filter ref="customExceptionTranslationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
@@ -99,7 +101,9 @@
         <s:authentication-provider ref="daoAuthenticationProvider"/>
     </s:authentication-manager>
 
+    <!--
     <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
+    -->
 
     <!-- 记住我功能-->
     <bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">

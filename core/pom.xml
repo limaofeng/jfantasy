@@ -28,12 +28,6 @@
             <groupId>com.cloudhopper.proxool</groupId>
             <artifactId>proxool</artifactId>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.cloudhopper.proxool</groupId>
-            <artifactId>proxool-cglib</artifactId>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -77,11 +71,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-json-plugin</artifactId>
+            <artifactId>struts2-sitemesh-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-sitemesh-plugin</artifactId>
+            <artifactId>struts2-json-plugin</artifactId>
+            <version>${org.apache.struts-version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>

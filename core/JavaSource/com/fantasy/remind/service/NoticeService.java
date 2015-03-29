@@ -120,7 +120,7 @@ public class NoticeService {
         filters.add(new PropertyFilter("EQB_isRead", "false"));
         Pager pager = new Pager<Notice>();
         pager.setOrderBy("modifyTime");
-        pager.setOrder(Pager.Order.desc);
+        pager.setOrders(Pager.Order.desc);
         return JSON.serialize(noticeService.findPager(pager, filters));
     }
 

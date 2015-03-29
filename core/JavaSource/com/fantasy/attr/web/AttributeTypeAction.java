@@ -1,15 +1,14 @@
 package com.fantasy.attr.web;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.util.common.StringUtil;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  * 商品属性类型
@@ -46,7 +45,7 @@ public class AttributeTypeAction extends ActionSupport {
 	public String search(Pager<AttributeType> pager, List<PropertyFilter> filters) {
 		if (StringUtil.isBlank(pager.getOrderBy())) {
 			pager.setOrderBy("id");
-			pager.setOrder(Pager.Order.desc);
+			pager.setOrders(Pager.Order.desc);
 		}
 		this.attrs.put(ROOT, attributeTypeService.findPager(pager, filters));
 		return JSONDATA;
@@ -55,7 +54,7 @@ public class AttributeTypeAction extends ActionSupport {
 	/**
 	 * 保存
 	 * 
-	 * @param article
+	 * @param attributeType
 	 * @return
 	 */
 	public String save(AttributeType attributeType) {

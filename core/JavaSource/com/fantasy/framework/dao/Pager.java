@@ -35,8 +35,7 @@ public class Pager<T> implements Serializable {
      * 排序字段
      */
     private String orderBy;
-    private Order order = Order.asc;
-    private Order[] orders = new Order[0];
+    private Order[] orders = new Order[]{Order.asc};
 
     private List<T> pageItems;
 
@@ -165,16 +164,12 @@ public class Pager<T> implements Serializable {
         this.orderBy = orderBy;
     }
 
-    public Order getOrder() {
-        return order;
-    }
-
     public Order[] getOrders() {
         return orders;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrders(Order... order) {
+        this.orders = order;
     }
 
     public void setOrder(String order) {
@@ -183,7 +178,7 @@ public class Pager<T> implements Serializable {
             if ((!StringUtils.equals("desc", order)) && (!StringUtils.equals("asc", order))) {
                 throw new IllegalArgumentException("排序方向" + order + "不是合法值");
             }
-            this.order = Order.valueOf(Order.class, order);
+            this.orders = new Order[]{Order.valueOf(Order.class, order)};
         } else {
             List<Order> list = new ArrayList<Order>();
             for (String _order : StringUtil.tokenizeToStringArray(order, ",;")) {
@@ -196,8 +191,12 @@ public class Pager<T> implements Serializable {
         }
     }
 
+    public void setOrder(Order... order) {
+        this.setOrders(order);
+    }
+
     public boolean isOrderBySetted() {
-        return (StringUtils.isNotBlank(this.orderBy)) && (ObjectUtil.isNotNull(order));
+        return (StringUtils.isNotBlank(this.orderBy)) && (ObjectUtil.isNotNull(orders));
     }
 
     public static enum Order {
@@ -206,7 +205,7 @@ public class Pager<T> implements Serializable {
 
     @Override
     public String toString() {
-        return "Pager [totalCount=" + totalCount + ", first=" + first + ", pageSize=" + pageSize + ", totalPage=" + totalPage + ", currentPage=" + currentPage + ", orderBy=" + orderBy + ", order=" + order + "]";
+        return "Pager [totalCount=" + totalCount + ", first=" + first + ", pageSize=" + pageSize + ", totalPage=" + totalPage + ", currentPage=" + currentPage + ", orderBy=" + orderBy + ", order=" + orders + "]";
     }
 
 }

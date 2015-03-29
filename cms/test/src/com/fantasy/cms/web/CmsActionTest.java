@@ -67,7 +67,7 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
         super.tearDown();
         //删除测试分类
         ArticleCategory category = cmsService.get("test");
-        cmsService.remove(category.getCode());
+        cmsService.delete(category.getCode());
     }
 
     @Test
@@ -334,7 +334,7 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
         Assert.assertEquals("testmove",this.cmsService.get(articles.get(0).getId()).getCategory().getCode());
 
         category = cmsService.get("testmove");
-        cmsService.remove(category.getCode());
+        cmsService.delete(category.getCode());
     }
 
 }
