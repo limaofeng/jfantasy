@@ -21,6 +21,7 @@
         </action>
 
         <action name="articles" class="com.fantasy.cms.web.ArticleAction">
+            <result name="input" type="json"/>
             <result type="json"/>
         </action>
 

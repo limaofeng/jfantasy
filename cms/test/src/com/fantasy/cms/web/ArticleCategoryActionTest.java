@@ -56,6 +56,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
         super.tearDown();
       /*  //删除测试分类
         ArticleCategory category = cmsService.get("test");
+        cmsService.delete(category.getCode());
         cmsService.remove(category.getCode());*/
 /*        testDelete();*/
     }
@@ -126,6 +127,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
         Assert.assertEquals(Action.SUCCESS, result);
     }
 
+    @Test
     public void testBatchDelete() throws Exception {
         this.request.setMethod("DELETE");
 
@@ -142,6 +144,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
         Assert.assertEquals(Action.SUCCESS, result);
     }
 
+    @Test
     public void testDelete() throws Exception {
         this.request.setMethod("DELETE");
 

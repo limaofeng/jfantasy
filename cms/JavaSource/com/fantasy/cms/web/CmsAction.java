@@ -178,7 +178,7 @@ public class CmsAction extends ActionSupport {
      */
     public String categoryDelete(String[] ids) {
         for (String code : ids) {
-            this.cmsService.remove(code);
+            this.cmsService.delete(code);
         }
         return JSONDATA;
     }

@@ -15,6 +15,9 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fantasy.security.SpringSecurityUtils;
+import com.fantasy.security.userdetails.AdminUser;
+import com.fantasy.system.util.SettingUtil;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,10 +26,10 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.htmlcleaner.TagNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
@@ -73,9 +76,31 @@ public class CmsService extends BuguSearcher<Article> {
      * @return string
      */
     public Pager<Article> findPager(Pager<Article> pager, List<PropertyFilter> filters) {
+        AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
+        if (adminUser != null && ObjectUtil.find(filters, "filterName", "EQS_category.code") == null) {
+            String code = SettingUtil.getValue("cms");
+            if (StringUtil.isNotBlank(code)) {
+                filters.add(new PropertyFilter("EQS_category.code", code));
+            }
+        }
         Pager<Article> articlePager = articleDao.findPager(pager, filters);
         Hibernate.initialize(articlePager.getPageItems());
         return articlePager;
+    }
+
+    public Pager<ArticleCategory> findCategoryPager(Pager<ArticleCategory> pager, List<PropertyFilter> filters) {
+        AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
+        if (adminUser != null) {
+            String code = SettingUtil.getValue("cms");
+            if (StringUtil.isNotBlank(code)) {
+                ArticleCategory category = this.articleCategoryDao.get(code);
+                if (category != null) {
+                    filters.add(new PropertyFilter("LIKES_path", category.getPath()));
+                    filters.add(new PropertyFilter("NEI_layer", "0"));
+                }
+            }
+        }
+        return this.articleCategoryDao.findPager(pager, filters);
     }
 
     private final static String ARTICLECATEGORY_PARENT_PROPERTYNAME = "parent";
@@ -91,7 +116,7 @@ public class CmsService extends BuguSearcher<Article> {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
         if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
-            category.setArticleVersion(this.versionService.save(Article.class.getName(),category.getCode(),category.getArticleVersion().getAttributes()));
+            category.setArticleVersion(this.versionService.save(Article.class.getName(), category.getCode(), category.getArticleVersion().getAttributes()));
         }
         List<ArticleCategory> categories;
         boolean root = false;
@@ -155,7 +180,7 @@ public class CmsService extends BuguSearcher<Article> {
      */
     public ArticleCategory get(String code) {
         ArticleCategory category = this.articleCategoryDao.get(code);
-        if(category!=null && category.getArticleVersion()!=null){
+        if (category != null && category.getArticleVersion() != null) {
             Hibernate.initialize(category.getArticleVersion().getAttributes());
         }
         return category;
@@ -164,13 +189,12 @@ public class CmsService extends BuguSearcher<Article> {
     /**
      * 移除栏目
      *
-     * @param code 栏目 Code
-     * @return ArticleCategory
+     * @param codes 栏目 Code
      */
-    public ArticleCategory remove(String code) {
-        ArticleCategory category = articleCategoryDao.get(code);
-        articleCategoryDao.delete(category);
-        return category;
+    public void delete(String... codes) {
+        for (String code : codes) {
+            articleCategoryDao.delete(code);
+        }
     }
 
     /**

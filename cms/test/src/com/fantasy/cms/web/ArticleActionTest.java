@@ -52,7 +52,7 @@ public class ArticleActionTest  extends StrutsSpringJUnit4TestCase {
         super.tearDown();
         //删除测试分类
         ArticleCategory category = cmsService.get("test");
-        cmsService.remove(category.getCode());
+        cmsService.delete(category.getCode());
     }
 
     @Test

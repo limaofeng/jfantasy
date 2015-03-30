@@ -172,6 +172,7 @@ public class RestActionMapper extends DefaultActionMapper {
             int lastSlashPos = actionName.lastIndexOf('/');
             if (lastSlashPos > -1) {
                 id = actionName.substring(lastSlashPos + 1);
+                id = StringUtil.isBlank(id) ? null : id;
             }
 
 
@@ -186,12 +187,10 @@ public class RestActionMapper extends DefaultActionMapper {
 
                         // Creating a new entry on POST e.g. foo/
                     } else if (isPost(request)) {
-                        id = StringUtil.isBlank(id) ? null : id;
                         mapping.setMethod(this.postMethodName);
 
                         // Removing an item e.g. foo/
                     } else if (isDelete(request)) {
-                        id = StringUtil.isBlank(id) ? null : id;
                         mapping.setMethod(this.deleteMethodName);
                     }
 

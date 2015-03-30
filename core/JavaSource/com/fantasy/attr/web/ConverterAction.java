@@ -43,7 +43,7 @@ public class ConverterAction extends ActionSupport {
 	public String search(Pager<Converter> pager, List<PropertyFilter> filters) {
 		if (StringUtil.isBlank(pager.getOrderBy())) {
 			pager.setOrderBy("id");
-			pager.setOrder(Pager.Order.desc);
+			pager.setOrders(Pager.Order.desc);
 		}
 		this.attrs.put(ROOT, converterService.findPager(pager, filters));
 		return JSONDATA;

@@ -33,7 +33,7 @@ public class WebServiceUtil {
             orders[i] = daoPager.getOrders()[i].name();
         }
         pager.setOrders(orders);
-        pager.setOrder(daoPager.getOrder().name());
+        pager.setOrder(daoPager.getOrders()[0].name());
         return pager;
     }
 

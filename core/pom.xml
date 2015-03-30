@@ -3,12 +3,17 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>3.1.1.Alphal</version>
+        <version>3.1.4.Alphal</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>fantasy-core</artifactId>
     <packaging>jar</packaging>
     <version>${com.fantasy-version}</version>
+
+    <build>
+        <sourceDirectory>JavaSource</sourceDirectory>
+        <testSourceDirectory>test/src</testSourceDirectory>
+    </build>
 
     <dependencies>
         <dependency>
@@ -23,12 +28,6 @@
             <groupId>com.cloudhopper.proxool</groupId>
             <artifactId>proxool</artifactId>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.cloudhopper.proxool</groupId>
-            <artifactId>proxool-cglib</artifactId>
-        </dependency>
-        -->
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
@@ -72,11 +71,12 @@
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-json-plugin</artifactId>
+            <artifactId>struts2-sitemesh-plugin</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>
-            <artifactId>struts2-sitemesh-plugin</artifactId>
+            <artifactId>struts2-json-plugin</artifactId>
+            <version>${org.apache.struts-version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.struts</groupId>

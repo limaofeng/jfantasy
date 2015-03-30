@@ -7,6 +7,7 @@ import com.fantasy.security.web.authentication.handler.ConcurrencyLoginSuccessHa
 import com.fantasy.security.web.authentication.handler.FantasyLoginSuccessHandler;
 import com.fantasy.system.service.WebAccessLogService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +29,13 @@ public class AdminLoginSuccessHandler extends FantasyLoginSuccessHandler{
 		AuthenticationSuccessHandler handler = SpringContextUtil.getBeanByType(AddressBookLoginSuccessHandler.class);
 		if (handler == null) {
 			handler = SpringContextUtil.createBean(AddressBookLoginSuccessHandler.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
+			this.handlers.add(handler);
 		}
-		this.handlers.add(handler);
 		handler = SpringContextUtil.getBeanByType(ConcurrencyLoginSuccessHandler.class);
-		if (handler == null) {
+		if (handler == null && SpringContextUtil.getBeanNamesForType(SessionRegistry.class).length != 0) {
 			handler = SpringContextUtil.createBean(ConcurrencyLoginSuccessHandler.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
+			this.handlers.add(handler);
 		}
-		this.handlers.add(handler);
 	}
 	
 	@Override

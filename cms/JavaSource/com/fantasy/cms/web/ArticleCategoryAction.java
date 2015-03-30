@@ -5,10 +5,8 @@ import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.framework.util.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class ArticleCategoryAction extends ActionSupport {
@@ -22,8 +20,7 @@ public class ArticleCategoryAction extends ActionSupport {
     }
 
     public String search(Pager<ArticleCategory> pager,List<PropertyFilter> filters){
-        System.out.println(JSON.text().serialize(pager));
-        this.attrs.put(ROOT,this.cmsService.getCategorys());
+        this.attrs.put(ROOT,this.cmsService.findCategoryPager(pager,filters));
         return SUCCESS;
     }
 
@@ -33,7 +30,7 @@ public class ArticleCategoryAction extends ActionSupport {
     }
 
     public String delete(String... id){
-        System.out.println(Arrays.toString(id));
+        this.cmsService.delete(id);
         return SUCCESS;
     }
 

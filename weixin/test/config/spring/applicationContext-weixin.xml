@@ -19,6 +19,14 @@
                             <property name="aesKey" value="tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6"/>
                             <property name="primitiveId" value="gh_3d6114f11c71"/>
                         </bean>
+                        <bean class="com.fantasy.wx.bean.Account">
+                            <property name="appId" value="wx928affc11e5e0463"/>
+                            <property name="type" value="service"/>
+                            <property name="secret" value="2169d5fc2aabca1031b8d451b62b5584"/>
+                            <property name="token" value="yirui_token"/>
+                            <property name="aesKey" value="unpGWTc9v3r4g0zZlpIdBFBHoeYJLnpUDlOb0JHldX3"/>
+                            <property name="primitiveId" value="gh_3f4602496cc1"/>
+                        </bean>
                     </list>
                 </property>
             </bean>

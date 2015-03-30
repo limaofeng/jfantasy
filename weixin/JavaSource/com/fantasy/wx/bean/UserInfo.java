@@ -1,5 +1,6 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,7 +14,7 @@ import java.util.Date;
  */
 @Entity(name="wxUserInfo")
 @Table(name = "WX_USER_INFO")
-public class UserInfo {
+public class UserInfo  extends BaseBusEntity {
 
     public UserInfo() {
     }

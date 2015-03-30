@@ -1,5 +1,6 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hibernate.annotations.GenericGenerator;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "WX_GROUP_MESSAGE")
-public class GroupMessage {
+public class GroupMessage   extends BaseBusEntity {
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -49,13 +50,6 @@ public class GroupMessage {
 
     @Transient
     private List<String> toUsers = new ArrayList<String>();
-
-    /**
-     * 最后修改时间
-     */
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "MODIFY_TIME")
-    private Date modifyTime;
 
 
     public Long getId() {

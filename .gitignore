@@ -11,3 +11,4 @@ target
 atlassian-ide-plugin.xml
 
 rebel.xml
+rebel-remote.xml

@@ -7,12 +7,17 @@ import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -26,7 +31,7 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_ARTICLE")
 @Persister(impl = DynaBeanEntityPersister.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "content", "keywords", "version", "attributeValues"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "keywords", "version", "attributeValues"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Article extends BaseBusEntity implements DynaBean {
 
@@ -59,6 +64,7 @@ public class Article extends BaseBusEntity implements DynaBean {
      */
     @IndexProperty(analyze = true, store = true)
     @JoinColumn(name = "CONTENT_ID")
+    @JsonSerialize(using = ContentSerialize.class)
     @OneToOne(targetEntity = Content.class, fetch = FetchType.LAZY, cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Content content;
     /**
@@ -184,6 +190,15 @@ public class Article extends BaseBusEntity implements DynaBean {
 
     public void setAttributeValues(List<AttributeValue> attributeValues) {
         this.attributeValues = attributeValues;
+    }
+
+    public static class ContentSerialize extends JsonSerializer<Content> {
+
+        @Override
+        public void serialize(Content content, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+            jgen.writeString(content.toString());
+        }
+
     }
 
     @Override
