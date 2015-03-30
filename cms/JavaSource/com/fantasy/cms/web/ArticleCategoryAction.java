@@ -31,7 +31,7 @@ public class ArticleCategoryAction extends ActionSupport {
 
     public String delete(String... id){
         for (String code : id) {
-            this.cmsService.remove(code);
+            this.cmsService.delete(code);
         }
         return SUCCESS;
     }

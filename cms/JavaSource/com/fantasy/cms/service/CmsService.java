@@ -68,11 +68,6 @@ public class CmsService extends BuguSearcher<Article> {
         return articleCategoryDao.find(new Criterion[]{Restrictions.like("path", category.getPath(), MatchMode.START), Restrictions.ne("code", code)}, "layer,sort", "asc,asc");
     }
 
-
-    public Pager<ArticleCategory> findCategoryPager(Pager<ArticleCategory> pager, List<PropertyFilter> filters){
-        return this.articleCategoryDao.findPager(pager,filters);
-    }
-
     /**
      * 文章查询方法
      *
