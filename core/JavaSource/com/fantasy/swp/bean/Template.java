@@ -19,7 +19,7 @@ import java.util.List;
  * @since 2013-12-25 上午9:21:05
  */
 @Entity
-@Table(name = "SWP_TEMPLATE")
+@Table(name = "SWP_TEMPLATE",uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_TEMPLATE",columnNames = {"PATH","WEBSITE_ID"})})
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "dataInferfaces","webSite"})
 public class Template extends BaseBusEntity {
 
@@ -60,7 +60,7 @@ public class Template extends BaseBusEntity {
     /**
      * 模版路径
      */
-    @Column(name = "PATH", nullable = false, unique = true)
+    @Column(name = "PATH", nullable = false)
     private String path;
     /**
      * 页面类型
