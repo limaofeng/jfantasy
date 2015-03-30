@@ -12,7 +12,7 @@ import java.util.List;
  * 页面静态化时，对某个页面的配置
  */
 @Entity
-@Table(name = "SWP_PAGE")
+@Table(name = "SWP_PAGE",uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_PAGE",columnNames = {"PATH","WEBSITE_ID"})})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "datas"})
 public class Page extends BaseBusEntity {
 
@@ -50,7 +50,7 @@ public class Page extends BaseBusEntity {
     /**
      * 文件存储路径
      */
-    @Column(name = "path")
+    @Column(name = "PATH")
     private String path;
     /**
      * list类型的页面,pageSize默认15条
