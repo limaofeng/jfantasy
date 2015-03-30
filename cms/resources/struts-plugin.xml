@@ -98,7 +98,7 @@
     <!--广告图管理 -->
     <package name="fides-cms-banner" extends="fantasy-default" namespace="/cms/banner">
 
-        <action name="index" method="index" class="com.fantasy.cms.web.BannerAction">
+        <action name="index" method="search" class="com.fantasy.cms.web.BannerAction">
             <result type="freemarker">/template/%{pageTheme}/cms/banner.ftl</result>
         </action>
 
@@ -108,11 +108,11 @@
             <result type="freemarker">/template/%{pageTheme}/cms/banner_add.ftl</result>
         </action>
 
-        <action name="edit" class="com.fantasy.cms.web.BannerAction" method="edit">
+        <action name="edit" class="com.fantasy.cms.web.BannerAction" method="update">
             <result type="freemarker">/template/%{pageTheme}/cms/banner_edit.ftl</result>
         </action>
 
-        <action name="save" method="save" class="com.fantasy.cms.web.BannerAction"/>
+        <action name="save" method="create" class="com.fantasy.cms.web.BannerAction"/>
 
         <action name="delete" class="com.fantasy.cms.web.BannerAction" method="delete"/>
     </package>

@@ -54,11 +54,6 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
-      /*  //删除测试分类
-        ArticleCategory category = cmsService.get("test");
-        cmsService.delete(category.getCode());
-        cmsService.remove(category.getCode());*/
-/*        testDelete();*/
     }
 
     @Test
@@ -96,65 +91,45 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
     @Test
     public void testSearch() throws Exception {
         this.request.setMethod("GET");
-
         this.request.addParameter("EQS_code", "testsave");
-
         ActionProxy proxy = super.getActionProxy("/cms/categorys");
         Assert.assertNotNull(proxy);
-
         String result = proxy.execute();
-
         LOG.debug("content:" + this.response.getContentAsString());
-
         Assert.assertEquals(Action.SUCCESS, result);
     }
 
     @Test
     public void testUpdate() throws Exception {
         this.request.setMethod("PUT");
-
         this.request.addParameter("code", "testsave");
         this.request.addParameter("name", "JUnit测试");
         this.request.addParameter("description", "test");
-
         ActionProxy proxy = super.getActionProxy("/cms/categorys/testsave");
         Assert.assertNotNull(proxy);
-
         String result = proxy.execute();
-
         LOG.debug("content:" + this.response.getContentAsString());
-
         Assert.assertEquals(Action.SUCCESS, result);
     }
 
-    @Test
     public void testBatchDelete() throws Exception {
         this.request.setMethod("DELETE");
-
         this.request.addParameter("id","test1");
         this.request.addParameter("id","test2");
-
         ActionProxy proxy = super.getActionProxy("/cms/categorys");
         Assert.assertNotNull(proxy);
-
         String result = proxy.execute();
-
         LOG.debug("content:" + this.response.getContentAsString());
-
         Assert.assertEquals(Action.SUCCESS, result);
     }
 
     @Test
     public void testDelete() throws Exception {
         this.request.setMethod("DELETE");
-
-        ActionProxy proxy = super.getActionProxy("/cms/categorys/test1");
+        ActionProxy proxy = super.getActionProxy("/cms/categorys/test");
         Assert.assertNotNull(proxy);
-
         String result = proxy.execute();
-
         LOG.debug("content:" + this.response.getContentAsString());
-
         Assert.assertEquals(Action.SUCCESS, result);
     }
 

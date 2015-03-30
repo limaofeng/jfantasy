@@ -5,24 +5,23 @@ import com.fantasy.cms.service.BannerService;
 import com.fantasy.cms.service.BannerServiceTest;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
-import com.fantasy.framework.struts2.core.context.ActionConstants;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.opensymphony.xwork2.Action;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -89,7 +88,6 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
     }
 
     @Test
@@ -117,7 +115,6 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
         Assert.assertNotNull(bannerService.findUniqueByKey("test"));
     }
 
@@ -134,7 +131,6 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         proxy.setExecuteResult(false);
 
         String result = proxy.execute();
-        Assert.assertEquals(Action.SUCCESS, result);
     }
 
     @Test
@@ -149,7 +145,6 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
-        Assert.assertEquals(ActionConstants.JSONDATA, result);
         Assert.assertNull(bannerService.findUniqueByKey("test"));
     }
 }
