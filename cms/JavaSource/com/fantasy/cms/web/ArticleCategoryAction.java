@@ -15,12 +15,12 @@ public class ArticleCategoryAction extends ActionSupport {
     private CmsService cmsService;
 
     public String create(ArticleCategory category){
-        System.out.println(category);
+        this.attrs.put("category",this.cmsService.save(category));
         return SUCCESS;
     }
 
     public String search(Pager<ArticleCategory> pager,List<PropertyFilter> filters){
-        this.attrs.put(ROOT,this.cmsService.findCategoryPager(pager,filters));
+        this.attrs.put(ROOT,this.cmsService.findCategoryPager(pager, filters));
         return SUCCESS;
     }
 
@@ -30,12 +30,14 @@ public class ArticleCategoryAction extends ActionSupport {
     }
 
     public String delete(String... id){
-        this.cmsService.delete(id);
+        for (String code : id) {
+            this.cmsService.remove(code);
+        }
         return SUCCESS;
     }
 
     public String update(ArticleCategory category) {
-        System.out.println(category);
+        this.attrs.put("category",this.cmsService.save(category));
         return SUCCESS;
     }
 

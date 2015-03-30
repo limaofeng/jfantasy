@@ -21,19 +21,6 @@ public class BannerAction extends ActionSupport {
 	@Autowired
 	private transient BannerService bannerService;
 
-
-	/**
-	 * 首页
-	 * 
-	 * @return
-	 */
-	public String index(Pager<Banner> pager, List<PropertyFilter> filters) {
-		this.search(pager, filters);
-		this.attrs.put("pager", this.attrs.get(ROOT));
-	
-		return SUCCESS;
-	}
-
 	/**
 	 * 搜索
 	 * 
@@ -43,7 +30,7 @@ public class BannerAction extends ActionSupport {
 	 */
 	public String search(Pager<Banner> pager, List<PropertyFilter> filters) {
 		this.attrs.put(ROOT, bannerService.findPager(pager, filters));
-		return JSONDATA;
+		return SUCCESS;
 	}
 
 	/**
@@ -52,18 +39,29 @@ public class BannerAction extends ActionSupport {
 	 * @param banner
 	 * @return
 	 */
-	public String save(Banner banner) {
+	public String create(Banner banner) {
 		this.attrs.put(ROOT, bannerService.save(banner));
-		return JSONDATA;
+		return SUCCESS;
 	}
 
+    /**
+     * 更新
+     *
+     * @param banner
+     * @return
+     */
+    public String update(Banner banner) {
+        this.attrs.put(ROOT, bannerService.save(banner));
+        return SUCCESS;
+    }
+
 	/**
-	 * 修改
+	 * 根据ID查询对象
 	 * 
 	 * @param id
 	 * @return
 	 */
-	public String edit(Long id) {
+	public String view(Long id) {
 		this.attrs.put("banner", this.bannerService.get(id));
 		return SUCCESS;
 	}
@@ -77,6 +75,6 @@ public class BannerAction extends ActionSupport {
 	
 	public String delete(Long... ids) {
 		this.bannerService.delete(ids);
-		return JSONDATA;
+		return SUCCESS;
 	}
 }

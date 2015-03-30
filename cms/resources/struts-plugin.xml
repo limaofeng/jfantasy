@@ -20,6 +20,11 @@
             </result>
         </action>
 
+        <action name="banners" class="com.fantasy.cms.web.BannerAction">
+            <result type="json"/>
+        </action>
+
+
         <action name="articles" class="com.fantasy.cms.web.ArticleAction">
             <result name="input" type="json"/>
             <result type="json"/>
