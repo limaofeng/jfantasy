@@ -65,7 +65,7 @@ public class CmsActionTest extends StrutsSpringJUnit4TestCase {
     @After
     public void tearDown() throws Exception {
         super.tearDown();
-        //删除测试分类
+        //删除测试分类   ....
         ArticleCategory category = cmsService.get("test");
         cmsService.delete(category.getCode());
     }
