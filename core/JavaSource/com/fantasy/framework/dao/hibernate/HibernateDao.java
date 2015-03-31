@@ -383,7 +383,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
      */
     public void delete(PK id) {
         Assert.notNull(id, "id不能为空");
-        T t = load(id);
+        T t = get(id);
         if (t != null) {
             delete(t);
         }

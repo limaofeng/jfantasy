@@ -1,13 +1,17 @@
 package com.fantasy.cms.web;
 
+import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.service.CmsService;
-import com.fantasy.security.SpringSecurityUtils;
-import com.opensymphony.xwork2.Action;
-import com.opensymphony.xwork2.ActionProxy;
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.util.common.DateUtil;
+import com.fantasy.security.SpringSecurityUtils;
+import com.opensymphony.xwork2.ActionProxy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +21,17 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
+@Transactional
 public class ArticleActionTest  extends StrutsSpringJUnit4TestCase {
 
+    private static final Log LOG = LogFactory.getLog(ArticleActionTest.class);
     @Override
     protected String getConfigPath() {
         return "struts.xml";
@@ -40,30 +50,57 @@ public class ArticleActionTest  extends StrutsSpringJUnit4TestCase {
         SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         //添加文章测试分类
-        ArticleCategory category = new ArticleCategory();
-        category.setCode("test");
-        category.setName("JUnit测试");
-        category.setDescription("test");
-        cmsService.save(category);
+
+        ArticleCategory category  = this.cmsService.get("root");
+        if(category == null){
+            category = new ArticleCategory();
+            category.setCode("root");
+            category.setName("JUnit测试");
+            category.setDescription("root");
+            cmsService.save(category);
+        }
+
     }
 
     @After
     public void tearDown() throws Exception {
-        super.tearDown();
-        //删除测试分类
-        ArticleCategory category = cmsService.get("test");
-        cmsService.delete(category.getCode());
+        testDelete();
     }
 
     @Test
     public void testView() throws Exception {
+        this.testSave();
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_title","测试文章标题"));
+        Pager<Article> pager = this.cmsService.findPager(new Pager<Article>(1),filters);
         this.request.setMethod("GET");
+        ActionProxy proxy = super.getActionProxy("/cms/articles/"+pager.getPageItems().get(0).getId());
+        LOG.debug("返回数据类型：" + proxy.execute());
+        LOG.debug("testView返回数据："+this.response.getContentAsString());
+    }
 
-        ActionProxy proxy = super.getActionProxy("/cms/articles/1");
-        Assert.assertNotNull(proxy);
-        proxy.setExecuteResult(false);
+    public void testSave() throws  Exception{
+        this.request.setMethod("POST");
+        this.request.addParameter("title","测试文章标题");
+        this.request.addParameter("summary","测试文章摘要");
+        this.request.addParameter("keywords","test");
+        this.request.addParameter("content","测试文章正文");
+        this.request.addParameter("author","limaofeng");
+        this.request.addParameter("releaseDate", DateUtil.format("yyyy-MM-dd"));
+        this.request.addParameter("category.code","root");
+        this.request.addParameter("issue","true");
+        ActionProxy proxy = super.getActionProxy("/cms/articles/");
+        LOG.debug("返回数据类型：" + proxy.execute());
+        LOG.debug("testSave返回数据："+this.response.getContentAsString());
+    }
 
-        String result = proxy.execute();
-        Assert.assertEquals(Action.SUCCESS, result);
+    public void testDelete() throws Exception {
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_title","测试文章标题"));
+        Pager<Article> pager = this.cmsService.findPager(new Pager<Article>(1),filters);
+        this.request.setMethod("DELETE");
+        ActionProxy proxy = super.getActionProxy("/cms/articles/"+pager.getPageItems().get(0).getId());
+        LOG.debug("返回数据类型：" + proxy.execute());
+        LOG.debug("testDelete返回数据："+this.response.getContentAsString());
     }
 }

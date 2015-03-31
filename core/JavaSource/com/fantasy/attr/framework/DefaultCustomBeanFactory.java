@@ -13,6 +13,7 @@ import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.asm.AsmUtil;
 import com.fantasy.framework.util.asm.Property;
 import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -120,6 +121,8 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     }
 
     private Class<?> makeClass(String attrClassName) {
+        //如果class为数组的话，取原对象
+        attrClassName = RegexpUtil.replace(attrClassName, "^\\[L|;$", "");
         AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(attrClassName);
         if (version != null) {
             return makeClass(version);
