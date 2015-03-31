@@ -57,7 +57,12 @@ public class SpelService {
                 if("filters".equals(entry.getKey())){    // List<PropertyFilter>条件
                     List<Map<String,String>> _params = (List<Map<String,String>>)entry.getValue();
                     for(int i=0; i<_params.size(); i++){
-                        PropertyFilter filter = new PropertyFilter(_params.get(i).get("key"),_params.get(i).get("value"));
+                        PropertyFilter filter = null;
+                        if(_params.get(i).get("value")==null){
+                            filter = new PropertyFilter(_params.get(i).get("key"));
+                        }else{
+                            filter = new PropertyFilter(_params.get(i).get("key"),_params.get(i).get("value"));
+                        }
                         filters.add(filter);
                     }
                     context.setVariable("filters",filters);
