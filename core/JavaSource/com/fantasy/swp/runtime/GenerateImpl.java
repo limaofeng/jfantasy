@@ -215,6 +215,45 @@ public class GenerateImpl implements IGenerate {
         return backPage;
     }
 
+    public Map<String, Object> getPageDataMap(Page page){
+        // 所有数据
+        final Map<String, Object> dm = new HashMap<String, Object>();
+        // 模版
+        final com.fantasy.swp.bean.Template template = page.getTemplate();
+        // 数据定义
+        List<DataInferface> dataInferfaces = template.getDataInferfaces();
+        if(dataInferfaces!=null && dataInferfaces.size()>0){
+            for(DataInferface dataInferface : dataInferfaces){
+                Data data = ObjectUtil.find(page.getDatas(), "dataInferface.id", dataInferface.getId());
+                if(dataInferface.getKey().equals(template.getDataKey())){
+                    continue;
+                }
+                dm.put(dataInferface.getKey(), GeneratePageUtil.getValue(data));
+            }
+        }
+        if(template.getPageType()== PageType.pagination){    // 分页
+            Data data = ObjectUtil.find(page.getDatas(), "dataInferface.key", template.getDataKey());
+            List<Object> list = (List<Object>) GeneratePageUtil.getValue(data);
+            final Pager pager = new Pager(page.getPageSize());
+            pager.setTotalCount(list.size());
+            pager.setCurrentPage(1);
+
+            int start = pager.getPageSize() * (pager.getCurrentPage()-1);
+            int end = Math.min(pager.getPageSize() * pager.getCurrentPage(), pager.getTotalCount());
+            pager.setPageItems(list.subList(start, end));
+            dm.put(template.getDataKey(),pager.getPageItems());
+            dm.put("pager",pager);
+        }else if(template.getPageType()==PageType.multi){   // 多页面
+            Data data = ObjectUtil.find(page.getDatas(), "dataInferface.key", template.getDataKey());
+            List<Object> list = (List<Object>) GeneratePageUtil.getValue(data);
+            for(Object o : list){
+                dm.put(template.getDataKey(), o);
+                break;
+            }
+        }else{   // 单页面
+        }
+        return dm;
+    }
 //    /**
 //     *
 //     * @param dm
@@ -374,12 +413,14 @@ public class GenerateImpl implements IGenerate {
                 }
             }else{
 //                hibernateEntityObject = entry.getValue();
-                PageItemData pageItemData = this.getPageItemData(entry.getValue());
-                if(pageItemData!=null){
-                    pageItemData.setPageItem(pageItem);
-                    pageItemDatas.add(pageItemData);
-                    if(page.getTemplate().getPageType()==PageType.multi && entry.getKey().equals(page.getTemplate().getDataKey())){
-                        pageItem.setCode(pageItemData.getBeanId()+"");
+                if(entry.getValue()!=null){
+                    PageItemData pageItemData = this.getPageItemData(entry.getValue());
+                    if(pageItemData!=null){
+                        pageItemData.setPageItem(pageItem);
+                        pageItemDatas.add(pageItemData);
+                        if(page.getTemplate().getPageType()==PageType.multi && entry.getKey().equals(page.getTemplate().getDataKey())){
+                            pageItem.setCode(pageItemData.getBeanId()+"");
+                        }
                     }
                 }
             }
