@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 /**
  * 正则工具类
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2012-11-30 下午05:01:51
  * @version 1.0
@@ -369,37 +368,5 @@ public class RegexpUtil {
 		result.append("$");
 		return result.toString();
 	}
-
-	public static void main(String[] args) {
-		// System.out.println(replace("15921884771", "(\\d{3})\\d{4}(\\d{4,})", "$1****$2"));
-//		test("*.js", "/itsm/static/js/fantasy/String.js");
-		// test("toto.java", "tutu.java");
-		// test("12345", "1234");
-		// test("1234", "12345");
-		// test("*f", "");
-		// test("***", "toto");
-		// test("*.java", "toto.");
-		// test("*.java", "toto.jav");
-		// test("*.java", "toto.java");
-		// test("abc*", "");
-		// test("a*c", "abbbbbccccc");
-		// test("abc*xyz", "abcxxxyz");
-		// test("*xyz", "abcxxxyz");
-		// test("abc**xyz", "abcxxxyz");
-		// test("abc**x", "abcxxx");
-		// test("*a*b*c**x", "aaabcxxx");
-		// test("abc*x*yz", "abcxxxyz");
-		// test("abc*x*yz*", "abcxxxyz");
-		// test("a*b*c*x*yf*z*", "aabbccxxxeeyffz");
-		// test("a*b*c*x*yf*zze", "aabbccxxxeeyffz");
-		// test("a*b*c*x*yf*ze", "aabbccxxxeeyffz");
-		// test("a*b*c*x*yf*ze", "aabbccxxxeeyfze");
-		// test("*LogServerInterface*.java", "_LogServerInterfaceImpl.java");
-		// test("abc*xyz", "abcxyxyz");
-	}
-
-//	private static void test(String pattern, String str) {
-//		System.out.println(pattern + " " + str + " =>> " + wildMatch(pattern, str));
-//	}
 
 }

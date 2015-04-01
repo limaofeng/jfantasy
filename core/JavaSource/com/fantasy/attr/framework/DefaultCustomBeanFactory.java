@@ -25,6 +25,7 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -66,7 +67,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
             }
             transactionManager.commit(status);
         } catch (Exception e) {
-            LOG.error(e.getMessage(),e);
+            LOG.error(e.getMessage(), e);
             transactionManager.rollback(status);
         }
     }
@@ -103,7 +104,10 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
             Class<?> javaType = ClassUtil.forName(attrClassName);
             if (javaType == null) {
                 LOG.debug(" javaType : " + attrClassName + " load Failure ！ ");
-                javaType = makeClass(attrClassName);
+                //如果class为数组的话，取原对象
+                boolean array = RegexpUtil.isMatch(attrClassName, "^\\[L[a-zA-Z._]+;$");
+                javaType = makeClass(RegexpUtil.replace(attrClassName, "^\\[L|;$", ""));
+                javaType = array ? Array.newInstance(javaType, 0).getClass() : javaType;
             }
             if (javaType == null) {
                 continue;
@@ -121,8 +125,6 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     }
 
     private Class<?> makeClass(String attrClassName) {
-        //如果class为数组的话，取原对象
-        attrClassName = RegexpUtil.replace(attrClassName, "^\\[L|;$", "");
         AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(attrClassName);
         if (version != null) {
             return makeClass(version);

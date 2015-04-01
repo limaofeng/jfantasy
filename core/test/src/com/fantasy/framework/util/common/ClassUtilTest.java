@@ -1,8 +1,16 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.security.bean.User;
+import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
+
 public class ClassUtilTest {
+
+    private static Log LOG = LogFactory.getLog(ClassUtilTest.class);
 
     @Test
     public void testLoadClass() throws Exception {
@@ -40,6 +48,13 @@ public class ClassUtilTest {
 
     @Test
     public void testForName() throws Exception {
+        String className = Array.newInstance(User.class,0).getClass().getName();
+
+        Class<?> clazz = ClassUtil.forName(className);
+
+        LOG.debug(clazz);
+
+        Assert.assertEquals(clazz,Array.newInstance(User.class,0).getClass());
 
     }
 
