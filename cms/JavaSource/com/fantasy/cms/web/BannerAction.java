@@ -7,42 +7,43 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 /**
  * 轮播图Action
- * 
+ *
  * @author li_huang
- * 
  */
 public class BannerAction extends ActionSupport {
-	private static final long serialVersionUID = 3799834983783507214L;
 
-	@Autowired
-	private transient BannerService bannerService;
+    private static final long serialVersionUID = 3799834983783507214L;
 
-	/**
-	 * 搜索
-	 * 
-	 * @param pager
-	 * @param filters
-	 * @return
-	 */
-	public String search(Pager<Banner> pager, List<PropertyFilter> filters) {
-		this.attrs.put(ROOT, bannerService.findPager(pager, filters));
-		return SUCCESS;
-	}
+    @Autowired
+    private transient BannerService bannerService;
 
-	/**
-	 * 保存
-	 * 
-	 * @param banner
-	 * @return
-	 */
-	public String create(Banner banner) {
-		this.attrs.put(ROOT, bannerService.save(banner));
-		return SUCCESS;
-	}
+    /**
+     * 搜索
+     *
+     * @param pager
+     * @param filters
+     * @return
+     */
+    public String search(Pager<Banner> pager, List<PropertyFilter> filters) {
+        this.attrs.put(ROOT, bannerService.findPager(pager, filters));
+        return SUCCESS;
+    }
+
+    /**
+     * 保存
+     *
+     * @param banner
+     * @return
+     */
+    public String create(Banner banner) {
+        this.attrs.put(ROOT, bannerService.save(banner));
+        return SUCCESS;
+    }
 
     /**
      * 更新
@@ -55,26 +56,26 @@ public class BannerAction extends ActionSupport {
         return SUCCESS;
     }
 
-	/**
-	 * 根据ID查询对象
-	 * 
-	 * @param id
-	 * @return
-	 */
-	public String view(Long id) {
-		this.attrs.put("banner", this.bannerService.get(id));
-		return SUCCESS;
-	}
-	
-	/**
-	 * 删除
-	 * 
-	 * @param ids
-	 * @return
-	 */
-	
-	public String delete(Long... ids) {
-		this.bannerService.delete(ids);
-		return SUCCESS;
-	}
+    /**
+     * 根据ID查询对象
+     *
+     * @param id
+     * @return
+     */
+    public String view(Long id) {
+        this.attrs.put(ROOT, this.bannerService.get(id));
+        return SUCCESS;
+    }
+
+    /**
+     * 删除
+     *
+     * @param ids
+     * @return
+     */
+
+    public String delete(Long... ids) {
+        this.bannerService.delete(ids);
+        return SUCCESS;
+    }
 }
