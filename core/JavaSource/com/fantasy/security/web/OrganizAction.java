@@ -29,12 +29,12 @@ public class OrganizAction extends ActionSupport {
     }
 
     public String create(Organization organization){
-        this.organizationService.save(organization);
+        this.attrs.put(ROOT,this.organizationService.save(organization));
         return SUCCESS;
     }
 
     public String update(Organization organization){
-        this.organizationService.save(organization);
+        this.attrs.put(ROOT,this.organizationService.save(organization));
         return SUCCESS;
     }
 

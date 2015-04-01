@@ -13,7 +13,9 @@ import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.JspSupportServlet;
+import org.hibernate.criterion.Restrictions;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,20 +60,29 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
         SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
         LOG.debug("默认admin登陆。。。");
-        testSave();
+        OrgDimension orgDimension = new OrgDimension();
+        orgDimension.setId("TestWD");
+        orgDimension.setName("测试维度");
+        orgDimension.setDescription("测试维度");
+        this.orgDimensionService.save(orgDimension);
     }
 
     @After
     public void tearDown() throws Exception {
-       this.testDelete();
+       OrgDimension orgDimension = this.orgDimensionService.findUnique(Restrictions.eq("id","TestWD"));
+       if(orgDimension!=null){
+           this.orgDimensionService.delete(orgDimension.getId());
+       }
+
+        OrgDimension orgDimension1 = this.orgDimensionService.findUnique(Restrictions.eq("id","weidu1"));
+        if(orgDimension1!=null){
+            this.orgDimensionService.delete(orgDimension1.getId());
+        }
     }
 
 
-    public void testSave() throws Exception{
-       /* this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();*/
-
+    @Test
+    public void testCreate() throws Exception{
         Website website = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getWebsite();
         this.request.setMethod("POST");
         this.request.addParameter("id","weidu1");
@@ -80,49 +91,59 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("website.id", website.getId().toString());
         ActionProxy proxy = super.getActionProxy("/security/orgdimensions/");
         LOG.debug("返回数据类型："+proxy.execute());
-        LOG.debug("testDelete返回数据："+this.response.getContentAsString());
+        LOG.debug("testCreate返回数据："+this.response.getContentAsString());
+        Assert.assertEquals(response.getStatus(),200);
     }
 
+    @Test
+    public void testUpdate() throws Exception{
+        Website website = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser().getWebsite();
+        this.request.setMethod("PUT");
+        this.request.addParameter("id","TestWD");
+        this.request.addParameter("name", "维度。。。。");
+        this.request.addParameter("description", "完全不知道说的是啥");
+        this.request.addParameter("website.id", website.getId().toString());
+        ActionProxy proxy = super.getActionProxy("/security/orgdimensions/TestWD");
+        LOG.debug("返回数据类型："+proxy.execute());
+        LOG.debug("testUpdate返回数据："+this.response.getContentAsString());
+        Assert.assertEquals(response.getStatus(),200);
+    }
+
+    @Test
     public void testDelete() throws Exception{
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQS_name","维度1"));
+        filters.add(new PropertyFilter("EQS_id","TestWD"));
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("DELETE");
             ActionProxy proxy = super.getActionProxy("/security/orgdimensions/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testDelete返回数据："+this.response.getContentAsString());
+            Assert.assertEquals(response.getStatus(),200);
         }
     }
 
     @Test
     public void testSearch() throws Exception{
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
-        this.request.addParameter("EQS_id","weidu1");
+        this.request.addParameter("EQS_id","TestWD");
         this.request.setMethod("GET");
         ActionProxy proxy = super.getActionProxy("/security/orgdimensions");
         LOG.debug("返回数据类型："+proxy.execute());
         LOG.debug("testSearch返回数据："+this.response.getContentAsString());
+        Assert.assertEquals(response.getStatus(),200);
     }
 
     @Test
     public void testView() throws Exception{
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQS_id","weidu1"));
+        filters.add(new PropertyFilter("EQS_id","TestWD"));
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("GET");
             ActionProxy proxy = super.getActionProxy("/security/orgdimensions/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testView返回数据："+this.response.getContentAsString());
+            Assert.assertEquals(response.getStatus(),200);
         }
 
     }

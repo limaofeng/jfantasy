@@ -14,7 +14,9 @@ import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.views.JspSupportServlet;
+import org.hibernate.criterion.Restrictions;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -68,21 +70,29 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         orgDimension.setWebsite(website);
         this.orgDimensionService.save(orgDimension);
         //创建组织结构
-        testSave();
-
+        Organization organization = new Organization();
+        organization.setId("TestID");
+        organization.setName("测试机构");
+        organization.setDescription("测试机构");
+        organization.setType(Organization.OrgType.company);
+        this.organizationService.save(organization);
     }
 
     @After
     public void tearDown() throws Exception {
-        this.testDelete();
-
-        //最后删除维度和维度之间的关系
+         Organization organization = this.organizationService.findUnique(Restrictions.eq("id","TestID"));
+        if(organization!=null){
+            this.organizationService.delete(organization.getId());
+        }
+        //最后删除维度和组织机构之间的关系
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQS_id","Testweidu"));
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.orgDimensionService.delete(pager.getPageItems().get(0).getId());
         }
+
+
 
     }
 
@@ -96,13 +106,10 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
     }
 
 
-    public void testSave() throws Exception {
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
-        //组织机构 数据
+    @Test
+    public void testCreate() throws Exception {
         this.request.setMethod("POST");
-        this.request.addParameter("id", "jg1");
+        this.request.addParameter("id", "TestID");
         this.request.addParameter("name", "机构1");
         this.request.addParameter("description", "机构1");
         this.request.addParameter("type", "company");
@@ -111,30 +118,49 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         filters.add(new PropertyFilter("EQS_id","Testweidu"));
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()) {
-            this.request.addParameter("orgHelpBeans[0].orgDimension.id", pager.getPageItems().get(0).getId());
+            this.request.addParameter("orgHelpBeans[0].orgDimension.id", pager.getPageItems().get(0).getId());//添加维度
             ActionProxy proxy = super.getActionProxy("/security/organizations/");
             LOG.debug("返回数据类型：" + proxy.execute());
             LOG.debug("testSave返回数据：" + this.response.getContentAsString());
+            Assert.assertEquals(response.getStatus(),200);
+        }
+    }
+
+    @Test
+    public void testUpdate() throws Exception {
+        this.request.setMethod("PUT");
+        this.request.addParameter("id", "TestID");
+        this.request.addParameter("name", "测试机构");
+        this.request.addParameter("description", "测试机构");
+        this.request.addParameter("type", "company");
+        //对应组织维度 与上级组织机构
+        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
+        filters.add(new PropertyFilter("EQS_id","Testweidu"));
+        Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
+        if(!pager.getPageItems().isEmpty()) {
+            this.request.addParameter("orgHelpBeans[0].orgDimension.id", pager.getPageItems().get(0).getId());//添加维度
+            ActionProxy proxy = super.getActionProxy("/security/organizations/TestID");
+            LOG.debug("返回数据类型：" + proxy.execute());
+            LOG.debug("testUpdate返回数据：" + this.response.getContentAsString());
+            Assert.assertEquals(response.getStatus(),200);
         }
     }
 
     @Test
     public void testSearch() throws Exception {
-        this.request.removeAllParameters();
-        this.response.setCommitted(false);
-        this.response.reset();
         this.request.setMethod("GET");
-        this.request.addParameter("EQS_id","jg1");
+        this.request.addParameter("EQS_id","TestID");
         ActionProxy proxy = super.getActionProxy("/security/organizations");
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSearch返回数据：" + this.response.getContentAsString());
+        Assert.assertEquals(response.getStatus(),200);
     }
 
 
     @Test
     public void testView() throws Exception {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQS_id","jg1"));
+        filters.add(new PropertyFilter("EQS_id","TestID"));
         Pager<Organization> pager = this.organizationService.findPager(new Pager<Organization>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.removeAllParameters();
@@ -144,6 +170,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
             ActionProxy proxy = super.getActionProxy("/security/organizations/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testView返回数据："+this.response.getContentAsString());
+            Assert.assertEquals(response.getStatus(),200);
         }
 
     }
@@ -160,20 +187,18 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         }
     }
 
+
+    @Test
     public void testDelete() throws Exception {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQS_id","jg1"));
+        filters.add(new PropertyFilter("EQS_id","TestID"));
         Pager<Organization> pager = this.organizationService.findPager(new Pager<Organization>(1),filters);
         if(!pager.getPageItems().isEmpty()){
-            this.request.removeAllParameters();
-            this.response.setCommitted(false);
-            this.response.reset();
             this.request.setMethod("DELETE");
             ActionProxy proxy = super.getActionProxy("/security/organizations/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testDelete返回数据："+this.response.getContentAsString());
-        }
-
-
+            Assert.assertEquals(response.getStatus(),200);
+         }
     }
 }

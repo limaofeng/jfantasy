@@ -5,6 +5,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.bean.Job;
 import com.fantasy.security.dao.JobDao;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,6 +47,10 @@ public class JobService  {
         for(Long id:ids){
             this.jobDao.delete(id);
         }
+    }
+
+    public Job findUnique(String code){
+        return this.jobDao.findUnique(Restrictions.eq("code",code));
     }
 
 
