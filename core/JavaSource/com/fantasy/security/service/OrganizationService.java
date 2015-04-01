@@ -14,12 +14,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by yhx on 2015/1/21.
- */
 @Service
 @Transactional
 public class OrganizationService {
@@ -83,7 +81,7 @@ public class OrganizationService {
                 newRelation.setLayer(parentRelation.getLayer() + 1);
                 //排序
                 newRelation.setSort(parentRelation.getLayer() + 1);
-                newRelation.setPath(parentRelation.getPath() + ","+newRelation.getId());
+                newRelation.setPath(parentRelation.getPath() + "," + newRelation.getId());
                 newRelation.setParent(parentRelation);
                 //组织维度
                 newRelation.setOrgDimension(orgHelpBean.getOrgDimension());
@@ -140,7 +138,7 @@ public class OrganizationService {
                     this.orgRelationDao.delete(orgRelation);
                 }
             }
-            Organization organization = this.findUnique(Restrictions.eq("id",id));
+            Organization organization = this.findUnique(Restrictions.eq("id", id));
             this.organizationDao.delete(organization);
         }
     }

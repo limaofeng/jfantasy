@@ -24,12 +24,12 @@ public class OrgDimensionAction extends ActionSupport {
     }
 
     public String create(OrgDimension orgDimension) {
-        this.orgDimensionService.save(orgDimension);
+        this.attrs.put(ROOT,this.orgDimensionService.save(orgDimension));
         return SUCCESS;
     }
 
     public String update(OrgDimension orgDimension) {
-        this.orgDimensionService.save(orgDimension);
+        this.attrs.put(ROOT,this.orgDimensionService.save(orgDimension));
         return SUCCESS;
     }
 

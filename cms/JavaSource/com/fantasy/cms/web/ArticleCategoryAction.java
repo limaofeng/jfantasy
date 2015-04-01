@@ -15,7 +15,7 @@ public class ArticleCategoryAction extends ActionSupport {
     private CmsService cmsService;
 
     public String create(ArticleCategory category){
-        this.attrs.put("category",this.cmsService.save(category));
+        this.attrs.put(ROOT,this.cmsService.save(category));
         return SUCCESS;
     }
 
@@ -35,7 +35,7 @@ public class ArticleCategoryAction extends ActionSupport {
     }
 
     public String update(ArticleCategory category) {
-        this.attrs.put("category",this.cmsService.save(category));
+        this.attrs.put(ROOT,this.cmsService.save(category));
         return SUCCESS;
     }
 
