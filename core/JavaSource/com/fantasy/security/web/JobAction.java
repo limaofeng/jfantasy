@@ -34,7 +34,7 @@ public class JobAction extends ActionSupport {
     }
 
     public String view(Long id){
-        this.attrs.put("job",this.jobService.get(id));
+        this.attrs.put(ROOT,this.jobService.get(id));
         return SUCCESS;
     }
 
