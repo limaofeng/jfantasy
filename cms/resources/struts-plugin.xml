@@ -98,23 +98,23 @@
     <!--广告图管理 -->
     <package name="fides-cms-banner" extends="fantasy-default" namespace="/cms/banner">
 
-        <action name="index" method="search" class="com.fantasy.cms.web.BannerAction">
+        <action name="index" method="index" class="com.fantasy.cms.web.CmsBannerAction">
             <result type="freemarker">/template/%{pageTheme}/cms/banner.ftl</result>
         </action>
 
-        <action name="search" method="search" class="com.fantasy.cms.web.BannerAction"/>
+        <action name="search" method="search" class="com.fantasy.cms.web.CmsBannerAction"/>
 
-        <action name="add" class="com.fantasy.framework.struts2.ActionSupport">
+        <action name="add">
             <result type="freemarker">/template/%{pageTheme}/cms/banner_add.ftl</result>
         </action>
 
-        <action name="edit" class="com.fantasy.cms.web.BannerAction" method="update">
+        <action name="edit" class="com.fantasy.cms.web.CmsBannerAction" method="edit">
             <result type="freemarker">/template/%{pageTheme}/cms/banner_edit.ftl</result>
         </action>
 
-        <action name="save" method="create" class="com.fantasy.cms.web.BannerAction"/>
+        <action name="save" method="save" class="com.fantasy.cms.web.CmsBannerAction"/>
 
-        <action name="delete" class="com.fantasy.cms.web.BannerAction" method="delete"/>
+        <action name="delete" class="com.fantasy.cms.web.CmsBannerAction" method="delete"/>
     </package>
 
 
