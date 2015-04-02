@@ -4,7 +4,7 @@ $(function(){
     window.list = $('#bannerParameter').list($('#bannerParameterForm'));
     list.form.data('form').on('change',function(data,templateName,ele){
         if(templateName == 'edit'){
-            var bannerUploader = $('#bannerUploader',this.target).upload({data:{'dir':'goodsImages'},theme:'image',size:'300x150'},!!data.bannerImage?[data.bannerImage]:[]);
+            var bannerUploader = $('#bannerUploader',this.target).upload({data:{'dir':'banner_image'},theme:'image',size:'300x150'},!!data.bannerImage?[data.bannerImage]:[]);
             bannerUploader.on('uploadComplete',function(){
                 var _data = bannerUploader.getData()[0];
                 var data = ele.getData();

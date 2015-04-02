@@ -104,7 +104,7 @@
                     </a>
                     <ul class="dropdown-menu float-right">
                         <li>
-                            <a title="编辑" class="edit" href="<@s.url namespace="/cms/banner" action="edit?ids={id}"/>" target="after:closest('#page-content')">
+                            <a title="编辑" class="edit" href="<@s.url namespace="/cms/banner" action="edit?id={id}"/>" target="after:closest('#page-content')">
                                 <i class="glyph-icon icon-edit mrg5R"></i>
                                 <@s.text name="banner.edit"/>
                             </a>

@@ -70,12 +70,13 @@ public class BannerAction extends ActionSupport {
     /**
      * 删除
      *
-     * @param ids
+     * @param id
      * @return
      */
 
-    public String delete(Long... ids) {
-        this.bannerService.delete(ids);
+    public String delete(Long... id) {
+        this.bannerService.delete(id);
         return SUCCESS;
     }
+
 }
