@@ -177,7 +177,7 @@
             }
             var url = $(this).attr('href'),treeNode = selectdNodes[0];
             jQuery.dialog.confirm('<h4 class="infobox-title">确认删除分类</h4><p>分类名称:<b>'+treeNode.name+'</b><br/>分类删除后,对应的数据字典也会一并删除</p>',function(){
-                $.post(url+'?id='+treeNode.id,function(){
+                $.post(url+'?codes='+treeNode.code,function(){
                     var onode = treeNode.getParentNode();
                     $.msgbox({
                         msg : '数据字典分类 <b>'+treeNode.name+'</b> 删除成功',
