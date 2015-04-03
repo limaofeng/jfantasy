@@ -7,9 +7,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import com.fantasy.framework.freemarker.TemplateModelUtils;
 import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.common.*;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.swp.IGenerate;
@@ -21,6 +19,7 @@ import com.fantasy.swp.service.PageItemService;
 import com.fantasy.swp.service._PageService;
 import com.fantasy.swp.util.GeneratePageUtil;
 import freemarker.template.Configuration;
+import net.sf.ehcache.util.PropertyUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
@@ -30,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -66,6 +67,8 @@ public class GenerateImpl implements IGenerate {
             List<DataInferface> dataInferfaces = template.getDataInferfaces();
             // 所有数据
             final Map<String, Object> dm = new HashMap<String, Object>();
+            dm.putAll(this.sysProperty());
+
             if(dataInferfaces!=null && dataInferfaces.size()>0){
                 for(DataInferface dataInferface : dataInferfaces){
                     Data data = ObjectUtil.find(page.getDatas(), "dataInferface.id", dataInferface.getId());
@@ -141,6 +144,7 @@ public class GenerateImpl implements IGenerate {
     public Page reCreate(Long pageItemId, List<Data> dataList) throws SwpException, IOException {
         Configuration configuration = SpringContextUtil.getBeanByType(Configuration.class);
         Map<String,Object> dm = new HashMap<String, Object>();
+        dm.putAll(this.sysProperty());
 
         PageItem pageItem = this.pageItemService.get(pageItemId);
         Page page = pageItem.getPage();
@@ -213,6 +217,64 @@ public class GenerateImpl implements IGenerate {
         }
         Page backPage = pageService.findUniqueByPath(page.getPath(),page.getWebSite().getId());
         return backPage;
+    }
+
+    /**
+     * 预览
+     * 第一页或第一条数据
+     * @param page
+     * @return
+     * @throws IOException
+     */
+    public String preview(Page page, OutputStream out){
+        try {
+            // 所有数据
+            final Map<String, Object> dm = new HashMap<String, Object>();
+            dm.putAll(this.sysProperty());
+            // 模版
+            final com.fantasy.swp.bean.Template template = page.getTemplate();
+            // 数据定义
+            List<DataInferface> dataInferfaces = template.getDataInferfaces();
+            if(dataInferfaces!=null && dataInferfaces.size()>0){
+                for(DataInferface dataInferface : dataInferfaces){
+                    Data data = ObjectUtil.find(page.getDatas(), "dataInferface.id", dataInferface.getId());
+                    if(dataInferface.getKey().equals(template.getDataKey())){
+                        continue;
+                    }
+                    dm.put(dataInferface.getKey(), GeneratePageUtil.getValue(data));
+                }
+            }
+            String view = "";
+            if(template.getPageType()== PageType.pagination){    // 分页
+                Data data = ObjectUtil.find(page.getDatas(), "dataInferface.key", template.getDataKey());
+                List<Object> list = (List<Object>) GeneratePageUtil.getValue(data);
+                final Pager pager = new Pager(page.getPageSize());
+                pager.setTotalCount(list.size());
+                pager.setCurrentPage(1);
+
+                int start = pager.getPageSize() * (pager.getCurrentPage()-1);
+                int end = Math.min(pager.getPageSize() * pager.getCurrentPage(), pager.getTotalCount());
+                pager.setPageItems(list.subList(start, end));
+                dm.put(template.getDataKey(),pager.getPageItems());
+                dm.put("pager",pager);
+                FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(dm),configuration.getTemplate(template.getPath()),out);
+            }else if(template.getPageType()==PageType.multi){   // 多页面
+                Data data = ObjectUtil.find(page.getDatas(), "dataInferface.key", template.getDataKey());
+                List<Object> list = (List<Object>) GeneratePageUtil.getValue(data);
+                for(Object o : list){
+                    dm.put(template.getDataKey(), o);
+                    FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(dm),configuration.getTemplate(template.getPath()),out);
+                    break;
+                }
+            }else{   // 单页面
+                FreeMarkerTemplateUtils.writer(TemplateModelUtils.createScopesHashModel(dm),configuration.getTemplate(template.getPath()),out);
+            }
+            return view;
+        } catch (Exception e){
+            e.printStackTrace();
+            return "Exception:"+e.getMessage();
+        }
+
     }
 
     public Map<String, Object> getPageDataMap(Page page){
@@ -454,5 +516,21 @@ public class GenerateImpl implements IGenerate {
             return pageItemData;
         }
         return null;
+    }
+    private Map<String,Object> sysProperty(){
+        String webSource = PropertiesHelper.load("props/application.properties").getProperty("webSource");
+        String tripartiteSource = PropertiesHelper.load("props/application.properties").getProperty("tripartiteSource");
+        String serverSource =  PropertiesHelper.load("props/application.properties").getProperty("serverSource");
+        Map<String, Object> dm = new HashMap<String, Object>();
+        if(webSource!=null){
+            dm.put("webSource",webSource);
+        }
+        if(tripartiteSource!=null){
+            dm.put("tripartiteSource",tripartiteSource);
+        }
+        if(serverSource!=null){
+            dm.put("serverSource",serverSource);
+        }
+        return dm;
     }
 }

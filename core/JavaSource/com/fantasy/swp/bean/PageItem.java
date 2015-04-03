@@ -1,6 +1,7 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SWP_PAGE_ITEM")
+@JsonIgnoreProperties({"hibernateLazyInitializer","page","content"})
 public class PageItem extends BaseBusEntity {
 
     private static final long serialVersionUID = 1157087271787049968L;

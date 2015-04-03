@@ -1,6 +1,7 @@
 package com.fantasy.swp.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "SWP_PAGE_ITEM_DATA")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "pageItem"})
 public class PageItemData extends BaseBusEntity {
 
     @Id

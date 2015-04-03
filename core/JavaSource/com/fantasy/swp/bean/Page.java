@@ -40,6 +40,7 @@ public class Page extends BaseBusEntity {
      */
     @ManyToMany(targetEntity = Data.class, fetch = FetchType.LAZY)
     @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "PAGE_ID"), inverseJoinColumns = @JoinColumn(name = "DATA_ID"), foreignKey = @ForeignKey(name = "FK_PAGE_DATA"))
+    @OrderBy(value="id desc")
     private List<Data> datas;
     /**
      * 站点
@@ -59,6 +60,7 @@ public class Page extends BaseBusEntity {
     private int pageSize;
 
     @OneToMany(mappedBy = "page", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
+    @OrderBy(value="id desc")
     private List<PageItem> pageItems;
 
     /**
