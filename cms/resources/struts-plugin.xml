@@ -67,7 +67,7 @@
         <!-- 文章显示 -->
         <action name="article_view" class="com.fantasy.cms.web.CmsAction" method="articleView">
             <result type="freemarker">
-                %{@com.fantasy.cms.service.CmsService@getTemplatePath("/template/"+pageTheme+"/cms/article_view{code}.ftl",category)}
+                %{@com.fantasy.cms.service.CmsService@getTemplatePath("/template/"+pageTheme+"/cms/article_view{code}.ftl",art)}
             </result>
         </action>
         <!-- 文章删除 -->
