@@ -141,7 +141,7 @@
                 var categoryId = treeNode.id;
                 $(this).attr('href', $(this).data('href') + '?id=' + categoryId);
             }
-        }).target('after:#page-content');
+        });
 
         //修改分类
         $('.category-update').bind('click', function (e) {
@@ -159,7 +159,7 @@
             var treeNode = selectdNodes[0];
             var categoryId = treeNode.id;
             $(this).attr('href', $(this).data('href') + '?id=' + categoryId);
-        }).target('after:#page-content');
+        });
         //删除商品栏目
         $('.category-remove').click(function (e) {
             var selectdNodes = categoryTree.getSelectedNodes();
@@ -200,30 +200,39 @@
 <@override name="pageContent">
 <div class="col-md-3 pad0L">
     <div class="content-box pad5A mrg0B pad0B scrollable-content" id="layout_left">
-        <a title="<@s.text name='mall.goods.category.addBtn' />" class="btn medium primary-bg category-add" href="<@s.url namespace="/mall/goods/category" action="add"/>">
+        <a title="<@s.text name='mall.goods.category.addBtn' />" class="btn medium primary-bg category-add" href="<@s.url namespace="/mall/goods/category" action="add"/>" target="after:closest('#page-content')">
             <span class="button-content">
                 <i class="glyph-icon icon-plus float-left"></i>
                 <@s.text name='mall.goods.category.addValue' />
             </span>
         </a>
-        <a title="<@s.text name='mall.goods.category.updateBtn' />" class="btn medium primary-bg category-update" href="<@s.url namespace="/mall/goods/category" action="edit"/>">
+        <a title="<@s.text name='mall.goods.category.updateBtn' />" class="btn medium primary-bg category-update" href="<@s.url namespace="/mall/goods/category" action="edit"/>"  target="after:closest('#page-content')">
             <span class="button-content">
                 <i class="glyph-icon icon-edit float-left"></i>
                 <@s.text name='mall.goods.category.updateValue' />
             </span>
         </a>
-        <a title="<@s.text name='mall.goods.category.deleteBtn' />" class="btn medium primary-bg category-remove" href="<@s.url namespace="/mall/goods/category" action="delete"/>">
-            <span class="button-content">
-                <i class="glyph-icon icon-remove float-left"></i>
-                <@s.text name='mall.goods.category.deleteValue' />
-            </span>
-        </a>
-        <a title="<@s.text name='mall.goods.category.rootAddTitle' />" class="btn medium primary-bg root-category-add" href="<@s.url namespace="/mall/goods/category" action="root_add"/>" target="after:closest('#page-content')">
-            <span class="button-content">
-                 <i class="glyph-icon icon-plus float-left"></i>
-                <@s.text name='mall.goods.category.rootAddTitle' />
-            </span>
-        </a>
+        <div class="dropdown btn-group">
+            <a href="javascript:;" class="btn medium primary-bg" title="" data-toggle="dropdown">
+                <span class="button-content text-center float-none font-size-11 text-transform-upr">
+                    <i class="glyph-icon icon-caret-down float-right"></i>
+                    <@s.text name="operation.more"/>
+                </span>
+            </a>
+            <ul class="dropdown-menu float-right">
+                <li>
+                    <a title="<@s.text name='mall.goods.category.deleteBtn' />" class="category-remove" href="<@s.url namespace="/mall/goods/category" action="delete"/>">
+                        <i class="glyph-icon icon-remove mrg5R"></i>
+                        <@s.text name='mall.goods.category.deleteValue' />
+                    </a>
+                </li>
+                <li>
+                    <a title="<@s.text name='mall.goods.category.rootAddTitle' />" class="root-category-add" href="<@s.url namespace="/mall/goods/category" action="root_add"/>" target="after:closest('#page-content')">
+                         <i class="glyph-icon icon-plus mrg5R"></i>
+                        <@s.text name='mall.goods.category.rootAddTitle' />
+                    </a>
+                </li>
+        </div>
         <div class="divider mrg5B"></div>
         <ul id="categoryTree" class="ztree"></ul>
     </div>
