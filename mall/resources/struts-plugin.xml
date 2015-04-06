@@ -9,7 +9,7 @@
     <!--* * -->
     <!--********************************************************************** -->
     <package name="admin-mall" extends="fantasy-default" namespace="/mall">
-        <action name="goods" class="com.fantasy.mall.goods.web.GoodsAction" method="goods">
+        <action name="goods" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goods">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/goods.ftl</result>
         </action>
         <action name="payconfig">
@@ -19,6 +19,19 @@
             </result>
         </action>
     </package>
+
+    <package name="rest-goods" extends="fantasy-default" namespace="/mall/goods">
+
+        <action name="categorys" class="com.fantasy.mall.goods.web.GoodsCategoryAction">
+            <result type="json"/>
+        </action>
+
+        <action name="goodses" class="com.fantasy.mall.goods.web.GoodsAction">
+            <result type="json"/>
+        </action>
+
+    </package>
+
     <include file="struts-mall-goods.xml"/>
 
     <package name="admin-mall-stock" extends="fantasy-default" namespace="/mall/stock">

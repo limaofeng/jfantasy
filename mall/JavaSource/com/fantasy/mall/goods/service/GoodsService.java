@@ -96,6 +96,14 @@ public class GoodsService implements InitializingBean {
         return goods;
     }
 
+    public Goods get(Long id) {
+        Goods goods = this.goodsDao.get(id);
+        for (Product product : goods.getProducts()) {
+            Hibernate.initialize(product);
+        }
+        return goods;
+    }
+
     public List<GoodsCategory> rootCategories() {
         return ObjectUtil.sort(this.goodsCategoryDao.find(Restrictions.isNull("parent")), "sort");
     }
