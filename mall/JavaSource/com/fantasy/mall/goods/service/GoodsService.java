@@ -15,6 +15,9 @@ import com.fantasy.mall.goods.dao.GoodsCategoryDao;
 import com.fantasy.mall.goods.dao.GoodsDao;
 import com.fantasy.mall.sales.bean.Sales;
 import com.fantasy.mall.sales.service.SalesService;
+import com.fantasy.security.SpringSecurityUtils;
+import com.fantasy.security.userdetails.AdminUser;
+import com.fantasy.system.util.SettingUtil;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -143,6 +146,13 @@ public class GoodsService implements InitializingBean {
      * @return Pager<Goods>
      */
     public Pager<Goods> findPager(Pager<Goods> pager, List<PropertyFilter> filters) {
+        AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
+        if (adminUser != null && ObjectUtil.find(filters, "filterName", "EQS_category.code") == null) {
+            String code = SettingUtil.getValue("cms");
+            if (StringUtil.isNotBlank(code)) {
+                filters.add(new PropertyFilter("EQS_category.code", code));
+            }
+        }
         return this.goodsDao.findPager(pager, filters);
     }
 
@@ -604,6 +614,17 @@ public class GoodsService implements InitializingBean {
      * @return
      */
     public Pager<GoodsCategory> findCategoryPager(Pager<GoodsCategory> pager, List<PropertyFilter> filters) {
+        AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
+        if (adminUser != null) {
+            String code = SettingUtil.getValue("goods");
+            if (StringUtil.isNotBlank(code)) {
+                GoodsCategory category = this.goodsCategoryDao.findUnique(Restrictions.eq("sign",code));
+                if (category != null) {
+                    filters.add(new PropertyFilter("LIKES_path", category.getPath()));
+                    filters.add(new PropertyFilter("NEI_layer", "0"));
+                }
+            }
+        }
         return this.goodsCategoryDao.findPager(pager, filters);
     }
 
