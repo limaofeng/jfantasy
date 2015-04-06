@@ -36,7 +36,7 @@ public class GoodsDao extends HibernateDao<Goods, Long> implements LuceneDao<Goo
 				filter = new PropertyFilter("EQL_category.id", ids[0]);
 			}
 		}
-		Criterion likePathCriterion = null;
+		Criterion likePathCriterion;
 		// 将 id 转为 path like 查询
 		if (filter.getMatchType() == PropertyFilter.MatchType.IN) {
 			Disjunction disjunction = Restrictions.disjunction();

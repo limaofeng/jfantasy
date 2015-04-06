@@ -58,6 +58,7 @@ public class GoodsService implements InitializingBean {
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        assert transactionManager != null;
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             // 初始化商品根目录
@@ -148,9 +149,9 @@ public class GoodsService implements InitializingBean {
     public Pager<Goods> findPager(Pager<Goods> pager, List<PropertyFilter> filters) {
         AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
         if (adminUser != null && ObjectUtil.find(filters, "filterName", "EQS_category.code") == null) {
-            String code = SettingUtil.getValue("cms");
+            String code = SettingUtil.getValue("goods");
             if (StringUtil.isNotBlank(code)) {
-                filters.add(new PropertyFilter("EQS_category.code", code));
+                filters.add(new PropertyFilter("EQS_category.sign", code));
             }
         }
         return this.goodsDao.findPager(pager, filters);
@@ -355,21 +356,6 @@ public class GoodsService implements InitializingBean {
     public List<Goods> find(List<PropertyFilter> filters, String orderBy, String order, int start, int size) {
         return this.goodsDao.find(filters, orderBy, order, start, size);
     }
-
-    /**
-     * 查询分类
-     *
-     * @param filters 查询条件
-     * @param orderBy 排序字段
-     * @param order   排序方向
-     * @param start   结果集返回的开始位置
-     * @param size    结果集条数
-     * @return List<GoodsCategory>
-     */
-    public List<GoodsCategory> findGoodsCategory(List<PropertyFilter> filters, String orderBy, String order, int start, int size){
-        return this.goodsCategoryDao.find(filters,orderBy,order,start,size);
-    }
-
 
     /**
      * 计算商品的存货及销售数量
@@ -618,7 +604,7 @@ public class GoodsService implements InitializingBean {
         if (adminUser != null) {
             String code = SettingUtil.getValue("goods");
             if (StringUtil.isNotBlank(code)) {
-                GoodsCategory category = this.goodsCategoryDao.findUnique(Restrictions.eq("sign",code));
+                GoodsCategory category = this.goodsCategoryDao.findUnique(Restrictions.eq("sign", code));
                 if (category != null) {
                     filters.add(new PropertyFilter("LIKES_path", category.getPath()));
                     filters.add(new PropertyFilter("NEI_layer", "0"));
