@@ -22,11 +22,14 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
+@Transactional
 public class AttributeVersionServiceTest {
 
     private final static Log logger = LogFactory.getLog(AttributeVersionServiceTest.class);
@@ -122,6 +125,9 @@ public class AttributeVersionServiceTest {
             }
             return;
         }
+        AttributeType attributeType =this.attributeTypeService.findUnique(Restrictions.eq("dataType",Integer.class.getName()));
+        this.attributeTypeService.delete(attributeType.getId());
+
         for (Attribute attribute : version.getAttributes()) {
             this.converterService.delete(attribute.getAttributeType().getConverter().getId());
         }
