@@ -5,6 +5,7 @@ import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
 
@@ -14,6 +15,7 @@ import java.util.List;
 @Entity
 @Table(name = "TEST_Article")
 @Persister(impl = DynaBeanEntityPersister.class)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "keywords", "version", "attributeValues"})
 public class Article extends BaseBusEntity implements DynaBean {
 
     @Id

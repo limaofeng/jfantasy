@@ -1,29 +1,28 @@
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
-        "http://struts.apache.org/dtds/struts-2.1.7.dtd">
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN" "http://struts.apache.org/dtds/struts-2.1.7.dtd">
 <struts>
 
     <package name="fides-brand" extends="fantasy-default" namespace="/mall/goods/brand">
-        <action name="index" class="com.fantasy.mall.goods.web.BrandAction" method="index">
+        <action name="index" class="com.fantasy.mall.goods.web.OldBrandAction" method="index">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/brand.ftl</result>
         </action>
 
-        <action name="search" class="com.fantasy.mall.goods.web.BrandAction" method="search"/>
+        <action name="search" class="com.fantasy.mall.goods.web.OldBrandAction" method="search"/>
 
-        <action name="edit" class="com.fantasy.mall.goods.web.BrandAction" method="edit">
+        <action name="edit" class="com.fantasy.mall.goods.web.OldBrandAction" method="edit">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/brand_edit.ftl</result>
         </action>
 
-        <action name="add" class="com.fantasy.mall.goods.web.BrandAction" method="add">
+        <action name="add" class="com.fantasy.mall.goods.web.OldBrandAction" method="add">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/brand_add.ftl</result>
         </action>
 
-        <action name="view" class="com.fantasy.mall.goods.web.BrandAction" method="edit">
+        <action name="view" class="com.fantasy.mall.goods.web.OldBrandAction" method="edit">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/brand_view.ftl</result>
         </action>
 
-        <action name="save" class="com.fantasy.mall.goods.web.BrandAction" method="save"/>
+        <action name="save" class="com.fantasy.mall.goods.web.OldBrandAction" method="save"/>
 
-        <action name="delete" class="com.fantasy.mall.goods.web.BrandAction" method="delete"/>
+        <action name="delete" class="com.fantasy.mall.goods.web.OldBrandAction" method="delete"/>
 
     </package>
 
@@ -37,55 +36,59 @@
             </result>
         </action>
 
+        <action name="goods" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goods">
+            <result type="freemarker">/template/%{pageTheme}/mall/goods/goods.ftl</result>
+        </action>
+
         <!-- 商品管理首页 -->
-        <action name="index" class="com.fantasy.mall.goods.web.GoodsAction" method="index">
+        <action name="index" class="com.fantasy.mall.goods.web.OldGoodsAction" method="index">
             <result type="freemarker">
                 %{@com.fantasy.mall.goods.service.GoodsService@getTemplatePath("/template/"+pageTheme+"/mall/goods/goods_index{sign}.ftl",category)}
             </result>
         </action>
 
         <!-- 商品查询 -->
-        <action name="search" class="com.fantasy.mall.goods.web.GoodsAction" method="search"/>
+        <action name="search" class="com.fantasy.mall.goods.web.OldGoodsAction" method="search"/>
 
         <!-- 商品添加页面 -->
-        <action name="add" class="com.fantasy.mall.goods.web.GoodsAction" method="categoryEdit">
+        <action name="add" class="com.fantasy.mall.goods.web.OldGoodsAction" method="categoryEdit">
             <result type="freemarker">
                 %{@com.fantasy.mall.goods.service.GoodsService@getTemplatePath("/template/"+pageTheme+"/mall/goods/goods_add{sign}.ftl",category)}
             </result>
         </action>
 
         <!-- 商品保存 -->
-        <action name="save" class="com.fantasy.mall.goods.web.GoodsAction" method="goodsSave"/>
+        <action name="save" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goodsSave"/>
 
         <!-- 商品编辑页面 -->
-        <action name="edit" class="com.fantasy.mall.goods.web.GoodsAction" method="goodsEdit">
+        <action name="edit" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goodsEdit">
             <result type="freemarker">
                 %{@com.fantasy.mall.goods.service.GoodsService@getTemplatePath("/template/"+pageTheme+"/mall/goods/goods_edit{sign}.ftl",goods)}
             </result>
         </action>
 
         <!-- 商品详细页面 -->
-        <action name="view" class="com.fantasy.mall.goods.web.GoodsAction" method="goodsEdit">
+        <action name="view" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goodsEdit">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/goods_view.ftl</result>
         </action>
 
         <!-- 商品删除 -->
-        <action name="delete" class="com.fantasy.mall.goods.web.GoodsAction" method="goodsDelete"/>
+        <action name="delete" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goodsDelete"/>
 
         <!-- 商品移动 -->
-        <action name="move" class="com.fantasy.mall.goods.web.GoodsAction" method="moveGoods"/>
+        <action name="move" class="com.fantasy.mall.goods.web.OldGoodsAction" method="moveGoods"/>
 
         <!--商品上架-->
-        <action name="goodsUp" class="com.fantasy.mall.goods.web.GoodsAction" method="goodsUp"/>
+        <action name="goodsUp" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goodsUp"/>
 
         <!--商品下架-->
-        <action name="goodsDown" class="com.fantasy.mall.goods.web.GoodsAction" method="goodsDown"/>
+        <action name="goodsDown" class="com.fantasy.mall.goods.web.OldGoodsAction" method="goodsDown"/>
 
     </package>
 
     <package name="fides-goods-category" extends="fantasy-default" namespace="/mall/goods/category">
         <!-- 商品分类添加页面 -->
-        <action name="add" class="com.fantasy.mall.goods.web.GoodsAction" method="categoryEdit">
+        <action name="add" class="com.fantasy.mall.goods.web.OldGoodsAction" method="categoryEdit">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/category_add.ftl</result>
         </action>
         
@@ -94,17 +97,17 @@
         </action>
 
         <!-- 商品分类保存 -->
-        <action name="save" class="com.fantasy.mall.goods.web.GoodsAction" method="categorySave"/>
+        <action name="save" class="com.fantasy.mall.goods.web.OldGoodsAction" method="categorySave"/>
 
         <!-- 商品分类移动 -->
-        <action name="move" class="com.fantasy.mall.goods.web.GoodsAction" method="categorySave"/>
+        <action name="move" class="com.fantasy.mall.goods.web.OldGoodsAction" method="categorySave"/>
 
         <!-- 商品分类编辑页面 -->
-        <action name="edit" class="com.fantasy.mall.goods.web.GoodsAction" method="categoryEdit">
+        <action name="edit" class="com.fantasy.mall.goods.web.OldGoodsAction" method="categoryEdit">
             <result type="freemarker">/template/%{pageTheme}/mall/goods/category_edit.ftl</result>
         </action>
 
         <!-- 商品分类删除 -->
-        <action name="delete" class="com.fantasy.mall.goods.web.GoodsAction" method="categoryDelete"/>
+        <action name="delete" class="com.fantasy.mall.goods.web.OldGoodsAction" method="categoryDelete"/>
     </package>
 </struts>

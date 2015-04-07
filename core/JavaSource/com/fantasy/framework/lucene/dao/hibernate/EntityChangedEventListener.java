@@ -3,6 +3,7 @@ package com.fantasy.framework.lucene.dao.hibernate;
 import com.fantasy.framework.lucene.backend.EntityChangedListener;
 import com.fantasy.framework.lucene.backend.IndexChecker;
 import com.fantasy.framework.lucene.cache.DaoCache;
+import com.fantasy.framework.lucene.dao.LuceneDao;
 import com.fantasy.framework.util.common.ClassUtil;
 import org.hibernate.event.spi.*;
 import org.hibernate.persister.entity.EntityPersister;
@@ -15,13 +16,18 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
         Object entity = event.getEntity();
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
-        if (!IndexChecker.hasIndexed(clazz)) {
+        LuceneDao luceneDao = DaoCache.getInstance().get(clazz);
+        if (luceneDao == null) {
             return;
         }
         EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
-        if (luceneListener != null) {
-            luceneListener.entityInsert(entity);
+        if (luceneListener == null) {
+            return;
         }
+        if (!IndexChecker.hasIndexed(clazz)) {
+            return;
+        }
+        luceneListener.entityInsert(entity);
     }
 
     @Override
@@ -33,32 +39,36 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
         Object entity = event.getEntity();
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
+        LuceneDao luceneDao = DaoCache.getInstance().get(clazz);
+        if (luceneDao == null) {
+            return;
+        }
+        EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
+        if (luceneListener == null) {
+            return;
+        }
         if (IndexChecker.hasIndexed(clazz)) {
-            EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
-            if (luceneListener != null) {
-                luceneListener.entityUpdate(entity);
-            }
+            luceneListener.entityUpdate(entity);
         } else if (IndexChecker.needListener(clazz)) {
-            EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
-            if (luceneListener != null) {
-                luceneListener.getRefListener().entityChange(clazz, event.getId().toString());
-            }
+            luceneListener.getRefListener().entityChange(clazz, event.getId().toString());
         }
     }
 
     public void onPostDelete(PostDeleteEvent event) {
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
+        LuceneDao luceneDao = DaoCache.getInstance().get(clazz);
+        if (luceneDao == null) {
+            return;
+        }
+        EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
+        if (luceneListener == null) {
+            return;
+        }
         if (IndexChecker.hasIndexed(clazz)) {
-            EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
-            if (luceneListener != null) {
-                luceneListener.entityRemove(event.getId().toString());
-            }
+            luceneListener.entityRemove(event.getId().toString());
         } else if (IndexChecker.needListener(clazz)) {
-            EntityChangedListener luceneListener = DaoCache.getInstance().get(clazz).getLuceneListener();
-            if (luceneListener != null) {
-                luceneListener.getRefListener().entityChange(clazz, event.getId().toString());
-            }
+            luceneListener.getRefListener().entityChange(clazz, event.getId().toString());
         }
     }
 

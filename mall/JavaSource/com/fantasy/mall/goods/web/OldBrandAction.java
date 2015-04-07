@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * 品牌管理
  */
-public class BrandAction extends ActionSupport {
+public class OldBrandAction extends ActionSupport {
 
     private static final long serialVersionUID = -3032805252418268707L;
 

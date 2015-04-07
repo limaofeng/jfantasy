@@ -24,7 +24,7 @@ public class OgnlUtilTest {
 
     @Test
     public void testSetValueByBeanArray(){
-        OgnlTest ognlTest = new OgnlTest();
+        OgnlBean ognlTest = new OgnlBean();
 
         OgnlUtil.getInstance().setValue("number", ognlTest, "100");
         OgnlUtil.getInstance().setValue("name", ognlTest, "test");

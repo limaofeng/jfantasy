@@ -80,7 +80,7 @@ public class SettingService {
                 Setting.newInstance("title", "网站头部标题"),
                 Setting.newInstance("serverUrl", "应用地址"),
                 Setting.newInstance("cms", "cms文章栏目"),
-                Setting.newInstance("good", "商品分类")
+                Setting.newInstance("goods", "商品分类")
         }));
     }
 }

@@ -4,7 +4,7 @@ package com.fantasy.framework.util.ognl;
 import java.util.Arrays;
 import java.util.List;
 
-public class OgnlTest {
+public class OgnlBean {
 
     private String name;
 
@@ -14,11 +14,11 @@ public class OgnlTest {
 
     private List<String> listNames;
 
-    private List<OgnlTest> list;
+    private List<OgnlBean> list;
 
-    private OgnlTest bean;
+    private OgnlBean bean;
 
-    private OgnlTest[] array;
+    private OgnlBean[] array;
 
     public String getName() {
         return name;
@@ -36,19 +36,19 @@ public class OgnlTest {
         this.number = number;
     }
 
-    public OgnlTest[] getArray() {
+    public OgnlBean[] getArray() {
         return array;
     }
 
-    public void setArray(OgnlTest[] array) {
+    public void setArray(OgnlBean[] array) {
         this.array = array;
     }
 
-    public List<OgnlTest> getList() {
+    public List<OgnlBean> getList() {
         return list;
     }
 
-    public void setList(List<OgnlTest> list) {
+    public void setList(List<OgnlBean> list) {
         this.list = list;
     }
 
@@ -60,11 +60,11 @@ public class OgnlTest {
         this.names = names;
     }
 
-    public OgnlTest getBean() {
+    public OgnlBean getBean() {
         return bean;
     }
 
-    public void setBean(OgnlTest bean) {
+    public void setBean(OgnlBean bean) {
         this.bean = bean;
     }
 

@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CMS_ARTICLE_CATEGORY")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "articles"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "articles", "articleVersion"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ArticleCategory extends BaseBusEntity {
 
