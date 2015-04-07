@@ -7,7 +7,7 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.1.7.Alphal</version>
+    <version>3.1.6.Alphal</version>
 
     <properties>
         <argLine>-Dfile.encoding=UTF-8</argLine>
@@ -28,7 +28,7 @@
         <commons-email-version>1.3.2</commons-email-version>
         <mybatis-spring-version>1.2.2</mybatis-spring-version>
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
-        <com.fantasy-version>3.1.7.Alphal</com.fantasy-version>
+        <com.fantasy-version>3.1.6.Alphal</com.fantasy-version>
         <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
         <org.hibernate-version>4.3.8.Final</org.hibernate-version>
