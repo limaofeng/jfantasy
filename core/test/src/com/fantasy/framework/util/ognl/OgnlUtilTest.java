@@ -5,8 +5,8 @@ import ognl.Ognl;
 import ognl.OgnlContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Assert;
 import org.junit.Test;
-import org.testng.Assert;
 
 public class OgnlUtilTest {
 
