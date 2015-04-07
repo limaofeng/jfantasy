@@ -151,7 +151,7 @@ public class GoodsService implements InitializingBean {
         if (adminUser != null && ObjectUtil.find(filters, "filterName", "EQS_category.code") == null) {
             String code = SettingUtil.getValue("goods");
             if (StringUtil.isNotBlank(code)) {
-                filters.add(new PropertyFilter("EQS_category.sign", code));
+                filters.add(new PropertyFilter("LIKES_category.path", this.getCategory(code).getPath()));
             }
         }
         return this.goodsDao.findPager(pager, filters);

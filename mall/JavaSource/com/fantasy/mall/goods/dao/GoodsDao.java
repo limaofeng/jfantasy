@@ -1,7 +1,6 @@
 package com.fantasy.mall.goods.dao;
 
 import com.fantasy.framework.dao.hibernate.HibernateDao;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.lucene.backend.EntityChangedListener;
 import com.fantasy.framework.lucene.dao.LuceneDao;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -9,18 +8,15 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.GoodsCategory;
 import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
-import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.List;
 
 @Repository
 public class GoodsDao extends HibernateDao<Goods, Long> implements LuceneDao<Goods> {
 
+	/*
 	@Override
 	protected Criterion[] buildPropertyFilterCriterions(List<PropertyFilter> filters) {
 		PropertyFilter filter = ObjectUtil.remove(filters, "filterName", "EQS_category.sign");
@@ -53,7 +49,7 @@ public class GoodsDao extends HibernateDao<Goods, Long> implements LuceneDao<Goo
 		Criterion[] criterions = super.buildPropertyFilterCriterions(filters);
 		criterions = ObjectUtil.join(criterions, likePathCriterion);
 		return criterions;
-	}
+	}*/
 
 	@SuppressWarnings("unchecked")
 	private String[] getRootGoodsCategoryIds() {

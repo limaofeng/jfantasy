@@ -11,6 +11,7 @@ import com.fantasy.mall.goods.service.GoodsService;
 import com.fantasy.system.util.SettingUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 public class OldGoodsAction extends ActionSupport {
@@ -28,15 +29,10 @@ public class OldGoodsAction extends ActionSupport {
         } else {
             categories = goodsService.getCategories();
         }
-        // 默认选择根目录的第一个分类
-        if (ObjectUtil.find(filters, "filterName", "EQL_category.id") == null) {
-            filters.add(new PropertyFilter("EQL_category.id", categories.isEmpty() ? rootCode : categories.get(0).getId().toString()));
-        }
+        GoodsCategory category = goodsService.getCategory(rootCode);
         // 设置当前根
-        PropertyFilter filter = ObjectUtil.find(filters, "filterName", "EQL_category.id");
-        if (filter != null) {
-            this.attrs.put("category", ObjectUtil.find(categories, "id", filter.getPropertyValue(String.class)));
-        }
+        filters.add(new PropertyFilter("LIKES_category.path", category.getPath()));
+        this.attrs.put("category", category);
         // 全部分类
         this.attrs.put("categorys", categories);
         this.search(pager, filters);
@@ -52,10 +48,14 @@ public class OldGoodsAction extends ActionSupport {
      */
     public String index(Pager<Goods> pager, List<PropertyFilter> filters) {
         PropertyFilter filter;
-        if ((filter = ObjectUtil.find(filters, "filterName", "EQL_category.id")) != null) {
-            this.attrs.put("category", this.goodsService.getCategory(filter.getPropertyValue(Long.class)));
-        } else if ((filter = ObjectUtil.find(filters, "filterName", "EQS_category.sign")) != null) {
-            this.attrs.put("category", this.goodsService.getCategoryBySign(filter.getPropertyValue(String.class)));
+        if ((filter = ObjectUtil.remove(filters, "filterName", "EQL_category.id")) != null) {
+            GoodsCategory category = this.goodsService.getCategory(filter.getPropertyValue(Long.class));
+            filters.add(new PropertyFilter("LIKES_category.path", category.getPath()));
+            this.attrs.put("category", category);
+        } else if ((filter = ObjectUtil.remove(filters, "filterName", "EQS_category.sign")) != null) {
+            GoodsCategory category = this.goodsService.getCategoryBySign(filter.getPropertyValue(String.class));
+            filters.add(new PropertyFilter("LIKES_category.path", category.getPath()));
+            this.attrs.put("category", category);
         }
         this.search(pager, filters);
         this.attrs.put("pager", this.attrs.get(ROOT));
