@@ -290,7 +290,7 @@ public class Response {
      */
     public String getContentEncoding() {
         String contentType = getContentType();
-        return contentType.contains("charset=") ? null : contentType.substring(contentType.lastIndexOf("charset=") + "charset=".length());// "Unknown"
+        return !contentType.contains("charset=") ? null : contentType.substring(contentType.lastIndexOf("charset=") + "charset=".length());// "Unknown"
     }
 
     /**

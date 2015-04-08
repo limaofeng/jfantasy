@@ -77,26 +77,37 @@ public class OrganizationService {
             if (parent != null) {//有上级组织
                 //上级关系
                 OrgRelation parentRelation = this.findUniqueRelation(Restrictions.eq("orgDimension.id", orgHelpBean.getOrgDimension().getId()), Restrictions.eq("organization.id", parent.getId()));
-                //层级
-                newRelation.setLayer(parentRelation.getLayer() + 1);
-                //排序
-                newRelation.setSort(parentRelation.getLayer() + 1);
-                newRelation.setPath(parentRelation.getPath() + "," + newRelation.getId());
-                newRelation.setParent(parentRelation);
-                //组织维度
-                newRelation.setOrgDimension(orgHelpBean.getOrgDimension());
-                //当前组织机构
-                newRelation.setOrganization(organization);
+                //查询该组织机构有没有和维度之间的关系
+                newRelation = this.orgRelationDao.findUnique(Restrictions.eq("organization.id",organization.getId()),Restrictions.eq("orgDimension.id",orgHelpBean.getOrgDimension().getId()));
+                if(newRelation==null){
+                    newRelation = new OrgRelation();
+                    //层级
+                    newRelation.setLayer(parentRelation.getLayer() + 1);
+                    //排序
+                    newRelation.setSort(parentRelation.getLayer() + 1);
+                    newRelation.setPath(parentRelation.getPath() + "," + organization.getId());
+                    newRelation.setParent(parentRelation);
+                    //组织维度
+                    newRelation.setOrgDimension(orgHelpBean.getOrgDimension());
+                    //当前组织机构
+                    newRelation.setOrganization(organization);
+                }
             } else {//没有上级组织
-                //组织维度
-                newRelation.setOrgDimension(orgHelpBean.getOrgDimension());
-                //层级
-                newRelation.setLayer(1);
-                //排序
-                newRelation.setSort(1);
-                newRelation.setPath(organization.getId());
-                //当前组织机构
-                newRelation.setOrganization(organization);
+                //查询该组织机构有没有和维度之间的关系
+                newRelation = this.orgRelationDao.findUnique(Restrictions.eq("organization.id",organization.getId()),Restrictions.eq("orgDimension.id",orgHelpBean.getOrgDimension().getId()));
+                if(newRelation==null){
+                    newRelation = new OrgRelation();
+                    //组织维度
+                    newRelation.setOrgDimension(orgHelpBean.getOrgDimension());
+                    //层级
+                    newRelation.setLayer(1);
+                    //排序
+                    newRelation.setSort(1);
+                    newRelation.setPath(organization.getId());
+                    //当前组织机构
+                    newRelation.setOrganization(organization);
+                }
+
             }
             this.orgRelationDao.save(newRelation);
         }

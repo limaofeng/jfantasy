@@ -3,9 +3,9 @@ package com.fantasy.attr.interceptor;
 import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanQuery;
 import com.fantasy.attr.framework.query.DynaBeanQueryManager;
+import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeValue;
-import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.HibernateDao;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -22,6 +22,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.hibernate.ObjectNotFoundException;
+import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.criterion.*;
 import org.springframework.stereotype.Component;
 
@@ -216,13 +217,17 @@ public class AttributeValueInterceptor {
     public Object save(ProceedingJoinPoint pjp, Object entity) throws Throwable {
         HibernateDao dao = (HibernateDao) pjp.getTarget();
         Class entityClass = (Class) ClassUtil.getValue(pjp.getTarget(), "entityClass");
-        if (!(entity != null && entity instanceof DynaBean && entity.getClass().getName().contains(ClassUtil.CGLIB_CLASS_SEPARATOR) && entityClass.equals(entity.getClass().getSuperclass()))) {
+        if (!(entity != null && entity instanceof DynaBean && entity.getClass().getName().contains(ClassUtil.CGLIB_CLASS_SEPARATOR) && entityClass == entity.getClass().getSuperclass())) {
             return pjp.proceed(new Object[]{entity});
         }
         Long entityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
         DynaBean dynaBean = (DynaBean) (entityId == null ? ClassUtil.newInstance(entityClass) : _method_get.invoke(dao, entityId));
         BeanUtil.copyProperties(dynaBean, entity, "attributeValues");
-        List<AttributeValue> attributeValues = dynaBean.getAttributeValues() == null ? new ArrayList<AttributeValue>() : dynaBean.getAttributeValues();
+        assert dynaBean != null;
+        List<AttributeValue> attributeValues = dynaBean.getAttributeValues();
+        if (attributeValues == null || (attributeValues instanceof PersistentCollection && ((PersistentCollection) attributeValues).isWrapper(null)) || attributeValues.isEmpty()) {
+            attributeValues = new ArrayList<AttributeValue>();
+        }
         for (Attribute attribute : ((DynaBean) entity).getVersion().getAttributes()) {
             AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
             if (attributeValue == null) {
@@ -241,6 +246,7 @@ public class AttributeValueInterceptor {
         }
         Object oldEntity = entity;
         entity = dynaBean;
+        ((DynaBean) entity).setAttributeValues(attributeValues);
         Object retval = pjp.proceed(new Object[]{entity});
         Long newEntityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
         if (entityId != null || newEntityId == null) {
@@ -250,7 +256,6 @@ public class AttributeValueInterceptor {
         for (AttributeValue attributeValue : attributeValues) {
             attributeValue.setTargetId(newEntityId);
         }
-        ((DynaBean) entity).setAttributeValues(attributeValues);
         retval = pjp.proceed(new Object[]{entity});
         BeanUtil.copyProperties(oldEntity, entity);
         return retval;

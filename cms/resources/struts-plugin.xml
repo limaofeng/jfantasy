@@ -56,7 +56,7 @@
         <!-- 文章修改 -->
         <action name="article_edit" class="com.fantasy.cms.web.CmsAction" method="articleEdit">
             <result type="freemarker">
-                %{@com.fantasy.cms.service.CmsService@getTemplatePath("/template/"+pageTheme+"/cms/article_edit{code}.ftl",category)}
+                %{@com.fantasy.cms.service.CmsService@getTemplatePath("/template/"+pageTheme+"/cms/article_edit{code}.ftl",art)}
             </result>
         </action>
         <!-- 文章发布 -->
@@ -67,7 +67,7 @@
         <!-- 文章显示 -->
         <action name="article_view" class="com.fantasy.cms.web.CmsAction" method="articleView">
             <result type="freemarker">
-                %{@com.fantasy.cms.service.CmsService@getTemplatePath("/template/"+pageTheme+"/cms/article_view{code}.ftl",category)}
+                %{@com.fantasy.cms.service.CmsService@getTemplatePath("/template/"+pageTheme+"/cms/article_view{code}.ftl",art)}
             </result>
         </action>
         <!-- 文章删除 -->
@@ -94,7 +94,6 @@
         <action name="move" class="com.fantasy.cms.web.CmsAction" method="moveArticle"/>
     </package>
 
-
     <!--广告图管理 -->
     <package name="fides-cms-banner" extends="fantasy-default" namespace="/cms/banner">
 
@@ -117,64 +116,4 @@
         <action name="delete" class="com.fantasy.cms.web.CmsBannerAction" method="delete"/>
     </package>
 
-
-    <package name="cms" extends="fantasy-default" namespace="/admin/cms">
-        <!--文章首页 -->
-        <action name="index" class="com.fantasy.cms.web.CmsAction" method="index">
-            <result type="freemarker">/template/tocer/cms/article.ftl</result>
-        </action>
-        <!-- 文章列表 -->
-        <action name="search" class="com.fantasy.cms.web.CmsAction" method="search"/>
-        <!-- 文章添加 -->
-        <action name="article_add">
-            <result type="freemarker">/template/tocer/cms/article_add.ftl</result>
-        </action>
-        <!-- 文章保存 -->
-        <action name="article_save" class="com.fantasy.cms.web.CmsAction" method="articleSave"/>
-        <!-- 文章修改 -->
-        <action name="article_edit" class="com.fantasy.cms.web.CmsAction" method="articleEdit">
-            <result type="freemarker">/template/tocer/cms/article_edit.ftl</result>
-        </action>
-        <!-- 文章发布 -->
-        <action name="article_issue" class="com.fantasy.cms.web.CmsAction" method="articleIssue"/>
-        <!-- 文章显示 -->
-        <action name="article_view" class="com.fantasy.cms.web.CmsAction" method="articleView">
-            <result type="freemarker">/template/tocer/cms/article_view.ftl</result>
-        </action>
-        <!-- 文章删除 -->
-        <action name="article_delete" class="com.fantasy.cms.web.CmsAction" method="articleDelete"/>
-        <!-- 文章栏目添加 -->
-        <action name="category_add">
-            <result type="freemarker">/template/tocer/cms/category_add.ftl</result>
-        </action>
-        <!-- 文章栏目保存 -->
-        <action name="category_save" class="com.fantasy.cms.web.CmsAction" method="categorySave"/>
-        <!-- 文章栏目保存 -->
-        <action name="category_update" class="com.fantasy.cms.web.CmsAction" method="categorySave"/>
-        <!-- 移动栏目保存 -->
-        <action name="category_move" class="com.fantasy.cms.web.CmsAction" method="categorySave"/>
-        <!-- 文章栏目修改 -->
-        <action name="category_edit" class="com.fantasy.cms.web.CmsAction" method="categoryEdit">
-            <result type="freemarker">/template/tocer/cms/category_edit.ftl</result>
-        </action>
-        <!-- 文章栏目删除 -->
-        <action name="category_delete" class="com.fantasy.cms.web.CmsAction" method="categoryDelete"/>
-    </package>
-    <!-- 广告位管理 -->
-    <package name="admin-cms" namespace="/admin/cms/banner" extends="fantasy-default">
-        <action name="index" method="index" class="com.fantasy.cms.web.BannerAction">
-            <result type="freemarker">/template/tocer/cms/banner.ftl</result>
-        </action>
-        <action name="search" method="search" class="com.fantasy.cms.web.BannerAction">
-            <result type="freemarker">/template/tocer/cms/banner_edit.ftl</result>
-        </action>
-        <action name="add">
-            <result type="freemarker">/template/tocer/cms/banner_add.ftl</result>
-        </action>
-        <action name="edit" class="com.fantasy.cms.web.BannerAction" method="edit">
-            <result type="freemarker">/template/tocer/cms/banner_edit.ftl</result>
-        </action>
-        <action name="save" method="save" class="com.fantasy.cms.web.BannerAction"/>
-        <action name="delete" class="com.fantasy.cms.web.BannerAction" method="delete"/>
-    </package>
 </struts>

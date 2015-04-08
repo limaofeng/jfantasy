@@ -114,9 +114,9 @@ public class GoodsCategory extends BaseBusEntity implements DynaBean {
     /**
      * 商品品牌
      */
-    @ManyToMany(mappedBy = "goodsCategories", fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @OrderBy("name asc")
-    //@JoinTable(name = "MALL_GOODS_CATEGORY_BRAND", joinColumns = @JoinColumn(name = "GOODS_CATEGORY_ID"), inverseJoinColumns = @JoinColumn(name = "BRAND_ID"))
+    @JoinTable(name = "MALL_GOODS_CATEGORY_BRAND", joinColumns = @JoinColumn(name = "GOODS_CATEGORY_ID"), inverseJoinColumns = @JoinColumn(name = "BRAND_ID"), foreignKey = @ForeignKey(name = "FK_GOODS_CATEGORIE_BRAND"))
     private List<Brand> brands;
     /**
      * 品牌在分类中的排序规则

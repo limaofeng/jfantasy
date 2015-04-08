@@ -15,7 +15,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "AUTH_JOB")
-@JsonIgnoreProperties({"hibernateLazyInitializer","organization"})
+@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Job extends BaseBusEntity {
 
     private static final long serialVersionUID = -7020427994563623645L;
@@ -45,7 +45,7 @@ public class Job extends BaseBusEntity {
     /**
      *组织机构
      */
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name="ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_JOB_ORGANIZATION"))
     private Organization organization;
 

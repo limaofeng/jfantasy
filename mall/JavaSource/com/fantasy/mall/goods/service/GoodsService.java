@@ -15,6 +15,9 @@ import com.fantasy.mall.goods.dao.GoodsCategoryDao;
 import com.fantasy.mall.goods.dao.GoodsDao;
 import com.fantasy.mall.sales.bean.Sales;
 import com.fantasy.mall.sales.service.SalesService;
+import com.fantasy.security.SpringSecurityUtils;
+import com.fantasy.security.userdetails.AdminUser;
+import com.fantasy.system.util.SettingUtil;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -55,6 +58,7 @@ public class GoodsService implements InitializingBean {
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        assert transactionManager != null;
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             // 初始化商品根目录
@@ -90,6 +94,14 @@ public class GoodsService implements InitializingBean {
      */
     public Goods get(String sn) {
         Goods goods = this.goodsDao.findUnique(Restrictions.eq("sn", sn));
+        for (Product product : goods.getProducts()) {
+            Hibernate.initialize(product);
+        }
+        return goods;
+    }
+
+    public Goods get(Long id) {
+        Goods goods = this.goodsDao.get(id);
         for (Product product : goods.getProducts()) {
             Hibernate.initialize(product);
         }
@@ -135,6 +147,13 @@ public class GoodsService implements InitializingBean {
      * @return Pager<Goods>
      */
     public Pager<Goods> findPager(Pager<Goods> pager, List<PropertyFilter> filters) {
+        AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
+        if (adminUser != null && ObjectUtil.find(filters, "filterName", "EQS_category.code") == null) {
+            String code = SettingUtil.getValue("goods");
+            if (StringUtil.isNotBlank(code)) {
+                filters.add(new PropertyFilter("LIKES_category.path", this.getCategory(code).getPath()));
+            }
+        }
         return this.goodsDao.findPager(pager, filters);
     }
 
@@ -337,21 +356,6 @@ public class GoodsService implements InitializingBean {
     public List<Goods> find(List<PropertyFilter> filters, String orderBy, String order, int start, int size) {
         return this.goodsDao.find(filters, orderBy, order, start, size);
     }
-
-    /**
-     * 查询分类
-     *
-     * @param filters 查询条件
-     * @param orderBy 排序字段
-     * @param order   排序方向
-     * @param start   结果集返回的开始位置
-     * @param size    结果集条数
-     * @return List<GoodsCategory>
-     */
-    public List<GoodsCategory> findGoodsCategory(List<PropertyFilter> filters, String orderBy, String order, int start, int size){
-        return this.goodsCategoryDao.find(filters,orderBy,order,start,size);
-    }
-
 
     /**
      * 计算商品的存货及销售数量
@@ -596,6 +600,17 @@ public class GoodsService implements InitializingBean {
      * @return
      */
     public Pager<GoodsCategory> findCategoryPager(Pager<GoodsCategory> pager, List<PropertyFilter> filters) {
+        AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
+        if (adminUser != null) {
+            String code = SettingUtil.getValue("goods");
+            if (StringUtil.isNotBlank(code)) {
+                GoodsCategory category = this.goodsCategoryDao.findUnique(Restrictions.eq("sign", code));
+                if (category != null) {
+                    filters.add(new PropertyFilter("LIKES_path", category.getPath()));
+                    filters.add(new PropertyFilter("NEI_layer", "0"));
+                }
+            }
+        }
         return this.goodsCategoryDao.findPager(pager, filters);
     }
 

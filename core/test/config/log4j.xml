@@ -28,7 +28,6 @@
 	-->
  	<category name="com.fantasy">
  		<priority value="DEBUG" />
-        <appender-ref ref="CONSOLE" />
  	</category>
 	<category name="org.hibernate.cache">
 		<priority value="DEBUG" />
