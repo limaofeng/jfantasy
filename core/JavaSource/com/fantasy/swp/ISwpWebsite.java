@@ -4,6 +4,7 @@ import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.exception.SwpException;
 
+import java.io.OutputStream;
 import java.util.List;
 
 /**
@@ -127,4 +128,12 @@ public interface ISwpWebsite {
      * @param path 模板地址
      */
     public ITemplage getTemplate(String path);
+
+    /**
+     * 预览生成的页面
+     * 第一页数据
+     * @param path 页面path
+     * @return
+     */
+    public String priviewPage(String path, OutputStream out);
 }

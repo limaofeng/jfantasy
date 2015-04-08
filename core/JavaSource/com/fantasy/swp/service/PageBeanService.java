@@ -13,6 +13,8 @@ import com.fantasy.system.bean.Website;
 import org.springframework.stereotype.Component;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -177,12 +179,22 @@ public class PageBeanService {
     }
 
     /**
-     * 预览
+     * 获得数据
      * @param url 页面相对路径
      * @param websiteId 站点
      */
     public Map<String, Object> getPageDatas(String url, Long websiteId){
         Page page = this.pageService.findUniqueByPath(url,websiteId);
         return this.generate.getPageDataMap(page);
+    }
+
+    /**
+     * 预览
+     * @param url 页面相对路径
+     * @param websiteId 站点
+     */
+    public String preview(String url, Long websiteId, OutputStream out){
+        Page page = this.pageService.findUniqueByPath(url,websiteId);
+        return this.generate.preview(page,out);
     }
 }

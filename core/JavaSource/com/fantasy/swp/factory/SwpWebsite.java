@@ -12,6 +12,7 @@ import com.fantasy.swp.service.PageBeanService;
 import com.fantasy.swp.service.TemplateBeanService;
 import com.fantasy.system.bean.Website;
 
+import java.io.OutputStream;
 import java.util.List;
 
 
@@ -164,6 +165,16 @@ public class SwpWebsite implements ISwpWebsite {
     @Override
     public ITemplage getTemplate(String path) {
         return this.templateBeanService.get(path,this.website.getId());
+    }
+
+    /**
+     *
+     * @param path 页面path
+     * @return
+     */
+    @Override
+    public String priviewPage(String path, OutputStream out) {
+        return this.pageBeanService.preview(path, this.website.getId(),out);
     }
 
     public Website getWebsite() {

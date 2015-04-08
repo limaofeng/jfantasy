@@ -56,6 +56,7 @@ public class Template extends BaseBusEntity {
      * 数据接口定义
      */
     @OneToMany(mappedBy = "template", fetch = FetchType.LAZY)
+    @OrderBy(value="id desc")
     private List<DataInferface> dataInferfaces;
     /**
      * 模版路径
