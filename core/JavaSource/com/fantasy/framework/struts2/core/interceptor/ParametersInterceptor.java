@@ -1,8 +1,8 @@
 package com.fantasy.framework.struts2.core.interceptor;
 
 import com.fantasy.attr.framework.DynaBean;
-import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.framework.util.VersionUtil;
+import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.dao.hibernate.PropertyFilter.MatchType;
@@ -26,7 +26,6 @@ import com.opensymphony.xwork2.ognl.OgnlValueStackFactory;
 import com.opensymphony.xwork2.util.*;
 import com.opensymphony.xwork2.util.reflection.ReflectionContextState;
 import ognl.Ognl;
-import ognl.OgnlException;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -126,7 +125,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         int count = 0;
         for (int i = s.length() - 1; i >= 0; i--) {
             char c = s.charAt(i);
-            if (c == '.' || c == '['){
+            if (c == '.' || c == '[') {
                 count++;
             }
         }
@@ -261,7 +260,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
         // 初始化Pager对象
         index = ObjectUtil.indexOf(parameterTypes, Pager.class);
         if (index > -1 && paramNames.length != 1 && ObjectUtil.isNull(params.get(paramNames[index]))) {
-                params.put(paramNames[index], new Pager());
+            params.put(paramNames[index], new Pager());
         }
         // 重新排序保存到 MethodParam 对象
         for (String paramName : paramNames) {
@@ -278,7 +277,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             for (int i = 0; i < paramNames.length; i++) {
                 String paramName = paramNames[i];
                 Class<?> parameterType = parameterTypes[i];
-                if (params.containsKey(paramName)){
+                if (params.containsKey(paramName)) {
                     continue;
                 }
                 if (List.class.isAssignableFrom(parameterType)) {
@@ -471,13 +470,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 } else {
                     ognlUtil.setValue(name, ognlValueStack.getContext(), formbean, value);
                 }
-            } catch (OgnlException e) {
+            } catch (Exception e) {
                 log.error(e.getMessage());
                 if (name.contains(".")) {
                     com.fantasy.framework.util.ognl.OgnlUtil.getInstance().setValue(name, formbean, value);
                 }
-            } catch (Exception e) {
-                log.error(e.getMessage(), e);
             }
         }
     }
