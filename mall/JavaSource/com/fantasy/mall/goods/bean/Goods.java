@@ -46,7 +46,7 @@ import java.util.List;
 @Table(name = "MALL_GOODS")
 @Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore", "category"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore"})
 public class Goods extends BaseBusEntity implements DynaBean {
 
     private static final long serialVersionUID = 7710250000511514557L;

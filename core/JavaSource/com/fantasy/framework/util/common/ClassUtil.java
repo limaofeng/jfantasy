@@ -127,7 +127,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return null;
     }
 
-    public static <T> T newInstance(String className,Class<T> tClass) {
+    public static <T> T newInstance(String className, Class<T> tClass) {
         try {
             return tClass.cast(newInstance(FantasyClassLoader.getClassLoader().loadClass(className)));
         } catch (ClassNotFoundException e) {
@@ -141,15 +141,15 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     }
 
     public static Property[] getPropertys(Class<?> clazz) {
-        return classFactory.getClass(getRealClass(clazz)).getPropertys();
+        return classFactory.getClass(clazz).getPropertys();
     }
 
     public static Property getProperty(Object target, String name) {
-        return getProperty(getRealClass(target), name);
+        return getProperty(target.getClass(), name);
     }
 
     public static Property getProperty(Class<?> clazz, String name) {
-        return classFactory.getClass(getRealClass(clazz)).getProperty(name);
+        return classFactory.getClass(clazz).getProperty(name);
     }
 
     public static Class<?> forName(String className) {
@@ -166,19 +166,19 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         if ((property != null) && (property.isRead())) {
             return property.getValue(target);
         }
-        return classFactory.getClass(getRealClass(target.getClass())).getValue(target, name);
+        return classFactory.getClass(target.getClass()).getValue(target, name);
     }
 
     public static Field getDeclaredField(Class<?> clazz, String fieldName) {
-        return classFactory.getClass(getRealClass(clazz)).getDeclaredField(fieldName);
+        return classFactory.getClass(clazz).getDeclaredField(fieldName);
     }
 
     public static Field[] getDeclaredFields(Class<?> clazz, Class<? extends Annotation> annotClass) {
-        return classFactory.getClass(getRealClass(clazz)).getDeclaredFields(annotClass);
+        return classFactory.getClass(clazz).getDeclaredFields(annotClass);
     }
 
     public static Field[] getDeclaredFields(Class<?> clazz) {
-        return classFactory.getClass(getRealClass(clazz)).getDeclaredFields();
+        return classFactory.getClass(clazz).getDeclaredFields();
     }
 
     public static void setValue(Object target, String name, Object value) {
@@ -186,13 +186,13 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         if ((property != null) && (property.isWrite())) {
             property.setValue(target, value);
         } else {
-            classFactory.getClass(getRealClass(target.getClass())).setValue(target, name, value);
+            classFactory.getClass(target.getClass()).setValue(target, name, value);
         }
     }
 
     public static MethodProxy getMethodProxy(Class<?> clazz, String method) {
         try {
-            return classFactory.getClass(getRealClass(clazz)).getMethod(method);
+            return classFactory.getClass(clazz).getMethod(method);
         } catch (Exception e) {
             logger.error(clazz + "." + method + "-" + e.getMessage());
         }
@@ -201,7 +201,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static MethodProxy getMethodProxy(Class<?> clazz, String method, Class<?>... paramTypes) {
         try {
-            return classFactory.getClass(getRealClass(clazz)).getMethod(method, paramTypes);
+            return classFactory.getClass(clazz).getMethod(method, paramTypes);
         } catch (Exception e) {
             logger.error(clazz + "." + method + "-" + e.getMessage());
         }
