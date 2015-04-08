@@ -80,8 +80,6 @@ public class AttributeVersionServiceTest {
             }
             return;
         }
-        AttributeType attributeType =this.attributeTypeService.findUnique(Restrictions.eq("dataType",Integer.class.getName()));
-        this.attributeTypeService.delete(attributeType.getId());
 
         for (Attribute attribute : version.getAttributes()) {
             this.converterService.delete(attribute.getAttributeType().getConverter().getId());
