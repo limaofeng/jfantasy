@@ -21,6 +21,7 @@ import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
+import org.hibernate.Hibernate;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.criterion.*;
@@ -222,8 +223,8 @@ public class AttributeValueInterceptor {
         }
         Long entityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
         DynaBean dynaBean = (DynaBean) (entityId == null ? ClassUtil.newInstance(entityClass) : _method_get.invoke(dao, entityId));
-        BeanUtil.copyProperties(dynaBean, entity, "attributeValues");
         assert dynaBean != null;
+        Hibernate.initialize(dynaBean.getAttributeValues());
         List<AttributeValue> attributeValues = dynaBean.getAttributeValues();
         if (attributeValues == null || (attributeValues instanceof PersistentCollection && ((PersistentCollection) attributeValues).isWrapper(null)) || attributeValues.isEmpty()) {
             attributeValues = new ArrayList<AttributeValue>();
@@ -235,11 +236,11 @@ public class AttributeValueInterceptor {
                 attributeValue.setTargetId(entityId);
                 attributeValue.setAttribute(attribute);
                 attributeValue.setVersion(((DynaBean) entity).getVersion());
+                attributeValues.add(attributeValue);
             }
             String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), entity, String.class);
             if (StringUtil.isNotBlank(value)) {
                 attributeValue.setValue(value);
-                attributeValues.add(attributeValue);
             } else {
                 ObjectUtil.remove(attributeValues, "attribute.code", attribute.getCode());
             }

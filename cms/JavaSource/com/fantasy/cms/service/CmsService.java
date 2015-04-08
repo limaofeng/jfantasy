@@ -77,10 +77,10 @@ public class CmsService extends BuguSearcher<Article> {
      */
     public Pager<Article> findPager(Pager<Article> pager, List<PropertyFilter> filters) {
         AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
-        if (adminUser != null && ObjectUtil.find(filters, "filterName", "EQS_category.code") == null) {
+        if (adminUser != null) {
             String code = SettingUtil.getValue("cms");
             if (StringUtil.isNotBlank(code)) {
-                filters.add(new PropertyFilter("EQS_category.code", code));
+                filters.add(new PropertyFilter("LIKES_category.path", this.articleCategoryDao.get(code).getPath()));
             }
         }
         Pager<Article> articlePager = articleDao.findPager(pager, filters);

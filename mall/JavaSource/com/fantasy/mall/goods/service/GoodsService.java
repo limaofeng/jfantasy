@@ -148,7 +148,7 @@ public class GoodsService implements InitializingBean {
      */
     public Pager<Goods> findPager(Pager<Goods> pager, List<PropertyFilter> filters) {
         AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
-        if (adminUser != null && ObjectUtil.find(filters, "filterName", "EQS_category.code") == null) {
+        if (adminUser != null) {
             String code = SettingUtil.getValue("goods");
             if (StringUtil.isNotBlank(code)) {
                 filters.add(new PropertyFilter("LIKES_category.path", this.getCategory(code).getPath()));

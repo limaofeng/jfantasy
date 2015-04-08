@@ -1,9 +1,6 @@
 package com.fantasy.attr.storage.service;
 
-import com.fantasy.attr.storage.bean.Attribute;
-import com.fantasy.attr.storage.bean.AttributeType;
-import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fantasy.attr.storage.bean.Converter;
+import com.fantasy.attr.storage.bean.*;
 import com.fantasy.attr.storage.dao.AttributeDao;
 import com.fantasy.attr.storage.dao.AttributeVersionDao;
 import com.fantasy.framework.dao.Pager;
@@ -62,13 +59,35 @@ public class AttributeVersionService {
     }
 
     public AttributeVersion save(String targetClassName, String number, List<Attribute> attributes) {
-        AttributeVersion version = new AttributeVersion();
-        version.setTargetClassName(targetClassName);
-        version.setNumber(number);
-        version.setType(AttributeVersion.Type.ext);
-        version.setAttributes(attributes);
+        AttributeVersion version = this.attributeVersionDao.findUnique(Restrictions.eq("targetClassName", targetClassName), Restrictions.eq("number", number));
+        if (version == null) {
+            version = new AttributeVersion();
+            version.setTargetClassName(targetClassName);
+            version.setNumber(number);
+            version.setType(AttributeVersion.Type.ext);
+        }
+        if (version.getAttributes() == null) {
+            version.setAttributes(new ArrayList<Attribute>());
+        }
+        for (Attribute attribute : attributes) {
+            Attribute oldAttribute = ObjectUtil.find(version.getAttributes(), "code", attribute.getCode());
+            if (oldAttribute == null) {
+                attributeDao.save(attribute);
+                version.getAttributes().add(attribute);
+            } else {
+                BeanUtil.copyProperties(oldAttribute, attribute);
+                attributeDao.save(oldAttribute);
+            }
+        }
+        List<Attribute> removeAttribute = new ArrayList<Attribute>();
         for (Attribute attribute : version.getAttributes()) {
-            attributeDao.save(attribute);
+            if (ObjectUtil.find(attributes, "code", attribute.getCode()) == null) {
+                removeAttribute.add(attribute);
+            }
+        }
+        for (Attribute attribute : removeAttribute) {
+            attributeDao.delete(attribute.getId());
+            ObjectUtil.remove(version.getAttributes(), "code", attribute.getCode());
         }
         this.attributeVersionDao.save(version);
         return version;
