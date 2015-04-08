@@ -6,6 +6,7 @@ import ognl.DefaultTypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +32,7 @@ public class CustomBeanTypeConverter extends DefaultTypeConverter {
             for (String id : ids) {
                 customBeanList.add(customBeanService.get(Long.valueOf(id)));
             }
-            return customBeanList.toArray(new CustomBean[customBeanList.size()]);
+            return customBeanList.toArray((CustomBean[]) Array.newInstance(toType.getComponentType(), ((ArrayList) customBeanList).size()));
         } else if (value instanceof CustomBean && toType == String.class) {
             CustomBean customBean = (CustomBean) value;
             customBeanService.save(customBean);

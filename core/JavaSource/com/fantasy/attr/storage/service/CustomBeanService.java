@@ -48,10 +48,10 @@ public class CustomBeanService {
         }
         for (Attribute attribute : version.getAttributes()) {
             AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
-            if (attributeValue == null) {
+            if (attributeValue == null && OgnlUtil.getInstance().getValue(attribute.getCode(), customBean)!=null) {
                 attributeValue = new AttributeValue();
                 attributeValue.setAttribute(attribute);
-                attributeValue.setValue(OgnlUtil.getInstance().getValue(attribute.getCode(), customBean).toString());
+                attributeValue.setValue(OgnlUtil.getInstance().getValue(attribute.getCode(), customBean)==null?null:OgnlUtil.getInstance().getValue(attribute.getCode(), customBean).toString());
                 attributeValue.setVersion(version);
                 attributeValue.setTargetId(_customBean.getId());
                 attributeValues.add(attributeValue);
