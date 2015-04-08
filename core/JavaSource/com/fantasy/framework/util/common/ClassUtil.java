@@ -27,10 +27,6 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     public static final IClassFactory classFactory = ClassFactory.getFastClassFactory();
     private static final ConcurrentHashMap<Class<?>, BeanInfo> beanInfoCache = new ConcurrentHashMap<Class<?>, BeanInfo>();
 
-    public static void loadClass(Class<?> clazz) {
-        classFactory.getClass(getRealClass(clazz));
-    }
-
     public static BeanInfo getBeanInfo(Class<?> clazz) {
         if (!beanInfoCache.containsKey(clazz)) {
             try {
@@ -94,7 +90,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
      * 调用带参数的构造方法
      */
     public static <T> T newInstance(Class<T> clazz, Object parameter) {
-        return classFactory.getClass(getRealClass(clazz)).newInstance(parameter);
+        return classFactory.getClass(clazz).newInstance(parameter);
     }
 
     /**
@@ -108,7 +104,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
      * 调用带参数的构造方法
      */
     public static <T> T newInstance(Class<T> clazz, Class<?>[] parameterTypes, Object[] parameters) {
-        return classFactory.getClass(getRealClass(clazz)).newInstance(parameterTypes, parameters);
+        return classFactory.getClass(clazz).newInstance(parameterTypes, parameters);
     }
 
     /**
