@@ -24,7 +24,7 @@ public class CustomBean extends BaseBusEntity {
     /**
      * 对应的版本
      */
-    @Column(name = "VERSION_ID", unique = true)
+    @Column(name = "VERSION_ID")
     private Long version;
     /**
      * 属性
