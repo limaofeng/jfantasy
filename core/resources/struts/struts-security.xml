@@ -44,22 +44,22 @@
 
     <!-- 用户管理 -->
     <package name="admin-security-user" extends="fantasy-default" namespace="/security/user">
-        <action name="index" class="com.fantasy.security.web.UserAction" method="index">
+        <action name="index" class="com.fantasy.security.web.OldUserAction" method="index">
             <result type="freemarker">/template/%{pageTheme}/security/user.ftl</result>
         </action>
-        <action name="search" class="com.fantasy.security.web.UserAction" method="search"/>
-        <action name="add" class="com.fantasy.security.web.UserAction">
+        <action name="search" class="com.fantasy.security.web.OldUserAction" method="search"/>
+        <action name="add" class="com.fantasy.security.web.OldUserAction">
             <result type="freemarker">/template/%{pageTheme}/security/user_add.ftl</result>
         </action>
-        <action name="edit" class="com.fantasy.security.web.UserAction" method="edit">
+        <action name="edit" class="com.fantasy.security.web.OldUserAction" method="edit">
             <result type="freemarker">/template/%{pageTheme}/security/user_edit.ftl</result>
         </action>
         <action name="rpwd" class="com.fantasy.framework.struts2.ActionSupport">
             <result type="freemarker">/template/%{pageTheme}/security/user_resetpwd.ftl</result>
         </action>
-        <action name="save" class="com.fantasy.security.web.UserAction" method="save"/>
-        <action name="resetpwd" class="com.fantasy.security.web.UserAction" method="resetpwd"/>
-        <action name="delete" class="com.fantasy.security.web.UserAction" method="delete"/>
+        <action name="save" class="com.fantasy.security.web.OldUserAction" method="save"/>
+        <action name="resetpwd" class="com.fantasy.security.web.OldUserAction" method="resetpwd"/>
+        <action name="delete" class="com.fantasy.security.web.OldUserAction" method="delete"/>
     </package>
 
     <package name="fides-usercenter" extends="fantasy-default" namespace="/usercenter">

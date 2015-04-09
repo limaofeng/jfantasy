@@ -5,12 +5,12 @@
     <package name="fides-mycenter" extends="fantasy-default" namespace="/mycenter">
 
         <!--个人资料-->
-        <action name="information" class="com.fantasy.security.web.UserAction" method="profile">
+        <action name="information" class="com.fantasy.security.web.OldUserAction" method="profile">
             <result type="freemarker">/template/%{pageTheme}/mycenter/information.ftl</result>
         </action>
 
         <!--个人资料保存-->
-        <action name="information_save" class="com.fantasy.security.web.UserAction" method="save"/>
+        <action name="information_save" class="com.fantasy.security.web.OldUserAction" method="save"/>
 
 
 
