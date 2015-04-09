@@ -64,4 +64,14 @@ public class OgnlUtilTest {
 
     }
 
+    @Test
+    public void arrayTest() throws Exception{
+        OgnlBean ognlTest = new OgnlBean();
+        OgnlUtil.getInstance().setValue("array[0].number", ognlTest, "100");
+        OgnlUtil.getInstance().setValue("array[0].name", ognlTest, "test0");
+        OgnlUtil.getInstance().setValue("array[1].number", ognlTest, "200");
+        OgnlUtil.getInstance().setValue("array[1].name", ognlTest, "test1");
+        LOG.debug(ognlTest);
+    }
+
 }
