@@ -86,6 +86,15 @@
     <bean id="fileManager" class="com.fantasy.file.manager.LocalFileManager" lazy-init="false">
         <constructor-arg name="defaultDir" value="${filemanager.path}" />
     </bean>
+    <!-- 密码加密规则 -->
+    <bean id="plaintext" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>
+    <bean id="md5" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
+
+    <bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userDetailsService"/>
+        <property name="hideUserNotFoundExceptions" value="false"/>
+        <property name="passwordEncoder" ref="plaintext"/>
+    </bean>
 
     <!-- 邮件服务接口类 -->
     <bean id="mailSendService" class="com.fantasy.framework.service.MailSendService">

@@ -137,11 +137,18 @@
         </action>
     </package>
 
-
     <!-- 维度与组织机构之间关系-->
     <package name="admin-orgrelation" extends="fantasy-default" namespace="/security">
         <action name="orgrelations" class="com.fantasy.security.web.OrgRelationAction">
             <result type="json"/>
         </action>
     </package>
+
+    <!-- 用户管理-->
+    <package name="admin-user" extends="fantasy-default" namespace="/security">
+          <action name="users" class="com.fantasy.security.web.UserAction">
+              <result type="json"/>
+          </action>
+    </package>
+
 </struts>
