@@ -224,6 +224,7 @@ public class AttributeValueInterceptor {
         Long entityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
         DynaBean dynaBean = (DynaBean) (entityId == null ? ClassUtil.newInstance(entityClass) : _method_get.invoke(dao, entityId));
         assert dynaBean != null;
+        BeanUtil.copyProperties(dynaBean, entity, "attributeValues");
         Hibernate.initialize(dynaBean.getAttributeValues());
         List<AttributeValue> attributeValues = dynaBean.getAttributeValues();
         if (attributeValues == null || (attributeValues instanceof PersistentCollection && ((PersistentCollection) attributeValues).isWrapper(null)) || attributeValues.isEmpty()) {
