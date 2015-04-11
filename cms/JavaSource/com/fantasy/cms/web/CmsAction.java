@@ -11,6 +11,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.system.util.SettingUtil;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,16 +30,16 @@ public class CmsAction extends ActionSupport {
      *
      * @return string
      */
-    public String article() {
+    public String article(String code) {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         List<ArticleCategory> categories;
-        String rootCode = SettingUtil.getValue("cms");
-        if(StringUtil.isNotBlank(rootCode)){
+        String rootCode = StringUtil.isNotBlank(code) ? code : SettingUtil.getValue("cms");
+        if (StringUtil.isNotBlank(rootCode)) {
             categories = cmsService.getCategorys(rootCode);
-        }else{
+        } else {
             categories = cmsService.getCategorys();
         }
-        filters.add(new PropertyFilter("EQS_category.code",categories.isEmpty()?rootCode:categories.get(0).getCode()));
+        filters.add(new PropertyFilter("EQS_category.code", categories.isEmpty() ? rootCode : categories.get(0).getCode()));
         // 设置当前根
         PropertyFilter filter = ObjectUtil.find(filters, "filterName", "EQS_category.code");
         if (filter != null) {
