@@ -1,10 +1,7 @@
 package com.fantasy.cms.bean;
 
-import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
-import com.fantasy.attr.storage.bean.AttributeValue;
-import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -18,7 +15,6 @@ import org.hibernate.annotations.Persister;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import java.io.IOException;
-import java.util.List;
 
 /**
  * 文章表
@@ -33,7 +29,7 @@ import java.util.List;
 @Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "keywords", "version", "attributeValues"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Article extends BaseBusEntity implements DynaBean {
+public class Article extends BaseDynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;
 
@@ -91,18 +87,6 @@ public class Article extends BaseBusEntity implements DynaBean {
     @IndexFilter(compare = Compare.IS_EQUALS, value = "true")
     @Column(name = "ISSUE")
     private Boolean issue;
-    /**
-     * 数据版本
-     */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_VERSION"))
-    private AttributeVersion version;
-    /**
-     * 动态属性集合。 * 注意访问修饰符为 protected
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    protected List<AttributeValue> attributeValues;
 
     public Long getId() {
         return id;
@@ -176,22 +160,6 @@ public class Article extends BaseBusEntity implements DynaBean {
         this.issue = issue;
     }
 
-    public AttributeVersion getVersion() {
-        return version;
-    }
-
-    public void setVersion(AttributeVersion version) {
-        this.version = version;
-    }
-
-    public List<AttributeValue> getAttributeValues() {
-        return attributeValues;
-    }
-
-    public void setAttributeValues(List<AttributeValue> attributeValues) {
-        this.attributeValues = attributeValues;
-    }
-
     public static class ContentSerialize extends JsonSerializer<Content> {
 
         @Override
@@ -211,8 +179,6 @@ public class Article extends BaseBusEntity implements DynaBean {
                 ", author='" + author + '\'' +
                 ", releaseDate='" + releaseDate + '\'' +
                 ", issue=" + issue +
-                ", version=" + version +
-                ", attributeValues=" + attributeValues +
                 '}';
     }
 }

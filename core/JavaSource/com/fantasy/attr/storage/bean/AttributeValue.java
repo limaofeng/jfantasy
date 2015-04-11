@@ -1,10 +1,21 @@
 package com.fantasy.attr.storage.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.io.IOException;
 
 /**
  * 属性值表
@@ -16,6 +27,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "ATTR_ATTRIBUTE_VALUE", uniqueConstraints = {@UniqueConstraint(columnNames = {"VERSION_ID", "ATTRIBUTE_ID", "TARGET_ID"})})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "version"})
 public class AttributeValue extends BaseBusEntity {
 
     private static final long serialVersionUID = 5155306149647104462L;
@@ -30,6 +42,8 @@ public class AttributeValue extends BaseBusEntity {
      */
     @JoinColumn(name = "ATTRIBUTE_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VALUE_ATTRIBUTE"))
     @ManyToOne(fetch = FetchType.LAZY)
+    @JsonSerialize(using = AttributeSerialize.class)
+    @JsonDeserialize(using = AttributeDeserialize.class)
     private Attribute attribute;
     /**
      * 数据版本
@@ -45,7 +59,8 @@ public class AttributeValue extends BaseBusEntity {
     /**
      * 属性值
      */
-    @Column(name = "VALUE", length = 3000)
+    @Lob
+    @Column(name = "VALUE")
     private String value;
 
     public Long getId() {
@@ -86,6 +101,29 @@ public class AttributeValue extends BaseBusEntity {
 
     public void setVersion(AttributeVersion version) {
         this.version = version;
+    }
+
+    public static class AttributeSerialize extends JsonSerializer<Attribute> {
+
+        @Override
+        public void serialize(Attribute attribute, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+            if (attribute == null) {
+                jgen.writeNull();
+            } else {
+                jgen.writeString(attribute.getCode());
+            }
+        }
+
+    }
+
+    public static class AttributeDeserialize extends JsonDeserializer<Attribute> {
+
+        @Override
+        public Attribute deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+            String code = jp.getValueAsString();
+            return StringUtil.isNotBlank(code) ? new Attribute(code) : null;
+        }
+
     }
 
     @Override

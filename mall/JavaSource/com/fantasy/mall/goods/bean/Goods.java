@@ -1,10 +1,7 @@
 package com.fantasy.mall.goods.bean;
 
-import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
-import com.fantasy.attr.storage.bean.AttributeValue;
-import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.Compare;
 import com.fantasy.framework.lucene.annotations.IndexFilter;
 import com.fantasy.framework.lucene.annotations.Indexed;
@@ -15,17 +12,17 @@ import com.fantasy.mall.member.bean.Comment;
 import com.fantasy.mall.shop.bean.Shop;
 import com.fantasy.member.bean.Member;
 import com.fantasy.system.util.SettingUtil;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
-import org.hibernate.annotations.*;
+import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
 
-import javax.persistence.*;
 import javax.persistence.CascadeType;
+import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;
 import javax.persistence.OrderBy;
@@ -47,7 +44,7 @@ import java.util.List;
 @Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore"})
-public class Goods extends BaseBusEntity implements DynaBean {
+public class Goods extends BaseDynaBean {
 
     private static final long serialVersionUID = 7710250000511514557L;
 
@@ -195,18 +192,6 @@ public class Goods extends BaseBusEntity implements DynaBean {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SHOP_ID", foreignKey = @ForeignKey(name = "FK_GOODS_SHOP"))
     private Shop shop;
-    /**
-     * 数据版本
-     */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_GOODS_VERSION"))
-    private AttributeVersion version;
-    /**
-     * 动态属性集合。
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    private List<AttributeValue> attributeValues;
 
     /**
      * 获取商品ID
@@ -423,22 +408,6 @@ public class Goods extends BaseBusEntity implements DynaBean {
      */
     public GoodsCategory getCategory() {
         return category;
-    }
-
-    public AttributeVersion getVersion() {
-        return version;
-    }
-
-    public void setVersion(AttributeVersion version) {
-        this.version = version;
-    }
-
-    public List<AttributeValue> getAttributeValues() {
-        return attributeValues;
-    }
-
-    public void setAttributeValues(List<AttributeValue> attributeValues) {
-        this.attributeValues = attributeValues;
     }
 
     public Integer getSaleCount() {

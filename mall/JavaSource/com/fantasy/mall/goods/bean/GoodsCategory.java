@@ -1,27 +1,22 @@
 package com.fantasy.mall.goods.bean;
 
-import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
-import com.fantasy.attr.storage.bean.AttributeValue;
+import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.annotation.*;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import java.io.IOException;
 import java.util.List;
 
@@ -37,7 +32,7 @@ import java.util.List;
 @Persister(impl = DynaBeanEntityPersister.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "metaKeywords", "metaDescription", "goodsParameterStore", "brandCustomSort", "goods"})
-public class GoodsCategory extends BaseBusEntity implements DynaBean {
+public class GoodsCategory extends BaseDynaBean {
 
     private static final long serialVersionUID = -5132652107151648662L;
 
@@ -128,18 +123,6 @@ public class GoodsCategory extends BaseBusEntity implements DynaBean {
      */
     @Column(name = "GOODS_PARAMETER_STORE", length = 3000)
     private String goodsParameterStore;
-    /**
-     * 数据版本
-     */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_CATEGORY_VERSION"))
-    private AttributeVersion version;
-    /**
-     * 动态属性集合
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    private List<AttributeValue> attributeValues;
 
     public Long getId() {
         return id;
@@ -224,26 +207,6 @@ public class GoodsCategory extends BaseBusEntity implements DynaBean {
             return new String[0];
         }
         return StringUtil.tokenizeToStringArray(this.brandCustomSort);
-    }
-
-    @Override
-    public AttributeVersion getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(AttributeVersion version) {
-        this.version = version;
-    }
-
-    @Override
-    public List<AttributeValue> getAttributeValues() {
-        return attributeValues;
-    }
-
-    @Override
-    public void setAttributeValues(List<AttributeValue> attributeValues) {
-        this.attributeValues = attributeValues;
     }
 
     public Long[] getBrandIds() {

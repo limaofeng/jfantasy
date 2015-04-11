@@ -11,8 +11,10 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -56,8 +58,10 @@ public class VersionUtil {
 
     private static DynaBean createDynaBean(DynaBean dynaBean, DynaBean bean) {
         dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
+        List<AttributeValue> attributeValue = StringUtil.isBlank(bean.getAttributeValueStore()) ? bean.getAttributeValues() : JSON.deserialize(bean.getAttributeValueStore(), new TypeReference<List<AttributeValue>>() {
+        });
         for (Attribute attribute : bean.getVersion().getAttributes()) {
-            AttributeValue sourceValue = ObjectUtil.find(bean.getAttributeValues(), "attribute.code", attribute.getCode());
+            AttributeValue sourceValue = ObjectUtil.find(attributeValue, "attribute.code", attribute.getCode());
             if (sourceValue != null && StringUtil.isNotBlank(sourceValue.getValue())) {
                 getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), dynaBean, sourceValue.getValue());
             }

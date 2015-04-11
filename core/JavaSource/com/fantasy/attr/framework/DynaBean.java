@@ -2,12 +2,14 @@ package com.fantasy.attr.framework;
 
 import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 
 /**
  * 动态Bean接口
  */
+@JsonIgnoreProperties({"attributeValues"})
 public interface DynaBean {
 
     /**
@@ -32,5 +34,9 @@ public interface DynaBean {
      * @param attributeValues List<AttributeValue>
      */
     public void setAttributeValues(List<AttributeValue> attributeValues);
+
+    public void setAttributeValueStore(String json);
+
+    public String getAttributeValueStore();
 
 }

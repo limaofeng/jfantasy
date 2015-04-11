@@ -5,14 +5,13 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileService;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.core.type.TypeReference;
 import ognl.DefaultTypeConverter;
-
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 public class FileDetailTypeConverter extends DefaultTypeConverter {
@@ -23,46 +22,49 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
     @SuppressWarnings("rawtypes")
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (toType == FileDetail.class) {
-            value = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
-            if (StringUtil.isBlank(value) || !value.toString().contains(":")) {
+            String file = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            if (file.startsWith("{") && file.endsWith("}")) {
+                FileDetail fileDetail = JSON.deserialize(file, FileDetail.class);
+                if (fileDetail != null) {
+                    return fileDetail;
+                }
+            }
+            if (StringUtil.isBlank(file) || !file.contains(":")) {
                 return null;
             }
-            String[] arry = value.toString().split(":");
+            String[] arry = file.split(":");
             return fileService.getFileDetail(arry[1], arry[0]);
         } else if (toType == FileDetail[].class) {
             String files = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            FileDetail[] fileDetails;
+            if (files.startsWith("[") && files.endsWith("]")) {
+                fileDetails = JSON.deserialize(files, new TypeReference<FileDetail[]>() {
+                });
+                if (fileDetails != null) {
+                    return fileDetails;
+                }
+            }
             if (StringUtil.isBlank(files)) {
                 return new FileDetail[0];
             }
-            String[] absolutePaths = RegexpUtil.split(files, ",");
+            String[] absolutePaths = files.split(",");
             if (absolutePaths.length == 0) {
                 return new FileDetail[0];
             }
-            List<FileDetail> fileDetails = new ArrayList<FileDetail>();
-            for (String absolutePath : absolutePaths) {
-                if (StringUtil.isBlank(absolutePath)){
-                    continue;
-                }
-                String[] arry = absolutePath.split(":");
-                if (arry.length != 2) {
-                    continue;
-                }
+            fileDetails = new FileDetail[absolutePaths.length];
+            for (int i = 0, len = absolutePaths.length; i < len; i++) {
+                String[] arry = absolutePaths[0].split(":");
                 FileDetail fileDetail = fileService.getFileDetail(arry[1], arry[0]);
                 if (fileDetail == null) {
                     continue;
                 }
-                fileDetails.add(fileDetail.clone());
+                fileDetails[i] = fileDetail.clone();
             }
-            return fileDetails.toArray(new FileDetail[fileDetails.size()]);
+            return fileDetails;
         } else if (value instanceof FileDetail && toType == String.class) {
-            FileDetail fileDetail = (FileDetail) value;
-            return fileDetail.getFileManagerId() + ":" + fileDetail.getAbsolutePath();
+            return JSON.text().serialize(value);
         } else if (value instanceof FileDetail[] && toType == String.class) {
-            StringBuilder stringBuilder = new StringBuilder();
-            for (FileDetail fileDetail : (FileDetail[]) value) {
-                stringBuilder.append(fileDetail.getFileManagerId()).append(":").append(fileDetail.getAbsolutePath()).append(",");
-            }
-            return stringBuilder.toString();
+            return JSON.text().serialize(value);
         }
         return super.convertValue(context, target, member, propertyName, value, toType);
     }

@@ -1,11 +1,8 @@
 package com.fantasy.mall.order.bean;
 
-import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
-import com.fantasy.attr.storage.bean.AttributeValue;
-import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.common.bean.Area;
-import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
@@ -13,19 +10,16 @@ import com.fantasy.mall.delivery.bean.DeliveryType;
 import com.fantasy.mall.delivery.bean.Shipping;
 import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import com.opensymphony.xwork2.util.Element;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.*;
+import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
+import com.opensymphony.xwork2.util.Element;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -43,7 +37,7 @@ import java.util.List;
 @Persister(impl = DynaBeanEntityPersister.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "shipAreaStore", "memeo", "shippings", "orderItems", "payments"})
-public class Order extends BaseBusEntity implements DynaBean {
+public class Order extends BaseDynaBean {
 
     private static final long serialVersionUID = -8541323033439515148L;
 
@@ -141,7 +135,7 @@ public class Order extends BaseBusEntity implements DynaBean {
     @Column(name = "DELIVERY_TYPE_NAME", nullable = true, length = 100)
     private String deliveryTypeName;// 配送方式名称
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DELIVERY_TYPE_ID",foreignKey =  @ForeignKey(name = "FK_ORDER_DELIVERY_TYPE"))
+    @JoinColumn(name = "DELIVERY_TYPE_ID", foreignKey = @ForeignKey(name = "FK_ORDER_DELIVERY_TYPE"))
     private DeliveryType deliveryType;// 配送方式
     @Column(name = "DELIVERY_FEE", nullable = false, precision = 15, scale = 5)
     private BigDecimal deliveryFee;// 配送费用
@@ -152,7 +146,7 @@ public class Order extends BaseBusEntity implements DynaBean {
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false)
     private String paymentConfigName;// 支付方式名称
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYMENT_CONFIG_ID",foreignKey =  @ForeignKey(name = "FK_ORDER_PAYMENT_CONFIG"))
+    @JoinColumn(name = "PAYMENT_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_ORDER_PAYMENT_CONFIG"))
     private PaymentConfig paymentConfig;// 支付方式
     @Column(name = "PAYMENT_FEE", nullable = false, precision = 15, scale = 5)
     private BigDecimal paymentFee;// 支付手续费
@@ -161,26 +155,13 @@ public class Order extends BaseBusEntity implements DynaBean {
     private String goodsIdListStore;// 商品ID集合储存
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID",foreignKey =  @ForeignKey(name = "FK_ORDER_MEMBER"))
+    @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_ORDER_MEMBER"))
     private Member member;// 会员
 
     @Element(OrderItem.class)
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime asc")
     private List<OrderItem> orderItems = new ArrayList<OrderItem>();// 订单支付信息
-
-    /**
-     * 数据版本
-     */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_GOODS_VERSION"))
-    private AttributeVersion version;
-    /**
-     * 动态属性集合。
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    private List<AttributeValue> attributeValues;
 
     /**
      * 临时字段，用于订单提交时，保存用户收货地址的id
@@ -421,26 +402,6 @@ public class Order extends BaseBusEntity implements DynaBean {
 
     public void setPaymentConfig(PaymentConfig paymentConfig) {
         this.paymentConfig = paymentConfig;
-    }
-
-    @Override
-    public AttributeVersion getVersion() {
-        return version;
-    }
-
-    @Override
-    public void setVersion(AttributeVersion version) {
-        this.version = version;
-    }
-
-    @Override
-    public List<AttributeValue> getAttributeValues() {
-        return attributeValues;
-    }
-
-    @Override
-    public void setAttributeValues(List<AttributeValue> attributeValues) {
-        this.attributeValues = attributeValues;
     }
 
     @Transient

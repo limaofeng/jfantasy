@@ -14,6 +14,7 @@ import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.reflect.MethodProxy;
 import com.fantasy.framework.util.reflect.Property;
 import org.apache.commons.logging.Log;
@@ -249,6 +250,7 @@ public class AttributeValueInterceptor {
         Object oldEntity = entity;
         entity = dynaBean;
         ((DynaBean) entity).setAttributeValues(attributeValues);
+        ((DynaBean) entity).setAttributeValueStore(JSON.serialize(attributeValues));
         Object retval = pjp.proceed(new Object[]{entity});
         Long newEntityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
         if (entityId != null || newEntityId == null) {
@@ -258,6 +260,7 @@ public class AttributeValueInterceptor {
         for (AttributeValue attributeValue : attributeValues) {
             attributeValue.setTargetId(newEntityId);
         }
+        ((DynaBean) entity).setAttributeValueStore(JSON.serialize(attributeValues));
         retval = pjp.proceed(new Object[]{entity});
         BeanUtil.copyProperties(oldEntity, entity);
         return retval;

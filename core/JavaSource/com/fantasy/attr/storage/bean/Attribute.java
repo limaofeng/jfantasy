@@ -51,7 +51,7 @@ public class Attribute extends BaseBusEntity {
      * 类型
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ATTRIBUTE_TYPE_ID",foreignKey = @ForeignKey(name = "FK_ATTR_ATTRIBUTE_TYPE"))
+    @JoinColumn(name = "ATTRIBUTE_TYPE_ID", foreignKey = @ForeignKey(name = "FK_ATTR_ATTRIBUTE_TYPE"))
     private AttributeType attributeType;
     /**
      * 描述
@@ -63,6 +63,13 @@ public class Attribute extends BaseBusEntity {
      */
     @OneToMany(mappedBy = "attribute", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<AttributeValue> attributeValues;
+
+    public Attribute() {
+    }
+
+    public Attribute(String code) {
+        this.code = code;
+    }
 
     public Long getId() {
         return id;

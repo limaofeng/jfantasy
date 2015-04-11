@@ -1,22 +1,20 @@
 package com.fantasy.attr.storage.bean;
 
 
-import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
-import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "TEST_Article")
 @Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "keywords", "version", "attributeValues"})
-public class Article extends BaseBusEntity implements DynaBean {
+public class Article extends BaseDynaBean {
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
@@ -41,19 +39,6 @@ public class Article extends BaseBusEntity implements DynaBean {
     @Column(name = "ISSUE")
     private Boolean issue = false;
 
-    /**
-     * 数据版本
-     */
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_VERSION"))
-    private AttributeVersion version;
-    /**
-     * 动态属性集合。
-     */
-    @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
-    @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
-    private List<AttributeValue> attributeValues;
-
     public Long getId() {
         return id;
     }
@@ -76,22 +61,6 @@ public class Article extends BaseBusEntity implements DynaBean {
 
     public void setSummary(String summary) {
         this.summary = summary;
-    }
-
-    public AttributeVersion getVersion() {
-        return version;
-    }
-
-    public void setVersion(AttributeVersion version) {
-        this.version = version;
-    }
-
-    public List<AttributeValue> getAttributeValues() {
-        return attributeValues;
-    }
-
-    public void setAttributeValues(List<AttributeValue> attributeValues) {
-        this.attributeValues = attributeValues;
     }
 
     public Boolean getIssue() {
