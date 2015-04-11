@@ -27,7 +27,7 @@ import java.io.IOException;
 @Entity
 @Table(name = "CMS_ARTICLE")
 @Persister(impl = DynaBeanEntityPersister.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "keywords", "version", "attributeValues"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "keywords"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Article extends BaseDynaBean {
 
