@@ -20,6 +20,13 @@ public class JSONTest {
     private final static Log LOG = LogFactory.getLog(JSONTest.class);
 
     @Test
+    public void serializeDynaBean(){
+        Class clazz = AsmUtil.makeClass(Article.class.getName() + "$json", Article.class.getName(), new Property("test", String.class));
+        Object object = ClassUtil.newInstance(clazz);
+        LOG.debug(JSON.serialize(object));
+    }
+
+    @Test
     public void serialize(){
         Member member= new Member();
         member.setUsername("limaofeng");

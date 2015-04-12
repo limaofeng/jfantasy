@@ -9,7 +9,6 @@ import java.util.List;
 /**
  * 动态Bean接口
  */
-@JsonIgnoreProperties({"attributeValueStore", "version", "attributeValues"})
 public interface DynaBean {
 
     /**

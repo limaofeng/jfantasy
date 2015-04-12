@@ -41,7 +41,7 @@ public class CustomBeanDefinitionServiceTest {
 
     @Test
     public void testSave() throws Exception {
-        CustomBeanDefinition definition = customBeanDefinitionService.save(className, "测试", AttributeUtils.integer("number","数字字段","test"));
+        CustomBeanDefinition definition = customBeanDefinitionService.save(className, "测试", AttributeUtils.integer("number", "数字字段", "test"), AttributeUtils.strings("strs", "数组字符串", "test"));
 
         Assert.assertNotNull(definition);
 
@@ -56,6 +56,11 @@ public class CustomBeanDefinitionServiceTest {
         OgnlUtil.getInstance().setValue("number", o, "10");
 
         Assert.assertNotNull(o);
+
+        LOG.debug(JSON.set("text").serialize(o));
+
+        OgnlUtil.getInstance().setValue("strs[0]", o, "limaofeng");
+        OgnlUtil.getInstance().setValue("strs[1]", o, "huangli");
 
         LOG.debug(JSON.set("text").serialize(o));
 

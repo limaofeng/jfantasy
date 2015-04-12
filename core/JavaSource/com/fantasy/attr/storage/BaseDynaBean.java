@@ -4,6 +4,7 @@ import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,12 +14,14 @@ public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
     /**
      * 数据版本
      */
+    @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "VERSION_ID")
     private AttributeVersion version;
     /**
      * 动态属性集合。
      */
+    @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
     private List<AttributeValue> attributeValues;
@@ -26,6 +29,7 @@ public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
      * 字段缓存
      */
     @Lob
+    @JsonIgnore
     @Column(name = "ATTRIBUTE_VALUE_STORE")
     private String attributeValueStore;
 

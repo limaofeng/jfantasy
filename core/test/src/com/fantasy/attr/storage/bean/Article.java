@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TEST_Article")
 @Persister(impl = DynaBeanEntityPersister.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "keywords", "version", "attributeValues"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "keywords"})
 public class Article extends BaseDynaBean {
 
     @Id

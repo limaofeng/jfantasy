@@ -89,6 +89,7 @@
                 notices.totalCount>0?$("#noticeBaseSize").show():$("#noticeBaseSize").hide();
             }
             refreshNotices();
+            /*
             var socket = new WebSocket('ws://'+window.location.host+request.getContextPath()+'/notice/msg');
             socket.onopen = function(event) {
                 // 监听消息
@@ -99,7 +100,7 @@
                     refreshNotices();
                     view.setJSON(view.getData());
                 };
-            };
+            };*/
         });
     </script>
 </head>
@@ -777,6 +778,7 @@
         </@s.if>
     </li>
     </@s.iterator>
+        <#--
 <li>
     <a href="javascript:;" title="Help &amp; Support">
         <i class="glyph-icon icon-book"></i>
@@ -797,7 +799,7 @@
         </li>
 
     </ul>
-</li>
+</li>-->
 </ul>
 <div class="divider mrg5T mobile-hidden"></div>
 <div class="text-center mobile-hidden">

@@ -2,7 +2,7 @@
 <@override name="pageTitle">
 <@s.text name='mall.goods.pageTitle'/>
 <small>
-    You can use the Messaging List component to create all kinds of messaging systems for your application users.
+    <@s.text name='mall.goods.pageDescription'/>
 </small>
 </@override>
 <@override name="head">

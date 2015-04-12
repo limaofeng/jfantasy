@@ -34,7 +34,7 @@ public class CustomBeanServiceTest {
     public void setUp() throws Exception {
         this.tearDown();
 
-        customBeanDefinitionService.save(className, "测试", AttributeUtils.integer("number","数字字段","test"));
+        customBeanDefinitionService.save(className, "测试", AttributeUtils.integer("number","数字字段","test"), AttributeUtils.strings("strs", "数组字符串", "test"));
     }
 
     @After
@@ -77,6 +77,15 @@ public class CustomBeanServiceTest {
         Assert.assertEquals(id, object.getId());
 
         Assert.assertEquals(2, OgnlUtil.getInstance().getValue("number", object));
+
+        OgnlUtil.getInstance().setValue("strs[0]", object, "limaofeng");
+        OgnlUtil.getInstance().setValue("strs[1]", object, "huangli");
+
+        customBeanService.save(object);
+
+        object = customBeanService.get(id);
+
+        LOG.debug(object);
 
     }
 
