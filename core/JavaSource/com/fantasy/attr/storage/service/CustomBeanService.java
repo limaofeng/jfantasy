@@ -3,6 +3,8 @@ package com.fantasy.attr.storage.service;
 import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.attr.storage.bean.*;
 import com.fantasy.attr.storage.dao.CustomBeanDao;
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -43,15 +45,15 @@ public class CustomBeanService {
             customBeanDao.save(_customBean);
             _customBean.setAttributeValues(attributeValues);
             customBean.setId(_customBean.getId());
-        }else{
+        } else {
             attributeValues = this.customBeanDao.get(customBean.getId()).getAttributeValues();
         }
         for (Attribute attribute : version.getAttributes()) {
             AttributeValue attributeValue = ObjectUtil.find(attributeValues, "attribute.code", attribute.getCode());
-            if (attributeValue == null && OgnlUtil.getInstance().getValue(attribute.getCode(), customBean)!=null) {
+            if (attributeValue == null && OgnlUtil.getInstance().getValue(attribute.getCode(), customBean) != null) {
                 attributeValue = new AttributeValue();
                 attributeValue.setAttribute(attribute);
-                attributeValue.setValue(OgnlUtil.getInstance().getValue(attribute.getCode(), customBean)==null?null:OgnlUtil.getInstance().getValue(attribute.getCode(), customBean).toString());
+                attributeValue.setValue(OgnlUtil.getInstance().getValue(attribute.getCode(), customBean) == null ? null : OgnlUtil.getInstance().getValue(attribute.getCode(), customBean).toString());
                 attributeValue.setVersion(version);
                 attributeValue.setTargetId(_customBean.getId());
                 attributeValues.add(attributeValue);
@@ -67,6 +69,10 @@ public class CustomBeanService {
         for (Long id : ids) {
             customBeanDao.delete(id);
         }
+    }
+
+    public Pager findPager(Pager<CustomBean> pager, List<PropertyFilter> filters) {
+        return this.customBeanDao.findPager(pager, filters);
     }
 
     public com.fantasy.attr.framework.CustomBean get(Long id) {

@@ -158,9 +158,9 @@ public class RestActionMapper extends DefaultActionMapper {
             return null;
         }
 
-        String actionName =  mapping.getName();
+        String actionName = mapping.getName();
 
-        if(StringUtil.isBlank(mapping.getExtension()) && !actionName.contains("/") && !actionName.endsWith("/")){
+        if (StringUtil.isBlank(mapping.getExtension()) && !actionName.contains("/") && !actionName.endsWith("/")) {
             actionName = (actionName + "/");
         }
 
@@ -312,7 +312,7 @@ public class RestActionMapper extends DefaultActionMapper {
     }
 
     protected boolean isPost(HttpServletRequest request) {
-        return "post".equalsIgnoreCase(request.getMethod());
+        return "post".equalsIgnoreCase(request.getMethod()) && StringUtil.isBlank(request.getParameter(HTTP_METHOD_PARAM));
     }
 
     protected boolean isPut(HttpServletRequest request) {
