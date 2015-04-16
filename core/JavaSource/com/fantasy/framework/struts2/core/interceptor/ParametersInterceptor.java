@@ -6,6 +6,7 @@ import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.dao.hibernate.PropertyFilter.MatchType;
+import com.fantasy.framework.struts2.DynaModelDriven;
 import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.asm.AsmUtil;
 import com.fantasy.framework.util.asm.Property;
@@ -247,7 +248,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 setParameters(object, stack, newParameters(paramName, parameters));
                 params.put(paramNames[0], ClassUtil.getValue(object, paramName));
             } else {
-                Object object = newInstance(parameterTypes[0], paramName, parameters);
+                Object dynaModelDriven = null;
+                if (action instanceof DynaModelDriven) {
+                    dynaModelDriven = ((DynaModelDriven) action).getModel(method.getName(), paramName, parameterTypes[0], parameters);
+                }
+                Object object = ObjectUtil.defaultValue(dynaModelDriven, newInstance(parameterTypes[0], paramName, parameters));
                 setParameters(object, stack, newParameters(paramName, parameters));
                 params.put(paramNames[0], object);
             }
@@ -473,7 +478,11 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             } catch (Exception e) {
                 log.error(e.getMessage());
                 if (name.contains(".")) {
-                    com.fantasy.framework.util.ognl.OgnlUtil.getInstance().setValue(name, formbean, value);
+                    try {
+                        com.fantasy.framework.util.ognl.OgnlUtil.getInstance().setValue(name, formbean, value);
+                    } catch (Exception ex) {
+                        log.error(ex.getMessage());
+                    }
                 }
             }
         }
