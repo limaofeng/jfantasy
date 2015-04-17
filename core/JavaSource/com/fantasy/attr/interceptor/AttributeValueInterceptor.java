@@ -261,9 +261,9 @@ public class AttributeValueInterceptor {
             attributeValue.setTargetId(newEntityId);
         }
         ((DynaBean) entity).setAttributeValueStore(JSON.serialize(attributeValues));
-        retval = pjp.proceed(new Object[]{entity});
-        BeanUtil.copyProperties(oldEntity, entity);
-        return retval;
+//        retval = pjp.proceed(new Object[]{entity});
+//        BeanUtil.copyProperties(oldEntity, entity);
+        return entity;
     }
 
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.get(..)) && args(id)", argNames = "pjp,id")

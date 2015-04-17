@@ -265,22 +265,14 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                     ognlUtil.setValue(field.getName(), oldEntity, addObjects);
                     //删除原有数据
                     for (Object _odl : _old_fks) {
-                        if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), this.getIdValue(targetEntityClass, _odl)) == null) {
+                        if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), getIdValue(targetEntityClass, _odl)) == null) {
                             this.getSession().delete(_odl);
-                            System.out.println("删除数据" + this.getIdValue(targetEntityClass, _odl));
+                            logger.debug("删除数据" + getIdValue(targetEntityClass, _odl));
                         }
                     }
                 }
             }
-            // 用于回显
-            fields = ClassUtil.getDeclaredFields(this.entityClass);
-            for (Field field : fields) {
-                if (field.getAnnotation(Transient.class) != null) {
-                    continue;
-                }
-                ClassUtil.setValue(entity, field.getName(), ClassUtil.getValue(oldEntity, field.getName()));
-            }
-            return oldEntity;
+            return entity;
         } else {
             // 为外键对象提供查询功能
             Field[] manyToOneFields = ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class);

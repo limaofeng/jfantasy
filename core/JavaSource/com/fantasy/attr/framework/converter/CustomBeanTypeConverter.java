@@ -2,6 +2,8 @@ package com.fantasy.attr.framework.converter;
 
 import com.fantasy.attr.framework.CustomBean;
 import com.fantasy.attr.storage.service.CustomBeanService;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import ognl.DefaultTypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,9 +27,17 @@ public class CustomBeanTypeConverter extends DefaultTypeConverter {
     @Transactional
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (CustomBean.class.isAssignableFrom(toType)) {
-            return customBeanService.get(Long.valueOf(value.toString()));
+            String _value = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            if(StringUtil.isBlank(_value)){
+                return Array.newInstance(toType.getComponentType(),0);
+            }
+            return customBeanService.get(Long.valueOf(_value));
         } else if (CustomBean[].class.isAssignableFrom(toType)) {
-            String[] ids = value.toString().split(",");
+            String _value = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            if(StringUtil.isBlank(_value)){
+                return Array.newInstance(toType.getComponentType(),0);
+            }
+            String[] ids = _value.split(",");
             List<CustomBean> customBeanList = new ArrayList<CustomBean>();
             for (String id : ids) {
                 customBeanList.add(customBeanService.get(Long.valueOf(id)));

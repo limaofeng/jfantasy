@@ -476,12 +476,12 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                     ognlUtil.setValue(name, ognlValueStack.getContext(), formbean, value);
                 }
             } catch (Exception e) {
-                log.error(e.getMessage());
+                logger.error(e.getMessage());
                 if (name.contains(".")) {
                     try {
                         com.fantasy.framework.util.ognl.OgnlUtil.getInstance().setValue(name, formbean, value);
                     } catch (Exception ex) {
-                        log.error(ex.getMessage());
+                        logger.error(ex.getMessage());
                     }
                 }
             }
