@@ -2,6 +2,7 @@ package com.fantasy.attr.framework.util;
 
 
 import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.file.bean.FileDetail;
 
 import java.util.Date;
 
@@ -35,6 +36,28 @@ public class AttributeUtils {
         attribute.setName(name);
         attribute.setDescription(description);
         attribute.setAttributeType(AttributeTypeUtils.get(javaType));
+        attribute.setNonNull(true);
+        attribute.setNotTemporary(false);
+        return attribute;
+    }
+
+    public static Attribute file(String code, String name, String description) {
+        Attribute attribute = new Attribute();
+        attribute.setCode(code);
+        attribute.setName(name);
+        attribute.setDescription(description);
+        attribute.setAttributeType(AttributeTypeUtils.get(FileDetail.class));
+        attribute.setNonNull(true);
+        attribute.setNotTemporary(false);
+        return attribute;
+    }
+
+    public static Attribute files(String code, String name, String description) {
+        Attribute attribute = new Attribute();
+        attribute.setCode(code);
+        attribute.setName(name);
+        attribute.setDescription(description);
+        attribute.setAttributeType(AttributeTypeUtils.get(FileDetail[].class));
         attribute.setNonNull(true);
         attribute.setNotTemporary(false);
         return attribute;
