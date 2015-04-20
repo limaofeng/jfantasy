@@ -11,6 +11,8 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -30,6 +32,12 @@ public class WeiXinOnPushServlet extends HttpServlet {
     private WeiXinSessionFactory weiXinSessionFactory;
 
     private String defaultAppId = "wxcbc2c9fb9d585cd3";
+
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
+        this.setDefaultAppId(config.getInitParameter("defaultAppId"));
+    }
 
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

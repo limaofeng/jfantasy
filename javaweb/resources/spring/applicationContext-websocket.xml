@@ -13,10 +13,10 @@
     <!--<bean id="weixinWebSocketEndPoint" class="com.fantasy.wx.websocket.WeixinMessageWebSocket"/>
     <websocket:handlers>
         <websocket:mapping path="/weixin/msg" handler="weixinWebSocketEndPoint"/>
-    </websocket:handlers>-->
+    </websocket:handlers>
     <bean id="noticeWebSockets" class="com.fantasy.remind.websocket.NoticeWebSocket"/>
-
     <websocket:handlers>
         <websocket:mapping path="/notice/msg" handler="noticeWebSockets"/>
     </websocket:handlers>
+    -->
 </beans>

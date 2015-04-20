@@ -42,21 +42,10 @@
         <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
     </listener>
 
-    <!-- proxool 数据库连接池 -->
-    <servlet>
-        <servlet-name>proxool</servlet-name>
-        <servlet-class>org.logicalcobwebs.proxool.admin.servlet.AdminServlet</servlet-class>
-    </servlet>
     <!-- Freemarker 模板中使用struts2标签 -->
     <servlet>
         <servlet-name>JspSupportServlet</servlet-name>
         <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <!-- axis 配置 -->
-    <servlet>
-        <servlet-name>AxisServlet</servlet-name>
-        <servlet-class>org.apache.axis2.transport.http.AxisServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
     <servlet>
@@ -64,7 +53,7 @@
         <servlet-class>com.fantasy.framework.spring.web.DelegatingServletProxy</servlet-class>
         <init-param>
             <param-name>defaultAppId</param-name>
-            <param-value>wxcbc2c9fb9d585cd3</param-value>
+            <param-value>wxdb4ed8c64ae393e6</param-value>
         </init-param>
     </servlet>
 
@@ -283,24 +272,8 @@
     </filter-mapping>
 
     <servlet-mapping>
-        <servlet-name>proxool</servlet-name>
-        <url-pattern>/proxool</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AxisServlet</servlet-name>
-        <url-pattern>/servlet/AxisServlet</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AxisServlet</servlet-name>
-        <url-pattern>*.jws</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
-        <servlet-name>AxisServlet</servlet-name>
-        <url-pattern>/services/*</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>weiXinOnPushServlet</servlet-name>
-        <url-pattern>/weixin/message/push</url-pattern>
+        <url-pattern>/weixin/message/push.xhtml</url-pattern>
     </servlet-mapping>
 
     <jsp-config>
