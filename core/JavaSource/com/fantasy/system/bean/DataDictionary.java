@@ -71,7 +71,7 @@ public class DataDictionary extends BaseBusEntity {
     @Transient
     @JsonSerialize(using = DataDictionaryKeySerialize.class)
     public DataDictionaryKey getParentKey() {
-        if (this.parent == null) {
+        if (this.getParent() == null) {
             return null;
         }
         return DataDictionaryKey.newInstance(this.parent.code, this.parent.type);
