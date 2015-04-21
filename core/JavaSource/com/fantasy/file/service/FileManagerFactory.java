@@ -64,6 +64,7 @@ public class FileManagerFactory implements InitializingBean {
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+        assert transactionManager != null;
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             // 创建默认目录
@@ -107,7 +108,7 @@ public class FileManagerFactory implements InitializingBean {
      * @param config 配置信息
      * @return FileManager
      */
-    private FileManager initialize(String beanId, FileManagerConfig config) {
+    private synchronized FileManager initialize(String beanId, FileManagerConfig config) {
         if (!fileManagerCache.containsKey(beanId)) {
             Map<String, Object> propertyValues = new HashMap<String, Object>();
             propertyValues.put("config", config);
@@ -124,7 +125,7 @@ public class FileManagerFactory implements InitializingBean {
      * @param config 配置信息
      * @return FileManager
      */
-    public FileManager initialize(FileManagerConfig config) {
+    public synchronized FileManager initialize(FileManagerConfig config) {
         String beanId = config.getId();
         if (logger.isDebugEnabled()) {
             StringBuffer log = new StringBuffer();
@@ -208,7 +209,7 @@ public class FileManagerFactory implements InitializingBean {
      * @param ftpService FTP service
      * @return FileManager
      */
-    public FileManager initialize(String beanId, FTPService ftpService) {
+    public synchronized FileManager initialize(String beanId, FTPService ftpService) {
         FTPFileManager fileManager = (FTPFileManager) fileManagerCache.get(beanId);
         if (!fileManagerCache.containsKey(beanId)) {
             SpringContextUtil.registerBeanDefinition(getFileManagerBeanId(beanId), FTPFileManager.class, new Object[]{ftpService});
@@ -226,7 +227,7 @@ public class FileManagerFactory implements InitializingBean {
      * @param defaultDir 路径
      * @return FileManager
      */
-    public FileManager initialize(String beanId, String defaultDir) {
+    public synchronized FileManager initialize(String beanId, String defaultDir) {
         LocalFileManager fileManager = (LocalFileManager) fileManagerCache.get(beanId);
         if (!fileManagerCache.containsKey(beanId)) {
             Map<String, Object> propertyValues = new HashMap<String, Object>();
