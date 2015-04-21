@@ -111,6 +111,7 @@ public class WeiXinSessionTest {
 
     @Test
     public void testGetAuthorizationUrl() throws Exception {
+
         LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.base));
 
         LOG.debug(session.getAuthorizationUrl("http://test.jfantasy.org", Scope.userinfo));

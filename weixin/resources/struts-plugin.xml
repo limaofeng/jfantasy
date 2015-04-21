@@ -3,15 +3,22 @@
         "http://struts.apache.org/dtds/struts-2.3.dtd">
 
 <struts>
+
+    <package name="weixin-authorization" extends="fantasy-default" namespace="/weixin/authorization">
+        <action name="users" class="com.fantasy.wx.web.UserAction">
+            <result type="json"/>
+        </action>
+    </package>
+
     <package name="weixin-userinfo" extends="fantasy-default" namespace="/weixin">
         <!-- 拍品 -->
         <action name="userinfo" class="com.fantasy.wx.web.UserInfoAction" method="index">
             <result type="freemarker">/template/%{pageTheme}/weixin/userinfo.ftl</result>
         </action>
-        <action name="user_search" class="com.fantasy.wx.web.UserInfoAction" method="search" />
-        <action name="refresh" class="com.fantasy.wx.web.UserInfoAction" method="refresh" />
+        <action name="user_search" class="com.fantasy.wx.web.UserInfoAction" method="search"/>
+        <action name="refresh" class="com.fantasy.wx.web.UserInfoAction" method="refresh"/>
     </package>
-    <package name="weixin-token"  extends="fantasy-default" namespace="/weixin/token">
+    <package name="weixin-token" extends="fantasy-default" namespace="/weixin/token">
         <action name="add" class="com.fantasy.framework.struts2.ActionSupport">
             <result type="freemarker">/template/%{pageTheme}/weixin/token_add.ftl</result>
         </action>
@@ -38,6 +45,6 @@
         <action name="send" class="com.fantasy.wx.web.MessageAction" method="sendMessage"/>
     </package>
     <package name="weixin-client" extends="fantasy-default" namespace="/weixin/client">
-        <action name="core" class="com.fantasy.wx.web.WeixinAction" method="operationUrl" />
+        <action name="core" class="com.fantasy.wx.web.WeixinAction" method="operationUrl"/>
     </package>
 </struts>
