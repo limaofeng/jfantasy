@@ -113,8 +113,6 @@
 
     <import resource="classpath:spring/applicationContext-schedule.xml"/>
 
-    <import resource="classpath:spring/applicationContext-websocket.xml"/>
-
     <import resource="classpath:spring/applicationContext-weixin.xml"/>
 
 </beans>

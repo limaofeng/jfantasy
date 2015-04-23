@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>3.2.2.Alphal</version>
+        <version>3.2.4.Alphal</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.haolue</groupId>
@@ -60,11 +60,6 @@
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cms</artifactId>
-            <version>${com.fantasy-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-websocket</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
