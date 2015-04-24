@@ -78,14 +78,15 @@ public abstract class HibernateDao<T, PK extends Serializable> {
      *
      * @param entity 保存的对象
      */
-    public void save(T entity) {
+    public T save(T entity) {
         Assert.notNull(entity, "entity不能为空");
         try {
-            getSession().saveOrUpdate(clean(entity));
+            getSession().saveOrUpdate(entity = clean(entity));
         } catch (NonUniqueObjectException e) {
             getSession().merge(entity);
         }
         this.logger.debug("save entity: {}", entity);
+        return entity;
     }
 
     /**
@@ -272,7 +273,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                     }
                 }
             }
-            return entity;
+            return oldEntity;
         } else {
             // 为外键对象提供查询功能
             Field[] manyToOneFields = ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class);

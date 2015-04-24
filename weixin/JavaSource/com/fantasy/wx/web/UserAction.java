@@ -26,8 +26,7 @@ public class UserAction extends RestActionSupport {
     }
 
     public String update(UserInfo user) {
-        userInfoWeiXinService.save(user);
-        this.attrs.put(ROOT, user);
+        this.attrs.put(ROOT, userInfoWeiXinService.save(user));
         return SUCCESS;
     }
 

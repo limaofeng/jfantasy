@@ -5,16 +5,14 @@ import com.fantasy.member.bean.Member;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 /**
  * 微信用户基本信息
  * Created by zzzhong on 2014/6/19.
  */
-@Entity(name="wxUserInfo")
+@Entity(name = "wxUserInfo")
 @Table(name = "WX_USER_INFO")
-public class UserInfo  extends BaseBusEntity {
+public class UserInfo extends BaseBusEntity {
 
     public UserInfo() {
     }
@@ -22,13 +20,14 @@ public class UserInfo  extends BaseBusEntity {
     public UserInfo(String openid) {
         this.openId = openid;
     }
+
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     //用户的标识，对当前公众号唯一
-    @Column(name = "OPENID", unique = true)
+    @Column(name = "OPENID", unique = true, updatable = false)
     private String openId;
     //用户的昵称
     @Column(name = "NICKNAME", length = 5000)
@@ -75,15 +74,7 @@ public class UserInfo  extends BaseBusEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
-    @PrimaryKeyJoinColumn
     private Member member;
-
-    public String getTime() {
-        if (subscribeTime == 0) return "";
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        long time = subscribeTime * 1000L;
-        return sdf.format(new Date(time));
-    }
 
     public Long getId() {
         return id;

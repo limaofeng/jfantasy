@@ -39,8 +39,8 @@ public class UserInfoWeiXinService implements InitializingBean{
     public UserInfo getUserInfo(String openId) {
         return userInfoDao.findUniqueBy("openId", openId);
     }
-    public void save(UserInfo ui) {
-        userInfoDao.save(ui);
+    public UserInfo save(UserInfo ui) {
+        return userInfoDao.save(ui);
     }
     public void delete(Long... ids) {
         for(Long id:ids){
