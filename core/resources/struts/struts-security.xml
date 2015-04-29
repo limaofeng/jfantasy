@@ -151,4 +151,11 @@
           </action>
     </package>
 
+    <!-- 角色管理-->
+    <package name="admin-role" extends="fantasy-default" namespace="/security">
+        <action name="roles" class="com.fantasy.security.web.RestRoleAction">
+            <result type="json"/>
+        </action>
+    </package>
+
 </struts>

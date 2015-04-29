@@ -25,7 +25,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "AUTH_USER")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "userGroups", "password", "menus", "authorities" ,"logoImageStore"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "userGroups", "menus", "authorities" ,"logoImageStore"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements FantasyUserDetails {
 
