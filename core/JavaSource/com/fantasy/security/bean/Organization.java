@@ -82,6 +82,12 @@ public class Organization extends BaseBusEntity {
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Job> jobs;
 
+    /**
+     * 用户
+     */
+    @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<User> userList;
+
 
     public String getId() {
         return id;
@@ -145,5 +151,13 @@ public class Organization extends BaseBusEntity {
 
     public void setJobs(List<Job> jobs) {
         this.jobs = jobs;
+    }
+
+    public List<User> getUserList() {
+        return userList;
+    }
+
+    public void setUserList(List<User> userList) {
+        this.userList = userList;
     }
 }

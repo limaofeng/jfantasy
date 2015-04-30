@@ -11,7 +11,6 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -112,6 +111,13 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     @JoinColumn(name="WEBSITE_ID",foreignKey = @ForeignKey(name="FK_WEBSITE_USER"))
     private Website website;
 
+    /**
+     * 对应的组织机构
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="ORGANIZATION_ID",foreignKey = @ForeignKey(name="FK_ORGANIZATION_USER"))
+    private Organization organization;
+
 	public Long getId() {
 		return id;
 	}
@@ -200,7 +206,6 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 		this.lastLoginTime = lastLoginTime;
 	}
 
-	@JsonSerialize(using = UserRolesSerialize.class)
 	public List<Role> getRoles() {
 		return roles;
 	}
@@ -277,5 +282,13 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
                 ", lastLoginTime=" + lastLoginTime +
                 ", details=" + details +
                 '}';
+    }
+
+    public Organization getOrganization() {
+        return organization;
+    }
+
+    public void setOrganization(Organization organization) {
+        this.organization = organization;
     }
 }
