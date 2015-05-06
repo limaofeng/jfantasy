@@ -1,6 +1,6 @@
 package com.fantasy.security.bean;
 
-import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.attr.storage.BaseDynaBean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "AUTH_JOB")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-public class Job extends BaseBusEntity {
+public class Job extends BaseDynaBean {
 
     private static final long serialVersionUID = -7020427994563623645L;
 

@@ -1,34 +1,24 @@
 package com.fantasy.security.web;
 
-import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.framework.struts2.DynaModelDriven;
 import com.fantasy.security.bean.Organization;
 import com.fantasy.security.service.OrganizationService;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * 组织机构Action
  *
  */
-public class OrganizAction extends ActionSupport implements DynaModelDriven<Organization> {
+public class OrganizAction extends ActionSupport{
 
     @Autowired
     private OrganizationService organizationService;
 
-    @Override
-    public Organization getModel(String methodName,String paramName,Class paramType,Map<String, Object> parameters) {
-        if("organization".equals(paramName) && Organization.class.isAssignableFrom(paramType)){
-            return VersionUtil.createDynaBean(Organization.class, "organization_v1");
-        }
-        return null;
-    }
 
     public String search(Pager<Organization> pager,List<PropertyFilter> filters){
         this.attrs.put(ROOT,this.organizationService.findPager(pager,filters));
