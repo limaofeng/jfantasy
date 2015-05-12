@@ -15,17 +15,15 @@ public interface FileItemSelector {
      *
      * @param fileItem 文件对象
      * @return {boolean}
-     * @功能描述
      */
-    public boolean includeFile(FileItem fileItem);
+    boolean includeFile(FileItem fileItem);
 
     /**
      * 判断这个目录是否应该被遍历
      *
      * @param fileItem 文件对象
      * @return {boolean}
-     * @功能描述
      */
-    public boolean traverseDescendents(FileItem fileItem);
+    boolean traverseDescendents(FileItem fileItem);
 
 }

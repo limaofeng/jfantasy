@@ -1,5 +1,6 @@
 package com.fantasy.file.service;
 
+import com.fantasy.file.bean.Directory;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.bean.FileDetailKey;
 import com.fantasy.file.bean.Folder;
@@ -10,6 +11,8 @@ import com.fantasy.framework.util.common.file.FileUtil;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -18,6 +21,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -33,17 +37,27 @@ public class FileServiceTest {
     private FileService fileService;
     @Autowired
     private FileUploadService fileUploadService;
-
+    @Autowired
+    private DirectoryService directoryService;
     //测试数据
     private FileDetailKey fileDetailKey;
 
     @Before
     public void setUp() throws Exception {
         try {
-            File file = new File(FileServiceTest.class.getResource("test.jpg").getFile());
+            File file = new File(FileServiceTest.class.getResource("files/t5.jpg").getFile());
             String mimeType = FileUtil.getMimeType(file);
             FileDetail fileDetail = fileUploadService.upload(file, mimeType, file.getName(), "test");
             this.fileDetailKey = FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId());
+
+            File[] files = new File(FileServiceTest.class.getResource("files/").getFile()).listFiles();
+            if(files == null){
+                return;
+            }
+            for (File _file : files) {
+                fileUploadService.upload(_file, FileUtil.getMimeType(_file), _file.getName(), "test");
+            }
+
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage(), e);
         } catch (IOException e) {
@@ -53,7 +67,10 @@ public class FileServiceTest {
 
     @After
     public void tearDown() throws Exception {
-        this.fileService.delete(fileDetailKey);
+        Directory directory = directoryService.get("test");
+        for(FileDetail fileDetail : fileService.findFileDetail(Restrictions.eq("fileManagerId",directory.getFileManager().getId()),Restrictions.like("folder.absolutePath",directory.getDirPath(), MatchMode.START))){
+            this.fileService.delete(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()));
+        }
     }
 
     @Test

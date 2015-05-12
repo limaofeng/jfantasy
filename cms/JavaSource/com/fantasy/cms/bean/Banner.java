@@ -50,6 +50,7 @@ public class Banner extends BaseBusEntity {
      * 对应的明细项
      */
     @OneToMany(mappedBy = "banner", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OrderBy("sort ASC")
     private List<BannerItem> bannerItems;
 
     public Long getId() {

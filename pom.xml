@@ -26,6 +26,7 @@
         <org.mybatis-version>3.2.7</org.mybatis-version>
         <commons-codec-version>1.8</commons-codec-version>
         <commons-email-version>1.3.2</commons-email-version>
+        <aliyun-sdk-oss-version>2.0.3</aliyun-sdk-oss-version>
         <mybatis-spring-version>1.2.2</mybatis-spring-version>
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
         <com.fantasy-version>3.2.7.Alphal</com.fantasy-version>
@@ -92,9 +93,11 @@
                     <include>**/*.xml</include>
                     <include>**/*.jpg</include>
                     <include>**/*.png</include>
+                    <include>**/*.gif</include>
                     <include>**/*.jpeg</include>
                     <include>**/*.map3</include>
                     <include>**/*.map4</include>
+                    <include>**/*.xlsx</include>
                     <include>**/*.properties</include>
                     <include>**/*.bpmn</include>
                 </includes>
@@ -877,6 +880,16 @@
                 <artifactId>spring-test</artifactId>
                 <version>${org.springframework-version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.aliyun.oss</groupId>
+                <artifactId>aliyun-sdk-oss</artifactId>
+                <version>${aliyun-sdk-oss-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-core</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -912,14 +925,12 @@
         <module>question</module>
         <module>websocket</module>
         <module>weixin</module>
-        <module>weixin-ws</module>
-        <module>weixin-ws-server</module>
-        <module>weixin-ws-client</module>
+        <module>aliyun-oss</module>
         <module>javaweb</module>
     </modules>
 
     <!-- 项目信息设置 -->
-    <name>fantasy-framework</name>
+    <name>${project.artifactId}</name>
     <description>昊略公司开发框架</description>
     <url>http://www.jfantasy.org</url>
     <inceptionYear>2012</inceptionYear>

@@ -5,24 +5,24 @@ import com.fantasy.file.bean.Directory;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.bean.FileDetailKey;
 import com.fantasy.file.bean.FilePart;
-import com.fantasy.file.manager.UploadFileManager;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.common.*;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.web.WebUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Service;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @Service
+@Transactional
 public class FileUploadService {
 
     private static final Log logger = LogFactory.getLog(FileUploadService.class);
@@ -32,21 +32,23 @@ public class FileUploadService {
     private transient FileService fileService;
     @Autowired
     private transient FilePartService filePartService;
+    @Autowired
+    private transient FileManagerFactory fileManagerFactory;
 
     /**
      * 文件上传方法
      * <br/>dir 往下为分段上传参数
      *
-     * @param attach            附件信息
-     * @param contentType 附件类型
-     * @param fileName    附件名称
-     * @param dir               附件上传目录Id
-     * @param entireFileName    完整文件名称
-     * @param entireFileDir     附件完整文件的上传目录信息
-     * @param entireFileHash    文件hash值
-     * @param partFileHash      分段文件的hash值
-     * @param total             分段上传时的总段数
-     * @param index             当前片段
+     * @param attach         附件信息
+     * @param contentType    附件类型
+     * @param fileName       附件名称
+     * @param dir            附件上传目录Id
+     * @param entireFileName 完整文件名称
+     * @param entireFileDir  附件完整文件的上传目录信息
+     * @param entireFileHash 文件hash值
+     * @param partFileHash   分段文件的hash值
+     * @param total          分段上传时的总段数
+     * @param index          当前片段
      * @return FileDetail
      * @throws IOException
      */
@@ -69,7 +71,7 @@ public class FileUploadService {
             if (isPart) {//如果为分段上传
                 //获取文件上传目录的配置信息
                 Directory directory = fileService.getDirectory(dir);
-                FileManager fileManager = FileManagerFactory.getInstance().getUploadFileManager(directory.getFileManager().getId());
+                FileManager fileManager = fileManagerFactory.getUploadFileManager(directory.getFileManager().getId());
 
                 FilePart filePart = filePartService.findByPartFileHash(entireFileHash, partFileHash);
                 if (filePart == null || (fileDetail = fileService.get(FileDetailKey.newInstance(filePart.getAbsolutePath(), filePart.getFileManagerId()))) == null) {//分段已上传信息
@@ -121,11 +123,11 @@ public class FileUploadService {
                 fileDetail = this.upload(attach, contentType, fileName, dir);
             }
             return fileDetail;
-        }catch (RuntimeException e){
-            logger.error(e.getMessage(),e);
+        } catch (RuntimeException e) {
+            logger.error(e.getMessage(), e);
             throw e;
-        }catch (IOException e){
-            logger.error(e.getMessage(),e);
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
             throw e;
         }
     }
@@ -134,27 +136,36 @@ public class FileUploadService {
         Directory directory = this.fileService.getDirectory(dir);
         //获取文件Md5码
         String md5 = MessageDigestUtil.getInstance().get(attach);// 获取文件MD5
+
+        String mimeType = FileUtil.getMimeType(attach);
+
+        //通过 mimeType 纠正后缀名
+        Map<String, String> extensions = new HashMap<String, String>() {
+            {
+                this.put("image/jpeg", "jpg");
+                this.put("image/gif", "gif");
+                this.put("image/png", "png");
+                this.put("mage/bmp", "bmp");
+            }
+        };
+
         // 获取虚拟目录
-        String absolutePath = directory.getDirPath() + separator + StringUtil.uuid() + "." + WebUtil.getExtension(fileName);
+        String absolutePath = directory.getDirPath() + separator + DateUtil.format("yyyyMMdd") + separator + StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", "")) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
         // 文件类型
         FileDetail fileDetail;
         // 获取真实目录
-        String realPath = "";
+        String realPath;
 
         String fileManagerId = directory.getFileManager().getId();
 
-        FileManager fileManager = FileManagerFactory.getInstance().getFileManager(fileManagerId);
-        if (fileManager instanceof UploadFileManager) {
-            UploadFileManager uploadFileManager = ((UploadFileManager) fileManager);
-            fileDetail = fileService.getFileDetailByMd5(md5, fileManagerId);
-            if (fileDetail == null) {
-                realPath = separator + DateUtil.format("yyyy-MM-dd") + separator + md5;
-                uploadFileManager.writeFile(realPath, attach);
-            } else {
-                realPath = fileDetail.getRealPath();
-            }
+        FileManager fileManager = fileManagerFactory.getFileManager(fileManagerId);
+
+        fileDetail = fileService.getFileDetailByMd5(md5, fileManagerId);
+        if (fileDetail == null || fileManager.getFileItem(fileDetail.getRealPath()) == null) {
+            realPath = separator + mimeType + separator + StringUtil.hexTo64("0" + md5) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
+            fileManager.writeFile(realPath, attach);
         } else {
-            fileManager.writeFile(absolutePath, attach);
+            realPath = fileDetail.getRealPath();
         }
         return fileService.saveFileDetail(absolutePath, fileName, contentType, attach.length(), md5, realPath, fileManagerId, "");
     }

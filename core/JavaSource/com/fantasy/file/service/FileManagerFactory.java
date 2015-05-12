@@ -2,32 +2,33 @@ package com.fantasy.file.service;
 
 import com.fantasy.common.service.FtpServiceFactory;
 import com.fantasy.file.FileManager;
+import com.fantasy.file.FileManagerBuilder;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.bean.enums.FileManagerType;
-import com.fantasy.file.manager.FTPFileManager;
-import com.fantasy.file.manager.LocalFileManager;
+import com.fantasy.file.builders.LocalFileManagerBuilder;
 import com.fantasy.file.manager.UploadFileManager;
 import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.service.FTPService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+
+import static com.fantasy.file.bean.enums.FileManagerType.local;
 
 /**
  * FileManager 管理类
@@ -51,16 +52,16 @@ public class FileManagerFactory implements InitializingBean {
     @Autowired
     private FtpServiceFactory ftpServiceFactory;
 
+    private Map<FileManagerType, FileManagerBuilder> fileManagerBuilders = new HashMap<FileManagerType, FileManagerBuilder>() {
+        {
+            this.put(FileManagerType.local, new LocalFileManagerBuilder());
+        }
+    };
+
     private final static ConcurrentMap<String, FileManager> fileManagerCache = new ConcurrentHashMap<String, FileManager>();
 
+
     public void afterPropertiesSet() throws Exception {
-    }
-
-    public static String getFileManagerBeanId(String id) {
-        return "FileManager_" + id;
-    }
-
-    public void initialize() {
         PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
         DefaultTransactionDefinition def = new DefaultTransactionDefinition();
         def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
@@ -74,22 +75,17 @@ public class FileManagerFactory implements InitializingBean {
                 fileManagerConfig.setId(WEBROOT_FILEMANAGER_ID);
                 fileManagerConfig.setName("项目WEB根目录");
                 fileManagerConfig.setDescription("应用启动是检查并修改该目录");
-                fileManagerConfig.setType(FileManagerType.local);
+                fileManagerConfig.setType(local);
             }
-            fileManagerConfig.setLocalDefaultDir(StringUtil.defaultValue(PathUtil.root(), PathUtil.classes()));
+            fileManagerConfig.addConfigParam("defaultDir", StringUtil.defaultValue(PathUtil.root(), PathUtil.classes()));
             fileManagerService.save(fileManagerConfig);
-            if (logger.isDebugEnabled()) {
-                StringBuffer log = new StringBuffer();
-                log.append("\r\n初始化WEBROOT文件管理器(").append(WEBROOT_FILEMANAGER_ID).append("):");
-                log.append("\r\n名称:").append(fileManagerConfig.getName());
-                log.append("\r\n类型:").append(fileManagerConfig.getType().getValue());
-                log.append("\r\n地址:").append(fileManagerConfig.getLocalDefaultDir());
-                log.append("\r\n描述:").append(fileManagerConfig.getDescription());
-                logger.debug(log);
-            }
             // 初始化文件管理器
             for (FileManagerConfig config : fileManagerService.getAll()) {
-                this.initialize(config);
+                try {
+                    this.registerFileManager(config.getId(), config.getType(), config.getConfigParams());
+                } catch (Exception ex) {
+                    logger.error("注册 FileManager id = [" + config.getId() + "] 失败!", ex);
+                }
             }
         } finally {
             transactionManager.commit(status);
@@ -102,54 +98,16 @@ public class FileManagerFactory implements InitializingBean {
         // System.out.println(Arrays.toString(SpringContextUtil.getBeanNamesForType(DynamicFileManager.class)));
     }
 
-    /**
-     * 获取 虚拟文件管理器
-     *
-     * @param config 配置信息
-     * @return FileManager
-     */
-    private synchronized FileManager initialize(String beanId, FileManagerConfig config) {
-        if (!fileManagerCache.containsKey(beanId)) {
-            Map<String, Object> propertyValues = new HashMap<String, Object>();
-            propertyValues.put("config", config);
-            propertyValues.put("source", this.initialize(config.getSource()));
-            SpringContextUtil.registerBeanDefinition(getFileManagerBeanId(config.getId()), UploadFileManager.class, propertyValues);
-            fileManagerCache.put(config.getId(), SpringContextUtil.getBean(getFileManagerBeanId(config.getId()), FileManager.class));
+    public void registerFileManager(String id, FileManagerType type, final List<FileManagerConfig.ConfigParam> configParams) {
+        if (!fileManagerBuilders.containsKey(type)) {
+            logger.error(" 未找到 [" + type + "] 对应的构建程序!请参考 FileManagerBuilder 实现,并添加到 FileManagerFactory 的配置中");
+            return;
         }
-        return fileManagerCache.get(config.getId());
-    }
-
-    /**
-     * 获取配置对应的 FileManager ，不包括虚拟目录文件管理器
-     *
-     * @param config 配置信息
-     * @return FileManager
-     */
-    public synchronized FileManager initialize(FileManagerConfig config) {
-        String beanId = config.getId();
-        if (logger.isDebugEnabled()) {
-            StringBuffer log = new StringBuffer();
-            log.append("\r\n初始化文件管理器(").append(beanId).append("):");
-            log.append("\r\n名称:").append(config.getName());
-            log.append("\r\n类型:").append(config.getType().getValue());
-            log.append("\r\n地址:").append(config.getLocalDefaultDir());
-            log.append("\r\n描述:").append(config.getDescription());
-            logger.debug(log);
+        Map<String,String> params = new HashMap<String, String>();
+        for(FileManagerConfig.ConfigParam configParam : configParams){
+            params.put(configParam.getName(),configParam.getValue());
         }
-        try {
-            if (FileManagerType.virtual == config.getType()) {
-                return initialize(beanId, config);
-            } else if (FileManagerType.local == config.getType()) {// 本地文件管理
-                return initialize(beanId, config.getLocalDefaultDir());
-            } else if (FileManagerType.ftp == config.getType()) {// FTP文件管理
-                return initialize(beanId, ftpServiceFactory.getFtpService(config.getFtpConfig().getId()));
-            } else if (FileManagerType.jdbc == config.getType()) {// JDBC文件管理
-                return null;
-            }
-        }catch (Exception e){
-            logger.error(e.getMessage(),e);
-        }
-        throw new IgnoreException(config.getType() + " 对应的FileManagerType不存在!");
+        fileManagerCache.put(id, fileManagerBuilders.get(type).register(params));
     }
 
     /**
@@ -197,73 +155,16 @@ public class FileManagerFactory implements InitializingBean {
      * @return FileManager
      */
     public FileManager getFileManager(String id) {
-        if (fileManagerCache.isEmpty()) {
-            this.initialize();
-        }
-        return fileManagerCache.containsKey(id) ? fileManagerCache.get(id) : null;
-    }
-
-    /**
-     * 获取ftpService对应的文件管理器
-     *
-     * @param ftpService FTP service
-     * @return FileManager
-     */
-    public synchronized FileManager initialize(String beanId, FTPService ftpService) {
-        FTPFileManager fileManager = (FTPFileManager) fileManagerCache.get(beanId);
-        if (!fileManagerCache.containsKey(beanId)) {
-            SpringContextUtil.registerBeanDefinition(getFileManagerBeanId(beanId), FTPFileManager.class, new Object[]{ftpService});
-            fileManagerCache.put(beanId, SpringContextUtil.getBean(getFileManagerBeanId(beanId), FileManager.class));
-        } else {
-            fileManager.setFtpService(ftpService);
-        }
-        return fileManagerCache.get(beanId);
-    }
-
-    /**
-     * 获取本地文件管理器
-     *
-     * @param beanId     id
-     * @param defaultDir 路径
-     * @return FileManager
-     */
-    public synchronized FileManager initialize(String beanId, String defaultDir) {
-        LocalFileManager fileManager = (LocalFileManager) fileManagerCache.get(beanId);
-        if (!fileManagerCache.containsKey(beanId)) {
-            Map<String, Object> propertyValues = new HashMap<String, Object>();
-            propertyValues.put("defaultDir", defaultDir);
-            SpringContextUtil.registerBeanDefinition(getFileManagerBeanId(beanId), LocalFileManager.class, propertyValues);
-            fileManagerCache.put(beanId, fileManager = (LocalFileManager) SpringContextUtil.getBean(getFileManagerBeanId(beanId), FileManager.class));
-        } else {
-            fileManager.setDefaultDir(defaultDir);
-        }
-        return fileManager;
+        return fileManagerCache.get(id);
     }
 
     public static String[] getFileManagerIds() {
-        if (fileManagerCache.isEmpty()) {
-            getInstance().initialize();
-        }
         Set<String> strings = fileManagerCache.keySet();
         return strings.toArray(new String[strings.size()]);
     }
 
     public void remove(FileManagerConfig config) {
         fileManagerCache.remove(config.getId());
-        SpringContextUtil.removeBeanDefinition(getFileManagerBeanId(config.getId()));
-    }
-
-    public static List<FileManagerConfig> getFileManagers() {
-        return SpringContextUtil.getBeanByType(FileManagerService.class).listFileManager();
-    }
-
-    public static String getConfigId(FileManager fm) {
-        for (Map.Entry<String, FileManager> entry : fileManagerCache.entrySet()) {
-            if (entry.getValue().equals(fm)) {
-                return entry.getKey();
-            }
-        }
-        throw new IgnoreException(fm + "-对应的文件管理器未注册!");
     }
 
 }

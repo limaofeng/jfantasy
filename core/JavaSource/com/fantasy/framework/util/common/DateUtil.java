@@ -41,6 +41,12 @@ public class DateUtil {
         dateDriver = (DateDriver) ClassUtil.newInstance(dateDriverClass);
     }
 
+    public static String formatRfc822Date(Date expirationTime) {
+        SimpleDateFormat rfc822DateFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+        rfc822DateFormat.setTimeZone(new SimpleTimeZone(0, "GMT"));
+        return rfc822DateFormat.format(expirationTime);
+    }
+
     @Deprecated
     public enum DateType {
         DAY, HOUR, MINUTE, SECOND;
@@ -97,7 +103,7 @@ public class DateUtil {
      * @return string
      */
     public static String format(Object date, String format) {
-        if (date == null || !Date.class.isAssignableFrom(date.getClass())){
+        if (date == null || !Date.class.isAssignableFrom(date.getClass())) {
             return "";
         }
         return format((Date) date, format);
@@ -139,7 +145,7 @@ public class DateUtil {
      * @return data
      */
     public static Date parse(String s, String format) {
-        if (s == null){
+        if (s == null) {
             return null;
         }
         DateFormat dateFormat = getDateFormat(format);

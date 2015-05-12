@@ -1,12 +1,15 @@
 package com.fantasy.file.bean;
 
-import com.fantasy.common.bean.FtpConfig;
-import com.fantasy.common.bean.JdbcConfig;
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -34,7 +37,7 @@ public class FileManagerConfig extends BaseBusEntity {
      * 唯一别名，作为文件管理器的ID
      */
     @Id
-    @Column(name = "BEAN_NAME", nullable = false, insertable = true, updatable = false, length = 50)
+    @Column(name = "ID", nullable = false, insertable = true, updatable = false, length = 50)
     private String id;
     /**
      * 文件管理器名称
@@ -52,27 +55,37 @@ public class FileManagerConfig extends BaseBusEntity {
      */
     @Column(name = "DESCRIPTION", length = 250)
     private String description;
+    /**
+     * 存放配置参数
+     */
+    @Column(name = "CONFIG_PARAM_STORE", length = 3000)
+    private String configParamStore;
+    /**
+     * 参数
+     */
+    @Transient
+    private List<ConfigParam> configParams = new ArrayList<ConfigParam>();
 
-    /*------------------------------ FTP 配置属性-------------------------------*/
+    /*------------------------------ FTP 配置属性-------------------------------
     @JoinColumn(name = "FTP_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_FILE_MANAGER_FTP_CONFIG"))
     @ManyToOne(fetch = FetchType.LAZY)
-
     private FtpConfig ftpConfig;
+    */
 
-    /*------------------------------ JDBC 配置属性-------------------------------*/
+    /*------------------------------ JDBC 配置属性-------------------------------
     @JoinColumn(name = "JDBC_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_FILE_MANAGER_JDBC_CONFIG"))
     @ManyToOne(fetch = FetchType.LAZY)
-
     private JdbcConfig jdbcConfig;
-
-    /*------------------------------- Local 配置属性 -----------------------------*/
+    */
+    /*------------------------------- Local 配置属性 -----------------------------
     @Column(name = "LOCAL_DEFAULT_DIR", length = 350)
     private String localDefaultDir;
-
-    /*------------------------------- 虚拟目录 配置属性 -----------------------------*/
+    */
+    /*------------------------------- 虚拟目录 配置属性 -----------------------------
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "SOURCE_ID")
     private FileManagerConfig source;
+    */
 
     /**
      * 文件管理器对应的目录
@@ -112,30 +125,6 @@ public class FileManagerConfig extends BaseBusEntity {
         this.type = type;
     }
 
-    public FtpConfig getFtpConfig() {
-        return ftpConfig;
-    }
-
-    public void setFtpConfig(FtpConfig ftpConfig) {
-        this.ftpConfig = ftpConfig;
-    }
-
-    public JdbcConfig getJdbcConfig() {
-        return jdbcConfig;
-    }
-
-    public void setJdbcConfig(JdbcConfig jdbcConfig) {
-        this.jdbcConfig = jdbcConfig;
-    }
-
-    public String getLocalDefaultDir() {
-        return localDefaultDir;
-    }
-
-    public void setLocalDefaultDir(String localDefaultDir) {
-        this.localDefaultDir = localDefaultDir;
-    }
-
     public List<Folder> getFolders() {
         return folders;
     }
@@ -160,37 +149,102 @@ public class FileManagerConfig extends BaseBusEntity {
         this.description = description;
     }
 
-    public FileManagerConfig getSource() {
-        return source;
+    public String getConfigParamStore() {
+        return configParamStore;
     }
 
-    public void setSource(FileManagerConfig source) {
-        this.source = source;
+    public void setConfigParamStore(String configParamStore) {
+        this.configParamStore = configParamStore;
     }
 
-    public static FileManagerConfig newInstance(String key, String name, String localDefaultDir, String description) {
-        FileManagerConfig config = new FileManagerConfig();
-        config.setId(key);
-        config.setName(name);
-        config.setType(FileManagerType.local);
-        config.setLocalDefaultDir(localDefaultDir);
-        config.setDescription(description);
-        return config;
+    public List<ConfigParam> getConfigParams() {
+        if (configParams.isEmpty() || StringUtil.isNotBlank(this.getConfigParamStore())) {
+            configParams = StringUtil.isBlank(this.getConfigParamStore()) ? Collections.<ConfigParam>emptyList() : JSON.text().deserialize(this.getConfigParamStore(), new TypeReference<List<ConfigParam>>() {
+            });
+        }
+        return configParams;
     }
 
-    public static FileManagerConfig newInstance(String key) {
-        FileManagerConfig config = new FileManagerConfig();
-        config.setId(key);
-        return config;
+    public void setConfigParams(List<ConfigParam> configParams) {
+        this.configParams = configParams;
     }
 
-    public static FileManagerConfig newInstance(String key, String name, FileManagerConfig source, String description) {
-        FileManagerConfig config = new FileManagerConfig();
-        config.setId(key);
-        config.setName(name);
-        config.setType(FileManagerType.virtual);
-        config.setSource(source);
-        config.setDescription(description);
-        return config;
+
+    public void addConfigParam(String name, String value) {
+        this.configParams.add(new ConfigParam(name, value));
+    }
+
+//    public static FileManagerConfig newInstance(String key, String name, String localDefaultDir, String description) {
+//        FileManagerConfig config = new FileManagerConfig();
+//        config.setId(key);
+//        config.setName(name);
+//        config.setType(FileManagerType.local);
+//        config.setLocalDefaultDir(localDefaultDir);
+//        config.setDescription(description);
+//        return config;
+//    }
+
+//    public static FileManagerConfig newInstance(String key) {
+//        FileManagerConfig config = new FileManagerConfig();
+//        config.setId(key);
+//        return config;
+//    }
+
+//    public static FileManagerConfig newInstance(String key, String name, FileManagerConfig source, String description) {
+//        FileManagerConfig config = new FileManagerConfig();
+//        config.setId(key);
+//        config.setName(name);
+//        config.setType(FileManagerType.virtual);
+//        config.setSource(source);
+//        config.setDescription(description);
+//        return config;
+//    }
+
+    public static class ConfigParam {
+        private String name;
+        private String value;
+
+        public ConfigParam() {
+        }
+
+        public ConfigParam(String name, String value) {
+            this.name = name;
+            this.value = value;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public void setValue(String value) {
+            this.value = value;
+        }
+
+        @Override
+        public String toString() {
+            return "ConfigParam{" +
+                    "name='" + name + '\'' +
+                    ", value='" + value + '\'' +
+                    '}';
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "FileManagerConfig{" +
+                "id='" + id + '\'' +
+                ", name='" + name + '\'' +
+                ", type=" + type +
+                ", description='" + description + '\'' +
+                ", configParams=" + configParams +
+                '}';
     }
 }

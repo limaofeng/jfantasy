@@ -2,6 +2,7 @@ package com.fantasy.framework.dao.hibernate;
 
 import com.fantasy.attr.storage.listener.AttributeVersionEventListener;
 import com.fantasy.attr.storage.listener.VersionChangedEventListener;
+import com.fantasy.file.listener.FileManagerEventListener;
 import com.fantasy.framework.dao.hibernate.event.PropertyGeneratorSaveOrUpdatEventListener;
 import com.fantasy.framework.dao.hibernate.generator.SequenceGenerator;
 import com.fantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
@@ -105,12 +106,11 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         addEventListener("post-delete", eventListeners, versionChangedEventListener);
 
         // FileEventListener 监听器,用户转存文件或者删除文件
-        /*
-        FileEventListener fileEventListener = SpringContextUtil.createBean(FileEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
-		addEventListener("post-commit-insert", eventListeners, fileEventListener);
-		addEventListener("post-commit-update", eventListeners, fileEventListener);
-		addEventListener("post-commit-delete", eventListeners, fileEventListener);
-		*/
+        FileManagerEventListener fileManagerEventListener = SpringContextUtil.createBean(FileManagerEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
+		addEventListener("post-commit-insert", eventListeners, fileManagerEventListener);
+		addEventListener("post-commit-update", eventListeners, fileManagerEventListener);
+		addEventListener("post-commit-delete", eventListeners, fileManagerEventListener);
+
         this.eventListeners.putAll(eventListeners);
         EventListenerRegistry registry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
         for (Map.Entry<String, List<Object>> event : this.eventListeners.entrySet()) {

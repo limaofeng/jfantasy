@@ -2,12 +2,16 @@ package com.fantasy.framework.util.regexp;
 
 import com.fantasy.security.bean.User;
 import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
 
 
 public class RegexpUtilTest {
+
+    private static final Log LOG = LogFactory.getLog(RegexpUtilTest.class);
 
     @Test
     public void testGetPattern() throws Exception {
@@ -21,11 +25,6 @@ public class RegexpUtilTest {
 
     @Test
     public void testParseGroups() throws Exception {
-
-    }
-
-    @Test
-    public void testParseGroups1() throws Exception {
 
     }
 
@@ -59,7 +58,11 @@ public class RegexpUtilTest {
 
     @Test
     public void testParseFirst() throws Exception {
+        LOG.debug(RegexpUtil.parseGroup("ddd/", "([^/]+)/$",1));
 
+        LOG.debug(RegexpUtil.parseGroup("aaa/bbb/ccc/ddd/", "([^/]+)/$",1));
+
+        LOG.debug(RegexpUtil.parseGroup("qqqq/", "([^/]+)/$",1));
     }
 
     @Test

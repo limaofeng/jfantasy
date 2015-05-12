@@ -149,8 +149,8 @@ public class UploadFileManager implements FileManager {
         }
 
         @Override
-        public File getFile() {
-            return uploadFileManager.source.getFileItem(this.fileDetail.getRealPath()).getFile();
+        public Metadata getMetadata() {
+            return null;
         }
 
         public List<FileItem> listFileItems(FileItemFilter filter) {

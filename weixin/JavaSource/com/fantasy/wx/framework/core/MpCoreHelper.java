@@ -713,13 +713,15 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         }
     }
 
+    private LocalFileManager fileManager = new LocalFileManager(System.getProperty("java.io.tmpdir"));
+
     public FileItem mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException {
         try {
             File file = getWeiXinDetails(session.getId()).getWxMpService().mediaDownload(mediaId);
             if (file == null) {
                 return null;
             }
-            return new LocalFileManager.LocalFileItem(file);
+            return fileManager.retrieveFileItem(file);
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }

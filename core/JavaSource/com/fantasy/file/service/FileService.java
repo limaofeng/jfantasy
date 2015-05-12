@@ -133,6 +133,10 @@ public class FileService {
     // return this.folderDao.findPager(pager, filters);
     // }
 
+    public List<FileDetail> findFileDetail(Criterion... criterions){
+        return this.fileDetailDao.find(criterions);
+    }
+
     public Pager<FileDetail> findFileDetailPager(Pager<FileDetail> pager, List<PropertyFilter> filters) {
         return this.fileDetailDao.findPager(pager, filters);
     }

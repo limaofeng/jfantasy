@@ -5,6 +5,8 @@ import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.UUID;
+
 public class StringUtilTest {
 
     private static final Log logger = LogFactory.getLog(StringUtilTest.class);
@@ -257,12 +259,12 @@ public class StringUtilTest {
     }
 
     @Test
-    public void testUuid() throws Exception {
+    public void testShortUrl() throws Exception {
 
     }
 
     @Test
-    public void testShortUrl() throws Exception {
-
+    public void testHexTo64() throws Exception {
+        logger.debug(StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-","")));
     }
 }

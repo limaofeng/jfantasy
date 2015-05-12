@@ -687,14 +687,37 @@ public abstract class StringUtil {
         return DateUtil.parse(idCard.substring(6, 6 + 8), "yyyyMMdd");
     }
 
-    /**
-     * 随机获取UUID字符串(无中划线)
-     *
-     * @return UUID字符串
-     */
-    public static String uuid() {
-        String uuid = UUID.randomUUID().toString();
-        return uuid.substring(0, 8) + uuid.substring(9, 13) + uuid.substring(14, 18) + uuid.substring(19, 23) + uuid.substring(24);
+    public static final char[] charMap;
+
+    static {
+        charMap = new char[64];
+        for (int i = 0; i < 10; i++) {
+            charMap[i] = (char) ('0' + i);
+        }
+        for (int i = 10; i < 36; i++) {
+            charMap[i] = (char) ('a' + i - 10);
+        }
+        for (int i = 36; i < 62; i++) {
+            charMap[i] = (char) ('A' + i - 36);
+        }
+        charMap[62] = '_';
+        charMap[63] = '-';
+    }
+
+    public static String hexTo64(String hex) {
+        StringBuilder r = new StringBuilder();
+        int index;
+        int[] buff = new int[3];
+        int l = hex.length();
+        for (int i = 0; i < l; i++) {
+            index = i % 3;
+            buff[index] = Integer.parseInt("" + hex.charAt(i), 16);
+            if (index == 2) {
+                r.append(charMap[buff[0] << 2 | buff[1] >>> 2]);
+                r.append(charMap[(buff[1] & 3) << 4 | buff[2]]);
+            }
+        }
+        return r.toString();
     }
 
     public static String[] shortUrl(String s, String key) {

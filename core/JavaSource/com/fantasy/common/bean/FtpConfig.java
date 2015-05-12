@@ -1,7 +1,5 @@
 package com.fantasy.common.bean;
 
-import com.fantasy.common.service.FtpServiceFactory;
-import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -11,7 +9,6 @@ import javax.persistence.*;
 /**
  * Ftp 连接配置
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-7-12 下午02:32:45
  * @version 1.0
@@ -139,11 +136,6 @@ public class FtpConfig extends BaseBusEntity {
 
 	public void setControlEncoding(String controlEncoding) {
 		this.controlEncoding = controlEncoding;
-	}
-
-	@Transient
-	public String getFileManagerId() {
-		return FileManagerFactory.getFileManagerBeanId(FtpServiceFactory.getFtpServiceBeanId(this.id));
 	}
 
 }

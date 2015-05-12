@@ -1,19 +1,13 @@
 package com.fantasy.file.manager;
 
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileItemFilter;
-import com.fantasy.file.FileItemSelector;
-import com.fantasy.file.FileManager;
+import com.fantasy.file.*;
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 public class LocalFileManager implements FileManager {
 
@@ -78,19 +72,34 @@ public class LocalFileManager implements FileManager {
     }
 
     public FileItem getFileItem(String remotePath) {
-        File file = new File(this.defaultDir + filterRemotePath(remotePath));
-        return file.exists() ? retrieveFileItem(file) : null;
+        return retrieveFileItem(this.defaultDir + filterRemotePath(remotePath));
     }
 
     private FileItem root() {
-        return retrieveFileItem(new File(this.defaultDir));
+        return retrieveFileItem("/");
     }
 
-    private FileItem retrieveFileItem(final File file) {
+    public FileItem retrieveFileItem(String absolutePath) {
+        final File file = new File(this.defaultDir + absolutePath);
         if (!file.getAbsolutePath().startsWith(new File(this.defaultDir).getAbsolutePath()) || !file.exists()) {
             return null;
         }
-        return new LocalFileItem(this, file);
+        return file.isDirectory() ? new LocalFileItem(this, file) : new LocalFileItem(this, file, new FileItem.Metadata(new HashMap<String, Object>() {
+            {
+                this.put(FileItem.HttpHeaders.CONTENT_TYPE, FileUtil.getMimeType(file));
+            }
+        }));
+    }
+
+    public FileItem retrieveFileItem(final File file) {
+        if (!file.getAbsolutePath().startsWith(new File(this.defaultDir).getAbsolutePath()) || !file.exists()) {
+            return null;
+        }
+        return file.isDirectory() ? new LocalFileItem(this, file) : new LocalFileItem(this, file, new FileItem.Metadata(new HashMap<String, Object>() {
+            {
+                this.put(FileItem.HttpHeaders.CONTENT_TYPE, FileUtil.getMimeType(file));
+            }
+        }));
     }
 
     public List<FileItem> listFiles() {
@@ -98,13 +107,7 @@ public class LocalFileManager implements FileManager {
     }
 
     public List<FileItem> listFiles(FileItemFilter filter) {
-        List<FileItem> fileItems = new ArrayList<FileItem>();
-        for (FileItem item : listFiles()) {
-            if (filter.accept(item)) {
-                fileItems.add(item);
-            }
-        }
-        return fileItems;
+        return root().listFileItems(filter);
     }
 
     public List<FileItem> listFiles(FileItemSelector selector) {
@@ -113,13 +116,13 @@ public class LocalFileManager implements FileManager {
 
     @SuppressWarnings("unchecked")
     public List<FileItem> listFiles(String remotePath) {
-        FileItem fileItem = retrieveFileItem(new File(this.defaultDir + remotePath));
+        FileItem fileItem = retrieveFileItem(remotePath);
         return fileItem == null ? Collections.EMPTY_LIST : fileItem.listFileItems();
     }
 
     @SuppressWarnings("unchecked")
     public List<FileItem> listFiles(String remotePath, FileItemFilter fileItemFilter) {
-        FileItem fileItem = retrieveFileItem(new File(this.defaultDir + remotePath));
+        FileItem fileItem = retrieveFileItem(remotePath);
         return fileItem == null ? Collections.EMPTY_LIST : fileItem.listFileItems(fileItemFilter);
     }
 
@@ -131,51 +134,25 @@ public class LocalFileManager implements FileManager {
         FileUtil.delFile(this.defaultDir + remotePath);
     }
 
-    public static class LocalFileItem implements FileItem {
+    public static class LocalFileItem extends AbstractFileItem {
 
         private File file;
         private LocalFileManager fileManager;
 
-        public LocalFileItem(File file) {
-            this.file = file;
-        }
-
         public LocalFileItem(LocalFileManager fileManager, File file) {
+            super(file.getAbsolutePath());
             this.file = file;
             this.fileManager = fileManager;
         }
 
-        public String getAbsolutePath() {
-            FileItem fileItem = getParentFileItem();
-            return fileItem != null ? (("/".equals(fileItem.getAbsolutePath()) ? "/" : (fileItem.getAbsolutePath() + "/")) + getName()) : "/";
-        }
-
-        public String getContentType() {
-            return file.isDirectory() ? "folder" : FileUtil.getMimeType(file);
-        }
-
-        public String getName() {
-            return file.getName();
+        public LocalFileItem(LocalFileManager fileManager, final File file, Metadata metadata) {
+            super(file.getAbsolutePath(), file.length(), new Date(file.lastModified()), metadata);
+            this.file = file;
+            this.fileManager = fileManager;
         }
 
         public FileItem getParentFileItem() {
-            if (this.fileManager == null) {
-                return new LocalFileItem(file.getParentFile());
-            } else {
-                return this.fileManager.retrieveFileItem(file.getParentFile());
-            }
-        }
-
-        public long getSize() {
-            return file.length();
-        }
-
-        public boolean isDirectory() {
-            return file.isDirectory();
-        }
-
-        public Date lastModified() {
-            return new Date(file.lastModified());
+            return this.fileManager.retrieveFileItem(file.getParentFile());
         }
 
         public List<FileItem> listFileItems() {
@@ -188,11 +165,7 @@ public class LocalFileManager implements FileManager {
                     return (pathname.isDirectory() || pathname.isFile()) && !pathname.isHidden();
                 }
             })) {
-                if (this.fileManager == null) {
-                    fileItems.add(new LocalFileItem(f));
-                } else {
-                    fileItems.add(this.fileManager.retrieveFileItem(f));
-                }
+                fileItems.add(this.fileManager.retrieveFileItem(f));
             }
             return fileItems;
         }
@@ -217,28 +190,13 @@ public class LocalFileManager implements FileManager {
             return FileItem.Util.flat(this.listFileItems(), selector);
         }
 
-        @Override
-        public File getFile() {
-            return file;
-        }
-
         public InputStream getInputStream() throws IOException {
             if (this.isDirectory()) {
                 throw new IgnoreException("当前对象为一个目录,不能获取 InputStream ");
             }
-            if (this.fileManager == null) {
-                return new FileInputStream(file);
-            } else {
-                return this.fileManager.readFile(this.getAbsolutePath());
-            }
+            return this.fileManager.readFile(this.getAbsolutePath());
         }
 
-        @Override
-        public String toString() {
-            return "LocalFileItem{" +
-                    "file=" + file.getAbsolutePath() +
-                    '}';
-        }
     }
 
 }

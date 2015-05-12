@@ -90,12 +90,12 @@ public class FTPFileManager implements FileManager {
 			return FileItem.Util.flat(this.listFileItems(), selector);
 		}
 
-        @Override
-        public File getFile() {
-            return null;
-        }
+		@Override
+		public Metadata getMetadata() {
+			return null;
+		}
 
-        public List<FileItem> listFileItems(FileItemFilter filter) {
+		public List<FileItem> listFileItems(FileItemFilter filter) {
 			List<FileItem> fileItems = new ArrayList<FileItem>();
 			if (!this.isDirectory()) {
 				return fileItems;

@@ -22,7 +22,7 @@ public interface FileManager {
      * @param file       文件对象
      * @throws IOException
      */
-    public void writeFile(String remotePath, File file) throws IOException;
+     void writeFile(String remotePath, File file) throws IOException;
 
     /**
      * 将 InputStream 写到地址对应的文件中
@@ -31,7 +31,7 @@ public interface FileManager {
      * @param in         输出流
      * @throws IOException
      */
-    public void writeFile(String remotePath, InputStream in) throws IOException;
+    void writeFile(String remotePath, InputStream in) throws IOException;
 
     /**
      * 返回一个 out 流，用来接收要写入的内容
@@ -40,7 +40,7 @@ public interface FileManager {
      * @return {OutputStream}
      * @throws IOException
      */
-    public OutputStream writeFile(String remotePath) throws IOException;
+    OutputStream writeFile(String remotePath) throws IOException;
 
     /**
      * 通过地址将一个文件写到一个本地地址
@@ -49,7 +49,7 @@ public interface FileManager {
      * @param localPath  路径
      * @throws IOException
      */
-    public void readFile(String remotePath, String localPath) throws IOException;
+    void readFile(String remotePath, String localPath) throws IOException;
 
     /**
      * 通过地址将文件写入到 OutputStream 中
@@ -58,7 +58,7 @@ public interface FileManager {
      * @param out        输出流
      * @throws IOException
      */
-    public void readFile(String remotePath, OutputStream out) throws IOException;
+    void readFile(String remotePath, OutputStream out) throws IOException;
 
     /**
      * 通过一个地址获取文件对应的 InputStream
@@ -67,14 +67,14 @@ public interface FileManager {
      * @return 返回 InputStream 对象
      * @throws IOException
      */
-    public InputStream readFile(String remotePath) throws IOException;
+    InputStream readFile(String remotePath) throws IOException;
 
     /**
      * 获取跟目录的文件列表
      *
      * @return {List<FileItem>}
      */
-    public List<FileItem> listFiles();
+    List<FileItem> listFiles();
 
     /**
      * 获取指定路径下的文件列表
@@ -82,7 +82,7 @@ public interface FileManager {
      * @param remotePath 路径
      * @return {List<FileItem>}
      */
-    public List<FileItem> listFiles(String remotePath);
+    List listFiles(String remotePath);
 
     /**
      * 通过 FileItemSelector 接口 筛选文件,当前对象必须为文件夹，此方法有效
@@ -90,7 +90,7 @@ public interface FileManager {
      * @param selector FileItemSelector
      * @return {List<FileItem>}
      */
-    public List<FileItem> listFiles(FileItemSelector selector);
+    List<FileItem> listFiles(FileItemSelector selector);
 
     /**
      * 通过 FileItemSelector 接口 筛选文件,当前对象必须为文件夹，此方法有效
@@ -99,7 +99,7 @@ public interface FileManager {
      * @param selector   FileItemSelector
      * @return {List<FileItem>}
      */
-    public List<FileItem> listFiles(String remotePath, FileItemSelector selector);
+    List<FileItem> listFiles(String remotePath, FileItemSelector selector);
 
     /**
      * 通过 FileItemFilter 接口 筛选文件,当前对象必须为文件夹，此方法有效
@@ -107,7 +107,7 @@ public interface FileManager {
      * @param filter FileItemFilter
      * @return {List<FileItem>}
      */
-    public List<FileItem> listFiles(FileItemFilter filter);
+    List<FileItem> listFiles(FileItemFilter filter);
 
     /**
      * 通过 FileItemFilter 接口 筛选文件,当前对象必须为文件夹，此方法有效
@@ -116,7 +116,7 @@ public interface FileManager {
      * @param filter     FileItemFilter
      * @return {List<FileItem>}
      */
-    public List<FileItem> listFiles(String remotePath, FileItemFilter filter);
+    List<FileItem> listFiles(String remotePath, FileItemFilter filter);
 
     /**
      * 获取目录对应的 FileItem 对象
@@ -124,13 +124,13 @@ public interface FileManager {
      * @param remotePath 地址
      * @return {FileItem}
      */
-    public FileItem getFileItem(String remotePath);
+    FileItem getFileItem(String remotePath);
 
     /**
      * 删除地址对应的文件
      *
      * @param remotePath 地址
      */
-    public void removeFile(String remotePath);
+    void removeFile(String remotePath);
 
 }

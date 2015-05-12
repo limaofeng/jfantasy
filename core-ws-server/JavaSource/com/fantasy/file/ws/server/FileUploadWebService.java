@@ -9,12 +9,14 @@ import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import org.apache.axiom.attachments.Attachments;
 import org.apache.axis2.context.MessageContext;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.activation.DataHandler;
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.xml.ws.WebServiceException;
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 @Component
 public class FileUploadWebService implements IFileUploadService {
@@ -25,7 +27,6 @@ public class FileUploadWebService implements IFileUploadService {
     public FileDTO uploadFile(String fileName, String contentType, String dir, String attchmentID) {
         MessageContext msgCtx = MessageContext.getCurrentMessageContext();
         Attachments attachment = msgCtx.getAttachmentMap();
-        System.out.println(attachment.getAllContentIDs());
         DataHandler dataHandler = attachment.getDataHandler(attchmentID);
         try {
             File tmp = FileUtil.tmp();

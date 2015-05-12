@@ -5,6 +5,8 @@ import org.apache.commons.lang.builder.HashCodeBuilder;
 
 import com.fantasy.framework.util.common.StringUtil;
 
+import java.util.UUID;
+
 /**
  * 商品参数
  */
@@ -15,7 +17,7 @@ public class GoodsParameterValue implements Comparable<GoodsParameterValue> {
     private Integer sort;
 
     public GoodsParameterValue() {
-        this.id = StringUtil.uuid();
+        this.id = UUID.randomUUID().toString();
     }
 
     public GoodsParameterValue(String id) {

@@ -1,11 +1,6 @@
 package com.fantasy.framework.struts2.views.components;
 
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileManager;
-import com.fantasy.file.web.FileFilter;
-import com.fantasy.framework.util.common.ImageUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.system.util.SettingUtil;
 import com.opensymphony.xwork2.util.ValueStack;
@@ -17,9 +12,6 @@ import org.apache.struts2.views.annotations.StrutsTagAttribute;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 
 @StrutsTag(name = "img", tldTagClass = "com.fantasy.framework.struts2.views.jsp.ui.ImgTag", description = "", allowDynamicAttributes = true)
 public class Img extends UIBean {
@@ -49,7 +41,7 @@ public class Img extends UIBean {
 		if (alt != null) {
 			addParameter("alt", findString(alt));
 		}
-
+		/*
 		if (ratio != null) {
 			FileItem fileItem = FileFilter.getFileCache(tmpsrc);
 			if (fileItem != null) {
@@ -87,7 +79,7 @@ public class Img extends UIBean {
 			} catch (IOException e) {
 				logger.error(e.getMessage(), e);
 			}
-		}
+		}*/
 	}
 
 	protected String getDefaultTemplate() {

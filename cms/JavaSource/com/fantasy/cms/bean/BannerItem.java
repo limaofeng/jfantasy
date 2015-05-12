@@ -53,6 +53,11 @@ public class BannerItem extends BaseBusEntity {
      */
     @Column(name = "BANNER_IMAGE_STORE", length = 500)
     private String bannerImageStore;
+    /**
+     * 排序字段
+     */
+    @Column(name = "SORT")
+    private Integer sort;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BANNER_ID")
@@ -116,6 +121,14 @@ public class BannerItem extends BaseBusEntity {
 
     public void setBanner(Banner banner) {
         this.banner = banner;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     @Override

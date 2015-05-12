@@ -25,13 +25,11 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
 import java.util.Enumeration;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 @Component("fileFilter")
 public class FileFilter extends GenericFilterBean {
 
-    private final static ConcurrentMap<String, FileItem> fileCache = new ConcurrentHashMap<String, FileItem>();
+//    private final static ConcurrentMap<String, FileItem> fileCache = new ConcurrentHashMap<String, FileItem>();
 
     @Override
     protected void initFilterBean() throws ServletException {
@@ -63,19 +61,19 @@ public class FileFilter extends GenericFilterBean {
             chain.doFilter(request, response);
             return;
         }
-        if (fileCache.containsKey(url)) {
-            writeFile(request, response, fileCache.get(url));
-            return;
-        }
+//        if (fileCache.containsKey(url)) {
+//            writeFile(request, response, fileCache.get(url));
+//            return;
+//        }
         FileManager fileManager = SettingUtil.getDefaultUploadFileManager();
         if (fileManager != null) {
             FileItem fileItem = fileManager.getFileItem(url);
             if (fileItem == null && RegexpUtil.find(url, regex)) {
                 // 查找源文件
                 String srcUrl = RegexpUtil.replace(url, regex, ".$3");
-                if (fileCache.containsKey(srcUrl)) {
-                    fileItem = fileCache.get(srcUrl);
-                } else {
+//                if (fileCache.containsKey(srcUrl)) {
+//                    fileItem = fileCache.get(srcUrl);
+//                } else {
                     fileItem = fileManager.getFileItem(srcUrl);
                     if (fileItem == null) {
 //						noInFileManagerCache.add(url);
@@ -83,9 +81,9 @@ public class FileFilter extends GenericFilterBean {
                         return;
                     }
                     // 缓存原始路径对应的文件
-                    if (!fileCache.containsKey(srcUrl)) {
-                        fileCache.put(srcUrl, fileItem);
-                    }
+//                    if (!fileCache.containsKey(srcUrl)) {
+//                        fileCache.put(srcUrl, fileItem);
+//                    }
                     // 只自动缩放 image/jpeg 格式的图片
                     if (!"image/jpeg".equals(fileItem.getContentType())) {
 //						noInFileManagerCache.add(url);
@@ -102,26 +100,26 @@ public class FileFilter extends GenericFilterBean {
                 webrootFileManager.writeFile(url, tmp);
                 // 删除临时文件
                 FileUtil.delFile(tmp);
-                fileCache.put(url, fileItem = webrootFileManager.getFileItem(url));
+//                fileCache.put(url, fileItem = webrootFileManager.getFileItem(url));
                 writeFile(request, response, fileItem);
                 return;
             }
-            if (fileItem != null) {
-                fileCache.put(url, fileItem);
-                writeFile(request, response, fileItem);
-                return;
-            }
-        }
+//            if (fileItem != null) {
+//                fileCache.put(url, fileItem);
+//                writeFile(request, response, fileItem);
+//                return;
+//            }
+//        }
         chain.doFilter(request, response);
     }
 
-    public static void addFileCache(String url, FileItem fileItem) {
-        fileCache.put(url, fileItem);
-    }
-
-    public static FileItem getFileCache(String url) {
-        return fileCache.get(url);
-    }
+//    public static void addFileCache(String url, FileItem fileItem) {
+//        fileCache.put(url, fileItem);
+//    }
+//
+//    public static FileItem getFileCache(String url) {
+//        return fileCache.get(url);
+//    }
 
 
     public void _doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
