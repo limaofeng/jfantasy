@@ -71,14 +71,15 @@ public class FileManagerFactory implements InitializingBean {
             // 创建默认目录
             FileManagerConfig fileManagerConfig = fileManagerService.get(WEBROOT_FILEMANAGER_ID);
             if (fileManagerConfig == null) {
-                fileManagerConfig = new FileManagerConfig();
-                fileManagerConfig.setId(WEBROOT_FILEMANAGER_ID);
-                fileManagerConfig.setName("项目WEB根目录");
-                fileManagerConfig.setDescription("应用启动是检查并修改该目录");
-                fileManagerConfig.setType(local);
+                fileManagerService.save(local, WEBROOT_FILEMANAGER_ID, "项目WEB根目录", "应用启动是检查并修改该目录", new HashMap<String, String>() {
+                    {
+                        this.put("defaultDir", StringUtil.defaultValue(PathUtil.root(), PathUtil.classes()));
+                    }
+                });
+            } else {
+                fileManagerConfig.addConfigParam("defaultDir", StringUtil.defaultValue(PathUtil.root(), PathUtil.classes()));
+                fileManagerService.save(fileManagerConfig);
             }
-            fileManagerConfig.addConfigParam("defaultDir", StringUtil.defaultValue(PathUtil.root(), PathUtil.classes()));
-            fileManagerService.save(fileManagerConfig);
             // 初始化文件管理器
             for (FileManagerConfig config : fileManagerService.getAll()) {
                 try {
@@ -103,9 +104,9 @@ public class FileManagerFactory implements InitializingBean {
             logger.error(" 未找到 [" + type + "] 对应的构建程序!请参考 FileManagerBuilder 实现,并添加到 FileManagerFactory 的配置中");
             return;
         }
-        Map<String,String> params = new HashMap<String, String>();
-        for(FileManagerConfig.ConfigParam configParam : configParams){
-            params.put(configParam.getName(),configParam.getValue());
+        Map<String, String> params = new HashMap<String, String>();
+        for (FileManagerConfig.ConfigParam configParam : configParams) {
+            params.put(configParam.getName(), configParam.getValue());
         }
         fileManagerCache.put(id, fileManagerBuilders.get(type).register(params));
     }
@@ -167,4 +168,9 @@ public class FileManagerFactory implements InitializingBean {
         fileManagerCache.remove(config.getId());
     }
 
+    public void setBuilders(List<FileManagerBuilder> builders) {
+        for (FileManagerBuilder fileManagerBuilder : builders) {
+            this.fileManagerBuilders.put(fileManagerBuilder.getType(), fileManagerBuilder);
+        }
+    }
 }

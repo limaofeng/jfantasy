@@ -123,7 +123,12 @@ public class OSSFileManager implements FileManager {
     }
 
     private FileItem retrieveFileItem(OSSObjectSummary objectSummary) {
-        return new OSSFileItem(this, "/" + objectSummary.getKey(), objectSummary.getSize(), objectSummary.getLastModified(), client.getObjectMetadata(bucketName, objectSummary.getKey()));
+        String absolutePath = "/" + objectSummary.getKey();
+        if (absolutePath.endsWith("/")) {
+            return new OSSFileItem(this, absolutePath, client.getObjectMetadata(bucketName, objectSummary.getKey()));
+        } else {
+            return new OSSFileItem(this, absolutePath, objectSummary.getSize(), objectSummary.getLastModified(), client.getObjectMetadata(bucketName, objectSummary.getKey()));
+        }
     }
 
     private FileItem retrieveFileItem(String absolutePath) {
@@ -148,8 +153,21 @@ public class OSSFileManager implements FileManager {
 
     @Override
     public void removeFile(String remotePath) {
-        if (remotePath.endsWith("/")) {//TODO 如果删除的是目录
-            throw new RuntimeException("删除目录未实现");
+        if (remotePath.endsWith("/")) {
+            ListObjectsRequest listObjectsRequest = new ListObjectsRequest(bucketName);
+            String prefix = RegexpUtil.replace(remotePath, "^/", "");
+            if (StringUtil.isNotBlank(prefix)) {
+                listObjectsRequest.setPrefix(prefix);
+            }
+            ObjectListing listing = client.listObjects(listObjectsRequest);
+            for (OSSObjectSummary objectSummary : listing.getObjectSummaries()) {
+                client.deleteObject(bucketName, objectSummary.getKey());
+            }
+            for (String commonPrefix : listing.getCommonPrefixes()) {
+                if (client.doesObjectExist(bucketName, commonPrefix)) {
+                    client.deleteObject(bucketName, commonPrefix);
+                }
+            }
         } else {
             client.deleteObject(bucketName, RegexpUtil.replace(remotePath, "^/", ""));
         }
@@ -190,9 +208,15 @@ public class OSSFileManager implements FileManager {
             ObjectListing listing = client.listObjects(listObjectsRequest);
             List<FileItem> fileItems = new ArrayList<FileItem>();
             for (String commonPrefix : listing.getCommonPrefixes()) {
+                if (commonPrefix.equals(ossAbsolutePath)) {
+                    continue;
+                }
                 fileItems.add(this.fileManager.retrieveFileItem("/" + commonPrefix));
             }
             for (OSSObjectSummary objectSummary : listing.getObjectSummaries()) {
+                if (objectSummary.getKey().equals(ossAbsolutePath)) {
+                    continue;
+                }
                 fileItems.add(this.fileManager.retrieveFileItem(objectSummary));
             }
             return fileItems;

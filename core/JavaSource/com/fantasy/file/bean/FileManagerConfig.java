@@ -58,7 +58,7 @@ public class FileManagerConfig extends BaseBusEntity {
     /**
      * 存放配置参数
      */
-    @Column(name = "CONFIG_PARAM_STORE", length = 3000)
+    @Column(name = "CONFIG_PARAM_STORE", length = 500)
     private String configParamStore;
     /**
      * 参数

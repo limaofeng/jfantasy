@@ -1,17 +1,18 @@
 package com.fantasy.file.service;
 
 import com.fantasy.file.bean.FileManagerConfig;
+import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.file.dao.FileManagerConfigDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import org.hibernate.criterion.Criterion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -34,6 +35,18 @@ public class FileManagerService {
         return fileManager;
     }
 
+    public void save(FileManagerType type, String id, String name, String description, Map<String, String> params) {
+        FileManagerConfig fileManagerConfig = new FileManagerConfig();
+        fileManagerConfig.setId(id);
+        fileManagerConfig.setName(name);
+        fileManagerConfig.setDescription(description);
+        fileManagerConfig.setType(type);
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            fileManagerConfig.addConfigParam(entry.getKey(), entry.getValue());
+        }
+        this.save(fileManagerConfig);
+    }
+
     public List<FileManagerConfig> getAll() {
         return fileManagerConfigDao.getAll();
     }
@@ -47,4 +60,6 @@ public class FileManagerService {
     public List<FileManagerConfig> listFileManager() {
         return this.fileManagerConfigDao.find(new Criterion[0], "id", "asc");
     }
+
+
 }

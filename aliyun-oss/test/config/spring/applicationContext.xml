@@ -18,7 +18,8 @@
     <context:component-scan base-package="com.fantasy,com.haolue"/>
 
     <!-- 加载 properties文件 -->
-    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
+    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true"
+                                  ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
     <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
     <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
@@ -34,7 +35,7 @@
         </property>
         <property name="defaultEncoding" value="utf-8"/>
 
-        <property name="templateLoaderPath" value="${freemarker.templatePath}" />
+        <property name="templateLoaderPath" value="${freemarker.templatePath}"/>
         <property name="preTemplateLoaders">
             <list>
                 <bean class="com.fantasy.framework.freemarker.loader.FreemarkerTemplateLoader">
@@ -48,7 +49,8 @@
 
     <!-- ehcache缓存配置 -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:cache/ehcache.xml"/>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
+          p:configLocation="classpath:cache/ehcache.xml"/>
     <!--
     <ehcache:annotation-driven cache-manager="cacheManager" />
      -->
@@ -70,7 +72,8 @@
     </bean>
 
     <!-- lucene 配置 -->
-    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open"
+          destroy-method="close">
         <property name="analyzer">
             <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
         </property>
@@ -80,17 +83,24 @@
     </bean>
 
     <!-- 文件管理器 -->
-    <bean id="fileManagerFactory" class="com.fantasy.file.service.FileManagerFactory" lazy-init="false"/>
+    <bean id="fileManagerFactory" class="com.fantasy.file.service.FileManagerFactory" lazy-init="false">
+        <property name="builders">
+            <list>
+                <bean class="com.fantasy.aliyun.oss.OSSFileManagerBuilder"/>
+            </list>
+        </property>
+    </bean>
 
     <!-- 文件默认存储路径 -->
     <bean id="fileManager" class="com.fantasy.file.manager.LocalFileManager" lazy-init="false">
-        <constructor-arg name="defaultDir" value="${filemanager.path}" />
+        <constructor-arg name="defaultDir" value="${filemanager.path}"/>
     </bean>
     <!-- 密码加密规则 -->
     <bean id="plaintext" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>
     <bean id="md5" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
 
-    <bean id="daoAuthenticationProvider" class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+    <bean id="daoAuthenticationProvider"
+          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
         <property name="userDetailsService" ref="userDetailsService"/>
         <property name="hideUserNotFoundExceptions" value="false"/>
         <property name="passwordEncoder" ref="plaintext"/>

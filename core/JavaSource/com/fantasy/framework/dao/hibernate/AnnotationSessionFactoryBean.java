@@ -107,16 +107,15 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
 
         // FileEventListener 监听器,用户转存文件或者删除文件
         FileManagerEventListener fileManagerEventListener = SpringContextUtil.createBean(FileManagerEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
-		addEventListener("post-commit-insert", eventListeners, fileManagerEventListener);
-		addEventListener("post-commit-update", eventListeners, fileManagerEventListener);
-		addEventListener("post-commit-delete", eventListeners, fileManagerEventListener);
+		addEventListener("post-insert", eventListeners, fileManagerEventListener);
+		addEventListener("post-update", eventListeners, fileManagerEventListener);
+		addEventListener("post-delete", eventListeners, fileManagerEventListener);
 
         this.eventListeners.putAll(eventListeners);
         EventListenerRegistry registry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
         for (Map.Entry<String, List<Object>> event : this.eventListeners.entrySet()) {
             for (Object listener : event.getValue()) {
                 if(EventType.SAVE_UPDATE.eventName().equals(event.getKey())){
-                    // instanceof List ? ((List) listener).toArray(new Object[((List) listener).size()]) :listener
                     registry.prependListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
                 }else{
                     registry.appendListeners(EventType.resolveEventTypeByName(event.getKey()),listener);

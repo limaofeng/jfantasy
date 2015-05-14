@@ -82,7 +82,7 @@ public interface FileManager {
      * @param remotePath 路径
      * @return {List<FileItem>}
      */
-    List listFiles(String remotePath);
+    List<FileItem> listFiles(String remotePath);
 
     /**
      * 通过 FileItemSelector 接口 筛选文件,当前对象必须为文件夹，此方法有效
