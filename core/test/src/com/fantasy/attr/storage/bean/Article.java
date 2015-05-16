@@ -5,15 +5,19 @@ import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 
+
 @Entity
 @Table(name = "TEST_Article")
 @Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "keywords"})
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Article extends BaseDynaBean {
 
     @Id
