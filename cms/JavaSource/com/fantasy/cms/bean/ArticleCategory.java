@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -94,36 +93,6 @@ public class ArticleCategory extends BaseBusEntity {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Article> articles;
 
-
-    // -------------------------------新增字段-------------------------------\\
-
-    /**
-     * 英文名称
-     */
-    @Column(name = "EGNAME")
-    private String egname;
-
-    /**
-     * 栏目对应的模板地址
-     */
-    @Column(name = "TEMPLATE_PATH")
-    private String templatePath;
-
-    /**
-     * 栏目文章对应的模板地址
-     */
-    @Column(name = "ARTICLE_TEMPLATE_PATH")
-    private String articleTemplatePath;
-
-
-    public String getEgname() {
-        return egname;
-    }
-
-    public void setEgname(String egname) {
-        this.egname = egname;
-    }
-
     public String getCode() {
         return code;
     }
@@ -198,22 +167,6 @@ public class ArticleCategory extends BaseBusEntity {
         this.path = path;
     }
 
-    public String getTemplatePath() {
-        return templatePath;
-    }
-
-    public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
-    }
-
-    public String getArticleTemplatePath() {
-        return articleTemplatePath;
-    }
-
-    public void setArticleTemplatePath(String articleTemplatePath) {
-        this.articleTemplatePath = articleTemplatePath;
-    }
-
     public AttributeVersion getArticleVersion() {
         return articleVersion;
     }
@@ -225,7 +178,7 @@ public class ArticleCategory extends BaseBusEntity {
     public static class ArticleCategoryParentSerialize extends JsonSerializer<ArticleCategory> {
 
         @Override
-        public void serialize(ArticleCategory category, JsonGenerator jgen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        public void serialize(ArticleCategory category, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeString(category.getCode());
         }
 

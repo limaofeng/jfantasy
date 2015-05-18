@@ -894,6 +894,12 @@
                 <groupId>com.fantasy</groupId>
                 <artifactId>fantasy-test</artifactId>
                 <version>${com.fantasy-version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.fantasy</groupId>
+                        <artifactId>fantasy-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
         </dependencies>
     </dependencyManagement>
