@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.cache.spi.CacheKey;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.LongType;
-import org.junit.After;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,26 +30,9 @@ public class CacheQueryCacheTest {
     @Autowired
     private WebsiteService websiteService;
 
-    private Article article;
-
-//    @Before
-    public void setUp() throws Exception {
-        article = new Article();
-        article.setTitle("测试缓存文章");
-        article.setSummary("测试缓存文章");
-        articleService.save(article);
-    }
-
-    @After
-    public void tearDown() throws Exception {
-//        for(Article art : articleService.find(Restrictions.eq("title","测试缓存文章"))){
-//            this.articleService.delete(art.getId());
-//        }
-    }
-
     @Test
     public void testGet(){
-        LOG.debug(articleService.get(18L));
+        LOG.debug(articleService.get(1801L));
 
         LOG.debug(articleService.find(Restrictions.eq("title", "测试缓存文章")));
 
@@ -58,7 +40,7 @@ public class CacheQueryCacheTest {
 
         Cache cache = redisCacheManager.getCache(Article.class.getName());
 
-        CacheKey cacheKey = new CacheKey(18L, LongType.INSTANCE,Article.class.getName(),null,null);
+        CacheKey cacheKey = new CacheKey(1801L, LongType.INSTANCE,Article.class.getName(),null,null);
 
         Object object = cache.get(cacheKey);
 

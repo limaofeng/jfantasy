@@ -273,6 +273,14 @@ public class CmsService {
         return this.articleCategoryDao.findUniqueBy("code", code) == null;
     }
 
+    public List<Article> find(List<PropertyFilter> filters) {
+        return this.find(filters, null, null, 100);
+    }
+
+    public List<Article> find(Criterion... criterions) {
+        return this.articleDao.find(criterions);
+    }
+
     public List<Article> find(List<PropertyFilter> filters, String orderBy, String order, int size) {
         if (StringUtil.isBlank(orderBy)) {
             return this.articleDao.find(filters, 0, size);
@@ -300,4 +308,11 @@ public class CmsService {
         return this.articleCategoryDao.find(Restrictions.isNull(ARTICLECATEGORY_PARENT_PROPERTYNAME));
     }
 
+    public Article findUnique(Criterion... criterions) {
+        return this.articleDao.findUnique(criterions);
+    }
+
+    public Article findUniqueBy(String propertyName, Object value) {
+        return this.articleDao.findUniqueBy(propertyName, value);
+    }
 }
