@@ -1,7 +1,8 @@
-package com.fantasy.test.service;
+package com.fantasy.framework.dao.mybatis;
 
 import com.fantasy.framework.dao.Pager;
-import com.fantasy.test.bean.TyBatisbean;
+import com.fantasy.test.bean.MyBatisBean;
+import com.fantasy.test.service.MyBatisBeanService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,12 +22,12 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-public class TyBatisbeanServiceTest {
+public class MyBatisBeanServiceTest {
 
-    private static final Log logger = LogFactory.getLog(TyBatisbeanServiceTest.class);
+    private static final Log logger = LogFactory.getLog(MyBatisBeanServiceTest.class);
 
     @Autowired
-    private TMyBatisbeanService tMyBatisbeanService;
+    private MyBatisBeanService tMyBatisbeanService;
 
     @Before
     public void setUp() throws Exception {
@@ -40,17 +41,17 @@ public class TyBatisbeanServiceTest {
 
     @Test
     public void testFindPager() {
-        Pager<TyBatisbean> pager = new Pager<TyBatisbean>();
-        TyBatisbean tyBatisbean = new TyBatisbean();
-        tyBatisbean.setValue("test");
-        pager = tMyBatisbeanService.findPager(pager, tyBatisbean);
+        Pager<MyBatisBean> pager = new Pager<MyBatisBean>();
+        MyBatisBean myBatisBean = new MyBatisBean();
+        myBatisBean.setValue("test");
+        pager = tMyBatisbeanService.findPager(pager, myBatisBean);
         logger.debug("pager : " + pager);
         for (int i = 1; i <= pager.getTotalPage(); i++) {
             pager.setCurrentPage(i);
             pager.setFirst(0);
-            pager = tMyBatisbeanService.findPager(pager, tyBatisbean);
+            pager = tMyBatisbeanService.findPager(pager, myBatisBean);
             logger.debug("显示第" + i + "页的数据:" + pager);
-            for (TyBatisbean t : pager.getPageItems()) {
+            for (MyBatisBean t : pager.getPageItems()) {
                 logger.debug(t);
             }
         }
@@ -59,11 +60,11 @@ public class TyBatisbeanServiceTest {
 
     @Test
     public void testFindSimplePager() {
-        Pager<TyBatisbean> pager = tMyBatisbeanService.findSimplePager(new Pager<TyBatisbean>(), "test");
+        Pager<MyBatisBean> pager = tMyBatisbeanService.findSimplePager(new Pager<MyBatisBean>(), "test");
         logger.debug("pager : " + pager);
         for (int i = 1; i <= pager.getTotalPage(); i++) {
             logger.debug("显示第" + i + "页的数据:" + pager);
-            for (TyBatisbean t : pager.getPageItems()) {
+            for (MyBatisBean t : pager.getPageItems()) {
                 logger.debug(t);
             }
         }
@@ -72,21 +73,21 @@ public class TyBatisbeanServiceTest {
 
     @Test
     public void testSelectAll() {
-        List<TyBatisbean> tyBatisbeanList = tMyBatisbeanService.selectAll();
-        logger.debug("size : " + tyBatisbeanList.size());
-        for (TyBatisbean t : tyBatisbeanList) {
+        List<MyBatisBean> myBatisBeanList = tMyBatisbeanService.selectAll();
+        logger.debug("size : " + myBatisBeanList.size());
+        for (MyBatisBean t : myBatisBeanList) {
             logger.debug(t);
         }
-        tyBatisbeanList =  tMyBatisbeanService.selectMultiParameters("test", "test");
-        logger.debug("size : " + tyBatisbeanList.size());
-        for (TyBatisbean t : tyBatisbeanList) {
+        myBatisBeanList =  tMyBatisbeanService.selectMultiParameters("test", "test");
+        logger.debug("size : " + myBatisBeanList.size());
+        for (MyBatisBean t : myBatisBeanList) {
             logger.debug(t);
         }
     }
 
     @Test
     public void testUpdate() {
-        TyBatisbean testbean = new TyBatisbean();
+        MyBatisBean testbean = new MyBatisBean();
         testbean.setKey("test");
         testbean.setValue("test-value");
         int count = tMyBatisbeanService.update(testbean);
@@ -111,7 +112,7 @@ public class TyBatisbeanServiceTest {
     public void testInsert() {
         this.testDelete();
 
-        TyBatisbean testbean = new TyBatisbean();
+        MyBatisBean testbean = new MyBatisBean();
         testbean.setKey("test");
         testbean.setValue("test");
         int count = tMyBatisbeanService.insert(testbean);
@@ -119,7 +120,7 @@ public class TyBatisbeanServiceTest {
         Assert.assertEquals(count, 1);
 
         for (int i = 1; i <= 30; i++) {
-            testbean = new TyBatisbean();
+            testbean = new MyBatisBean();
             testbean.setKey(i + "");
             testbean.setValue("test");
             count = tMyBatisbeanService.insert(testbean);

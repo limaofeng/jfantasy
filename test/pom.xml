@@ -19,6 +19,11 @@
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-ehcache</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
