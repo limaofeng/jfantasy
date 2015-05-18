@@ -130,8 +130,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     public void afterPropertiesSet() throws Exception {
         // TODO 添加需要额外的扫描的文件夹
         this.mapperLocations = ObjectUtil.defaultValue(this.mapperLocations, new Resource[0]);
-        this.mapperLocations = ObjectUtil.join(this.mapperLocations, SpringContextUtil.getResources("classpath:com/fantasy/framework/dao/mybatis/keygen/dao/*-Mapper.xml"));
-        this.mapperLocations = ObjectUtil.join(this.mapperLocations, SpringContextUtil.getResources("classpath:com/fantasy/**/dao/*-Mapper.xml"));
+        this.mapperLocations = ObjectUtil.join(this.mapperLocations, SpringContextUtil.getResources("classpath*:com/fantasy/**/dao/*-Mapper.xml"));
         // 添加别名注解扫描路径
         this.typeAliasesPackage = StringUtil.defaultValue(this.typeAliasesPackage, "com.fantasy.framework.dao.mybatis.keygen.bean;");
         // 判断必要元素
