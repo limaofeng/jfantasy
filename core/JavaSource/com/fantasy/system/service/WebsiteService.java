@@ -12,11 +12,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service
@@ -35,6 +35,15 @@ public class WebsiteService {
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Website findUniqueByKey(String key) {
         Website website = this.websiteDao.findUniqueBy("key", key);
+//        Class lazyClass = website.getDefaultFileManager().getClass();
+//        Field field = ClassUtil.getDeclaredField(lazyClass,"handler");
+//        try {
+//            website.getDefaultFileManager().getName();
+//            JavassistLazyInitializer lazyInitializer = (JavassistLazyInitializer) field.get(website.getDefaultFileManager());
+//            System.out.println(lazyInitializer.getIdentifier());
+//        } catch (IllegalAccessException e) {
+//            e.printStackTrace();
+//        }
         for (Setting setting : website.getSettings()) {
             Hibernate.initialize(setting);
         }

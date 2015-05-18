@@ -83,10 +83,13 @@
     <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
         <property name="connectionFactory" ref="jedisConnectionFactory"/>
         <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+            <!--
             <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+            -->
         </property>
         <property name="hashKeySerializer">
-            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
         </property>
         <property name="valueSerializer">
             <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
@@ -112,10 +115,6 @@
     <!-- 文件管理器 -->
     <bean id="fileManagerFactory" class="com.fantasy.file.service.FileManagerFactory" lazy-init="false"/>
 
-    <!-- 文件默认存储路径 -->
-    <bean id="fileManager" class="com.fantasy.file.manager.LocalFileManager" lazy-init="false">
-        <constructor-arg name="defaultDir" value="${filemanager.path}"/>
-    </bean>
     <!-- 密码加密规则 -->
     <bean id="plaintext" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>
     <bean id="md5" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>

@@ -13,7 +13,6 @@ import java.util.List;
 /**
  * 扩展mybatis缓存，支持Ehcache
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2012-10-28 下午08:28:47
  * @version 1.0

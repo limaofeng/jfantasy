@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity(name = "axis.Message")
 @Table(name = "AXIS_MESSAGE")
 @JsonIgnoreProperties({"hibernateLazyInitializer"})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Message extends BaseBusEntity {
 
     /**

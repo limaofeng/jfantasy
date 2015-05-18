@@ -1,0 +1,38 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <parent>
+        <groupId>com.fantasy</groupId>
+        <artifactId>fantasy-framework</artifactId>
+        <version>3.2.8.Alphal</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>fantasy-test</artifactId>
+    <packaging>jar</packaging>
+    <version>${com.fantasy-version}</version>
+
+    <build>
+        <sourceDirectory>JavaSource</sourceDirectory>
+        <testSourceDirectory>test/src</testSourceDirectory>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
+    <description>测试模块 - 提供测试时用到的一些基础的类及辅助方法</description>
+
+    <developers>
+        <developer>
+            <name>李茂峰</name>
+            <email>limaofeng@msn.com</email>
+        </developer>
+    </developers>
+
+</project>

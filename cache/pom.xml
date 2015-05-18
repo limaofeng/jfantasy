@@ -16,9 +16,51 @@
     </build>
 
     <dependencies>
-        
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <version>2.6.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <version>1.5.0.RELEASE</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>spring-aop</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-tx</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+                <exclusion>
+                    <artifactId>spring-core</artifactId>
+                    <groupId>org.springframework</groupId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-test</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
     </dependencies>
 
-    <description>开发框架 - 内容管理模块</description>
+    <description>Hibernate - 集成 Spring CacheManager 功能</description>
+
+    <developers>
+        <developer>
+            <name>李茂峰</name>
+            <email>limaofeng@msn.com</email>
+        </developer>
+    </developers>
 
 </project>

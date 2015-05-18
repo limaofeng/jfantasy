@@ -11,6 +11,7 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
+import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -28,7 +29,7 @@ import java.io.IOException;
 @Table(name = "CMS_ARTICLE")
 @Persister(impl = DynaBeanEntityPersister.class)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "keywords"})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Article extends BaseDynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;

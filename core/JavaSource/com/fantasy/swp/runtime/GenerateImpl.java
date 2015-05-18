@@ -7,7 +7,10 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import com.fantasy.framework.freemarker.TemplateModelUtils;
 import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.*;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.PropertiesHelper;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.swp.IGenerate;
@@ -19,18 +22,16 @@ import com.fantasy.swp.service.PageItemService;
 import com.fantasy.swp.service._PageService;
 import com.fantasy.swp.util.GeneratePageUtil;
 import freemarker.template.Configuration;
-import net.sf.ehcache.util.PropertyUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.StringWriter;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -39,9 +40,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 
-/**
- * Created by wuzhiyong on 2015/3/2.
- */
+
 @Component
 @Transactional
 public class GenerateImpl implements IGenerate {

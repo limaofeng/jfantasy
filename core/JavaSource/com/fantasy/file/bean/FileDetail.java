@@ -16,7 +16,7 @@ import javax.persistence.*;
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEDETAIL")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "folder", "realPath"})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileDetail extends BaseBusEntity {
 
     private static final long serialVersionUID = -3377507500960127984L;

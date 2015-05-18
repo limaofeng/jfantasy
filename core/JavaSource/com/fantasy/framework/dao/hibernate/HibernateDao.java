@@ -392,7 +392,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     @SuppressWarnings("unchecked")
     public T get(PK id) {
         Assert.notNull(id, "id不能为空");
-        return (T) getSession().get(this.entityClass, id);
+        return (T) getSession().load(this.entityClass, id);
     }
 
     /**

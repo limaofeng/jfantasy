@@ -7,6 +7,7 @@ import com.fantasy.security.bean.User;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "SYS_WEBSITE")
 @JsonIgnoreProperties(value = {"defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Website extends BaseBusEntity {
 
     private static final long serialVersionUID = 3763626581086219087L;
@@ -69,6 +70,7 @@ public class Website extends BaseBusEntity {
      * 网站设置
      */
     @OneToMany(mappedBy = "website", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Setting> settings = new ArrayList<Setting>();
     /**
      * 网站用户信息

@@ -6,6 +6,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "FILE_MANAGER_CONFIG")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "folders", "fileDetails"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileManagerConfig extends BaseBusEntity {
 
     private static final long serialVersionUID = -4833473939396674528L;

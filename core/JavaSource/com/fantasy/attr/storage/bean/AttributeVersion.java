@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "ATTR_VERSION", uniqueConstraints = {@UniqueConstraint(columnNames = {"TARGET_CLASS_NAME", "NUMBER"})})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "attributes"})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AttributeVersion extends BaseBusEntity {
 
     public enum Type {
@@ -57,6 +58,7 @@ public class AttributeVersion extends BaseBusEntity {
      */
     @ManyToMany(targetEntity = Attribute.class, fetch = FetchType.LAZY)
     @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "VERSION_ID"), inverseJoinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), foreignKey = @ForeignKey(name = "FK_VERSION_ATTRIBUTE"))
+    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Attribute> attributes;
     /**
      * 版本对应的 attr values

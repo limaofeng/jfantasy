@@ -890,6 +890,11 @@
                 <artifactId>fantasy-core</artifactId>
                 <version>${com.fantasy-version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-test</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -911,6 +916,7 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
+        <module>cache</module>
         <module>core-ws</module>
         <module>core-ws-server</module>
         <module>core-ws-client</module>
@@ -927,6 +933,7 @@
         <module>weixin</module>
         <module>aliyun-oss</module>
         <module>javaweb</module>
+        <module>test</module>
     </modules>
 
     <!-- 项目信息设置 -->

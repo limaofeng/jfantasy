@@ -45,12 +45,6 @@
         -->
     </bean>
 
-    <!-- ehcache缓存配置 -->
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:cache/ehcache.xml"/>
-    <!--
-    <ehcache:annotation-driven cache-manager="cacheManager" />
-     -->
 
     <!-- 开发中的功能
     <bean id="logManager" class="com.fantasy.framework.log.DefaultLogManager"/>
@@ -62,11 +56,6 @@
         <constructor-arg name="port" value="9090" />
     </bean>
     -->
-
-    <!-- 系统默认缓存 -->
-    <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">
-        <constructor-arg name="id" value="fantasy.default"/>
-    </bean>
 
     <!-- lucene 配置 -->
     <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
@@ -101,6 +90,8 @@
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
 
     <!-- 其他需要加载的spring模块 -->
+    <import resource="classpath:spring/applicationContext-cache.xml"/>
+
     <import resource="classpath:spring/applicationContext-datasource.xml"/>
 
     <import resource="classpath:spring/applicationContext-transaction.xml"/>
