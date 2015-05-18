@@ -1,13 +1,15 @@
-package com.fantasy.attr.storage.service;
+package com.fantasy.attr;
 
 import com.fantasy.attr.framework.converter.CustomBeanTypeConverter;
 import com.fantasy.attr.framework.util.AttributeUtils;
 import com.fantasy.attr.framework.util.VersionUtil;
-import com.fantasy.attr.storage.bean.Article;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
+import com.fantasy.attr.storage.service.*;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.test.bean.Article;
+import com.fantasy.test.service.CmsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
@@ -33,7 +35,7 @@ public class CustomBeanTypeConverterTest {
     private static Log logger = LogFactory.getLog(CustomBeanTypeConverterTest.class);
 
     @Autowired
-    private ArticleService articleService;
+    private CmsService cmsService;
     @Autowired
     private AttributeVersionService attributeVersionService;
     @Autowired
@@ -72,9 +74,9 @@ public class CustomBeanTypeConverterTest {
     public void testDelete(){
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQS_title", "测试动态bean"));
-        List<Article> articles = this.articleService.find(filters,"id","asc",10);
+        List<Article> articles = this.cmsService.find(filters,"id","asc",10);
         for(Article article : articles){
-            this.articleService.delete(article.getId());
+            this.cmsService.delete(article.getId());
         }
         this.customBeanDefinitionService.delete(className);
         this.attributeService.delete(attributeService.findByCode("moneys").getId());
@@ -92,7 +94,7 @@ public class CustomBeanTypeConverterTest {
         article.setTitle("测试动态bean");
         article.setSummary("测试动态bean");
         OgnlUtil.getInstance().setValue("moneys.number",article,"123");
-        this.articleService.save(article);
+        this.cmsService.save(article);
     }
 
 

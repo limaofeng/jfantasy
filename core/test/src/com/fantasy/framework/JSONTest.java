@@ -1,9 +1,5 @@
 package com.fantasy.framework;
 
-import com.fantasy.attr.storage.bean.Article;
-import com.fantasy.framework.util.asm.AsmUtil;
-import com.fantasy.framework.util.asm.Property;
-import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
@@ -21,9 +17,9 @@ public class JSONTest {
 
     @Test
     public void serializeDynaBean(){
-        Class clazz = AsmUtil.makeClass(Article.class.getName() + "$json", Article.class.getName(), new Property("test", String.class));
-        Object object = ClassUtil.newInstance(clazz);
-        LOG.debug(JSON.serialize(object));
+//        Class clazz = AsmUtil.makeClass(Article.class.getName() + "$json", Article.class.getName(), new Property("test", String.class));
+//        Object object = ClassUtil.newInstance(clazz);
+//        LOG.debug(JSON.serialize(object));
     }
 
     @Test
@@ -43,13 +39,13 @@ public class JSONTest {
         member.setLastLoginTime(DateUtil.parse("2014-10-20 10:29:34"));
         Assert.assertEquals(JSON.text().serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"张三\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":\"2014-10-20 10:29:34\",\"details\":null}");
 
-        Article article = new Article();
-
-        LOG.debug(JSON.serialize(article));
-
-        Class newArticle = AsmUtil.makeClass(Article.class.getName()+"$new", Article.class.getName(),new Property("name", String.class));
-
-        LOG.debug(JSON.serialize(ClassUtil.newInstance(newArticle)));
+//        Article article = new Article();
+//
+//        LOG.debug(JSON.serialize(article));
+//
+//        Class newArticle = AsmUtil.makeClass(Article.class.getName()+"$new", Article.class.getName(),new Property("name", String.class));
+//
+//        LOG.debug(JSON.serialize(ClassUtil.newInstance(newArticle)));
     }
 
     @Test

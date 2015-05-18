@@ -1,5 +1,7 @@
-package com.fantasy.attr.storage.bean;
+package com.fantasy.attr;
 
+import com.fantasy.attr.storage.bean.Attribute;
+import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.framework.util.jackson.JSON;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;

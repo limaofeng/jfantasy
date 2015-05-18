@@ -1,7 +1,9 @@
-package com.fantasy.attr.storage.service;
+package com.fantasy.attr;
 
 import com.fantasy.attr.framework.util.AttributeUtils;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
+import com.fantasy.attr.storage.service.AttributeVersionService;
+import com.fantasy.attr.storage.service.CustomBeanDefinitionService;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;

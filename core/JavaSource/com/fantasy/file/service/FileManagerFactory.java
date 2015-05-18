@@ -1,14 +1,15 @@
 package com.fantasy.file.service;
 
-import com.fantasy.common.service.FtpServiceFactory;
 import com.fantasy.file.FileManager;
 import com.fantasy.file.FileManagerBuilder;
 import com.fantasy.file.bean.FileManagerConfig;
+import com.fantasy.file.bean.FileManagerConfig.ConfigParam;
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.file.builders.LocalFileManagerBuilder;
 import com.fantasy.file.manager.UploadFileManager;
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.logging.Log;
@@ -49,8 +50,6 @@ public class FileManagerFactory implements InitializingBean {
 
     @Autowired
     private FileManagerService fileManagerService;
-    @Autowired
-    private FtpServiceFactory ftpServiceFactory;
 
     private Map<FileManagerType, FileManagerBuilder> fileManagerBuilders = new HashMap<FileManagerType, FileManagerBuilder>() {
         {
@@ -69,16 +68,20 @@ public class FileManagerFactory implements InitializingBean {
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             // 创建默认目录
+            final String webroot_path = StringUtil.defaultValue(PathUtil.root(), PathUtil.classes());
             FileManagerConfig fileManagerConfig = fileManagerService.get(WEBROOT_FILEMANAGER_ID);
             if (fileManagerConfig == null) {
                 fileManagerService.save(local, WEBROOT_FILEMANAGER_ID, "项目WEB根目录", "应用启动是检查并修改该目录", new HashMap<String, String>() {
                     {
-                        this.put("defaultDir", StringUtil.defaultValue(PathUtil.root(), PathUtil.classes()));
+                        this.put("defaultDir", webroot_path);
                     }
                 });
             } else {
-                fileManagerConfig.addConfigParam("defaultDir", StringUtil.defaultValue(PathUtil.root(), PathUtil.classes()));
-                fileManagerService.save(fileManagerConfig);
+                ConfigParam defaultDir = ObjectUtil.find(fileManagerConfig.getConfigParams(), "name", "defaultDir");
+                if (defaultDir == null || !webroot_path.equals(defaultDir.getValue())) {
+                    fileManagerConfig.addConfigParam("defaultDir", webroot_path);
+                    fileManagerService.save(fileManagerConfig);
+                }
             }
             // 初始化文件管理器
             for (FileManagerConfig config : fileManagerService.getAll()) {
@@ -91,12 +94,6 @@ public class FileManagerFactory implements InitializingBean {
         } finally {
             transactionManager.commit(status);
         }
-        // SpringContextUtil.registerBeanDefinition("xxxxx", ConfigFileManager.class);
-        // System.out.println(SpringContextUtil.getBean("xxxxx"));
-        // SpringContextUtil.registerBeanDefinition("xxxxx", DynamicFileManager.class);
-        // System.out.println(SpringContextUtil.getBean("xxxxx"));
-        // System.out.println(SpringContextUtil.getBean("xxxxx"));
-        // System.out.println(Arrays.toString(SpringContextUtil.getBeanNamesForType(DynamicFileManager.class)));
     }
 
     public void registerFileManager(String id, FileManagerType type, final List<FileManagerConfig.ConfigParam> configParams) {

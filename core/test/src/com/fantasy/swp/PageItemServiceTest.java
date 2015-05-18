@@ -1,29 +1,25 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.storage.bean.Article;
-import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fantasy.attr.storage.service.ArticleService;
 import com.fantasy.attr.storage.service.AttributeVersionService;
-import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import com.fantasy.swp.bean.Page;
 import com.fantasy.swp.bean.PageItem;
 import com.fantasy.swp.bean.PageItemData;
 import com.fantasy.swp.service.PageItemDataService;
 import com.fantasy.swp.service.PageItemService;
 import com.fantasy.swp.service._PageService;
-import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,8 +37,8 @@ public class PageItemServiceTest extends StrutsSpringJUnit4TestCase {
     private PageActionTest pageActionTest;
     @Autowired
     private AttributeVersionService attributeVersionService;
-    @Autowired
-    private ArticleService articleService;
+//    @Autowired
+//    private ArticleService articleService;
 
     @Before
     public void setUp() throws Exception {
@@ -76,21 +72,21 @@ public class PageItemServiceTest extends StrutsSpringJUnit4TestCase {
         filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQS_title","ARTICLE_JUNIT_TEST"));
 
-        Article article = new Article();
-        List<Article> articles = articleService.find(filters);
-        if(articles.size()<=0){
-            article.setTitle("ARTICLE_JUNIT_TEST");
-            article.setSummary("xxxx");
-            Pager<AttributeVersion> pager = attributeVersionService.findPager(new Pager<AttributeVersion>(),new ArrayList<PropertyFilter>());
-            if(pager.getPageItems()!=null && pager.getPageItems().size()>0){
-                article.setVersion(pager.getPageItems().get(0));
-            }
-            this.articleService.save(article);
-        }else{
-            article = articles.get(0);
-        }
-        pageItemData.setBeanId(article.getId() + "");
-        pageItemData.setClassName(Article.class.getName());
+//        Article article = new Article();
+//        List<Article> articles = articleService.find(filters);
+//        if(articles.size()<=0){
+//            article.setTitle("ARTICLE_JUNIT_TEST");
+//            article.setSummary("xxxx");
+//            Pager<AttributeVersion> pager = attributeVersionService.findPager(new Pager<AttributeVersion>(),new ArrayList<PropertyFilter>());
+//            if(pager.getPageItems()!=null && pager.getPageItems().size()>0){
+//                article.setVersion(pager.getPageItems().get(0));
+//            }
+//            this.articleService.save(article);
+//        }else{
+//            article = articles.get(0);
+//        }
+//        pageItemData.setBeanId(article.getId() + "");
+//        pageItemData.setClassName(Article.class.getName());
         pageItemData.setPageItem(pageItem);
         pageItemDatas.add(pageItemData);
         pageItem.setPageItemDatas(pageItemDatas);

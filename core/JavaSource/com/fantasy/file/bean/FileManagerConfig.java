@@ -2,6 +2,7 @@ package com.fantasy.file.bean;
 
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -160,11 +161,11 @@ public class FileManagerConfig extends BaseBusEntity {
     }
 
     public List<ConfigParam> getConfigParams() {
-        if (configParams.isEmpty() || StringUtil.isNotBlank(this.getConfigParamStore())) {
-            configParams = StringUtil.isBlank(this.getConfigParamStore()) ? Collections.<ConfigParam>emptyList() : JSON.text().deserialize(this.getConfigParamStore(), new TypeReference<List<ConfigParam>>() {
+        if (configParams.isEmpty()) {
+            this.configParams = StringUtil.isBlank(this.getConfigParamStore()) ? Collections.<ConfigParam>emptyList() : JSON.text().deserialize(this.getConfigParamStore(), new TypeReference<List<ConfigParam>>() {
             });
         }
-        return configParams;
+        return this.configParams;
     }
 
     public void setConfigParams(List<ConfigParam> configParams) {
@@ -173,7 +174,12 @@ public class FileManagerConfig extends BaseBusEntity {
 
 
     public void addConfigParam(String name, String value) {
-        this.configParams.add(new ConfigParam(name, value));
+        ConfigParam configParam = ObjectUtil.find(this.configParams,"name",name);
+        if(configParam == null) {
+            this.configParams.add(new ConfigParam(name, value));
+        }else{
+            configParam.setValue(value);
+        }
     }
 
 //    public static FileManagerConfig newInstance(String key, String name, String localDefaultDir, String description) {

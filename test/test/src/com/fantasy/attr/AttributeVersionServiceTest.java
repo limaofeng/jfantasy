@@ -1,13 +1,18 @@
-package com.fantasy.attr.storage.service;
+package com.fantasy.attr;
 
 import com.fantasy.attr.framework.util.VersionUtil;
-import com.fantasy.attr.storage.bean.Article;
 import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.service.AttributeService;
+import com.fantasy.attr.storage.service.AttributeTypeService;
+import com.fantasy.attr.storage.service.AttributeVersionService;
+import com.fantasy.attr.storage.service.ConverterService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.security.service.UserService;
+import com.fantasy.test.bean.Article;
+import com.fantasy.test.service.CmsService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,7 +39,7 @@ public class AttributeVersionServiceTest {
     @Autowired
     private AttributeVersionService attributeVersionService;
     @Autowired
-    private ArticleService articleService;
+    private CmsService cmsService;
     @Autowired
     private ConverterService converterService;
     @Autowired
@@ -86,7 +91,7 @@ public class AttributeVersionServiceTest {
     public void testFindPager() throws Exception {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQI_intTest","123"));
-        List<Article> articles =  this.articleService.findPager(new Pager<Article>(),filters).getPageItems();
+        List<Article> articles =  this.cmsService.findPager(new Pager<Article>(),filters).getPageItems();
 
         Assert.assertEquals(1,articles.size());
 
@@ -109,8 +114,8 @@ public class AttributeVersionServiceTest {
         //测试普通数据类型
         VersionUtil.getOgnlUtil(attributeType).setValue("intTest", article, "456");
         logger.debug(article);
-        this.articleService.save(article);
-        article = this.articleService.get(article.getId());
+        this.cmsService.save(article);
+        article = this.cmsService.get(article.getId());
         logger.debug(article);
         Assert.assertEquals(456, OgnlUtil.getInstance().getValue("intTest", article));
 
@@ -120,12 +125,12 @@ public class AttributeVersionServiceTest {
         VersionUtil.getOgnlUtil(userAttributeType).setValue("user", article, "admin");
         logger.debug(VersionUtil.getOgnlUtil(userAttributeType).getValue("user", article));
         Assert.assertEquals(123, OgnlUtil.getInstance().getValue("intTest", article));
-        this.articleService.save(article);
+        this.cmsService.save(article);
         logger.debug(article);
         Assert.assertEquals(123, OgnlUtil.getInstance().getValue("intTest", article));
 
         //测试 findPager 中的动态属性
-        for(Article art : this.articleService.findPager(new Pager<Article>(),new ArrayList<PropertyFilter>()).getPageItems()){
+        for(Article art : this.cmsService.findPager(new Pager<Article>(),new ArrayList<PropertyFilter>()).getPageItems()){
             logger.debug(art);
             Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
             Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
@@ -137,7 +142,7 @@ public class AttributeVersionServiceTest {
 
         this.testFind();
 
-        for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
+        for(Article art : this.cmsService.find(Restrictions.eq("title", "测试数据标题"))){
             logger.debug(art);
         }
 
@@ -146,10 +151,10 @@ public class AttributeVersionServiceTest {
     private void testFind() {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQI_intTest", "123"));
-        for(Article art : this.articleService.find(filters)){
+        for(Article art : this.cmsService.find(filters)){
             logger.debug(art);
         }
-        for(Article art : this.articleService.find(Restrictions.eq("intTest",Integer.valueOf("123")))){
+        for(Article art : this.cmsService.find(Restrictions.eq("intTest",Integer.valueOf("123")))){
             logger.debug(art);
         }
         /*
@@ -162,12 +167,12 @@ public class AttributeVersionServiceTest {
     }
 
     public void testGet() throws Exception {
-        Article article = this.articleService.findUnique(Restrictions.eq("title","测试数据标题"));
+        Article article = this.cmsService.findUnique(Restrictions.eq("title","测试数据标题"));
 
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
 
-        article = this.articleService.findUniqueBy("title","测试数据标题");
+        article = this.cmsService.findUniqueBy("title","测试数据标题");
 
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));

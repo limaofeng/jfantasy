@@ -1,27 +1,29 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.storage.service.ArticleService;
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.bean.Page;
 import com.fantasy.swp.bean.Template;
 import com.fantasy.swp.bean.enums.PageType;
-import com.fantasy.swp.service.*;
+import com.fantasy.swp.service.DataInferfaceService;
+import com.fantasy.swp.service.DataService;
+import com.fantasy.swp.service.TemplateService;
+import com.fantasy.swp.service._PageService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 import com.fantasy.system.web.WebsiteActionTest;
 import com.opensymphony.xwork2.ActionProxy;
-import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -30,7 +32,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -170,7 +171,7 @@ public class PageActionTest extends StrutsSpringJUnit4TestCase {
 
 //    @Test
     public void testCreate() throws Exception {
-        SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
+//        SpelService.setServer("articleService", SpringContextUtil.getBeanByType(ArticleService.class));
         this.request.addHeader("X-Requested-With", "XMLHttpRequest");
         this.request.addParameter("ids", "71");
         ActionProxy proxy = super.getActionProxy("/swp/page/create.do");

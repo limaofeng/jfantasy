@@ -130,7 +130,6 @@ public class AfterPropertiesSet {
     /**
      * 应用启动时加载并初始化全部的FtpService
      *
-     * @功能描述
      * @throws Exception
      */
     public void FtpServiceFactory() throws Exception {

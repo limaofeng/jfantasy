@@ -1,27 +1,24 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.storage.bean.Article;
-import com.fantasy.attr.storage.service.ArticleService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import com.fantasy.swp.bean.Data;
 import com.fantasy.swp.bean.DataInferface;
 import com.fantasy.swp.service.DataInferfaceService;
 import com.fantasy.swp.service.DataService;
 import com.opensymphony.xwork2.ActionProxy;
-import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockServletConfig;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +36,6 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
     private DataService dataService;
     @Autowired
     private TemplateActionTest templateActionTest;
-    @Autowired
-    private ArticleService articleService;
 
     @Before
     public void setUp() throws Exception {
@@ -141,15 +136,17 @@ public class DataActionTest extends StrutsSpringJUnit4TestCase {
     }
 
     private String getStatList(){
-        return JSON.serialize(this.articleService.find(new ArrayList<PropertyFilter>()));
+//        return JSON.serialize(this.articleService.find(new ArrayList<PropertyFilter>()));
 //         return "{title:'测试',summary:'静态数据源',content:'测试静态数据源'}";
+        return null;
     }
     private String getStatObject(){
-        List<Article> arts = this.articleService.find(new ArrayList<PropertyFilter>());
-        if(arts.size()<=0){
-            return "{}";
-        }
-        return JSON.serialize(arts.get(0));
+//        List<Article> arts = this.articleService.find(new ArrayList<PropertyFilter>());
+//        if(arts.size()<=0){
+//            return "{}";
+//        }
+//        return JSON.serialize(arts.get(0));
+        return null;
     }
     private String getStatCommon(){
         return "{title:'xxxTitle'}";

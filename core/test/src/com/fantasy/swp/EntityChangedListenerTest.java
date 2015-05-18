@@ -1,16 +1,11 @@
 package com.fantasy.swp;
 
-import com.fantasy.attr.storage.bean.Article;
-import com.fantasy.attr.storage.service.ArticleService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import java.util.Date;
 
 /**
  * Created by hebo on 2015/2/6.
@@ -20,28 +15,28 @@ import java.util.Date;
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class EntityChangedListenerTest {
 
-    @Autowired
-    private ArticleService articleService;
-
-    private Article article;
+//    @Autowired
+//    private ArticleService articleService;
+//
+//    private Article article;
 
     @Before
     public void setUp() throws Exception {
-        this.article = new Article();
-        this.article.setTitle("测试标题");
-        articleService.save(article);
+//        this.article = new Article();
+//        this.article.setTitle("测试标题");
+//        articleService.save(article);
     }
 
     @After
     public void tearDown() throws Exception {
-        articleService.delete(article.getId());
+//        articleService.delete(article.getId());
     }
 
     @Test
     public void testUpdate() {
-        Article article = new Article();
-        article.setId(this.article.getId());
-        article.setTitle("改变title数据" + new Date());
-        this.articleService.save(article);
+//        Article article = new Article();
+//        article.setId(this.article.getId());
+//        article.setTitle("改变title数据" + new Date());
+//        this.articleService.save(article);
     }
 }

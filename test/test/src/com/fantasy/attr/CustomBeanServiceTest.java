@@ -1,8 +1,10 @@
-package com.fantasy.attr.storage.service;
+package com.fantasy.attr;
 
 import com.fantasy.attr.framework.CustomBean;
 import com.fantasy.attr.framework.util.AttributeUtils;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
+import com.fantasy.attr.storage.service.CustomBeanDefinitionService;
+import com.fantasy.attr.storage.service.CustomBeanService;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import junit.framework.Assert;
