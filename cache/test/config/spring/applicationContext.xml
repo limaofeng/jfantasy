@@ -48,13 +48,6 @@
         -->
     </bean>
 
-    <!-- ehcache缓存配置 -->
-    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:cache/ehcache.xml"/>
-    <!--
-    <ehcache:annotation-driven cache-manager="cacheManager" />
-     -->
-
     <!-- 开发中的功能
     <bean id="logManager" class="com.fantasy.framework.log.DefaultLogManager"/>
     <log:annotation-driven log-manager="logManager"/>
@@ -65,36 +58,6 @@
         <constructor-arg name="port" value="9090" />
     </bean>
     -->
-
-    <!-- 系统默认缓存 -->
-    <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">
-        <constructor-arg name="id" value="fantasy.default"/>
-    </bean>
-
-    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
-        <property name="hostName" value="127.0.0.1"/>
-        <property name="port" value="6379"/>
-        <property name="timeout" value="15000"/>
-        <property name="database" value="0"/>
-        <property name="password" value=""/>
-    </bean>
-
-    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connectionFactory-ref="jedisConnectionFactory">
-        <property name="keySerializer">
-            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
-        </property>
-        <property name="hashKeySerializer">
-            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
-        </property>
-        <property name="valueSerializer">
-            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
-        </property>
-        <property name="hashValueSerializer">
-            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
-        </property>
-    </bean>
-
-    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager" c:template-ref="redisTemplate"/>
 
     <!-- lucene 配置 -->
     <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open"
@@ -144,6 +107,8 @@
     <bean id="userDetailsService" class="com.fantasy.security.userdetails.SimpleUserDetailsService"/>
 
     <!-- 其他需要加载的spring模块 -->
+    <import resource="classpath:spring/applicationContext-cache.xml"/>
+
     <import resource="classpath:spring/applicationContext-datasource.xml"/>
 
     <import resource="classpath:spring/applicationContext-transaction.xml"/>

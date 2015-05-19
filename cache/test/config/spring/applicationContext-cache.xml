@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:p="http://www.springframework.org/schema/p" xmlns:c="http://www.springframework.org/schema/c"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="true">
+
+    <!-- ehcache缓存配置 -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:cache/ehcache.xml"/>
+
+    <!-- 系统默认缓存 -->
+    <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">
+        <constructor-arg name="id" value="fantasy.default"/>
+    </bean>
+
+    <!-- Redis 缓存配置 -->
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
+        <property name="hostName" value="127.0.0.1"/>
+        <property name="port" value="6379"/>
+        <property name="timeout" value="15000"/>
+        <property name="database" value="0"/>
+        <property name="password" value=""/>
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate" p:connectionFactory-ref="jedisConnectionFactory">
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+        <property name="hashKeySerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+        <property name="valueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+        <property name="hashValueSerializer">
+            <bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+        </property>
+    </bean>
+
+    <bean id="redisCacheManager" class="org.springframework.data.redis.cache.RedisCacheManager" c:template-ref="redisTemplate"/>
+
+
+
+    <!--
+    <ehcache:annotation-driven cache-manager="cacheManager" />
+     -->
+
+</beans>

@@ -60,7 +60,6 @@ public class CmsWebService implements ICmsService {
         ArticleCategoryDTO categoryDTO = new ArticleCategoryDTO();
         categoryDTO.setCode(category.getCode());
         categoryDTO.setName(category.getName());
-        categoryDTO.setEngname(category.getEgname());
         categoryDTO.setDescription(category.getDescription());
         categoryDTO.setSort(category.getSort());
         categoryDTO.setLayer(category.getLayer());
