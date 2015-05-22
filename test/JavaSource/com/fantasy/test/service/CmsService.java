@@ -3,6 +3,7 @@ package com.fantasy.test.service;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.lucene.BuguSearcher;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
@@ -29,7 +30,7 @@ import java.util.List;
 
 @Service
 @Transactional
-public class CmsService {
+public class CmsService extends BuguSearcher<Article>{
 
     private static final Log LOG = LogFactory.getLog(CmsService.class);
 
@@ -196,7 +197,7 @@ public class CmsService {
         }
         this.articleDao.save(article);
         if (StringUtil.isBlank(article.getSummary()) && StringUtil.isNotBlank(article.getContent())) {
-            TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent());
+            TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent().toString());
             String content = node.getText().toString().trim().replace("\n", "");
             String summary = content.substring(0, content.length() >= 10 ? 10 : content.length());
             article.setSummary(summary);

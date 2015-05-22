@@ -12,7 +12,7 @@
 
      -->
 
-    <defaultCache maxElementsInMemory="10000" maxEntriesLocalHeap="10000" maxEntriesLocalDisk="10000000" eternal="false"
+    <defaultCache maxElementsInMemory="10000" maxEntriesLocalHeap="10000" maxEntriesLocalDisk="10000000" eternal="true"
                   timeToIdleSeconds="600" timeToLiveSeconds="1800" overflowToDisk="true" diskSpoolBufferSizeMB="30"
                   diskPersistent="false" diskExpiryThreadIntervalSeconds="1200" memoryStoreEvictionPolicy="LRU"
                   statistics="false"/>
