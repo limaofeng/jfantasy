@@ -53,11 +53,6 @@ public class BuguIndex implements InitializingBean {
      * 分词器
      */
     private Analyzer analyzer = new StandardAnalyzer(this.version);
-//	/**
-//	 * 文件管理器
-//	 */
-//	@Deprecated
-//	private LocalFileManager fileManager;
     /**
      * 索引文件的存放目录
      */
@@ -100,12 +95,17 @@ public class BuguIndex implements InitializingBean {
     public void afterPropertiesSet() {
         Set<Class<?>> indexedClasses = new LinkedHashSet<Class<?>>();
         for (String basePackage : packagesToScan) {
-            indexedClasses.addAll(ClassPathScanner.getInstance().findAnnotationedClasses(basePackage, Indexed.class));
             for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, LuceneDao.class)) {
-                LuceneDao dao = (LuceneDao) SpringContextUtil.getBeanByType(clazz);
-                if (dao != null) {
-                    DaoCache.getInstance().put(ClassUtil.getInterfaceGenricType(clazz, LuceneDao.class), dao);
+                Class entityClass = ClassUtil.getSuperClassGenricType(clazz);
+                if(entityClass.getAnnotation(Indexed.class) == null){
+                    continue;
                 }
+                LuceneDao dao = (LuceneDao) SpringContextUtil.getBeanByType(clazz);
+                if (dao == null) {
+                    continue;
+                }
+                indexedClasses.add(entityClass);
+                DaoCache.getInstance().put(ClassUtil.getInterfaceGenricType(clazz, LuceneDao.class), dao);
             }
         }
         for (Class<?> clazz : indexedClasses) {
@@ -146,7 +146,7 @@ public class BuguIndex implements InitializingBean {
      */
     public void open() {
         if(this.executor == null){
-            this.executor = Executors.newFixedThreadPool(10);
+            this.executor = Executors.newFixedThreadPool(50);
         }
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
         this.scheduler.scheduleAtFixedRate(new IndexReopenTask(), this.period, this.period, TimeUnit.MILLISECONDS);

@@ -1,6 +1,8 @@
 package com.fantasy.attr.storage.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -8,6 +10,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "CUSTOM_BEAN")
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class CustomBean extends BaseBusEntity {
 
     @Id

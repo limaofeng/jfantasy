@@ -10,6 +10,7 @@ import com.fantasy.framework.lucene.exception.IdException;
 import com.fantasy.framework.lucene.mapper.FieldUtil;
 import com.fantasy.framework.lucene.mapper.MapperUtil;
 import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.JdbcUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
@@ -83,14 +84,19 @@ public abstract class BuguSearcher<T> {
      */
     public List<T> search(Query query, int size) {
         IndexSearcher searcher = open();
-        LuceneDao<T> dao = DaoCache.getInstance().get(this.entityClass);
+        final LuceneDao<T> dao = DaoCache.getInstance().get(this.entityClass);
         List<T> data = new ArrayList<T>();
         try {
             TopDocs topDocs = searcher.search(query, size);
             for (int i = 0; i < topDocs.scoreDocs.length; i++) {
                 ScoreDoc sdoc = topDocs.scoreDocs[i];
-                Document doc = searcher.doc(sdoc.doc);
-                data.add(dao.get(doc.get(idName)));
+                final Document doc = searcher.doc(sdoc.doc);
+                data.add(JdbcUtil.transaction(new JdbcUtil.Callback<T>() {
+                    @Override
+                    public T run() {
+                        return dao.get(doc.get(idName));
+                    }
+                }));
             }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -111,7 +117,7 @@ public abstract class BuguSearcher<T> {
     public Pager<T> search(Pager<T> pager, Query query, BuguHighlighter highlighter) {
         IndexSearcher searcher = open();
         int between = 0;
-        LuceneDao<T> dao = DaoCache.getInstance().get(this.entityClass);
+        final LuceneDao<T> dao = DaoCache.getInstance().get(this.entityClass);
         try {
             TopDocs hits;
             if (pager.isOrderBySetted()) {// TODO 多重排序等HIbernateDao优化好之后再实现
@@ -129,8 +135,13 @@ public abstract class BuguSearcher<T> {
             List<T> data = new ArrayList<T>();
             for (int i = (pager.getFirst() - between); i < hits.scoreDocs.length && hits.totalHits > 0; i++) {
                 ScoreDoc sdoc = hits.scoreDocs[i];
-                Document doc = searcher.doc(sdoc.doc);
-                data.add(dao.get(doc.get(idName)));
+                final Document doc = searcher.doc(sdoc.doc);
+                data.add(JdbcUtil.transaction(new JdbcUtil.Callback<T>() {
+                    @Override
+                    public T run() {
+                        return dao.get(doc.get(idName));
+                    }
+                }));
             }
             pager.setPageItems(data);
             if (highlighter != null) {

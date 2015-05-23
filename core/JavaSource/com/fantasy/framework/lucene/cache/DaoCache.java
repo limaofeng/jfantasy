@@ -30,4 +30,5 @@ public class DaoCache {
     public <T> void put(Class<T> clazz, LuceneDao<T> dao) {
         this.cache.put(clazz, dao);
     }
+
 }

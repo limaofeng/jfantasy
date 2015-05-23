@@ -1,7 +1,6 @@
 package com.fantasy.framework.util.ognl;
 
 import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.ognl.typeConverter.DateConverter;
@@ -58,16 +57,8 @@ public class OgnlUtil {
     public synchronized static OgnlUtil getInstance(String key) {
         OgnlUtil ognlUtil;
         if (!ognlUtilCache.containsKey(key)) {
-            if (SpringContextUtil.getApplicationContext() != null) {
-                ognlUtil = SpringContextUtil.getBeanByType(OgnlUtil.class);
-                if (ognlUtil == null) {
-                    ognlUtil = new OgnlUtil();
-                    ognlUtil.addTypeConverter(Date.class, new DateConverter());
-                }
-            } else {
-                ognlUtil = new OgnlUtil();
-                ognlUtil.addTypeConverter(Date.class, new DateConverter());
-            }
+            ognlUtil = new OgnlUtil();
+            ognlUtil.addTypeConverter(Date.class, new DateConverter());
             ognlUtilCache.put(key, ognlUtil);
         } else {
             ognlUtil = ognlUtilCache.get(key);
