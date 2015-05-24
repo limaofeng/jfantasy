@@ -5,6 +5,7 @@ import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.file.dao.FileManagerConfigDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -61,5 +62,8 @@ public class FileManagerService {
         return this.fileManagerConfigDao.find(new Criterion[0], "id", "asc");
     }
 
+    public static List<FileManagerConfig> getFileManagers() {
+        return SpringContextUtil.getBeanByType(FileManagerService.class).listFileManager();
+    }
 
 }

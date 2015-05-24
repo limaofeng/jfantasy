@@ -2,8 +2,13 @@ package com.fantasy.file.web;
 
 import com.fantasy.file.FileItem;
 import com.fantasy.file.FileManager;
+import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileManagerFactory;
+import com.fantasy.file.service.FileService;
+import com.fantasy.file.service.FileUploadService;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ImageUtil;
+import com.fantasy.framework.util.common.JdbcUtil;
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
@@ -11,7 +16,7 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.web.ServletUtils;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.framework.util.web.WebUtil.Browser;
-import com.fantasy.system.util.SettingUtil;
+import org.hibernate.Hibernate;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -30,9 +35,14 @@ public class FileFilter extends GenericFilterBean {
 
 //    private final static ConcurrentMap<String, FileItem> fileCache = new ConcurrentHashMap<String, FileItem>();
 
+    private FileService fileService;
+    private FileUploadService fileUploadService;
+
     @Override
     protected void initFilterBean() throws ServletException {
         super.initFilterBean();
+        this.fileService = SpringContextUtil.getBeanByType(FileService.class);
+        this.fileUploadService = SpringContextUtil.getBeanByType(FileUploadService.class);
     }
 
     private static final String regex = "_(\\d+)x(\\d+)[.]([^.]+)$";
@@ -41,34 +51,61 @@ public class FileFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        String referer = WebUtil.getReferer(request);
-        if (referer == null) {
-            chain.doFilter(request, response);
-            return;
-        }
+//        String referer = WebUtil.getReferer(request);
+//        if (referer == null) {
+//            chain.doFilter(request, response);
+//            return;
+//        }
 
         //通过 referer 判断访问来源，并通过配置 文件管理器 与 host 关联。
-        String host = RegexpUtil.parseFirst(referer, "(http://|https://)[^/]+");
-        String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
+//        String host = RegexpUtil.parseFirst(referer, "(http://|https://)[^/]+");
+        final String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
         FileManager webrootFileManager = FileManagerFactory.getInstance().getFileManager("WEBROOT");
         if (RegexpUtil.find(url, ".do$")) {
             chain.doFilter(request, response);
             return;
         }
 
-        if (FileManagerFactory.getInstance().getFileManager("WEBROOT").getFileItem(url) != null) {
+        if (webrootFileManager.getFileItem(url) != null) {
             chain.doFilter(request, response);
             return;
         }
-        FileManager fileManager = SettingUtil.getDefaultUploadFileManager();
-        if (fileManager != null) {
-            FileItem fileItem = fileManager.getFileItem(url);
-            if (fileItem == null && !RegexpUtil.find(url, regex)) {
+        FileManager fileManager = FileManagerFactory.getInstance().getFileManager("haolue-upload");
+        //TODO 暂时写死,以后优化
+        FileDetail fileDetail = JdbcUtil.transaction(new JdbcUtil.Callback<FileDetail>() {
+            @Override
+            public FileDetail run() {
+                FileDetail fileDetail = FileFilter.this.fileService.getFileDetail(url, "haolue-upload");
+                if (fileDetail != null) {
+                    Hibernate.initialize(fileDetail);
+                }
+                return fileDetail;
+            }
+        });
+        if (fileDetail != null) {
+            FileItem fileItem = fileManager.getFileItem(fileDetail.getRealPath());
+            if (fileItem != null) {
+                writeFile(request, response, fileItem);
+                return;
+            }
+        } else if (RegexpUtil.find(url, regex)) {
+            final String srcUrl = RegexpUtil.replace(url, regex, ".$3");
+            FileDetail srcFileDetail = JdbcUtil.transaction(new JdbcUtil.Callback<FileDetail>() {
+                @Override
+                public FileDetail run() {
+                    FileDetail fileDetail = FileFilter.this.fileService.getFileDetail(srcUrl, "haolue-upload");
+                    if (fileDetail != null) {
+                        Hibernate.initialize(fileDetail);
+                    }
+                    return fileDetail;
+                }
+            });
+            if (srcFileDetail == null) {
                 chain.doFilter(request, response);
+                return;
             }
             // 查找源文件
-            String srcUrl = RegexpUtil.replace(url, regex, ".$3");
-            fileItem = fileManager.getFileItem(srcUrl);
+            FileItem fileItem = fileManager.getFileItem(srcFileDetail.getRealPath());
             if (fileItem == null) {
                 chain.doFilter(request, response);
                 return;
@@ -85,10 +122,10 @@ public class FileFilter extends GenericFilterBean {
             // 创建临时文件
             File tmp = FileUtil.tmp();
             ImageUtil.write(image, tmp);
-            webrootFileManager.writeFile(url, tmp);
+            fileDetail = fileUploadService.upload(tmp, url, "haolue-upload");
             // 删除临时文件
             FileUtil.delFile(tmp);
-            writeFile(request, response, fileItem);
+            writeFile(request, response, fileManager.getFileItem(fileDetail.getRealPath()));
             return;
         }
         chain.doFilter(request, response);

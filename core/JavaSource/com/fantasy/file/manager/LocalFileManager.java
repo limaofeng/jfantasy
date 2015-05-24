@@ -5,6 +5,7 @@ import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.StreamUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
+import com.fantasy.framework.util.regexp.RegexpUtil;
 
 import java.io.*;
 import java.util.*;
@@ -72,7 +73,7 @@ public class LocalFileManager implements FileManager {
     }
 
     public FileItem getFileItem(String remotePath) {
-        return retrieveFileItem(this.defaultDir + filterRemotePath(remotePath));
+        return retrieveFileItem(filterRemotePath(remotePath));
     }
 
     private FileItem root() {
@@ -140,13 +141,13 @@ public class LocalFileManager implements FileManager {
         private LocalFileManager fileManager;
 
         public LocalFileItem(LocalFileManager fileManager, File file) {
-            super(file.getAbsolutePath());
+            super(RegexpUtil.replace(file.getAbsolutePath(), "^" + fileManager.defaultDir, "") + (file.isDirectory() ? "/" : ""));
             this.file = file;
             this.fileManager = fileManager;
         }
 
         public LocalFileItem(LocalFileManager fileManager, final File file, Metadata metadata) {
-            super(file.getAbsolutePath(), file.length(), new Date(file.lastModified()), metadata);
+            super(RegexpUtil.replace(file.getAbsolutePath(), "^" + fileManager.defaultDir, "") + (file.isDirectory() ? "/" : ""), file.length(), new Date(file.lastModified()), metadata);
             this.file = file;
             this.fileManager = fileManager;
         }

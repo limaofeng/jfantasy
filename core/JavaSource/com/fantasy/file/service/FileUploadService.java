@@ -8,6 +8,7 @@ import com.fantasy.file.bean.FilePart;
 import com.fantasy.framework.spring.SpELUtil;
 import com.fantasy.framework.util.common.*;
 import com.fantasy.framework.util.common.file.FileUtil;
+import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.web.WebUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -170,4 +171,37 @@ public class FileUploadService {
         return fileService.saveFileDetail(absolutePath, fileName, contentType, attach.length(), md5, realPath, fileManagerId, "");
     }
 
+    public FileDetail upload(File attach, String absolutePath, String fileManagerId) throws IOException {
+        //获取文件Md5码
+        String md5 = MessageDigestUtil.getInstance().get(attach);// 获取文件MD5
+
+        String mimeType = FileUtil.getMimeType(attach);
+
+        //通过 mimeType 纠正后缀名
+        Map<String, String> extensions = new HashMap<String, String>() {
+            {
+                this.put("image/jpeg", "jpg");
+                this.put("image/gif", "gif");
+                this.put("image/png", "png");
+                this.put("mage/bmp", "bmp");
+            }
+        };
+        // 文件类型
+        FileDetail fileDetail;
+        // 获取真实目录
+        String realPath;
+
+        String fileName = RegexpUtil.parseFirst(absolutePath, "[^/]+$");
+
+        FileManager fileManager = fileManagerFactory.getFileManager(fileManagerId);
+
+        fileDetail = fileService.getFileDetailByMd5(md5, fileManagerId);
+        if (fileDetail == null || fileManager.getFileItem(fileDetail.getRealPath()) == null) {
+            realPath = separator + mimeType + separator + StringUtil.hexTo64("0" + md5) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
+            fileManager.writeFile(realPath, attach);
+        } else {
+            realPath = fileDetail.getRealPath();
+        }
+        return fileService.saveFileDetail(absolutePath, fileName, mimeType, attach.length(), md5, realPath, fileManagerId, "");
+    }
 }

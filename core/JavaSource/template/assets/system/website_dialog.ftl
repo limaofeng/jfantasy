@@ -58,7 +58,7 @@
                 </div>
                 <div class="form-input col-md-10">
                     <div class="append-left">
-                    <@s.select name="defaultFileManager.id"  list="@com.fantasy.file.service.FileManagerFactory@getFileManagers()" listKey="id" listValue="name" cssClass="chosen-select view-field" data_placeholder="请选择文件管理器"/>
+                    <@s.select name="defaultFileManager.id"  list="@com.fantasy.file.service.FileManagerService@getFileManagers()" listKey="id" listValue="name" cssClass="chosen-select view-field" data_placeholder="请选择文件管理器"/>
                     </div>
                 </div>
             </div>

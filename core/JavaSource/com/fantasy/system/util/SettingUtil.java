@@ -1,7 +1,6 @@
 package com.fantasy.system.util;
 
 import com.fantasy.file.FileManager;
-import com.fantasy.file.manager.UploadFileManager;
 import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
@@ -117,19 +116,12 @@ public class SettingUtil {
     }
 
     public static FileManager getDefaultFileManager() {
-        return null;
+        return FileManagerFactory.getInstance().getFileManager("haolue-upload");
     }
 
     public static FileManager getDefaultUploadFileManager() {
-        String[] fmids = FileManagerFactory.getFileManagerIds();
-        for (String fmid : fmids) {
-            FileManager fileManager = FileManagerFactory.getInstance().getFileManager(fmid);
-            if (!(fileManager instanceof UploadFileManager)) {
-                continue;
-            }
-            return fileManager;
-        }
-        return null;
+        //TODO 暂时写死,以后优化
+        return FileManagerFactory.getInstance().getFileManager("haolue-upload");
     }
 
     public static Long getRootMenuId() {
