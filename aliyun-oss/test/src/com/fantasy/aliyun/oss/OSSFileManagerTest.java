@@ -39,14 +39,9 @@ public class OSSFileManagerTest {
 
     private FileManager fileManager;
 
-    public static void main(String[] args) {
-
-
-    }
-
     @Before
     public void setUp() throws Exception {
-        if (fileManagerFactory.getFileManager("oss") == null) {
+        if (fileManagerFactory.getFileManager("test-oss") == null) {
             Map<String, String> params = new HashMap<String, String>();
             params.put("accessKeyId", "GjYnEEMsLVTomMzF");
             params.put("accessKeySecret", "rYSFhN67iXR0vl0pUSatSQjEqR2e2F");
