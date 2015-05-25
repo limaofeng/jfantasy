@@ -48,7 +48,7 @@ public class BuguIndex implements InitializingBean {
     /**
      * Lucene 版本
      */
-    private Version version = Version.LUCENE_36;
+    private Version version = Version.LUCENE_4_9;
     /**
      * 分词器
      */
@@ -168,7 +168,7 @@ public class BuguIndex implements InitializingBean {
                 Directory dir = writer.getDirectory();
                 try {
                     writer.commit();
-                    writer.close(true);
+                    writer.close();
                 } catch (CorruptIndexException ex) {
                     logger.error("Can not commit and close the lucene index", ex);
                 } catch (IOException ex) {

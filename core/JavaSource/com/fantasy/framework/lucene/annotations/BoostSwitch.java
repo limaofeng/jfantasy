@@ -9,7 +9,6 @@ import java.lang.annotation.Target;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-1-23 下午03:15:53
  */
 @Target({java.lang.annotation.ElementType.FIELD})
