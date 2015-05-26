@@ -28,7 +28,7 @@
                 <prop key="hibernate.max_fetch_depth">2</prop>
                 <prop key="hibernate.order_updates">true</prop>
                 <prop key="hibernate.connection.autocommit">false</prop>
-                <prop key="hibernate.show_sql">true</prop>
+                <prop key="hibernate.show_sql">false</prop>
                 <prop key="format_sql">true</prop>
             </props>
         </property>

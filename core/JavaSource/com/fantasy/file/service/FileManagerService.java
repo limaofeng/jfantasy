@@ -31,7 +31,7 @@ public class FileManagerService {
     }
 
     public FileManagerConfig save(FileManagerConfig fileManager) {
-        fileManager.setConfigParamStore(JSON.text().serialize(fileManager.getConfigParams()));
+        fileManager.setConfigParamStore(JSON.serialize(fileManager.getConfigParams()));
         this.fileManagerConfigDao.save(fileManager);
         return fileManager;
     }

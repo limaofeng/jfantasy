@@ -2,10 +2,9 @@ package com.fantasy.cms.dao;
 
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
-import com.fantasy.framework.dao.hibernate.HibernateDao;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.lucene.backend.EntityChangedListener;
-import com.fantasy.framework.lucene.dao.LuceneDao;
+import com.fantasy.framework.lucene.dao.hibernate.HibernateLuceneDao;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.hibernate.Hibernate;
@@ -22,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository("fantasy.cms.hibernate.ArticleDao")
-public class ArticleDao extends HibernateDao<Article, Long> implements LuceneDao<Article> {
+public class ArticleDao extends HibernateLuceneDao<Article, Long> {
 
     @Override
     protected Criterion[] buildPropertyFilterCriterions(List<PropertyFilter> filters) {

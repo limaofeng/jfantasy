@@ -62,9 +62,9 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
             }
             return fileDetails;
         } else if (value instanceof FileDetail && toType == String.class) {
-            return JSON.text().serialize(value);
+            return JSON.serialize(value);
         } else if (value instanceof FileDetail[] && toType == String.class) {
-            return JSON.text().serialize(value);
+            return JSON.serialize(value);
         }
         return super.convertValue(context, target, member, propertyName, value, toType);
     }

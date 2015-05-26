@@ -3,9 +3,10 @@ package com.fantasy.framework.lucene.handler;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fantasy.framework.lucene.mapper.DataType;
 import com.fantasy.framework.lucene.mapper.FieldUtil;
-import org.apache.lucene.document.*;
-import org.apache.lucene.index.FieldInfo;
-import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.Fieldable;
+import org.apache.lucene.document.NumericField;
 
 import java.sql.Timestamp;
 import java.util.Collection;
@@ -38,8 +39,7 @@ public class PropertyFieldHandler extends AbstractFieldHandler {
         }
         Class<?> type = this.field.getType();
         String fieldName = this.prefix + this.field.getName();
-
-        Field f = new Field(fieldName, getArrayString(objValue, type.getComponentType()), getFieldType(analyze, store));
+        org.apache.lucene.document.Field f = new org.apache.lucene.document.Field(fieldName, getArrayString(objValue, type.getComponentType()), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);
 
         f.setBoost(boost);
         doc.add(f);
@@ -52,61 +52,52 @@ public class PropertyFieldHandler extends AbstractFieldHandler {
         }
         Class<?> type = this.field.getType();
         String fieldName = this.prefix + this.field.getName();
-        IndexableField f = null;
+        Fieldable f = null;
         if (DataType.isString(type)) {
-            f = new Field(fieldName, objValue.toString(), getFieldType(analyze, store));
+            f = new org.apache.lucene.document.Field(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);
         } else if ((DataType.isBoolean(type)) || (DataType.isBooleanObject(type))) {
-            f = new StringField(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO);
+            f = new org.apache.lucene.document.Field(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO, Field.Index.NOT_ANALYZED);
         } else if ((DataType.isChar(type)) || (DataType.isCharObject(type))) {
-            f = new StringField(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO);
+            f = new org.apache.lucene.document.Field(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO, Field.Index.NOT_ANALYZED);
         } else if ((DataType.isInteger(type)) || (DataType.isIntegerObject(type))) {
             int v = Integer.parseInt(objValue.toString());
-            f = new IntField(fieldName, v, store ? Field.Store.YES : Field.Store.NO);
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setIntValue(v);
         } else if ((DataType.isLong(type)) || (DataType.isLongObject(type))) {
             long v = Long.parseLong(objValue.toString());
-            f = new LongField(fieldName, v, store ? Field.Store.YES : Field.Store.NO);
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setLongValue(v);
         } else if ((DataType.isShort(type)) || (DataType.isShortObject(type))) {
             short v = Short.parseShort(objValue.toString());
-            f = store ? new SortedNumericDocValuesField(fieldName, v) : new NumericDocValuesField(fieldName, v);
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setIntValue(v);
         } else if ((DataType.isFloat(type)) || (DataType.isFloatObject(type))) {
             float v = Float.parseFloat(objValue.toString());
-            f = new FloatField(fieldName, v, store ? Field.Store.YES : Field.Store.NO);
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setFloatValue(v);
         } else if ((DataType.isDouble(type)) || (DataType.isDoubleObject(type))) {
             double v = Double.parseDouble(objValue.toString());
-            f = new DoubleField(fieldName, v, store ? Field.Store.YES : Field.Store.NO);
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setDoubleValue(v);
         } else if (DataType.isDate(type)) {
             Date date = (Date) objValue;
-            f = store ? new SortedNumericDocValuesField(fieldName, date.getTime()) : new NumericDocValuesField(fieldName, date.getTime());
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setLongValue(date.getTime());
         } else if (DataType.isTimestamp(type)) {
             Timestamp ts = (Timestamp) objValue;
-            f = store ? new SortedNumericDocValuesField(fieldName, ts.getTime()) : new NumericDocValuesField(fieldName, ts.getTime());
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setLongValue(ts.getTime());
         } else if ((DataType.isSet(type)) || (DataType.isList(type))) {
             Collection<?> coll = (Collection<?>) objValue;
             StringBuilder sb = new StringBuilder();
             for (Object o : coll) {
                 sb.append(o).append(";");
             }
-            f = new Field(fieldName, sb.toString(), getFieldType(analyze, store));
+            f = new org.apache.lucene.document.Field(fieldName, sb.toString(), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);
         } else if (DataType.isMap(type)) {
             Map<?, ?> map = (Map<?, ?>) objValue;
             StringBuilder sb = new StringBuilder();
             for (Map.Entry<?, ?> entry : map.entrySet()) {
                 sb.append(entry.getValue()).append(";");
             }
-            f = new Field(fieldName, sb.toString(), getFieldType(analyze, store));
+            f = new org.apache.lucene.document.Field(fieldName, sb.toString(), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);
         }
         if (f != null) {
-            ((Field) f).setBoost(boost);
+            f.setBoost(boost);
             doc.add(f);
         }
     }
-
-    public static FieldType getFieldType(boolean analyze, boolean store) {
-        FieldType fieldType = new FieldType();
-        fieldType.setDocValueType(FieldInfo.DocValuesType.BINARY);
-        fieldType.setStored(store);
-        fieldType.setIndexed(analyze);
-        return fieldType;
-    }
-
 }

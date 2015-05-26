@@ -162,7 +162,7 @@ public class FileManagerConfig extends BaseBusEntity {
 
     public List<ConfigParam> getConfigParams() {
         if (configParams.isEmpty()) {
-            this.configParams = StringUtil.isBlank(this.getConfigParamStore()) ? Collections.<ConfigParam>emptyList() : JSON.text().deserialize(this.getConfigParamStore(), new TypeReference<List<ConfigParam>>() {
+            this.configParams = StringUtil.isBlank(this.getConfigParamStore()) ? Collections.<ConfigParam>emptyList() : JSON.deserialize(this.getConfigParamStore(), new TypeReference<List<ConfigParam>>() {
             });
         }
         return this.configParams;

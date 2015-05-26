@@ -30,7 +30,7 @@ public class BuguSearcherTest {
     public void setUp() throws Exception {
 
         String json = I18nUtil.decodeUnicode(HttpClientUtil.doGet("http://interface.sina.cn/dfz/jx/news/index.d.html?page=1&ch=zhengwen&cid=69603").getText());
-        List<Map<String, String>> list = (List<Map<String, String>>) OgnlUtil.getInstance().getValue("result.data.list", JSON.text().deserialize(json));
+        List<Map<String, String>> list = (List<Map<String, String>>) OgnlUtil.getInstance().getValue("result.data.list", JSON.deserialize(json));
 
         for (Map<String, String> article : list) {
             News news = new News();

@@ -2,9 +2,9 @@ package com.fantasy.framework.lucene;
 
 import org.apache.log4j.Logger;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.QueryParser;
-import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryParser.MultiFieldQueryParser;
+import org.apache.lucene.queryParser.ParseException;
+import org.apache.lucene.queryParser.QueryParser;
 import org.apache.lucene.search.*;
 import org.springframework.util.Assert;
 
@@ -60,7 +60,7 @@ public class BuguParser {
      * @return Query
      */
     public static Query parse(String field, String value, QueryParser.Operator op) {
-        QueryParser parser = new QueryParser(field, BuguIndex.getInstance().getAnalyzer());
+        QueryParser parser = new QueryParser(BuguIndex.getInstance().getVersion(),field, BuguIndex.getInstance().getAnalyzer());
         parser.setDefaultOperator(op);
         return parse(parser, value);
     }
@@ -104,7 +104,7 @@ public class BuguParser {
      * @return Query
      */
     public static Query parse(String[] fields, String value, QueryParser.Operator op) {
-        QueryParser parser = new MultiFieldQueryParser(fields, BuguIndex.getInstance().getAnalyzer());
+        QueryParser parser = new MultiFieldQueryParser(BuguIndex.getInstance().getVersion(),fields, BuguIndex.getInstance().getAnalyzer());
         parser.setDefaultOperator(op);
         return parse(parser, value);
     }
@@ -120,7 +120,7 @@ public class BuguParser {
     public static Query parse(String[] fields, BooleanClause.Occur[] occurs, String value) {
         Query query = null;
         try {
-            query = MultiFieldQueryParser.parse(value, fields, occurs, BuguIndex.getInstance().getAnalyzer());
+            query = MultiFieldQueryParser.parse(BuguIndex.getInstance().getVersion(),value, fields, occurs, BuguIndex.getInstance().getAnalyzer());
         } catch (ParseException ex) {
             logger.error("MultiFieldQueryParser can not parse the value " + value, ex);
         }
@@ -138,7 +138,7 @@ public class BuguParser {
     public static Query parse(String[] fields, BooleanClause.Occur[] occurs, String[] values) {
         Query query = null;
         try {
-            query = MultiFieldQueryParser.parse(values, fields, occurs, BuguIndex.getInstance().getAnalyzer());
+            query = MultiFieldQueryParser.parse(BuguIndex.getInstance().getVersion(),values, fields, occurs, BuguIndex.getInstance().getAnalyzer());
         } catch (ParseException ex) {
             logger.error("MultiFieldQueryParser can not parse the values " + Arrays.toString(values), ex);
         }

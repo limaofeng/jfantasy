@@ -23,7 +23,7 @@ public class JSON {
     private static final Log logger = LogFactory.getLog(JSON.class);
 
     public static final String defaultKey = "default";
-    public static final String textKey = "text";
+    public static final String unicodeKey = "unicode";
     private static final ConcurrentHashMap<String, ObjectMapper> objectMapperCache = new ConcurrentHashMap<String, ObjectMapper>();
 
     private static final Mirror mirror = new Mirror();
@@ -58,8 +58,31 @@ public class JSON {
     private static ThreadLocal<String> threadLocal = new ThreadLocal<String>();
 
     static {
-        //默认将中文转为 Unicode 编码
+        //默认
         register(defaultKey, new ObjectMapperRegister() {
+            @Override
+            public void callback(ObjectMapper objectMapper) {
+                // 当找不到对应的序列化器时 忽略此字段
+                objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+                // 允许非空字段
+                objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
+                // 允许单引号
+                objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
+                // 失败在未知属性
+                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+                //使Jackson JSON支持Unicode编码非ASCII字符
+                SimpleModule module = new SimpleModule();
+//                module.addSerializer(String.class, new StringUnicodeSerializer());
+                module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
+                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
+                objectMapper.registerModule(module);
+                //设置null值不参与序列化(字段不被显示)
+//                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+
+            }
+        });
+        //将中文转为 Unicode 编码
+        register(unicodeKey, new ObjectMapperRegister() {
             @Override
             public void callback(ObjectMapper objectMapper) {
                 // 当找不到对应的序列化器时 忽略此字段
@@ -81,25 +104,6 @@ public class JSON {
 
             }
         });
-        // text 显示时不采用 unicode 中文的方式
-        register(textKey, new ObjectMapperRegister() {
-            @Override
-            public void callback(ObjectMapper objectMapper) {
-                // 当找不到对应的序列化器时 忽略此字段
-                objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-                // 允许非空字段
-                objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
-                // 允许单引号
-                objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-                // 失败在未知属性
-                objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-                SimpleModule module = new SimpleModule();
-                module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
-                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
-                objectMapper.registerModule(module);
-
-            }
-        });
     }
 
     /**
@@ -112,27 +116,20 @@ public class JSON {
         return mirror;
     }
 
-    /**
-     * 返回 textKey 对应的镜像
-     *
-     * @return Mirror
-     */
-    public static Mirror text() {
-        threadLocal.set(textKey);
+    public static Mirror unicode() {
+        threadLocal.set(unicodeKey);
         return mirror;
     }
 
     public synchronized static void register(String key, ObjectMapperRegister instanceCallBack) {
-        if (!objectMapperCache.contains(key)) {
-            ObjectMapper objectMapper = new ObjectMapper();
-            instanceCallBack.callback(objectMapper);
-            objectMapperCache.putIfAbsent(key, objectMapper);
-        }
+        ObjectMapper objectMapper = new ObjectMapper();
+        instanceCallBack.callback(objectMapper);
+        objectMapperCache.putIfAbsent(key, objectMapper);
     }
 
     public interface ObjectMapperRegister {
 
-        public void callback(ObjectMapper objectMapper);
+        void callback(ObjectMapper objectMapper);
 
     }
 

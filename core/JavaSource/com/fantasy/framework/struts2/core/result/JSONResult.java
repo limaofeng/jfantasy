@@ -98,7 +98,7 @@ public class JSONResult implements Result {
     protected String createJSONString(HttpServletRequest request, Object rootObject) {
         // TODO excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties 不能使用
         // JSONUtil.serialize(rootObject, excludeProperties, includeProperties, ignoreHierarchy, enumAsBean, excludeNullProperties);
-        return addCallbackIfApplicable(request, JSON.text().serialize(rootObject));
+        return addCallbackIfApplicable(request, JSON.serialize(rootObject));
     }
 
     protected boolean enableGzip(HttpServletRequest request) {

@@ -60,34 +60,31 @@ public class IndexRebuildTask implements Runnable {
                 }
             }
             final LuceneDao luceneDao = DaoCache.getInstance().get(clazz);
-            long count = JdbcUtil.transaction(new JdbcUtil.Callback<Long>() {
-                @Override
-                public Long run() {
-                    return luceneDao.count();
-                }
-            });
+            long count = luceneDao.count();
             int pages = (int) (count / this.batchSize);
             int remainder = (int) (count % this.batchSize);
             if (pages > 0) {
                 for (int i = 1; i <= pages; i++) {
-                    JdbcUtil.Transaction transaction = JdbcUtil.transaction();
-                    try {
-                        List<?> list = luceneDao.find((i - 1) * this.batchSize, this.batchSize);
-                        process(list);
-                    } finally {
-                        transaction.commit();
-                    }
+                    JdbcUtil.transaction(new ProcessCallback((i - 1) * this.batchSize, this.batchSize) {
+                        @Override
+                        public Void run() {
+                            List<?> list = luceneDao.find(this.start, this.size);
+                            process(list);
+                            return null;
+                        }
+                    });
                 }
             }
             if (remainder > 0) {
                 pages++;
-                JdbcUtil.Transaction transaction = JdbcUtil.transaction();
-                try {
-                    List<?> list = luceneDao.find((pages - 1) * this.batchSize, this.batchSize);
-                    process(list);
-                } finally {
-                    transaction.commit();
-                }
+                JdbcUtil.transaction(new ProcessCallback((pages - 1) * this.batchSize, this.batchSize) {
+                    @Override
+                    public Void run() {
+                        List<?> list = luceneDao.find(this.start, this.size);
+                        process(list);
+                        return null;
+                    }
+                });
             }
             try {
                 this.writer.commit();
@@ -124,6 +121,19 @@ public class IndexRebuildTask implements Runnable {
                 logger.error("IndexWriter can not add a document to the lucene index", ex);
             }
         }
+    }
+
+    public abstract class ProcessCallback implements JdbcUtil.Callback<Void> {
+        protected int start;
+        protected int size;
+
+        ProcessCallback(int start, int size) {
+            this.start = start;
+            this.size = size;
+        }
+
+        public abstract Void run();
+
     }
 
 }

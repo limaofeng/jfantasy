@@ -10,7 +10,6 @@ import com.fantasy.framework.lucene.exception.IdException;
 import com.fantasy.framework.lucene.mapper.FieldUtil;
 import com.fantasy.framework.lucene.mapper.MapperUtil;
 import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.JdbcUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
@@ -91,12 +90,7 @@ public abstract class BuguSearcher<T> {
             for (int i = 0; i < topDocs.scoreDocs.length; i++) {
                 ScoreDoc sdoc = topDocs.scoreDocs[i];
                 final Document doc = searcher.doc(sdoc.doc);
-                data.add(JdbcUtil.transaction(new JdbcUtil.Callback<T>() {
-                    @Override
-                    public T run() {
-                        return dao.get(doc.get(idName));
-                    }
-                }));
+                data.add(dao.get(doc.get(idName)));
             }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -136,12 +130,7 @@ public abstract class BuguSearcher<T> {
             for (int i = (pager.getFirst() - between); i < hits.scoreDocs.length && hits.totalHits > 0; i++) {
                 ScoreDoc sdoc = hits.scoreDocs[i];
                 final Document doc = searcher.doc(sdoc.doc);
-                data.add(JdbcUtil.transaction(new JdbcUtil.Callback<T>() {
-                    @Override
-                    public T run() {
-                        return dao.get(doc.get(idName));
-                    }
-                }));
+                data.add(dao.get(doc.get(idName)));
             }
             pager.setPageItems(data);
             if (highlighter != null) {

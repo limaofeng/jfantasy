@@ -48,7 +48,7 @@ public class BuguIndex implements InitializingBean {
     /**
      * Lucene 版本
      */
-    private Version version = Version.LUCENE_4_9;
+    private Version version = Version.LUCENE_36;
     /**
      * 分词器
      */
@@ -105,7 +105,7 @@ public class BuguIndex implements InitializingBean {
                     continue;
                 }
                 indexedClasses.add(entityClass);
-                DaoCache.getInstance().put(ClassUtil.getInterfaceGenricType(clazz, LuceneDao.class), dao);
+                DaoCache.getInstance().put(entityClass, dao);
             }
         }
         for (Class<?> clazz : indexedClasses) {
