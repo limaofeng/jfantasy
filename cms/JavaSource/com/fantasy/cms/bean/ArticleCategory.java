@@ -93,6 +93,13 @@ public class ArticleCategory extends BaseBusEntity {
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Article> articles;
 
+    public ArticleCategory() {
+    }
+
+    public ArticleCategory(String code) {
+        this.setCode(code);
+    }
+
     public String getCode() {
         return code;
     }

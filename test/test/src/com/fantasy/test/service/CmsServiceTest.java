@@ -4,8 +4,10 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.lucene.BuguParser;
 import com.fantasy.test.bean.Article;
+import com.fantasy.test.bean.ArticleCategory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +24,16 @@ public class CmsServiceTest {
 
     @Autowired
     private CmsService cmsService;
+
+    @Before
+    public void setUp() throws Exception{
+        if(cmsService.get("category") == null) {
+            ArticleCategory category = new ArticleCategory();
+            category.setCode("test");
+            category.setName("用于测试的文章分类");
+            cmsService.save(category);
+        }
+    }
 
     @Test
     public void testSearch() throws Exception {

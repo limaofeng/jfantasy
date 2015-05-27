@@ -1,10 +1,14 @@
 package com.fantasy.attr.storage.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.*;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import java.util.List;
 
 /**
@@ -16,6 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ATTR_ATTRIBUTE")
+@JsonIgnoreProperties("versions")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Attribute extends BaseBusEntity {
 
@@ -63,6 +68,11 @@ public class Attribute extends BaseBusEntity {
      */
     @OneToMany(mappedBy = "attribute", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<AttributeValue> attributeValues;
+
+    @ManyToMany(targetEntity = AttributeVersion.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), inverseJoinColumns = @JoinColumn(name = "VERSION_ID"), foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VERSION"))
+    @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+    private List<AttributeVersion> versions;
 
     public Attribute() {
     }
@@ -133,6 +143,14 @@ public class Attribute extends BaseBusEntity {
 
     public void setNotTemporary(Boolean notTemporary) {
         this.notTemporary = notTemporary;
+    }
+
+    public List<AttributeVersion> getVersions() {
+        return versions;
+    }
+
+    public void setVersions(List<AttributeVersion> versions) {
+        this.versions = versions;
     }
 
     @Override

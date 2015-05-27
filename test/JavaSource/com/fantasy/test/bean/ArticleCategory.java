@@ -1,6 +1,7 @@
 package com.fantasy.test.bean;
 
 import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -17,7 +18,7 @@ import java.util.List;
 @Table(name = "TEST_ARTICLE_CATEGORY")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "articles", "articleVersion"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class ArticleCategory {
+public class ArticleCategory extends BaseBusEntity {
 
     public static final String PATH_SEPARATOR = ",";// 树路径分隔符
 
@@ -75,6 +76,13 @@ public class ArticleCategory {
      */
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Article> articles;
+
+    public ArticleCategory() {
+    }
+
+    public ArticleCategory(String code) {
+        this.setCode(code);
+    }
 
     public String getCode() {
         return code;

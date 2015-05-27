@@ -38,11 +38,13 @@ public class VersionUtil {
 
     public static DynaBean makeDynaBean(String className, String number) {
         AttributeVersion version = getVersion(className, number);
+        assert version != null;
         return createDynaBean(ClassUtil.forName(version.getClassName()), version);
     }
 
     public static <T> T createDynaBean(Class<T> clazz, String number) {
         AttributeVersion version = getVersion(clazz.getName(), number);
+        assert version != null;
         return clazz.cast(createDynaBean(ClassUtil.forName(version.getClassName()), version));
     }
 
@@ -87,7 +89,9 @@ public class VersionUtil {
     }
 
     public static Class makeClass(Class<?> clazz, String number) {
-        return ClassUtil.forName(getVersion(clazz.getName(), number).getClassName());
+        AttributeVersion version = getVersion(clazz.getName(), number);
+        assert version != null;
+        return ClassUtil.forName(version.getClassName());
     }
 
     public static OgnlUtil getOgnlUtil(AttributeType attributeType) {
@@ -103,6 +107,7 @@ public class VersionUtil {
         for (AttributeVersion version : versions) {
             AttributeVersion attributeVersion = VersionUtil.getVersion(entityClass.getName(), version.getNumber());
             String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
+            assert attributeVersion != null;
             Attribute attribute = ObjectUtil.find(attributeVersion.getAttributes(), "code", simpleName);
             if (attribute != null) {
                 com.fantasy.framework.util.reflect.Property property = ClassUtil.getProperty(ClassUtil.forName(attribute.getAttributeType().getDataType()), RegexpUtil.replaceFirst(propertyName, simpleName + ".", ""));

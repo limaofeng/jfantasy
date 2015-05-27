@@ -9,6 +9,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.test.bean.Article;
+import com.fantasy.test.bean.ArticleCategory;
 import com.fantasy.test.service.CmsService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -62,7 +63,6 @@ public class CustomBeanTypeConverterTest {
         //attributeTypeService.save(Array.newInstance(ClassUtil.forName(className)).getClass(), "UserDel", "UserDel", CustomBeanTypeConverter.class);
         //定义数据版本 添加属性
         attributeVersionService.save(Article.class.getName(),"fantasy_article_v1",AttributeUtils.bean("moneys","UserDelBean","", ClassUtil.forName(className)));
-        //  attributeVersionService.save(Article.class.getName(),"fantasy_article_v1",AttributeUtils.bean("moneys","UserDelBean","", Array.newInstance(ClassUtil.forName(className)).getClass().getName())));
     }
 
 
@@ -78,10 +78,9 @@ public class CustomBeanTypeConverterTest {
         for(Article article : articles){
             this.cmsService.delete(article.getId());
         }
+        this.attributeVersionService.delete(attributeVersionService.findUniqueByTargetClassName(Article.class.getName(),"fantasy_article_v1").getId());
         this.customBeanDefinitionService.delete(className);
         this.attributeService.delete(attributeService.findByCode("moneys").getId());
-        this.attributeVersionService.delete(attributeVersionService.findUniqueByTargetClassName("com.fantasy.attr.storage.bean.Article","fantasy_article_v1").getId());
-
         for (CustomBeanDefinition definition : this.customBeanDefinitionService.find(Restrictions.isNull("className"))) {
             this.customBeanDefinitionService.delete(definition.getId());
         }
@@ -93,6 +92,7 @@ public class CustomBeanTypeConverterTest {
         Article article = VersionUtil.createDynaBean(Article.class, "fantasy_article_v1");
         article.setTitle("测试动态bean");
         article.setSummary("测试动态bean");
+        article.setCategory(new ArticleCategory("test"));
         OgnlUtil.getInstance().setValue("moneys.number",article,"123");
         this.cmsService.save(article);
     }
