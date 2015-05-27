@@ -88,7 +88,8 @@ public class FileFilter extends GenericFilterBean {
                 writeFile(request, response, fileItem);
                 return;
             }
-        } else if (RegexpUtil.find(url, regex)) {
+        }
+        if (RegexpUtil.find(url, regex)) {
             final String srcUrl = RegexpUtil.replace(url, regex, ".$3");
             FileDetail srcFileDetail = JdbcUtil.transaction(new JdbcUtil.Callback<FileDetail>() {
                 @Override
