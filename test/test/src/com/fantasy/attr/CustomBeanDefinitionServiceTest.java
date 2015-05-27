@@ -59,12 +59,12 @@ public class CustomBeanDefinitionServiceTest {
 
         Assert.assertNotNull(o);
 
-        LOG.debug(JSON.set("text").serialize(o));
+        LOG.debug(JSON.serialize(o));
 
         OgnlUtil.getInstance().setValue("strs[0]", o, "limaofeng");
         OgnlUtil.getInstance().setValue("strs[1]", o, "huangli");
 
-        LOG.debug(JSON.set("text").serialize(o));
+        LOG.debug(JSON.serialize(o));
 
     }
 
