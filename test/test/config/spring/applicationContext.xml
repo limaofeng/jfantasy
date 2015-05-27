@@ -49,7 +49,7 @@
 
     <!-- ehcache缓存配置 -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:cacheManagerName="appCache" p:acceptExisting="true" p:configLocation="classpath:cache/ehcache.xml"/>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:cacheManagerName="appCache" p:acceptExisting="true"/>
     <!--
     <ehcache:annotation-driven cache-manager="cacheManager" />
      -->
