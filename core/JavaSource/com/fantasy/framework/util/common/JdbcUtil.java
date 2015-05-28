@@ -45,8 +45,29 @@ public abstract class JdbcUtil extends JdbcUtils {
         return new Transaction(transactionManager, transactionManager.getTransaction(def));
     }
 
+    public static Transaction transaction(int propagationBehavior) {
+        PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
+        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+        def.setPropagationBehavior(propagationBehavior);
+        assert transactionManager != null;
+        return new Transaction(transactionManager, transactionManager.getTransaction(def));
+    }
+
     public static <T> T transaction(Callback<T> callback) {
         Transaction transaction = transaction();
+        try {
+            T val = callback.run();
+            if(val instanceof HibernateProxy){
+                Hibernate.initialize(val);
+            }
+            return val;
+        } finally {
+            transaction.commit();
+        }
+    }
+
+    public static <T> T transaction(Callback<T> callback,int propagationBehavior) {
+        Transaction transaction = transaction(propagationBehavior);
         try {
             T val = callback.run();
             if(val instanceof HibernateProxy){

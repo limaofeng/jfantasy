@@ -6,6 +6,7 @@ import com.fantasy.cms.service.BannerServiceTest;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
+import com.fantasy.framework.util.common.JdbcUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.opensymphony.xwork2.Action;
@@ -21,6 +22,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.transaction.TransactionDefinition;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -84,10 +86,19 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         //添加查询条件
         this.request.addParameter("LIKES_name", "测试轮播图");
 
-        ActionProxy proxy = super.getActionProxy("/cms/banner/search.do");
+        final ActionProxy proxy = super.getActionProxy("/cms/banner/search.do");
         Assert.assertNotNull(proxy);
-
-        String result = proxy.execute();
+        String result = JdbcUtil.transaction(new JdbcUtil.Callback<String>() {
+            @Override
+            public String run() {
+                try {
+                    return proxy.execute();
+                } catch (Exception e) {
+                    LOG.error(e.getMessage(),e);
+                    return null;
+                }
+            }
+        },TransactionDefinition.PROPAGATION_REQUIRED);
     }
 
     @Test
