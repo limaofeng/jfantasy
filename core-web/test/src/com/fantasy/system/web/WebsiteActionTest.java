@@ -4,6 +4,7 @@ import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.file.service.FileManagerService;
 import com.fantasy.framework.struts2.ActionSupport;
 import com.fantasy.framework.struts2.core.context.ActionConstants;
+import com.fantasy.framework.util.web.context.ActionContext;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
@@ -59,7 +60,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
         SpringSecurityUtils.saveUserDetailsToContext(userDetails, request);
         request.getSession().setAttribute("SPRING_SECURITY_CONTEXT", SecurityContextHolder.getContext());
 
-
+        ActionContext.getContext(request, response);
 
         LOG.debug("默认admin登陆。。。");
     }
