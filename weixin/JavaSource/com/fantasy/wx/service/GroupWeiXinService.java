@@ -22,7 +22,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class GroupWeiXinService  implements InitializingBean  {
+public class GroupWeiXinService implements InitializingBean {
     @Autowired
     private WeiXinSessionFactory factory;
 
@@ -34,7 +34,7 @@ public class GroupWeiXinService  implements InitializingBean  {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        session = factory.openSession(Consts.appid);
+        session = Consts.appid != null ? factory.openSession(Consts.appid) : null;
     }
 
     public Group save(Group group) {
@@ -56,14 +56,14 @@ public class GroupWeiXinService  implements InitializingBean  {
 
     public void delete(Long... ids) {
         for (Long id : ids) {
-            userInfoDao.batchSQLExecute("update wx_user_info set GROUP_ID=null where GROUP_ID=?",id);
+            userInfoDao.batchSQLExecute("update wx_user_info set GROUP_ID=null where GROUP_ID=?", id);
             groupDao.delete(id);
         }
     }
 
     public int create(String name) {
         com.fantasy.wx.framework.message.user.Group res = session.createGroup(name);
-        Group group = new Group(res.getId(), res.getName(),res.getCount());
+        Group group = new Group(res.getId(), res.getName(), res.getCount());
         group.setCount(res.getCount());
         groupDao.save(group);
         return 0;
@@ -71,7 +71,7 @@ public class GroupWeiXinService  implements InitializingBean  {
 
     public int update(Long id, String name) {
         Group group = new Group(id, name);
-        session.updateGroup(id,name);
+        session.updateGroup(id, name);
         groupDao.save(group);
         return 0;
     }
@@ -80,7 +80,7 @@ public class GroupWeiXinService  implements InitializingBean  {
         List<Group> gl = new ArrayList<Group>();
         List<com.fantasy.wx.framework.message.user.Group> list = session.getGroups();
         for (com.fantasy.wx.framework.message.user.Group g : list) {
-            Group group = new Group(g.getId(),g.getName(),g.getCount());
+            Group group = new Group(g.getId(), g.getName(), g.getCount());
             groupDao.save(group);
             gl.add(group);
         }
@@ -88,7 +88,7 @@ public class GroupWeiXinService  implements InitializingBean  {
     }
 
     public int moveGroup(String openId, Long groupId) {
-        session.moveUser(openId,groupId);
+        session.moveUser(openId, groupId);
         UserInfo ui = new UserInfo();
         ui.setOpenId(openId);
         ui.setGroup(new Group(groupId, null));

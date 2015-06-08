@@ -1,10 +1,11 @@
 package com.fantasy.framework.util.common;
 
-//import com.opensymphony.xwork2.util.ClassLoaderUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.core.io.support.PropertiesLoaderUtils;
 import org.springframework.util.SystemPropertyUtils;
 
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -20,9 +21,12 @@ public class PropertiesHelper {
     Properties p;
 
     public static PropertiesHelper load(String propertiesPath) {
-//        try {
-            Properties props = new Properties();
-            //TODO 该问题必须解决
+        try {
+            return new PropertiesHelper(PropertiesLoaderUtils.loadAllProperties(propertiesPath, PropertiesHelper.class.getClassLoader()));
+        } catch (IOException e) {
+            logger.error(e.getMessage(), e);
+            return nullPropertiesHelper;
+        }
             /*
             Iterator<URL> urls = ClassLoaderUtil.getResources(propertiesPath, PropertiesHelper.class, true);
             Properties props = new Properties();
@@ -36,7 +40,6 @@ public class PropertiesHelper {
                 }
             }
             */
-            return new PropertiesHelper(props);
 //        } catch (IOException e) {
 //            logger.error(e.getMessage(), e);
 //            return nullPropertiesHelper;
@@ -52,7 +55,7 @@ public class PropertiesHelper {
     }
 
     public void setProperties(Properties props) {
-        if (props == null){
+        if (props == null) {
             throw new IllegalArgumentException("properties must be not null");
         }
         this.p = props;

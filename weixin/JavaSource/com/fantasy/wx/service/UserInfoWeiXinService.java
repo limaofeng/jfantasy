@@ -33,7 +33,7 @@ public class UserInfoWeiXinService implements InitializingBean{
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        session = factory.openSession(Consts.appid);
+        session = Consts.appid == null ? null : factory.openSession(Consts.appid);
     }
 
     public UserInfo getUserInfo(String openId) {

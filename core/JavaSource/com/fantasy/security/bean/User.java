@@ -14,7 +14,7 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
-
+import org.hibernate.annotations.Cache;
 import javax.persistence.*;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "userGroups", "menus", "authorities" ,"logoImageStore"})
-@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements FantasyUserDetails {
 
 	private static final long serialVersionUID = 5507435998232223911L;
@@ -86,18 +86,21 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 	 */
 	@ManyToMany(targetEntity = UserGroup.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "AUTH_USERGROUP_USER", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"),foreignKey = @ForeignKey(name="FK_USERGROUP_USER_US"))
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private List<UserGroup> userGroups;
 	/**
 	 * 用户对应的角色
 	 */
 	@ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
 	@JoinTable(name = "AUTH_ROLE_USER", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"),foreignKey = @ForeignKey(name="FK_ROLE_USER_UID"))
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private List<Role> roles;
 	/**
 	 * 用户详细信息
 	 */
 	@OneToOne(fetch = FetchType.LAZY, cascade = { CascadeType.ALL })
 	@PrimaryKeyJoinColumn
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 	private UserDetails details;
 	/**
 	 * 用户允许访问的权限
@@ -109,6 +112,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="WEBSITE_ID",foreignKey = @ForeignKey(name="FK_WEBSITE_USER"))
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Website website;
 
     /**
@@ -116,6 +120,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="ORGANIZATION_ID",foreignKey = @ForeignKey(name="FK_ORGANIZATION_USER"))
+	@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Organization organization;
 
 	public Long getId() {
