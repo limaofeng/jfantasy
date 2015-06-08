@@ -34,17 +34,7 @@
             </props>
         </property>
         <property name="defaultEncoding" value="utf-8"/>
-
         <property name="templateLoaderPath" value="${freemarker.templatePath}"/>
-        <property name="preTemplateLoaders">
-            <list>
-                <bean class="com.fantasy.framework.freemarker.loader.FreemarkerTemplateLoader">
-
-                </bean>
-            </list>
-        </property>
-        <!--
-        -->
     </bean>
 
     <!-- ehcache缓存配置 -->

@@ -256,6 +256,21 @@
         </plugins>
     </reporting>
 
+    <dependencies>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>${javax.servlet.api-version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>${javax.servlet.jsp-api-version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <!-- jar yi依赖 -->
     <dependencyManagement>
         <dependencies>
