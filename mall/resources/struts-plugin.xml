@@ -36,29 +36,29 @@
 
     <package name="admin-mall-stock" extends="fantasy-default" namespace="/mall/stock">
         <!-- 商品对应的产品信息 -->
-        <action name="stock_product_index" class="com.fantasy.mall.stock.web.StockAction" method="productIndex">
+        <action name="stock_product_index" class="StockAction" method="productIndex">
             <result>/WEB-INF/views/admin/mall/stock/stock_product_index.jsp</result>
         </action>
         <!-- 产品查询 -->
-        <action name="stock_product_search" class="com.fantasy.mall.stock.web.StockAction" method="productSearch"/>
+        <action name="stock_product_search" class="StockAction" method="productSearch"/>
         <!-- 库存查询首页 -->
-        <action name="stock_index" class="com.fantasy.mall.stock.web.StockAction" method="index">
+        <action name="stock_index" class="StockAction" method="index">
             <result>/WEB-INF/views/admin/mall/stock/stock_index.jsp</result>
         </action>
         <!-- 库存查询列表 -->
-        <action name="stock_search" class="com.fantasy.mall.stock.web.StockAction" method="search"/>
+        <action name="stock_search" class="StockAction" method="search"/>
         <!-- 产品库存添加 -->
-        <action name="stock_change" class="com.fantasy.mall.stock.web.StockAction" method="change">
+        <action name="stock_change" class="StockAction" method="change">
             <result>/WEB-INF/views/admin/mall/stock/stock_change.jsp</result>
         </action>
         <!-- 产品库存保存 -->
-        <action name="stock_save" class="com.fantasy.mall.stock.web.StockAction" method="save"/>
+        <action name="stock_save" class="StockAction" method="save"/>
         <!-- 库存预警添加或修改页面 -->
         <action name="stock_warn_add">
             <result>/WEB-INF/views/admin/mall/stock/stock_warn_add.jsp</result>
         </action>
         <!-- 库存预警保存页面 -->
-        <action name="stock_warn_save" class="com.fantasy.mall.stock.web.StockAction" method="warnSave"/>
+        <action name="stock_warn_save" class="StockAction" method="warnSave"/>
     </package>
     <!-- 订单管理 -->
     <package name="admin-mall-order" extends="fantasy-default" namespace="/mall/order">

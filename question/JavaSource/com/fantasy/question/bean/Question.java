@@ -3,7 +3,6 @@ package com.fantasy.question.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
-import com.opensymphony.xwork2.util.Element;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -76,7 +75,6 @@ public class Question extends BaseBusEntity {
     /**
      * 问题回答
      */
-    @Element(Answer.class)
     @OneToMany(mappedBy = "question",fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime desc")
     private List<Answer> answers;

@@ -6,7 +6,6 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.*;
@@ -80,7 +79,7 @@ public class Model extends BaseBusEntity {
     public String getModelImageStore() {
         return this.modelImageStore;
     }
-    @TypeConversion(key = "modelImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
+    //@TypeConversion(key = "modelImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setModelImageStore(String modelImageStore) {
         this.modelImageStore = modelImageStore;
     }
@@ -113,6 +112,7 @@ public class Model extends BaseBusEntity {
         if (this.avatar == null && StringUtils.isNotBlank(this.modelImageStore)) {
             List<FileDetail> fileDetails = JSON.deserialize(this.modelImageStore, new TypeReference<List<FileDetail>>() {
             });
+            assert fileDetails != null;
             this.avatar = fileDetails.isEmpty() ? null : fileDetails.get(0);
         }
         if(this.avatar==null){

@@ -3,10 +3,9 @@ package com.fantasy.cms.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -99,7 +98,7 @@ public class BannerItem extends BaseBusEntity {
         return bannerImageStore;
     }
 
-    @TypeConversion(key = "bannerImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
+    //@TypeConversion(key = "bannerImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setBannerImageStore(String bannerImageStore) {
         this.bannerImageStore = bannerImageStore;
     }

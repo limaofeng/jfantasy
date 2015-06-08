@@ -14,18 +14,22 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <asm-version>3.3</asm-version>
         <junit-version>4.9</junit-version>
+        <ognl-version>3.0.6</ognl-version>
         <cglib-version>2.2.2</cglib-version>
         <mysql-version>5.1.22</mysql-version>
         <jmagick-version>6.6.9</jmagick-version>
         <activiti-version>5.17.0</activiti-version>
         <org.slf4j-version>1.6.1</org.slf4j-version>
+        <commons-io-version>2.0.1</commons-io-version>
         <servlet.api-version>2.5</servlet.api-version>
         <commons-net-version>3.3</commons-net-version>
         <htmlcleaner-version>2.8</htmlcleaner-version>
+        <freemarker-version>2.3.19</freemarker-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
         <org.mybatis-version>3.2.7</org.mybatis-version>
         <commons-codec-version>1.8</commons-codec-version>
         <spymemcached-version>2.11.6</spymemcached-version>
+        <commons-lang3-version>3.3.2</commons-lang3-version>
         <commons-email-version>1.3.2</commons-email-version>
         <redis.clients-version>2.6.2</redis.clients-version>
         <aliyun-sdk-oss-version>2.0.3</aliyun-sdk-oss-version>
@@ -861,6 +865,26 @@
                 <version>${spymemcached-version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang3-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.freemarker</groupId>
+                <artifactId>freemarker</artifactId>
+                <version>${freemarker-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>ognl</groupId>
+                <artifactId>ognl</artifactId>
+                <version>${ognl-version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.activiti</groupId>
                 <artifactId>activiti-engine</artifactId>
                 <version>${activiti-version}</version>
@@ -967,21 +991,17 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
+        <module>core-web</module>
         <module>cache</module>
-        <module>core-ws</module>
-        <module>core-ws-server</module>
-        <module>core-ws-client</module>
         <module>mall</module>
-        <module>mall-ws</module>
-        <module>mall-ws-server</module>
-        <module>mall-ws-client</module>
+        <module>mall-web</module>
         <module>cms</module>
-        <module>cms-ws</module>
-        <module>cms-ws-server</module>
-        <module>cms-ws-client</module>
+        <module>cms-web</module>
         <module>question</module>
+        <module>question-web</module>
         <module>websocket</module>
         <module>weixin</module>
+        <module>weixin-web</module>
         <module>aliyun-oss</module>
         <module>javaweb</module>
         <module>test</module>

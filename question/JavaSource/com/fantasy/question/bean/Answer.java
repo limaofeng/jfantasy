@@ -3,7 +3,6 @@ package com.fantasy.question.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
-import com.opensymphony.xwork2.util.Element;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -54,7 +53,6 @@ public class Answer extends BaseBusEntity {
     /**
      * 追问（答）
      */
-    @Element(AnswerAdditional.class)
     @OneToMany(mappedBy = "answer",fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime asc")
     private List<AnswerAdditional> additionals;

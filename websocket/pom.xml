@@ -49,6 +49,21 @@
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-cache</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>redis.clients</groupId>
+            <artifactId>jedis</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-redis</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

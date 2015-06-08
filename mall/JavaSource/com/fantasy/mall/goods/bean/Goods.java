@@ -15,7 +15,6 @@ import com.fantasy.system.util.SettingUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
@@ -434,7 +433,7 @@ public class Goods extends BaseDynaBean {
         return introduction;
     }
 
-    @TypeConversion(key = "introduction", converter = "com.fantasy.common.bean.converter.HtmlConverter")
+    //@TypeConversion(key = "introduction", converter = "com.fantasy.common.bean.converter.HtmlConverter")
     public void setIntroduction(String introduction) {
         this.introduction = introduction;
     }
@@ -477,7 +476,7 @@ public class Goods extends BaseDynaBean {
         return goodsImageStore;
     }
 
-    @TypeConversion(key = "goodsImageStore", converter = "com.fantasy.mall.goods.bean.converter.GoodsImageStoreConverter")
+    //@TypeConversion(key = "goodsImageStore", converter = "com.fantasy.mall.goods.bean.converter.GoodsImageStoreConverter")
     public void setGoodsImageStore(String goodsImageStore) {
         this.goodsImageStore = goodsImageStore;
     }

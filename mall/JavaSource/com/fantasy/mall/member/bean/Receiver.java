@@ -5,7 +5,6 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -95,7 +94,7 @@ public class Receiver extends BaseBusEntity {
         return areaStore;
     }
 
-    @TypeConversion(key = "areaStore", converter = "com.fantasy.common.bean.converter.AreaStoreConverter")
+    //@TypeConversion(key = "areaStore", converter = "com.fantasy.common.bean.converter.AreaStoreConverter")
     public void setAreaStore(String areaStore) {
         this.areaStore = areaStore;
     }

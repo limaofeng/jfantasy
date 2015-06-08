@@ -30,6 +30,9 @@
         <priority value="DEBUG"/>
         <appender-ref ref="FILE"/>
     </category>
+    <category name="org.springframework.web">
+        <priority value="DEBUG"/>
+    </category>
     <category name="com.fantasy">
         <priority value="DEBUG"/>
         <appender-ref ref="FILE"/>

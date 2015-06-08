@@ -12,8 +12,6 @@ import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import com.opensymphony.xwork2.util.Element;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -158,7 +156,6 @@ public class Order extends BaseDynaBean {
     @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_ORDER_MEMBER"))
     private Member member;// 会员
 
-    @Element(OrderItem.class)
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime asc")
     private List<OrderItem> orderItems = new ArrayList<OrderItem>();// 订单支付信息
@@ -335,7 +332,7 @@ public class Order extends BaseDynaBean {
         return shipAreaStore;
     }
 
-    @TypeConversion(key = "shipAreaStore", converter = "com.fantasy.common.bean.converter.AreaStoreConverter")
+    //@TypeConversion(key = "shipAreaStore", converter = "com.fantasy.common.bean.converter.AreaStoreConverter")
     public void setShipAreaStore(String shipAreaStore) {
         this.shipAreaStore = shipAreaStore;
     }

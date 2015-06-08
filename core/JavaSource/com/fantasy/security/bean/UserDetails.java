@@ -3,7 +3,6 @@ package com.fantasy.security.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
 import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -174,7 +173,7 @@ public class UserDetails implements Serializable {
         return avatarStore;
     }
 
-    @TypeConversion(key = "avatarStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
+    //@TypeConversion(key = "avatarStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setAvatarStore(String avatarStore) {
         this.avatarStore = avatarStore;
     }
@@ -183,6 +182,7 @@ public class UserDetails implements Serializable {
         if (this.avatar == null && StringUtils.isNotBlank(this.avatarStore)) {
             List<FileDetail> fileDetails = JSON.deserialize(this.avatarStore, new TypeReference<List<FileDetail>>() {
             });
+            assert fileDetails != null;
             this.avatar = fileDetails.isEmpty() ? null : fileDetails.get(0);
         }
         return this.avatar;

@@ -7,7 +7,6 @@ import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.web.context.ActionContext;
 import org.apache.log4j.Logger;
-import org.apache.struts2.ServletActionContext;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -33,16 +32,7 @@ public class WebUtil {
     private static final Logger logger = Logger.getLogger(WebUtil.class);
 
     private static HttpServletRequest getRequest() {
-        HttpServletRequest request;
-        try {
-            request = ServletActionContext.getRequest();
-        } catch (NullPointerException e) {
-            request = ActionContext.getContext().getHttpRequest();
-            if (request == null) {
-                throw e;
-            }
-        }
-        return request;
+        return ActionContext.getContext().getHttpRequest();
     }
 
     /**
@@ -130,7 +120,7 @@ public class WebUtil {
     public static int getPort(String url) {
         String scheme = getScheme(url);
         String port = RegexpUtil.parseGroup(url, ":([0-9]+)", 1);
-        return Integer.valueOf(StringUtil.isNull(port) ? ("http".equals(scheme) ? "80" : "443") : port);
+        return Integer.valueOf(port == null ? ("http".equals(scheme) ? "80" : "443") : port);
     }
 
     /**

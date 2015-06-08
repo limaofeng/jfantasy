@@ -43,7 +43,7 @@ public class WeiXinSessionTest {
 
     @Before
     public void setUp() throws Exception {
-        session = factory.openSession("wxcbc2c9fb9d585cd3");
+        session = factory.openSession("wx0e7cef7ad73417eb");
         group = ObjectUtil.find(session.getGroups(), "getName()", "员工");
     }
 
@@ -134,6 +134,17 @@ public class WeiXinSessionTest {
     @Test
     public void testRefreshMenu() throws Exception {
         List<Menu> menus = session.getMenus();
+        menus.clear();
+        Menu m1 = new Menu("我是技工", Menu.view("工程项目", "http://121.40.16.197:3005/projects"),
+                Menu.view("我的资料", "http://121.40.16.197:3005/users/edit?id=228")
+                , Menu.view("个人中心", "http://121.40.16.197:3005/users/center?id=228"),
+                Menu.view("我申请的工程", "http://121.40.16.197:3005/users/resume_list?id=228"));
+
+        Menu m2 = new Menu("我是企业", Menu.view("我的工程", "http://121.40.16.197:3005/projects/my_projects?id=3"),Menu.view("收到的简历", "http://121.40.16.197:3005/companys/resume_list?id=3"));
+        Menu m3 = Menu.view("注册", "http://121.40.16.197:3005/register");
+        menus.add(m1);
+        menus.add(m2);
+        menus.add(m3);
         session.refreshMenu(menus.toArray(new Menu[menus.size()]));
     }
 

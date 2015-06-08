@@ -1,11 +1,11 @@
 package com.fantasy.framework.freemarker;
 
 import com.fantasy.framework.freemarker.directive.DirectiveUtils;
+import com.fantasy.framework.util.common.ClassUtil;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.*;
-import org.apache.struts2.views.freemarker.StrutsClassTemplateLoader;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -80,7 +80,10 @@ public class FreeMarkerConfigurationFactoryBean extends FreeMarkerConfigurationF
 
     @Override
     protected void postProcessTemplateLoaders(List<TemplateLoader> templateLoaders) {
-        templateLoaders.add(new StrutsClassTemplateLoader());
+        Class<TemplateLoader> strutsClassTemplateLoader = ClassUtil.forName("org.apache.struts2.views.freemarker.StrutsClassTemplateLoader");
+        if (strutsClassTemplateLoader != null) {
+            templateLoaders.add(ClassUtil.newInstance(strutsClassTemplateLoader));
+        }
         if (webappTemplateLoader != null) {
             templateLoaders.add(webappTemplateLoader);
         }

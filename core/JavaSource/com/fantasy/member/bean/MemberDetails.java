@@ -3,10 +3,9 @@ package com.fantasy.member.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -224,7 +223,7 @@ public class MemberDetails implements Serializable {
         return this.avatarStore;
     }
 
-    @TypeConversion(key = "avatarStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
+    //@TypeConversion(key = "avatarStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setAvatarStore(String avatarStore) {
         this.avatarStore = avatarStore;
     }

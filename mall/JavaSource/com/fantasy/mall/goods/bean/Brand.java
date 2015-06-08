@@ -3,10 +3,9 @@ package com.fantasy.mall.goods.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
-import com.opensymphony.xwork2.conversion.annotations.TypeConversion;
-import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -142,7 +141,7 @@ public class Brand extends BaseBusEntity {
         return logoImageStore;
     }
 
-    @TypeConversion(key = "logoImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
+    //@TypeConversion(key = "logoImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setLogoImageStore(String logoImageStore) {
         this.logoImageStore = logoImageStore;
     }
@@ -158,6 +157,7 @@ public class Brand extends BaseBusEntity {
         }
         List<FileDetail> fileDetails = JSON.deserialize(this.logoImageStore, new TypeReference<List<FileDetail>>() {
         });
+        assert fileDetails != null;
         return fileDetails.isEmpty() ? null : fileDetails.get(0);
     }
 }
