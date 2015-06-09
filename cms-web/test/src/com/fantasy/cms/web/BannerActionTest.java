@@ -2,7 +2,6 @@ package com.fantasy.cms.web;
 
 import com.fantasy.cms.bean.Banner;
 import com.fantasy.cms.service.BannerService;
-import com.fantasy.cms.service.BannerServiceTest;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
@@ -112,7 +111,7 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("bannerItems[0].url", "http://jira.jfantasy.org");
 
         try {
-            File file = new File(BannerServiceTest.class.getResource("Banner_2.png").getFile());
+            File file = new File(BannerActionTest.class.getResource("Banner_2.png").getFile());
             String mimeType = FileUtil.getMimeType(file);
             FileDetail fileDetail = fileUploadService.upload(file, mimeType, file.getName(), "test");
             this.request.addParameter("bannerItems[0].bannerImageStore", fileDetail.getFileManagerId() + ":" + fileDetail.getAbsolutePath());
