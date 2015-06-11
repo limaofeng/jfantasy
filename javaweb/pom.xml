@@ -54,12 +54,27 @@
         </dependency>
         <dependency>
             <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-core-web</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
             <artifactId>fantasy-mall</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-mall-web</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cms</artifactId>
+            <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-cms-web</artifactId>
             <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
