@@ -2,6 +2,7 @@ package com.fantasy.wx.menu.service;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.bean.MenuWeixin;
+import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.message.content.Menu;
 import com.fantasy.wx.framework.oauth2.Scope;
 import com.fantasy.wx.service.MenuWeiXinService;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -77,7 +77,7 @@ public class IZIMenuWeixinWeiXinServiceTest {
         Assert.assertEquals(r, 0);
     }
     @Test
-    public void tesTrefresh(){
+    public void tesTrefresh() throws WeiXinException {
         /*Menu[] menus0=new Menu[3];
         menus0[0]=Menu.view("商场","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2F121.40.16.197%2Fiziwx%2Fbazaar%2Findex&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
         menus0[1]=Menu.view("品牌","https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx0e7cef7ad73417eb&redirect_uri=http%3A%2F%2F121.40.16.197%2Fiziwx%2Fbrand%2Findex&response_type=code&scope=snsapi_userinfo&connect_redirect=1#wechat_redirect");
@@ -115,7 +115,7 @@ public class IZIMenuWeixinWeiXinServiceTest {
         /*iMenuWeiXinService.deleteMenu();*/
     }
     @Test
-    public void testUrl(){
+    public void testUrl() throws WeiXinException {
         String url=iMenuWeiXinService.createOauth2Url("http://121.40.16.197:8080/izi/account/info", Scope.userinfo);
         logger.debug(url);
     }

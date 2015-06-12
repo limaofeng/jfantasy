@@ -2,13 +2,11 @@ package com.fantasy.wx.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.account.Consts;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.dao.UserInfoDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
-import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
+import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.user.User;
-import com.fantasy.wx.framework.session.WeiXinSession;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,61 +17,60 @@ import java.util.List;
 
 @Service
 @Transactional
-public class UserInfoWeiXinService implements InitializingBean{
-
-    @Autowired
-    private WeiXinSessionFactory factory;
-
-    private WeiXinSession session;
+public class UserInfoWeiXinService implements InitializingBean {
 
     @Autowired
     private UserInfoDao userInfoDao;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        session = Consts.appid == null ? null : factory.openSession(Consts.appid);
     }
 
     public UserInfo getUserInfo(String openId) {
         return userInfoDao.findUniqueBy("openId", openId);
     }
+
     public UserInfo save(UserInfo ui) {
         return userInfoDao.save(ui);
     }
+
     public void delete(Long... ids) {
-        for(Long id:ids){
+        for (Long id : ids) {
             userInfoDao.delete(id);
         }
     }
-    public void deleteByOpenId(String openId){
-        UserInfo ui=this.getUserInfo(openId);
+
+    public void deleteByOpenId(String openId) {
+        UserInfo ui = this.getUserInfo(openId);
         this.delete(ui.getId());
     }
+
     public Pager<UserInfo> findPager(Pager<UserInfo> pager, List<PropertyFilter> filters) {
         return this.userInfoDao.findPager(pager, filters);
     }
 
     /**
      * 刷新所有的用户信息
+     *
      * @throws WeiXinException
      */
     public void refresh() throws WeiXinException {
-        List<User> list=session.getUsers();
-        for (User u :list) {
-            UserInfo ui=this.getUserInfo(u.getOpenId());
-            UserInfo unew=transfiguration(u);
-            if(ui!=null) unew.setId(ui.getId());
+        List<User> list = WeiXinSessionUtils.getCurrentSession().getUsers();
+        for (User u : list) {
+            UserInfo ui = this.getUserInfo(u.getOpenId());
+            UserInfo unew = transfiguration(u);
+            if (ui != null) unew.setId(ui.getId());
             this.userInfoDao.save(unew);
         }
     }
+
     /**
      * 通过openId刷新用户信息
-     *
      */
-    public UserInfo refresh(String openId){
+    public UserInfo refresh(String openId) throws WeiXinException {
         UserInfo ui = getUserInfo(openId);
-        if(ui == null) {
-            ui = transfiguration(session.getUser(openId));
+        if (ui == null) {
+            ui = transfiguration(WeiXinSessionUtils.getCurrentSession().getUser(openId));
             this.userInfoDao.save(ui);
         }
         return ui;
@@ -82,18 +79,18 @@ public class UserInfoWeiXinService implements InitializingBean{
 
     /**
      * 通过安全连接的code换取微信用户信息
+     *
      * @param code
      * @return
      */
-    public UserInfo authUserInfo(String code){
-        return transfiguration(session.getAuthorizedUser(code));
+    public UserInfo authUserInfo(String code) throws WeiXinException {
+        return transfiguration(WeiXinSessionUtils.getCurrentSession().getAuthorizedUser(code));
     }
-
-
 
 
     /**
      * 设置用户列表的未读信息数量
+     *
      * @param list
      */
     public void countUnReadSize(List<UserInfo> list) {
@@ -104,6 +101,7 @@ public class UserInfoWeiXinService implements InitializingBean{
 
     /**
      * 设置用户的未读信息数量
+     *
      * @param u
      */
     public void setUnReadSize(UserInfo u) {
@@ -115,6 +113,7 @@ public class UserInfoWeiXinService implements InitializingBean{
 
     /**
      * 刷新最后查看事件
+     *
      * @param ui
      */
     public void refreshMessage(UserInfo ui) {
@@ -124,10 +123,11 @@ public class UserInfoWeiXinService implements InitializingBean{
 
     /**
      * 转换user到userinfo
+     *
      * @param u
      * @return
      */
-    public UserInfo transfiguration(User u){
+    public UserInfo transfiguration(User u) {
         if (u == null) {
             return null;
         }
