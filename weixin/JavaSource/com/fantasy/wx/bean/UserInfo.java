@@ -2,6 +2,7 @@ package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
+import com.fantasy.security.bean.enums.Sex;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -30,11 +31,12 @@ public class UserInfo extends BaseBusEntity {
     @Column(name = "OPENID", unique = true, updatable = false)
     private String openId;
     //用户的昵称
-    @Column(name = "NICKNAME", length = 5000)
+    @Column(name = "NICKNAME", length = 100)
     private String nickname;
     //用户的性别
-    @Column(name = "SEX")
-    private String sex;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "SEX",length = 10)
+    private Sex sex;
     //用户所在城市
     @Column(name = "CITY")
     private String city;
@@ -100,11 +102,11 @@ public class UserInfo extends BaseBusEntity {
         this.nickname = nickname;
     }
 
-    public String getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 

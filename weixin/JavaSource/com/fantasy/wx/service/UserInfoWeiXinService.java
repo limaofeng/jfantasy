@@ -1,17 +1,22 @@
 package com.fantasy.wx.service;
 
+import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.member.service.MemberService;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.dao.UserInfoDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.user.User;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -19,8 +24,14 @@ import java.util.List;
 @Transactional
 public class UserInfoWeiXinService implements InitializingBean {
 
+    private final static Log LOG = LogFactory.getLog(UserInfoWeiXinService.class);
+
     @Autowired
     private UserInfoDao userInfoDao;
+    @Resource
+    private MemberService memberService;
+    @Resource
+    private transient FileUploadService fileUploadService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
@@ -67,12 +78,17 @@ public class UserInfoWeiXinService implements InitializingBean {
     /**
      * 通过openId刷新用户信息
      */
-    public UserInfo refresh(String openId) throws WeiXinException {
+    private UserInfo refresh(String openId) throws WeiXinException {
         UserInfo ui = getUserInfo(openId);
-        if (ui == null) {
-            ui = transfiguration(WeiXinSessionUtils.getCurrentSession().getUser(openId));
-            this.userInfoDao.save(ui);
+        if (ui != null) {
+            return ui;
         }
+        User user = WeiXinSessionUtils.getCurrentSession().getUser(openId);
+        if (user == null) {
+            return null;
+        }
+        ui = transfiguration(user);
+        this.userInfoDao.save(ui);
         return ui;
     }
 
@@ -139,13 +155,69 @@ public class UserInfoWeiXinService implements InitializingBean {
         user.setProvince(u.getProvince());
         user.setLanguage(u.getLanguage());
         user.setNickname(u.getNickname());
-        user.setSex(u.getSex().getValue());
+        user.setSex(u.getSex());
         user.setSubscribe(u.isSubscribe());
         if (u.getSubscribeTime() != null) {
             user.setSubscribeTime(u.getSubscribeTime().getTime());
         }
         user.setUnionId(u.getUnionid());
         return user;
+    }
+
+    public UserInfo checkCreateMember(String openId) throws WeiXinException {
+        UserInfo u = getUserInfo(openId);
+        /*
+        TODO 关注微信号时,是否自动创建会员记录
+        if (u == null) {
+            UserInfo ui = refresh(openId);
+            if (ui == null) {
+                return null;
+            }
+            String bex64OpenId = StringUtil.hexTo64(MessageDigestUtil.getInstance().get(ui.getOpenId()));
+            Member member = new Member();
+            member.setUsername(bex64OpenId);
+            member.setPassword("123456");
+            member.setNickName(ui.getNickname());
+
+            member.setEnabled(true);
+            member.setAccountNonExpired(false);
+            member.setCredentialsNonExpired(false);
+            member.setAccountNonLocked(false);
+
+            MemberDetails details = member.getDetails();
+            if (details == null) {
+                details = new MemberDetails();
+            }
+            if (StringUtil.isBlank(details.getScore())) {
+                details.setScore(0);
+            }
+            //会员头像
+            File file = null;
+            try {
+                file = FileUtil.tmp();//临时文件
+                HttpClientUtil.doGet(ui.getAvatar()).writeFile(file);
+                String mimeType = FileUtil.getMimeType(file);
+                String fileName = file.getName() + "." + mimeType.replace("image/", "");
+                FileDetail fileDetail = fileUploadService.upload(file, mimeType, fileName, "avatar");
+                LOG.debug("头像上传成功:" + fileDetail);
+                details.setAvatarStore(JSON.serialize(new FileDetail[]{fileDetail}));
+            } catch (FileNotFoundException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+            } finally {
+                if (file != null) {
+                    FileUtil.delFile(file);//删除临时文件
+                }
+            }
+            member.setDetails(details);
+            memberService.save(member);
+            ui.setMember(member);
+            save(ui);
+            return ui;
+        }
+        */
+        return u;
     }
 
 }

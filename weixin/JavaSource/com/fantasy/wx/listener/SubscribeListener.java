@@ -29,7 +29,7 @@ public class SubscribeListener implements SubscribeEventListener {
             @Override
             public void run() {
                 try {
-                    userInfoWeiXinService.refresh(message.getFromUserName());
+                    userInfoWeiXinService.checkCreateMember(message.getFromUserName());
                 } catch (WeiXinException e) {
                     LOG.error(e.getMessage(), e);
                 }

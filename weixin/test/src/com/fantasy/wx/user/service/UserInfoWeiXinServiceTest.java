@@ -3,6 +3,7 @@ package com.fantasy.wx.user.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.security.bean.enums.Sex;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.service.UserInfoWeiXinService;
 import junit.framework.Assert;
@@ -46,7 +47,7 @@ public class UserInfoWeiXinServiceTest {
     public void testSave() throws Exception {
         UserInfo ui = new UserInfo();
         ui.setOpenId("test");
-        ui.setSex("1");
+        ui.setSex(Sex.female);
         ui.setLastMessageTime(1L);
         ui.setCity("上海");
         ui.setLanguage("zh");

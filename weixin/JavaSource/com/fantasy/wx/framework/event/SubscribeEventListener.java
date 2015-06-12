@@ -9,6 +9,6 @@ import com.fantasy.wx.framework.session.WeiXinSession;
  */
 public interface SubscribeEventListener  extends WeiXinEventListener{
 
-    public void onSubscribe(WeiXinSession session,Event event,EventMessage message);
+    void onSubscribe(WeiXinSession session,Event event,EventMessage message);
 
 }

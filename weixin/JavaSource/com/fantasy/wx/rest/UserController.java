@@ -22,13 +22,8 @@ public class UserController {
     private UserInfoWeiXinService userInfoWeiXinService;
 
     @RequestMapping(value = "/{openid}", method = RequestMethod.GET)
-    public UserInfo getUser(@PathVariable String openid, HttpServletResponse response) throws WeiXinException, IOException {
-        UserInfo userInfo = userInfoWeiXinService.refresh(openid);
-        if (userInfo == null) {
-            response.sendError(404);
-            return null;
-        }
-        return userInfoWeiXinService.refresh(openid);
+    public UserInfo getUser(@PathVariable String openid) throws WeiXinException, IOException {
+        return userInfoWeiXinService.checkCreateMember(openid);
     }
 
     @RequestMapping(value = "/authorized/{code}", method = RequestMethod.GET)
@@ -38,7 +33,7 @@ public class UserController {
             response.sendError(404);
             return null;
         }
-        return getUser(user.getOpenId(), response);
+        return getUser(user.getOpenId());
     }
 
 }
