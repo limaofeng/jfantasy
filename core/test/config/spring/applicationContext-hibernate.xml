@@ -30,7 +30,7 @@
                 <prop key="format_sql">true</prop>
             </props>
         </property>
-        <property name="packagesToScan" value="com.fantasy.*.bean"/>
+        <property name="packagesToScan" value="com.fantasy.*.bean;com.fantasy.framework.lucene.bean;"/>
     </bean>
 
     <bean abstract="true" name="hibernateDao" class="com.fantasy.framework.dao.hibernate.HibernateDao">

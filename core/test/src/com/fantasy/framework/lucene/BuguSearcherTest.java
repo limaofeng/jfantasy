@@ -9,6 +9,8 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +29,7 @@ public class BuguSearcherTest {
 
     private static final Log LOG = LogFactory.getLog(BuguSearcherTest.class);
 
+    @Before
     public void setUp() throws Exception {
 
         String json = I18nUtil.decodeUnicode(HttpClientUtil.doGet("http://interface.sina.cn/dfz/jx/news/index.d.html?page=1&ch=zhengwen&cid=69603").getText());
@@ -40,15 +43,21 @@ public class BuguSearcherTest {
         }
     }
 
+    @After
     public void tearDown() throws Exception {
         newsService.deleteAll();
     }
 
     @Test
     public void testSearch() throws Exception {
-        Pager<News> pager = newsService.search(new Pager<News>(), BuguParser.parse(new String[]{"title","summary"}, "上海"));
+        Pager<News> pager = newsService.search(new Pager<News>(), BuguParser.parse(new String[]{"title","summary"}, "上海救援"),new BuguHighlighter(new String[]{"title"},"上海救援"));
 
         LOG.debug("匹配的数据条数:" + pager.getTotalCount());
+
+        for(News news : pager.getPageItems()){
+            LOG.debug(news.getTitle());
+        }
+
     }
 
 
