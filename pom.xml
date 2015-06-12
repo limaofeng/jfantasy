@@ -50,7 +50,7 @@
         <spring.data.redis-version>1.5.0.RELEASE</spring.data.redis-version>
         <javax.servlet.jsp-api-version>2.2.1</javax.servlet.jsp-api-version>
         <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
-        <com.thoughtworks.xstream-version>1.4.2</com.thoughtworks.xstream-version>
+        <com.thoughtworks.xstream-version>1.4.8</com.thoughtworks.xstream-version>
         <com.fasterxml.jackson.core-version>2.3.0</com.fasterxml.jackson.core-version>
         <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
     </properties>
@@ -323,6 +323,11 @@
             <dependency>
                 <groupId>org.springframework</groupId>
                 <artifactId>spring-orm</artifactId>
+                <version>${org.springframework-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-webmvc</artifactId>
                 <version>${org.springframework-version}</version>
             </dependency>
             <dependency>
