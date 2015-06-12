@@ -52,4 +52,10 @@ public class FileController {
         return fileDetail;
     }
 
+    //TODO 添加图片切图处理程序，或许HTML5可以直接支持
+//    public String photoShot(String picture,String toPicture,int y,int x,int w,int h,float ratio) throws Exception {
+//        ImageUtil.write(ImageUtil.screenshots(PathUtil.getFilePath(picture), x, y, w, h, ratio), PathUtil.getFilePath(toPicture));
+//        return "success";
+//    }
+
 }
