@@ -6,7 +6,7 @@ import com.fantasy.contacts.bean.Linkman;
 import com.fantasy.contacts.dao.BookDao;
 import com.fantasy.contacts.dao.GroupDao;
 import com.fantasy.contacts.dao.LinkmanDao;
-import com.fantasy.contacts.service.handler.AddressBookLoginSuccessHandler;
+import com.fantasy.contacts.listener.AddressBookListener;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.SpringSecurityUtils;
@@ -72,7 +72,7 @@ public class AddressBookService {
 	}
 
 	public static List<Group> getGroups() {
-		return ((AddressBook) SpringSecurityUtils.getCurrentUser(SimpleUser.class).data(AddressBookLoginSuccessHandler.CURRENT_USER_BOOK_KEY)).getGroups();
+		return ((AddressBook) SpringSecurityUtils.getCurrentUser(SimpleUser.class).data(AddressBookListener.CURRENT_USER_BOOK_KEY)).getGroups();
 	}
 
 }

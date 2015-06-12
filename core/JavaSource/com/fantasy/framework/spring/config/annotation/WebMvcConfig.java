@@ -1,4 +1,4 @@
-package com.springmvc.config.annotation;
+package com.fantasy.framework.spring.config.annotation;
 
 
 import org.springframework.context.annotation.Bean;
@@ -7,10 +7,8 @@ import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver;
-import org.springframework.web.socket.config.annotation.EnableWebSocket;
 
 @Configuration
-@EnableWebSocket
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override

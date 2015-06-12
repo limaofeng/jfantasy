@@ -13,7 +13,7 @@ public interface WeiXinSessionFactory {
      *
      * @return Signature
      */
-    public WeiXinCoreHelper getWeiXinCoreHelper();
+    WeiXinCoreHelper getWeiXinCoreHelper();
 
     /**
      * 获取当前的 WeiXinSession
@@ -21,7 +21,7 @@ public interface WeiXinSessionFactory {
      * @return WeiXinSession
      * @throws WeiXinException
      */
-    public WeiXinSession getCurrentSession() throws WeiXinException;
+    WeiXinSession getCurrentSession() throws WeiXinException;
 
     /**
      * 返回一个 WeiXinSession 对象，如果当前不存在，则创建一个新的session对象
@@ -29,14 +29,14 @@ public interface WeiXinSessionFactory {
      * @return WeiXinSession
      * @throws WeiXinException
      */
-    public WeiXinSession openSession(String appid) throws WeiXinException;
+    WeiXinSession openSession(String appid) throws WeiXinException;
 
     /**
      * 获取微信账号存储服务
      *
      * @return AccountDetailsService
      */
-    public AccountDetailsService getAccountDetailsService();
+    AccountDetailsService getAccountDetailsService();
 
     /**
      * 处理接收到的请求
@@ -44,6 +44,6 @@ public interface WeiXinSessionFactory {
      * @param message http response
      * @return WeiXinMessage
      */
-    public WeiXinMessage<?> execute(WeiXinMessage message) throws WeiXinException;
+    WeiXinMessage<?> execute(WeiXinMessage message) throws WeiXinException;
 
 }

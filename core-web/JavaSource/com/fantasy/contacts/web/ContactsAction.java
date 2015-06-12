@@ -4,7 +4,7 @@ import com.fantasy.contacts.bean.Group;
 import com.fantasy.contacts.bean.Linkman;
 import com.fantasy.contacts.service.AddressBook;
 import com.fantasy.contacts.service.AddressBookService;
-import com.fantasy.contacts.service.handler.AddressBookLoginSuccessHandler;
+import com.fantasy.contacts.listener.AddressBookListener;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
@@ -69,7 +69,7 @@ public class ContactsAction extends ActionSupport {
     }
 
     public String group() {
-        AddressBook mybook = ((AddressBook) SpringSecurityUtils.getCurrentUser(SimpleUser.class).data(AddressBookLoginSuccessHandler.CURRENT_USER_BOOK_KEY));
+        AddressBook mybook = ((AddressBook) SpringSecurityUtils.getCurrentUser(SimpleUser.class).data(AddressBookListener.CURRENT_USER_BOOK_KEY));
         this.attrs.put("groups", mybook.getGroups());
         return SUCCESS;
     }

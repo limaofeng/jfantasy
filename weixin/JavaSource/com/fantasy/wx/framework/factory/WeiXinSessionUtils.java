@@ -18,8 +18,12 @@ public class WeiXinSessionUtils {
         return current.get();
     }
 
-    protected static WeiXinSession saveSession(WeiXinSession session) {
+    public static WeiXinSession saveSession(WeiXinSession session) {
         current.set(session);
         return session;
+    }
+
+    public static void closeSession() {
+        current.remove();
     }
 }

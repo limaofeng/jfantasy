@@ -6,16 +6,20 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.service.UserInfoWeiXinService;
 import junit.framework.Assert;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.util.xml.XStreamTransformer;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -64,6 +68,9 @@ public class UserInfoWeiXinServiceTest {
 
     @Test
     public void testRefresh() throws Exception {
+        XStreamTransformer xStreamTransformer = new XStreamTransformer();
+        InputStream is = new FileInputStream("");
+        XStreamTransformer.fromXml(WxMpXmlMessage.class, is);
         iUserInfoService.refresh();
         Pager<UserInfo> p = testFindPager("test");
         Assert.assertNotNull(p.getPageItems());

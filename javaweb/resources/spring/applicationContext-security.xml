@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context" xmlns:s="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:s="http://www.springframework.org/schema/security" xmlns:c="http://www.springframework.org/schema/c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/security.properties"/>
 
@@ -28,50 +30,22 @@
     <!-- 忘记密码-->
     <s:http pattern="/findpwd/retrievePassword.do" security="none"/>
     <!--微信请求项目地址过滤-->
-    <s:http pattern="/weixin/message/*" security="none"/>
+    <s:http pattern="/weixin/message/*/push" security="none"/>
 
     <!-- 管理端登陆配置 -->
     <s:http pattern="/**" auto-config="true" use-expressions="true" entry-point-ref="authenticationEntryPoint">
-        <!--
-        <s:session-management>
-            <s:concurrency-control max-sessions="1" session-registry-ref="sessionRegistry"/>
-        </s:session-management>
-        -->
         <!-- -->
         <s:intercept-url pattern="/**" access="hasAnyRole('ROLE_SYSTEM')"/>
         <!-- 如果需要验证验证码,在配置该行 -->
         <!-- 在EXCEPTION_TRANSLATION_FILTER之后添加一个过滤器  -->
         <s:custom-filter ref="customExceptionTranslationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
-        <!-- 在FROM_LOGIN_FILTER 前 增加一个过滤器
-        <s:custom-filter ref="captchaAuthenticationFilter" before="FORM_LOGIN_FILTER"/>
-        -->
         <s:custom-filter ref="resourceSecurityInterceptor" after="LAST"/>
         <s:form-login username-parameter="${security.usernameParameter}" password-parameter="${security.passwordParameter}" login-processing-url="${security.loginUrl}" login-page="${security.loginFormUrl}" authentication-success-handler-ref="adminLoginSuccessHandler" authentication-failure-url="${security.authenticationFailureUrl}"/>
         <s:logout logout-url="${security.logoutUrl}" success-handler-ref="adminLogoutSuccessHandler"/>
-        <s:remember-me services-ref="rememberMeServices" key="${security.rememberme.key}" authentication-success-handler-ref="adminLoginSuccessHandler" />
+        <s:remember-me services-ref="rememberMeServices" key="${security.rememberme.key}" authentication-success-handler-ref="adminLoginSuccessHandler"/>
     </s:http>
     <!-- 带验证码的身份认证过滤器 -->
 
-    <!-- 增加一个filter 必须包含三个属性 authenticationManager ，accessDecisionManager,securityMetadataSource 三个属性
-        我们的所有控制将在这三个类中实现
-        1.authenticationManager 认证管理器，实现用户认证的入口，主要实现UserDetailsService
-        2.accessDecisionManager 访问决策器 决定某个用户的角色，是否有足够的权限去访问某个资源
-        3.securityMetadataSource 资源源数据定义，即定义某一资源可以被那些角色访问
-    <bean id="captchaAuthenticationFilter" class="com.fantasy.security.web.authentication.CaptchaUsernamePasswordAuthenticationFilter">
-        <property name="captchaService" ref="captchaService"/>
-        <property name="authenticationManager" ref="authenticationManager"/>
-        <property name="filterProcessesUrl" value="${security.loginUrl}"/>
-        <property name="usernameParameter" value="${security.usernameParameter}"/>
-        <property name="passwordParameter" value="${security.passwordParameter}"/>
-        <property name="authenticationSuccessHandler" ref="adminLoginSuccessHandler"/>
-        <property name="authenticationFailureHandler">
-            <bean class="org.springframework.security.web.authentication.SimpleUrlAuthenticationFailureHandler">
-                <property name="defaultFailureUrl" value="${security.authenticationFailureUrl}"/>
-            </bean>
-        </property>
-        <property name="rememberMeServices" ref="rememberMeServices" />
-    </bean>
-    -->
     <!-- 登录Url认证入口 -->
     <bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
         <constructor-arg name="loginFormUrl" value="${security.loginFormUrl}"/>
@@ -96,23 +70,21 @@
     <bean id="requestCache" class="com.fantasy.security.web.savedrequest.FantasyHttpSessionRequestCache"/>
     <!-- 验证管理器 -->
 
-    <!-- 认证管理器，实现用户认证的入口，主要实现UserDetailsService接口即可 -->
+
+    <bean id="defaultAuthEventPublisher" class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
+
     <s:authentication-manager alias="authenticationManager">
         <s:authentication-provider ref="daoAuthenticationProvider"/>
     </s:authentication-manager>
-
-    <!--
-    <bean id="sessionRegistry" class="org.springframework.security.core.session.SessionRegistryImpl"/>
-    -->
 
     <!-- 记住我功能-->
     <bean id="rememberMeServices" class="org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices">
         <constructor-arg name="key" value="${security.rememberme.key}"/>
         <constructor-arg name="userDetailsService" ref="userDetailsService"/>
-        <property name="parameter" value="${security.rememberme.parameter}" />
-        <property name="tokenValiditySeconds" value="${security.rememberme.tokenValiditySeconds}" />
-        <property name="cookieName" value="${security.rememberme.cookieName}" />
-        <property name="useSecureCookie" value="false" />
+        <property name="parameter" value="${security.rememberme.parameter}"/>
+        <property name="tokenValiditySeconds" value="${security.rememberme.tokenValiditySeconds}"/>
+        <property name="cookieName" value="${security.rememberme.cookieName}"/>
+        <property name="useSecureCookie" value="false"/>
     </bean>
 
     <!-- 用户登陆接口(通过XML文件配置) -->

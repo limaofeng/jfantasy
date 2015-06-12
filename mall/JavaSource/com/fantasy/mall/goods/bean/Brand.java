@@ -2,6 +2,7 @@ package com.fantasy.mall.goods.bean;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -10,6 +11,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -70,7 +72,7 @@ public class Brand extends BaseBusEntity {
      * 商品分类
      */
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "MALL_GOODS_CATEGORY_BRAND", joinColumns = @JoinColumn(name = "BRAND_ID",nullable = true), inverseJoinColumns = @JoinColumn(name = "GOODS_CATEGORY_ID",nullable = true), foreignKey = @ForeignKey(name = "FK_BRAND_GOODS_CATEGORIE"))
+    @JoinTable(name = "MALL_GOODS_CATEGORY_BRAND", joinColumns = @JoinColumn(name = "BRAND_ID", nullable = true), inverseJoinColumns = @JoinColumn(name = "GOODS_CATEGORY_ID", nullable = true), foreignKey = @ForeignKey(name = "FK_BRAND_GOODS_CATEGORIE"))
     private List<GoodsCategory> goodsCategories;
 
     public Long getId() {
@@ -155,9 +157,8 @@ public class Brand extends BaseBusEntity {
         if (StringUtils.isEmpty(this.logoImageStore)) {
             return null;
         }
-        List<FileDetail> fileDetails = JSON.deserialize(this.logoImageStore, new TypeReference<List<FileDetail>>() {
-        });
-        assert fileDetails != null;
+        List<FileDetail> fileDetails = ObjectUtil.defaultValue(JSON.deserialize(this.logoImageStore, new TypeReference<List<FileDetail>>() {
+        }), Collections.<FileDetail>emptyList());
         return fileDetails.isEmpty() ? null : fileDetails.get(0);
     }
 }

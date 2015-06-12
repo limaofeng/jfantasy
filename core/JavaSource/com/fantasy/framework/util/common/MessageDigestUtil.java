@@ -7,6 +7,7 @@ import org.springframework.beans.factory.InitializingBean;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
@@ -51,7 +52,10 @@ public class MessageDigestUtil implements InitializingBean {
     }
 
     public String get(File file) throws IOException {
-        FileInputStream in = new FileInputStream(file);
+        return get(new FileInputStream(file));
+    }
+
+    public String get(InputStream in) throws IOException {
         byte[] buffer = new byte[2048];
         int numRead;
         while ((numRead = in.read(buffer)) != -1) {
@@ -85,7 +89,7 @@ public class MessageDigestUtil implements InitializingBean {
 
     private void appendHexPair(byte bt, StringBuffer stringbuffer) {
         int b = bt & TWO_BYTES;
-        if (b < PAD_BELOW){
+        if (b < PAD_BELOW) {
             stringbuffer.append('0');
         }
         stringbuffer.append(Integer.toHexString(b));

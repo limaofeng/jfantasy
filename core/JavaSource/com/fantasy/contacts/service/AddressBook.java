@@ -3,7 +3,7 @@ package com.fantasy.contacts.service;
 import com.fantasy.contacts.bean.Book;
 import com.fantasy.contacts.bean.Group;
 import com.fantasy.contacts.bean.Linkman;
-import com.fantasy.contacts.service.handler.AddressBookLoginSuccessHandler;
+import com.fantasy.contacts.listener.AddressBookListener;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.BeanUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -43,7 +43,7 @@ public class AddressBook extends Book {
 	}
 
 	public static AddressBook current() {
-		return (AddressBook) SpringSecurityUtils.getCurrentUser(SimpleUser.class).data(AddressBookLoginSuccessHandler.CURRENT_USER_BOOK_KEY);
+		return (AddressBook) SpringSecurityUtils.getCurrentUser(SimpleUser.class).data(AddressBookListener.CURRENT_USER_BOOK_KEY);
 	}
 
 	public void removeGroup(Long... ids) {

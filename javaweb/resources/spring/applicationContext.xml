@@ -2,7 +2,7 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:c="http://www.springframework.org/schema/c"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
        default-lazy-init="true">
 
@@ -18,8 +18,7 @@
     <context:component-scan base-package="com.fantasy.install"/>
 
     <!-- 加载 properties文件 -->
-    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true"
-                                  ignore-unresolvable="true" location="classpath:props/application.properties"/>
+    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
     <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
     <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
@@ -34,16 +33,7 @@
             </props>
         </property>
         <property name="defaultEncoding" value="utf-8"/>
-        <!--
         <property name="templateLoaderPath" value="${freemarker.templatePath}" />
-        <property name="preTemplateLoaders">
-            <list>
-                <bean class="com.fantasy.framework.freemarker.loader.FileManagerTemplateLoader">
-                    <property name="fileManagerBeanName" value="freemarker" />
-                </bean>
-            </list>
-        </property>
-        -->
     </bean>
 
 
@@ -59,8 +49,7 @@
     -->
 
     <!-- lucene 配置 -->
-    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open"
-          destroy-method="close">
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
         <property name="analyzer">
             <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
         </property>

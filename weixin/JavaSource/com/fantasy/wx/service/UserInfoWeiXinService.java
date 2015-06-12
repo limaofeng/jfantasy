@@ -16,9 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-/**
- * Created by zzzhong on 2014/8/28.
- */
+
 @Service
 @Transactional
 public class UserInfoWeiXinService implements InitializingBean{

@@ -4,7 +4,6 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.wx.framework.account.AccountDetailsService;
 import com.fantasy.wx.framework.core.WeiXinCoreHelper;
 import com.fantasy.wx.framework.event.*;
-import com.fantasy.wx.framework.exception.NoSessionException;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.handler.WeiXinHandler;
 import com.fantasy.wx.framework.intercept.DefaultInvocation;
@@ -51,12 +50,10 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
 
     @Override
     public WeiXinSession openSession(String appid) throws WeiXinException {
-        try {
-            return WeiXinSessionUtils.getCurrentSession();
-        } catch (NoSessionException e) {
+        if (!weiXinSessions.containsKey(appid)) {
             weiXinSessions.putIfAbsent(appid, new DefaultWeiXinSession(this.accountDetailsService.loadAccountByAppid(appid), weiXinCoreHelper));
-            return WeiXinSessionUtils.saveSession(weiXinSessions.get(appid));
         }
+        return weiXinSessions.get(appid);
     }
 
     @Override
@@ -64,15 +61,11 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
         return this.accountDetailsService;
     }
 
-    public void sendMessage(WeiXinMessage message, String userId) {
-
-    }
-
     @Override
     public WeiXinMessage<?> execute(WeiXinMessage message) throws WeiXinException {
         List<Object> handler = new ArrayList<Object>(weiXinMessageInterceptors);
         if (message instanceof EventMessage) {
-            final List<WeiXinEventListener> listeners = (List<WeiXinEventListener>) ObjectUtil.defaultValue(eventListeners.get(((EventMessage) message).getEventType()), Collections.emptyList());
+            final List<WeiXinEventListener> listeners = ObjectUtil.defaultValue(eventListeners.get(((EventMessage) message).getEventType()), Collections.<WeiXinEventListener>emptyList());
             handler.add(new WeiXinMessageInterceptor() {
                 @Override
                 public WeiXinMessage intercept(WeiXinSession session, WeiXinMessage message, Invocation invocation) throws WeiXinException {

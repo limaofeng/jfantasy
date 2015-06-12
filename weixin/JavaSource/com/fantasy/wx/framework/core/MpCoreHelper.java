@@ -118,6 +118,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 
     @Override
     public String buildOutMessage(WeiXinSession session, String encryptType, WeiXinMessage message) throws WeiXinException {
+        encryptType = StringUtils.isBlank(encryptType) ? "raw" : encryptType;
         WeiXinDetails weiXinDetails = getWeiXinDetails(session.getId());
         WxMpXmlOutMessage outMessage;
         if (message instanceof TextMessage) {
@@ -755,6 +756,10 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         }
     }
 
+    public Jsapi getJsapi(WeiXinSession session) throws WeiXinException {
+        return getWeiXinDetails(session.getId()).getJsapi();
+    }
+
     @Override
     public List<Menu> getMenus(WeiXinSession session) throws WeiXinException {
         try {
@@ -797,10 +802,11 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     private static class WeiXinDetails {
         private WxMpService wxMpService;
         private WxMpConfigStorage wxMpConfigStorage;
+        private Jsapi jsapi;
 
         public WeiXinDetails(AccountDetails accountDetails) {
             this.wxMpService = new WxMpServiceImpl();
-
+            this.jsapi = new MpJsapi(this.wxMpService);
             WxMpInMemoryConfigStorage wxMpConfigStorage = new WxMpInMemoryConfigStorage();
             wxMpConfigStorage.setAppId(accountDetails.getAppId());
             wxMpConfigStorage.setSecret(accountDetails.getSecret());
@@ -816,6 +822,10 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 
         public WxMpConfigStorage getWxMpConfigStorage() {
             return wxMpConfigStorage;
+        }
+
+        public Jsapi getJsapi() {
+            return jsapi;
         }
 
     }

@@ -1,6 +1,5 @@
 package com.fantasy.wx.framework.handler;
 
-import com.fantasy.wx.framework.message.EmptyMessage;
 import com.fantasy.wx.framework.message.TextMessage;
 import com.fantasy.wx.framework.message.WeiXinMessage;
 import com.fantasy.wx.framework.session.WeiXinSession;
@@ -18,7 +17,7 @@ public class AutoReplyTextHandler extends TextWeiXinHandler {
     protected WeiXinMessage handleTextMessage(WeiXinSession session, TextMessage message) {
         //TODO 自动回复功能，待完善
         LOG.debug("自动回复功能，待完善");
-        return EmptyMessage.get();
+        return new TextMessage("回:" + message.getContent());
     }
 
 }

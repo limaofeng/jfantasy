@@ -2,6 +2,7 @@ package com.fantasy.wx.framework.session;
 
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.wx.framework.core.Jsapi;
 import com.fantasy.wx.framework.core.WeiXinCoreHelper;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.message.content.*;
@@ -345,6 +346,16 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     @Override
     public AccountDetails getAccountDetails() {
         return this.accountDetails;
+    }
+
+    @Override
+    public Jsapi getJsapi() {
+        try {
+            return this.weiXinCoreHelper.getJsapi(this);
+        } catch (WeiXinException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
     }
 
 }

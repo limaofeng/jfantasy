@@ -1,6 +1,7 @@
 package com.fantasy.wx.framework.session;
 
 
+import com.fantasy.wx.framework.core.Jsapi;
 import com.fantasy.wx.framework.message.content.*;
 import com.fantasy.wx.framework.message.user.Group;
 import com.fantasy.wx.framework.message.user.User;
@@ -25,17 +26,17 @@ public interface WeiXinSession {
      * 发送图片消息
      *
      * @param content 图片消息
-     * @param toUsers  接收人
+     * @param toUsers 接收人
      */
-    public void sendImageMessage(Image content, String... toUsers);
+    void sendImageMessage(Image content, String... toUsers);
 
     /**
      * 发送图片消息
      *
      * @param content 图片消息
-     * @param toGroup  接收组
+     * @param toGroup 接收组
      */
-    public void sendImageMessage(Image content, long toGroup);
+    void sendImageMessage(Image content, long toGroup);
 
     /**
      * 发送语音消息
@@ -43,7 +44,7 @@ public interface WeiXinSession {
      * @param content 语音消息
      * @param toUsers 接收人
      */
-    public void sendVoiceMessage(Voice content, String... toUsers);
+    void sendVoiceMessage(Voice content, String... toUsers);
 
     /**
      * 发送语音消息
@@ -51,23 +52,23 @@ public interface WeiXinSession {
      * @param content 语音消息
      * @param toGroup 接收人
      */
-    public void sendVoiceMessage(Voice content, long toGroup);
+    void sendVoiceMessage(Voice content, long toGroup);
 
     /**
      * 发送视频消息
      *
      * @param content 视频消息
-     * @param toUsers  接收人
+     * @param toUsers 接收人
      */
-    public void sendVideoMessage(Video content, String... toUsers);
+    void sendVideoMessage(Video content, String... toUsers);
 
     /**
      * 发送视频消息
      *
      * @param content 视频消息
-     * @param toGroup  接收组
+     * @param toGroup 接收组
      */
-    public void sendVideoMessage(Video content, long toGroup);
+    void sendVideoMessage(Video content, long toGroup);
 
     /**
      * 发送音乐消息
@@ -75,7 +76,7 @@ public interface WeiXinSession {
      * @param content 音乐消息
      * @param toUser  接收人
      */
-    public void sendMusicMessage(Music content, String toUser);
+    void sendMusicMessage(Music content, String toUser);
 
     /**
      * 发送图文消息
@@ -83,7 +84,7 @@ public interface WeiXinSession {
      * @param content 图文消息
      * @param toUser  接收人
      */
-    public void sendNewsMessage(List<News> content, String toUser);
+    void sendNewsMessage(List<News> content, String toUser);
 
     /**
      * 发送图文消息
@@ -91,7 +92,7 @@ public interface WeiXinSession {
      * @param content 图文消息列表
      * @param toUsers 接收人
      */
-    public void sendNewsMessage(List<Article> content, String... toUsers);
+    void sendNewsMessage(List<Article> content, String... toUsers);
 
     /**
      * 发送图文消息
@@ -99,7 +100,7 @@ public interface WeiXinSession {
      * @param content 图文消息列表
      * @param toGroup 接收人
      */
-    public void sendNewsMessage(List<Article> content, long toGroup);
+    void sendNewsMessage(List<Article> content, long toGroup);
 
     /**
      * 发送文本消息
@@ -201,9 +202,9 @@ public interface WeiXinSession {
     /**
      * 刷新菜单配置
      *
-     * @param menus   菜单数组
+     * @param menus 菜单数组
      */
-    public void refreshMenu(Menu... menus);
+    void refreshMenu(Menu... menus);
 
     /**
      * 获取配置的菜单
@@ -214,8 +215,14 @@ public interface WeiXinSession {
 
     /**
      * 清除Menu配置
-     *
      */
     void clearMenu();
+
+    /**
+     * 获取 jsapi
+     *
+     * @return Jsapi
+     */
+    Jsapi getJsapi();
 
 }

@@ -25,7 +25,7 @@ public interface WeiXinCoreHelper {
      *
      * @param accountDetails 账号信息
      */
-    public void register(AccountDetails accountDetails);
+    void register(AccountDetails accountDetails);
 
     /**
      * 解析接收到的消息
@@ -35,7 +35,7 @@ public interface WeiXinCoreHelper {
      * @return WeiXinMessage
      * @throws WeiXinException
      */
-    public WeiXinMessage parseInMessage(WeiXinSession session, HttpServletRequest request) throws WeiXinException;
+    WeiXinMessage parseInMessage(WeiXinSession session, HttpServletRequest request) throws WeiXinException;
 
     /**
      * 构建回复的消息
@@ -46,7 +46,7 @@ public interface WeiXinCoreHelper {
      * @return String
      * @throws WeiXinException
      */
-    public String buildOutMessage(WeiXinSession session, String encryptType, WeiXinMessage message) throws WeiXinException;
+    String buildOutMessage(WeiXinSession session, String encryptType, WeiXinMessage message) throws WeiXinException;
 
     /**
      * 发送图片消息
@@ -56,7 +56,7 @@ public interface WeiXinCoreHelper {
      * @param toUsers 接收人
      * @throws WeiXinException
      */
-    public void sendImageMessage(WeiXinSession session, Image content, String... toUsers) throws WeiXinException;
+    void sendImageMessage(WeiXinSession session, Image content, String... toUsers) throws WeiXinException;
 
     /**
      * 发送图片消息
@@ -66,7 +66,7 @@ public interface WeiXinCoreHelper {
      * @param toGroup 接收组
      * @throws WeiXinException
      */
-    public void sendImageMessage(WeiXinSession session, Image content, long toGroup) throws WeiXinException;
+    void sendImageMessage(WeiXinSession session, Image content, long toGroup) throws WeiXinException;
 
     /**
      * 发送语音消息
@@ -76,7 +76,7 @@ public interface WeiXinCoreHelper {
      * @param toUsers 接收人
      * @throws WeiXinException
      */
-    public void sendVoiceMessage(WeiXinSession session, Voice content, String... toUsers) throws WeiXinException;
+    void sendVoiceMessage(WeiXinSession session, Voice content, String... toUsers) throws WeiXinException;
 
     /**
      * 发送语音消息
@@ -86,7 +86,7 @@ public interface WeiXinCoreHelper {
      * @param toGroup 接收人
      * @throws WeiXinException
      */
-    public void sendVoiceMessage(WeiXinSession session, Voice content, long toGroup) throws WeiXinException;
+    void sendVoiceMessage(WeiXinSession session, Voice content, long toGroup) throws WeiXinException;
 
     /**
      * 发送视频消息
@@ -96,7 +96,7 @@ public interface WeiXinCoreHelper {
      * @param toUsers 接收人
      * @throws WeiXinException
      */
-    public void sendVideoMessage(WeiXinSession session, Video content, String... toUsers) throws WeiXinException;
+    void sendVideoMessage(WeiXinSession session, Video content, String... toUsers) throws WeiXinException;
 
     /**
      * 发送视频消息
@@ -106,7 +106,7 @@ public interface WeiXinCoreHelper {
      * @param toGroup 接收人
      * @throws WeiXinException
      */
-    public void sendVideoMessage(WeiXinSession session, Video content, long toGroup) throws WeiXinException;
+    void sendVideoMessage(WeiXinSession session, Video content, long toGroup) throws WeiXinException;
 
 
     /**
@@ -117,7 +117,7 @@ public interface WeiXinCoreHelper {
      * @param toUser  接收人
      * @throws WeiXinException
      */
-    public void sendMusicMessage(WeiXinSession session, Music content, String toUser) throws WeiXinException;
+    void sendMusicMessage(WeiXinSession session, Music content, String toUser) throws WeiXinException;
 
     /**
      * 发送音乐消息
@@ -127,7 +127,7 @@ public interface WeiXinCoreHelper {
      * @param toUser  接收人
      * @throws WeiXinException
      */
-    public void sendNewsMessage(WeiXinSession session, List<News> content, String toUser) throws WeiXinException;
+    void sendNewsMessage(WeiXinSession session, List<News> content, String toUser) throws WeiXinException;
 
     /**
      * 发送图文消息
@@ -137,7 +137,7 @@ public interface WeiXinCoreHelper {
      * @param toUsers  接收人
      * @throws WeiXinException
      */
-    public void sendNewsMessage(WeiXinSession session, List<Article> articles, String... toUsers) throws WeiXinException;
+    void sendNewsMessage(WeiXinSession session, List<Article> articles, String... toUsers) throws WeiXinException;
 
     /**
      * 发送图文消息
@@ -147,7 +147,7 @@ public interface WeiXinCoreHelper {
      * @param toGroup  接收人
      * @throws WeiXinException
      */
-    public void sendNewsMessage(WeiXinSession session, List<Article> articles, long toGroup) throws WeiXinException;
+    void sendNewsMessage(WeiXinSession session, List<Article> articles, long toGroup) throws WeiXinException;
 
     /**
      * 发送文本消息
@@ -305,7 +305,7 @@ public interface WeiXinCoreHelper {
      * @param menus   菜单数组
      * @throws WeiXinException
      */
-    public void refreshMenu(WeiXinSession session, Menu... menus) throws WeiXinException;
+    void refreshMenu(WeiXinSession session, Menu... menus) throws WeiXinException;
 
     /**
      * 获取配置的菜单
@@ -324,4 +324,12 @@ public interface WeiXinCoreHelper {
      */
     void clearMenu(WeiXinSession session) throws WeiXinException;
 
+    /**
+     * 获取jsapi
+     *
+     * @param session 微信号session对象
+     * @return Jsapi
+     * @throws WeiXinException
+     */
+    Jsapi getJsapi(WeiXinSession session) throws WeiXinException;
 }

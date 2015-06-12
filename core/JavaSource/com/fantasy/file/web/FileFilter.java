@@ -6,7 +6,6 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.file.service.FileService;
 import com.fantasy.file.service.FileUploadService;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ImageUtil;
 import com.fantasy.framework.util.common.JdbcUtil;
 import com.fantasy.framework.util.common.StreamUtil;
@@ -17,6 +16,7 @@ import com.fantasy.framework.util.web.ServletUtils;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.framework.util.web.WebUtil.Browser;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.GenericFilterBean;
 
@@ -30,20 +30,13 @@ import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URLEncoder;
 
-@Component("fileFilter")
+@Component
 public class FileFilter extends GenericFilterBean {
 
-//    private final static ConcurrentMap<String, FileItem> fileCache = new ConcurrentHashMap<String, FileItem>();
-
+    @Autowired
     private FileService fileService;
+    @Autowired
     private FileUploadService fileUploadService;
-
-    @Override
-    protected void initFilterBean() throws ServletException {
-        super.initFilterBean();
-        this.fileService = SpringContextUtil.getBeanByType(FileService.class);
-        this.fileUploadService = SpringContextUtil.getBeanByType(FileUploadService.class);
-    }
 
     private static final String regex = "_(\\d+)x(\\d+)[.]([^.]+)$";
 
