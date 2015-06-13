@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "YR_QUESTION")
-@JsonIgnoreProperties({ "hibernateLazyInitializer","answers"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler","answers"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Question extends BaseBusEntity {
 

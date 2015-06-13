@@ -21,7 +21,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CMS_BANNER_ITEM")
-@JsonIgnoreProperties(value = {"banner", "bannerImageStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "banner", "bannerImageStore"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class BannerItem extends BaseBusEntity {
 

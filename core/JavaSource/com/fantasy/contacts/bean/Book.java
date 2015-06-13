@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CONTACTS_BOOK")
-@JsonIgnoreProperties( { "hibernateLazyInitializer" })
+@JsonIgnoreProperties( { "hibernateLazyInitializer", "handler"})
 public class Book extends BaseBusEntity {
 
 	private static final long serialVersionUID = -7969549623026789527L;

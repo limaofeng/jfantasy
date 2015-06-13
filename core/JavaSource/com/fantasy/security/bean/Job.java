@@ -15,7 +15,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "AUTH_JOB")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Job extends BaseDynaBean {
 
     private static final long serialVersionUID = -7020427994563623645L;

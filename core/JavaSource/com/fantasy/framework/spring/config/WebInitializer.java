@@ -1,12 +1,15 @@
 package com.fantasy.framework.spring.config;
 
+import com.fantasy.framework.spring.ClassPathScanner;
 import com.fantasy.framework.spring.config.annotation.WebMvcConfig;
+import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.PropertiesHelper;
 import com.fantasy.framework.util.web.filter.ActionContextFilter;
 import com.fantasy.framework.web.filter.CharacterEncodingFilter;
 import com.tacitknowledge.filters.cache.CacheHeaderFilter;
 import com.tacitknowledge.filters.gzipfilter.GZIPFilter;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
+import org.springframework.stereotype.Component;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
@@ -15,10 +18,7 @@ import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.util.IntrospectorCleanupListener;
 import org.springframework.web.util.Log4jConfigListener;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.FilterRegistration;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRegistration;
+import javax.servlet.*;
 import java.util.EnumSet;
 
 public class WebInitializer implements WebApplicationInitializer {
@@ -94,10 +94,25 @@ public class WebInitializer implements WebApplicationInitializer {
         filterRegistration.setInitParameter("targetFilterLifecycle", "true");
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
 
-        DelegatingFilterProxy weixinSessionOpenFilter = new DelegatingFilterProxy();
-        filterRegistration = servletContext.addFilter("weixinSessionOpenFilter", weixinSessionOpenFilter);
-        filterRegistration.setInitParameter("targetFilterLifecycle", "true");
-        filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
+        //依赖 weixin 模块
+        if (!ClassPathScanner.getInstance().findAnnotationedClasses("com.fantasy.wx.framework.web.filter", Component.class).isEmpty()) {
+            DelegatingFilterProxy weixinSessionOpenFilter = new DelegatingFilterProxy();
+            filterRegistration = servletContext.addFilter("weixinSessionOpenFilter", weixinSessionOpenFilter);
+            filterRegistration.setInitParameter("targetFilterLifecycle", "true");
+            filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
+        }
 
+        //struts2 相关配置
+        Class<Filter> struts2Class = ClassUtil.forName("org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter");
+        if (struts2Class != null) {
+            //Freemarker 模板中使用struts2标签
+            Servlet jspSupportServlet = (Servlet) ClassUtil.newInstance("org.apache.struts2.views.JspSupportServlet");
+            dynamic = servletContext.addServlet("jspSupportServlet", jspSupportServlet);
+            dynamic.setLoadOnStartup(1);
+            //添加struts2
+            Filter struts2 = ClassUtil.newInstance(struts2Class);
+            filterRegistration = servletContext.addFilter("struts2", struts2);
+            filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "*.do");
+        }
     }
 }

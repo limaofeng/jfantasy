@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "SWP_PAGE_ITEM_DATA")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "pageItem"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "pageItem"})
 public class PageItemData extends BaseBusEntity {
 
     @Id

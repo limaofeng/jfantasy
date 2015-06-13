@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEDETAIL")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "folder", "realPath"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "folder", "realPath"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileDetail extends BaseBusEntity {
 

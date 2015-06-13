@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_USER_DETAILS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "user", "avatarStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","user", "avatarStore"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserDetails implements Serializable {
 

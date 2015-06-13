@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_SPECIFICATION")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "handler"})
 public class Specification extends BaseBusEntity {
 
     private static final long serialVersionUID = -2508802352043544093L;

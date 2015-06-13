@@ -17,7 +17,7 @@ import java.util.List;
 
 @Entity
 @Table(name="remind_model")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "notices"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "notices"})
 public class Model extends BaseBusEntity {
     public Model(){}
     public Model(String code){

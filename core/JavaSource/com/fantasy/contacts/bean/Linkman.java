@@ -1,46 +1,31 @@
 package com.fantasy.contacts.bean;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Transient;
-
+import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.security.bean.enums.Sex;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.security.bean.enums.Sex;
+import javax.persistence.*;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 联系人表
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-3-15 上午11:11:59
  * @version 1.0
  */
 @Entity
 @Table(name = "CONTACTS_LINKMAN")
-@JsonIgnoreProperties( { "hibernateLazyInitializer", "book", "groupIds" })
+@JsonIgnoreProperties( { "hibernateLazyInitializer", "handler", "book", "groupIds" })
 public class Linkman extends BaseBusEntity {
 
 	private static final long serialVersionUID = 6682544433375302625L;

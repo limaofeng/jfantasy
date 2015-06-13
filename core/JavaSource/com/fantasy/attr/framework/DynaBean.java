@@ -2,7 +2,6 @@ package com.fantasy.attr.framework;
 
 import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.util.List;
 

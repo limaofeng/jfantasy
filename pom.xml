@@ -45,6 +45,7 @@
         <org.apache.lucene-version>3.6.2</org.apache.lucene-version>
         <javax.servlet.api-version>3.1.0</javax.servlet.api-version>
         <eu.medsea.mimeutil-version>2.1.3</eu.medsea.mimeutil-version>
+        <commons-fileupload-version>1.2.2</commons-fileupload-version>
         <org.apache.santuario-version>1.4.6</org.apache.santuario-version>
         <org.quartz-scheduler-version>2.2.1</org.quartz-scheduler-version>
         <spring.data.redis-version>1.5.0.RELEASE</spring.data.redis-version>
@@ -903,6 +904,11 @@
                 <groupId>org.freemarker</groupId>
                 <artifactId>freemarker</artifactId>
                 <version>${freemarker-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-fileupload</groupId>
+                <artifactId>commons-fileupload</artifactId>
+                <version>${commons-fileupload-version}</version>
             </dependency>
             <dependency>
                 <groupId>ognl</groupId>

@@ -27,7 +27,7 @@ import java.io.IOException;
 @Entity
 @Table(name = "ATTR_ATTRIBUTE_VALUE", uniqueConstraints = {@UniqueConstraint(columnNames = {"VERSION_ID", "ATTRIBUTE_ID", "TARGET_ID"})})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "version"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "version"})
 public class AttributeValue extends BaseBusEntity {
 
     private static final long serialVersionUID = 5155306149647104462L;

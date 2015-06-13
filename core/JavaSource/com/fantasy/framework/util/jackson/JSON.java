@@ -154,6 +154,18 @@ public class JSON {
         return deserialize(json, HashMap.class);
     }
 
+    public static ObjectMapper getObjectMapper() {
+        String key = threadLocal.get();
+        if (StringUtil.isBlank(key)) {
+            threadLocal.set(key = defaultKey);
+        }
+        try {
+            return objectMapperCache.get(key);
+        } finally {
+            threadLocal.remove();
+        }
+    }
+
     public static <T> T deserialize(String json, Class<T> classed) {
         try {
             String key = threadLocal.get();

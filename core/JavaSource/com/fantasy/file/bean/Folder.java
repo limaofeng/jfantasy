@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "FILE_FOLDER")
 @IdClass(FolderKey.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Folder extends BaseBusEntity {
 

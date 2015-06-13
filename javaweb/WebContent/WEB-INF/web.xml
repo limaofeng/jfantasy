@@ -4,31 +4,6 @@
 
     <display-name>appName</display-name>
 
-    <!-- Freemarker 模板中使用struts2标签 -->
-    <servlet>
-        <servlet-name>JspSupportServlet</servlet-name>
-        <servlet-class>org.apache.struts2.views.JspSupportServlet</servlet-class>
-        <load-on-startup>1</load-on-startup>
-    </servlet>
-    <servlet>
-        <servlet-name>weiXinOnPushServlet</servlet-name>
-        <servlet-class>com.fantasy.framework.spring.web.DelegatingServletProxy</servlet-class>
-        <init-param>
-            <param-name>defaultAppId</param-name>
-            <param-value>wxdb4ed8c64ae393e6</param-value>
-        </init-param>
-    </servlet>
-
-    <!-- 如果需要使用 struts2 作为控制层,可以放开这段注释 -->
-    <filter>
-        <filter-name>struts-prepare</filter-name>
-        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsPrepareFilter</filter-class>
-    </filter>
-    <filter>
-        <filter-name>struts2</filter-name>
-        <filter-class>org.apache.struts2.dispatcher.ng.filter.StrutsExecuteFilter</filter-class>
-    </filter>
-
     <!-- 自动登陆
     <filter>
         <filter-name>autoLoginFilter</filter-name>
@@ -61,25 +36,6 @@
         <dispatcher>INCLUDE</dispatcher>
     </filter-mapping>
     -->
-    <!-- struts2 过滤器 -->
-    <filter-mapping>
-        <filter-name>struts-prepare</filter-name>
-        <url-pattern>*.do</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-    </filter-mapping>
-    <filter-mapping>
-        <filter-name>struts2</filter-name>
-        <url-pattern>*.do</url-pattern>
-        <dispatcher>REQUEST</dispatcher>
-        <dispatcher>FORWARD</dispatcher>
-        <dispatcher>INCLUDE</dispatcher>
-    </filter-mapping>
-    <servlet-mapping>
-        <servlet-name>weiXinOnPushServlet</servlet-name>
-        <url-pattern>/weixin/message/push.xhtml</url-pattern>
-    </servlet-mapping>
 
     <jsp-config>
         <taglib id="TagLibRef_struts">

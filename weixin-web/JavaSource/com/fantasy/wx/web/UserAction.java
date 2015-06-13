@@ -38,7 +38,7 @@ public class UserAction extends RestActionSupport {
         WeiXinSession session = factory.openSession(PropertiesHelper.load("props/application.properties").getProperty("weixin.appid"));
         User user = session.getAuthorizedUser(id);
         if(user != null){
-            this.attrs.put(ROOT, userInfoWeiXinService.refresh(user.getOpenId()));
+            this.attrs.put(ROOT, userInfoWeiXinService.checkCreateMember(user.getOpenId()));
         }
         return SUCCESS;
     }

@@ -9,7 +9,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "AREA")
-@JsonIgnoreProperties(value = {"JavassistLazyInitializer", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Area extends BaseBusEntity {
 

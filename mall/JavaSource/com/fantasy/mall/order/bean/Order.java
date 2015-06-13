@@ -34,7 +34,7 @@ import java.util.List;
 @Table(name = "MALL_ORDER")
 @Persister(impl = DynaBeanEntityPersister.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "shipAreaStore", "memeo", "shippings", "orderItems", "payments"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "shipAreaStore", "memeo", "shippings", "orderItems", "payments"})
 public class Order extends BaseDynaBean {
 
     private static final long serialVersionUID = -8541323033439515148L;

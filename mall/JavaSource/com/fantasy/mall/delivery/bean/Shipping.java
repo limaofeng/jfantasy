@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MALL_DELIVERY_SHIPPING")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "order", "deliveryItems", "shipAreaStore" })
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "order", "deliveryItems", "shipAreaStore" })
 public class Shipping extends BaseBusEntity {
 
 	private static final long serialVersionUID = 4315245804828793329L;

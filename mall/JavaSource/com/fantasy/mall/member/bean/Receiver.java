@@ -20,7 +20,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "MALL_MEM_RECEIVER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "areaStore", "member"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "areaStore", "member"})
 public class Receiver extends BaseBusEntity {
 
     private static final long serialVersionUID = 851367820092125804L;

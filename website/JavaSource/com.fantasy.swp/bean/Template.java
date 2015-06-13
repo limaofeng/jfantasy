@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SWP_TEMPLATE",uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_TEMPLATE",columnNames = {"PATH","WEBSITE_ID"})})
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "dataInferfaces","webSite"})
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "dataInferfaces","webSite"})
 public class Template extends BaseBusEntity {
 
     private static final long serialVersionUID = 6516821318292532274L;

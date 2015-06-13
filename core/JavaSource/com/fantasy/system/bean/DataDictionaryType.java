@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SYS_DD_TYPE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "dataDictionaries"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "dataDictionaries"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DataDictionaryType extends BaseBusEntity {
 

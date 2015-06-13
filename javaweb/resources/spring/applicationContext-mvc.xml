@@ -11,6 +11,7 @@
     <mvc:annotation-driven>
         <mvc:message-converters>
             <bean class="org.springframework.http.converter.StringHttpMessageConverter" c:defaultCharset="utf-8"/>
+            <bean class="com.fantasy.framework.spring.http.converter.FantasyMappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
     <mvc:resources mapping="/static/**" location="/static/"/>

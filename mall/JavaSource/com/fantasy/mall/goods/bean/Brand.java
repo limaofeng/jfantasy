@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MALL_BRAND")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "introduction", "logoImageStore", "goods", "goodsCategories"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "logoImageStore", "goods", "goodsCategories"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Brand extends BaseBusEntity {
 

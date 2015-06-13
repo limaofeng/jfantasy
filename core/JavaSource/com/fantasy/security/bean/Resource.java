@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Entity
 @Table(name = "AUTH_RESOURCE")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "parentResources", "userGroups", "roles" })
+@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "parentResources", "userGroups", "roles" })
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Resource extends BaseBusEntity {
 

@@ -1,23 +1,12 @@
 package com.fantasy.contacts.bean;
 
-import java.util.List;
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-
+import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
-import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.common.ObjectUtil;
+import javax.persistence.*;
+import java.util.List;
 
 /**
  * 联系人群组
@@ -29,7 +18,7 @@ import com.fantasy.framework.util.common.ObjectUtil;
  */
 @Entity
 @Table(name = "CONTACTS_GROUP")
-@JsonIgnoreProperties( { "hibernateLazyInitializer", "book", "linkmans" })
+@JsonIgnoreProperties( {"hibernateLazyInitializer", "handler", "book", "linkmans" })
 public class Group extends BaseBusEntity {
 
 	private static final long serialVersionUID = -5646654443086634257L;

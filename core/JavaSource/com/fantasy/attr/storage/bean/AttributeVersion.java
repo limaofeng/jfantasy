@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ATTR_VERSION", uniqueConstraints = {@UniqueConstraint(columnNames = {"TARGET_CLASS_NAME", "NUMBER"})})
-@JsonIgnoreProperties({"hibernateLazyInitializer", "attributes"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "attributes"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AttributeVersion extends BaseBusEntity {
 

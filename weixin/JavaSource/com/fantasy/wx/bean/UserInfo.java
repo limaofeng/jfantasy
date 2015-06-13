@@ -3,6 +3,7 @@ package com.fantasy.wx.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
 import com.fantasy.security.bean.enums.Sex;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ import javax.persistence.*;
  */
 @Entity(name = "wxUserInfo")
 @Table(name = "WX_USER_INFO")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class UserInfo extends BaseBusEntity {
 
     public UserInfo() {
@@ -35,7 +37,7 @@ public class UserInfo extends BaseBusEntity {
     private String nickname;
     //用户的性别
     @Enumerated(EnumType.STRING)
-    @Column(name = "SEX",length = 10)
+    @Column(name = "SEX", length = 10)
     private Sex sex;
     //用户所在城市
     @Column(name = "CITY")

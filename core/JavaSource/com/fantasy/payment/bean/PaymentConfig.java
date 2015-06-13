@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MALL_PAYMENT_CONFIG")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "description", "orders", "payments", "refunds"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "description", "orders", "payments", "refunds"})
 public class PaymentConfig extends BaseBusEntity {
 
     private static final long serialVersionUID = -7950849648189504426L;

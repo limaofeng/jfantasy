@@ -9,14 +9,13 @@ import javax.persistence.*;
 /**
  * 地址表
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-3-15 上午11:11:55
  * @version 1.0
  */
 @Entity
 @Table(name = "CONTACTS_ADDRESS")
-@JsonIgnoreProperties( { "hibernateLazyInitializer" })
+@JsonIgnoreProperties( {"hibernateLazyInitializer", "handler"})
 public class Address extends BaseBusEntity {
 
 	private static final long serialVersionUID = -1954479745916107049L;
