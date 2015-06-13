@@ -337,6 +337,11 @@
                 <version>${org.springframework-version}</version>
             </dependency>
             <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-oxm</artifactId>
+                <version>${org.springframework-version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
                 <version>${org.springframework.security-version}</version>
@@ -1006,6 +1011,41 @@
                         <artifactId>fantasy-core</artifactId>
                     </exclusion>
                 </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-mall</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-core-web</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-mall-web</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-cms</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-cms-web</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-cache</artifactId>
+                <version>${com.fantasy-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fantasy</groupId>
+                <artifactId>fantasy-weixin</artifactId>
+                <version>${com.fantasy-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

@@ -50,48 +50,34 @@
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-core</artifactId>
-            <version>${com.fantasy-version}</version>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-core-web</artifactId>
-            <version>${com.fantasy-version}</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-mall</artifactId>
-            <version>${com.fantasy-version}</version>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-mall-web</artifactId>
-            <version>${com.fantasy-version}</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cms</artifactId>
-            <version>${com.fantasy-version}</version>
         </dependency>
-        <!--
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-cms-web</artifactId>
-            <version>${com.fantasy-version}</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cache</artifactId>
-            <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-weixin</artifactId>
-            <version>${com.fantasy-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-core-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-mall-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-cms-web</artifactId>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
@@ -112,11 +98,6 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-oxm</artifactId>
-            <version>${org.springframework-version}</version>
         </dependency>
     </dependencies>
 
