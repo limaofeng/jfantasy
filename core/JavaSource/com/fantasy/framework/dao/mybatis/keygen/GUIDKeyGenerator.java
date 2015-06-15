@@ -18,16 +18,13 @@ import java.util.Random;
 /**
  * GUID序列生成器
  * 
- * @功能描述
  * @author 李茂峰
  * @since 2013-1-14 下午02:09:32
  * @version 1.0
  */
 public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 	private static final Logger logger = Logger.getLogger(GUIDKeyGenerator.class);
-	private SecureRandom secureRandom;
 	private Random random;
-	private boolean secure = false;
 	private String s_id;
 
 	private static GUIDKeyGenerator instance;
@@ -47,8 +44,8 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 	}
 
 	public void afterPropertiesSet() {
-		this.secureRandom = new SecureRandom();
-		long secureInitializer = this.secureRandom.nextLong();
+		SecureRandom secureRandom = new SecureRandom();
+		long secureInitializer = secureRandom.nextLong();
 		random = new Random(secureInitializer);
 		try {
 			s_id = InetAddress.getLocalHost().toString();
@@ -59,7 +56,7 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 
 	public String pretty(String md5str) {
 		String raw = md5str.toUpperCase();
-		StringBuffer sb = new StringBuffer(64);
+		StringBuilder sb = new StringBuilder(64);
 		sb.append(raw.substring(0, 8));
 		sb.append("-");
 		sb.append(raw.substring(8, 12));
@@ -76,14 +73,10 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 	}
 
 	public String getGUID() {
-		StringBuffer sbValueBeforeMD5 = new StringBuffer(128);
+		StringBuilder sbValueBeforeMD5 = new StringBuilder(128);
 		long time = System.currentTimeMillis();
-		long rand = 0L;
-		if (this.secure){
-            rand = this.secureRandom.nextLong();
-        }else {
-            rand = random.nextLong();
-        }
+		long rand;
+		rand = random.nextLong();
 		sbValueBeforeMD5.append(s_id);
 		sbValueBeforeMD5.append(":");
 		sbValueBeforeMD5.append(Long.toString(time));

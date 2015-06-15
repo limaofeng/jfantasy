@@ -1,13 +1,9 @@
 package com.fantasy.framework.dao.mybatis.keygen.util;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fantasy.framework.dao.mybatis.keygen.service.SequenceService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class DataBaseKeyGenerator {
 
@@ -25,7 +21,6 @@ public class DataBaseKeyGenerator {
 	@Autowired
 	private SequenceService sequenceService;
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
 	public long nextValue(String key) {
 		return SequenceInfo.retrieve(this.sequenceService,this.poolSize,key).nextValue();
 	}

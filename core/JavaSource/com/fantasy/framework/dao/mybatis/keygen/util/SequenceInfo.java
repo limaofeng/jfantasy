@@ -51,7 +51,9 @@ public class SequenceInfo {
      * @return long
      */
     public static long nextValue(String keyName) {
-        return SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class).nextValue(keyName);
+        DataBaseKeyGenerator dataBaseKeyGenerator = SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class);
+        assert dataBaseKeyGenerator != null;
+        return dataBaseKeyGenerator.nextValue(keyName);
     }
 
     private SequenceInfo(SequenceService service, long poolSize, String keyName) {

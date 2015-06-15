@@ -17,7 +17,7 @@ public interface SequenceDao extends SqlMapper {
      * @param keyName keyName
      * @return Sequence
      */
-    public Sequence findUniqueByKey(String keyName);
+    Sequence findUniqueByKey(String keyName);
 
     /**
      * 创建序列
@@ -25,7 +25,7 @@ public interface SequenceDao extends SqlMapper {
      * @param sequence sequence
      * @return int 影响行数
      */
-    public int insert(Sequence sequence);
+    int insert(Sequence sequence);
 
     /**
      * 更新序列
@@ -33,7 +33,7 @@ public interface SequenceDao extends SqlMapper {
      * @param sequence sequence
      * @return int 影响行数
      */
-    public int update(Sequence sequence);
+    int update(Sequence sequence);
 
     /**
      * 获取表中数据的max(id)
@@ -42,5 +42,5 @@ public interface SequenceDao extends SqlMapper {
      * @param key   字段
      * @return max id
      */
-    public Integer queryTableSequence(@Param("table") String table, @Param("key") String key);
+    Integer queryTableSequence(@Param("table") String table, @Param("key") String key);
 }
