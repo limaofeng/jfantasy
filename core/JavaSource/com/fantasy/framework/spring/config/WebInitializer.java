@@ -44,10 +44,10 @@ public class WebInitializer implements WebApplicationInitializer {
         springMvcContext.register(WebMvcConfig.class);
 
         //5、DispatcherServlet
-        DispatcherServlet dispatcherServlet = new DispatcherServlet(springMvcContext);
-        ServletRegistration.Dynamic dynamic = servletContext.addServlet("dispatcherServlet", dispatcherServlet);
+        ServletRegistration.Dynamic dynamic = servletContext.addServlet("dispatcherServlet", DispatcherServlet.class);
+        dynamic.setInitParameter("contextConfigLocation", "classpath:spring/applicationContext-mvc.xml");
         dynamic.setLoadOnStartup(1);
-        dynamic.addMapping("/");
+        dynamic.addMapping("/*");
 
         //GZIPFilter 设置自己想要压缩的文件类型
         GZIPFilter gzipFilter = new GZIPFilter();
@@ -108,7 +108,7 @@ public class WebInitializer implements WebApplicationInitializer {
             //Freemarker 模板中使用struts2标签
             Servlet jspSupportServlet = (Servlet) ClassUtil.newInstance("org.apache.struts2.views.JspSupportServlet");
             dynamic = servletContext.addServlet("jspSupportServlet", jspSupportServlet);
-            dynamic.setLoadOnStartup(1);
+            dynamic.setLoadOnStartup(2);
             //添加struts2
             Filter struts2 = ClassUtil.newInstance(struts2Class);
             filterRegistration = servletContext.addFilter("struts2", struts2);

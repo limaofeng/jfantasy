@@ -13,7 +13,6 @@ class ProxyLogConfiguration extends AbstractLogConfiguration {
 	@Bean
 	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
 	public LogInterceptor logInterceptor() {
-		LogInterceptor interceptor = new LogInterceptor();
-		return interceptor;
+		return new LogInterceptor();
 	}
 }

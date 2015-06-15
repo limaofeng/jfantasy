@@ -2,7 +2,6 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:c="http://www.springframework.org/schema/c"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
        default-lazy-init="true">
 
@@ -15,7 +14,7 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
-    <context:component-scan base-package="com.fantasy.install"/>
+    <context:component-scan base-package="com.fantasy.modules;"/>
 
     <!-- 加载 properties文件 -->
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
@@ -35,7 +34,6 @@
         <property name="defaultEncoding" value="utf-8"/>
         <property name="templateLoaderPath" value="${freemarker.templatePath}" />
     </bean>
-
 
     <!-- 开发中的功能
     <bean id="logManager" class="com.fantasy.framework.log.DefaultLogManager"/>
@@ -96,7 +94,5 @@
     <import resource="classpath:spring/applicationContext-schedule.xml"/>
 
     <import resource="classpath:spring/applicationContext-weixin.xml"/>
-
-    <import resource="classpath:spring/applicationContext-mvc.xml"/>
 
 </beans>
