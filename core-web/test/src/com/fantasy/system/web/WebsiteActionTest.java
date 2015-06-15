@@ -27,12 +27,14 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Component
 @RunWith(SpringJUnit4ClassRunner.class)
+@WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
 
