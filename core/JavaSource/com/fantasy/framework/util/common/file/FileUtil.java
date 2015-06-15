@@ -166,7 +166,9 @@ public class FileUtil {
     public static File createFile(String pathname) {
         pathname = path(pathname);
         String fileName = RegexpUtil.parseGroup(pathname, "[^\\/]+$", 0);
-        return fileName == null ? createFolder(pathname) : new File(createFolder(pathname), RegexpUtil.parseGroup(pathname, "[^\\/]+$", 0));
+        String parentDir = RegexpUtil.parseGroup(pathname, "[^\\/]+$", 0);
+        assert parentDir != null;
+        return fileName == null ? createFolder(pathname) : new File(createFolder(pathname), parentDir);
     }
 
     public static File createFile(File parent, String fileName) {
@@ -503,7 +505,7 @@ public class FileUtil {
         return null;
     }
 
-    public static ZipOutputStream compress(String _unZipFile, OutputStream zipOut) throws FileNotFoundException, IOException {
+    public static ZipOutputStream compress(String _unZipFile, OutputStream zipOut) throws IOException {
         File srcFile = new File(_unZipFile);
         DataInputStream dis = new DataInputStream(new FileInputStream(srcFile));
         ZipOutputStream zos = new ZipOutputStream(zipOut);

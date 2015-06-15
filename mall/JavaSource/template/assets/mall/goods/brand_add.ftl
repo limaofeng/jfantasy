@@ -48,7 +48,7 @@
                 });
                 var _images = imageUploader.getData();
                 if(_images.length > 0){
-                    _data['logoImageStore'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
+                    _data['logoImage'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
                 }
                 options.data = _data;
             },

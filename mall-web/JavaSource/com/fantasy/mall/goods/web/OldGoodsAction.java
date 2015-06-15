@@ -31,8 +31,10 @@ public class OldGoodsAction extends ActionSupport {
         }
         GoodsCategory category = goodsService.getCategory(rootCode);
         // 设置当前根
-        filters.add(new PropertyFilter("LIKES_category.path", category.getPath()));
-        this.attrs.put("category", category);
+        if(category != null) {
+            filters.add(new PropertyFilter("LIKES_category.path", category.getPath()));
+            this.attrs.put("category", category);
+        }
         // 全部分类
         this.attrs.put("categorys", categories);
         this.search(pager, filters);

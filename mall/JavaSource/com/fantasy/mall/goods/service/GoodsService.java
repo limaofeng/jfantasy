@@ -37,6 +37,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -123,6 +124,9 @@ public class GoodsService implements InitializingBean {
 
     public List<GoodsCategory> getCategories(String sign) {
         GoodsCategory category = this.getCategory(sign);
+        if (category == null) {
+            return this.goodsCategoryDao.find(new Criterion[]{}, "layer,sort", "asc,asc");
+        }
         return this.goodsCategoryDao.find(new Criterion[]{Restrictions.like("path", category.getPath(), MatchMode.START), Restrictions.ne("sign", sign)}, "layer,sort", "asc,asc");
     }
 
@@ -329,13 +333,14 @@ public class GoodsService implements InitializingBean {
                 goods.setProducts(new ArrayList<Product>());
             }
         }
-        this.goodsDao.save(goods);
+        goods = this.goodsDao.save(goods);
+        List<Product> products = ObjectUtil.defaultValue(goods.getProducts(), Collections.<Product>emptyList());
         if (!goods.getSpecificationEnabled()) {// 如果未启用商品规格
-            Product product = goods.getProducts().isEmpty() ? new Product() : goods.getProducts().get(0);
+            Product product = products.isEmpty() ? new Product() : goods.getProducts().get(0);
             product.initialize(goods);
             productService.save(product);
         } else {//启用了商品规格  TODO 该位置以后需要优化
-            for (Product product : goods.getProducts()) {
+            for (Product product : products) {
                 product.initialize(goods);
                 this.productService.save(product);
             }

@@ -3,9 +3,8 @@ package com.fantasy.security.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
-import org.apache.commons.lang.StringUtils;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.type.TypeReference;
+import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -13,7 +12,6 @@ import org.hibernate.annotations.Parameter;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 /**
  * 用户详细信息表
@@ -173,19 +171,21 @@ public class UserDetails implements Serializable {
         return avatarStore;
     }
 
-    //@TypeConversion(key = "avatarStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setAvatarStore(String avatarStore) {
         this.avatarStore = avatarStore;
     }
 
+    @Transient
+    public void setAvatar(FileDetail fileDetail) {
+        this.setAvatarStore(JSON.serialize(fileDetail));
+    }
+
+    @Transient
     public FileDetail getAvatar() {
-        if (this.avatar == null && StringUtils.isNotBlank(this.avatarStore)) {
-            List<FileDetail> fileDetails = JSON.deserialize(this.avatarStore, new TypeReference<List<FileDetail>>() {
-            });
-            assert fileDetails != null;
-            this.avatar = fileDetails.isEmpty() ? null : fileDetails.get(0);
+        if (StringUtils.isEmpty(this.avatarStore)) {
+            return null;
         }
-        return this.avatar;
+        return JSON.deserialize(this.avatarStore, FileDetail.class);
     }
 
 }

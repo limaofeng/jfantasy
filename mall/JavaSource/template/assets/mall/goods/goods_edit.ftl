@@ -3,10 +3,10 @@
 <script type="text/javascript">
 $(function(){
     var list = $('#goodsParameter').list($('#goodsParameterForm'),<@s.property value="@com.fantasy.framework.util.jackson.JSON@serialize(goods.customGoodsParameterValues)" escapeHtml="false" default="[]"/>);
-    var goodsImageUploader = $('#goodsImageUploader').upload({data:{'dir':'goods_image'},theme:'images',size:'160x160'},<@s.property value="goods.goodsImageStore" escapeHtml="false" default="[]"/>);
+    var goodsImageUploader = $('#goodsImageUploader').upload({data:{'dir':'goods_image'},theme:'images',size:'160x160'},<@s.property value="goods.goodsImages" escapeHtml="false" default="[]"/>);
     $("#saveForm").ajaxForm({
         beforeSerialize : function(zhis, options){
-            options.data = {'customGoodsParameterValues':list.getData(),'goodsImageStore':goodsImageUploader.getSimpleData()};
+            options.data = {'customGoodsParameterValues':list.getData(),'goodsImages':goodsImageUploader.getSimpleData()};
         },
         success :function(data){
             $('#pager').pager().reload();
@@ -27,7 +27,6 @@ $(function(){
             <@s.hidden name="category.id" value="%{goods.category.id}" />
             <@s.hidden name="id" value="%{goods.id}"/>
             <@s.hidden  name="weight" value="0" />
-            <@s.hidden name="goodsImageStore"/>
         <div class="tabs">
             <ul>
                 <li>

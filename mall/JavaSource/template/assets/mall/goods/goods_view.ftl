@@ -10,7 +10,6 @@ $(function(){
 <div class="pad10L pad10R">
 <div class="example-box">
         <@s.form id="saveForm" namespace="/mall/goods" action="save" method="post" cssClass="center-margin">
-            <@s.hidden name="goodsImageStore"/>
         <div class="tabs ui-tabs ui-widget ui-widget-content ui-corner-all">
         <ul>
             <li>

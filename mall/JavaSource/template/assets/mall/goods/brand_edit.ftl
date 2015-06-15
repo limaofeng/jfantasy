@@ -49,7 +49,7 @@
                 }
             }}, categorys);
 
-        var imageUploader = $('#imageUploader').upload({data:{'dir':'brand_logo'},theme:'image',size:'160x160'},<@s.property value="brand.logoImageStore" default="[]" escapeHtml="false"/>);
+        var imageUploader = $('#imageUploader').upload({data:{'dir':'brand_logo'},theme:'image',size:'160x160'},<@s.property value="brand.logoImage" default="[]" escapeHtml="false"/>);
         $("#saveForm").ajaxForm({
             beforeSerialize : function(zhis, options){
                 var _data = {};
@@ -59,7 +59,7 @@
                 options.data = _data;
                 var _images = imageUploader.getData();
                 if(_images.length > 0){
-                    _data['logoImageStore'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
+                    _data['logoImage'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
                 }
             },
             success: function (data) {

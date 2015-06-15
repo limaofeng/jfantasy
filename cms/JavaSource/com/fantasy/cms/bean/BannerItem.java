@@ -4,13 +4,11 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * 横幅图维护项
@@ -98,20 +96,21 @@ public class BannerItem extends BaseBusEntity {
         return bannerImageStore;
     }
 
-    //@TypeConversion(key = "bannerImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setBannerImageStore(String bannerImageStore) {
         this.bannerImageStore = bannerImageStore;
     }
 
+    @Transient
+    public void setBannerImage(FileDetail fileDetail) {
+        this.setBannerImageStore(JSON.serialize(fileDetail));
+    }
+
+    @Transient
     public FileDetail getBannerImage() {
         if (StringUtils.isEmpty(this.bannerImageStore)) {
             return null;
         }
-        List<FileDetail> fileDetails = JSON.deserialize(this.bannerImageStore,
-                new TypeReference<List<FileDetail>>() {
-                }
-        );
-        return fileDetails == null || fileDetails.isEmpty() ? null : fileDetails.get(0);
+        return JSON.deserialize(this.bannerImageStore, FileDetail.class);
     }
 
     public Banner getBanner() {

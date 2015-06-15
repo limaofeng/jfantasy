@@ -1,14 +1,14 @@
 <#assign s=JspTaglibs["/WEB-INF/tlds/struts-tags.tld"]/>
 <script type="text/javascript">
     $(function () {
-        var imageUploader = $('#imageUploader').upload({data:{'dir':'brand_logo'},theme:'image',size:'160x160'},<@s.property value="user.details.avatarStore" default="[]" escapeHtml="false"/>);
+        var imageUploader = $('#imageUploader').upload({data:{'dir':'brand_logo'},theme:'image',size:'160x160'},<@s.property value="user.details.avatar" escapeHtml="false"/>);
         $("#saveForm").ajaxForm({
             beforeSerialize : function(zhis, options){
                 var _data = {};
                 options.data = _data;
                 var _images = imageUploader.getData();
                 if(_images.length > 0){
-                    _data['details.avatarStore'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
+                    _data['details.avatar'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
                 }
             },
             success: function (data) {

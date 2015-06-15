@@ -217,11 +217,33 @@ public class FileUploadService {
     }
 
     public FileDetail upload(MultipartFile file, String dir) throws IOException {
+        InputStream input = file.getInputStream();
+        if (input.markSupported()) {
+            return upload(input, file.getContentType(), file.getOriginalFilename(), file.getSize(), dir);
+        } else {
+            File temp = null;
+            try {
+                temp = FileUtil.tmp();
+                StreamUtil.copyThenClose(input, new FileOutputStream(temp));
+                return this.upload(temp, file.getContentType(), file.getOriginalFilename(), dir);
+            } catch (IOException e) {
+                logger.error(e.getMessage(), e);
+                throw e;
+            } finally {
+                if (temp != null) {
+                    FileUtil.delFile(temp);
+                }
+            }
+        }
+    }
+
+    public FileDetail upload(InputStream input, String contentType, String fileName, long size, String dir) throws IOException {
         Directory directory = this.fileService.getDirectory(dir);
         //获取文件Md5码
-        String md5 = MessageDigestUtil.getInstance().get(file.getInputStream());// 获取文件MD5
+        String md5 = MessageDigestUtil.getInstance().get(input);// 获取文件MD5
 
-        String mimeType = FileUtil.getMimeType(file.getInputStream());
+        input.reset();
+        String mimeType = FileUtil.getMimeType(input);
 
         //通过 mimeType 纠正后缀名
         Map<String, String> extensions = new HashMap<String, String>() {
@@ -234,7 +256,7 @@ public class FileUploadService {
         };
 
         // 获取虚拟目录
-        String absolutePath = directory.getDirPath() + separator + DateUtil.format("yyyyMMdd") + separator + StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", "")) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(file.getOriginalFilename()));
+        String absolutePath = directory.getDirPath() + separator + DateUtil.format("yyyyMMdd") + separator + StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", "")) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
         // 文件类型
         FileDetail fileDetail;
         // 获取真实目录
@@ -246,12 +268,13 @@ public class FileUploadService {
 
         fileDetail = fileService.getFileDetailByMd5(md5, fileManagerId);
         if (fileDetail == null || fileManager.getFileItem(fileDetail.getRealPath()) == null) {
-            realPath = separator + mimeType + separator + StringUtil.hexTo64("0" + md5) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(file.getOriginalFilename()));
-            fileManager.writeFile(realPath, file.getInputStream());
+            realPath = separator + mimeType + separator + StringUtil.hexTo64("0" + md5) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
+            input.reset();
+            fileManager.writeFile(realPath, input);
         } else {
             realPath = fileDetail.getRealPath();
         }
-        return fileService.saveFileDetail(absolutePath, file.getOriginalFilename(), file.getContentType(), file.getSize(), md5, realPath, fileManagerId, "");
+        return fileService.saveFileDetail(absolutePath, fileName, contentType, size, md5, realPath, fileManagerId, "");
     }
 
     public FileDetail upload(File attach, String contentType, String fileName, String dir) throws IOException {

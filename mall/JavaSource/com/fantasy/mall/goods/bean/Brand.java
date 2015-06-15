@@ -2,16 +2,13 @@ package com.fantasy.mall.goods.bean;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -143,9 +140,13 @@ public class Brand extends BaseBusEntity {
         return logoImageStore;
     }
 
-    //@TypeConversion(key = "logoImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
     public void setLogoImageStore(String logoImageStore) {
         this.logoImageStore = logoImageStore;
+    }
+
+    @Transient
+    public void setLogoImage(FileDetail fileDetail) {
+        this.setLogoImageStore(JSON.serialize(fileDetail));
     }
 
     /**
@@ -153,12 +154,11 @@ public class Brand extends BaseBusEntity {
      *
      * @return {FileDetail}
      */
+    @Transient
     public FileDetail getLogoImage() {
         if (StringUtils.isEmpty(this.logoImageStore)) {
             return null;
         }
-        List<FileDetail> fileDetails = ObjectUtil.defaultValue(JSON.deserialize(this.logoImageStore, new TypeReference<List<FileDetail>>() {
-        }), Collections.<FileDetail>emptyList());
-        return fileDetails.isEmpty() ? null : fileDetails.get(0);
+        return JSON.deserialize(this.logoImageStore, FileDetail.class);
     }
 }

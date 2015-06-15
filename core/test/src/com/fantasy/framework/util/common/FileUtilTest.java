@@ -5,9 +5,12 @@ import com.fantasy.file.manager.LocalFileManager;
 import com.fantasy.framework.service.FTPService;
 import com.fantasy.framework.util.common.file.FileUtil;
 import eu.medsea.mimeutil.MimeUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -15,6 +18,8 @@ import java.util.Collection;
 import java.util.List;
 
 public class FileUtilTest {
+
+    private final static Log LOG = LogFactory.getLog(FileUtilTest.class);
 
     @Test
     public void fileSize() {
@@ -78,6 +83,11 @@ public class FileUtilTest {
         for (String errorFile : errorFiles) {
             System.out.println(errorFile);
         }
+    }
+
+    @Test
+    public void testGetMimeType() throws Exception {
+        LOG.debug(FileUtil.getMimeType(new FileInputStream(new File("/Users/lmf/Pictures/66ea17c8tb596a917fcd9&690.jpeg"))));
     }
 
 }

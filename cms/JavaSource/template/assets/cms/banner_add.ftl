@@ -21,7 +21,7 @@ $(function(){
         beforeSerialize : function(zhis, options){
             var _data = list.getData();
             _data.each(function(){
-                this.bannerImageStore = this.bannerImage.fileManagerId + ':' + this.bannerImage.absolutePath;
+                this.bannerImage = this.bannerImage.fileManagerId + ':' + this.bannerImage.absolutePath;
             });
             options.data = {'bannerItems':_data};
         },

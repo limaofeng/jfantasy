@@ -36,6 +36,8 @@ public class WeixinSessionOpenFilter extends GenericFilterBean {
             String appid = (String) simpleUser.data(WeiXinSessionListener.WEIXIN_APPID);
             if (StringUtil.isBlank(appid)) {
                 LOG.error(" appid 获取失败 . 请检查 applicationContext-security.xml 是否配置 WeiXinSessionLoginSuccessHandler ");
+                chain.doFilter(request,response);
+                return;
             }
             try {
                 WeiXinSessionUtils.saveSession(weiXinSessionFactory.openSession(appid));

@@ -476,7 +476,6 @@ public class Goods extends BaseDynaBean {
         return goodsImageStore;
     }
 
-    //@TypeConversion(key = "goodsImageStore", converter = "com.fantasy.mall.goods.bean.converter.GoodsImageStoreConverter")
     public void setGoodsImageStore(String goodsImageStore) {
         this.goodsImageStore = goodsImageStore;
     }
@@ -521,9 +520,6 @@ public class Goods extends BaseDynaBean {
     private List<GoodsParameterValue> goodsParameterValues;
     @Transient
     private List<GoodsParameterValue> customGoodsParameterValues;
-    @Transient
-    private List<GoodsImage> goodsImages;
-
 
     public void setGoodsParameterValues(List<GoodsParameterValue> goodsParameterValues) {
         this.goodsParameterValues = goodsParameterValues;
@@ -567,27 +563,27 @@ public class Goods extends BaseDynaBean {
         this.shop = shop;
     }
 
-    public void setGoodsImages(List<GoodsImage> goodsImages) {
-        this.goodsImages = goodsImages;
+    @Transient
+    public void setGoodsImages(GoodsImage[] goodsImages) {
+        this.setGoodsImageStore(JSON.serialize(goodsImages));
     }
 
     /**
      * 获取商品图片集合
      */
     @Transient
-    public List<GoodsImage> getGoodsImages() {
-        if (this.goodsImages == null && StringUtils.isNotBlank(this.goodsImageStore)) {
-            this.goodsImages = JSON.deserialize(this.goodsImageStore, new TypeReference<List<GoodsImage>>() {
-            });
+    public GoodsImage[] getGoodsImages() {
+        if (StringUtils.isEmpty(this.goodsImageStore)) {
+            return null;
         }
-        return this.goodsImages;
+        return JSON.deserialize(this.goodsImageStore, GoodsImage[].class);
     }
 
     @Transient
     public GoodsImage getDefaultGoodsImage() {
-        List<GoodsImage> goodsImageList = getGoodsImages();
-        if (goodsImageList != null && goodsImageList.size() > 0) {
-            return goodsImageList.get(0);
+        GoodsImage[] goodsImages = getGoodsImages();
+        if (goodsImages != null && goodsImages.length > 0) {
+            return goodsImages[0];
         } else {
             return null;
         }

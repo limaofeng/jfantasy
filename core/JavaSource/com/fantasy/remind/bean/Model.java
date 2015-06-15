@@ -79,9 +79,22 @@ public class Model extends BaseBusEntity {
     public String getModelImageStore() {
         return this.modelImageStore;
     }
-    //@TypeConversion(key = "modelImageStore", converter = "com.fantasy.file.bean.converter.FileDetailStoreConverter")
+
     public void setModelImageStore(String modelImageStore) {
         this.modelImageStore = modelImageStore;
+    }
+
+    @Transient
+    public void setModelImage(FileDetail fileDetail) {
+        this.setModelImageStore(JSON.serialize(fileDetail));
+    }
+
+    @Transient
+    public FileDetail getModelImage() {
+        if (StringUtils.isEmpty(this.modelImageStore)) {
+            return null;
+        }
+        return JSON.deserialize(this.modelImageStore, FileDetail.class);
     }
 
     public List<Notice> getNotices() {

@@ -11,9 +11,9 @@ $(function(){
                 _data['customGoodsParameterValues['+_i+'].name'] = this.name;
                 _data['customGoodsParameterValues['+_i+'].value'] = this.value;
             });
-            options.data ={ _data, 'goodsImageStore':goodsImageUploader.getSimpleData()};
+            options.data ={ _data, 'goodsImage':goodsImageUploader.getSimpleData()};
             console.log(goodsImageUploader.getData());*/
-            options.data = {'customGoodsParameterValues':list.getData(),'goodsImageStore':goodsImageUploader.getSimpleData()};
+            options.data = {'customGoodsParameterValues':list.getData(),'goodsImages':goodsImageUploader.getSimpleData()};
         },
         success :function(data){
             $('#pager').pager().reload();
@@ -33,7 +33,6 @@ $(function(){
         <@s.form id="saveForm" namespace="/mall/goods" action="save" method="post" cssClass="center-margin">
             <@s.hidden  name="category.id" value="%{category.id}" />
             <@s.hidden  name="weight" value="0" />
-            <@s.hidden name="goodsImageStore"/>
         <div class="tabs">
             <ul >
                 <li>

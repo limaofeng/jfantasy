@@ -8,7 +8,7 @@
                 options.data = _data;
                 var _images = imageUploader.getData();
                 if(_images.length > 0){
-                    _data['modelImageStore'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
+                    _data['modelImage'] = _images[0].fileManagerId + ':' + _images[0].absolutePath;
                 }
             },
             success :function(data){
