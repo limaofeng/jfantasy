@@ -1,6 +1,7 @@
 package com.fantasy.cms.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Cache;
@@ -18,6 +19,7 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_BANNER")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Banner extends BaseBusEntity {
 
     private static final long serialVersionUID = -5628208241667269397L;

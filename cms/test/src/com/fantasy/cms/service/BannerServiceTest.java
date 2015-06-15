@@ -7,7 +7,6 @@ import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.file.FileUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -15,10 +14,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;
@@ -81,7 +79,7 @@ public class BannerServiceTest {
             File file = new File(BannerServiceTest.class.getResource("banner_1.jpg").getFile());
             String mimeType = FileUtil.getMimeType(file);
             FileDetail fileDetail = fileUploadService.upload(file, mimeType, file.getName(), "test");
-            item1.setBannerImageStore(JSON.serialize(new FileDetail[]{fileDetail}));
+            item1.setBannerImage(fileDetail);
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage(), e);
         } catch (IOException e) {
@@ -97,7 +95,7 @@ public class BannerServiceTest {
             File file = new File(BannerServiceTest.class.getResource("banner_2.png").getFile());
             String mimeType = FileUtil.getMimeType(file);
             FileDetail fileDetail = fileUploadService.upload(file, mimeType, file.getName(), "test");
-            item2.setBannerImageStore(JSON.serialize(new FileDetail[]{fileDetail}));
+            item2.setBannerImage(fileDetail);
         } catch (FileNotFoundException e) {
             logger.error(e.getMessage(), e);
         } catch (IOException e) {

@@ -574,7 +574,7 @@ public class Goods extends BaseDynaBean {
     @Transient
     public GoodsImage[] getGoodsImages() {
         if (StringUtils.isEmpty(this.goodsImageStore)) {
-            return null;
+            return new GoodsImage[0];
         }
         return JSON.deserialize(this.goodsImageStore, GoodsImage[].class);
     }
