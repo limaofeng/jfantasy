@@ -165,14 +165,9 @@ public class UserInfoWeiXinService implements InitializingBean {
     }
 
     public UserInfo checkCreateMember(String openId) throws WeiXinException {
-        UserInfo u = getUserInfo(openId);
-        /*
-        TODO 关注微信号时,是否自动创建会员记录
-        if (u == null) {
-            UserInfo ui = refresh(openId);
-            if (ui == null) {
-                return null;
-            }
+        return refresh(openId);
+        /* TODO 关注微信号时,是否自动创建会员记录
+        if (ui != null) {
             String bex64OpenId = StringUtil.hexTo64(MessageDigestUtil.getInstance().get(ui.getOpenId()));
             Member member = new Member();
             member.setUsername(bex64OpenId);
@@ -216,8 +211,8 @@ public class UserInfoWeiXinService implements InitializingBean {
             save(ui);
             return ui;
         }
+        return ui;
         */
-        return u;
     }
 
 }
