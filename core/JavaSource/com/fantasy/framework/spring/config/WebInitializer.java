@@ -44,8 +44,8 @@ public class WebInitializer implements WebApplicationInitializer {
         springMvcContext.register(WebMvcConfig.class);
 
         //5、DispatcherServlet
-        ServletRegistration.Dynamic dynamic = servletContext.addServlet("dispatcherServlet", DispatcherServlet.class);
-        dynamic.setInitParameter("contextConfigLocation", "classpath:spring/applicationContext-mvc.xml");
+        DispatcherServlet dispatcherServlet = new DispatcherServlet(springMvcContext);
+        ServletRegistration.Dynamic dynamic = servletContext.addServlet("dispatcherServlet", dispatcherServlet);
         dynamic.setLoadOnStartup(1);
         dynamic.addMapping("/*");
 
@@ -64,7 +64,6 @@ public class WebInitializer implements WebApplicationInitializer {
         filterRegistration = servletContext.addFilter("jcaptchaFilter", jcaptchaFilter);
         filterRegistration.setInitParameter("targetFilterLifecycle", "true");
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/jcaptcha.jpg");
-
 
         //5、为 request, response 提供上下文访问对象
         ActionContextFilter actionContextFilter = new ActionContextFilter();
