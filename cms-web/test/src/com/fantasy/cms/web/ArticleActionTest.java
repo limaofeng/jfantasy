@@ -76,7 +76,7 @@ public class ArticleActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("releaseDate", DateUtil.format("yyyy-MM-dd"));
         this.request.addParameter("category.code", "root");
         this.request.addParameter("issue", "true");
-        ActionProxy proxy = super.getActionProxy("/cms/articles/");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/articles/");
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSave返回数据：" + this.response.getContentAsString());
 
@@ -93,7 +93,7 @@ public class ArticleActionTest extends StrutsSpringJUnit4TestCase {
         filters.add(new PropertyFilter("EQS_title", "测试文章标题"));
         Pager<Article> pager = this.cmsService.findPager(new Pager<Article>(1), filters);
         this.request.setMethod("DELETE");
-        ActionProxy proxy = super.getActionProxy("/cms/articles/" + pager.getPageItems().get(0).getId());
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/articles/" + pager.getPageItems().get(0).getId());
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testDelete返回数据：" + this.response.getContentAsString());
 
@@ -109,7 +109,7 @@ public class ArticleActionTest extends StrutsSpringJUnit4TestCase {
         filters.add(new PropertyFilter("EQS_title", "测试文章标题"));
         Pager<Article> pager = this.cmsService.findPager(new Pager<Article>(1), filters);
         this.request.setMethod("GET");
-        final ActionProxy proxy = super.getActionProxy("/cms/articles/" + pager.getPageItems().get(0).getId());
+        final ActionProxy proxy = super.getActionProxy("/api/0.1/cms/articles/" + pager.getPageItems().get(0).getId());
         LOG.debug("返回数据类型：" + JdbcUtil.transaction(new JdbcUtil.Callback<String>() {
 
             @Override

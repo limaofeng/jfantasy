@@ -62,7 +62,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
     public void testView() throws Exception {
         this.request.setMethod("GET");
 
-        ActionProxy proxy = super.getActionProxy("/cms/categorys/test");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/categorys/test");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
@@ -80,7 +80,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("name", "JUnit测试");
         this.request.addParameter("description", "test");
 
-        ActionProxy proxy = super.getActionProxy("/cms/categorys");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/categorys");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
@@ -94,7 +94,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
     public void testSearch() throws Exception {
         this.request.setMethod("GET");
         this.request.addParameter("EQS_code", "testsave");
-        ActionProxy proxy = super.getActionProxy("/cms/categorys");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/categorys");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();
         LOG.debug("content:" + this.response.getContentAsString());
@@ -107,7 +107,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("code", "testsave");
         this.request.addParameter("name", "JUnit测试");
         this.request.addParameter("description", "test");
-        ActionProxy proxy = super.getActionProxy("/cms/categorys/testsave");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/categorys/testsave");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();
         LOG.debug("content:" + this.response.getContentAsString());
@@ -118,7 +118,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
         this.request.setMethod("DELETE");
         this.request.addParameter("id","test1");
         this.request.addParameter("id","test2");
-        ActionProxy proxy = super.getActionProxy("/cms/categorys");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/categorys");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();
         LOG.debug("content:" + this.response.getContentAsString());
@@ -128,7 +128,7 @@ public class ArticleCategoryActionTest extends StrutsSpringJUnit4TestCase {
     @Test
     public void testDelete() throws Exception {
         this.request.setMethod("DELETE");
-        ActionProxy proxy = super.getActionProxy("/cms/categorys/test");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/cms/categorys/test");
         Assert.assertNotNull(proxy);
         String result = proxy.execute();
         LOG.debug("content:" + this.response.getContentAsString());

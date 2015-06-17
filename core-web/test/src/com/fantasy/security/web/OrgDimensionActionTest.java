@@ -91,7 +91,7 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("name", "维度1");
         this.request.addParameter("description", "完全不知道说的是啥");
         this.request.addParameter("website.id", website.getId().toString());
-        ActionProxy proxy = super.getActionProxy("/security/orgdimensions/");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/orgdimensions/");
         LOG.debug("返回数据类型："+proxy.execute());
         LOG.debug("testCreate返回数据："+this.response.getContentAsString());
         Assert.assertEquals(response.getStatus(),200);
@@ -105,7 +105,7 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("name", "维度。。。。");
         this.request.addParameter("description", "完全不知道说的是啥");
         this.request.addParameter("website.id", website.getId().toString());
-        ActionProxy proxy = super.getActionProxy("/security/orgdimensions/TestWD");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/orgdimensions/TestWD");
         LOG.debug("返回数据类型："+proxy.execute());
         LOG.debug("testUpdate返回数据："+this.response.getContentAsString());
         Assert.assertEquals(response.getStatus(),200);
@@ -118,7 +118,7 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("DELETE");
-            ActionProxy proxy = super.getActionProxy("/security/orgdimensions/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/orgdimensions/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testDelete返回数据："+this.response.getContentAsString());
             Assert.assertEquals(response.getStatus(),200);
@@ -129,7 +129,7 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
     public void testSearch() throws Exception{
         this.request.addParameter("EQS_id","TestWD");
         this.request.setMethod("GET");
-        ActionProxy proxy = super.getActionProxy("/security/orgdimensions");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/orgdimensions");
         LOG.debug("返回数据类型："+proxy.execute());
         LOG.debug("testSearch返回数据："+this.response.getContentAsString());
         Assert.assertEquals(response.getStatus(),200);
@@ -142,7 +142,7 @@ public class OrgDimensionActionTest extends StrutsSpringJUnit4TestCase {
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("GET");
-            ActionProxy proxy = super.getActionProxy("/security/orgdimensions/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/orgdimensions/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testView返回数据："+this.response.getContentAsString());
             Assert.assertEquals(response.getStatus(),200);

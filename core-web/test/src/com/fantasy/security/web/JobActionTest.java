@@ -114,7 +114,7 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
     public void testSearch() throws Exception {
         this.request.setMethod("GET");
         this.request.addParameter("EQS_code","TestJob");
-        ActionProxy proxy = super.getActionProxy("/security/jobs");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/jobs");
         Assert.assertNotNull(proxy);
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSearch返回数据："+this.response.getContentAsString());
@@ -129,7 +129,7 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("description","项目经理描述001");
         Organization organization = this.organizationService.findUnique(Restrictions.eq("id","Testzhuzhi"));
         this.request.addParameter("organization.id",organization.getId());
-        ActionProxy proxy = super.getActionProxy("/security/jobs/");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/jobs/");
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSave返回数据：" + this.response.getContentAsString());
     }
@@ -148,7 +148,7 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
             this.request.addParameter("description","update测试");
             Organization organization = this.organizationService.findUnique(Restrictions.eq("id","Testzhuzhi"));
             this.request.addParameter("organization.id",organization.getId());
-            ActionProxy proxy = super.getActionProxy("/security/jobs/"+job.getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/jobs/"+job.getId());
             String result =  proxy.execute();
             LOG.debug("返回数据类型：" + result);
             LOG.debug("testUpdate返回数据："+this.response.getContentAsString());
@@ -163,7 +163,7 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
         Pager<Job> pager = this.jobService.findPager(new Pager<Job>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("GET");
-            ActionProxy proxy = super.getActionProxy("/security/jobs/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/jobs/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型：" + proxy.execute());
             LOG.debug("testView返回数据："+this.response.getContentAsString());
         }
@@ -177,7 +177,7 @@ public class JobActionTest extends StrutsSpringJUnit4TestCase {
         Pager<Job> pager = this.jobService.findPager(new Pager<Job>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("DELETE");
-            ActionProxy proxy = super.getActionProxy("/security/jobs/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/jobs/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型：" + proxy.execute());
             LOG.debug("testDelete返回数据："+this.response.getContentAsString());
         }

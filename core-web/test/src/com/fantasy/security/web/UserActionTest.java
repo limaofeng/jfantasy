@@ -104,7 +104,7 @@ public class UserActionTest extends StrutsSpringJUnit4TestCase {
         this.request.setMethod("GET");
         this.request.addParameter("EQS_username","hhh001");
         this.request.addParameter("pager.pageSize","100");
-        ActionProxy proxy = super.getActionProxy("/security/users");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/users");
         Assert.assertNotNull(proxy);
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSearch返回数据："+this.response.getContentAsString());
@@ -121,7 +121,7 @@ public class UserActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("roles[0].code","SYSTEM");
         this.request.addParameter("details.email","393469668@qq.com");
         this.request.addParameter("website.id","7");
-        ActionProxy proxy = super.getActionProxy("/security/users/");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/users/");
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSave返回数据：" + this.response.getContentAsString());
     }
@@ -141,7 +141,7 @@ public class UserActionTest extends StrutsSpringJUnit4TestCase {
             this.request.addParameter("roles[0].code","SYSTEM");
             this.request.addParameter("details.email","393469668@qq.com");
             this.request.addParameter("website.id","7");
-            ActionProxy proxy = super.getActionProxy("/security/users/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/users/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型：" + proxy.execute());
             LOG.debug("testUpdate返回数据：" + this.response.getContentAsString());
         }
@@ -154,7 +154,7 @@ public class UserActionTest extends StrutsSpringJUnit4TestCase {
         Pager<User> pager = this.userService.findPager(new Pager<User>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("GET");
-            ActionProxy proxy = super.getActionProxy("/security/users/hhh001");
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/users/hhh001");
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testView返回数据："+this.response.getContentAsString());
             Assert.assertEquals(response.getStatus(),200);
@@ -169,7 +169,7 @@ public class UserActionTest extends StrutsSpringJUnit4TestCase {
         Pager<User> pager = this.userService.findPager(new Pager<User>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("DELETE");
-            ActionProxy proxy = super.getActionProxy("/security/users/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/users/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型：" + proxy.execute());
             LOG.debug("testDelete返回数据："+this.response.getContentAsString());
         }

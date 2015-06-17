@@ -121,7 +121,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()) {
             this.request.addParameter("orgHelpBeans[0].orgDimension.id", pager.getPageItems().get(0).getId());//添加维度
-            ActionProxy proxy = super.getActionProxy("/security/organizations/");
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/organizations/");
             LOG.debug("返回数据类型：" + proxy.execute());
             LOG.debug("testSave返回数据：" + this.response.getContentAsString());
             Assert.assertEquals(response.getStatus(),200);
@@ -141,7 +141,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         Pager<OrgDimension> pager = this.orgDimensionService.findPager(new Pager<OrgDimension>(1),filters);
         if(!pager.getPageItems().isEmpty()) {
             this.request.addParameter("orgHelpBeans[0].orgDimension.id", pager.getPageItems().get(0).getId());//添加维度
-            ActionProxy proxy = super.getActionProxy("/security/organizations/TestID");
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/organizations/TestID");
             LOG.debug("返回数据类型：" + proxy.execute());
             LOG.debug("testUpdate返回数据：" + this.response.getContentAsString());
             Assert.assertEquals(response.getStatus(),200);
@@ -152,7 +152,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
     public void testSearch() throws Exception {
         this.request.setMethod("GET");
         this.request.addParameter("EQS_id","TestID");
-        ActionProxy proxy = super.getActionProxy("/security/organizations");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/organizations");
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSearch返回数据：" + this.response.getContentAsString());
         Assert.assertEquals(response.getStatus(),200);
@@ -169,7 +169,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
             this.response.setCommitted(false);
             this.response.reset();
             this.request.setMethod("GET");
-            ActionProxy proxy = super.getActionProxy("/security/organizations/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/organizations/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testView返回数据："+this.response.getContentAsString());
             Assert.assertEquals(response.getStatus(),200);
@@ -197,7 +197,7 @@ public class OrganizActionTest extends StrutsSpringJUnit4TestCase {
         Pager<Organization> pager = this.organizationService.findPager(new Pager<Organization>(1),filters);
         if(!pager.getPageItems().isEmpty()){
             this.request.setMethod("DELETE");
-            ActionProxy proxy = super.getActionProxy("/security/organizations/"+pager.getPageItems().get(0).getId());
+            ActionProxy proxy = super.getActionProxy("/api/0.1/security/organizations/"+pager.getPageItems().get(0).getId());
             LOG.debug("返回数据类型："+proxy.execute());
             LOG.debug("testDelete返回数据："+this.response.getContentAsString());
             Assert.assertEquals(response.getStatus(),200);
