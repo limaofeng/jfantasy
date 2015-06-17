@@ -57,7 +57,7 @@ public class OrgRelationActionTest extends StrutsSpringJUnit4TestCase {
         this.request.setMethod("GET");
         this.request.addParameter("EQS_orgDimension.id","default");
         this.request.addParameter("pager.pageSize","100");
-        ActionProxy proxy = super.getActionProxy("/security/orgrelations");
+        ActionProxy proxy = super.getActionProxy("/api/0.1/security/orgrelations");
         Assert.assertNotNull(proxy);
         LOG.debug("返回数据类型：" + proxy.execute());
         LOG.debug("testSearch返回数据："+this.response.getContentAsString());

@@ -77,7 +77,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
 
     @Test
     public void testIndex() throws Exception {
-        ActionProxy proxy = super.getActionProxy("/api/0.1/system/website/index.do");
+        ActionProxy proxy = super.getActionProxy("/system/website/index.do");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
@@ -89,7 +89,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
 
     @Test
     public void testSearch() throws Exception {
-        ActionProxy proxy = super.getActionProxy("/api/0.1/system/website/search.do");
+        ActionProxy proxy = super.getActionProxy("/system/website/search.do");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
@@ -109,7 +109,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("defaultFileManager.id", "haolue-default");
         this.request.addParameter("defaultUploadFileManager.id", "haolue-upload");
 
-        ActionProxy proxy = super.getActionProxy("/api/0.1/system/website/save.do");
+        ActionProxy proxy = super.getActionProxy("/system/website/save.do");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
@@ -133,7 +133,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
         this.request.addParameter("defaultFileManager.id", "haolue-default");
         this.request.addParameter("defaultUploadFileManager.id", "haolue-upload");
 
-        proxy = super.getActionProxy("/api/0.1/system/website/save.do");
+        proxy = super.getActionProxy("/system/website/save.do");
         result = proxy.execute();
 
         LOG.debug("result:" + this.response.getContentAsString());
@@ -153,7 +153,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
 
         this.request.addParameter("id", website.getId().toString());
 
-        ActionProxy proxy = super.getActionProxy("/api/0.1/system/website/view.do");
+        ActionProxy proxy = super.getActionProxy("/system/website/view.do");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
@@ -170,7 +170,7 @@ public class WebsiteActionTest extends StrutsSpringJUnit4TestCase {
 
         this.request.addParameter("ids", this.websiteService.get("test").getId().toString());
 
-        ActionProxy proxy = super.getActionProxy("/api/0.1/system/website/delete.do");
+        ActionProxy proxy = super.getActionProxy("/system/website/delete.do");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
