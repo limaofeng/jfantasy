@@ -116,7 +116,7 @@
         <action name="delete" class="com.fantasy.security.web.ResourceAction" method="delete"/>
     </package>
 
-    <package name="rest-security" extends="" namespace="/api/0.1/security">
+    <package name="rest-security" extends="fantasy-default" namespace="/api/0.1/security">
         <!-- 组织维度 -->
         <action name="orgdimensions" class="com.fantasy.security.web.OrgDimensionAction">
             <result type="json"/>

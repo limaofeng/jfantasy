@@ -7,7 +7,7 @@
     <!--*                       内容管理                                      * -->
     <!--*                                                                    * -->
     <!--********************************************************************** -->
-    <package name="rest-cms" extends="" namespace="/api/0.1/cms">
+    <package name="rest-cms" extends="fantasy-default" namespace="/api/0.1/cms">
         <action name="banners" class="com.fantasy.cms.web.BannerAction">
             <result type="json"/>
         </action>
