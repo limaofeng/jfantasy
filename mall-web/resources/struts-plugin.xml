@@ -20,7 +20,7 @@
         </action>
     </package>
 
-    <package name="rest-goods" extends="fantasy-default" namespace="/mall/goods">
+    <package name="rest-goods" extends="fantasy-default" namespace="/api/0.1/mall/goods">
 
         <action name="categorys" class="com.fantasy.mall.goods.web.GoodsCategoryAction">
             <result type="json"/>

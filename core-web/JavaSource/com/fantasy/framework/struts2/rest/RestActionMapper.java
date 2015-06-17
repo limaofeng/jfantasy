@@ -1,24 +1,3 @@
-/*
- * $Id: RestActionMapper.java 1367870 2012-08-01 07:11:09Z lukaszlenart $
- *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
-
 package com.fantasy.framework.struts2.rest;
 
 import com.fantasy.framework.util.common.StringUtil;
@@ -37,64 +16,6 @@ import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
-/**
- * <!-- START SNIPPET: description -->
- * <p/>
- * This Restful action mapper enforces Ruby-On-Rails Rest-style mappings.  If the method
- * is not specified (via '!' or 'method:' prefix), the method is "guessed" at using
- * ReST-style conventions that examine the URL and the HTTP method.  Special care has
- * been given to ensure this mapper works correctly with the codebehind plugin so that
- * XML configuration is unnecessary.
- * <p/>
- * <p>
- * This mapper supports the following parameters:
- * </p>
- * <ul>
- * <li><code>struts.mapper.idParameterName</code> - If set, this value will be the name
- * of the parameter under which the id is stored.  The id will then be removed
- * from the action name.  Whether or not the method is specified, the mapper will
- * try to truncate the identifier from the url and store it as a parameter.
- * </li>
- * <li><code>struts.mapper.indexMethodName</code> - The method name to call for a GET
- * request with no id parameter. Defaults to 'index'.
- * </li>
- * <li><code>struts.mapper.getMethodName</code> - The method name to call for a GET
- * request with an id parameter. Defaults to 'show'.
- * </li>
- * <li><code>struts.mapper.postMethodName</code> - The method name to call for a POST
- * request with no id parameter. Defaults to 'create'.
- * </li>
- * <li><code>struts.mapper.putMethodName</code> - The method name to call for a PUT
- * request with an id parameter. Defaults to 'update'.
- * </li>
- * <li><code>struts.mapper.deleteMethodName</code> - The method name to call for a DELETE
- * request with an id parameter. Defaults to 'destroy'.
- * </li>
- * <li><code>struts.mapper.editMethodName</code> - The method name to call for a GET
- * request with an id parameter and the 'edit' view specified. Defaults to 'edit'.
- * </li>
- * <li><code>struts.mapper.newMethodName</code> - The method name to call for a GET
- * request with no id parameter and the 'new' view specified. Defaults to 'editNew'.
- * </li>
- * </ul>
- * <p>
- * The following URL's will invoke its methods:
- * </p>
- * <ul>
- * <li><code>GET:    /movies                => method="search"</code></li>
- * <li><code>GET:    /movies/Thrillers      => method="show", id="Thrillers"</code></li>
- * <li><code>GET:    /movies/Thrillers;edit => method="edit", id="Thrillers"</code></li>
- * <li><code>GET:    /movies/Thrillers/edit => method="edit", id="Thrillers"</code></li>
- * <li><code>POST:   /movies                => method="create"</code></li>
- * <li><code>PUT:    /movies/Thrillers      => method="update", id="Thrillers"</code></li>
- * <li><code>DELETE: /movies/Thrillers      => method="destroy", id="Thrillers"</code></li>
- * </ul>
- * <p>
- * To simulate the HTTP methods PUT and DELETE, since they aren't supported by HTML,
- * the HTTP parameter "_method" will be used.
- * </p>
- * <!-- END SNIPPET: description -->
- */
 public class RestActionMapper extends DefaultActionMapper {
 
     protected static final Logger LOG = LoggerFactory.getLogger(RestActionMapper.class);
@@ -105,6 +26,8 @@ public class RestActionMapper extends DefaultActionMapper {
     private String postMethodName = "create";
     private String deleteMethodName = "delete";
     private String putMethodName = "update";
+    protected String namespace;
+    public static final String STRUTS_REST_NAMESPACE = "struts.rest.namespace";
 
     public RestActionMapper() {
     }
@@ -148,6 +71,11 @@ public class RestActionMapper extends DefaultActionMapper {
         this.allowDynamicMethodCalls = "true".equalsIgnoreCase(allowDynamicMethodCalls);
     }
 
+    @Inject(value = STRUTS_REST_NAMESPACE, required = false)
+    public void setNamespace(String namespace) {
+        this.namespace = namespace;
+    }
+
     public ActionMapping getMapping(HttpServletRequest request, ConfigurationManager configManager) {
         if (!isSlashesInActionNames()) {
             throw new IllegalStateException("This action mapper requires the setting 'slashesInActionNames' to be set to 'true'");
@@ -155,6 +83,14 @@ public class RestActionMapper extends DefaultActionMapper {
         ActionMapping mapping = super.getMapping(request, configManager);
 
         if (mapping == null) {
+            return null;
+        }
+
+        if (StringUtil.isNotBlank(mapping.getExtension())) {
+            return mapping;
+        }
+
+        if (!mapping.getNamespace().startsWith(this.namespace)) {
             return null;
         }
 

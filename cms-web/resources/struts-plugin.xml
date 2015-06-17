@@ -7,6 +7,19 @@
     <!--*                       内容管理                                      * -->
     <!--*                                                                    * -->
     <!--********************************************************************** -->
+    <package name="rest-cms" extends="" namespace="/api/0.1/cms">
+        <action name="banners" class="com.fantasy.cms.web.BannerAction">
+            <result type="json"/>
+        </action>
+        <action name="articles" class="com.fantasy.cms.web.ArticleAction">
+            <result name="input" type="json"/>
+            <result type="json"/>
+        </action>
+        <action name="categorys" class="com.fantasy.cms.web.ArticleCategoryAction">
+            <result type="json"/>
+        </action>
+    </package>
+
     <package name="fides-cms" extends="fantasy-default" namespace="/cms">
         <!-- 文章管理首页-->
         <action name="article" class="com.fantasy.cms.web.CmsAction" method="article">
@@ -18,20 +31,6 @@
                 <param name="namespace">/cms/banner</param>
                 <param name="actionName">index</param>
             </result>
-        </action>
-
-        <action name="banners" class="com.fantasy.cms.web.BannerAction">
-            <result type="json"/>
-        </action>
-
-
-        <action name="articles" class="com.fantasy.cms.web.ArticleAction">
-            <result name="input" type="json"/>
-            <result type="json"/>
-        </action>
-
-        <action name="categorys" class="com.fantasy.cms.web.ArticleCategoryAction">
-            <result type="json"/>
         </action>
 
     </package>

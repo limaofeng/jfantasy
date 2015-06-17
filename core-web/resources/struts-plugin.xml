@@ -19,6 +19,7 @@
     <bean type="com.fantasy.framework.struts2.rest.handler.ContentTypeHandler" name="x-www-form-urlencoded" class="com.fantasy.framework.struts2.rest.handler.FormUrlEncodedHandler" />
     <bean type="com.fantasy.framework.struts2.rest.handler.ContentTypeHandler" name="multipart/form-data" class="com.fantasy.framework.struts2.rest.handler.MultipartFormDataHandler" />
 
+    <constant name="struts.rest.namespace" value="/api/0.1/"/>
     <constant name="fantasy.page.theme" value="assets"/>
     <constant name="fantasy.page.templateDir" value="/WEB-INF/classes"/>
     <constant name="fantasy.freemarker.beanName" value="freemarkerService"/>

@@ -116,43 +116,28 @@
         <action name="delete" class="com.fantasy.security.web.ResourceAction" method="delete"/>
     </package>
 
-    <!-- 组织维度 -->
-    <package name="admin-orgdimension" extends="fantasy-default" namespace="/security">
+    <package name="rest-security" extends="" namespace="/api/0.1/security">
+        <!-- 组织维度 -->
         <action name="orgdimensions" class="com.fantasy.security.web.OrgDimensionAction">
             <result type="json"/>
         </action>
-    </package>
-
-    <!-- 组织机构 -->
-    <package name="admin-organize" extends="fantasy-default" namespace="/security">
+        <!-- 组织机构 -->
         <action name="organizations" class="com.fantasy.security.web.OrganizAction">
             <result type="json"/>
         </action>
-    </package>
-
-    <!-- 岗位 -->
-    <package name="admin-job" extends="fantasy-default" namespace="/security">
+        <!-- 岗位 -->
         <action name="jobs" class="com.fantasy.security.web.JobAction">
             <result type="json"/>
         </action>
-    </package>
-
-    <!-- 维度与组织机构之间关系-->
-    <package name="admin-orgrelation" extends="fantasy-default" namespace="/security">
+        <!-- 维度与组织机构之间关系-->
         <action name="orgrelations" class="com.fantasy.security.web.OrgRelationAction">
             <result type="json"/>
         </action>
-    </package>
-
-    <!-- 用户管理-->
-    <package name="admin-user" extends="fantasy-default" namespace="/security">
-          <action name="users" class="com.fantasy.security.web.UserAction">
-              <result type="json"/>
-          </action>
-    </package>
-
-    <!-- 角色管理-->
-    <package name="admin-role" extends="fantasy-default" namespace="/security">
+        <!-- 用户管理-->
+        <action name="users" class="com.fantasy.security.web.UserAction">
+            <result type="json"/>
+        </action>
+        <!-- 角色管理-->
         <action name="roles" class="com.fantasy.security.web.RestRoleAction">
             <result type="json"/>
         </action>

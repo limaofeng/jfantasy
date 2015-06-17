@@ -111,7 +111,7 @@ public class WebInitializer implements WebApplicationInitializer {
             //添加struts2
             Filter struts2 = ClassUtil.newInstance(struts2Class);
             filterRegistration = servletContext.addFilter("struts2", struts2);
-            filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "*.do");
+            filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
         }
     }
 }

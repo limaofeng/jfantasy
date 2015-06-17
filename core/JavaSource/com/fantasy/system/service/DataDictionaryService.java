@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 @Service
@@ -132,8 +133,8 @@ public class DataDictionaryService implements InitializingBean {
      *
      * @param dataDictionary 数据字典项
      */
-    public void save(DataDictionary dataDictionary) {
-        this.dataDictionaryDao.save(dataDictionary);
+    public DataDictionary save(DataDictionary dataDictionary) {
+        return this.dataDictionaryDao.save(dataDictionary);
     }
 
     /**
@@ -198,7 +199,6 @@ public class DataDictionaryService implements InitializingBean {
      * 删除配置项
      *
      * @param keys 数据字段 key
-     * @功能描述
      */
     public void delete(DataDictionaryKey... keys) {
         for (DataDictionaryKey key : keys) {
@@ -209,7 +209,7 @@ public class DataDictionaryService implements InitializingBean {
     public void deleteType(String... codes) {
         for (String code : codes) {
             DataDictionaryType dataDictionaryType = this.dataDictionaryTypeDao.get(code);
-            if (dataDictionaryType == null){
+            if (dataDictionaryType == null) {
                 continue;
             }
             for (DataDictionary dataDictionary : dataDictionaryType.getDataDictionaries()) {
@@ -241,11 +241,12 @@ public class DataDictionaryService implements InitializingBean {
 
     /**
      * 根据上级CODE 分类 查询下级分类
+     *
      * @param code
      * @return
      */
-    public List<DataDictionaryType> getDataDictionaryTypeByCode(String code){
-        return  this.dataDictionaryTypeDao.findUnique(Restrictions.eq("code",code)).getChildren();
+    public List<DataDictionaryType> getDataDictionaryTypeByCode(String code) {
+        return this.dataDictionaryTypeDao.findUnique(Restrictions.eq("code", code)).getChildren();
     }
 
 

@@ -2,11 +2,7 @@
         "http://struts.apache.org/dtds/struts-2.1.7.dtd">
 <struts>
 
-    <package name="rest-test" namespace="/api" extends="fantasy-default">
-
-        <action name="articles" class="com.fantasy.web.ArticleAction">
-            <result type="json"/>
-        </action>
+    <package name="rest-test" namespace="/api/0.1" extends="fantasy-default">
 
     </package>
 
