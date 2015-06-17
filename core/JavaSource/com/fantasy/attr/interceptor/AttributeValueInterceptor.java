@@ -53,7 +53,7 @@ public class AttributeValueInterceptor {
      */
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.findPager(..)) && args(pager,filters)", argNames = "pjp,pager,filters")
     public Object findPager(ProceedingJoinPoint pjp, Pager pager, List<PropertyFilter> filters) throws Throwable {
-        Class<?> entityClass = (Class<?>) ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        Class<?> entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
         if (!DynaBean.class.isAssignableFrom(entityClass)) {
             return pjp.proceed();
         }
@@ -81,7 +81,7 @@ public class AttributeValueInterceptor {
 
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.findUnique(..))")
     public Object findUnique(ProceedingJoinPoint pjp) throws Throwable {
-        Class<?> entityClass = (Class<?>) ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        Class<?> entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
         if (!DynaBean.class.isAssignableFrom(entityClass)) {
             return pjp.proceed();
         }
@@ -102,7 +102,7 @@ public class AttributeValueInterceptor {
      */
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.find(..))")
     public Object find(ProceedingJoinPoint pjp) throws Throwable {
-        Class<?> entityClass = (Class<?>) ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        Class<?> entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
         if (!DynaBean.class.isAssignableFrom(entityClass)) {
             return pjp.proceed();
         }
@@ -150,7 +150,7 @@ public class AttributeValueInterceptor {
     }
 
     private Object[] prepare(ProceedingJoinPoint pjp) {
-        Class<?> entityClass = (Class<?>) ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        Class<?> entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
         DynaBeanQuery dynaBeanQuery = DynaBeanQueryManager.getManager().peek();
         Property[] properties = ClassUtil.getPropertys(entityClass);
         Object[] args = pjp.getArgs();
@@ -175,7 +175,7 @@ public class AttributeValueInterceptor {
             } else if (arg instanceof Criterion[]) {
                 for (Criterion c : (Criterion[]) arg) {
                     if (c instanceof Disjunction) {
-                        List<Criterion> criterions = (List<Criterion>) ReflectionUtils.getFieldValue(c, "conditions");
+                        List<Criterion> criterions = ReflectionUtils.getFieldValue(c, "conditions");
                         for (Criterion criterion : criterions) {
                             logger.error("未处理：" + criterion.toString());
                         }
@@ -186,7 +186,7 @@ public class AttributeValueInterceptor {
                     } else if (c instanceof NotExpression) {
                         logger.error("未处理：" + c.toString());
                     } else {
-                        String propertyName = (String) ReflectionUtils.getFieldValue(c, "propertyName");
+                        String propertyName = ReflectionUtils.getFieldValue(c, "propertyName");
                         String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
                         if (ObjectUtil.find(properties, "name", simpleName) != null) {
                             continue;
@@ -218,14 +218,17 @@ public class AttributeValueInterceptor {
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.save(..)) && args(entity)", argNames = "pjp,entity")
     public Object save(ProceedingJoinPoint pjp, Object entity) throws Throwable {
         HibernateDao dao = (HibernateDao) pjp.getTarget();
-        Class entityClass = (Class) ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        Class entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
         if (!(entity != null && entity instanceof DynaBean && entity.getClass().getName().contains(ClassUtil.CGLIB_CLASS_SEPARATOR) && entityClass == entity.getClass().getSuperclass())) {
             return pjp.proceed(new Object[]{entity});
         }
         Long entityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
         DynaBean dynaBean = (DynaBean) (entityId == null ? ClassUtil.newInstance(entityClass) : _method_get.invoke(dao, entityId));
-        assert dynaBean != null;
+        if(dynaBean == null){
+            dynaBean = (DynaBean)ClassUtil.newInstance(entityClass);
+        }
         BeanUtil.copyProperties(dynaBean, entity, "attributeValues");
+        assert dynaBean != null;
         Hibernate.initialize(dynaBean.getAttributeValues());
         List<AttributeValue> attributeValues = dynaBean.getAttributeValues();
         if (attributeValues == null || (attributeValues instanceof PersistentCollection && ((PersistentCollection) attributeValues).isWrapper(null)) || attributeValues.isEmpty()) {

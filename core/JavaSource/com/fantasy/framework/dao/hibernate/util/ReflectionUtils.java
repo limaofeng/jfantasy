@@ -45,15 +45,15 @@ public class ReflectionUtils {
         invokeMethod(target, setterMethodName, new Class[]{type}, new Object[]{value});
     }
 
-    public static Object getFieldValue(Object object, String fieldName) {
+    public static <T> T getFieldValue(Object object, String fieldName) {
         Field field = getDeclaredField(object, fieldName);
         if (field == null) {
             throw new IllegalArgumentException("Could not find field [" + fieldName + "] on target [" + object + "]");
         }
         makeAccessible(field);
-        Object result = null;
+        T result = null;
         try {
-            result = field.get(object);
+            result = (T) field.get(object);
         } catch (IllegalAccessException e) {
             logger.error("不可能抛出的异常{}", e.getMessage());
         }
