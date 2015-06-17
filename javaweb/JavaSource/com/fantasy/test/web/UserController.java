@@ -1,8 +1,10 @@
 package com.fantasy.test.web;
 
 import com.fantasy.security.bean.User;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
     @RequestMapping("/{id}")
+    @ResponseStatus(value = HttpStatus.CREATED)
     public User view(@PathVariable("id") Long id, HttpServletRequest req) {
         User user = new User();
         user.setId(id);

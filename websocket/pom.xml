@@ -17,20 +17,17 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.fantasy</groupId>
+            <artifactId>fantasy-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-websocket</artifactId>
-            <version>${org.springframework-version}</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-messaging</artifactId>
-            <version>${org.springframework-version}</version>
-        </dependency>
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-core</artifactId>
-            <version>${com.fantasy-version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>javax</groupId>
@@ -39,7 +36,6 @@
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cache</artifactId>
-            <version>${com.fantasy-version}</version>
         </dependency>
         <dependency>
             <groupId>redis.clients</groupId>
