@@ -47,7 +47,7 @@ public class WebInitializer implements WebApplicationInitializer {
         DispatcherServlet dispatcherServlet = new DispatcherServlet(springMvcContext);
         ServletRegistration.Dynamic dynamic = servletContext.addServlet("dispatcherServlet", dispatcherServlet);
         dynamic.setLoadOnStartup(1);
-        dynamic.addMapping("/*");
+        dynamic.addMapping("/");
 
         //GZIPFilter 设置自己想要压缩的文件类型
         GZIPFilter gzipFilter = new GZIPFilter();
