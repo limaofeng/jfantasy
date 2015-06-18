@@ -1,7 +1,7 @@
-package com.fantasy.framework.spring.config;
+package com.fantasy.framework.spring.mvc.config;
 
 import com.fantasy.framework.spring.ClassPathScanner;
-import com.fantasy.framework.spring.config.annotation.WebMvcConfig;
+import com.fantasy.framework.spring.mvc.config.annotation.WebMvcConfig;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.PropertiesHelper;
 import com.fantasy.framework.util.web.filter.ActionContextFilter;

@@ -18,10 +18,9 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.quartz.JobKey;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
@@ -126,6 +125,10 @@ public class DataDictionaryService implements InitializingBean {
      */
     public Pager<DataDictionary> findPager(Pager<DataDictionary> pager, List<PropertyFilter> filters) {
         return this.dataDictionaryDao.findPager(pager, filters);
+    }
+
+    public Pager<DataDictionaryType> findDataDictionaryTypePager(Pager<DataDictionaryType> pager, List<PropertyFilter> filters) {
+        return this.dataDictionaryTypeDao.findPager(pager, filters);
     }
 
     /**
@@ -264,6 +267,10 @@ public class DataDictionaryService implements InitializingBean {
     public static String getName(String type, String code) {
         DataDictionary config = get(type, code);
         return config == null ? type + ":" + code : config.getName();
+    }
+
+    public List<DataDictionary> find(Criterion... criterions) {
+        return this.dataDictionaryDao.find(criterions);
     }
 
 }

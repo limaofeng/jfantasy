@@ -1,6 +1,6 @@
 package com.fantasy.framework.tags.model;
 
-public class Pager extends UIBean {
+public class Pager<D> extends UIBean {
     public static final String OPEN_TEMPLATE = "pager.ftl";
     private String formId;
     private com.fantasy.framework.dao.Pager<?> page;

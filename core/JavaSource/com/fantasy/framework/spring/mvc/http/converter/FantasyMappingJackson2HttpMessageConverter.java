@@ -1,4 +1,4 @@
-package com.fantasy.framework.spring.http.converter;
+package com.fantasy.framework.spring.mvc.http.converter;
 
 
 import com.fantasy.framework.util.jackson.JSON;

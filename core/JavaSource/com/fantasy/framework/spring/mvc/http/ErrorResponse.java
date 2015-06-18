@@ -1,4 +1,4 @@
-package com.fantasy.framework.spring.http;
+package com.fantasy.framework.spring.mvc.http;
 
 public class ErrorResponse {
     private String message;

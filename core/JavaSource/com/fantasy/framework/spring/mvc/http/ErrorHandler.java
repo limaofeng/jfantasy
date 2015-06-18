@@ -1,4 +1,4 @@
-package com.fantasy.framework.spring.http;
+package com.fantasy.framework.spring.mvc.http;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;

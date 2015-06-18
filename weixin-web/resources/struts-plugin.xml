@@ -4,6 +4,12 @@
 
 <struts>
 
+    <package name="weixin-authorization" extends="fantasy-default" namespace="/api/0.1/weixin/authorization">
+        <action name="users" class="com.fantasy.wx.web.UserAction">
+            <result type="json"/>
+        </action>
+    </package>
+
     <package name="weixin-userinfo" extends="fantasy-default" namespace="/weixin">
         <!-- 拍品 -->
         <action name="userinfo" class="com.fantasy.wx.web.UserInfoAction" method="index">

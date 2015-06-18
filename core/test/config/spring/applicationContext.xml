@@ -3,12 +3,21 @@
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
        xmlns:c="http://www.springframework.org/schema/c"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
        default-lazy-init="true">
-    <!--xmlns:log="http://www.fantasy.com.cn/schema/log"-->
 
     <!-- 用于非spring托管对象获取spring中的Bean -->
     <bean id="springContextUtil" class="com.fantasy.framework.spring.SpringContextUtil" lazy-init="false"/>
+
+    <!-- spring mvc -->
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver"/>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver"/>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
 
     <!-- 使用 annotation -->
     <context:annotation-config/>
@@ -16,11 +25,10 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
-    <context:component-scan base-package="com.fantasy,com.haolue"/>
+    <context:component-scan base-package="com.fantasy.modules"/>
 
     <!-- 加载 properties文件 -->
-    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true"
-                                  ignore-unresolvable="true" location="classpath:props/application.properties"/>
+    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
     <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
     <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
@@ -40,21 +48,7 @@
 
     <!-- ehcache缓存配置 -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:acceptExisting="true" p:cacheManagerName="appCache"/>
-    <!--
-    <ehcache:annotation-driven cache-manager="cacheManager" />
-     -->
-
-    <!-- 开发中的功能
-    <bean id="logManager" class="com.fantasy.framework.log.DefaultLogManager"/>
-    <log:annotation-driven log-manager="logManager"/>
-    -->
-
-    <!--
-    <bean id="socketServer" class="com.fantasy.framework.websocket.WebSocketServer" lazy-init="false" init-method="start" destroy-method="stop">
-        <constructor-arg name="port" value="9090" />
-    </bean>
-    -->
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:acceptExisting="true" p:cacheManagerName="testAppCache"/>
 
     <!-- 系统默认缓存 -->
     <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">
@@ -62,8 +56,7 @@
     </bean>
 
     <!-- lucene 配置 -->
-    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open"
-          destroy-method="close">
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
         <property name="analyzer">
             <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
         </property>
@@ -116,6 +109,8 @@
     <import resource="classpath:spring/applicationContext-mybatis.xml"/>
 
     <import resource="classpath:spring/applicationContext-hibernate.xml"/>
+
+    <import resource="classpath:spring/applicationContext-security.xml"/>
 
     <import resource="classpath:spring/applicationContext-schedule.xml"/>
 

@@ -1,6 +1,9 @@
-package com.fantasy.framework.spring.config.annotation;
+package com.fantasy.framework.spring.mvc.config.annotation;
 
 
+import com.fantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver;
+import com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor;
+import com.fantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver;
 import com.fantasy.framework.util.jackson.JSON;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -10,14 +13,14 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
+import org.springframework.web.servlet.config.annotation.*;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import java.nio.charset.Charset;
+import java.util.HashSet;
 import java.util.List;
 
 @EnableWebMvc
@@ -42,6 +45,18 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     }*/
 
     @Override
+    public void configureViewResolvers(ViewResolverRegistry registry) {
+        MappingJackson2JsonView jackson2JsonView = new MappingJackson2JsonView();
+        jackson2JsonView.setJsonpParameterNames(new HashSet<String>() {
+            {
+                this.add("callback");
+            }
+        });
+        registry.enableContentNegotiation();
+        super.configureViewResolvers(registry);
+    }
+
+    @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/static/**").addResourceLocations("/static/");
         registry.addResourceHandler("/assets/**").addResourceLocations("/assets/");
@@ -61,6 +76,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         jackson2HttpMessageConverter.setObjectMapper(JSON.getObjectMapper());
         converters.add(jackson2HttpMessageConverter);
         super.configureMessageConverters(converters);
+    }
+
+    @Override
+    public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
+        argumentResolvers.add(new FormModelMethodArgumentResolver());
+        argumentResolvers.add(new RequestJsonParamMethodArgumentResolver());
+        argumentResolvers.add(new PropertyFilterModelAttributeMethodProcessor());
+        super.addArgumentResolvers(argumentResolvers);
     }
 
 }
