@@ -39,8 +39,7 @@
 
     <!-- ehcache缓存配置 -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean"
-          p:configLocation="classpath:cache/ehcache.xml"/>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:cacheManagerName="test-appCache" p:configLocation="classpath:cache/ehcache.xml"/>
     <!--
     <ehcache:annotation-driven cache-manager="cacheManager" />
      -->
@@ -117,6 +116,15 @@
 
     <!-- 用户登陆接口(通过XML文件配置) -->
     <bean id="userDetailsService" class="com.fantasy.security.userdetails.SimpleUserDetailsService"/>
+
+    <!--JCaptcha验证码服务 -->
+    <bean id="captchaService" class="com.fantasy.framework.jcaptcha.FantasyCaptchaService">
+        <property name="captchaEngine">
+            <bean class="com.fantasy.framework.jcaptcha.DefaultEngine"/>
+        </property>
+        <!-- 默认生成的图片180秒过期 , 可另行设置 -->
+        <property name="minGuarantedStorageDelayInSeconds" value="180"/>
+    </bean>
 
     <!-- 其他需要加载的spring模块 -->
     <import resource="classpath:spring/applicationContext-datasource.xml"/>

@@ -7,7 +7,7 @@
 
 <!-- ehcache缓存配置 -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
-    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:configLocation="classpath:cache/ehcache.xml"/>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:cacheManagerName="appCache" p:acceptExisting="true" p:configLocation="classpath:cache/ehcache.xml"/>
 
     <!-- 系统默认缓存 -->
     <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">

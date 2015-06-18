@@ -26,30 +26,32 @@ public class ArticleDao extends HibernateLuceneDao<Article, Long> {
             String[] codes = getRootArticleCategoryCodes();
             if (codes.length > 1) {
                 filter = new PropertyFilter("INS_category.code", codes);
-            } else {
+            } else if (codes.length == 1)  {
                 filter = new PropertyFilter("EQS_category.code", codes[0]);
             }
         }
-        Criterion likePathCriterion;
+        Criterion likePathCriterion = null;
         // 将 code 转为 path like 查询
-        if (filter.getMatchType() == PropertyFilter.MatchType.IN) {
-            Disjunction disjunction = Restrictions.disjunction();
-            for (String code : filter.getPropertyValue(String[].class)) {
-                ArticleCategory category = (ArticleCategory) this.getSession().get(ArticleCategory.class, code);
-                disjunction.add(Restrictions.like("category.path", category.getPath(), MatchMode.START));
-            }
-            likePathCriterion = disjunction;
-        } else {
-            ArticleCategory category = (ArticleCategory) this.getSession().get(ArticleCategory.class, (Serializable) filter.getPropertyValue());
-            if (category != null) {
-                likePathCriterion = Restrictions.like("category.path", category.getPath(), MatchMode.START);
+        if(filter!= null ) {
+            if (filter.getMatchType() == PropertyFilter.MatchType.IN) {
+                Disjunction disjunction = Restrictions.disjunction();
+                for (String code : filter.getPropertyValue(String[].class)) {
+                    ArticleCategory category = (ArticleCategory) this.getSession().get(ArticleCategory.class, code);
+                    disjunction.add(Restrictions.like("category.path", category.getPath(), MatchMode.START));
+                }
+                likePathCriterion = disjunction;
             } else {
-                likePathCriterion = Restrictions.eq("category.code", filter.getPropertyValue());
+                ArticleCategory category = (ArticleCategory) this.getSession().get(ArticleCategory.class, (Serializable) filter.getPropertyValue());
+                if (category != null) {
+                    likePathCriterion = Restrictions.like("category.path", category.getPath(), MatchMode.START);
+                } else {
+                    likePathCriterion = Restrictions.eq("category.code", filter.getPropertyValue());
+                }
             }
         }
         List<PropertyFilter> newFilters = filters == null ? new ArrayList<PropertyFilter>() : filters;
         Criterion[] criterions = super.buildPropertyFilterCriterions(newFilters);
-        criterions = ObjectUtil.join(criterions, likePathCriterion);
+        criterions = ObjectUtil.join(criterions,likePathCriterion == null ? new Criterion[0]: new Criterion[]{likePathCriterion});
         return criterions;
     }
 

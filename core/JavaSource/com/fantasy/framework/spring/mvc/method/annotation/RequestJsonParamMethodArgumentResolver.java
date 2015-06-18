@@ -52,10 +52,7 @@ public class RequestJsonParamMethodArgumentResolver extends AbstractNamedValueMe
     }
 
     public boolean supportsParameter(MethodParameter parameter) {
-        if (parameter.hasParameterAnnotation(RequestJsonParam.class)) {
-            return true;
-        }
-        return false;
+        return parameter.hasParameterAnnotation(RequestJsonParam.class);
     }
 
     @Override

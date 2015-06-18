@@ -43,7 +43,7 @@ public class PaymentService {
     private PaymentDao paymentDao;
     @Autowired
     private PaymentConfigService paymentConfigService;
-    @Autowired
+    @Autowired(required = false)
     private PaymentConfiguration paymentConfiguration;
     @Autowired
     private MemberService memberService;
