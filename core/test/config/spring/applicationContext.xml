@@ -95,6 +95,7 @@
         <property name="poolSize" value="${dataBaseKey.poolSize}"/>
     </bean>
 
+
     <!-- 支付配置 -->
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
 
