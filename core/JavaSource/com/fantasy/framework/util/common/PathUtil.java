@@ -46,7 +46,7 @@ public class PathUtil {
                 url = PathUtil.class.getResource("");
                 logger.debug("PathUtil.class.getResource(\"\") 获取的 url = " + url);
             }
-            PathUtil.WEBCLASSES_PATH = RegexpUtil.replace(url.getPath(), "[\\/]$", "");
+            PathUtil.WEBCLASSES_PATH = new File(RegexpUtil.replace(url.getPath(), "[\\/]$", "")).getAbsolutePath();
             if (WEBCLASSES_PATH.indexOf("WEB-INF") > 0) {
                 File classFile = new File(PathUtil.WEBCLASSES_PATH);
                 PathUtil.WEBINF_PATH = RegexpUtil.replace(classFile.getParentFile().getPath(), "[\\/]$", "");
