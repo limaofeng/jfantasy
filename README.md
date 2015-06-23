@@ -13,3 +13,8 @@ fantasy-core 的功能
 帮助
 -------------
 >待续
+
+生成 Rest Api
+-------------
+>cd doc
+>apidoc -i ../ -o out/ -t template/
