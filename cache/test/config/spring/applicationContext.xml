@@ -2,13 +2,22 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
-       xmlns:c="http://www.springframework.org/schema/c"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd"
+       xmlns:c="http://www.springframework.org/schema/c" xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd"
        default-lazy-init="true">
     <!--xmlns:log="http://www.fantasy.com.cn/schema/log"-->
 
     <!-- 用于非spring托管对象获取spring中的Bean -->
     <bean id="springContextUtil" class="com.fantasy.framework.spring.SpringContextUtil" lazy-init="false"/>
+
+    <!-- spring mvc -->
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver"/>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver"/>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
 
     <!-- 使用 annotation -->
     <context:annotation-config/>
@@ -16,7 +25,7 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
-    <context:component-scan base-package="com.fantasy.modules"/>
+    <context:component-scan base-package="com.fantasy.modules;com.fantasy.test;"/>
 
     <!-- 加载 properties文件 -->
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true"
@@ -89,7 +98,6 @@
     <bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">
         <property name="poolSize" value="${dataBaseKey.poolSize}"/>
     </bean>
-
 
     <!-- 支付配置 -->
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>

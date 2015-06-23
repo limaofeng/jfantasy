@@ -1,5 +1,6 @@
 package com.fantasy.file;
 
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 
 import java.io.File;
@@ -15,16 +16,16 @@ public abstract class AbstractFileItem implements FileItem {
 
     public AbstractFileItem(String absolutePath) {
         this.absolutePath = absolutePath.replace(File.separator, "/");
-        this.name = RegexpUtil.parseGroup(absolutePath, "([^/]+)/$", 1);
-        this.directory = true;
-        this.lastModified = null;
-        this.metadata = new Metadata();
         if (!this.absolutePath.startsWith("/")) {
             this.absolutePath = "/" + this.absolutePath;
         }
         if (!this.absolutePath.endsWith("/")) {
             this.absolutePath = this.absolutePath + "/";
         }
+        this.name = StringUtil.nullValue(RegexpUtil.parseGroup(this.absolutePath, "([^/]+)/$", 1));
+        this.directory = true;
+        this.lastModified = null;
+        this.metadata = new Metadata();
     }
 
     public AbstractFileItem(String absolutePath, Metadata metadata) {
@@ -37,7 +38,7 @@ public abstract class AbstractFileItem implements FileItem {
 
     public AbstractFileItem(String absolutePath, long size, Date lastModified, Metadata metadata) {
         this.absolutePath = absolutePath;
-        this.name = RegexpUtil.parseGroup(absolutePath, "([^/]+)/$", 1);
+        this.name = RegexpUtil.parseGroup(absolutePath, "([^/]+)$", 1);
         this.size = size;
         this.directory = false;
         this.lastModified = lastModified;

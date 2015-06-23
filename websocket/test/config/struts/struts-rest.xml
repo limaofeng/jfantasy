@@ -1,9 +1,0 @@
-<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.1.7//EN"
-        "http://struts.apache.org/dtds/struts-2.1.7.dtd">
-<struts>
-
-    <package name="rest-test" namespace="/api/0.1" extends="fantasy-default">
-
-    </package>
-
-</struts>

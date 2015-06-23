@@ -76,7 +76,7 @@ public class LocalFileManager implements FileManager {
     }
 
     private FileItem root() {
-        return retrieveFileItem("/");
+        return retrieveFileItem(File.separator);
     }
 
     public FileItem retrieveFileItem(String absolutePath) {
