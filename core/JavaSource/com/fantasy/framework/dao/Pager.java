@@ -8,6 +8,26 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @apiDefine paramPager
+ * @apiParam {int} currentPage  要显示的页码
+ * @apiParam {int} pageSize  每页显示数据条数
+ * @apiParam {String} orderBy  排序字段
+ * @apiParam {String} order  排序方向
+ * @apiVersion 3.3.2
+ */
+
+/**
+ * @apiDefine returnPager
+ * @apiSuccess {int} currentPage  当前页码
+ * @apiSuccess {int} pageSize  每页显示的数据条数
+ * @apiSuccess {int} totalCount  最大数据条数
+ * @apiSuccess {int} totalPage  总页数
+ * @apiSuccess {String} orderBy  排序字段
+ * @apiSuccess {String} order  排序方向
+ * @apiSuccess {List} pageItems 当页数据集合
+ * @apiVersion 3.3.2
+ */
 public class Pager<T> implements Serializable {
 
     private static final long serialVersionUID = -2343309063338998483L;

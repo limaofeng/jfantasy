@@ -82,28 +82,12 @@ public class RegexpUtilTest {
 
     @Test
     public void testReplace() throws Exception {
-
+        String filePath = "E:\\gitprogram\\hbao-server\\web-server\\target\\hbao-web-webserver-1.0-SNAPSHOT\\assets\\js\\minified\\aui-production.js";
+        String dirPath = "E:\\gitprogram\\hbao-server\\web-server\\target\\hbao-web-webserver-1.0-SNAPSHOT\\";
+        LOG.debug(dirPath.replace("\\","/"));
+        //LOG.debug(RegexpUtil.replace(filePath,dirPath,""));
     }
 
-    @Test
-    public void testReplace1() throws Exception {
-
-    }
-
-    @Test
-    public void testReplace2() throws Exception {
-
-    }
-
-    @Test
-    public void testReplaceFirst1() throws Exception {
-
-    }
-
-    @Test
-    public void testReplaceFirst2() throws Exception {
-
-    }
 
     @Test
     public void testWildMatch() throws Exception {

@@ -15,9 +15,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @apiDefine WeiXinMessage
+ * @apiSuccess (Success 200)    {Long}      Id              MsgId	消息id，64位整型
+ * @apiSuccess (Success 200)    {String}    fromUserName    发送方帐号（OpenID或者微信公众号的原始ID）
+ * @apiSuccess (Success 200)    {Date}      createTime      消息创建时间
+ * @apiSuccess (Success 200)    {Content}   content         消息内容(参考：WeiXinMessage 接口与其实现类)
+ * @apiSuccess (Success 200)    {String}    toUserName      消息的接收方(OpenID或者微信公众号的原始ID)
+ * @apiVersion 3.3.2
+ */
 @RestController
 @RequestMapping("/weixin/message")
 public class MessageController {
@@ -27,8 +35,18 @@ public class MessageController {
     @Autowired
     private WeiXinSessionFactory weiXinSessionFactory;
 
+    /**
+     * @api {get} /weixin/message/:appid/push   微信消息接口
+     * @apiVersion 3.3.2
+     * @apiName push
+     * @apiGroup 微信消息
+     * @apiDescription 该接口为微信公众平台中的接口配置地址。
+     * @apiExample Example usage:
+     * curl -i http://localhost/weixin/message/wx0e7cef7ad73417eb/push
+     * @apiUse WeiXinMessage
+     */
     @RequestMapping(value = "/{appid}/push")
-    public String push(@PathVariable String appid, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String push(@PathVariable String appid, HttpServletRequest request) throws IOException {
         String echostr = request.getParameter("echostr");
         if (StringUtils.isNotBlank(echostr)) {
             // 说明是一个仅仅用来验证的请求，回显echostr

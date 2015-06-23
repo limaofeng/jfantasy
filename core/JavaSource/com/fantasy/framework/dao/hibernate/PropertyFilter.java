@@ -15,6 +15,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
+/**
+ * @apiDefine paramPropertyFilter
+ * @apiParam {PropertyFilter} filters  参数格式为:EQS_title=测试
+ * @apiVersion 3.3.2
+ */
 public class PropertyFilter {
     public static final String OR_SEPARATOR = "_OR_";
     private String[] propertyNames = null;
@@ -139,7 +144,7 @@ public class PropertyFilter {
                 return clazz.cast(array);
             }
         }
-        return clazz.cast(ConvertUtils.convert(this.getPropertyValue(),clazz));
+        return clazz.cast(ConvertUtils.convert(this.getPropertyValue(), clazz));
     }
 
     public Class<?> getPropertyType() {

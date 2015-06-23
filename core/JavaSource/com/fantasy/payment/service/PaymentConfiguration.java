@@ -141,7 +141,6 @@ public class PaymentConfiguration implements InitializingBean {
             orderDetailsService.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
             orderDetailsService.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
             orderDetailsService.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
-            orderDetailsService.setShowUrlTemplate("http://test.jfantasy.org/order/{orderSn}");
             this.paymentOrderServices.put("test", orderDetailsService);
         }
 
