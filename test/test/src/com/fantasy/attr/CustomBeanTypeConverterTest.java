@@ -1,8 +1,8 @@
 package com.fantasy.attr;
 
+import com.fantasy.attr.framework.CustomBeanFactory;
 import com.fantasy.attr.framework.converter.CustomBeanTypeConverter;
 import com.fantasy.attr.framework.util.AttributeUtils;
-import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.attr.storage.bean.CustomBeanDefinition;
 import com.fantasy.attr.storage.service.*;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -43,7 +43,8 @@ public class CustomBeanTypeConverterTest {
     private AttributeVersionService attributeVersionService;
     @Autowired
     private ConverterService converterService;
-
+    @Autowired
+    private CustomBeanFactory customBeanFactory;
     @Autowired
     private AttributeService attributeService;
     @Autowired
@@ -91,7 +92,7 @@ public class CustomBeanTypeConverterTest {
 
     @Test
     public void save(){
-        Article article = VersionUtil.createDynaBean(Article.class, "fantasy_article_v1");
+        Article article = customBeanFactory.makeDynaBean(Article.class, "fantasy_article_v1");
         article.setTitle("测试动态bean");
         article.setSummary("测试动态bean");
         article.setCategory(new ArticleCategory("test"));

@@ -114,9 +114,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
      * @param className class Name
      * @return 对象
      */
-    public static Object newInstance(String className) {
+    public static <T> T newInstance(String className) {
         try {
-            return newInstance(FantasyClassLoader.getClassLoader().loadClass(className));
+            return (T)newInstance(FantasyClassLoader.getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
             logger.error(e);
         }

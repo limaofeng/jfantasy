@@ -1,19 +1,16 @@
 package com.fantasy.attr.interceptor;
 
+import com.fantasy.attr.framework.DefaultCustomBeanFactory;
 import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanQuery;
 import com.fantasy.attr.framework.query.DynaBeanQueryManager;
-import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.HibernateDao;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
-import com.fantasy.framework.util.common.BeanUtil;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.common.*;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.reflect.MethodProxy;
 import com.fantasy.framework.util.reflect.Property;
@@ -26,6 +23,7 @@ import org.hibernate.Hibernate;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.criterion.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -36,11 +34,14 @@ import java.util.List;
 @Aspect
 public class AttributeValueInterceptor {
 
-    private final static Log logger = LogFactory.getLog(AttributeValueInterceptor.class);
+    private final static Log LOG = LogFactory.getLog(AttributeValueInterceptor.class);
 
     private final static MethodProxy _method_getIdValue = ClassUtil.getMethodProxy(HibernateDao.class, "getIdValue", Class.class, Object.class);
 
     private final static MethodProxy _method_get = ClassUtil.getMethodProxy(HibernateDao.class, "get", Serializable.class);
+
+    @Autowired
+    private DefaultCustomBeanFactory customBeanFactory;
 
     /**
      * findPager 时，对动态Bean 添加代理
@@ -142,9 +143,9 @@ public class AttributeValueInterceptor {
             return null;
         }
         try {
-            return VersionUtil.makeDynaBean(dynaBean);
+            return customBeanFactory.makeDynaBean(dynaBean);
         } catch (ObjectNotFoundException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return dynaBean;
         }
     }
@@ -165,7 +166,7 @@ public class AttributeValueInterceptor {
                         if (simpleName.equals(propertyName)) {
                             dynaBeanQuery.addColumn(propertyName, filter.getPropertyType());
                         } else {
-                            Attribute attribute = VersionUtil.getAttribute(entityClass, propertyName);
+                            Attribute attribute = customBeanFactory.getAttribute(entityClass, propertyName);
                             if (attribute != null && StringUtil.isNotBlank(attribute.getAttributeType().getForeignKey())) {
                                 dynaBeanQuery.addColumn(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()), attribute.getAttributeType().getForeignKey());
                             }
@@ -177,14 +178,14 @@ public class AttributeValueInterceptor {
                     if (c instanceof Disjunction) {
                         List<Criterion> criterions = ReflectionUtils.getFieldValue(c, "conditions");
                         for (Criterion criterion : criterions) {
-                            logger.error("未处理：" + criterion.toString());
+                            LOG.error("未处理：" + criterion.toString());
                         }
                     } else if (c instanceof SQLCriterion) {
-                        logger.error("未处理：" + c.toString());
+                        LOG.error("未处理：" + c.toString());
                     } else if (c instanceof LogicalExpression) {
-                        logger.error("未处理：" + c.toString());
+                        LOG.error("未处理：" + c.toString());
                     } else if (c instanceof NotExpression) {
-                        logger.error("未处理：" + c.toString());
+                        LOG.error("未处理：" + c.toString());
                     } else {
                         String propertyName = ReflectionUtils.getFieldValue(c, "propertyName");
                         String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
@@ -195,7 +196,7 @@ public class AttributeValueInterceptor {
                             Object value = ReflectionUtils.getFieldValue(c, "value");
                             dynaBeanQuery.addColumn(propertyName, value.getClass());
                         } else {
-                            Attribute attribute = VersionUtil.getAttribute(entityClass, propertyName);
+                            Attribute attribute = customBeanFactory.getAttribute(entityClass, propertyName);
                             if (attribute != null && StringUtil.isNotBlank(attribute.getAttributeType().getForeignKey())) {
                                 dynaBeanQuery.addColumn(attribute.getCode(), ClassUtil.forName(attribute.getAttributeType().getDataType()), attribute.getAttributeType().getForeignKey());
                             }
@@ -224,8 +225,8 @@ public class AttributeValueInterceptor {
         }
         Long entityId = (Long) _method_getIdValue.invoke(dao, entityClass, entity);
         DynaBean dynaBean = (DynaBean) (entityId == null ? ClassUtil.newInstance(entityClass) : _method_get.invoke(dao, entityId));
-        if(dynaBean == null){
-            dynaBean = (DynaBean)ClassUtil.newInstance(entityClass);
+        if (dynaBean == null) {
+            dynaBean = (DynaBean) ClassUtil.newInstance(entityClass);
         }
         BeanUtil.copyProperties(dynaBean, entity, "attributeValues");
         assert dynaBean != null;
@@ -243,7 +244,7 @@ public class AttributeValueInterceptor {
                 attributeValue.setVersion(((DynaBean) entity).getVersion());
                 attributeValues.add(attributeValue);
             }
-            String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), entity, String.class);
+            String value = customBeanFactory.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), entity, String.class);
             if (StringUtil.isNotBlank(value)) {
                 attributeValue.setValue(value);
             } else {
@@ -269,12 +270,66 @@ public class AttributeValueInterceptor {
     }
 
     @Around(value = "execution(public * com.fantasy.framework.dao.hibernate.HibernateDao.get(..)) && args(id)", argNames = "pjp,id")
-    public Object get(ProceedingJoinPoint pjp, Object id) throws Throwable {
+    public Object get(ProceedingJoinPoint pjp, Serializable id) throws Throwable {
         Class<?> entityClass = ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass());
         if (!DynaBean.class.isAssignableFrom(entityClass)) {
             return pjp.proceed();
         }
         return toDynaBean(pjp.proceed());
+    }
+
+    @Around(value = "execution(public * com.fantasy.framework.lucene.dao.hibernate.HibernateLuceneDao.get(..)) && args(id)", argNames = "pjp,id")
+    public Object get(final ProceedingJoinPoint pjp, String id) throws Throwable {
+        Class<?> entityClass = ReflectionUtils.getSuperClassGenricType(pjp.getTarget().getClass());
+        if (!DynaBean.class.isAssignableFrom(entityClass)) {
+            return pjp.proceed();
+        }
+        return JdbcUtil.transaction(new JdbcUtil.Callback<Object>() {
+            @Override
+            public Object run() {
+                try {
+                    return toDynaBean(pjp.proceed());
+                } catch (Throwable throwable) {
+                    LOG.error(throwable.getMessage());
+                    return null;
+                }
+            }
+        });
+    }
+
+    /**
+     * find 时，对动态Bean 添加代理
+     *
+     * @param pjp ProceedingJoinPoint
+     * @return Object
+     * @throws Throwable
+     */
+    @Around(value = "execution(public * com.fantasy.framework.lucene.dao.hibernate.HibernateLuceneDao.find(..))")
+    public Object findByLuceneDao(ProceedingJoinPoint pjp) throws Throwable {
+        Class<?> entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        if (!DynaBean.class.isAssignableFrom(entityClass)) {
+            return pjp.proceed();
+        }
+        try {
+            DynaBeanQueryManager.getManager().push(DynaBeanQuery.createDynaBeanQuery());
+            return toDynaBean(pjp.proceed(prepare(pjp)));
+        } finally {
+            DynaBeanQueryManager.getManager().pop();
+        }
+    }
+
+    @Around(value = "execution(public * com.fantasy.framework.lucene.dao.hibernate.HibernateLuceneDao.findByField(..))")
+    public Object findByField(ProceedingJoinPoint pjp) throws Throwable {
+        Class<?> entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        if (!DynaBean.class.isAssignableFrom(entityClass)) {
+            return pjp.proceed();
+        }
+        try {
+            DynaBeanQueryManager.getManager().push(DynaBeanQuery.createDynaBeanQuery());
+            return toDynaBean(pjp.proceed(prepare(pjp)));
+        } finally {
+            DynaBeanQueryManager.getManager().pop();
+        }
     }
 
 }

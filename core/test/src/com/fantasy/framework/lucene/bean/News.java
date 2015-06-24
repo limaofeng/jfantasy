@@ -1,15 +1,18 @@
 package com.fantasy.framework.lucene.bean;
 
+import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fantasy.framework.lucene.annotations.Indexed;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Persister;
 
 import javax.persistence.*;
 
 @Entity
 @Indexed
 @Table(name = "TEST_NEWS")
+@Persister(impl = DynaBeanEntityPersister.class)
 public class News extends BaseDynaBean {
 
     @Id

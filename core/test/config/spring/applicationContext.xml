@@ -63,6 +63,7 @@
         <property name="basePackage" value="com.fantasy.cms;com.fantasy.framework.lucene;"/>
         <property name="directoryPath" value="${buguIndex.directoryPath}"/>
         <property name="executor" ref="executor"/>
+        <property name="rebuild" value="true"/>
     </bean>
 
     <!-- 文件管理器 -->

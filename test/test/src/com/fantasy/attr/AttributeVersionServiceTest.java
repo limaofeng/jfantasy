@@ -1,6 +1,6 @@
 package com.fantasy.attr;
 
-import com.fantasy.attr.framework.util.VersionUtil;
+import com.fantasy.attr.framework.CustomBeanFactory;
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.service.AttributeService;
 import com.fantasy.attr.storage.service.AttributeTypeService;
@@ -50,6 +50,8 @@ public class AttributeVersionServiceTest {
     private AttributeService attributeService;
     @Autowired
     private UserService userService;
+    @Autowired
+    private CustomBeanFactory customBeanFactory;
 
     @Before
     public void setUp() throws Exception {
@@ -99,14 +101,14 @@ public class AttributeVersionServiceTest {
 
         Article article = articles.get(0);
 
-        Assert.assertEquals(123,VersionUtil.getOgnlUtil(ObjectUtil.find(article.getVersion().getAttributes(),"code","intTest").getAttributeType()).getValue("intTest",article));
+        Assert.assertEquals(123,customBeanFactory.getOgnlUtil(ObjectUtil.find(article.getVersion().getAttributes(),"code","intTest").getAttributeType()).getValue("intTest",article));
 
     }
 
    /* @Test*/
     public void testSave() throws Exception {
 
-        Article article = VersionUtil.createDynaBean(Article.class, "1.0");
+        Article article = customBeanFactory.makeDynaBean(Article.class, "1.0");
         article.setTitle("测试数据标题");
         article.setSummary("测试数据摘要");
 
@@ -114,7 +116,7 @@ public class AttributeVersionServiceTest {
         AttributeType userAttributeType = ObjectUtil.find(article.getVersion().getAttributes(),"code","user").getAttributeType();
 
         //测试普通数据类型
-        VersionUtil.getOgnlUtil(attributeType).setValue("intTest", article, "456");
+        customBeanFactory.getOgnlUtil(attributeType).setValue("intTest", article, "456");
         logger.debug(article);
         this.cmsService.save(article);
         article = this.cmsService.get(article.getId());
@@ -122,10 +124,10 @@ public class AttributeVersionServiceTest {
         Assert.assertEquals(456, OgnlUtil.getInstance().getValue("intTest", article));
 
         //修改普通数据类型
-        VersionUtil.getOgnlUtil(attributeType).setValue("intTest", article, "123");
+        customBeanFactory.getOgnlUtil(attributeType).setValue("intTest", article, "123");
         //测试对象数据类型
-        VersionUtil.getOgnlUtil(userAttributeType).setValue("user", article, "admin");
-        logger.debug(VersionUtil.getOgnlUtil(userAttributeType).getValue("user", article));
+        customBeanFactory.getOgnlUtil(userAttributeType).setValue("user", article, "admin");
+        logger.debug(customBeanFactory.getOgnlUtil(userAttributeType).getValue("user", article));
         Assert.assertEquals(123, OgnlUtil.getInstance().getValue("intTest", article));
         this.cmsService.save(article);
         logger.debug(article);

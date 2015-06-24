@@ -358,6 +358,25 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         }
     }
 
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private PK getIdValue(Object entity) {
+        OgnlUtil ognlUtil = OgnlUtil.getInstance();
+        Field[] idFields = ClassUtil.getDeclaredFields(this.entityClass, Id.class);
+        if (idFields.length == 0) {
+            return null;
+        }
+        if (idFields.length > 1) {
+            IdClass idClass = ClassUtil.getClassGenricType(entityClass, IdClass.class);
+            Serializable id = ClassUtil.newInstance((Class<Serializable>) idClass.value());
+            for (Field idField : idFields) {
+                ognlUtil.setValue(idField.getName(), id, ognlUtil.getValue(idField.getName(), entity));
+            }
+            return (PK) id;
+        } else {
+            return (PK) ClassUtil.getValue(entity, idFields[0].getName());
+        }
+    }
+
     /**
      * 删除对象
      *
@@ -365,7 +384,11 @@ public abstract class HibernateDao<T, PK extends Serializable> {
      */
     public void delete(T entity) {
         Assert.notNull(entity, "entity不能为空");
-        getSession().delete(entity);
+        if(DynaBean.class.isAssignableFrom(entityClass)){
+            getSession().delete(get(getIdValue(entity)));
+        }else {
+            getSession().delete(entity);
+        }
         this.logger.debug("delete entity: {}", entity);
     }
 

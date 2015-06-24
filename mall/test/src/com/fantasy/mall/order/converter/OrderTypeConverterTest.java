@@ -1,5 +1,6 @@
 package com.fantasy.mall.order.converter;
 
+import com.fantasy.attr.framework.CustomBeanFactory;
 import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.AttributeVersion;
@@ -8,7 +9,6 @@ import com.fantasy.attr.storage.service.AttributeService;
 import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.attr.storage.service.ConverterService;
-import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.common.service.AreaService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -28,10 +28,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.util.ArrayList;
@@ -58,6 +57,8 @@ public class OrderTypeConverterTest {
     private DeliveryService deliveryService;
     @Autowired
     private AreaService areaService;
+    @Autowired
+    private CustomBeanFactory customBeanFactory;
 
     @Before
     public void setUp(){
@@ -170,7 +171,7 @@ public class OrderTypeConverterTest {
         orderService.submitOrder(subOrder);
 
         //保存扩展的 order 对象
-        Order order = VersionUtil.createDynaBean(Order.class,"1.0.beta");
+        Order order = customBeanFactory.makeDynaBean(Order.class,"1.0.beta");
         order.setOrderType("TEST");
 
         if(!deliveryTypes.isEmpty()) {
@@ -185,7 +186,7 @@ public class OrderTypeConverterTest {
         order.setShipZipCode("200000");
 
         AttributeType attributeType = order.getVersion().getAttributes().get(0).getAttributeType();
-        OgnlUtil ognlUtil = VersionUtil.getOgnlUtil(attributeType);
+        OgnlUtil ognlUtil = customBeanFactory.getOgnlUtil(attributeType);
         ognlUtil.setValue("testOrder", order, subOrder.getSn());
         Assert.assertNotNull(ognlUtil.getValue("testOrder",order));
 

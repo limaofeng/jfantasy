@@ -1,11 +1,12 @@
 package com.fantasy.framework.struts2.core.interceptor;
 
+import com.fantasy.attr.framework.CustomBeanFactory;
 import com.fantasy.attr.framework.DynaBean;
-import com.fantasy.attr.framework.util.VersionUtil;
 import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.dao.hibernate.PropertyFilter.MatchType;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.struts2.DynaModelDriven;
 import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.asm.AsmUtil;
@@ -388,7 +389,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
             Object parameterObject = parameters.get(paramName + ".version.number") != null ? parameters.get(paramName + ".version.number") : parameters.get("version.number");
             String versionNumber = parameterObject == null ? null : (ClassUtil.isArray(parameterObject) ? Array.get(parameterObject, 0) : parameterObject).toString();
             if (StringUtil.isNotBlank(versionNumber)) {
-                return VersionUtil.makeDynaBean(parameterType.getName(), versionNumber);
+                return getCustomBeanFactory().makeDynaBean(parameterType.getName(), versionNumber);
             } else {
                 return bean;
             }
@@ -412,7 +413,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 Object parameterObject = parameters.get(paramNames[i] + ".version.number") != null ? parameters.get(paramNames[i] + ".version.number") : parameters.get("version.number");
                 String versionNumber = parameterObject == null ? null : (ClassUtil.isArray(parameterObject) ? Array.get(parameterObject, 0) : parameterObject).toString();
                 if (StringUtil.isNotBlank(versionNumber)) {
-                    parameterTypes[0] = VersionUtil.makeClass(parameterType, versionNumber);
+                    parameterTypes[0] = ClassUtil.forName(parameterType.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + versionNumber);
                 }
             }
         }
@@ -468,7 +469,7 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 if (formbean instanceof DynaBean && ((DynaBean) formbean).getVersion() != null) {
                     Attribute attribute = ObjectUtil.find(((DynaBean) formbean).getVersion().getAttributes(), "code", name);
                     if (attribute != null) {
-                        VersionUtil.getOgnlUtil(attribute.getAttributeType()).setValue(name, formbean, value);
+                        getCustomBeanFactory().getOgnlUtil(attribute.getAttributeType()).setValue(name, formbean, value);
                     } else {
                         ognlUtil.setValue(name, ognlValueStack.getContext(), formbean, value);
                     }
@@ -573,6 +574,15 @@ public class ParametersInterceptor extends MethodFilterInterceptor {
                 excludeParams.add(Pattern.compile(pattern));
             }
         }
+    }
+
+    private static CustomBeanFactory customBeanFactory;
+
+    public CustomBeanFactory getCustomBeanFactory() {
+        if (customBeanFactory == null) {
+            return customBeanFactory = SpringContextUtil.getBeanByType(CustomBeanFactory.class);
+        }
+        return customBeanFactory;
     }
 
 }

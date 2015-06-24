@@ -1,6 +1,6 @@
 package com.fantasy.attr.storage.service;
 
-import com.fantasy.attr.framework.util.VersionUtil;
+import com.fantasy.attr.framework.CustomBeanFactory;
 import com.fantasy.attr.storage.bean.*;
 import com.fantasy.attr.storage.dao.CustomBeanDao;
 import com.fantasy.framework.dao.Pager;
@@ -26,6 +26,8 @@ public class CustomBeanService {
     private CustomBeanDefinitionService customBeanDefinitionService;
     @Autowired
     private AttributeVersionService attributeVersionService;
+    @Autowired
+    private CustomBeanFactory customBeanFactory;
 
     public void save(com.fantasy.attr.framework.CustomBean customBean) {
         CustomBeanDefinition definition = customBeanDefinitionService.findUniqueByClassName(customBean.getClass().getName());
@@ -58,8 +60,9 @@ public class CustomBeanService {
                 attributeValue.setTargetId(_customBean.getId());
                 attributeValues.add(attributeValue);
             }
-            String value = VersionUtil.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), customBean, String.class);
+            String value = customBeanFactory.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), customBean, String.class);
             if (StringUtil.isNotBlank(value)) {
+                assert attributeValue != null;
                 attributeValue.setValue(value);
             }
         }
@@ -81,12 +84,13 @@ public class CustomBeanService {
             return null;
         }
         com.fantasy.attr.framework.CustomBean customBean = ClassUtil.newInstance(_customBean.getDefinition().getClassName(), com.fantasy.attr.framework.CustomBean.class);
+        assert customBean != null;
         customBean.setId(_customBean.getId());
         AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(customBean.getClass().getName());
         for (Attribute attribute : version.getAttributes()) {
             AttributeValue attributeValue = ObjectUtil.find(_customBean.getAttributeValues(), "attribute.code", attribute.getCode());
             if (attributeValue != null) {
-                VersionUtil.getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), customBean, attributeValue.getValue());
+                customBeanFactory.getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), customBean, attributeValue.getValue());
             }
         }
         return customBean;

@@ -142,8 +142,9 @@ public class OgnlUtil {
         Ognl.setValue(compile(name), context, root, value);
     }
 
-    public Object getValue(String key, Object root) {
-        return getValue(key, createDefaultContext(root), root);
+    @SuppressWarnings({"unchecked"})
+    public <T> T getValue(String key, Object root) {
+        return (T)getValue(key, createDefaultContext(root), root);
     }
 
     public Object getValue(String name, Map<String, Object> context, Object root) {

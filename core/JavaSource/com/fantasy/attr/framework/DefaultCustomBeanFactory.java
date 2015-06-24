@@ -4,6 +4,7 @@ import com.fantasy.attr.framework.converter.PrimitiveTypeConverter;
 import com.fantasy.attr.framework.util.AttributeTypeUtils;
 import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.attr.storage.service.AttributeVersionService;
@@ -12,23 +13,26 @@ import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.asm.AsmUtil;
 import com.fantasy.framework.util.asm.Property;
-import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.*;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fasterxml.jackson.core.type.TypeReference;
+import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * 默认的自定义Bean工厂
@@ -46,30 +50,28 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     @Autowired
     private ConverterService converterService;
 
+    private ConcurrentMap<String, AttributeVersion> versions = new ConcurrentHashMap<String, AttributeVersion>();
+
     @Override
     public void afterPropertiesSet() throws Exception {
-        PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            this.initAttributeTypes();
-            List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
-            for (AttributeVersion version : versions) {
-                if (ClassUtil.forName(version.getTargetClassName()) == null) {
-                    LOG.debug("target:" + version.getTargetClassName());
-                    continue;
+        JdbcUtil.transaction(new JdbcUtil.Callback<Void>() {
+            @Override
+            public Void run() {
+                DefaultCustomBeanFactory.this.initAttributeTypes();
+                List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
+                for (AttributeVersion version : versions) {
+                    if (ClassUtil.forName(version.getTargetClassName()) == null) {
+                        LOG.debug("target:" + version.getTargetClassName());
+                        continue;
+                    }
+                    if (ClassUtil.forName(version.getClassName()) == null) {
+                        continue;
+                    }
+                    makeClass(version);
                 }
-                if (ClassUtil.forName(version.getClassName()) != null) {
-                    continue;
-                }
-                makeClass(version);
+                return null;
             }
-            transactionManager.commit(status);
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            transactionManager.rollback(status);
-        }
+        }, TransactionDefinition.PROPAGATION_REQUIRED);
     }
 
     public void initAttributeTypes() {
@@ -96,32 +98,36 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     }
 
     public Class makeClass(AttributeVersion version) {
-        String className = version.getClassName();
-        String superClass = version.getType() == AttributeVersion.Type.custom ? Object.class.getName() : version.getTargetClassName();
-        List<Property> properties = new ArrayList<Property>();
-        for (Attribute attribute : version.getAttributes()) {
-            String attrClassName = attribute.getAttributeType().getDataType();
-            Class<?> javaType = ClassUtil.forName(attrClassName);
-            if (javaType == null) {
-                LOG.debug(" javaType : " + attrClassName + " load Failure ！ ");
-                //如果class为数组的话，取原对象
-                boolean array = RegexpUtil.isMatch(attrClassName, "^\\[L[a-zA-Z._]+;$");
-                javaType = makeClass(RegexpUtil.replace(attrClassName, "^\\[L|;$", ""));
-                javaType = array ? Array.newInstance(javaType, 0).getClass() : javaType;
+        try {
+            String className = version.getClassName();
+            String superClass = version.getType() == AttributeVersion.Type.custom ? Object.class.getName() : version.getTargetClassName();
+            List<Property> properties = new ArrayList<Property>();
+            for (Attribute attribute : version.getAttributes()) {
+                String attrClassName = attribute.getAttributeType().getDataType();
+                Class<?> javaType = ClassUtil.forName(attrClassName);
+                if (javaType == null) {
+                    LOG.debug(" javaType : " + attrClassName + " load Failure ！ ");
+                    //如果class为数组的话，取原对象
+                    boolean array = RegexpUtil.isMatch(attrClassName, "^\\[L[a-zA-Z._]+;$");
+                    javaType = makeClass(RegexpUtil.replace(attrClassName, "^\\[L|;$", ""));
+                    javaType = array ? Array.newInstance(javaType, 0).getClass() : javaType;
+                }
+                if (javaType == null) {
+                    continue;
+                }
+                properties.add(new Property(attribute.getCode(), javaType));
             }
-            if (javaType == null) {
-                continue;
+            Class[] iters = new Class[0];
+            if (version.getType() == AttributeVersion.Type.custom) {
+                properties.add(new Property("id", Long.class));
+                iters = new Class[]{CustomBean.class};
             }
-            properties.add(new Property(attribute.getCode(), javaType));
+            Class clazz = AsmUtil.makeClass(className, superClass, iters, properties.toArray(new Property[properties.size()]));
+            LOG.debug("dynaBeanClass:" + clazz);
+            return clazz;
+        } finally {
+            versions.put(version.getClassName(), version);
         }
-        Class[] iters = new Class[0];
-        if (version.getType() == AttributeVersion.Type.custom) {
-            properties.add(new Property("id", Long.class));
-            iters = new Class[]{CustomBean.class};
-        }
-        Class clazz = AsmUtil.makeClass(className, superClass, iters, properties.toArray(new Property[properties.size()]));
-        LOG.debug("dynaBeanClass:" + clazz);
-        return clazz;
     }
 
     private Class<?> makeClass(String attrClassName) {
@@ -146,7 +152,93 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
 
     @Override
     public void removeVersion(AttributeVersion version) {
-        FantasyClassLoader.getClassLoader().removeClass(version.getClassName());
+        try {
+            FantasyClassLoader.getClassLoader().removeClass(version.getClassName());
+        } finally {
+            versions.remove(version.getClassName());
+        }
+    }
+
+    public DynaBean makeDynaBean(DynaBean bean) {
+        if (bean.getVersion() == null) {
+            return bean;
+        }
+        DynaBean dynaBean = makeDynaBean(bean.getVersion().getTargetClassName(), bean.getVersion().getNumber());
+        return createDynaBean(dynaBean, bean);
+    }
+
+    public DynaBean makeDynaBean(String className, String number) {
+        AttributeVersion version = getVersion(className, number);
+        assert version != null;
+        return createDynaBean(ClassUtil.forName(version.getClassName()), version);
+    }
+
+    private AttributeVersion getVersion(String className, String number) {
+        return versions.get(className + ClassUtil.CGLIB_CLASS_SEPARATOR + number);
+    }
+
+    public DynaBean createDynaBean(Class clazz, AttributeVersion version) {
+        DynaBean dynaBean = newInstance(clazz);
+        dynaBean.setVersion(version);
+        return dynaBean;
+    }
+
+    private DynaBean newInstance(Class clazz) {
+        return (DynaBean) ClassUtil.newInstance(clazz);
+    }
+
+    private DynaBean createDynaBean(DynaBean dynaBean, DynaBean bean) {
+        dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
+        List<AttributeValue> attributeValue = StringUtil.isBlank(bean.getAttributeValueStore()) ? bean.getAttributeValues() : JSON.deserialize(bean.getAttributeValueStore(), new TypeReference<List<AttributeValue>>() {
+        });
+        for (Attribute attribute : bean.getVersion().getAttributes()) {
+            AttributeValue sourceValue = ObjectUtil.find(attributeValue, "attribute.code", attribute.getCode());
+            if (sourceValue != null && StringUtil.isNotBlank(sourceValue.getValue())) {
+                getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), dynaBean, sourceValue.getValue());
+            }
+        }
+        BeanUtil.copyProperties(dynaBean, bean, "version", "attributeValues");
+        return dynaBean;
+    }
+
+    public Attribute getAttribute(Class<?> entityClass, String propertyName) {
+        List<AttributeVersion> versions = getVersionsByEntityClass(entityClass);
+        for (AttributeVersion version : versions) {
+            AttributeVersion attributeVersion = getVersion(entityClass.getName(), version.getNumber());
+            String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
+            assert attributeVersion != null;
+            Attribute attribute = ObjectUtil.find(attributeVersion.getAttributes(), "code", simpleName);
+            if (attribute != null) {
+                com.fantasy.framework.util.reflect.Property property = ClassUtil.getProperty(ClassUtil.forName(attribute.getAttributeType().getDataType()), RegexpUtil.replaceFirst(propertyName, simpleName + ".", ""));
+                if (property != null) {
+                    return attribute;
+                }
+            }
+        }
+        return null;
+    }
+
+    private List<AttributeVersion> getVersionsByEntityClass(Class<?> entityClass) {
+        List<AttributeVersion> versions = new ArrayList<AttributeVersion>();
+        for (AttributeVersion version : this.versions.values()) {
+            if (entityClass.getName().equals(version.getTargetClassName())) {
+                versions.add(version);
+            }
+        }
+        return versions;
+    }
+
+    public OgnlUtil getOgnlUtil(AttributeType attributeType) {
+        if (!OgnlUtil.containsKey("attr-" + attributeType.getId())) {
+            OgnlUtil.getInstance("attr-" + attributeType.getId()).addTypeConverter(ClassUtil.forName(attributeType.getDataType()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(attributeType.getConverter().getTypeConverter()), SpringContextUtil.AUTOWIRE_BY_TYPE));
+        }
+        return OgnlUtil.getInstance("attr-" + attributeType.getId());
+    }
+
+    @SuppressWarnings(value = "unchecked")
+    @Override
+    public <T> T makeDynaBean(Class<T> clazz, String number) {
+        return (T)makeDynaBean(clazz.getName(),number);
     }
 
 }
