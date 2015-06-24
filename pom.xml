@@ -64,8 +64,35 @@
         </repository>
     </distributionManagement>
 
+    <profiles>
+        <profile>
+            <id>dev</id>
+            <properties>
+                <env>dev</env>
+            </properties>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <env>test</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>production</id>
+            <properties>
+                <env>production</env>
+            </properties>
+        </profile>
+    </profiles>
+
     <!-- 构建过程的设置 -->
     <build>
+        <filters>
+            <filter>filters/filter-${env}-env.properties</filter>
+        </filters>
         <extensions>
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
@@ -77,6 +104,7 @@
         <resources>
             <resource>
                 <directory>resources</directory>
+                <filtering>true</filtering>
             </resource>
             <resource>
                 <directory>JavaSource</directory>
@@ -93,6 +121,7 @@
         <testResources>
             <testResource>
                 <directory>test/config</directory>
+                <filtering>true</filtering>
             </testResource>
             <testResource>
                 <directory>test/src</directory>

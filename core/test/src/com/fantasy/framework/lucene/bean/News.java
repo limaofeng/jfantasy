@@ -1,6 +1,6 @@
 package com.fantasy.framework.lucene.bean;
 
-import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fantasy.framework.lucene.annotations.Indexed;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Indexed
 @Table(name = "TEST_NEWS")
-public class News extends BaseBusEntity{
+public class News extends BaseDynaBean {
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
