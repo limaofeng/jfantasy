@@ -720,7 +720,7 @@
  */
 ///core/JavaSource/com/fantasy/attr/framework/CustomBeanFactory.java
 /**
- *  自定义表单
+ * 自定义表单
  */
 ///core/JavaSource/com/fantasy/attr/framework/DefaultCustomBeanFactory.java
 /**
@@ -779,6 +779,13 @@
      * @param pjp    ProceedingJoinPoint
      * @param entity hibernateEntity
      * @return object
+     * @throws Throwable
+     */
+/**
+     * find 时，对动态Bean 添加代理
+     *
+     * @param pjp ProceedingJoinPoint
+     * @return Object
      * @throws Throwable
      */
 ///core/JavaSource/com/fantasy/attr/storage/BaseDynaBean.java
