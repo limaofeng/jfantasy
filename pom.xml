@@ -104,6 +104,15 @@
         <resources>
             <resource>
                 <directory>resources</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+            </resource>
+            <resource>
+                <directory>resources</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
                 <filtering>true</filtering>
             </resource>
             <resource>
@@ -121,6 +130,15 @@
         <testResources>
             <testResource>
                 <directory>test/config</directory>
+                <excludes>
+                    <exclude>**/*.properties</exclude>
+                </excludes>
+            </testResource>
+            <testResource>
+                <directory>test/config</directory>
+                <includes>
+                    <include>**/*.properties</include>
+                </includes>
                 <filtering>true</filtering>
             </testResource>
             <testResource>
