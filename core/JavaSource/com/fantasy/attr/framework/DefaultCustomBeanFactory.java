@@ -237,7 +237,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
 
     @SuppressWarnings(value = "unchecked")
     @Override
-    public <T> T makeDynaBean(Class<T> clazz, String number) {
+    public <T extends DynaBean> T makeDynaBean(Class<T> clazz, String number) {
         return (T)makeDynaBean(clazz.getName(),number);
     }
 
