@@ -11,14 +11,17 @@ import com.fantasy.framework.lucene.mapper.FieldUtil;
 import com.fantasy.framework.lucene.mapper.MapperUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.ognl.OgnlUtil;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.*;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -34,8 +37,12 @@ public abstract class BuguSearcher<T> {
     private static final Logger logger = Logger.getLogger(BuguSearcher.class);
     private Class<T> entityClass;
     private String idName;
+    private LoadEntityMode loadMode;
 
-    public BuguSearcher() {
+    private LuceneDao<T> luceneDao;
+
+    protected BuguSearcher(LoadEntityMode loadMode) {
+        this.loadMode = loadMode;
         // 通过泛型获取需要查询的对象
         this.entityClass = (Class<T>) ClassUtil.getSuperClassGenricType(ClassUtil.getRealClass(getClass()));
         try {
@@ -44,6 +51,11 @@ public abstract class BuguSearcher<T> {
         } catch (IdException e) {
             logger.error(e.getMessage(), e);
         }
+        this.luceneDao = DaoCache.getInstance().get(this.entityClass);
+    }
+
+    protected BuguSearcher() {
+        this(LoadEntityMode.dao);
     }
 
     /**
@@ -83,14 +95,13 @@ public abstract class BuguSearcher<T> {
      */
     public List<T> search(Query query, int size) {
         IndexSearcher searcher = open();
-        final LuceneDao<T> dao = DaoCache.getInstance().get(this.entityClass);
         List<T> data = new ArrayList<T>();
         try {
             TopDocs topDocs = searcher.search(query, size);
             for (int i = 0; i < topDocs.scoreDocs.length; i++) {
                 ScoreDoc sdoc = topDocs.scoreDocs[i];
-                final Document doc = searcher.doc(sdoc.doc);
-                data.add(dao.get(doc.get(idName)));
+                Document doc = searcher.doc(sdoc.doc);
+                data.add(this.build(doc));
             }
         } catch (IOException e) {
             logger.error(e.getMessage(), e);
@@ -111,7 +122,6 @@ public abstract class BuguSearcher<T> {
     public Pager<T> search(Pager<T> pager, Query query, BuguHighlighter highlighter) {
         IndexSearcher searcher = open();
         int between = 0;
-        final LuceneDao<T> dao = DaoCache.getInstance().get(this.entityClass);
         try {
             TopDocs hits;
             if (pager.isOrderBySetted()) {// TODO 多重排序等HIbernateDao优化好之后再实现
@@ -129,8 +139,8 @@ public abstract class BuguSearcher<T> {
             List<T> data = new ArrayList<T>();
             for (int i = (pager.getFirst() - between); i < hits.scoreDocs.length && hits.totalHits > 0; i++) {
                 ScoreDoc sdoc = hits.scoreDocs[i];
-                final Document doc = searcher.doc(sdoc.doc);
-                data.add(dao.get(doc.get(idName)));
+                Document doc = searcher.doc(sdoc.doc);
+                data.add(this.build(doc));
             }
             pager.setPageItems(data);
             if (highlighter != null) {
@@ -220,6 +230,31 @@ public abstract class BuguSearcher<T> {
                 }
             }
         }
+    }
+
+    private T build(Document doc) {
+        if (LoadEntityMode.dao == this.loadMode) {
+            return this.luceneDao.get(doc.get(idName));
+        } else {
+            T object = ClassUtil.newInstance(this.entityClass);
+            for (Fieldable fieldable : doc.getFields()) {
+                try {
+                    Field field = FieldsCache.getInstance().getField(this.entityClass, fieldable.name());
+                    if (Date.class.isAssignableFrom(field.getType())) {
+                        OgnlUtil.getInstance().setValue(fieldable.name(), object, new Date(Long.valueOf(fieldable.stringValue())));
+                    } else {
+                        OgnlUtil.getInstance().setValue(fieldable.name(), object, fieldable.stringValue());
+                    }
+                } catch (FieldException e) {
+                    logger.error(e.getMessage(), e);
+                }
+            }
+            return object;
+        }
+    }
+
+    public enum LoadEntityMode {
+        lucene, dao
     }
 
 }
