@@ -23,6 +23,7 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -64,7 +65,7 @@ public class BuguIndex implements InitializingBean {
     /**
      * 线程池
      */
-    private Executor executor;
+    private SchedulingTaskExecutor executor;
     /**
      * 定时任务
      */
@@ -121,7 +122,7 @@ public class BuguIndex implements InitializingBean {
                     BuguIndex.this.rebuild();
                 }
 
-            });
+            }, 1000 * 60);
         }
     }
 
@@ -145,9 +146,6 @@ public class BuguIndex implements InitializingBean {
      * 初始化方法
      */
     public void open() {
-        if(this.executor == null){
-            this.executor = Executors.newFixedThreadPool(50);
-        }
         this.scheduler = Executors.newSingleThreadScheduledExecutor();
         this.scheduler.scheduleAtFixedRate(new IndexReopenTask(), this.period, this.period, TimeUnit.MILLISECONDS);
         if (this.clusterConfig != null) {
@@ -242,7 +240,7 @@ public class BuguIndex implements InitializingBean {
         return FileUtil.createFolder(StringUtil.defaultValue(PathUtil.webinf(), PathUtil.classes()) + this.directoryPath + remotePath);
     }
 
-    public void setExecutor(Executor executor) {
+    public void setExecutor(SchedulingTaskExecutor executor) {
         this.executor = executor;
     }
 

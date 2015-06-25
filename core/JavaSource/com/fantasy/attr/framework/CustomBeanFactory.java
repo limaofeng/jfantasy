@@ -1,5 +1,6 @@
 package com.fantasy.attr.framework;
 
+import com.fantasy.attr.storage.bean.Attribute;
 import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.util.ognl.OgnlUtil;
@@ -19,4 +20,7 @@ public interface CustomBeanFactory {
 
     DynaBean makeDynaBean(String className, String number);
 
+    DynaBean makeDynaBean(DynaBean dynaBean);
+
+    Attribute getAttribute(Class<?> entityClass, String propertyName);
 }

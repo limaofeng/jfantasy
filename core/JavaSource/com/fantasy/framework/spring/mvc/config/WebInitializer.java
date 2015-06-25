@@ -105,7 +105,7 @@ public class WebInitializer implements WebApplicationInitializer {
         Class<Filter> struts2Class = ClassUtil.forName("org.apache.struts2.dispatcher.ng.filter.StrutsPrepareAndExecuteFilter");
         if (struts2Class != null) {
             //Freemarker 模板中使用struts2标签
-            Servlet jspSupportServlet = (Servlet) ClassUtil.newInstance("org.apache.struts2.views.JspSupportServlet");
+            Servlet jspSupportServlet = ClassUtil.newInstance("org.apache.struts2.views.JspSupportServlet");
             dynamic = servletContext.addServlet("jspSupportServlet", jspSupportServlet);
             dynamic.setLoadOnStartup(2);
             //添加struts2

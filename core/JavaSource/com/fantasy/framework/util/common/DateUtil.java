@@ -38,7 +38,7 @@ public class DateUtil {
          */
         String dateDriverClass = SimpleDateDriver.class.getName();
         dateDriverClass = PropertiesHelper.load("props/application.properties").getProperty("util.DateDriver", dateDriverClass);
-        dateDriver = (DateDriver) ClassUtil.newInstance(dateDriverClass);
+        dateDriver = ClassUtil.newInstance(dateDriverClass);
     }
 
     public static String formatRfc822Date(Date expirationTime) {

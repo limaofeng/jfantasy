@@ -66,6 +66,12 @@ public class CustomBeanTypeConverterTest {
         //attributeTypeService.save(Array.newInstance(ClassUtil.forName(className)).getClass(), "UserDel", "UserDel", CustomBeanTypeConverter.class);
         //定义数据版本 添加属性
         attributeVersionService.save(Article.class.getName(),"fantasy_article_v1",AttributeUtils.bean("moneys","UserDelBean","", ClassUtil.forName(className)));
+        if(cmsService.get("test") == null) {
+            ArticleCategory category = new ArticleCategory();
+            category.setCode("test");
+            category.setName("用于测试的文章分类");
+            cmsService.save(category);
+        }
     }
 
 

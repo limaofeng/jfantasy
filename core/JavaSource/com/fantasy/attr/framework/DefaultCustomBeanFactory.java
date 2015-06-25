@@ -21,9 +21,12 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionDefinition;
 
@@ -33,12 +36,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 默认的自定义Bean工厂
  */
 @Component
 @Lazy(false)
+@Scope(proxyMode = ScopedProxyMode.NO)
 public class DefaultCustomBeanFactory implements CustomBeanFactory, InitializingBean {
 
     private static final Log LOG = LogFactory.getLog(DefaultCustomBeanFactory.class);
@@ -52,22 +58,26 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
 
     private ConcurrentMap<String, AttributeVersion> versions = new ConcurrentHashMap<String, AttributeVersion>();
 
+    private static Lock lock = new ReentrantLock();
+
     @Override
     public void afterPropertiesSet() throws Exception {
         JdbcUtil.transaction(new JdbcUtil.Callback<Void>() {
             @Override
             public Void run() {
-                DefaultCustomBeanFactory.this.initAttributeTypes();
-                List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
-                for (AttributeVersion version : versions) {
-                    if (ClassUtil.forName(version.getTargetClassName()) == null) {
-                        LOG.debug("target:" + version.getTargetClassName());
-                        continue;
+                try {
+                    lock.lock();
+                    DefaultCustomBeanFactory.this.initAttributeTypes();
+                    List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
+                    for (AttributeVersion version : versions) {
+                        if (ClassUtil.forName(version.getTargetClassName()) == null) {
+                            LOG.debug("target:" + version.getTargetClassName());
+                            continue;
+                        }
+                        makeClass(version);
                     }
-                    if (ClassUtil.forName(version.getClassName()) == null) {
-                        continue;
-                    }
-                    makeClass(version);
+                } finally {
+                    lock.unlock();
                 }
                 return null;
             }
@@ -116,6 +126,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
                     continue;
                 }
                 properties.add(new Property(attribute.getCode(), javaType));
+                Hibernate.initialize(attribute.getAttributeType().getConverter());
             }
             Class[] iters = new Class[0];
             if (version.getType() == AttributeVersion.Type.custom) {
@@ -126,7 +137,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
             LOG.debug("dynaBeanClass:" + clazz);
             return clazz;
         } finally {
-            versions.put(version.getClassName(), version);
+            this.versions.put(version.getClassName(), version);
         }
     }
 
@@ -238,7 +249,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     @SuppressWarnings(value = "unchecked")
     @Override
     public <T extends DynaBean> T makeDynaBean(Class<T> clazz, String number) {
-        return (T)makeDynaBean(clazz.getName(),number);
+        return (T) makeDynaBean(clazz.getName(), number);
     }
 
 }

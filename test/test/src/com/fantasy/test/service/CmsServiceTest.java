@@ -29,7 +29,7 @@ public class CmsServiceTest {
 
     @Before
     public void setUp() throws Exception{
-        if(cmsService.get("category") == null) {
+        if(cmsService.get("test") == null) {
             ArticleCategory category = new ArticleCategory();
             category.setCode("test");
             category.setName("用于测试的文章分类");

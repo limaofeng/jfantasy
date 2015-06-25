@@ -1,6 +1,6 @@
 package com.fantasy.attr.interceptor;
 
-import com.fantasy.attr.framework.DefaultCustomBeanFactory;
+import com.fantasy.attr.framework.CustomBeanFactory;
 import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.attr.framework.query.DynaBeanQuery;
 import com.fantasy.attr.framework.query.DynaBeanQueryManager;
@@ -41,7 +41,7 @@ public class AttributeValueInterceptor {
     private final static MethodProxy _method_get = ClassUtil.getMethodProxy(HibernateDao.class, "get", Serializable.class);
 
     @Autowired
-    private DefaultCustomBeanFactory customBeanFactory;
+    private CustomBeanFactory customBeanFactory;
 
     /**
      * findPager 时，对动态Bean 添加代理
