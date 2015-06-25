@@ -22,7 +22,7 @@ public class AttributeVersionEventListener implements DeleteEventListener {
     @Override
     public void onDelete(DeleteEvent event) throws HibernateException {
         Class<?> clazz = ClassUtil.forName(event.getEntityName());
-        clazz = ObjectUtil.defaultValue(clazz,event.getObject().getClass());
+        clazz = ObjectUtil.defaultValue(clazz, event.getObject().getClass());
         if (AttributeVersion.class.isAssignableFrom(clazz)) {
             System.out.println(">>>>>>>");
         }
@@ -32,10 +32,11 @@ public class AttributeVersionEventListener implements DeleteEventListener {
     @Override
     public void onDelete(DeleteEvent event, Set transientEntities) throws HibernateException {
         Class<?> clazz = ClassUtil.forName(event.getEntityName());
+        assert clazz != null;
         if (AttributeVersion.class.isAssignableFrom(clazz)) {
-            AttributeVersion version = (AttributeVersion)event.getObject();
-            for(Attribute attribute : version.getAttributes()){
-                if(!attribute.getNotTemporary()){
+            AttributeVersion version = (AttributeVersion) event.getObject();
+            for (Attribute attribute : version.getAttributes()) {
+                if (!attribute.getNotTemporary()) {
                     attributeDao.delete(attribute.getId());
                 }
             }

@@ -9,8 +9,6 @@ import org.hibernate.persister.entity.EntityPersister;
 
 public class VersionChangedEventListener implements PostInsertEventListener, PostUpdateEventListener, PostDeleteEventListener {
 
-//    private static final Log LOG = LogFactory.getLog(VersionChangedEventListener.class);
-
     private CustomBeanFactory customBeanFactory;
 
     public CustomBeanFactory getCustomBeanFactory() {
@@ -21,6 +19,7 @@ public class VersionChangedEventListener implements PostInsertEventListener, Pos
     public void onPostDelete(PostDeleteEvent event) {
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
+        assert clazz != null;
         if (AttributeVersion.class.isAssignableFrom(clazz)) {
             getCustomBeanFactory().removeVersion((AttributeVersion) event.getEntity());
         }
@@ -30,6 +29,7 @@ public class VersionChangedEventListener implements PostInsertEventListener, Pos
     public void onPostInsert(PostInsertEvent event) {
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
+        assert clazz != null;
         if (AttributeVersion.class.isAssignableFrom(clazz)) {
             getCustomBeanFactory().loadVersion((AttributeVersion) event.getEntity());
         }
@@ -39,6 +39,7 @@ public class VersionChangedEventListener implements PostInsertEventListener, Pos
     public void onPostUpdate(PostUpdateEvent event) {
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
+        assert clazz != null;
         if (AttributeVersion.class.isAssignableFrom(clazz)) {
             getCustomBeanFactory().loadVersion((AttributeVersion) event.getEntity());
         }
