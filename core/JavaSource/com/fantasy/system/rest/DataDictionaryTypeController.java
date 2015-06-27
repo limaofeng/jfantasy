@@ -21,7 +21,7 @@ public class DataDictionaryTypeController {
 
     /**
      * @api {post} /ddts   添加分类
-     * @apiVersion 3.3.2
+     * @apiVersion 3.3.3
      * @apiName createDDT
      * @apiGroup 数据字典
      * @apiDescription 通过该接口, 可以添加新的数据字典分类。
@@ -38,7 +38,7 @@ public class DataDictionaryTypeController {
 
     /**
      * @api {get} /ddts/:code   获取分类
-     * @apiVersion 3.3.2
+     * @apiVersion 3.3.3
      * @apiName getDDT
      * @apiGroup 数据字典
      * @apiDescription 通过该接口, 可以获取<code>code</code>对应的字典分类信息。
@@ -54,7 +54,7 @@ public class DataDictionaryTypeController {
 
     /**
      * @api {get} /ddts/:code/dds  获取分类下的字典项
-     * @apiVersion 3.3.2
+     * @apiVersion 3.3.3
      * @apiName getDDSBYDDTS
      * @apiGroup 数据字典
      * @apiDescription 通过该接口, 可以获取<code>code</code>对应的所有字典信息。
@@ -80,7 +80,7 @@ public class DataDictionaryTypeController {
 
     /**
      * @api {delete} /ddts/:code   删除分类
-     * @apiVersion 3.3.2
+     * @apiVersion 3.3.3
      * @apiName deleteDdt
      * @apiGroup 数据字典
      * @apiDescription 通过该接口删除数据字典分类。
