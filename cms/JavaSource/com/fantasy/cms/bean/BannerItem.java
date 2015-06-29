@@ -57,7 +57,7 @@ public class BannerItem extends BaseBusEntity {
     private Integer sort;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BANNER_ID")
+    @JoinColumn(name = "BANNER_CODE")
     private Banner banner;
 
     public Long getId() {

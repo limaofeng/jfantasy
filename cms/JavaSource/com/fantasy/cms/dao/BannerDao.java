@@ -6,7 +6,7 @@ import com.fantasy.cms.bean.Banner;
 import com.fantasy.framework.dao.hibernate.HibernateDao;
 
 @Repository
-public class BannerDao extends HibernateDao<Banner, Long>{
+public class BannerDao extends HibernateDao<Banner, String>{
 
 	
 	

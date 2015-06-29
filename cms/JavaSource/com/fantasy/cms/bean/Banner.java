@@ -2,9 +2,8 @@ package com.fantasy.cms.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.List;
@@ -23,15 +22,10 @@ import java.util.List;
 public class Banner extends BaseBusEntity {
 
     private static final long serialVersionUID = -5628208241667269397L;
-
-    @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-    private Long id;
     /**
      * 唯一编码
      */
+    @Id
     @Column(name = "CODE", length = 20, unique = true, nullable = false)
     private String key;
     /**
@@ -56,14 +50,6 @@ public class Banner extends BaseBusEntity {
     @OrderBy("sort ASC")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<BannerItem> bannerItems;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getKey() {
         return key;
@@ -108,8 +94,7 @@ public class Banner extends BaseBusEntity {
     @Override
     public String toString() {
         return "Banner{" +
-                "id=" + id +
-                ", key='" + key + '\'' +
+                "key='" + key + '\'' +
                 ", name='" + name + '\'' +
                 ", size='" + size + '\'' +
                 ", description='" + description + '\'' +

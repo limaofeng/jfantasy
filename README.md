@@ -17,4 +17,4 @@ fantasy-core 的功能
 生成 Rest Api
 -------------
 >cd doc
->apidoc -i ../ -o out/ -t template/
+>apidoc -o out/ -t template/
