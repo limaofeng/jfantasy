@@ -7,7 +7,6 @@ import com.fantasy.wx.framework.message.content.*;
 import com.fantasy.wx.framework.message.user.Group;
 import com.fantasy.wx.framework.message.user.OpenIdList;
 import com.fantasy.wx.framework.message.user.User;
-import com.fantasy.wx.framework.oauth2.AccessToken;
 import com.fantasy.wx.framework.oauth2.Scope;
 import com.fantasy.wx.framework.session.AccountDetails;
 import com.fantasy.wx.framework.session.WeiXinSession;
@@ -269,14 +268,14 @@ public interface WeiXinCoreHelper {
     String oauth2buildAuthorizationUrl(WeiXinSession session, String redirectUri, Scope scope, String state) throws WeiXinException;
 
     /**
-     * 通过 accessToken 换取用户信息
+     * 通过 oauth2 的 code 换取用户信息
      *
      * @param session     微信号session对象
-     * @param accessToken 安全连接的用户授权token
+     * @param code    安全连接返回的code
      * @return User
      * @throws WeiXinException
      */
-    User getUser(WeiXinSession session, AccessToken accessToken) throws WeiXinException;
+    User getOauth2User(WeiXinSession session, String code) throws WeiXinException;
 
     /**
      * 通过 openId 获取用户的分组
@@ -287,16 +286,6 @@ public interface WeiXinCoreHelper {
      * @throws WeiXinException
      */
     Long getGroupIdByUserId(WeiXinSession session, String userId) throws WeiXinException;
-
-    /**
-     * 通过code换取网页授权access_token
-     *
-     * @param session 微信号session对象
-     * @param code    安全连接返回的code
-     * @return AccessToken
-     * @throws WeiXinException
-     */
-    AccessToken oauth2getAccessToken(WeiXinSession session, String code) throws WeiXinException;
 
     /**
      * 刷新菜单配置

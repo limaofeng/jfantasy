@@ -143,7 +143,7 @@ public interface WeiXinSession {
      * @param code 安全链接code
      * @return User
      */
-    User getAuthorizedUser(String code);
+    User getOauth2User(String code);
 
     /**
      * 获取安全连接的授权用户

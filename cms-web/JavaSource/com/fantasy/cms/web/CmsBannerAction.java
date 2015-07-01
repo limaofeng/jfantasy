@@ -63,7 +63,7 @@ public class CmsBannerAction extends ActionSupport {
      * @param id
      * @return
      */
-    public String edit(Long id) {
+    public String edit(String id) {
         this.attrs.put("banner", this.bannerService.get(id));
         return SUCCESS;
     }
@@ -75,7 +75,7 @@ public class CmsBannerAction extends ActionSupport {
      * @return
      */
 
-    public String delete(Long... ids) {
+    public String delete(String... ids) {
         this.bannerService.delete(ids);
         return JSONDATA;
     }

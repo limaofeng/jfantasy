@@ -62,7 +62,7 @@ public class BannerAction extends ActionSupport {
      * @param id
      * @return
      */
-    public String view(Long id) {
+    public String view(String id) {
         this.attrs.put(ROOT, this.bannerService.get(id));
         return SUCCESS;
     }
@@ -74,7 +74,7 @@ public class BannerAction extends ActionSupport {
      * @return
      */
 
-    public String delete(Long... id) {
+    public String delete(String... id) {
         this.bannerService.delete(id);
         return SUCCESS;
     }

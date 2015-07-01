@@ -235,9 +235,9 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
-    public User getAuthorizedUser(String code) {
+    public User getOauth2User(String code) {
         try {
-            return this.weiXinCoreHelper.getUser(this, this.weiXinCoreHelper.oauth2getAccessToken(this, code));
+            return this.weiXinCoreHelper.getOauth2User(this, code);
         } catch (WeiXinException e) {
             LOG.error(e.getMessage(), e);
             return null;

@@ -60,7 +60,7 @@ public class BannerServiceTest {
     }
 
     public void testSave() throws Exception {
-        Banner banner = this.bannerService.findUniqueByKey("JUNIT_TEST");
+        Banner banner = this.bannerService.get("JUNIT_TEST");
         if (banner != null) {
             this.testDelete();
         }
@@ -109,7 +109,7 @@ public class BannerServiceTest {
 
         logger.debug(banner);
 
-        Assert.assertNotNull(banner.getId());
+        Assert.assertNotNull(banner.getKey());
 
         Assert.assertEquals(2, banner.getBannerItems().size());
 
@@ -117,11 +117,11 @@ public class BannerServiceTest {
 
     @Test
     public void testGet() throws Exception {
-        Banner banner = this.bannerService.findUniqueByKey("JUNIT_TEST");
+        Banner banner = this.bannerService.get("JUNIT_TEST");
 
         Assert.assertNotNull(banner);
 
-        banner = this.bannerService.get(banner.getId());
+        banner = this.bannerService.get(banner.getKey());
 
         Assert.assertNotNull(banner);
 
@@ -133,22 +133,22 @@ public class BannerServiceTest {
     }
 
     public void testDelete() throws Exception {
-        Banner banner = this.bannerService.findUniqueByKey("JUNIT_TEST");
+        Banner banner = this.bannerService.get("JUNIT_TEST");
 
         Assert.assertNotNull(banner);
 
-        this.bannerService.delete(banner.getId());
+        this.bannerService.delete(banner.getKey());
     }
 
     @Test
     public void testBannerKeyUnique() throws Exception {
-        Banner banner = this.bannerService.findUniqueByKey("JUNIT_TEST");
+        Banner banner = this.bannerService.get("JUNIT_TEST");
 
-        Assert.assertTrue(this.bannerService.bannerKeyUnique(banner.getKey(),banner.getId()));
+        Assert.assertTrue(this.bannerService.bannerKeyUnique(banner.getKey()));
 
-        Assert.assertTrue(this.bannerService.bannerKeyUnique("TEST-XXXX",banner.getId()));
+        Assert.assertTrue(this.bannerService.bannerKeyUnique("TEST-XXXX"));
 
-        Assert.assertFalse(this.bannerService.bannerKeyUnique(banner.getKey(), 0l));
+        Assert.assertFalse(this.bannerService.bannerKeyUnique(banner.getKey()));
     }
 
 }

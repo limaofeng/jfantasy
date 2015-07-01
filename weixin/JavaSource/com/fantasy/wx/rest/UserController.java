@@ -59,21 +59,21 @@ public class UserController {
     }
 
     /**
-     * @api {get} /weixin/user/authorized/:code  通过安全code获取粉丝
+     * @api {get} /weixin/user/oauth2/:code  通过安全code获取粉丝
      * @apiVersion 3.3.3
-     * @apiName getUserByAuthorizedCode
+     * @apiName getUserByOauth2Code
      * @apiGroup 微信粉丝
      * @apiPermission admin
-     * @apiDescription 通过 authorized code 获取关注的用户信息
+     * @apiDescription 通过 oauth2 code 获取关注的用户信息
      * @apiExample Example usage:
-     * curl -i http://localhost/weixin/user/oJ27YtwbWvKhQ8g3QSzj_Tgmg4uw
+     * curl -i http://localhost/weixin/user/oauth2/oJ27YtwbWvKhQ8g3QSzj_Tgmg4uw
      * @apiUse UserInfo
      * @apiError WeiXinError    微信端抛出异常,对应 response status <code>403</code>
      * @apiUse GeneralError
      */
-    @RequestMapping(value = "/authorized/{code}", method = RequestMethod.GET)
+    @RequestMapping(value = "/oauth2/{code}", method = RequestMethod.GET)
     public UserInfo getUserByAuthorizedCode(@PathVariable String code, HttpServletResponse response) throws WeiXinException, IOException {
-        User user = WeiXinSessionUtils.getCurrentSession().getAuthorizedUser(code);
+        User user = WeiXinSessionUtils.getCurrentSession().getOauth2User(code);
         if (user == null) {
             response.sendError(404);
             return null;

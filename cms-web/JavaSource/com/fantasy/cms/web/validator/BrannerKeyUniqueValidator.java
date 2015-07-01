@@ -17,7 +17,7 @@ public class BrannerKeyUniqueValidator extends FieldValidatorSupport {
 		String fieldName = getFieldName();
 		String id = StringUtil.nullValue(getFieldValue("id", obj));
 		String key = StringUtil.nullValue(getFieldValue(fieldName, obj));
-		if (!bannerService.bannerKeyUnique(key, StringUtil.isBlank(id) ? null : Long.valueOf(id))) {
+		if (!bannerService.bannerKeyUnique(key)) {
 			addFieldError(fieldName, obj);
 		}
 	}

@@ -94,17 +94,6 @@ public class UserInfoWeiXinService implements InitializingBean {
 
 
     /**
-     * 通过安全连接的code换取微信用户信息
-     *
-     * @param code
-     * @return
-     */
-    public UserInfo authUserInfo(String code) throws WeiXinException {
-        return transfiguration(WeiXinSessionUtils.getCurrentSession().getAuthorizedUser(code));
-    }
-
-
-    /**
      * 设置用户列表的未读信息数量
      *
      * @param list

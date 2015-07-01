@@ -61,9 +61,9 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
     @Override
     public void tearDown() throws Exception {
         super.tearDown();
-        Banner banner = bannerService.findUniqueByKey("test");
+        Banner banner = bannerService.get("test");
         if(banner!=null) {
-            bannerService.delete(banner.getId());
+            bannerService.delete(banner.getKey());
         }
     }
 
@@ -127,7 +127,7 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
-        Assert.assertNotNull(bannerService.findUniqueByKey("test"));
+        Assert.assertNotNull(bannerService.get("test"));
     }
 
     @Test
@@ -135,8 +135,8 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         this.testSave();
         this.request.removeAllParameters();
 
-        Banner banner = bannerService.findUniqueByKey("test");
-        this.request.addParameter("id", banner.getId().toString());
+        Banner banner = bannerService.get("test");
+        this.request.addParameter("id", banner.getKey());
 
         ActionProxy proxy = super.getActionProxy("/cms/banner/edit.do");
         Assert.assertNotNull(proxy);
@@ -150,13 +150,13 @@ public class BannerActionTest extends StrutsSpringJUnit4TestCase {
         this.testSave();
         this.request.removeAllParameters();
 
-        Banner banner = bannerService.findUniqueByKey("test");
-        this.request.addParameter("ids", banner.getId().toString());
+        Banner banner = bannerService.get("test");
+        this.request.addParameter("ids", banner.getKey());
 
         ActionProxy proxy = super.getActionProxy("/cms/banner/delete.do");
         Assert.assertNotNull(proxy);
 
         String result = proxy.execute();
-        Assert.assertNull(bannerService.findUniqueByKey("test"));
+        Assert.assertNull(bannerService.get("test"));
     }
 }

@@ -474,7 +474,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         return url;
     }
 
-    public AccessToken oauth2getAccessToken(WeiXinSession session, String code) throws WeiXinException {
+    private AccessToken oauth2getAccessToken(WeiXinSession session, String code) throws WeiXinException {
         try {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = getWeiXinDetails(session.getId()).getWxMpService().oauth2getAccessToken(code);
             return new AccessToken(wxMpOAuth2AccessToken.getAccessToken(), wxMpOAuth2AccessToken.getExpiresIn(), wxMpOAuth2AccessToken.getRefreshToken(), wxMpOAuth2AccessToken.getOpenId(), wxMpOAuth2AccessToken.getScope());
@@ -483,7 +483,11 @@ public class MpCoreHelper implements WeiXinCoreHelper {
         }
     }
 
-    public User getUser(WeiXinSession session, AccessToken accessToken) throws WeiXinException {
+    public User getOauth2User(WeiXinSession session, String code) throws WeiXinException {
+        AccessToken accessToken = oauth2getAccessToken(session, code);
+        if (accessToken == null) {
+            throw new WeiXinException(code + " ==> AccessToken is null ");
+        }
         if (Scope.userinfo == accessToken.getScope()) {
             WxMpOAuth2AccessToken wxMpOAuth2AccessToken = new WxMpOAuth2AccessToken();
             wxMpOAuth2AccessToken.setAccessToken(accessToken.getToken());
@@ -806,7 +810,7 @@ public class MpCoreHelper implements WeiXinCoreHelper {
 
         public WeiXinDetails(AccountDetails accountDetails) {
             this.wxMpService = new WxMpServiceImpl();
-            this.jsapi = new MpJsapi(this.wxMpService);
+            this.jsapi = new DefaultJsapi(new WeiXinMpService(this.wxMpService));
             WxMpInMemoryConfigStorage wxMpConfigStorage = new WxMpInMemoryConfigStorage();
             wxMpConfigStorage.setAppId(accountDetails.getAppId());
             wxMpConfigStorage.setSecret(accountDetails.getSecret());
