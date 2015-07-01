@@ -4,11 +4,10 @@ import com.fantasy.file.FileItem;
 import com.fantasy.framework.util.cglib.CglibUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.wx.framework.core.WeiXinCoreHelper;
+import com.fantasy.wx.framework.core.WeiXinService;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.content.*;
-import com.fantasy.wx.framework.session.WeiXinSession;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 
@@ -45,19 +44,27 @@ public class MessageFactory {
      * @param url          图片链接
      * @return ImageMessage
      */
-    public static ImageMessage createImageMessage(final WeiXinCoreHelper coreHelper, Long msgId, String fromUserName, Date createTime, String mediaId, String url) throws WeiXinException {
+    @SuppressWarnings({"SimplifiableIfStatement", "unchecked"})
+    public static ImageMessage createImageMessage(final WeiXinService weiXinService, Long msgId, String fromUserName, Date createTime, String mediaId, String url) throws WeiXinException {
         ImageMessage message = new ImageMessage(msgId, fromUserName, createTime);
         message.setToUserName(WeiXinSessionUtils.getCurrentSession().getAccountDetails().getPrimitiveId());
-        final WeiXinSession session = WeiXinSessionUtils.getCurrentSession();
         Media media = CglibUtil.newInstance(Media.class, new MethodInterceptor() {
             @Override
             public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
                 try {
                     if ("getFileItem".equalsIgnoreCase(method.getName())) {
                         FileItem fileItem = (FileItem) methodProxy.invokeSuper(o, objects);
-                        String id = (String) ClassUtil.getMethodProxy(Media.class, "getId").invoke(o);
+                        com.fantasy.framework.util.reflect.MethodProxy _methodProxy = ClassUtil.getMethodProxy(Media.class, "getId");
+                        if (_methodProxy == null) {
+                            return null;
+                        }
+                        String id = (String) _methodProxy.invoke(o);
                         if (fileItem == null && StringUtil.isNotBlank(id)) {
-                            ClassUtil.getMethodProxy(Media.class, "setFileItem", FileItem.class).invoke(o, fileItem = coreHelper.mediaDownload(session, id));
+                            _methodProxy = ClassUtil.getMethodProxy(Media.class, "setFileItem", FileItem.class);
+                            if (_methodProxy == null) {
+                                return null;
+                            }
+                            _methodProxy.invoke(o, fileItem = weiXinService.mediaDownload(id));
                         }
                         return fileItem;
                     } else {

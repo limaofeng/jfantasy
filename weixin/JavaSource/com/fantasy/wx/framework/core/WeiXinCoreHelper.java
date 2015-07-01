@@ -215,7 +215,7 @@ public interface WeiXinCoreHelper {
      * @param session 微信号session对象
      * @return UserList
      */
-    OpenIdList getOpenIds(WeiXinSession session);
+    OpenIdList getOpenIds(WeiXinSession session) throws WeiXinException;
 
     /**
      * 公众号可通过本接口来获取帐号的关注者列表
@@ -224,7 +224,7 @@ public interface WeiXinCoreHelper {
      * @param nextOpenId 第一个拉取的OPENID，不填默认从头开始拉取
      * @return UserList
      */
-    OpenIdList getOpenIds(WeiXinSession session, String nextOpenId);
+    OpenIdList getOpenIds(WeiXinSession session, String nextOpenId) throws WeiXinException;
 
     /**
      * 获取全部用户关注用户
