@@ -5,7 +5,6 @@ import com.fantasy.wx.framework.account.AccountDetailsService;
 import com.fantasy.wx.framework.core.MpCoreHelper;
 import com.fantasy.wx.framework.core.WeiXinCoreHelper;
 import com.fantasy.wx.framework.event.WeiXinEventListener;
-import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.handler.DefaultEventHandler;
 import com.fantasy.wx.framework.handler.NotReplyTextHandler;
 import com.fantasy.wx.framework.handler.WeiXinHandler;
@@ -15,6 +14,7 @@ import com.fantasy.wx.framework.message.EventMessage;
 import com.fantasy.wx.framework.session.AccountDetails;
 import com.fantasy.wx.framework.session.DefaultWeiXinSession;
 import com.fantasy.wx.framework.session.WeiXinSession;
+import com.fantasy.wx.service.AccountWeiXinService;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -54,7 +54,7 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
         DefaultWeiXinSessionFactory factory = new DefaultWeiXinSessionFactory();
 
         if (this.accountDetailsService == null) {
-            throw new WeiXinException(" accountDetailsService is null");
+            this.accountDetailsService = SpringContextUtil.getBeanByType(AccountWeiXinService.class);
         }
         factory.setAccountDetailsService(this.accountDetailsService);
 

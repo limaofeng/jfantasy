@@ -26,7 +26,6 @@ public class AccountWeiXinService implements AccountDetailsService {
 
     @Override
     public AccountDetails loadAccountByAppid(String appid) throws AppidNotFoundException {
-        /*return this.getAll().get(0);*/
         AccountDetails accountDetails = get(appid);
         if (accountDetails == null) {
             throw new AppidNotFoundException(" appid 不存在 ");
@@ -40,19 +39,7 @@ public class AccountWeiXinService implements AccountDetailsService {
      * @return List<AccountDetails>
      */
     public List<AccountDetails> getAll() {
-
-        /*
-         List<AccountDetails> accountDetailses = new ArrayList<AccountDetails>();Account account = new Account();
-        account.setAppId("wxcbc2c9fb9d585cd3");
-        account.setSecret("4b224fb5b08f2380572e45baecda63ba");
-        account.setType(AccountDetails.Type.service);
-        account.setToken("haolue_token");
-        account.setAesKey("tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6");
-        account.setPrimitiveId("gh_3d6114f11c71");
-        accountDetailses.add(account);*/
-        //accountDetailses.addAll(accounts);
-        List accounts = accountDao.getAll();
-        return accounts;
+        return (List) accountDao.getAll();
     }
 
     /**

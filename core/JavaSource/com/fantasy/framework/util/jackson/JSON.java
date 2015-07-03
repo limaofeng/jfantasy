@@ -1,15 +1,21 @@
 package com.fantasy.framework.util.jackson;
 
-import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.jackson.deserializer.DateDeserializer;
 import com.fantasy.framework.util.jackson.serializer.DateSerializer;
 import com.fantasy.framework.util.jackson.serializer.StringUnicodeSerializer;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
+import com.fasterxml.jackson.databind.ser.PropertyWriter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -30,8 +36,8 @@ public class JSON {
 
     public static class Mirror {
 
-        public String serialize(Object object) {
-            return JSON.serialize(object);
+        public String serialize(Object object, String... ignoreProperties) {
+            return JSON.serialize(object, ignoreProperties);
         }
 
         public Object deserialize(String json) {
@@ -55,7 +61,30 @@ public class JSON {
 
     }
 
-    private static ThreadLocal<String> threadLocal = new ThreadLocal<String>();
+    public static class ThreadLocalObjectMapper {
+
+        private ObjectMapper objectMapper;
+
+        private String[] ignoreProperties;
+
+        public ThreadLocalObjectMapper(ObjectMapper objectMapper) {
+            this.objectMapper = objectMapper;
+        }
+
+        public ObjectMapper getObjectMapper() {
+            return objectMapper;
+        }
+
+        public String[] getIgnoreProperties() {
+            return ignoreProperties;
+        }
+
+        public void setIgnoreProperties(String[] ignoreProperties) {
+            this.ignoreProperties = ignoreProperties;
+        }
+    }
+
+    private static ThreadLocal<ThreadLocalObjectMapper> threadLocal = new ThreadLocal<ThreadLocalObjectMapper>();
 
     static {
         //默认
@@ -78,6 +107,17 @@ public class JSON {
                 objectMapper.registerModule(module);
                 //设置null值不参与序列化(字段不被显示)
 //                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+                objectMapper.setFilters(new SimpleFilterProvider().addFilter("ignore", new SimpleBeanPropertyFilter() {
+                    @Override
+                    protected boolean include(BeanPropertyWriter writer) {
+                        return false;
+                    }
+
+                    @Override
+                    protected boolean include(PropertyWriter writer) {
+                        return ObjectUtil.indexOf(threadLocal.get().getIgnoreProperties(), writer.getName()) == -1;
+                    }
+                }));
 
             }
         });
@@ -99,6 +139,17 @@ public class JSON {
                 module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
                 module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
                 objectMapper.registerModule(module);
+                objectMapper.setFilters(new SimpleFilterProvider().addFilter("ignoreProperties", new SimpleBeanPropertyFilter() {
+                    @Override
+                    protected boolean include(BeanPropertyWriter writer) {
+                        return false;
+                    }
+
+                    @Override
+                    protected boolean include(PropertyWriter writer) {
+                        return threadLocal.get().getIgnoreProperties() == null || threadLocal.get().getIgnoreProperties().length == 0 || ObjectUtil.indexOf(threadLocal.get().getIgnoreProperties(), writer.getName()) == -1;
+                    }
+                }));
                 //设置null值不参与序列化(字段不被显示)
 //                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
 
@@ -112,12 +163,12 @@ public class JSON {
      * @return Mirror
      */
     public static Mirror set(String key) {
-        threadLocal.set(key);
+        threadLocal.set(new ThreadLocalObjectMapper(objectMapperCache.get(key)));
         return mirror;
     }
 
     public static Mirror unicode() {
-        threadLocal.set(unicodeKey);
+        threadLocal.set(new ThreadLocalObjectMapper(objectMapperCache.get(unicodeKey)));
         return mirror;
     }
 
@@ -133,14 +184,27 @@ public class JSON {
 
     }
 
-    public static String serialize(Object object) {
+    public static String serialize(Object object, String... ignoreProperties) {
         try {
-            String key = threadLocal.get();
-            if (StringUtil.isBlank(key)) {
-                threadLocal.set(key = defaultKey);
+            if (object == null) {
+                return null;
+            }
+            ThreadLocalObjectMapper local = threadLocal.get();
+            if (local == null) {
+                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
             }
             try {
-                return objectMapperCache.get(key).writeValueAsString(object);
+                ObjectMapper objectMapper = local.getObjectMapper();
+                if (ignoreProperties.length == 0) {
+                    return objectMapper.writeValueAsString(object);
+                }
+                JsonFilter jsonFilter = ClassUtil.getClassGenricType(object.getClass(), JsonFilter.class);
+                if (jsonFilter == null) {
+                    logger.error("未设置 JsonFilter 不能使用 ignoreProperties 参数进行字段过滤");
+                    return null;
+                }
+                local.setIgnoreProperties(ignoreProperties);
+                return objectMapper.writeValueAsString(object);
             } finally {
                 threadLocal.remove();
             }
@@ -155,12 +219,12 @@ public class JSON {
     }
 
     public static ObjectMapper getObjectMapper() {
-        String key = threadLocal.get();
-        if (StringUtil.isBlank(key)) {
-            threadLocal.set(key = defaultKey);
+        ThreadLocalObjectMapper local = threadLocal.get();
+        if (local == null) {
+            threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
         }
         try {
-            return objectMapperCache.get(key);
+            return local.getObjectMapper();
         } finally {
             threadLocal.remove();
         }
@@ -168,12 +232,12 @@ public class JSON {
 
     public static <T> T deserialize(String json, Class<T> classed) {
         try {
-            String key = threadLocal.get();
-            if (StringUtil.isBlank(key)) {
-                threadLocal.set(key = defaultKey);
+            ThreadLocalObjectMapper local = threadLocal.get();
+            if (local == null) {
+                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
             }
             try {
-                return objectMapperCache.get(key).readValue(json, classed);
+                return local.getObjectMapper().readValue(json, classed);
             } finally {
                 threadLocal.remove();
             }
@@ -186,12 +250,12 @@ public class JSON {
     @SuppressWarnings("unchecked")
     public static <T> T[] deserialize(String json, T[] classed) {
         try {
-            String key = threadLocal.get();
-            if (StringUtil.isBlank(key)) {
-                threadLocal.set(key = defaultKey);
+            ThreadLocalObjectMapper local = threadLocal.get();
+            if (local == null) {
+                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
             }
             try {
-                return (T[]) objectMapperCache.get(key).readValue(json, classed.getClass());
+                return (T[]) local.getObjectMapper().readValue(json, classed.getClass());
             } finally {
                 threadLocal.remove();
             }
@@ -205,12 +269,12 @@ public class JSON {
     @SuppressWarnings("unchecked")
     public static <T> T deserialize(String json, TypeReference<T> typeReference) {
         try {
-            String key = threadLocal.get();
-            if (StringUtil.isBlank(key)) {
-                threadLocal.set(key = defaultKey);
+            ThreadLocalObjectMapper local = threadLocal.get();
+            if (local == null) {
+                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
             }
             try {
-                return (T) objectMapperCache.get(key).readValue(json, typeReference);
+                return (T) local.getObjectMapper().readValue(json, typeReference);
             } finally {
                 threadLocal.remove();
             }

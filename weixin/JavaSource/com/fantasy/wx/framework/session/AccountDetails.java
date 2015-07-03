@@ -6,7 +6,7 @@ package com.fantasy.wx.framework.session;
 public interface AccountDetails {
 
 
-    public static enum Type {
+    enum Type {
         /**
          * 服务号
          */
@@ -33,41 +33,43 @@ public interface AccountDetails {
      *
      * @return type
      */
-    public Type getType();
+    Type getType();
 
     /**
      * 名称
      *
      * @return String
      */
-    public String getName();
+    String getName();
 
     /**
      * 密钥
      *
      * @return String
      */
-    public String getSecret();
+    String getSecret();
 
     /**
      * 令牌 name
      *
      * @return String
      */
-    public String getToken();
+    String getToken();
 
     /**
      * 安全验证码
      *
      * @return String
      */
-    public String getAesKey();
+    String getAesKey();
 
     /**
      * 原始ID 用户消息回复时的 formusername
      *
      * @return String
      */
-    public String getPrimitiveId();
+    String getPrimitiveId();
+
+    String getAgentId();
 
 }

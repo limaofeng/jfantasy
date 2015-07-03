@@ -7,30 +7,6 @@
         <property name="messageHandler">
             <bean class="com.fantasy.wx.framework.handler.AutoReplyTextHandler"/>
         </property>
-        <property name="accountDetailsService">
-            <bean class="com.fantasy.wx.framework.account.SimpleAccountDetailsService">
-                <property name="accounts">
-                    <list>
-                        <bean class="com.fantasy.wx.bean.Account">
-                            <property name="appId" value="wxdb4ed8c64ae393e6"/>
-                            <property name="type" value="service"/>
-                            <property name="secret" value="1882fa9a1de98177ae463aa0b1f78503"/>
-                            <property name="token" value="haolue_token"/>
-                            <property name="aesKey" value=""/>
-                            <property name="primitiveId" value=""/>
-                        </bean>
-                        <bean class="com.fantasy.wx.bean.Account">
-                            <property name="appId" value="wxabdabc39743d1f6a"/>
-                            <property name="type" value="service"/>
-                            <property name="secret" value="f8368c7958b6567482549189eb409100"/>
-                            <property name="token" value="test_token"/>
-                            <property name="aesKey" value=""/>
-                            <property name="primitiveId" value=""/>
-                        </bean>
-                    </list>
-                </property>
-            </bean>
-        </property>
     </bean>
 
 </beans>

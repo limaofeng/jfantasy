@@ -12,7 +12,7 @@ public class SqlResultData {
     private String sql;
     private int maxRow;
 
-    public static enum Type {
+    public enum Type {
         select, insert, delete, update, other
     }
 

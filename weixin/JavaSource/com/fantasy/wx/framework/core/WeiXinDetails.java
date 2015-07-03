@@ -18,6 +18,7 @@ public class WeiXinDetails {
             WxCpInMemoryConfigStorage wxMpConfigStorage = new WxCpInMemoryConfigStorage();
             wxMpConfigStorage.setCorpId(accountDetails.getAppId());
             wxMpConfigStorage.setCorpSecret(accountDetails.getSecret());
+            wxMpConfigStorage.setAgentId(accountDetails.getAgentId());
             wxMpConfigStorage.setToken(accountDetails.getToken());
             wxMpConfigStorage.setAesKey(accountDetails.getAesKey());
             wxCpService.setWxCpConfigStorage(wxMpConfigStorage);

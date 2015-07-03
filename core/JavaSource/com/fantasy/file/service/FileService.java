@@ -126,7 +126,7 @@ public class FileService {
 
     // @Cacheable(value = "fantasy.file", key = "'getFileDetail-' + #absolutePath")
     public FileDetail getFileDetail(String absolutePath, String fileManagerId) {
-        return this.fileDetailDao.get(FileDetailKey.newInstance(absolutePath, fileManagerId));
+        return this.fileDetailDao.findUnique(Restrictions.eq("absolutePath",absolutePath), Restrictions.eq("fileManagerId",fileManagerId));
     }
 
     // public Pager<Folder> findFolderPager(Pager<Folder> pager, List<PropertyFilter> filters) {

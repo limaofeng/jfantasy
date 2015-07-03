@@ -2,6 +2,8 @@ package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.wx.framework.session.AccountDetails;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 
@@ -11,6 +13,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "WX_ACCOUNT")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Account extends BaseBusEntity implements AccountDetails {
 
     //开发者凭证
@@ -42,6 +46,9 @@ public class Account extends BaseBusEntity implements AccountDetails {
 
     @Column(name = "AES_KEY", length = 200)
     private String aesKey;
+
+    @Column(name = "AGENT_ID", length = 200)
+    private String agentId;
 
     public void setAppId(String appId) {
         this.appId = appId;
@@ -97,6 +104,15 @@ public class Account extends BaseBusEntity implements AccountDetails {
     @Override
     public String getPrimitiveId() {
         return primitiveId;
+    }
+
+    @Override
+    public String getAgentId() {
+        return this.agentId;
+    }
+
+    public void setAgentId(String agentId) {
+        this.agentId = agentId;
     }
 
     public void setPrimitiveId(String primitiveId) {
