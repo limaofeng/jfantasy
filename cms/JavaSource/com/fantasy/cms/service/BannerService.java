@@ -83,7 +83,7 @@ public class BannerService {
     }
 
     public boolean bannerKeyUnique(String key) {
-        return (this.bannerDao.get(key) == null);
+        return (this.bannerDao.get(key) != null);
     }
 
 }

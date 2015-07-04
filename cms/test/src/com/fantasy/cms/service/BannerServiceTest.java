@@ -146,9 +146,7 @@ public class BannerServiceTest {
 
         Assert.assertTrue(this.bannerService.bannerKeyUnique(banner.getKey()));
 
-        Assert.assertTrue(this.bannerService.bannerKeyUnique("TEST-XXXX"));
-
-        Assert.assertFalse(this.bannerService.bannerKeyUnique(banner.getKey()));
+        Assert.assertFalse(this.bannerService.bannerKeyUnique("TEST-XXXX"));
     }
 
 }
