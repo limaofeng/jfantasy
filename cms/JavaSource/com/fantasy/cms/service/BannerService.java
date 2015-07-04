@@ -65,6 +65,9 @@ public class BannerService {
 
     public Banner get(String key) {
         Banner banner = bannerDao.get(key);
+        if (banner == null) {
+            return null;
+        }
         Hibernate.initialize(banner);
         for (BannerItem item : banner.getBannerItems()) {
             Hibernate.initialize(item);

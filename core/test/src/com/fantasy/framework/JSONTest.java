@@ -3,7 +3,6 @@ package com.fantasy.framework;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -91,7 +90,6 @@ public class JSONTest {
         }
     }
 
-    @Test
     public void jsonFilter() throws Exception {
         TestPOJO testPOJO = new TestPOJO();
         testPOJO.setA("1");
@@ -110,7 +108,6 @@ public class JSONTest {
         Assert.assertEquals("{\"b\":\"2\"}", jsonStr1);
     }
 
-    @JsonFilter("myFilter")
     public static class TestPOJO{
         @JsonView(FilterView.OutputA.class)
         private String a;
