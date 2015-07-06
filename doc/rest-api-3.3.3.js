@@ -5455,19 +5455,6 @@
  * Properties的操作的工具类,为Properties提供一个代理增加相关工具方法如
  * getRequiredString(),getInt(),getBoolean()等方法
  */
-/*
-            Iterator<URL> urls = ClassLoaderUtil.getResources(propertiesPath, PropertiesHelper.class, true);
-            Properties props = new Properties();
-            while (urls.hasNext()) {
-                URL url = urls.next();
-                Properties _props = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
-                for (Map.Entry entry : _props.entrySet()) {
-                    if (!props.containsKey(entry.getKey())) {
-                        props.put(entry.getKey(), entry.getValue());
-                    }
-                }
-            }
-            */
 ///core/JavaSource/com/fantasy/framework/util/common/ScriptHelp.java
 /*]*[^\\**\\/]*)*\\*\\/", "$1").replaceAll("\\/\\/[^\\n]*", "");
 
@@ -13808,6 +13795,19 @@
 /**
      * 公众号名称
      */
+///weixin/JavaSource/com/fantasy/wx/bean/AccountMapping.java
+/**
+ * 授权用户与公众号的对应关系
+ */
+/**
+     * 对应的用户名
+     */
+/**
+     * 对应的用户类型
+     */
+/**
+     * 对应的公众号
+     */
 ///weixin/JavaSource/com/fantasy/wx/bean/Group.java
 /**
  * 微信用用户组
@@ -13914,10 +13914,6 @@
 /**
  * 微信用户基本信息
  * Created by zzzhong on 2014/6/19.
- */
-///weixin/JavaSource/com/fantasy/wx/dao/AccountDao.java
-/**
- * Created by zzzhong on 2014/8/28.
  */
 ///weixin/JavaSource/com/fantasy/wx/dao/GroupDao.java
 /**
@@ -14183,10 +14179,10 @@
      * @throws WeiXinException
      */
 /**
-     * 通过 accessToken 换取用户信息
+     * 通过 oauth2 的 code 换取用户信息
      *
      * @param session     微信号session对象
-     * @param accessToken 安全连接的用户授权token
+     * @param code    安全连接返回的code
      * @return User
      * @throws WeiXinException
      */
@@ -14196,14 +14192,6 @@
      * @param session 微信号session对象
      * @param userId  用户id
      * @return group
-     * @throws WeiXinException
-     */
-/**
-     * 通过code换取网页授权access_token
-     *
-     * @param session 微信号session对象
-     * @param code    安全连接返回的code
-     * @return AccessToken
      * @throws WeiXinException
      */
 /**
@@ -14233,6 +14221,24 @@
      * @return Jsapi
      * @throws WeiXinException
      */
+///weixin/JavaSource/com/fantasy/wx/framework/core/WeiXinCpService.java
+/*
+         User user = new User();
+        user.setOpenId(wxCpUser.getUserId());
+        user.setAvatar(wxCpUser.getHeadImgUrl());
+        user.setCity(wxCpUser.getCity());
+        user.setCountry(wxCpUser.getCountry());
+        user.setProvince(wxCpUser.getProvince());
+        user.setLanguage(wxCpUser.getLanguage());
+        user.setNickname(wxCpUser.getNickname());
+        user.setSex(toSex(wxCpUser.getSex()));
+        user.setSubscribe(wxCpUser.isSubscribe());
+        if (wxCpUser.getSubscribeTime() != null) {
+            user.setSubscribeTime(new Date(wxCpUser.getSubscribeTime()));
+        }
+        user.setUnionid(wxCpUser.getUnionId());
+        return user;
+        */
 ///weixin/JavaSource/com/fantasy/wx/framework/event/ClickEventListener.java
 /**
  * 点击菜单拉取消息时的事件推送监听接口
@@ -15170,14 +15176,14 @@
      * @apiUse GeneralError
      */
 /**
-     * @api {get} /weixin/user/authorized/:code  通过安全code获取粉丝
+     * @api {get} /weixin/user/oauth2/:code  通过安全code获取粉丝
      * @apiVersion 3.3.3
-     * @apiName getUserByAuthorizedCode
+     * @apiName getUserByOauth2Code
      * @apiGroup 微信粉丝
      * @apiPermission admin
-     * @apiDescription 通过 authorized code 获取关注的用户信息
+     * @apiDescription 通过 oauth2 code 获取关注的用户信息
      * @apiExample Example usage:
-     * curl -i http://localhost/weixin/user/oJ27YtwbWvKhQ8g3QSzj_Tgmg4uw
+     * curl -i http://localhost/weixin/user/oauth2/oJ27YtwbWvKhQ8g3QSzj_Tgmg4uw
      * @apiUse UserInfo
      * @apiError WeiXinError    微信端抛出异常,对应 response status <code>403</code>
      * @apiUse GeneralError
@@ -15186,21 +15192,11 @@
 /**
  * 数据库存储微信信息
  */
-/*return this.getAll().get(0);*/
 /**
      * 查找所有配置信息
      *
      * @return List<AccountDetails>
      */
-/*
-         List<AccountDetails> accountDetailses = new ArrayList<AccountDetails>();Account account = new Account();
-        account.setAppId("wxcbc2c9fb9d585cd3");
-        account.setSecret("4b224fb5b08f2380572e45baecda63ba");
-        account.setType(AccountDetails.Type.service);
-        account.setToken("haolue_token");
-        account.setAesKey("tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6");
-        account.setPrimitiveId("gh_3d6114f11c71");
-        accountDetailses.add(account);*/
 /**
      * 列表查询
      *
@@ -15474,12 +15470,6 @@
      */
 /**
      * 通过openId刷新用户信息
-     */
-/**
-     * 通过安全连接的code换取微信用户信息
-     *
-     * @param code
-     * @return
      */
 /**
      * 设置用户列表的未读信息数量
