@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 public class PrintComments {
 
     private FileManager fileManager;
-    private static final String version = "3.3.3";
+    private static final String version = "3.3.4";
 
     {
         String classesPath = PathUtil.classes();

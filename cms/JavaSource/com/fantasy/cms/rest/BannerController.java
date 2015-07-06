@@ -16,7 +16,7 @@ import java.util.List;
  * 轮播图接口
  *
  * @author limaofeng@msn.com
- * @version 3.3.3, 15/06/27
+ * @version 3.3.4, 15/06/27
  */
 @RestController
 @RequestMapping("/cms/banners")
@@ -29,7 +29,7 @@ public class BannerController {
      * @param banner banner
      * @return banner
      * @api {post} /cms/banners  添加轮播图
-     * @apiVersion 3.3.3
+     * @apiVersion 3.3.4
      * @apiName createBanner
      * @apiGroup 内容管理
      * @apiDescription 添加轮播图
@@ -49,7 +49,7 @@ public class BannerController {
      * @param banner banner
      * @return banner
      * @api {put} /cms/banners/:key  更新轮播图
-     * @apiVersion 3.3.3
+     * @apiVersion 3.3.4
      * @apiName updateBanner
      * @apiGroup 内容管理
      * @apiDescription 更新轮播图信息
@@ -68,7 +68,7 @@ public class BannerController {
      * @param key Banner
      * @return Banner
      * @api {get} /cms/banners/:key  获取轮播图
-     * @apiVersion 3.3.3
+     * @apiVersion 3.3.4
      * @apiName getBanner
      * @apiGroup 内容管理
      * @apiDescription 获取轮播图
@@ -84,7 +84,7 @@ public class BannerController {
     /**
      * @param key 编码
      * @api {delete} /cms/banners/:key 删除轮播图
-     * @apiVersion 3.3.3
+     * @apiVersion 3.3.4
      * @apiName deleteBanner
      * @apiGroup 内容管理
      * @apiDescription 删除轮播图
@@ -101,7 +101,7 @@ public class BannerController {
      * @param pager   翻页对象
      * @param filters 筛选条件
      * @api {get} /cms/banners   查询轮播图
-     * @apiVersion 3.3.3
+     * @apiVersion 3.3.4
      * @apiName getBanners
      * @apiGroup 内容管理
      * @apiDescription 查询轮播图
