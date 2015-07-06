@@ -1,7 +1,6 @@
 package com.fantasy.wx.listener;
 
 import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.PropertiesHelper;
 import com.fantasy.wx.service.AccountMappingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -25,7 +24,7 @@ public class WeiXinSessionListener implements ApplicationListener<Authentication
         if (details != null) {
             Map<String, Object> data = ClassUtil.getValue(details, "data");
             if (data != null && !data.containsKey(WEIXIN_APPID)) {
-                data.put(WEIXIN_APPID, accountMappingService.getAccount(details.getUsername(), "user").getAppId());
+                data.put(WEIXIN_APPID, accountMappingService.getAccount("user",details.getUsername()).getAppId());
             }
         }
     }
