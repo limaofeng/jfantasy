@@ -26,7 +26,7 @@ public class DataDictionaryController {
 
     /**
      * @api {post} /dds   添加数据项
-     * @apiVersion 3.3.4
+     * @apiVersion 3.3.5
      * @apiName createDD
      * @apiGroup 数据字典
      * @apiDescription 通过该接口, 可以添加新的数据项。
@@ -50,7 +50,7 @@ public class DataDictionaryController {
 
     /**
      * @api {post} /dds/:key   获取数据项
-     * @apiVersion 3.3.4
+     * @apiVersion 3.3.5
      * @apiName getDD
      * @apiGroup 数据字典
      * @apiDescription 通过该接口, 可以添加新的数据项。
@@ -66,7 +66,7 @@ public class DataDictionaryController {
 
     /**
      * @api {get} /dds   查询数据项
-     * @apiVersion 3.3.4
+     * @apiVersion 3.3.5
      * @apiName findDDS
      * @apiGroup 数据字典
      * @apiDescription 通过该接口, 可以筛选需要的数据字典项。
