@@ -56,14 +56,6 @@
         <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
     </properties>
 
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>local private nexus releases</name>
-            <url>http://maven.jfantasy.org/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
-
     <profiles>
         <profile>
             <id>dev</id>
