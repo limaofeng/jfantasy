@@ -26,7 +26,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class JSON {
 
-    private static final Log logger = LogFactory.getLog(JSON.class);
+    private static final Log LOG = LogFactory.getLog(JSON.class);
 
     public static final String defaultKey = "default";
     public static final String unicodeKey = "unicode";
@@ -200,7 +200,7 @@ public class JSON {
                 }
                 JsonFilter jsonFilter = ClassUtil.getClassGenricType(object.getClass(), JsonFilter.class);
                 if (jsonFilter == null) {
-                    logger.error("未设置 JsonFilter 不能使用 ignoreProperties 参数进行字段过滤");
+                    LOG.error("未设置 JsonFilter 不能使用 ignoreProperties 参数进行字段过滤");
                     return null;
                 }
                 local.setIgnoreProperties(ignoreProperties);
@@ -209,7 +209,7 @@ public class JSON {
                 threadLocal.remove();
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return "";
     }
@@ -242,7 +242,7 @@ public class JSON {
                 threadLocal.remove();
             }
         } catch (IOException e) {
-            logger.error(e.getMessage() + " source json string : " + json + " => " + classed);
+            LOG.error(e.getMessage() + " source json string : " + json + " => " + classed);
         }
         return null;
     }
@@ -260,7 +260,7 @@ public class JSON {
                 threadLocal.remove();
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
@@ -279,7 +279,7 @@ public class JSON {
                 threadLocal.remove();
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
