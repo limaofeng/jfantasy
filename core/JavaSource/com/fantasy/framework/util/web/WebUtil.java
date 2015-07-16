@@ -29,7 +29,7 @@ import java.util.Set;
  */
 public class WebUtil {
 
-    private static final Logger logger = Logger.getLogger(WebUtil.class);
+    private static final Logger LOG = Logger.getLogger(WebUtil.class);
 
     private static HttpServletRequest getRequest() {
         return ActionContext.getContext().getHttpRequest();
@@ -218,9 +218,9 @@ public class WebUtil {
                 }
             }
         } catch (SocketException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (UnknownHostException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return false;
     }
@@ -247,7 +247,7 @@ public class WebUtil {
                 }
             }
         } catch (SocketException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return serverIps;
     }
@@ -440,7 +440,7 @@ public class WebUtil {
         try {
             return Browser.mozilla == browser(request) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            logger.error(e);
+            LOG.error(e);
             return name;
         }
     }
@@ -449,7 +449,7 @@ public class WebUtil {
         try {
             return Browser.mozilla == browser(getRequest()) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
         } catch (UnsupportedEncodingException e) {
-            logger.error(e);
+            LOG.error(e);
             return name;
         }
     }
@@ -458,7 +458,7 @@ public class WebUtil {
         try {
             return new String(str.getBytes(oldCharset), charset);
         } catch (UnsupportedEncodingException e) {
-            logger.error(e);
+            LOG.error(e);
             return str;
         }
     }

@@ -13,7 +13,7 @@ import java.util.*;
 
 public abstract class StringUtil {
 
-    private static final Log logger = LogFactory.getLog(StringUtil.class);
+    private static final Log LOG = LogFactory.getLog(StringUtil.class);
 
     /**
      * 字符串超出指定长度时截取到指定长度，并在末尾追加指定的字符串。
@@ -296,7 +296,7 @@ public abstract class StringUtil {
         try {
             return isBlank(s) ? s : URLEncoder.encode(s, enc);
         } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return s;
         }
     }
@@ -313,7 +313,7 @@ public abstract class StringUtil {
         try {
             return isBlank(s) ? s : URLDecoder.decode(s, enc);
         } catch (UnsupportedEncodingException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return s;
         }
     }
@@ -573,7 +573,7 @@ public abstract class StringUtil {
         try {
             return s.getBytes("ISO-8859-1");
         } catch (Exception e) {
-            logger.warn(e);
+            LOG.warn(e);
         }
         return s.getBytes();
     }
@@ -582,7 +582,7 @@ public abstract class StringUtil {
         try {
             return s.getBytes(charset);
         } catch (Exception e) {
-            logger.warn(e);
+            LOG.warn(e);
         }
         return s.getBytes();
     }

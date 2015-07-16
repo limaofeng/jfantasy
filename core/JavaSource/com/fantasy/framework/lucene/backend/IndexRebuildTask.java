@@ -19,7 +19,7 @@ import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class IndexRebuildTask implements Runnable {
-    private static final Log logger = LogFactory.getLog(IndexRebuildTask.class);
+    private static final Log LOG = LogFactory.getLog(IndexRebuildTask.class);
     /**
      * 每个IndexRebuildTask拥有单独的锁
      */
@@ -43,20 +43,20 @@ public class IndexRebuildTask implements Runnable {
 
     public void run() {
         if (!rebuildLock.tryLock()) {
-            if (logger.isErrorEnabled()) {
-                logger.error("Another rebuilding task is running");
+            if (LOG.isErrorEnabled()) {
+                LOG.error("Another rebuilding task is running");
             }
             return;
         }
         try {
-            if (logger.isInfoEnabled()) {
-                logger.info("Index(" + this.clazz + ") rebuilding start...");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Index(" + this.clazz + ") rebuilding start...");
             }
             try {
                 this.writer.deleteAll();
             } catch (IOException ex) {
-                if (logger.isErrorEnabled()) {
-                    logger.error("Something is wrong when lucene IndexWriter doing deleteAll()", ex);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Something is wrong when lucene IndexWriter doing deleteAll()", ex);
                 }
             }
             final LuceneDao luceneDao = DaoCache.getInstance().get(clazz);
@@ -89,12 +89,12 @@ public class IndexRebuildTask implements Runnable {
             try {
                 this.writer.commit();
             } catch (CorruptIndexException ex) {
-                logger.error("Can not commit and close the lucene index", ex);
+                LOG.error("Can not commit and close the lucene index", ex);
             } catch (IOException ex) {
-                logger.error("Can not commit and close the lucene index", ex);
+                LOG.error("Can not commit and close the lucene index", ex);
             }
-            if (logger.isInfoEnabled()) {
-                logger.info("Index(" + this.clazz + ") rebuilding finish.");
+            if (LOG.isInfoEnabled()) {
+                LOG.info("Index(" + this.clazz + ") rebuilding finish.");
             }
         } finally {
             rebuildLock.unlock();
@@ -116,9 +116,9 @@ public class IndexRebuildTask implements Runnable {
             try {
                 this.writer.addDocument(doc);
             } catch (CorruptIndexException ex) {
-                logger.error("IndexWriter can not add a document to the lucene index", ex);
+                LOG.error("IndexWriter can not add a document to the lucene index", ex);
             } catch (IOException ex) {
-                logger.error("IndexWriter can not add a document to the lucene index", ex);
+                LOG.error("IndexWriter can not add a document to the lucene index", ex);
             }
         }
     }

@@ -29,53 +29,53 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
     public static final String SHOW_URL = "/payment.do";// 支付单回显url
     */
 
-    public static final DecimalFormat decimalFormat = new DecimalFormat("#.00");
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
 
-    public static final Map<String, String> creditBankcodes = new LinkedHashMap<String, String>();
-    public static final Map<String, String> debitBankcodes = new LinkedHashMap<String, String>();
+    public static final Map<String, String> CREDIT_BANKCODES = new LinkedHashMap<String, String>();
+    public static final Map<String, String> DEBIT_BANKCODES = new LinkedHashMap<String, String>();
 
     static {
         //银行简码——混合渠道
-        creditBankcodes.put("ICBCBTB", "中国工商银行（B2B）");
-        creditBankcodes.put("ABCBTB", "中国农业银行（B2B）");
-        creditBankcodes.put("CCBBTB", "中国建设银行（B2B）");
-        creditBankcodes.put("SPDBB2B", "上海浦东发展银行（B2B）");
-        creditBankcodes.put("BOCBTB", "中国银行（B2B）");
-        creditBankcodes.put("CMBBTB", "招商银行（B2B）");
-        creditBankcodes.put("BOCB2C", "中国银行");
-        creditBankcodes.put("ICBCB2C", "中国工商银行");
-        creditBankcodes.put("CMB", "招商银行");
-        creditBankcodes.put("CCB", "中国建设银行");
-        creditBankcodes.put("ABC", "中国农业银行");
-        creditBankcodes.put("SPDB", "上海浦东发展银行");
-        creditBankcodes.put("CIB", "兴业银行");
-        creditBankcodes.put("GDB", "广发银行");
-        creditBankcodes.put("CMBC", "中国民生银行");
-        creditBankcodes.put("CITIC", "中信银行");
-        creditBankcodes.put("HZCBB2C", "杭州银行");
-        creditBankcodes.put("CEBBANK", "中国光大银行");
-        creditBankcodes.put("SHBANK", "上海银行");
-        creditBankcodes.put("NBBANK", "宁波银行");
-        creditBankcodes.put("SPABANK", "平安银行");
-        creditBankcodes.put("BJRCB", "北京农村商业银行");
-        creditBankcodes.put("FDB", "富滇银行");
-        creditBankcodes.put("POSTGC", "中国邮政储蓄银行");
-        creditBankcodes.put("abc1003", "visa");
-        creditBankcodes.put(" abc1004", "master");
+        CREDIT_BANKCODES.put("ICBCBTB", "中国工商银行（B2B）");
+        CREDIT_BANKCODES.put("ABCBTB", "中国农业银行（B2B）");
+        CREDIT_BANKCODES.put("CCBBTB", "中国建设银行（B2B）");
+        CREDIT_BANKCODES.put("SPDBB2B", "上海浦东发展银行（B2B）");
+        CREDIT_BANKCODES.put("BOCBTB", "中国银行（B2B）");
+        CREDIT_BANKCODES.put("CMBBTB", "招商银行（B2B）");
+        CREDIT_BANKCODES.put("BOCB2C", "中国银行");
+        CREDIT_BANKCODES.put("ICBCB2C", "中国工商银行");
+        CREDIT_BANKCODES.put("CMB", "招商银行");
+        CREDIT_BANKCODES.put("CCB", "中国建设银行");
+        CREDIT_BANKCODES.put("ABC", "中国农业银行");
+        CREDIT_BANKCODES.put("SPDB", "上海浦东发展银行");
+        CREDIT_BANKCODES.put("CIB", "兴业银行");
+        CREDIT_BANKCODES.put("GDB", "广发银行");
+        CREDIT_BANKCODES.put("CMBC", "中国民生银行");
+        CREDIT_BANKCODES.put("CITIC", "中信银行");
+        CREDIT_BANKCODES.put("HZCBB2C", "杭州银行");
+        CREDIT_BANKCODES.put("CEBBANK", "中国光大银行");
+        CREDIT_BANKCODES.put("SHBANK", "上海银行");
+        CREDIT_BANKCODES.put("NBBANK", "宁波银行");
+        CREDIT_BANKCODES.put("SPABANK", "平安银行");
+        CREDIT_BANKCODES.put("BJRCB", "北京农村商业银行");
+        CREDIT_BANKCODES.put("FDB", "富滇银行");
+        CREDIT_BANKCODES.put("POSTGC", "中国邮政储蓄银行");
+        CREDIT_BANKCODES.put("abc1003", "visa");
+        CREDIT_BANKCODES.put(" abc1004", "master");
         //银行简码——纯借记卡渠道
-        debitBankcodes.put("CMB-DEBIT", "招商银行");
-        debitBankcodes.put("CCB-DEBIT", "中国建设银行");
-        debitBankcodes.put("ICBC-DEBIT", "中国工商银行");
-        debitBankcodes.put("COMM-DEBIT", "交通银行");
-        debitBankcodes.put("GDB-DEBIT", "广发银行");
-        debitBankcodes.put("BOC-DEBIT", "中国银行");
-        debitBankcodes.put("CEB-DEBIT", "中国光大银行");
-        debitBankcodes.put("SPDB-DEBIT", "上海浦东发展银行");
-        debitBankcodes.put("PSBC-DEBIT", "中国邮政储蓄银行");
-        debitBankcodes.put("BJBANK", "北京银行");
-        debitBankcodes.put("SHRCB", "上海农商银行");
-        debitBankcodes.put("WZCBB2C-DEBIT", "温州银行");
-        debitBankcodes.put("COMM", "交通银行");
+        DEBIT_BANKCODES.put("CMB-DEBIT", "招商银行");
+        DEBIT_BANKCODES.put("CCB-DEBIT", "中国建设银行");
+        DEBIT_BANKCODES.put("ICBC-DEBIT", "中国工商银行");
+        DEBIT_BANKCODES.put("COMM-DEBIT", "交通银行");
+        DEBIT_BANKCODES.put("GDB-DEBIT", "广发银行");
+        DEBIT_BANKCODES.put("BOC-DEBIT", "中国银行");
+        DEBIT_BANKCODES.put("CEB-DEBIT", "中国光大银行");
+        DEBIT_BANKCODES.put("SPDB-DEBIT", "上海浦东发展银行");
+        DEBIT_BANKCODES.put("PSBC-DEBIT", "中国邮政储蓄银行");
+        DEBIT_BANKCODES.put("BJBANK", "北京银行");
+        DEBIT_BANKCODES.put("SHRCB", "上海农商银行");
+        DEBIT_BANKCODES.put("WZCBB2C-DEBIT", "温州银行");
+        DEBIT_BANKCODES.put("COMM", "交通银行");
     }
 
     @Override
@@ -104,7 +104,7 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         String show_url = context.getShowUrl(payment.getOrderSn());// 商品显示URL
         String sign_type = "MD5";//签名加密方式（MD5）
         AtomicReference<String> subject = new AtomicReference<String>(orderDetails.getSubject());// 订单的名称、标题、关键字等
-        String total_fee = decimalFormat.format(orderDetails.getPayableFee());// 总金额（单位：元）
+        String total_fee = DECIMAL_FORMAT.format(orderDetails.getPayableFee());// 总金额（单位：元）
         String key = paymentConfig.getBargainorKey();// 密钥
         //防钓鱼时间戳
         String anti_phishing_key = "";
@@ -175,11 +175,11 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
     }
 
     public static Map<String, String> getDebitBankcodes() {
-        return AlipayDirect.debitBankcodes;
+        return AlipayDirect.DEBIT_BANKCODES;
     }
 
     public static Map<String, String> getCreditBankcodes() {
-        return AlipayDirect.creditBankcodes;
+        return AlipayDirect.CREDIT_BANKCODES;
     }
 
 }

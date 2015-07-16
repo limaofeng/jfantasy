@@ -34,6 +34,21 @@ public class Article extends BaseDynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;
 
+    enum Type {
+        /**
+         * 原创
+         */
+        original,
+        /**
+         * 转载
+         */
+        transfer,
+        /**
+         * 链接
+         */
+        link
+    }
+
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")

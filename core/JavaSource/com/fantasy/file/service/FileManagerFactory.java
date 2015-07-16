@@ -42,7 +42,7 @@ import static com.fantasy.file.bean.enums.FileManagerType.local;
 @Transactional
 public class FileManagerFactory implements InitializingBean {
 
-    private static final Log logger = LogFactory.getLog(FileManagerFactory.class);
+    private static final Log LOG = LogFactory.getLog(FileManagerFactory.class);
 
     private static FileManagerFactory fileManagerFactory;
 
@@ -88,7 +88,7 @@ public class FileManagerFactory implements InitializingBean {
                 try {
                     this.registerFileManager(config.getId(), config.getType(), config.getConfigParams());
                 } catch (Exception ex) {
-                    logger.error("注册 FileManager id = [" + config.getId() + "] 失败!", ex);
+                    LOG.error("注册 FileManager id = [" + config.getId() + "] 失败!", ex);
                 }
             }
         } finally {
@@ -98,7 +98,7 @@ public class FileManagerFactory implements InitializingBean {
 
     public void registerFileManager(String id, FileManagerType type, final List<FileManagerConfig.ConfigParam> configParams) {
         if (!fileManagerBuilders.containsKey(type)) {
-            logger.error(" 未找到 [" + type + "] 对应的构建程序!请参考 FileManagerBuilder 实现,并添加到 FileManagerFactory 的配置中");
+            LOG.error(" 未找到 [" + type + "] 对应的构建程序!请参考 FileManagerBuilder 实现,并添加到 FileManagerFactory 的配置中");
             return;
         }
         Map<String, String> params = new HashMap<String, String>();

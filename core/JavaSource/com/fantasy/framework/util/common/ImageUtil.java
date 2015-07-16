@@ -33,7 +33,7 @@ import java.util.Iterator;
  */
 public final class ImageUtil {
 
-    private static final Log logger = LogFactory.getLog(ImageUtil.class);
+    private static final Log LOG = LogFactory.getLog(ImageUtil.class);
 
     private static final Color BACKGROUND_COLOR = Color.white;// 填充背景色
     private static final String DEST_FORMAT_NAME = "jpg";// 缩放、水印后保存文件格式名称
@@ -45,7 +45,7 @@ public final class ImageUtil {
     private static ImageObserver imageObserver = new ImageObserver() {
 
         public boolean imageUpdate(Image img, int infoflags, int x, int y, int width, int height) {
-            logger.debug("ImageObserver : infoflags:" + infoflags + ",x:" + x + ",y:" + y + ",width:" + width + ",height:" + height);
+            LOG.debug("ImageObserver : infoflags:" + infoflags + ",x:" + x + ",y:" + y + ",width:" + width + ",height:" + height);
             return true;
         }
 
@@ -90,7 +90,7 @@ public final class ImageUtil {
             imageInputStream.close();
             return formatName;
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return null;
         }
     }
@@ -125,7 +125,7 @@ public final class ImageUtil {
             graphics2D.dispose();
             ImageIO.write(destBufferedImage, DEST_FORMAT_NAME, destImageFile);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -145,7 +145,7 @@ public final class ImageUtil {
             graphics2D.dispose();
             ImageIO.write(destBufferedImage, DEST_FORMAT_NAME, destImageOutput);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -271,7 +271,7 @@ public final class ImageUtil {
         try {
             ImageIO.write(image, formatName, out);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -294,7 +294,7 @@ public final class ImageUtil {
             g.dispose();
             return image;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return null;
     }
@@ -423,7 +423,7 @@ public final class ImageUtil {
             g.dispose();
             return tag;
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
         return imageOriginal;
     }
@@ -687,7 +687,7 @@ public final class ImageUtil {
             ImageIcon imageIcon = new ImageIcon(os.toByteArray());
             return imageIcon.getImage();
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw new IgnoreException(e.getMessage());
         }
     }
@@ -703,15 +703,15 @@ public final class ImageUtil {
             fs.read(bi, 0, bilen);
 
             int nwidth = (bi[7] & 0xFF) << 24 | (bi[6] & 0xFF) << 16 | (bi[5] & 0xFF) << 8 | bi[4] & 0xFF;
-            logger.debug("width: " + nwidth);
+            LOG.debug("width: " + nwidth);
             int nheight = (bi[11] & 0xFF) << 24 | (bi[10] & 0xFF) << 16 | (bi[9] & 0xFF) << 8 | bi[8] & 0xFF;
-            logger.debug("height: " + nheight);
+            LOG.debug("height: " + nheight);
 
             int nbitcount = (bi[15] & 0xFF) << 8 | bi[14] & 0xFF;
-            logger.debug("bits: " + nbitcount);
+            LOG.debug("bits: " + nbitcount);
 
             int nsizeimage = (bi[23] & 0xFF) << 24 | (bi[22] & 0xFF) << 16 | (bi[21] & 0xFF) << 8 | bi[20] & 0xFF;
-            logger.debug("source size: " + nsizeimage);
+            LOG.debug("source size: " + nsizeimage);
 
             if (nbitcount == 24) {
                 int npad = nsizeimage / nheight - nwidth * 3;
@@ -728,7 +728,7 @@ public final class ImageUtil {
                 }
                 Toolkit kit = Toolkit.getDefaultToolkit();
                 image = kit.createImage(new MemoryImageSource(nwidth, nheight, ndata, 0, nwidth));
-                logger.debug("read bmp image success");
+                LOG.debug("read bmp image success");
             } else {
                 throw new IgnoreException("it's not 24bits bmp, fail.");
             }
@@ -756,8 +756,8 @@ public final class ImageUtil {
      * @return
      */
     public static BufferedImage screenshots(BufferedImage img, int x, int y, int w, int h) {
-        if (logger.isDebugEnabled()){
-            logger.debug("Method:screenshots,param:{x:" + x + ",y:" + y + ",w:" + w + ",h:" + h + "}");
+        if (LOG.isDebugEnabled()){
+            LOG.debug("Method:screenshots,param:{x:" + x + ",y:" + y + ",w:" + w + ",h:" + h + "}");
         }
         ImageFilter cropFilter = new CropImageFilter(x, y, w, h);
         Image newImg = Toolkit.getDefaultToolkit().createImage(new FilteredImageSource(img.getSource(), cropFilter));
@@ -781,7 +781,7 @@ public final class ImageUtil {
             BASE64Encoder encoder = new BASE64Encoder();// 对字节数组Base64编码
             return encoder.encode(data);// 返回Base64编码过的字节数组字符串
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return null;
         } finally {
             StreamUtil.closeQuietly(in);
@@ -800,7 +800,7 @@ public final class ImageUtil {
             ByteArrayInputStream in = new ByteArrayInputStream(decoder.decodeBuffer(base64));
             return ImageIO.read(in);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             return null;
         }
     }

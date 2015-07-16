@@ -16,12 +16,12 @@ import java.util.regex.Matcher;
 
 public class DateUtil {
 
-    private static final Log logger = LogFactory.getLog(DateUtil.class);
+    private static final Log LOG = LogFactory.getLog(DateUtil.class);
 
     /**
      * 缓存的 SimpleDateFormat
      */
-    private static final ConcurrentMap<String, SimpleDateFormat> dateFormatCache = new ConcurrentHashMap<String, SimpleDateFormat>();
+    private static final ConcurrentMap<String, SimpleDateFormat> DATE_FORMAT_CACHE = new ConcurrentHashMap<String, SimpleDateFormat>();
 
     /**
      * 日期驱动接口 针对DateUtil.now()方法获取时间
@@ -30,7 +30,7 @@ public class DateUtil {
     /**
      * SimpleDateFormat 访问锁
      */
-    private static final ConcurrentMap<String, ReentrantLock> locks = new ConcurrentHashMap<String, ReentrantLock>();
+    private static final ConcurrentMap<String, ReentrantLock> LOCKS = new ConcurrentHashMap<String, ReentrantLock>();
 
     static {
         /**
@@ -81,14 +81,14 @@ public class DateUtil {
      * @return DateFormat
      */
     private static DateFormat getDateFormat(String format) {
-        if (!dateFormatCache.containsKey(format)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("缓存日期格式:" + format);
+        if (!DATE_FORMAT_CACHE.containsKey(format)) {
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("缓存日期格式:" + format);
             }
-            dateFormatCache.put(format, new SimpleDateFormat(format));
-            locks.put(format, new ReentrantLock());
+            DATE_FORMAT_CACHE.put(format, new SimpleDateFormat(format));
+            LOCKS.put(format, new ReentrantLock());
         }
-        return dateFormatCache.get(format);
+        return DATE_FORMAT_CACHE.get(format);
     }
 
     public static String format(String format) {
@@ -121,11 +121,11 @@ public class DateUtil {
             return "";
         }
         DateFormat dateFormat = getDateFormat(format);
-        locks.get(format).lock();
+        LOCKS.get(format).lock();
         try {
             return dateFormat.format(date);
         } finally {
-            locks.get(format).unlock();
+            LOCKS.get(format).unlock();
         }
     }
 
@@ -149,13 +149,13 @@ public class DateUtil {
             return null;
         }
         DateFormat dateFormat = getDateFormat(format);
-        locks.get(format).lock();
+        LOCKS.get(format).lock();
         try {
             return dateFormat.parse(s);
         } catch (ParseException e) {
             throw new IgnoreException(e.getMessage());
         } finally {
-            locks.get(format).unlock();
+            LOCKS.get(format).unlock();
         }
     }
 

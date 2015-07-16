@@ -42,7 +42,7 @@ import java.util.*;
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implements ResourceLoaderAware {
 
-    private static final Log logger = LogFactory.getLog(AnnotationSessionFactoryBean.class);
+    private static final Log LOG = LogFactory.getLog(AnnotationSessionFactoryBean.class);
 
     private Map<String, List<Object>> eventListeners = new HashMap<String, List<Object>>();
 
@@ -63,7 +63,7 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         //========================== 判断是否为扩展模式 ==========================
         if (Mode.extra == packageMode) {
             this.packagesToScan = StringUtil.add(this.packagesToScan == null ? new String[0] : this.packagesToScan, ConfigResolver.parseConfiguration().getPackagesToScan());
-            logger.error(Arrays.toString(packagesToScan));
+            LOG.error(Arrays.toString(packagesToScan));
         }
 
         //========================== 添加BusEntityInterceptor拦截器 ==========================

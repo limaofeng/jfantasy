@@ -27,7 +27,7 @@ import java.util.*;
 @Transactional
 public class FileUploadService {
 
-    private static final Log logger = LogFactory.getLog(FileUploadService.class);
+    private static final Log LOG = LogFactory.getLog(FileUploadService.class);
 
     private final static String separator = "/";
     @Autowired
@@ -48,8 +48,8 @@ public class FileUploadService {
                 fileName = entireFileName + ".part" + StringUtil.addZeroLeft(index.toString(), total.toString().length());
             }
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("上传文件参数:{fileName:" + contentType + ",contentType:" + fileName + ",dir:" + dir + ",isPart:" + isPart + "}");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("上传文件参数:{fileName:" + contentType + ",contentType:" + fileName + ",dir:" + dir + ",isPart:" + isPart + "}");
             }
 
             //上传文件信息
@@ -111,10 +111,10 @@ public class FileUploadService {
             }
             return fileDetail;
         } catch (RuntimeException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw e;
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw e;
         }
     }
@@ -145,8 +145,8 @@ public class FileUploadService {
                 fileName = entireFileName + ".part" + StringUtil.addZeroLeft(index.toString(), total.toString().length());
             }
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("上传文件参数:{fileName:" + contentType + ",contentType:" + fileName + ",dir:" + dir + ",isPart:" + isPart + "}");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("上传文件参数:{fileName:" + contentType + ",contentType:" + fileName + ",dir:" + dir + ",isPart:" + isPart + "}");
             }
 
             //上传文件信息
@@ -208,10 +208,10 @@ public class FileUploadService {
             }
             return fileDetail;
         } catch (RuntimeException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw e;
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw e;
         }
     }
@@ -227,7 +227,7 @@ public class FileUploadService {
                 StreamUtil.copyThenClose(input, new FileOutputStream(temp));
                 return this.upload(temp, file.getContentType(), file.getOriginalFilename(), dir);
             } catch (IOException e) {
-                logger.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 throw e;
             } finally {
                 if (temp != null) {

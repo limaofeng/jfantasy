@@ -19,7 +19,7 @@ import java.util.concurrent.locks.ReentrantLock;
  */
 public class SequenceInfo {
 
-    private final static Log logger = LogFactory.getLog(SequenceInfo.class);
+    private final static Log LOG = LogFactory.getLog(SequenceInfo.class);
 
     private final static ConcurrentMap<String, SequenceInfo> keys = new ConcurrentHashMap<String, SequenceInfo>(10);
     private final static Lock retrievelock = new ReentrantLock();
@@ -116,8 +116,8 @@ public class SequenceInfo {
             if (this.nextKey > this.keyMax) {
                 retrieveFromDB();
             }
-            if (logger.isDebugEnabled()) {
-                logger.debug(this.keyName + " nextKey = " + (this.nextKey) + "\tpoolSize = " + this.poolSize + "\tkeyMax = " + keyMax);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug(this.keyName + " nextKey = " + (this.nextKey) + "\tpoolSize = " + this.poolSize + "\tkeyMax = " + keyMax);
             }
             return this.nextKey++;
         } finally {

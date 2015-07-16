@@ -26,7 +26,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class AsmUtil implements Opcodes {
 
-    private static final Log logger = LogFactory.getLog(AsmUtil.class);
+    private static final Log LOG = LogFactory.getLog(AsmUtil.class);
 
     /**
      * 创建一个java动态bean
@@ -119,11 +119,11 @@ public class AsmUtil implements Opcodes {
             try {
                 return FantasyClassLoader.getClassLoader().loadClass(bytes, className);
             } catch (ClassNotFoundException ex) {
-                logger.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
                 throw new RuntimeException(e.getMessage());
             }
         } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -394,7 +394,7 @@ public class AsmUtil implements Opcodes {
             ClassReader reader = new ClassReader(clazz.getName());
             reader.accept(new TraceClassVisitor(writer), 0);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } finally {
             StreamUtil.closeQuietly(writer);
         }
