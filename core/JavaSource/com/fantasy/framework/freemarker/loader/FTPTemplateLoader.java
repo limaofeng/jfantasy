@@ -1,13 +1,15 @@
 package com.fantasy.framework.freemarker.loader;
 
+import com.fantasy.framework.service.FTPService;
+import freemarker.cache.TemplateLoader;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.Reader;
 
-import com.fantasy.framework.service.FTPService;
-
-import freemarker.cache.TemplateLoader;
-
+/**
+ * TODO FTPTemplateLoader 将ftl模板单独存放到一个 ftpserver 中
+ */
 public class FTPTemplateLoader implements TemplateLoader{
 	
 	private FTPService ftpService;
@@ -23,15 +25,10 @@ public class FTPTemplateLoader implements TemplateLoader{
 
 	public long getLastModified(Object arg0) {
 		return 0;
-//		return ftpService.getLastModified();
 	}
 
 	public Reader getReader(Object templateSource, final String encoding) throws IOException {
 		return null;
-//		ByteArrayOutputStream out = new ByteArrayOutputStream();
-//		ftpService.download(name, out);
-//		System.out.println(out.toString());
-//		return out.toString();
 	}
 
 	public void setFtpService(FTPService ftpService) {
