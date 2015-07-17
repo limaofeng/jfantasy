@@ -101,12 +101,9 @@ public class JSON {
                 objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 //使Jackson JSON支持Unicode编码非ASCII字符
                 SimpleModule module = new SimpleModule();
-//                module.addSerializer(String.class, new StringUnicodeSerializer());
                 module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
                 module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
                 objectMapper.registerModule(module);
-                //设置null值不参与序列化(字段不被显示)
-//                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
                 objectMapper.setFilters(new SimpleFilterProvider().addFilter("ignore", new SimpleBeanPropertyFilter() {
                     @Override
                     protected boolean include(BeanPropertyWriter writer) {
@@ -150,9 +147,6 @@ public class JSON {
                         return threadLocal.get().getIgnoreProperties() == null || threadLocal.get().getIgnoreProperties().length == 0 || ObjectUtil.indexOf(threadLocal.get().getIgnoreProperties(), writer.getName()) == -1;
                     }
                 }));
-                //设置null值不参与序列化(字段不被显示)
-//                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-
             }
         });
     }
