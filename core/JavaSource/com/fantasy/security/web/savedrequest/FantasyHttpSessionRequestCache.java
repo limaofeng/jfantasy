@@ -43,8 +43,6 @@ public class FantasyHttpSessionRequestCache extends HttpSessionRequestCache {
 				if (ObjectUtil.isNotNull(refererUrl)) {
 					ClassUtil.setValue(savedRequest, "requestURL", refererUrl);
 					ClassUtil.setValue(savedRequest, "requestURI", refererUrl.replaceFirst(WebUtil.getRequestUrl(request, ""), ""));
-					// ClassUtil.setValue(savedRequest, "scheme", WebUtil.getScheme(refererUrl));
-					// ClassUtil.setValue(savedRequest, "serverPort", WebUtil.getPort(refererUrl));
 					String[] refererUrls = refererUrl.split(StringUtil.nullValue(ClassUtil.getValue(savedRequest, "contextPath")));
 					if (refererUrls.length > 1) {
 						refererUrl = refererUrls[1];

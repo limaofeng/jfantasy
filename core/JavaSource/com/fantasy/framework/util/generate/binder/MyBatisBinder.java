@@ -48,9 +48,6 @@ public class MyBatisBinder {
                 this.generateJavaDao(javasource, table);
                 this.generateJavaMapper(javasource, table);
                 this.generateSqlMap(javasource, table);
-                // this.generateTest(new File("").getCanonicalFile().getPath().concat("/test"), table);
-                // this.generateController(javasource, table);
-                // this.generateFormBean(javasource, table);
             }
         }catch (Exception e){
             throw new IgnoreException(e.getMessage());

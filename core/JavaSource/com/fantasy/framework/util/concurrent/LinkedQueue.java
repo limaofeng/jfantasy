@@ -675,7 +675,6 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
     }
 
     public void poll(long timeout, TimeUnit unit, PollCallBack<E> pollCallBack) throws InterruptedException {
-        // E x = null;
         int c = -1;
         long nanos = unit.toNanos(timeout);
         final AtomicInteger count = this.count;
