@@ -58,7 +58,7 @@ public abstract class StreamUtil {
         try {
             input.close();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
     }
 
@@ -66,7 +66,7 @@ public abstract class StreamUtil {
         try {
             output.close();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class StreamUtil {
         try {
             writer.close();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
     }
 
@@ -82,7 +82,7 @@ public abstract class StreamUtil {
         try {
             in.close();
         } catch (IOException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
     }
 }

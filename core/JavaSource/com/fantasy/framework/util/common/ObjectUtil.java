@@ -380,7 +380,7 @@ public final class ObjectUtil {
         try {
             BeanUtil.setValue(obj, fieldName, value);
         } catch (Exception e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
     }
 

@@ -382,7 +382,7 @@ public class FTPService {
         try {
             return new String(str.getBytes(this.controlEncoding), ISO_8859_1);
         } catch (UnsupportedEncodingException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
     }
 
@@ -390,7 +390,7 @@ public class FTPService {
         try {
             return str == null ? "" : new String(str.getBytes(ISO_8859_1), this.controlEncoding);
         } catch (UnsupportedEncodingException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
     }
 

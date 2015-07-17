@@ -122,7 +122,7 @@ public class FTPFileManager implements FileManager {
 				}
 				return fileItems;
 			} catch (IOException e) {
-				throw new IgnoreException(e.getMessage());
+				throw new IgnoreException(e.getMessage(),e);
 			}
 		}
 
@@ -172,7 +172,7 @@ public class FTPFileManager implements FileManager {
 				try {
 					ftpFile = fileManager.ftpService.listFiles(RegexpUtil.replace(this.absolutePath, "/$", ""))[0];
 				} catch (IOException e) {
-					throw new IgnoreException(e.getMessage());
+					throw new IgnoreException(e.getMessage(),e);
 				}
 			}
 			return ftpFile;
@@ -194,7 +194,7 @@ public class FTPFileManager implements FileManager {
 				return retrieveFileItem(this.ftpService.listFiles(remotePath)[0], parentPath);
 			}
 		} catch (IOException e) {
-			throw new IgnoreException(e.getMessage());
+			throw new IgnoreException(e.getMessage(),e);
 		}
 	}
 

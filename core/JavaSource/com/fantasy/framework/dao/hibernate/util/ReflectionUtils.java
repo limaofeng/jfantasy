@@ -55,7 +55,7 @@ public class ReflectionUtils {
         try {
             result = (T) field.get(object);
         } catch (IllegalAccessException e) {
-            logger.error("不可能抛出的异常{}", e.getMessage());
+            logger.error("不可能抛出的异常{}", e.getMessage(),e);
         }
         return result;
     }
@@ -69,7 +69,7 @@ public class ReflectionUtils {
         try {
             field.set(object, value);
         } catch (IllegalAccessException e) {
-            logger.error("不可能抛出的异常:{}", e.getMessage());
+            logger.error("不可能抛出的异常:{}", e.getMessage(),e);
         }
     }
 
@@ -94,6 +94,7 @@ public class ReflectionUtils {
             try {
                 return superClass.getDeclaredField(fieldName);
             } catch (NoSuchFieldException localNoSuchFieldException) {
+                logger.error(localNoSuchFieldException.getMessage(),localNoSuchFieldException);
                 superClass = superClass.getSuperclass();
             }
         }
@@ -113,6 +114,7 @@ public class ReflectionUtils {
             try {
                 return superClass.getDeclaredMethod(methodName, parameterTypes);
             } catch (NoSuchMethodException localNoSuchMethodException) {
+                logger.error(localNoSuchMethodException.getMessage(),localNoSuchMethodException);
                 superClass = superClass.getSuperclass();
             }
 

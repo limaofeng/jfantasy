@@ -92,8 +92,10 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
                 }
             }
         } catch (InstantiationException e) {
+            logger.error(e.getMessage(),e);
             throw new HibernateException("Could not instantiate resultclass: " + resultClass.getName());
         } catch (IllegalAccessException e) {
+            logger.error(e.getMessage(),e);
             throw new HibernateException("Could not instantiate resultclass: " + resultClass.getName());
         }
         return result;

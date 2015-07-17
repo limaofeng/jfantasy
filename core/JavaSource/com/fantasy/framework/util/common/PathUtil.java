@@ -38,7 +38,7 @@ public class PathUtil {
             PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "classes" + File.separator;
             PathUtil.WEBLIB_PATH = PathUtil.webinf() + "lib" + File.separator;
         } catch (Exception e) {// TODO 待完善
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
             logger.debug("改用 Thread.currentThread().getContextClassLoader().getResource(\"/\") 方式获取WebRoot路径");
             URL url = Thread.currentThread().getContextClassLoader().getResource("");
             logger.debug("Thread.currentThread().getContextClassLoader().getResource(\"/\") 获取的 url = " + url);

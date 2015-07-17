@@ -50,7 +50,7 @@ public class JDBCFileManager implements FileManager, InitializingBean {
             con.commit();
         } catch (SQLException e) {
             JdbcUtil.rollback(con);
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(),e);
         } finally {
             JdbcUtil.closeResultSet(rs);
             JdbcUtil.closeStatement(st);
@@ -80,10 +80,10 @@ public class JDBCFileManager implements FileManager, InitializingBean {
             con.commit();
         } catch (IOException e) {
             JdbcUtil.rollback(con);
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(),e);
         } catch (SQLException e) {
             JdbcUtil.rollback(con);
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(),e);
         } finally {
             JdbcUtil.closeResultSet(rs);
             JdbcUtil.closeStatement(st);
@@ -122,10 +122,10 @@ public class JDBCFileManager implements FileManager, InitializingBean {
             con.commit();
         } catch (IOException e) {
             JdbcUtil.rollback(con);
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(),e);
         } catch (SQLException e) {
             JdbcUtil.rollback(con);
-            throw new IOException(e.getMessage());
+            throw new IOException(e.getMessage(),e);
         } finally {
             JdbcUtil.closeResultSet(rs);
             JdbcUtil.closeStatement(st);

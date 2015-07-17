@@ -1,5 +1,6 @@
 package com.fantasy.payment.product.httpClient;
 
+import com.fantasy.framework.error.IgnoreException;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;
@@ -156,11 +157,11 @@ public class HttpProtocolHandler {
             }
             response.setResponseHeaders(method.getResponseHeaders());
         } catch (UnknownHostException ex) {
-            return null;
+            throw new IgnoreException(ex.getMessage(),ex);
         } catch (IOException ex) {
-            return null;
+            throw new IgnoreException(ex.getMessage(),ex);
         } catch (Exception ex) {
-            return null;
+            throw new IgnoreException(ex.getMessage(),ex);
         } finally {
             method.releaseConnection();
         }

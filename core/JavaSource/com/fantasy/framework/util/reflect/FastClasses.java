@@ -65,7 +65,7 @@ public class FastClasses<T> implements IClass<T> {
 						this.methodProxys.put(name.toString(), new MethodProxy(method, parameters));
 					}
 				} catch (Exception e) {
-					logger.error(e.getMessage());
+					logger.error(e.getMessage(),e);
 				}
 			}
 			for (Constructor<?> constructor : clazz.getConstructors()) {

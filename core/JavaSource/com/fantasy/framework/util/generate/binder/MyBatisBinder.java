@@ -53,7 +53,7 @@ public class MyBatisBinder {
                 // this.generateFormBean(javasource, table);
             }
         }catch (Exception e){
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
 
     }
@@ -64,7 +64,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
@@ -94,7 +94,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map data = new HashMap();
 	data.put("beanClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("bean")));
@@ -116,7 +116,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map data = new HashMap();
 	data.put("package", table.getPackage(packages.get("test")));
@@ -136,7 +136,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map data = new HashMap();
 	data.put("beanClass", RegexpUtil.replace(table.getClassName(), "\\[sign\\]", packages.get("bean")));
@@ -155,7 +155,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
@@ -185,7 +185,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
@@ -215,7 +215,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
@@ -246,7 +246,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
@@ -275,7 +275,7 @@ public class MyBatisBinder {
         try {
             out = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file)));
         } catch (FileNotFoundException e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
         Map<String, String> importsMap = new HashMap<String, String>();
 	TemplateUtil util = (TemplateUtil) ((Map<String, Object>) ClassUtil.getValue(freemarkerService, "utils")).get("util");
