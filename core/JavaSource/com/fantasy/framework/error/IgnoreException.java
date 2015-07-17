@@ -6,4 +6,8 @@ public class IgnoreException extends RuntimeException {
         super(message);
     }
 
+    public IgnoreException(String message,Exception e){
+        super(message,e);
+    }
+
 }

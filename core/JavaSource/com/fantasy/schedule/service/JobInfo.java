@@ -1,5 +1,6 @@
 package com.fantasy.schedule.service;
 
+import com.fantasy.framework.error.IgnoreException;
 import org.quartz.Job;
 import org.quartz.JobDataMap;
 import org.quartz.JobDetail;
@@ -130,6 +131,7 @@ public class JobInfo {
         try {
             this.jobClass = (Class<Job>) Class.forName(className);
         } catch (ClassNotFoundException e) {
+            throw new IgnoreException(e.getMessage(),e);
         }
     }
 

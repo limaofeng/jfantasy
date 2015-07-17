@@ -42,9 +42,9 @@ public class FileUtil {
             reader.close();
             return buf.toString();
         } catch (FileNotFoundException ex) {
-            throw new IgnoreException("没有找到文件:" + file.getAbsolutePath());
+            throw new IgnoreException("没有找到文件:" + file.getAbsolutePath(),ex);
         } catch (Exception ex) {
-            throw new IgnoreException(ex.getMessage());
+            throw new IgnoreException(ex.getMessage(),ex);
         }
 
     }
@@ -331,7 +331,7 @@ public class FileUtil {
                     logger.debug("delete file:" + sourceFile + ":" + sourceFile.delete());
                 }
             } catch (IOException e) {
-                throw new IgnoreException(e.getMessage());
+                throw new IgnoreException(e.getMessage(),e);
             }
         }
         return false;

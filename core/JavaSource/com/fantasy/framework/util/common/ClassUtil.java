@@ -152,7 +152,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return StringUtil.isNotBlank(className) ? (Class<T>) forName(className, FantasyClassLoader.getClassLoader()) : null;
         } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
         return null;
     }
@@ -190,7 +190,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).getMethod(method);
         } catch (Exception e) {
-            logger.error(clazz + "." + method + "-" + e.getMessage());
+            logger.error(clazz + "." + method + "-" + e.getMessage(),e);
         }
         return null;
     }
@@ -199,7 +199,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).getMethod(method, paramTypes);
         } catch (Exception e) {
-            logger.error(clazz + "." + method + "-" + e.getMessage());
+            logger.error(clazz + "." + method + "-" + e.getMessage(),e);
         }
         return null;
     }

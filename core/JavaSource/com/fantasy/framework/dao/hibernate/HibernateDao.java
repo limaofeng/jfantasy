@@ -83,6 +83,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         try {
             getSession().saveOrUpdate(entity = clean(entity));
         } catch (NonUniqueObjectException e) {
+            logger.error(e.getMessage(),e);
             getSession().merge(entity);
         }
         this.logger.debug("save entity: {}", entity);
@@ -99,6 +100,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         try {
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
+            logger.error(e.getMessage(),e);
             getSession().merge(entity);
         }
         this.logger.debug("update entity: {}", entity);
@@ -850,7 +852,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage());
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage(),e);
         }
     }
 
@@ -863,7 +865,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage());
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage(),e);
         }
     }
 
@@ -877,7 +879,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             orderEntries = (List<OrderEntry>) ReflectionUtils.getFieldValue(impl, "orderEntries");
             ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList<OrderEntry>());
         } catch (Exception e) {
-            this.logger.error("不可能抛出的异常:{}", e.getMessage());
+            this.logger.error("不可能抛出的异常:{}", e.getMessage(),e);
         }
         int totalCount = Integer.valueOf(c.setProjection(Projections.rowCount()).uniqueResult().toString());
         c.setProjection(projection);
@@ -890,7 +892,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         try {
             ReflectionUtils.setFieldValue(impl, "orderEntries", orderEntries);
         } catch (Exception e) {
-            this.logger.error("不可能抛出的异常:{}", e.getMessage());
+            this.logger.error("不可能抛出的异常:{}", e.getMessage(),e);
         }
         return totalCount;
     }
