@@ -106,7 +106,7 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         addEventListener("post-delete", eventListeners, versionChangedEventListener);
 
         // FileEventListener 监听器,用户转存文件或者删除文件
-        FileManagerEventListener fileManagerEventListener = SpringContextUtil.createBean(FileManagerEventListener.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
+        FileManagerEventListener fileManagerEventListener = SpringContextUtil.createBean(FileManagerEventListener.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
 		addEventListener("post-insert", eventListeners, fileManagerEventListener);
 		addEventListener("post-update", eventListeners, fileManagerEventListener);
 		addEventListener("post-delete", eventListeners, fileManagerEventListener);

@@ -241,7 +241,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
 
     public OgnlUtil getOgnlUtil(AttributeType attributeType) {
         if (!OgnlUtil.containsKey("attr-" + attributeType.getId())) {
-            OgnlUtil.getInstance("attr-" + attributeType.getId()).addTypeConverter(ClassUtil.forName(attributeType.getDataType()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(attributeType.getConverter().getTypeConverter()), SpringContextUtil.AUTOWIRE_BY_TYPE));
+            OgnlUtil.getInstance("attr-" + attributeType.getId()).addTypeConverter(ClassUtil.forName(attributeType.getDataType()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(attributeType.getConverter().getTypeConverter()), SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE));
         }
         return OgnlUtil.getInstance("attr-" + attributeType.getId());
     }

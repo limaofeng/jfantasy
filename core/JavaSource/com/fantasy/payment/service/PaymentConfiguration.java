@@ -137,7 +137,7 @@ public class PaymentConfiguration implements InitializingBean {
 
         //支付订单service
         if(!this.paymentOrderServices.containsKey("test")){
-            TestOrderDetailsService orderDetailsService = SpringContextUtil.createBean(TestOrderDetailsService.class,SpringContextUtil.AUTOWIRE_BY_TYPE);
+            TestOrderDetailsService orderDetailsService = SpringContextUtil.createBean(TestOrderDetailsService.class,SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
             orderDetailsService.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
             orderDetailsService.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
             orderDetailsService.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
