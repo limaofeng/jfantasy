@@ -9,11 +9,11 @@ import java.io.OutputStream;
 
 public abstract class AbstractBuffer implements Buffer {
 
-    private Log logger = LogFactory.getLog(getClass());
-    protected static final String __IMMUTABLE = "IMMUTABLE";
-    protected static final String __READONLY = "READONLY";
-    protected static final String __READWRITE = "READWRITE";
-    protected static final String __VOLATILE = "VOLATILE";
+    private Log LOG = LogFactory.getLog(getClass());
+    protected static final String IMMUTABLE = "IMMUTABLE";
+    protected static final String READONLY = "READONLY";
+    protected static final String READWRITE = "READWRITE";
+    protected static final String VOLATILE = "VOLATILE";
     protected int _access;
     protected boolean _volatile;
     protected int _get;
@@ -533,7 +533,7 @@ public abstract class AbstractBuffer implements Buffer {
             }
             return new String(asArray(), 0, length(), charset);
         } catch (Exception e) {
-            logger.warn(e);
+            LOG.warn(e);
         }
         return new String(asArray(), 0, length());
     }

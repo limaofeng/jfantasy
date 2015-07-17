@@ -208,11 +208,8 @@ public class WebUtil {
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
                     InetAddress ia = ips.nextElement();
+                    // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
                     if (ia instanceof Inet4Address && ia.getHostAddress().equals(ip.trim()) && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
-                        // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
-                        // System.out.println("IP:"
-                        // + ia.getHostAddress());
-                        // System.out.println("--------------------------------------------");
                         return true;
                     }
                 }

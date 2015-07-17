@@ -28,11 +28,11 @@ public class JSON {
 
     private static final Log LOG = LogFactory.getLog(JSON.class);
 
-    public static final String defaultKey = "default";
-    public static final String unicodeKey = "unicode";
-    private static final ConcurrentHashMap<String, ObjectMapper> objectMapperCache = new ConcurrentHashMap<String, ObjectMapper>();
+    public static final String DEFAULT_KEY = "default";
+    public static final String UNICODE_KEY = "unicode";
+    private static final ConcurrentHashMap<String, ObjectMapper> OBJECT_MAPPER_CACHE = new ConcurrentHashMap<String, ObjectMapper>();
 
-    private static final Mirror mirror = new Mirror();
+    private static final Mirror MIRROR = new Mirror();
 
     public static class Mirror {
 
@@ -88,7 +88,7 @@ public class JSON {
 
     static {
         //默认
-        register(defaultKey, new ObjectMapperRegister() {
+        register(DEFAULT_KEY, new ObjectMapperRegister() {
             @Override
             public void callback(ObjectMapper objectMapper) {
                 // 当找不到对应的序列化器时 忽略此字段
@@ -119,7 +119,7 @@ public class JSON {
             }
         });
         //将中文转为 Unicode 编码
-        register(unicodeKey, new ObjectMapperRegister() {
+        register(UNICODE_KEY, new ObjectMapperRegister() {
             @Override
             public void callback(ObjectMapper objectMapper) {
                 // 当找不到对应的序列化器时 忽略此字段
@@ -157,19 +157,19 @@ public class JSON {
      * @return Mirror
      */
     public static Mirror set(String key) {
-        threadLocal.set(new ThreadLocalObjectMapper(objectMapperCache.get(key)));
-        return mirror;
+        threadLocal.set(new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(key)));
+        return MIRROR;
     }
 
     public static Mirror unicode() {
-        threadLocal.set(new ThreadLocalObjectMapper(objectMapperCache.get(unicodeKey)));
-        return mirror;
+        threadLocal.set(new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(UNICODE_KEY)));
+        return MIRROR;
     }
 
     public synchronized static void register(String key, ObjectMapperRegister instanceCallBack) {
         ObjectMapper objectMapper = new ObjectMapper();
         instanceCallBack.callback(objectMapper);
-        objectMapperCache.putIfAbsent(key, objectMapper);
+        OBJECT_MAPPER_CACHE.putIfAbsent(key, objectMapper);
     }
 
     public interface ObjectMapperRegister {
@@ -185,7 +185,7 @@ public class JSON {
             }
             ThreadLocalObjectMapper local = threadLocal.get();
             if (local == null) {
-                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
+                threadLocal.set(local = new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(DEFAULT_KEY)));
             }
             try {
                 ObjectMapper objectMapper = local.getObjectMapper();
@@ -215,7 +215,7 @@ public class JSON {
     public static ObjectMapper getObjectMapper() {
         ThreadLocalObjectMapper local = threadLocal.get();
         if (local == null) {
-            threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
+            threadLocal.set(local = new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(DEFAULT_KEY)));
         }
         try {
             return local.getObjectMapper();
@@ -228,7 +228,7 @@ public class JSON {
         try {
             ThreadLocalObjectMapper local = threadLocal.get();
             if (local == null) {
-                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
+                threadLocal.set(local = new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(DEFAULT_KEY)));
             }
             try {
                 return local.getObjectMapper().readValue(json, classed);
@@ -246,7 +246,7 @@ public class JSON {
         try {
             ThreadLocalObjectMapper local = threadLocal.get();
             if (local == null) {
-                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
+                threadLocal.set(local = new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(DEFAULT_KEY)));
             }
             try {
                 return (T[]) local.getObjectMapper().readValue(json, classed.getClass());
@@ -265,7 +265,7 @@ public class JSON {
         try {
             ThreadLocalObjectMapper local = threadLocal.get();
             if (local == null) {
-                threadLocal.set(local = new ThreadLocalObjectMapper(objectMapperCache.get(defaultKey)));
+                threadLocal.set(local = new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(DEFAULT_KEY)));
             }
             try {
                 return (T) local.getObjectMapper().readValue(json, typeReference);
