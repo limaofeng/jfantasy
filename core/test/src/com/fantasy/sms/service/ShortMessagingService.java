@@ -18,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 短信服务类
@@ -124,10 +125,10 @@ public class ShortMessagingService {
             captcha.setValue(captchaConfigService.getWordGenerator(config.getRandomWord()).getWord(config.getWordLength()));
             captcha.setRetry(0);
         }
-		captchaDao.save(captcha);
-		Map<String, Object> data = new HashMap<String, Object>();
-		data.put("config", config);
-		data.put("captcha", captcha);
+		captcha = captchaDao.save(captcha);
+		AtomicReference<Map<String, Object>> data = new AtomicReference<Map<String, Object>>(new HashMap<String, Object>());
+		data.get().put("config", config);
+		data.get().put("captcha", captcha);
 		boolean status = false;
 		String content = "";
 		try {

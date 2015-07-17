@@ -28,8 +28,7 @@ public class AttributeService {
 	 * @return
 	 */
 	public Attribute save(Attribute attribute) {
-		attributeDao.save(attribute);
-		return attribute;
+		return attributeDao.save(attribute);
 	}
 	/**
 	 * 根据code查找属性

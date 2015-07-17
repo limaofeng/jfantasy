@@ -1,20 +1,18 @@
 package com.fantasy.mall.member.service;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.mall.member.bean.Receiver;
 import com.fantasy.mall.member.dao.ReceiverDao;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.userdetails.MemberUser;
 import com.fantasy.security.SpringSecurityUtils;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional
@@ -36,8 +34,7 @@ public class ReceiverService {
 				}
 			}
 		}
-		receiverDao.save(receiver);
-		return receiver;
+		return receiverDao.save(receiver);
 	}
 
 	public List<Receiver> find(Criterion[] criterions, String orderBy, String order) {

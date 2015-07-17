@@ -62,7 +62,7 @@ public class AddressBook extends Book {
 
 	public Object addLinkman(Linkman linkman) {
 		linkman.setBook(new Book(this.getId()));
-		getAddressBookService().save(linkman);
+		linkman = getAddressBookService().save(linkman);
 		int index = ObjectUtil.indexOf(this.getLinkmans(), "id", linkman.getId());
 		if (index == -1) {
 			this.getLinkmans().add(linkman);

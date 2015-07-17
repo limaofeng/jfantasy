@@ -39,8 +39,7 @@ public class PaymentConfigService {
      * @return {paymentConfig}
      */
     public PaymentConfig save(PaymentConfig config) {
-        this.paymentConfigDao.save(config);
-        return config;
+        return this.paymentConfigDao.save(config);
     }
 
     /**

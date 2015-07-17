@@ -164,7 +164,7 @@ public class CmsService extends BuguSearcher<Article> {
                 }
             }
         }
-        this.articleCategoryDao.save(category);
+        category = this.articleCategoryDao.save(category);
         if (root) {
             category.setParent(null);
             this.articleCategoryDao.update(category);
@@ -207,7 +207,7 @@ public class CmsService extends BuguSearcher<Article> {
         if (LOG.isDebugEnabled()) {
             LOG.debug("保存文章 > " + JSON.serialize(article));
         }
-        this.articleDao.save(article);
+        article = this.articleDao.save(article);
         if (StringUtil.isBlank(article.getSummary()) && StringUtil.isNotBlank(article.getContent())) {
             TagNode node = HtmlCleanerUtil.htmlCleaner(article.getContent().getText());
             String content = node.getText().toString().trim().replace("\n", "");

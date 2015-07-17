@@ -32,8 +32,8 @@ public class RoleService{
 		return this.roleDao.findPager(pager, filters);
 	}
 
-	public void save(Role role) {
-		roleDao.save(role);
+	public Role save(Role role) {
+		return roleDao.save(role);
 	}
 
 	public Role get(String id) {

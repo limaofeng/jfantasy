@@ -61,8 +61,7 @@ public class DeliveryService {
      * 保存
      */
     public DeliveryCorp save(DeliveryCorp deliveryCorp) {
-        this.deliveryCorpDao.save(deliveryCorp);
-        return deliveryCorp;
+        return this.deliveryCorpDao.save(deliveryCorp);
     }
 
     /**
@@ -125,8 +124,7 @@ public class DeliveryService {
         if (deliveryType.getContinueWeightPrice() == null) {
             deliveryType.setContinueWeightPrice(BigDecimal.ZERO);
         }
-        this.deliveryTypeDao.save(deliveryType);
-        return deliveryType;
+        return this.deliveryTypeDao.save(deliveryType);
     }
 
     /**
@@ -166,7 +164,7 @@ public class DeliveryService {
             item.initialize(ObjectUtil.find(order.getOrderItems(), "sn", item.getSn()));
             item.setShipping(shipping);
         }
-        this.shippingDao.save(shipping);
+        shipping = this.shippingDao.save(shipping);
         for (DeliveryItem item : shipping.getDeliveryItems()) {
             this.deliveryItemDao.save(item);
         }

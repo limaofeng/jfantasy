@@ -92,8 +92,7 @@ public class OrderService {
      * @return {Order}
      */
     public Order save(Order order) {
-        this.orderDao.save(order);
-        return order;
+        return this.orderDao.save(order);
     }
 
     /**

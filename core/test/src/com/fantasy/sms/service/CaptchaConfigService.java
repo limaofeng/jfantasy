@@ -54,8 +54,7 @@ public class CaptchaConfigService {
      * @return
      */
     public CaptchaConfig save(CaptchaConfig captchaConfig) {
-        this.captchaConfigDao.save(captchaConfig);
-        return captchaConfig;
+        return this.captchaConfigDao.save(captchaConfig);
     }
 
     /**

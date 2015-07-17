@@ -61,7 +61,7 @@ public class TopicAction extends ActionSupport {
      * @return struts 返回码
      */
     public String save(Topic topic) {
-        this.topicService.save(topic);
+        this.attrs.put(ROOT, this.topicService.save(topic));
         return JSONDATA;
     }
 

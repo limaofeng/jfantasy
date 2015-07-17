@@ -60,8 +60,7 @@ public class AccountWeiXinService implements AccountDetailsService {
      * @return 微信配置信息对象
      */
     public Account save(Account wc) {
-        accountDao.save(wc);
-        return wc;
+        return accountDao.save(wc);
     }
 
     /**

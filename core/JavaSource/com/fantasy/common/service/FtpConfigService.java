@@ -34,8 +34,8 @@ public class FtpConfigService {
 		return this.ftpConfigDao.get(id);
 	}
 
-	public void save(FtpConfig config) {
-		this.ftpConfigDao.save(config);
+	public FtpConfig save(FtpConfig config) {
+		return this.ftpConfigDao.save(config);
 	}
 
 	public void delete(Long... ids) {

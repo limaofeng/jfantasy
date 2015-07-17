@@ -45,8 +45,7 @@ public class ProductService {
 			product.setMarketable(false);
 			product.setIsDefault(false);
 		}
-		this.productDao.save(product);
-		return product;
+		return this.productDao.save(product);
 	}
 
 	public Product getProduct(Long id) {

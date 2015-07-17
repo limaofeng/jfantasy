@@ -87,7 +87,7 @@ public class KeywordService implements InitializingBean {
 	 * @param key
 	 * @param keywords
 	 */
-	public void addHotKeywords(String key, String keywords) {
+	public HotKeywords addHotKeywords(String key, String keywords) {
 		String time = DateUtil.format("yyyyMMdd");
 		HotKeywords hotKeywords = this.hotKeywordsDao.findUnique(Restrictions.eq("key", key), Restrictions.eq("keywords", keywords), Restrictions.eq("timeUnit", TimeUnit.day), Restrictions.eq("time", time));
 		if (hotKeywords == null) {
@@ -99,7 +99,7 @@ public class KeywordService implements InitializingBean {
 			hotKeywords.setHitCount(0);
 		}
 		hotKeywords.setHitCount(hotKeywords.getHitCount() + 1);
-		this.hotKeywordsDao.save(hotKeywords);
+		return this.hotKeywordsDao.save(hotKeywords);
 	}
 	
 	public Pager<Keywords> findPager(Pager<Keywords> pager,List<PropertyFilter> filters){

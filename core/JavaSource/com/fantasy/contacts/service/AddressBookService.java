@@ -33,7 +33,7 @@ public class AddressBookService {
 		Book book = bookDao.findUnique(Restrictions.eq("ownerType", ownerType), Restrictions.eq("owner", owner));
 		if (book == null) {
 			book = new Book(owner, ownerType);
-			bookDao.save(book);
+			book = bookDao.save(book);
 		}
 		return new AddressBook(book);
 	}
@@ -46,9 +46,8 @@ public class AddressBookService {
 		return getAddressBook(username, "1");
 	}
 
-	public Object save(Group group) {
-		groupDao.save(group);
-		return group;
+	public Group save(Group group) {
+		return groupDao.save(group);
 	}
 
 	public void deleteGroup(Long... ids) {
@@ -57,8 +56,8 @@ public class AddressBookService {
 		}
 	}
 
-	public void save(Linkman linkman) {
-		linkmanDao.save(linkman);
+	public Linkman save(Linkman linkman) {
+		return linkmanDao.save(linkman);
 	}
 
 	public void deleteLinkman(Long... ids) {

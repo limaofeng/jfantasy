@@ -34,8 +34,7 @@ public class JobService  {
 
 
     public Job save(Job job){
-        this.jobDao.save(job);
-        return job;
+        return this.jobDao.save(job);
     }
 
 

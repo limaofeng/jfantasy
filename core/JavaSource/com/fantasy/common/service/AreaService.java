@@ -58,8 +58,7 @@ public class AreaService{
                 this.areaDao.save(areaSort);
             }
         }
-        this.areaDao.save(area);// 保存
-        return area;
+        return this.areaDao.save(area);// 保存
     }
 
     public Area get(String id) {

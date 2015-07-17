@@ -234,7 +234,7 @@ public class GoodsService implements InitializingBean {
         } else {// 新增数据
             category.setSort(categories.size() + 1);
         }
-        this.goodsCategoryDao.save(category);
+        category = this.goodsCategoryDao.save(category);
         if (root) {
             category.setParent(null);
             this.goodsCategoryDao.update(category);

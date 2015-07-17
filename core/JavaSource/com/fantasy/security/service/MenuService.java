@@ -138,7 +138,7 @@ public class MenuService{
         if(menu.getPath() == null){
             menu.setPath("");
         }
-        this.menuDao.save(menu);
+        menu = this.menuDao.save(menu);
         if (root) {
             menu.setParent(null);
             menu.setPath(menu.getId() + Menu.PATH_SEPARATOR);

@@ -41,8 +41,7 @@ public class JdbcConfigService {
     }
 
     public JdbcConfig save(JdbcConfig jdbcConfig) {
-        this.jdbcConfigDao.save(jdbcConfig);
-        return jdbcConfig;
+        return this.jdbcConfigDao.save(jdbcConfig);
     }
 
     public Boolean testConnection(JdbcConfig jdbcConfig) {

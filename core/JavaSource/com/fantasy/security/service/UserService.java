@@ -42,12 +42,12 @@ public class UserService {
      * @param user 用户对象
      */
     @CacheEvict(value = {"fantasy.security.userService"}, allEntries = true)
-    public void save(User user) {
+    public User save(User user) {
         if (user.getId() == null) {
             if (StringUtil.isNotBlank(user.getPassword())) {
                 user.setPassword(SpringSecurityUtils.getPasswordEncoder().encodePassword(user.getPassword(), null));
             }
-            this.userDao.save(user);
+            return this.userDao.save(user);
         } else {
             if (!"******".equals(user.getPassword())) {
                 User u = this.userDao.get(user.getId());
@@ -58,7 +58,7 @@ public class UserService {
             } else {
                 user.setPassword(null);// 为NULL时,不会更新字段
             }
-            this.userDao.save(user);
+            return this.userDao.save(user);
         }
     }
 

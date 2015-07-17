@@ -5,11 +5,10 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.mall.goods.bean.Brand;
 import com.fantasy.mall.goods.dao.BrandDao;
-import org.hibernate.criterion.Criterion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 /**
@@ -62,8 +61,7 @@ public class BrandService {
 	 * @return
 	 */
 	public Brand save(Brand brand) {
-		this.brandDao.save(brand);
-		return brand;
+		return this.brandDao.save(brand);
 	}
 
 	/**
@@ -72,7 +70,7 @@ public class BrandService {
 	 * @return
 	 */
 	public List<Brand> getBrands() {
-		return this.brandDao.find(new Criterion[0]);
+		return this.brandDao.find();
 	}
 
 	/**

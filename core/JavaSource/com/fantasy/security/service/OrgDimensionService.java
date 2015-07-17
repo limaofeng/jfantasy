@@ -42,8 +42,7 @@ public class OrgDimensionService {
     }
 
     public OrgDimension save(OrgDimension orgDimension){
-        this.orgDimensionDao.save(orgDimension);
-        return orgDimension;
+        return this.orgDimensionDao.save(orgDimension);
     }
 
     public void delete(String...ids){

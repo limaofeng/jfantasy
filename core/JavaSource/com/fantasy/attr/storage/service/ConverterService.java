@@ -38,8 +38,7 @@ public class ConverterService {
     }
 
     public Converter save(Converter converter) {
-        this.converterDao.save(converter);
-        return converter;
+        return this.converterDao.save(converter);
     }
 
     public Object get(Long id) {
@@ -65,8 +64,7 @@ public class ConverterService {
     }
 
     public static List<Converter> findAll() {
-        ConverterService service = SpringContextUtil.getBeanByType(ConverterService.class);
-        return service.find();
+        return SpringContextUtil.getBeanByType(ConverterService.class).find();
     }
 
     public void save(Class<? extends TypeConverter> clazz, String name, String description) {

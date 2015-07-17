@@ -68,7 +68,7 @@ public class OrganizationService {
         //维护关系
         List<OrgHelpBean> orgHelpBeans = organization.getOrgHelpBeans();
         //先保存当前组织机构
-        this.organizationDao.save(organization);
+        organization = this.organizationDao.save(organization);
         for (OrgHelpBean orgHelpBean : ObjectUtil.defaultValue(orgHelpBeans, new ArrayList<OrgHelpBean>())) {
             //当前层级关系
             OrgRelation newRelation = new OrgRelation();

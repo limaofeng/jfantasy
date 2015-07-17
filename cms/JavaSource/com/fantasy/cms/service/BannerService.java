@@ -39,7 +39,7 @@ public class BannerService {
     @SuppressWarnings("unchecked")
     public Banner save(Banner banner) {
         List<BannerItem> bitems = banner.getBannerItems();// 传递过来的集合
-        bannerDao.save(banner);
+        banner = bannerDao.save(banner);
         List<BannerItem> banntiems = banner.getBannerItems();// 数据库中原来就有的集合
         if (bitems == null) {
             bitems = Collections.emptyList();
@@ -49,7 +49,7 @@ public class BannerService {
         }
         for (BannerItem bnitem : bitems) {
             bnitem.setBanner(banner);
-            bannerItemDao.save(bnitem);
+            bnitem = bannerItemDao.save(bnitem);
             if (!banntiems.equals(bitems)) {// 添加时，这两个集合为同一个，所以不能做移除操作
                 ObjectUtil.remove(banntiems, "id", bnitem.getId());
             }

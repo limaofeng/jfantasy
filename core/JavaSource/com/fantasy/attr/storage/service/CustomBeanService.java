@@ -44,7 +44,7 @@ public class CustomBeanService {
         if (_customBean.getId() == null) {
             _customBean.setDefinition(definition);
             _customBean.setVersion(version.getId());
-            customBeanDao.save(_customBean);
+            _customBean = customBeanDao.save(_customBean);
             _customBean.setAttributeValues(attributeValues);
             customBean.setId(_customBean.getId());
         } else {

@@ -39,8 +39,8 @@ public class ModelService {
      * 保存
      * @param notice
      */
-    public void save(Model notice){
-        this.modelDao.save(notice);
+    public Model save(Model notice){
+        return this.modelDao.save(notice);
     }
 
 

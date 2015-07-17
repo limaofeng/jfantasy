@@ -75,8 +75,7 @@ public class WebsiteService {
     }
 
     public Website save(Website website) {
-        websiteDao.save(website);
-        return website;
+        return websiteDao.save(website);
     }
 
     public boolean websiteCodeUnique(String key, Long id) {

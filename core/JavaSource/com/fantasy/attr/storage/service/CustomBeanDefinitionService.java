@@ -47,8 +47,7 @@ public class CustomBeanDefinitionService {
         definition.setName(name);
         definition.setClassName(className);
         definition.setAttributes(version.getAttributes());
-        customBeanDefinitionDao.save(definition);
-        return definition;
+        return customBeanDefinitionDao.save(definition);
     }
 
     public CustomBeanDefinition findUniqueByClassName(String className) {

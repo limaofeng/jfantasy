@@ -37,8 +37,7 @@ public class AttributeTypeService {
     }
 
     public AttributeType save(AttributeType attributeType) {
-        attributeTypeDao.save(attributeType);
-        return attributeType;
+        return attributeTypeDao.save(attributeType);
     }
 
     public AttributeType save(Class<?> javaType, String name, String description, Class<? extends TypeConverter> converter) {
@@ -50,8 +49,7 @@ public class AttributeTypeService {
         attributeType.setDataType(javaType.getName());
         attributeType.setConverter(TypeConverterUtils.getTypeConverter(converter));
         attributeType.setDescription(description);
-        this.attributeTypeDao.save(attributeType);
-        return attributeType;
+        return this.attributeTypeDao.save(attributeType);
     }
 
     public AttributeType get(Long id) {

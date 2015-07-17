@@ -31,8 +31,8 @@ public class TopicService {
         }
     }
 
-    public void save(Topic topic) {
-        topicDao.save(topic);
+    public Topic save(Topic topic) {
+        return topicDao.save(topic);
     }
 
     public Topic get(String code) {

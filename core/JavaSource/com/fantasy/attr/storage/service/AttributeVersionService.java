@@ -54,8 +54,7 @@ public class AttributeVersionService {
         for (Attribute attribute : version.getAttributes()) {
             attributeDao.save(attribute);
         }
-        this.attributeVersionDao.save(version);
-        return version;
+        return this.attributeVersionDao.save(version);
     }
 
     public AttributeVersion save(String targetClassName, String number, List<Attribute> attributes) {
@@ -72,7 +71,7 @@ public class AttributeVersionService {
         for (Attribute attribute : attributes) {
             Attribute oldAttribute = ObjectUtil.find(version.getAttributes(), "code", attribute.getCode());
             if (oldAttribute == null) {
-                attributeDao.save(attribute);
+                attribute = attributeDao.save(attribute);
                 version.getAttributes().add(attribute);
             } else {
                 BeanUtil.copyProperties(oldAttribute, attribute);
@@ -89,8 +88,7 @@ public class AttributeVersionService {
             attributeDao.delete(attribute.getId());
             ObjectUtil.remove(version.getAttributes(), "code", attribute.getCode());
         }
-        this.attributeVersionDao.save(version);
-        return version;
+        return this.attributeVersionDao.save(version);
     }
 
     public AttributeVersion get(Long id) {

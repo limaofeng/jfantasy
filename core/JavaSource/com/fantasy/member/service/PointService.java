@@ -1,18 +1,16 @@
 package com.fantasy.member.service;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.bean.Point;
 import com.fantasy.member.dao.PointDao;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
 
 @Transactional
 @Service
@@ -46,12 +44,12 @@ public class PointService {
 	}
 	/**
 	 * 保存积分收支明细
-	 * @param consume
+	 * @param point
 	 * @return
 	 */
 	public Point save(Point point) {
-		this.pointDao.save(point);
-		return point;
+		;
+		return this.pointDao.save(point);
 	}
 	
 	public void delete(Long[] ids) {

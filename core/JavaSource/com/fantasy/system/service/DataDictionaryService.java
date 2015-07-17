@@ -190,7 +190,7 @@ public class DataDictionaryService implements InitializingBean {
         } else {// 新增数据
             dataDictionaryType.setSort(types.size() + 1);
         }
-        this.dataDictionaryTypeDao.save(dataDictionaryType);
+        dataDictionaryType = this.dataDictionaryTypeDao.save(dataDictionaryType);
         if (root) {
             dataDictionaryType.setParent(null);
             this.dataDictionaryTypeDao.update(dataDictionaryType);

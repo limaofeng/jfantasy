@@ -24,12 +24,12 @@ public class CartService {
 	@Autowired
 	private CartItemDao cartItemDao;
 
-	public void save(Cart cart) {
-		this.cartDao.save(cart);
+	public Cart save(Cart cart) {
+		return this.cartDao.save(cart);
 	}
 
-	public void save(CartItem item) {
-		this.cartItemDao.save(item);
+	public CartItem save(CartItem item) {
+		return this.cartItemDao.save(item);
 	}
 	
 	public Pager<CartItem> findPager(Pager<CartItem> pager, List<PropertyFilter> filters) {
@@ -43,7 +43,7 @@ public class CartService {
 			cart.setOwner(owner);
 			cart.setOwnerType(ownerType);
 			cart.setCartItems(new ArrayList<CartItem>());
-			cartDao.save(cart);
+			cart = cartDao.save(cart);
 		}
 		return new ShopCartDataBase(cart);
 	}

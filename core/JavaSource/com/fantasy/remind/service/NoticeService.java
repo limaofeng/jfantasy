@@ -80,7 +80,7 @@ public class NoticeService {
             }
         }
         boolean b = notice.getId() == null;
-        this.noticeDao.save(notice);
+        notice = this.noticeDao.save(notice);
         if (b){
             try {
                 noticeQueue.put(notice);

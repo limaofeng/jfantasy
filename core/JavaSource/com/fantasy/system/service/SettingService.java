@@ -41,8 +41,7 @@ public class SettingService {
     }
 
     public Setting save(Setting setting) {
-        settingDao.save(setting);
-        return setting;
+        return settingDao.save(setting);
     }
 
     public boolean settingCodeUnique(String key, Long websiteId, Long id) {

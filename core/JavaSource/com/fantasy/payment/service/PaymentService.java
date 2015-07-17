@@ -108,8 +108,7 @@ public class PaymentService {
                 payment.setMember(SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser());
             }
         }
-        this.paymentDao.save(payment);
-        return payment;
+        return this.paymentDao.save(payment);
     }
 
     /**
@@ -132,7 +131,7 @@ public class PaymentService {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.failure);
         payment.setTradeNo(PaymentContext.getContext().getPayResult().getTradeNo());
-        this.paymentDao.save(payment);
+        payment = this.paymentDao.save(payment);
         PaymentContext.getContext().payFailure(PaymentContext.getContext().getPayment());
     }
 
@@ -145,7 +144,7 @@ public class PaymentService {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.success);
         payment.setTradeNo(PaymentContext.getContext().getPayResult().getTradeNo());
-        this.paymentDao.save(payment);
+        payment = this.paymentDao.save(payment);
         PaymentContext.getContext().paySuccess(PaymentContext.getContext().getPayment());
     }
 
