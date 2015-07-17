@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.web;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -319,6 +320,7 @@ public class WebUtil {
                     val = URLDecoder.decode(val, "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     val = pair.split("=")[1];
+                    throw new IgnoreException(e.getMessage(),e);
                 }
             }
             if (!params.containsKey(key)){

@@ -1,6 +1,7 @@
 package com.fantasy.system.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.error.IgnoreException;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -145,6 +146,7 @@ public class DataDictionary extends BaseBusEntity {
                 }
             } catch (Exception e) {
                 jgen.writeString("");
+                throw new IgnoreException(e.getMessage(),e);
             }
         }
 

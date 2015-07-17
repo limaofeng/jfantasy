@@ -47,7 +47,7 @@ public class MultiDataSource extends AbstractRoutingDataSource {
         try {
             connection.setCatalog(catalogConverter.convert(catalog));
         } catch (Exception e) {
-            logger.error(e.getMessage());
+            logger.error(e.getMessage(),e);
         }
     }
 
@@ -76,7 +76,7 @@ public class MultiDataSource extends AbstractRoutingDataSource {
             resolvedDataSources.put(lookupKey, object);
             return dataSource.name();
         } catch (BeansException e) {
-            logger.error("没有匹配到DataSource,将使用默认数据源!");
+            logger.error("没有匹配到DataSource,将使用默认数据源!",e);
         }
         return null;
     }

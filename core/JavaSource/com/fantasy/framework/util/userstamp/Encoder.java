@@ -1,5 +1,7 @@
 package com.fantasy.framework.util.userstamp;
 
+import com.fantasy.framework.error.IgnoreException;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Random;
@@ -15,6 +17,7 @@ public class Encoder {
                 userStamp[(14 + i)] = NToC(Math.abs(messageDigest[i]) % 62);
             }
 		} catch (NoSuchAlgorithmException e) {
+			throw new IgnoreException(e.getMessage(),e);
 		}
 		return userStamp;
 	}
@@ -77,6 +80,7 @@ public class Encoder {
                 pwChars[i] = NToC(Math.abs(messageDigest[i]) % 62);
             }
 		} catch (NoSuchAlgorithmException e) {
+			throw new IgnoreException(e.getMessage(),e);
 		}
 		return pwChars;
 	}

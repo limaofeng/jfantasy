@@ -110,7 +110,7 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return this.clazz.newInstance();
 		} catch (Exception e) {
-			throw new IgnoreException(e.getMessage());
+			throw new IgnoreException(e.getMessage(),e);
 		}
 	}
 
@@ -121,7 +121,7 @@ public class FastClasses<T> implements IClass<T> {
             }
 			return newInstance(object.getClass(), object);
 		} catch (Exception e) {
-			throw new IgnoreException(e.getMessage());
+			throw new IgnoreException(e.getMessage(),e);
 		}
 	}
 
@@ -129,7 +129,7 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return this.constructors.get(type).newInstance(new Object[] { object });
 		} catch (Exception e) {
-			throw new IgnoreException(e.getMessage());
+			throw new IgnoreException(e.getMessage(),e);
 		}
 	}
 
@@ -194,7 +194,7 @@ public class FastClasses<T> implements IClass<T> {
                 throw new IgnoreException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!");
             }
 		} catch (Exception e) {
-			throw new IgnoreException(e.getMessage());
+			throw new IgnoreException(e.getMessage(),e);
 		}
 	}
 
@@ -217,7 +217,7 @@ public class FastClasses<T> implements IClass<T> {
 		try {
 			return field != null ? field.get(target) : null;
 		} catch (Exception ex) {
-			throw new IgnoreException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!"+ex.getMessage());
+			throw new IgnoreException("没有找到[" + this.fastClass.getName() + "." + name + "]对应的属性!"+ex.getMessage(),ex);
 		}
 	}
 

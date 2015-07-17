@@ -85,6 +85,7 @@ public class ClassPathScanner implements ResourceLoaderAware {
                     candidates.add(Class.forName(clazzName));
                     logger.debug("Find Annotationed Class " + clazzName + "(@" + anno.getName() + ")");
                 } catch (ClassNotFoundException ignored) {
+                    logger.error(ignored.getMessage(),ignored);
                 }
             }
         } catch (IOException ex) {

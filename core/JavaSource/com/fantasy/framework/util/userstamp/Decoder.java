@@ -55,6 +55,7 @@ public class Decoder {
                 }
             }
 		} catch (Exception e) {
+			logger.error(e.getMessage(),e);
 			return false;
 		}
 		return true;

@@ -236,7 +236,7 @@ public class JSON {
                 threadLocal.remove();
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage() + " source json string : " + json + " => " + classed);
+            LOG.error(e.getMessage() + " source json string : " + json + " => " + classed,e);
         }
         return null;
     }

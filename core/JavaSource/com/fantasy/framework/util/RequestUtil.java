@@ -1,5 +1,6 @@
 package com.fantasy.framework.util;
 
+import com.fantasy.framework.error.IgnoreException;
 import org.springframework.web.bind.ServletRequestUtils;
 
 import javax.servlet.ServletRequest;
@@ -28,6 +29,7 @@ public class RequestUtil extends ServletRequestUtils {
 			strResult = bufResult.toString();
 		} catch (Exception e) {
 			strResult = defaultVal;
+			throw new IgnoreException(e.getMessage(),e);
 		}
 		return strResult;
 	}
