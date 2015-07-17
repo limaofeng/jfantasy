@@ -260,17 +260,4 @@ public class UploadFileManager implements FileManager {
         }
     }
 
-    public static void main(String[] args) {
-//		String absolutePath = "/www_root/images/abs123.jpg";// .jpg
-//		System.out.println(StringUtil.isChinese("/www_root/images/abs123.jpg"));
-//		// if(RegexpUtil.isMatch(absolutePath, "([/][^/]{1,})([.][^./]{1,})$")){
-//		// absolutePath = RegexpUtil.replace(absolutePath, "([/][^/]{1,})([.][^./]{1,})$", "$1");
-//		// }else{
-//		// }
-//
-//		System.out.println(RegexpUtil.parseFirst(absolutePath, "[^/]+[.]{0}[^.]{0}$"));
-//		// System.out.println(WebUtil.getExtension(absolutePath));
-//		System.out.println("----------------------------");
-    }
-
 }

@@ -258,7 +258,6 @@ public class PaymentService {
             throw new PaymentException("支付失败!");
         } else if (payment.getPaymentStatus() == Payment.PaymentStatus.success) {
             LOG.debug("订单已支付");
-            //throw new PaymentException("订单已支付!");
         }
     }
 

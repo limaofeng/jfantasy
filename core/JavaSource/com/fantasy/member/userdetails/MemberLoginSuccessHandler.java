@@ -26,15 +26,9 @@ public class MemberLoginSuccessHandler extends FantasyLoginSuccessHandler {
 		super.afterPropertiesSet();
         AuthenticationSuccessHandler handler = SpringContextUtil.getBeanByType(ConcurrencyLoginSuccessHandler.class);
         if (handler == null) {
-            handler = SpringContextUtil.createBean(ConcurrencyLoginSuccessHandler.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
+            handler = SpringContextUtil.createBean(ConcurrencyLoginSuccessHandler.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
         }
         this.handlers.add(handler);
-        //TODO 会员登录时初始化购物车
-/*		AuthenticationSuccessHandler handler = SpringContextUtil.getBeanByType(InitializeShopCartLoginSuccessHandler.class);
-		if (handler == null) {
-			handler = SpringContextUtil.createBean(InitializeShopCartLoginSuccessHandler.class, SpringContextUtil.AUTOWIRE_BY_TYPE);
-		}
-		this.handlers.add(handler);*/
 	}
 
 	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {

@@ -44,14 +44,8 @@ public class FileFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-//        String referer = WebUtil.getReferer(request);
-//        if (referer == null) {
-//            chain.doFilter(request, response);
-//            return;
-//        }
 
-        //通过 referer 判断访问来源，并通过配置 文件管理器 与 host 关联。
-//        String host = RegexpUtil.parseFirst(referer, "(http://|https://)[^/]+");
+        //TODO 通过 referer 判断访问来源，并通过配置 文件管理器 与 host 关联。 String host = RegexpUtil.parseFirst(referer, "(http://|https://)[^/]+");
         final String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
         FileManager webrootFileManager = FileManagerFactory.getInstance().getFileManager("WEBROOT");
         if (RegexpUtil.find(url, ".do$")) {
@@ -64,7 +58,6 @@ public class FileFilter extends GenericFilterBean {
             return;
         }
         FileManager fileManager = FileManagerFactory.getInstance().getFileManager("haolue-upload");
-        //TODO 暂时写死,以后优化
         FileDetail fileDetail = JdbcUtil.transaction(new JdbcUtil.Callback<FileDetail>() {
             @Override
             public FileDetail run() {

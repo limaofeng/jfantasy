@@ -359,11 +359,8 @@ public final class ImageUtil {
         }else if (GIF_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
             throw new RuntimeException("暂不支持GIF图片缩放");
         } else {
-            imageOriginal = ImageIO.read(target);// toBufferedImage((ToolkitImage)jpgReader(target));
+            imageOriginal = ImageIO.read(target);
         }
-        /* else if (PNG_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
-            imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
-        }*/
         int realWidth = imageOriginal.getWidth();
         int realHeight = imageOriginal.getHeight();
         if ((realWidth == width) && (realHeight == heigth)){

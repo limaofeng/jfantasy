@@ -124,14 +124,9 @@ public class FileService {
         return folder;
     }
 
-    // @Cacheable(value = "fantasy.file", key = "'getFileDetail-' + #absolutePath")
     public FileDetail getFileDetail(String absolutePath, String fileManagerId) {
         return this.fileDetailDao.findUnique(Restrictions.eq("absolutePath",absolutePath), Restrictions.eq("fileManagerId",fileManagerId));
     }
-
-    // public Pager<Folder> findFolderPager(Pager<Folder> pager, List<PropertyFilter> filters) {
-    // return this.folderDao.findPager(pager, filters);
-    // }
 
     public List<FileDetail> findFileDetail(Criterion... criterions){
         return this.fileDetailDao.find(criterions);
@@ -160,7 +155,7 @@ public class FileService {
     }
 
     /**
-     * 用来转移文件目录<br/> 比如当文章发布时才将图片更新到 http server。一般来说 localization 对应的 FileManager 是不作为上传目录的。只做文件存错。不记录其文件信息
+     * TODO 用来转移文件目录<br/> 比如当文章发布时才将图片更新到 http server。一般来说 localization 对应的 FileManager 是不作为上传目录的。只做文件存错。不记录其文件信息
      *
      * @param absolutePath 虚拟目录
      */
@@ -171,7 +166,7 @@ public class FileService {
     }
 
     /**
-     * width、heigth只适用于图片
+     * TODO width、heigth只适用于图片
      *
      * @param absolutePath 虚拟目录
      * @param width        宽
@@ -217,7 +212,7 @@ public class FileService {
                 return absolutePath + "(" + i + ")." + ext;
             }
         }
-        return absolutePath;//absolutePath + StringUtil.uuid() + (StringUtil.isNotBlank(ext) ? ("." + ext) : "");
+        return absolutePath;
     }
 
 }

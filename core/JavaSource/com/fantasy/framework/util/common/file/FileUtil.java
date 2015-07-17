@@ -221,25 +221,6 @@ public class FileUtil {
         });
     }
 
-    /*
-    public static void gbk2utf8(File file, String[] exts) throws IOException {
-        if (file.isFile()) {
-            for (String ext : exts)
-                if (file.getAbsolutePath().toLowerCase().endsWith(ext)) {
-                    String gbkContent = readFile(file);
-                    byte[] utf8Content = gbk2utf8(gbkContent);
-                    writeFile(utf8Content, file.getAbsolutePath());
-                    break;
-                }
-        } else {
-            File[] files = file.listFiles();
-            if (files != null) {
-                for (File _file : files)
-                    gbk2utf8(_file, exts);
-            }
-        }
-    }*/
-
     public static void compressionGZIP(String oldPath, String newPath) {
         try {
             FileInputStream fin = new FileInputStream(oldPath);

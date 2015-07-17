@@ -57,12 +57,6 @@ public abstract class StringUtil {
         return RegexpUtil.isMatch(input, "[^\\x00-\\xff]");
     }
 
-    /*
-    public static void main(String[] args) throws Exception {
-    System.out.println(append("dsdf", 5, "0"));
-    }
-    */
-
     /**
      * 剔除字符串中的空白字符
      *
@@ -328,15 +322,7 @@ public abstract class StringUtil {
         return bb;
     }
 
-    /*
-    public static final String ALL_INTERFACES = "0.0.0.0";
-    public static final String CRLF = "\r\n";
-    public static final String LINE_SEPARATOR = System.getProperty("line.separator", "\n");
-    public static final String ISO_8859_1 = "ISO-8859-1";
-    public static final String UTF8 = "UTF-8";
-    public static final String UTF8Alt = "UTF8";
-    public static final String UTF16 = "UTF-16";
-     */
+
     private static char[] lowercases = {'\000', '\001', '\002', '\003', '\004', '\005', '\006', '\007', '\b', '\t', '\n', '\013', '\f', '\r', '\016', '\017', '\020', '\021', '\022', '\023', '\024', '\025', '\026', '\027', '\030', '\031', '\032', '\033', '\034', '\035', '\036', '\037', ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', ''};
     
     public static String asciiToLowerCase(String s) {
@@ -512,16 +498,6 @@ public abstract class StringUtil {
         return s;
     }
 
-    /*
-    public static boolean equals(String s, char[] buf, int offset, int length) {
-        if (s.length() != length)
-            return false;
-        for (int i = 0; i < length; i++)
-            if (buf[(offset + i)] != s.charAt(i))
-                return false;
-        return true;
-    }*/
-
     public static String toUTF8String(byte[] b, int offset, int length) {
         try {
             return new String(b, offset, length, "UTF-8");
@@ -553,20 +529,6 @@ public abstract class StringUtil {
         }
         return buf.toString();
     }
-
-    // public static String printable(byte[] b) {
-    // StringBuilder buf = new StringBuilder();
-    // for (int i = 0; i < b.length; i++) {
-    // char c = (char) b[i];
-    // if ((Character.isWhitespace(c)) || ((c > ' ') && (c < ''))) {
-    // buf.append(c);
-    // } else {
-    // buf.append("0x");
-    // TypeUtil.toHex(b[i], buf);
-    // }
-    // }
-    // return buf.toString();
-    // }
 
     public static byte[] getBytes(String s) {
         try {

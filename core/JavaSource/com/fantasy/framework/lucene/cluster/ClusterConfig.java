@@ -108,7 +108,6 @@ public class ClusterConfig {
 		for (String clusterNode : clusterNodes) {
 			String host = clusterNode.split(":")[0];
 			int port = Integer.valueOf(clusterNode.split(":")[1]);
-//			this.addNode(host, port);
 			ClusterNode node = new ClusterNode(host, port);
 			this.clusterNodes.put(host, node);
 		}

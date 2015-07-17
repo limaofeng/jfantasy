@@ -57,11 +57,4 @@ public class SimilarityUtil {
 		return 1 - (double) ld / Math.max(str1.length(), str2.length());
 	}
 
-	/*public static void main(String[] args) {
-
-		String str1 = "中国人";
-		String str2 = "中国";
-		System.out.println("ld=" + ld(str1, str2));
-		System.out.println("sim=" + sim(str1, str2));
-	}*/
 }

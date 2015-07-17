@@ -35,15 +35,6 @@ public class WebsiteService {
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Website findUniqueByKey(String key) {
         Website website = this.websiteDao.findUniqueBy("key", key);
-//        Class lazyClass = website.getDefaultFileManager().getClass();
-//        Field field = ClassUtil.getDeclaredField(lazyClass,"handler");
-//        try {
-//            website.getDefaultFileManager().getName();
-//            JavassistLazyInitializer lazyInitializer = (JavassistLazyInitializer) field.get(website.getDefaultFileManager());
-//            System.out.println(lazyInitializer.getIdentifier());
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        }
         for (Setting setting : website.getSettings()) {
             Hibernate.initialize(setting);
         }
