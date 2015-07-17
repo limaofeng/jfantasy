@@ -1,5 +1,11 @@
 package com.fantasy.framework.lucene.handler;
 
+import com.fantasy.framework.lucene.annotations.IndexRefBy;
+import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.mapper.DataType;
+import com.fantasy.framework.lucene.mapper.FieldUtil;
+import org.apache.lucene.document.Document;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -7,13 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import org.apache.lucene.document.Document;
-
-import com.fantasy.framework.lucene.annotations.IndexRefBy;
-import com.fantasy.framework.lucene.cache.FieldsCache;
-import com.fantasy.framework.lucene.mapper.DataType;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
 
 public class RefListFieldHandler extends AbstractFieldHandler {
 	public RefListFieldHandler(Object obj, Field field, String prefix) {
@@ -25,7 +24,7 @@ public class RefListFieldHandler extends AbstractFieldHandler {
 		if (value == null) {
 			return;
 		}
-		Class<?> clazz = null;
+		Class<?> clazz;
 		Class<?> type = this.field.getType();
 		List<Object> list = new ArrayList<Object>();
 		if (type.isArray()) {
@@ -64,7 +63,7 @@ public class RefListFieldHandler extends AbstractFieldHandler {
 			}
 		}
 		clazz = FieldUtil.getRealType(clazz);
-		if ((list != null) && (list.size() > 0)) {
+		if (!list.isEmpty()) {
 			Field[] fields = FieldsCache.getInstance().get(clazz);
 			for (Field f : fields) {
 				IndexRefBy irb = (IndexRefBy) f.getAnnotation(IndexRefBy.class);
