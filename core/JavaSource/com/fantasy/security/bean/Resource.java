@@ -49,7 +49,6 @@ public class Resource extends BaseBusEntity {
 	 */
 	@Column(name = "VALUE")
 	private String value;
-//	private Rule rule;
 	/**
 	 * 资源类型
 	 */
@@ -227,7 +226,8 @@ public class Resource extends BaseBusEntity {
 		return new SimpleGrantedAuthority("URL_" + getValue());
 	}
 
-    public Resource clone() {
-        return ObjectUtil.clone(this);//  "parentResources", "userGroups","subResources","roles";
+    @Override
+	public Resource clone() {
+        return ObjectUtil.clone(this);
     }
 }
