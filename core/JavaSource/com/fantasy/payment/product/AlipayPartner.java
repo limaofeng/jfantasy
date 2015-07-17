@@ -22,11 +22,6 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
      * 支付宝消息验证地址
      */
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
-    /*
-    public static final String RETURN_URL = "/payment/payreturn.do";// 回调处理URL
-    public static final String NOTIFY_URL = "/payment/paynotify.do";// 消息通知URL
-    public static final String SHOW_URL = "/payment.do";// 支付单回显url
-    */
 
     @Override
     public String getPaymentUrl() {

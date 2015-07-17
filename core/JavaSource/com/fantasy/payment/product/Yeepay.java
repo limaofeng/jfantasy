@@ -23,9 +23,6 @@ public class Yeepay extends AbstractPaymentProduct {
     public static final String PAYMENT_URL = "https://www.yeepay.com/app-merchant-proxy/node";// 支付请求URL
     public static final String RETURN_URL = "/shop/payment!payreturn.action";// 回调处理URL
 
-    // 支持货币种类
-    // public static final CurrencyType[] currencyType = {CurrencyType.CNY};
-
     @Override
     public String getPaymentUrl() {
         return PAYMENT_URL;

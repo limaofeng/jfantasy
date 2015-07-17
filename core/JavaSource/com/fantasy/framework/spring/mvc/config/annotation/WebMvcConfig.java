@@ -35,15 +35,6 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         configurer.enable();
     }
 
-/*
-    @Bean
-    public ViewResolver viewResolver() {
-        FreeMarkerViewResolver viewResolver = new FreeMarkerViewResolver();
-        viewResolver.setPrefix("/template/");
-        viewResolver.setSuffix(".ftl");
-        return viewResolver;
-    }*/
-
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         MappingJackson2JsonView jackson2JsonView = new MappingJackson2JsonView();
