@@ -69,27 +69,6 @@ public class FileManagerConfig extends BaseBusEntity {
     @Transient
     private List<ConfigParam> configParams = new ArrayList<ConfigParam>();
 
-    /*------------------------------ FTP 配置属性-------------------------------
-    @JoinColumn(name = "FTP_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_FILE_MANAGER_FTP_CONFIG"))
-    @ManyToOne(fetch = FetchType.LAZY)
-    private FtpConfig ftpConfig;
-    */
-
-    /*------------------------------ JDBC 配置属性-------------------------------
-    @JoinColumn(name = "JDBC_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_FILE_MANAGER_JDBC_CONFIG"))
-    @ManyToOne(fetch = FetchType.LAZY)
-    private JdbcConfig jdbcConfig;
-    */
-    /*------------------------------- Local 配置属性 -----------------------------
-    @Column(name = "LOCAL_DEFAULT_DIR", length = 350)
-    private String localDefaultDir;
-    */
-    /*------------------------------- 虚拟目录 配置属性 -----------------------------
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "SOURCE_ID")
-    private FileManagerConfig source;
-    */
-
     /**
      * 文件管理器对应的目录
      */
@@ -181,32 +160,6 @@ public class FileManagerConfig extends BaseBusEntity {
             configParam.setValue(value);
         }
     }
-
-//    public static FileManagerConfig newInstance(String key, String name, String localDefaultDir, String description) {
-//        FileManagerConfig config = new FileManagerConfig();
-//        config.setId(key);
-//        config.setName(name);
-//        config.setType(FileManagerType.local);
-//        config.setLocalDefaultDir(localDefaultDir);
-//        config.setDescription(description);
-//        return config;
-//    }
-
-//    public static FileManagerConfig newInstance(String key) {
-//        FileManagerConfig config = new FileManagerConfig();
-//        config.setId(key);
-//        return config;
-//    }
-
-//    public static FileManagerConfig newInstance(String key, String name, FileManagerConfig source, String description) {
-//        FileManagerConfig config = new FileManagerConfig();
-//        config.setId(key);
-//        config.setName(name);
-//        config.setType(FileManagerType.virtual);
-//        config.setSource(source);
-//        config.setDescription(description);
-//        return config;
-//    }
 
     public static class ConfigParam {
         private String name;
