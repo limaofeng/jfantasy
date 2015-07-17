@@ -57,10 +57,10 @@ public class EmbedListFieldHandler extends AbstractFieldHandler {
 				return;
 			}
 		}
-		if ((list != null) && (list.size() > 0)) {
+		if ((list != null) && (!list.isEmpty())) {
 			Field[] fields = FieldsCache.getInstance().get(clazz);
 			for (Field f : fields) {
-				IndexEmbedBy ieb = (IndexEmbedBy) f.getAnnotation(IndexEmbedBy.class);
+				IndexEmbedBy ieb = f.getAnnotation(IndexEmbedBy.class);
 				if (ieb != null) {
 					FieldHandler handler = new EmbedByFieldHandler(this.obj.getClass(), list, f, this.prefix);
 					handler.handle(doc);

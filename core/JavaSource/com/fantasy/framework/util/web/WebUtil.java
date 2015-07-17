@@ -160,7 +160,7 @@ public class WebUtil {
         Cookie[] cookies = getCookies(request);
         if (cookies != null) {
             for (Cookie cooky : cookies) {
-                if (cooky.getName().equals(name)){
+                if (cooky.getName().equals(name)) {
                     return cooky;
                 }
             }
@@ -209,12 +209,12 @@ public class WebUtil {
                 Enumeration<InetAddress> ips = ni.getInetAddresses();
                 while (ips.hasMoreElements()) {
                     InetAddress ia = ips.nextElement();
-                    if (ia instanceof Inet4Address && ia.getHostAddress().equals(ip.trim())  && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
+                    if (ia instanceof Inet4Address && ia.getHostAddress().equals(ip.trim()) && (ia.isSiteLocalAddress() || ia.isMCGlobal())) {
                         // 只获取IPV4的局域网和广域网地址，忽略本地回环和本地链路地址
                         // System.out.println("IP:"
                         // + ia.getHostAddress());
                         // System.out.println("--------------------------------------------");
-                            return true;
+                        return true;
                     }
                 }
             }
@@ -264,33 +264,33 @@ public class WebUtil {
     public static String getOsVersion(HttpServletRequest request) {
         String useros = request.getHeader("User-Agent").toLowerCase();
         String osVersion = "unknown";
-        if (useros.indexOf("nt 6.1") > 0){
+        if (useros.indexOf("nt 6.1") > 0) {
             osVersion = "Windows 7";
-        }else if (useros.indexOf("nt 6.0") > 0){
+        } else if (useros.indexOf("nt 6.0") > 0) {
             osVersion = "Windows Vista/Server 2008";
-        } else if (useros.indexOf("nt 5.2") > 0){
+        } else if (useros.indexOf("nt 5.2") > 0) {
             osVersion = "Windows Server 2003";
-        } else if (useros.indexOf("nt 5.1") > 0){
+        } else if (useros.indexOf("nt 5.1") > 0) {
             osVersion = "Windows XP";
-        } else if (useros.indexOf("nt 5") > 0){
+        } else if (useros.indexOf("nt 5") > 0) {
             osVersion = "Windows 2000";
-        } else if (useros.indexOf("nt 4") > 0){
+        } else if (useros.indexOf("nt 4") > 0) {
             osVersion = "Windows nt4";
-        }else if (useros.indexOf("me") > 0){
+        } else if (useros.indexOf("me") > 0) {
             osVersion = "Windows Me";
-        } else if (useros.indexOf("98") > 0){
+        } else if (useros.indexOf("98") > 0) {
             osVersion = "Windows 98";
-        }else if (useros.indexOf("95") > 0){
+        } else if (useros.indexOf("95") > 0) {
             osVersion = "Windows 95";
-        } else if (useros.indexOf("ipad") > 0){
+        } else if (useros.indexOf("ipad") > 0) {
             osVersion = "iPad";
-        } else if (useros.indexOf("macintosh") > 0){
+        } else if (useros.indexOf("macintosh") > 0) {
             osVersion = "Mac";
-        } else if (useros.indexOf("unix") > 0){
+        } else if (useros.indexOf("unix") > 0) {
             osVersion = "UNIX";
-        } else if (useros.indexOf("linux") > 0){
+        } else if (useros.indexOf("linux") > 0) {
             osVersion = "Linux";
-        }else if (useros.indexOf("sunos") > 0) {
+        } else if (useros.indexOf("sunos") > 0) {
             osVersion = "SunOS";
         } else if (useros.indexOf("iPhone") > 0) {
             osVersion = "iPhone";
@@ -323,9 +323,9 @@ public class WebUtil {
                     throw new IgnoreException(e.getMessage(),e);
                 }
             }
-            if (!params.containsKey(key)){
+            if (!params.containsKey(key)) {
                 params.put(key, new String[]{val});
-            }  else {
+            } else {
                 params.put(key, ObjectUtil.join(params.get(key), val));
             }
         }
@@ -345,9 +345,9 @@ public class WebUtil {
             return null;
         }
         for (Map.Entry<String, String[]> entry : parseQuery(query).entrySet()) {
-            if (entry.getValue().length == 1){
+            if (entry.getValue().length == 1) {
                 OgnlUtil.getInstance().setValue(entry.getKey(), t, (entry.getValue())[0]);
-            }else {
+            } else {
                 OgnlUtil.getInstance().setValue(entry.getKey(), t, entry.getValue());
             }
         }
@@ -391,20 +391,20 @@ public class WebUtil {
     }
 
     public static enum Browser {
-        Opera("Opera", "version/\\d+\\W\\d+"),
-        chrome("Chrome", "Chrome/\\d+\\W\\d+"),
-        Firefox("Firefox", "Firefox/\\d+\\W\\d+"),
-        safari("Safari", "version/\\d+\\W\\d+\\W\\d+"),
-        _360se("360SE", "360SE/\\d+\\W\\d+"),
-        green("GreenBrowser", "GreenBrowser/\\d+\\W\\d+"),
-        qq("QQBrowser", "QQBrowser/\\d+\\W\\d+"),
-        maxthon("Maxthon", "Maxthon \\d+\\W\\d+"),
-        msie("MSIE", "msie\\s\\d+\\W\\d+"),
-        mozilla("Mozilla", "firefox/\\d+\\W\\d+"),
-        mqqbrowser("MQQBrowser", "MQQBrowser/\\d+\\W\\d+"),
-        ucbrowser("UCBrowser", "UCBrowser/\\d+\\W\\d+"),
-        baidubrowser("baidubrowser", "baidubrowser/\\d+\\W\\d+"),
-        unknown("unknown", "version/\\d+\\W\\d+");
+        Opera("Opera", "version/\\d+\\W\\d+"),//NOSONAR
+        chrome("Chrome", "Chrome/\\d+\\W\\d+"),//NOSONAR
+        Firefox("Firefox", "Firefox/\\d+\\W\\d+"),//NOSONAR
+        safari("Safari", "version/\\d+\\W\\d+\\W\\d+"),//NOSONAR
+        _360se("360SE", "360SE/\\d+\\W\\d+"),//NOSONAR
+        green("GreenBrowser", "GreenBrowser/\\d+\\W\\d+"),//NOSONAR
+        qq("QQBrowser", "QQBrowser/\\d+\\W\\d+"),//NOSONAR
+        maxthon("Maxthon", "Maxthon \\d+\\W\\d+"),//NOSONAR
+        msie("MSIE", "msie\\s\\d+\\W\\d+"),//NOSONAR
+        mozilla("Mozilla", "firefox/\\d+\\W\\d+"),//NOSONAR
+        mqqbrowser("MQQBrowser", "MQQBrowser/\\d+\\W\\d+"),//NOSONAR
+        ucbrowser("UCBrowser", "UCBrowser/\\d+\\W\\d+"),//NOSONAR
+        baidubrowser("baidubrowser", "baidubrowser/\\d+\\W\\d+"),//NOSONAR
+        unknown("unknown", "version/\\d+\\W\\d+");//NOSONAR
 
         private String browser;
         private String version;
@@ -438,7 +438,7 @@ public class WebUtil {
 
     }
 
-    public static String filename(String name,HttpServletRequest request) {
+    public static String filename(String name, HttpServletRequest request) {
         try {
             return Browser.mozilla == browser(request) ? new String(name.getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(name, "UTF-8");
         } catch (UnsupportedEncodingException e) {
