@@ -19,11 +19,21 @@ import java.util.Map;
 
 public class SpringContextUtil implements ApplicationContextAware, DisposableBean {
 
-    public static final int AUTOWIRE_NO = 0;
-    public static final int AUTOWIRE_BY_NAME = 1;
-    public static final int AUTOWIRE_BY_TYPE = 2;
-    public static final int AUTOWIRE_CONSTRUCTOR = 3;
-    public static final int AUTOWIRE_AUTODETECT = 4;
+    public enum AutoType {
+
+        AUTOWIRE_NO(0), AUTOWIRE_BY_NAME(1), AUTOWIRE_BY_TYPE(2), AUTOWIRE_CONSTRUCTOR(3), AUTOWIRE_AUTODETECT(4);
+
+        private int value;
+
+        AutoType(int value) {
+            this.value = value;
+        }
+
+        public int getValue() {
+            return this.value;
+        }
+
+    }
 
     private static final Log logger = LogFactory.getLog(SpringContextUtil.class);
 
@@ -85,16 +95,16 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
             return applicationContext.getBean(name, requiredType);
         } catch (NoSuchBeanDefinitionException e) {
             if (logger.isErrorEnabled()) {
-                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!");
+                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!", e);
             }
             return null;
         } catch (BeansException e) {
             if (logger.isErrorEnabled()) {
-                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!");
+                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!", e);
             }
             throw e;
         } catch (NullPointerException e) {
-            logger.error("查找Bean:" + name + "时发现applicationContext未启动");
+            logger.error("查找Bean:" + name + "时发现applicationContext未启动", e);
             return null;
         }
     }
@@ -107,43 +117,35 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
     /**
      * 由spring容器初始化该对象
      *
-     * @param <T>
-     * @param beanClass
-     * @param autoType
-     * @return
-     * @see #AUTOWIRE_NO
-     * @see #AUTOWIRE_BY_NAME
-     * @see #AUTOWIRE_BY_TYPE
-     * @see #AUTOWIRE_CONSTRUCTOR
-     * @see #AUTOWIRE_AUTODETECT
+     * @param <T>       泛型
+     * @param beanClass 泛型 class
+     * @param autoType  自动注入方式
+     * @return T 对象
+     * @see AutoType
      */
     @SuppressWarnings("unchecked")
-    public static synchronized <T> T autowire(Class<T> beanClass, int autoType) {
-        return (T) applicationContext.getAutowireCapableBeanFactory().autowire(beanClass, autoType, false);
+    public static synchronized <T> T autowire(Class<T> beanClass, AutoType autoType) {
+        return (T) applicationContext.getAutowireCapableBeanFactory().autowire(beanClass, autoType.getValue(), false);
     }
 
     /**
      * spring 创建该Bean
      *
-     * @param <T>
-     * @param beanClass
-     * @param autoType
-     * @return
-     * @see #AUTOWIRE_NO
-     * @see #AUTOWIRE_BY_NAME
-     * @see #AUTOWIRE_BY_TYPE
-     * @see #AUTOWIRE_CONSTRUCTOR
-     * @see #AUTOWIRE_AUTODETECT
+     * @param <T>       泛型
+     * @param beanClass 泛型 class
+     * @param autoType  自动注入方式
+     * @return T 对象
+     * @see AutoType
      */
     @SuppressWarnings("unchecked")
-    public static synchronized <T> T createBean(Class<T> beanClass, int autoType) {
-        return (T) applicationContext.getAutowireCapableBeanFactory().createBean(beanClass, autoType, false);
+    public static synchronized <T> T createBean(Class<T> beanClass, AutoType autoType) {
+        return (T) applicationContext.getAutowireCapableBeanFactory().createBean(beanClass, autoType.getValue(), false);
     }
 
     /**
      * 如果BeanFactory包含一个与所给名称匹配的bean定义，则返回true
      *
-     * @param name
+     * @param name beanname
      * @return boolean
      */
     public static synchronized boolean containsBean(String name) {
@@ -153,7 +155,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
     /**
      * 判断以给定名字注册的bean定义是一个singleton还是一个prototype。 如果与给定名字相应的bean定义没有被找到，将会抛出一个异常（NoSuchBeanDefinitionException）
      *
-     * @param name
+     * @param name beanname
      * @return boolean
      * @throws org.springframework.beans.factory.NoSuchBeanDefinitionException
      */
@@ -162,7 +164,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
     }
 
     /**
-     * @param name
+     * @param name beanname
      * @return Class 注册对象的类型
      * @throws NoSuchBeanDefinitionException
      */
@@ -173,8 +175,8 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
     /**
      * 如果给定的bean名字在bean定义中有别名，则返回这些别名
      *
-     * @param name
-     * @return
+     * @param name beanname
+     * @return name aliases
      * @throws NoSuchBeanDefinitionException
      */
     public static synchronized String[] getAliases(String name) throws NoSuchBeanDefinitionException {
@@ -218,7 +220,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
         ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
-        beanDefinitionBuilder.setAutowireMode(AUTOWIRE_BY_TYPE);
+        beanDefinitionBuilder.setAutowireMode(AutoType.AUTOWIRE_BY_TYPE.getValue());
         defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
     }
 
@@ -240,7 +242,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
         ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
         DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
-        beanDefinitionBuilder.setAutowireMode(AUTOWIRE_BY_TYPE);
+        beanDefinitionBuilder.setAutowireMode(AutoType.AUTOWIRE_BY_TYPE.getValue());
 
         for (Map.Entry<String, Object> entry : propertyValues.entrySet()) {
             beanDefinitionBuilder.addPropertyValue(entry.getKey(), entry.getValue());
