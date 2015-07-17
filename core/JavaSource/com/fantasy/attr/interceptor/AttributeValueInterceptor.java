@@ -289,7 +289,7 @@ public class AttributeValueInterceptor {
             public Object run() {
                 try {
                     return toDynaBean(pjp.proceed());
-                } catch (Throwable throwable) {
+                } catch (Throwable throwable) {//NOSONAR
                     LOG.error(throwable.getMessage());
                     return null;
                 }
