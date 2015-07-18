@@ -184,6 +184,7 @@ public class FileFilter extends GenericFilterBean {
                 try {
                     StreamUtil.copy(fileItem.getInputStream(), response.getOutputStream());
                 } catch (FileNotFoundException var5) {
+                    logger.error(var5.getMessage(),var5);
                     response.sendError(404);
                 }
             }
@@ -192,6 +193,7 @@ public class FileFilter extends GenericFilterBean {
                 try {
                     StreamUtil.copy(fileItem.getInputStream(), response.getOutputStream());
                 } catch (FileNotFoundException e) {
+                    logger.error(e.getMessage(),e);
                     response.sendError(404);
                 }
             }

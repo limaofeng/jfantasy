@@ -179,7 +179,7 @@ public class OgnlUtil {
             try {
                 this.expressions.putIfAbsent(expression, o = Ognl.parseExpression(expression));
             } catch (OgnlException e) {
-                throw new IgnoreException(e.getMessage());
+                throw new IgnoreException(e.getMessage(),e);
             }
         }
         return o;
@@ -240,7 +240,7 @@ public class OgnlUtil {
             try {
                 internalSetProperty(expression, entry.getValue(), o, context, throwPropertyExceptions);
             } catch (Exception e) {
-                throw new IgnoreException(e.getMessage());
+                throw new IgnoreException(e.getMessage(),e);
             }
         }
         Ognl.setRoot(context, oldRoot);

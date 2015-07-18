@@ -133,6 +133,7 @@ public class ScheduleService {
         try {
             return this.scheduler.checkExists(jobKey);
         } catch (SchedulerException e) {
+            logger.error(e.getMessage(),e);
             return true;
         }
     }
@@ -141,6 +142,7 @@ public class ScheduleService {
         try {
             return this.scheduler.checkExists(triggerKey);
         } catch (SchedulerException e) {
+            logger.error(e.getMessage(),e);
             return false;
         }
     }

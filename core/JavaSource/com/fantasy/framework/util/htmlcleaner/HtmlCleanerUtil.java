@@ -183,7 +183,7 @@ public class HtmlCleanerUtil {
             TagNode tagNode = node.findElementByAttValue(att, value, true, true);
             return getAsString(getBrowserCompactXmlSerializer(hc), tagNode);
         } catch (Exception e) {
-            throw new IgnoreException(e.getMessage());
+            throw new IgnoreException(e.getMessage(),e);
         }
     }
 

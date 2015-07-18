@@ -39,7 +39,7 @@ public class RefFieldHandler extends AbstractFieldHandler {
 			Field field = FieldsCache.getInstance().getIdField(obj.getClass());
 			return String.valueOf(FieldUtil.get(obj, field));
 		} catch (IdException e) {
-			throw new RuntimeException("要索引的对象@Id字段不能为空");
+			throw new RuntimeException("要索引的对象@Id字段不能为空",e);
 		}
 	}
 }

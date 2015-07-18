@@ -40,6 +40,7 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 		} catch (IllegalAccessException e) {
 			log.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
+			logger.error(e.getMessage(),e);
 			throw (AuthenticationException) e.getTargetException();
 		}
 		throw new UsernameNotFoundException(messages.getMessage("JdbcDaoImpl.notFound", new Object[] { username }, "Username {0} not found", Locale.CHINA));

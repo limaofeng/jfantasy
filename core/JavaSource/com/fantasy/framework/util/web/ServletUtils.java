@@ -140,6 +140,7 @@ public class ServletUtils {
 			String encodedfileName = new String(fileName.getBytes(), "ISO8859-1");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");
 		} catch (UnsupportedEncodingException localUnsupportedEncodingException) {
+			logger.error(localUnsupportedEncodingException.getMessage(),localUnsupportedEncodingException);
 		}
 	}
 

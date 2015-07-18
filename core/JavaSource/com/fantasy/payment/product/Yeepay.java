@@ -1,5 +1,6 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.service.PaymentContext;
@@ -109,6 +110,7 @@ public class Yeepay extends AbstractPaymentProduct {
         } catch (UnsupportedEncodingException e) {
             keys = key.getBytes();
             values = value.getBytes();
+            throw new IgnoreException(e.getMessage(),e);
         }
 
         Arrays.fill(kIpad, keys.length, 64, (byte) 54);
@@ -122,7 +124,7 @@ public class Yeepay extends AbstractPaymentProduct {
         try {
             messageDigest = MessageDigest.getInstance("MD5");
         } catch (NoSuchAlgorithmException e) {
-            return null;
+            throw new IgnoreException(e.getMessage(),e);
         }
         messageDigest.update(kIpad);
         messageDigest.update(values);

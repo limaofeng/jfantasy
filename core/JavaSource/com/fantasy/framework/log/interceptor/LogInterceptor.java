@@ -32,6 +32,7 @@ public class LogInterceptor extends LogAspectSupport implements MethodIntercepto
         try {
             return execute(aopAllianceInvoker, invocation.getThis(), method, invocation.getArguments());
         } catch (ThrowableWrapper th) {
+            logger.error(th.getMessage(),th);
             throw th.original;
         }
     }
