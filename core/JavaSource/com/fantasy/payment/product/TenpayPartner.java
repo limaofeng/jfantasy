@@ -41,18 +41,18 @@ public class TenpayPartner extends AbstractPaymentProduct {
         String attach = "sh" + "op" + "xx";// 商户数据
         String chnid = paymentConfig.getBargainorId();// 商户号
         String cmdno = "12";// 业务代码（12：担保交易支付）
-        String encode_type = "2";// 字符集编码格式（1：GB2312、2：UTF-8）
-        String mch_desc = "";// 订单描述
-        String mch_name = paymentSn;// 商品名称
-        String mch_price = totalAmountString;// 总金额（单位：分）
-        String mch_returl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
-        String mch_type = "1";// 交易类型（1、实物交易、2、虚拟交易）
-        String mch_vno = paymentSn;// 交易号
-        String need_buyerinfo = "2";// 是否需要填写物流信息（1：需要、2：不需要）
+        String encodeType = "2";// 字符集编码格式（1：GB2312、2：UTF-8）
+        String mchDesc = "";// 订单描述
+        String mchName = paymentSn;// 商品名称
+        String mchPrice = totalAmountString;// 总金额（单位：分）
+        String mchReturl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String mchType = "1";// 交易类型（1、实物交易、2、虚拟交易）
+        String mchVno = paymentSn;// 交易号
+        String needBuyerinfo = "2";// 是否需要填写物流信息（1：需要、2：不需要）
         String seller = paymentConfig.getBargainorId();// 商户号
-        String show_url = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 商品显示URL
-        String transport_desc = "";// 物流方式说明
-        String transport_fee = "0";// 物流费用（单位：分）
+        String showUrl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 商品显示URL
+        String transportDesc = "";// 物流方式说明
+        String transportFee = "0";// 物流费用（单位：分）
         String version = "2";// 版本号
         String key = paymentConfig.getBargainorKey();// 密钥
 
@@ -61,18 +61,18 @@ public class TenpayPartner extends AbstractPaymentProduct {
         signMap.put("attach", attach);
         signMap.put("chnid", chnid);
         signMap.put("cmdno", cmdno);
-        signMap.put("encode_type", encode_type);
-        signMap.put("mch_desc", mch_desc);
-        signMap.put("mch_name", mch_name);
-        signMap.put("mch_price", mch_price);
-        signMap.put("mch_returl", mch_returl);
-        signMap.put("mch_type", mch_type);
-        signMap.put("mch_vno", mch_vno);
-        signMap.put("need_buyerinfo", need_buyerinfo);
+        signMap.put("encode_type", encodeType);
+        signMap.put("mch_desc", mchDesc);
+        signMap.put("mch_name", mchName);
+        signMap.put("mch_price", mchPrice);
+        signMap.put("mch_returl", mchReturl);
+        signMap.put("mch_type", mchType);
+        signMap.put("mch_vno", mchVno);
+        signMap.put("need_buyerinfo", needBuyerinfo);
         signMap.put("seller", seller);
-        signMap.put("show_url", show_url);
-        signMap.put("transport_desc", transport_desc);
-        signMap.put("transport_fee", transport_fee);
+        signMap.put("show_url", showUrl);
+        signMap.put("transport_desc", transportDesc);
+        signMap.put("transport_fee", transportFee);
         signMap.put("version", version);
         signMap.put("key", key);
         String sign = DigestUtils.md5Hex(getParameterString(signMap)).toUpperCase();
@@ -82,18 +82,18 @@ public class TenpayPartner extends AbstractPaymentProduct {
         parameterMap.put("attach", attach);
         parameterMap.put("chnid", chnid);
         parameterMap.put("cmdno", cmdno);
-        parameterMap.put("encode_type", encode_type);
-        parameterMap.put("mch_desc", mch_desc);
-        parameterMap.put("mch_name", mch_name);
-        parameterMap.put("mch_price", mch_price);
-        parameterMap.put("mch_returl", mch_returl);
-        parameterMap.put("mch_type", mch_type);
-        parameterMap.put("mch_vno", mch_vno);
-        parameterMap.put("need_buyerinfo", need_buyerinfo);
+        parameterMap.put("encode_type", encodeType);
+        parameterMap.put("mch_desc", mchDesc);
+        parameterMap.put("mch_name", mchName);
+        parameterMap.put("mch_price", mchPrice);
+        parameterMap.put("mch_returl", mchReturl);
+        parameterMap.put("mch_type", mchType);
+        parameterMap.put("mch_vno", mchVno);
+        parameterMap.put("need_buyerinfo", needBuyerinfo);
         parameterMap.put("seller", seller);
-        parameterMap.put("show_url", show_url);
-        parameterMap.put("transport_desc", transport_desc);
-        parameterMap.put("transport_fee", transport_fee);
+        parameterMap.put("show_url", showUrl);
+        parameterMap.put("transport_desc", transportDesc);
+        parameterMap.put("transport_fee", transportFee);
         parameterMap.put("version", version);
         parameterMap.put("sign", sign);
         return parameterMap;
@@ -104,34 +104,34 @@ public class TenpayPartner extends AbstractPaymentProduct {
         PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String attach = parameters.get("attach");
-        String buyer_id = parameters.get("buyer_id");
-        String cft_tid = parameters.get("cft_tid");
+        String buyerId = parameters.get("buyer_id");
+        String cftTid = parameters.get("cft_tid");
         String chnid = parameters.get("chnid");
         String cmdno = parameters.get("cmdno");
-        String mch_vno = parameters.get("mch_vno");
+        String mchVno = parameters.get("mch_vno");
         String retcode = parameters.get("retcode");
         String seller = parameters.get("seller");
         String status = parameters.get("status");
-        String total_fee = parameters.get("total_fee");
-        String trade_price = parameters.get("trade_price");
-        String transport_fee = parameters.get("transport_fee");
+        String totalFee = parameters.get("total_fee");
+        String tradePrice = parameters.get("trade_price");
+        String transportFee = parameters.get("transport_fee");
         String version = parameters.get("version");
         String sign = parameters.get("sign");
 
         // 验证支付签名
         Map<String, String> parameterMap = new LinkedHashMap<String, String>();
         parameterMap.put("attach", attach);
-        parameterMap.put("buyer_id", buyer_id);
-        parameterMap.put("cft_tid", cft_tid);
+        parameterMap.put("buyer_id", buyerId);
+        parameterMap.put("cft_tid", cftTid);
         parameterMap.put("chnid", chnid);
         parameterMap.put("cmdno", cmdno);
-        parameterMap.put("mch_vno", mch_vno);
+        parameterMap.put("mch_vno", mchVno);
         parameterMap.put("retcode", retcode);
         parameterMap.put("seller", seller);
         parameterMap.put("status", status);
-        parameterMap.put("total_fee", total_fee);
-        parameterMap.put("trade_price", trade_price);
-        parameterMap.put("transport_fee", transport_fee);
+        parameterMap.put("total_fee", totalFee);
+        parameterMap.put("trade_price", tradePrice);
+        parameterMap.put("transport_fee", transportFee);
         parameterMap.put("version", version);
         parameterMap.put("key", paymentConfig.getBargainorKey());
         return StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase());

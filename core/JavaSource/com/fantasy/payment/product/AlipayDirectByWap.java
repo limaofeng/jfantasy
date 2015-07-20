@@ -42,33 +42,33 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
         OrderDetails orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
-        String return_url = context.getReturnUrl(payment.getSn());// 回调处理URL
-        String notify_url = context.getNotifyUrl(payment.getSn());// 消息通知URL
+        String returnUrl = context.getReturnUrl(payment.getSn());// 回调处理URL
+        String notifyUrl = context.getNotifyUrl(payment.getSn());// 消息通知URL
 
         //操作中断返回地址
-        String merchant_url = SettingUtil.getServerUrl() + "/payment/merchant/" + payment.getSn();
+        String merchantUrl = SettingUtil.getServerUrl() + "/payment/merchant/" + payment.getSn();
         //用户付款中途退出返回商户的地址。需http://格式的完整路径，不允许加?id=123这类自定义参数
 
         String partner = paymentConfig.getBargainorId();// 合作身份者ID
         // 签名方式，选择项：0001(RSA)、MD5
-        String sign_type = "MD5";
+        String signType = "MD5";
         // 无线的产品中，签名方式为rsa时，sign_type需赋值为0001而不是RSA
 
         //卖家支付宝帐户
-        String seller_email = paymentConfig.getSellerEmail();
+        String sellerEmail = paymentConfig.getSellerEmail();
         //商户订单号
-        String out_trade_no = orderDetails.getSN();
+        String outTradeNo = orderDetails.getSN();
         //订单名称
         String subject = orderDetails.getSubject();
         //必填
 
         //付款金额
         DecimalFormat df = new DecimalFormat("0.00");
-        String total_fee = df.format(orderDetails.getPayableFee());
+        String totalFee = df.format(orderDetails.getPayableFee());
         //必填
 
         //请求业务参数详细
-        String req_dataToken = "<direct_trade_create_req><notify_url>" + notify_url + "</notify_url><call_back_url>" + return_url + "</call_back_url><seller_account_name>" + seller_email + "</seller_account_name><out_trade_no>" + out_trade_no + "</out_trade_no><subject>" + subject + "</subject><total_fee>" + total_fee + "</total_fee><merchant_url>" + merchant_url + "</merchant_url></direct_trade_create_req>";
+        String reqDataToken = "<direct_trade_create_req><notify_url>" + notifyUrl + "</notify_url><call_back_url>" + returnUrl + "</call_back_url><seller_account_name>" + sellerEmail + "</seller_account_name><out_trade_no>" + outTradeNo + "</out_trade_no><subject>" + subject + "</subject><total_fee>" + totalFee + "</total_fee><merchant_url>" + merchantUrl + "</merchant_url></direct_trade_create_req>";
         //必填
 
         //返回格式
@@ -83,31 +83,31 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
         sParaTempToken.put("service", "alipay.wap.trade.create.direct");
         sParaTempToken.put("partner", partner);
         sParaTempToken.put("_input_charset", input_charset);
-        sParaTempToken.put("sec_id", sign_type);
+        sParaTempToken.put("sec_id", signType);
         sParaTempToken.put("format", format);
         sParaTempToken.put("v", v);
         sParaTempToken.put("req_id", payment.getSn());//请求号
-        sParaTempToken.put("req_data", req_dataToken);
+        sParaTempToken.put("req_data", reqDataToken);
         try {
             //建立请求
             String sHtmlTextToken = buildRequest(ALIPAY_GATEWAY_NEW, "", "", sParaTempToken, paymentConfig);
             //URLDECODE返回的信息
             sHtmlTextToken = URLDecoder.decode(sHtmlTextToken, input_charset);
             //获取token
-            String request_token = getRequestToken(sHtmlTextToken, sign_type);
+            String requestToken = getRequestToken(sHtmlTextToken, signType);
             ////////////////////////////////////根据授权码token调用交易接口alipay.wap.auth.authAndExecute//////////////////////////////////////
             //业务详细
-            String req_data = "<auth_and_execute_req><request_token>" + request_token + "</request_token></auth_and_execute_req>";
+            String reqData = "<auth_and_execute_req><request_token>" + requestToken + "</request_token></auth_and_execute_req>";
             //必填
             //把请求参数打包成数组
             Map<String, String> sParaTemp = new HashMap<String, String>();
             sParaTemp.put("service", "alipay.wap.auth.authAndExecute");
             sParaTemp.put("partner", partner);
             sParaTemp.put("_input_charset", input_charset);
-            sParaTemp.put("sec_id", sign_type);
+            sParaTemp.put("sec_id", signType);
             sParaTemp.put("format", format);
             sParaTemp.put("v", v);
-            sParaTemp.put("req_data", req_data);
+            sParaTemp.put("req_data", reqData);
             return buildRequestPara(sParaTemp, paymentConfig);
         } catch (UnsupportedEncodingException e) {
             LOG.error(e.getMessage(), e);
@@ -122,19 +122,19 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
     public boolean verifySign(Map<String, String> parameters) {
         Map<String, String> params = parameters;
         try {
-            String sign_type = parameters.get("sign_type");
+            String signType = parameters.get("sign_type");
             //RSA签名解密
-            if ("0001".equals(sign_type)) {
+            if ("0001".equals(signType)) {
                 params = decrypt(parameters);
             }
             //XML解析notify_data数据
-            Document doc_notify_data = DocumentHelper.parseText(params.get("notify_data"));
+            Document docNotifyData = DocumentHelper.parseText(params.get("notify_data"));
             //商户订单号
-            String out_trade_no = doc_notify_data.selectSingleNode("//notify/out_trade_no").getText();
+            String outTradeNo = docNotifyData.selectSingleNode("//notify/out_trade_no").getText();
             //支付宝交易号
-            String trade_no = doc_notify_data.selectSingleNode("//notify/trade_no").getText();
+            String tradeNo = docNotifyData.selectSingleNode("//notify/trade_no").getText();
             //交易状态
-            String trade_status = doc_notify_data.selectSingleNode("//notify/trade_status").getText();
+            String tradeStatus = docNotifyData.selectSingleNode("//notify/trade_status").getText();
             //获取支付宝的通知返回参数，可参考技术文档中页面跳转同步通知参数列表(以上仅供参考)//
             return verifyNotify(params);
         } catch (Exception e) {
@@ -156,19 +156,19 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
             params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
         }
         try {
-            String sign_type = parameters.get("sign_type");
+            String signType = parameters.get("sign_type");
             //RSA签名解密
-            if ("0001".equals(sign_type)) {
+            if ("0001".equals(signType)) {
                 params = decrypt(parameters);
             }
             //XML解析notify_data数据
-            Document doc_notify_data = DocumentHelper.parseText(params.get("notify_data"));
+            Document docNotifyData = DocumentHelper.parseText(params.get("notify_data"));
             //商户订单号
-            params.put("out_trade_no", doc_notify_data.selectSingleNode("//notify/out_trade_no").getText());
+            params.put("out_trade_no", docNotifyData.selectSingleNode("//notify/out_trade_no").getText());
             //支付宝交易号
-            params.put("trade_no", doc_notify_data.selectSingleNode("//notify/trade_no").getText());
+            params.put("trade_no", docNotifyData.selectSingleNode("//notify/trade_no").getText());
             //交易状态
-            params.put("trade_status", doc_notify_data.selectSingleNode("//notify/trade_status").getText());
+            params.put("trade_status", docNotifyData.selectSingleNode("//notify/trade_status").getText());
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }

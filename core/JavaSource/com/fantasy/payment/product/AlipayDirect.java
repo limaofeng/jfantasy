@@ -92,25 +92,25 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
         AtomicReference<String> body = new AtomicReference<String>(orderDetails.getSN());// 订单描述
         String defaultbank = parameters.get("bankNo");// 默认选择银行（当paymethod为bankPay时有效）
-        String extra_common_param = "";// 商户数据
-        String notify_url = context.getNotifyUrl(payment.getSn());// 消息通知URL
-        AtomicReference<String> out_trade_no = new AtomicReference<String>(payment.getSn());// 支付编号
+        String extraCommonParam = "";// 商户数据
+        String notifyUrl = context.getNotifyUrl(payment.getSn());// 消息通知URL
+        AtomicReference<String> outTradeNo = new AtomicReference<String>(payment.getSn());// 支付编号
         String partner = paymentConfig.getBargainorId();// 合作身份者ID
-        String payment_type = "1";// 支付类型（固定值：1）
+        String paymentType = "1";// 支付类型（固定值：1）
         String paymethod = StringUtil.isBlank(defaultbank) ? "directPay" : "bankPay";// 默认支付方式（bankPay：网银、cartoon：卡通、directPay：余额、CASH：网点支付）
-        String return_url = context.getReturnUrl(payment.getSn());// 回调处理URL
-        String seller_id = paymentConfig.getSellerEmail();// 商家ID
+        String returnUrl = context.getReturnUrl(payment.getSn());// 回调处理URL
+        String sellerId = paymentConfig.getSellerEmail();// 商家ID
         String service = "create_direct_pay_by_user";// 接口类型（create_direct_pay_by_user：即时交易）
-        String show_url = context.getShowUrl(payment.getOrderSn());// 商品显示URL
-        String sign_type = "MD5";//签名加密方式（MD5）
+        String showUrl = context.getShowUrl(payment.getOrderSn());// 商品显示URL
+        String signType = "MD5";//签名加密方式（MD5）
         AtomicReference<String> subject = new AtomicReference<String>(orderDetails.getSubject());// 订单的名称、标题、关键字等
-        String total_fee = DECIMAL_FORMAT.format(orderDetails.getPayableFee());// 总金额（单位：元）
+        String totalFee = DECIMAL_FORMAT.format(orderDetails.getPayableFee());// 总金额（单位：元）
         String key = paymentConfig.getBargainorKey();// 密钥
         //防钓鱼时间戳
-        String anti_phishing_key = "";
+        String antiPhishingKey = "";
         //若要使用请调用类文件submit中的query_timestamp函数
         //客户端的IP地址
-        String exter_invoke_ip = "";
+        String exterInvokeIp = "";
         //非局域网的外网IP地址，如：221.0.0.1
 
         // 生成签名
@@ -118,26 +118,26 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         signMap.put("service", service);
         signMap.put("partner", partner);
         signMap.put("_input_charset", input_charset);
-        signMap.put("payment_type", payment_type);
-        signMap.put("notify_url", notify_url);
-        signMap.put("return_url", return_url);
-        signMap.put("seller_email", seller_id);
-        signMap.put("out_trade_no", out_trade_no.get());
+        signMap.put("payment_type", paymentType);
+        signMap.put("notify_url", notifyUrl);
+        signMap.put("return_url", returnUrl);
+        signMap.put("seller_email", sellerId);
+        signMap.put("out_trade_no", outTradeNo.get());
         signMap.put("subject", subject.get());
-        signMap.put("total_fee", total_fee);
+        signMap.put("total_fee", totalFee);
         signMap.put("body", body.get());
-        signMap.put("show_url", show_url);
-        signMap.put("anti_phishing_key", anti_phishing_key);
-        signMap.put("exter_invoke_ip", exter_invoke_ip);
+        signMap.put("show_url", showUrl);
+        signMap.put("anti_phishing_key", antiPhishingKey);
+        signMap.put("exter_invoke_ip", exterInvokeIp);
         signMap.put("paymethod", paymethod);
         signMap.put("defaultbank", defaultbank);
-        signMap.put("extra_common_param", extra_common_param);
+        signMap.put("extra_common_param", extraCommonParam);
 
         String sign = DigestUtils.md5Hex(getParameterString(signMap) + key);
 
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>(paraFilter(signMap));
-        parameterMap.put("sign_type", sign_type);
+        parameterMap.put("sign_type", signType);
         parameterMap.put("sign", sign);
         return parameterMap;
     }

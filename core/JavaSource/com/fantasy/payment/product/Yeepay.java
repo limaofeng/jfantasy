@@ -37,40 +37,40 @@ public class Yeepay extends AbstractPaymentProduct {
         BigDecimal paymentAmount = payment.getTotalAmount();
         String paymentSn = payment.getSn();
 
-        String p0_Cmd = "Buy";// 业务类型
-        String p1_MerId = paymentConfig.getBargainorId();// 商户编号
+        String p0Cmd = "Buy";// 业务类型
+        String p1MerId = paymentConfig.getBargainorId();// 商户编号
         //String p2_Order = paymentSn;// 支付编号
-        String p3_Amt = paymentAmount.toString();// 总金额（单位：元）
-        String p4_Cur = "CNY";// 支付币种（CNY：人民币）
-        String p5_Pid = paymentSn + ":商品名称";// 商品名称
-        String p6_Pcat = "";// 商品种类
-        String p7_Pdesc = paymentSn + ":商品描述";// 商品描述
-        String p8_Url = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
-        String p9_SAF = "0";// 是否需要填写送货地址（1：是、0：否）
-        String pa_MP = "shop" + "xx";// 商户数据
-        String pd_FrpId = "";// 支付通道编码
-        String pr_NeedResponse = "1";// 是否需要应答机制（1：是、0：否）
+        String p3Amt = paymentAmount.toString();// 总金额（单位：元）
+        String p4Cur = "CNY";// 支付币种（CNY：人民币）
+        String p5Pid = paymentSn + ":商品名称";// 商品名称
+        String p6Pcat = "";// 商品种类
+        String p7Pdesc = paymentSn + ":商品描述";// 商品描述
+        String p8Url = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String p9SAF = "0";// 是否需要填写送货地址（1：是、0：否）
+        String paMP = "shop" + "xx";// 商户数据
+        String pdFrpId = "";// 支付通道编码
+        String prNeedResponse = "1";// 是否需要应答机制（1：是、0：否）
         String key = paymentConfig.getBargainorKey();// 密钥
 
         // 生成签名
         /*p2_Order == paymentSn */
-        String hmac = hmacSign(p0_Cmd + p1_MerId + paymentSn + p3_Amt + p4_Cur + p5_Pid + p6_Pcat + p7_Pdesc + p8_Url + p9_SAF + pa_MP + pd_FrpId + pr_NeedResponse, key);
+        String hmac = hmacSign(p0Cmd + p1MerId + paymentSn + p3Amt + p4Cur + p5Pid + p6Pcat + p7Pdesc + p8Url + p9SAF + paMP + pdFrpId + prNeedResponse, key);
 
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>();
-        parameterMap.put("p0_Cmd", p0_Cmd);
-        parameterMap.put("p1_MerId", p1_MerId);
+        parameterMap.put("p0_Cmd", p0Cmd);
+        parameterMap.put("p1_MerId", p1MerId);
         parameterMap.put("p2_Order", paymentSn);
-        parameterMap.put("p3_Amt", p3_Amt);
-        parameterMap.put("p4_Cur", p4_Cur);
-        parameterMap.put("p5_Pid", p5_Pid);
-        parameterMap.put("p6_Pcat", p6_Pcat);
-        parameterMap.put("p7_Pdesc", p7_Pdesc);
-        parameterMap.put("p8_Url", p8_Url);
-        parameterMap.put("p9_SAF", p9_SAF);
-        parameterMap.put("pa_MP", pa_MP);
-        parameterMap.put("pd_FrpId", pd_FrpId);
-        parameterMap.put("pr_NeedResponse", pr_NeedResponse);
+        parameterMap.put("p3_Amt", p3Amt);
+        parameterMap.put("p4_Cur", p4Cur);
+        parameterMap.put("p5_Pid", p5Pid);
+        parameterMap.put("p6_Pcat", p6Pcat);
+        parameterMap.put("p7_Pdesc", p7Pdesc);
+        parameterMap.put("p8_Url", p8Url);
+        parameterMap.put("p9_SAF", p9SAF);
+        parameterMap.put("pa_MP", paMP);
+        parameterMap.put("pd_FrpId", pdFrpId);
+        parameterMap.put("pr_NeedResponse", prNeedResponse);
         parameterMap.put("hmac", hmac);
 
         return parameterMap;

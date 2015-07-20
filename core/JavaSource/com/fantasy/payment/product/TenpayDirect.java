@@ -45,31 +45,31 @@ public class TenpayDirect extends AbstractPaymentProduct {
 
         String cmdno = "1";// 业务代码（1：即时交易支付）
         String date = dateString;// 订单提交时间
-        String bank_type = "0";// 银行类型（0：财付通）
+        String bankType = "0";// 银行类型（0：财付通）
         String desc = paymentSn;// 订单描述
-        String purchaser_id = "";// 客户财付通帐户
-        String bargainor_id = paymentConfig.getBargainorId();// 商户号
-        String transaction_id = transactionId;// 交易号
-        String sp_billno = paymentSn;// 支付编号
-        String total_fee = totalAmountString;// 总金额（单位：分）
-        String fee_type = "1";// 支付币种（1：人民币）
-        String return_url = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String purchaserId = "";// 客户财付通帐户
+        String bargainorId = paymentConfig.getBargainorId();// 商户号
+        String transactionIds = transactionId;// 交易号
+        String spBillno = paymentSn;// 支付编号
+        String totalFee = totalAmountString;// 总金额（单位：分）
+        String feeType = "1";// 支付币种（1：人民币）
+        String returnUrl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String attach = "s" + "h" + "o" + "p" + "x" + "x";// 商户数据
-        String spbill_create_ip = parameters.get("remoteAddr");// 客户IP
+        String spbillCreateIp = parameters.get("remoteAddr");// 客户IP
         String key = paymentConfig.getBargainorKey();// 密钥
 
         // 生成签名
         Map<String, String> signMap = new LinkedHashMap<String, String>();
         signMap.put("cmdno", cmdno);
         signMap.put("date", date);
-        signMap.put("bargainor_id", bargainor_id);
-        signMap.put("transaction_id", transaction_id);
-        signMap.put("sp_billno", sp_billno);
-        signMap.put("total_fee", total_fee);
-        signMap.put("fee_type", fee_type);
-        signMap.put("return_url", return_url);
+        signMap.put("bargainor_id", bargainorId);
+        signMap.put("transaction_id", transactionIds);
+        signMap.put("sp_billno", spBillno);
+        signMap.put("total_fee", totalFee);
+        signMap.put("fee_type", feeType);
+        signMap.put("return_url", returnUrl);
         signMap.put("attach", attach);
-        signMap.put("spbill_create_ip", spbill_create_ip);
+        signMap.put("spbill_create_ip", spbillCreateIp);
         signMap.put("key", key);
         String sign = DigestUtils.md5Hex(getParameterString(signMap)).toUpperCase();
 
@@ -77,17 +77,17 @@ public class TenpayDirect extends AbstractPaymentProduct {
         Map<String, String> parameterMap = new HashMap<String, String>();
         parameterMap.put("cmdno", cmdno);
         parameterMap.put("date", date);
-        parameterMap.put("bargainor_id", bargainor_id);
-        parameterMap.put("transaction_id", transaction_id);
-        parameterMap.put("sp_billno", sp_billno);
-        parameterMap.put("total_fee", total_fee);
-        parameterMap.put("fee_type", fee_type);
-        parameterMap.put("return_url", return_url);
+        parameterMap.put("bargainor_id", bargainorId);
+        parameterMap.put("transaction_id", transactionIds);
+        parameterMap.put("sp_billno", spBillno);
+        parameterMap.put("total_fee", totalFee);
+        parameterMap.put("fee_type", feeType);
+        parameterMap.put("return_url", returnUrl);
         parameterMap.put("attach", attach);
-        parameterMap.put("spbill_create_ip", spbill_create_ip);
-        parameterMap.put("bank_type", bank_type);
+        parameterMap.put("spbill_create_ip", spbillCreateIp);
+        parameterMap.put("bank_type", bankType);
         parameterMap.put("desc", desc);
-        parameterMap.put("purchaser_id", purchaser_id);
+        parameterMap.put("purchaser_id", purchaserId);
         parameterMap.put("sign", sign);
         parameterMap.put("cs", "utf-8");
 
@@ -99,24 +99,24 @@ public class TenpayDirect extends AbstractPaymentProduct {
         PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 财付通（即时交易）
         String cmdno = parameters.get("cmdno");
-        String pay_result = parameters.get("pay_result");
+        String payResult = parameters.get("pay_result");
         String date = parameters.get("date");
-        String transaction_id = parameters.get("transaction_id");
-        String sp_billno = parameters.get("sp_billno");
-        String total_fee = parameters.get("total_fee");
-        String fee_type = parameters.get("fee_type");
+        String transactionId = parameters.get("transaction_id");
+        String spBillno = parameters.get("sp_billno");
+        String totalFee = parameters.get("total_fee");
+        String feeType = parameters.get("fee_type");
         String attach = parameters.get("attach");
         String sign = parameters.get("sign");
 
         // 验证支付签名
         Map<String, String> parameterMap = new LinkedHashMap<String, String>();
         parameterMap.put("cmdno", cmdno);
-        parameterMap.put("pay_result", pay_result);
+        parameterMap.put("pay_result", payResult);
         parameterMap.put("date", date);
-        parameterMap.put("transaction_id", transaction_id);
-        parameterMap.put("sp_billno", sp_billno);
-        parameterMap.put("total_fee", total_fee);
-        parameterMap.put("fee_type", fee_type);
+        parameterMap.put("transaction_id", transactionId);
+        parameterMap.put("sp_billno", spBillno);
+        parameterMap.put("total_fee", totalFee);
+        parameterMap.put("fee_type", feeType);
         parameterMap.put("attach", attach);
         parameterMap.put("key", paymentConfig.getBargainorKey());
         return StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase());

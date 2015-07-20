@@ -36,29 +36,29 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         Payment payment = context.getPayment();
 
         String body = orderDetails.getSubject();// 订单描述
-        String logistics_fee = "0";// 物流费用
-        String logistics_payment = "SELLER_PAY";// 物流支付方式（SELLER_PAY：卖家承担运费、BUYER_PAY：买家承担运费）
-        String logistics_type = "EXPRESS";// 物流类型（EXPRESS：快递、POST：平邮、EMS：EMS）
-        String notify_url = PaymentContext.getContext().getNotifyUrl(payment.getSn());// 消息通知URL
-        AtomicReference<String> out_trade_no = new AtomicReference<String>(payment.getSn());// 支付编号
+        String logisticsFee = "0";// 物流费用
+        String logisticsPayment = "SELLER_PAY";// 物流支付方式（SELLER_PAY：卖家承担运费、BUYER_PAY：买家承担运费）
+        String logisticsType = "EXPRESS";// 物流类型（EXPRESS：快递、POST：平邮、EMS：EMS）
+        String notifyUrl = PaymentContext.getContext().getNotifyUrl(payment.getSn());// 消息通知URL
+        AtomicReference<String> outTradeNo = new AtomicReference<String>(payment.getSn());// 支付编号
         String partner = paymentConfig.getBargainorId();// 合作身份者ID
-        String payment_type = "1";// 支付类型（固定值：1）
+        String paymentType = "1";// 支付类型（固定值：1）
         String price = String.format("%.2f", orderDetails.getPayableFee());// 总金额（单位：元）
         String quantity = "1";// 商品数量
-        String return_url = PaymentContext.getContext().getReturnUrl(payment.getSn());// 回调处理URL
-        String seller_id = paymentConfig.getSellerEmail();// 商家ID 如："shenzhenying@haoluesoft.com";
+        String returnUrl = PaymentContext.getContext().getReturnUrl(payment.getSn());// 回调处理URL
+        String sellerId = paymentConfig.getSellerEmail();// 商家ID 如："shenzhenying@haoluesoft.com";
         String service = "create_partner_trade_by_buyer";// 接口类型（create_partner_trade_by_buyer：担保交易）
-        String show_url = PaymentContext.getContext().getShowUrl(orderDetails.getSN());// 支付结果显示URL
-        String sign_type = "MD5";//签名加密方式（MD5）
+        String showUrl = PaymentContext.getContext().getShowUrl(orderDetails.getSN());// 支付结果显示URL
+        String signType = "MD5";//签名加密方式（MD5）
         AtomicReference<String> subject = new AtomicReference<String>(payment.getSn());// 订单的名称、标题、关键字等
         String key = paymentConfig.getBargainorKey();// 密钥
 
         //TODO 担保支付时的收货人信息如何设置
-        String receive_name = "昊略软件";//收货人姓名
-        String receive_address = "上海市徐汇区田林路140号28号楼G09";//收货人地址
-        String receive_zip = "200233";//收货人邮编
-        String receive_phone = "0571-88158090";//收货人电话号码
-        String receive_mobile = "15921884771";//收货人手机号码
+        String receiveName = "昊略软件";//收货人姓名
+        String receiveAddress = "上海市徐汇区田林路140号28号楼G09";//收货人地址
+        String receiveZip = "200233";//收货人邮编
+        String receivePhone = "0571-88158090";//收货人电话号码
+        String receiveMobile = "15921884771";//收货人手机号码
 
         // 生成签名
         Map<String, String> signMap = new LinkedHashMap<String, String>();
@@ -66,28 +66,28 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         signMap.put("service", service);
         signMap.put("partner", partner);
         signMap.put("_input_charset", input_charset);
-        signMap.put("payment_type", payment_type);
-        signMap.put("notify_url", notify_url);
-        signMap.put("return_url", return_url);
-        signMap.put("seller_email", seller_id);
-        signMap.put("out_trade_no", out_trade_no.get());
+        signMap.put("payment_type", paymentType);
+        signMap.put("notify_url", notifyUrl);
+        signMap.put("return_url", returnUrl);
+        signMap.put("seller_email", sellerId);
+        signMap.put("out_trade_no", outTradeNo.get());
         signMap.put("subject", subject.get());
         signMap.put("price", price);
         signMap.put("quantity", quantity);
-        signMap.put("logistics_fee", logistics_fee);
-        signMap.put("logistics_type", logistics_type);
-        signMap.put("logistics_payment", logistics_payment);
+        signMap.put("logistics_fee", logisticsFee);
+        signMap.put("logistics_type", logisticsType);
+        signMap.put("logistics_payment", logisticsPayment);
         signMap.put("body", body);
-        signMap.put("show_url", show_url);
-        signMap.put("receive_name", receive_name);
-        signMap.put("receive_address", receive_address);
-        signMap.put("receive_zip", receive_zip);
-        signMap.put("receive_phone", receive_phone);
-        signMap.put("receive_mobile", receive_mobile);
+        signMap.put("show_url", showUrl);
+        signMap.put("receive_name", receiveName);
+        signMap.put("receive_address", receiveAddress);
+        signMap.put("receive_zip", receiveZip);
+        signMap.put("receive_phone", receivePhone);
+        signMap.put("receive_mobile", receiveMobile);
         String sign = DigestUtils.md5Hex(getParameterString(signMap) + key);
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>(paraFilter(signMap));
-        parameterMap.put("sign_type", sign_type);
+        parameterMap.put("sign_type", signType);
         parameterMap.put("sign", sign);
         return parameterMap;
     }
