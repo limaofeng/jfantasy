@@ -816,7 +816,7 @@ public final class ImageUtil {
 
     // 水印位置(无、左上、右上、居中、左下、右下)
     public enum WatermarkPosition {
-        no, topLeft, topRight, center, bottomLeft, bottomRight;
+        no, topLeft, topRight, center, bottomLeft, bottomRight;//NOSONAR
 
         public Position position(int srcWidth, int srcHeight, int watermarkImageWidth, int watermarkImageHeight) {
             switch (this) {

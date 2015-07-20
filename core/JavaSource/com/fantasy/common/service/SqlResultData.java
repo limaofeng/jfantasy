@@ -13,7 +13,7 @@ public class SqlResultData {
     private int maxRow;
 
     public enum Type {
-        select, insert, delete, update, other
+        select, insert, delete, update, other//NOSONAR
     }
 
     private Type type;

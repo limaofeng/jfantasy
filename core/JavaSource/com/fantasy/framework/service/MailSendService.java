@@ -34,7 +34,7 @@ public class MailSendService implements InitializingBean {
     /**
      * 用于将:李茂峰<limaofeng@msn.com>格式的字符串解开
      */
-    private static final Pattern parseEmail = RegexpUtil.getPattern("^([\\S\\s]+)?\\<([\\S\\s]+)\\>");
+    private static final Pattern PARSE_EMAIL = RegexpUtil.getPattern("^([\\S\\s]+)?\\<([\\S\\s]+)\\>");
 
     private Configuration configuration;
     private String hostname;
@@ -44,7 +44,7 @@ public class MailSendService implements InitializingBean {
     private String password;
     private String charset = "utf-8";
 
-    private final static Log logger = LogFactory.getLog(MailSendService.class);
+    private final static Log LOG = LogFactory.getLog(MailSendService.class);
 
     public void afterPropertiesSet() throws Exception {
         Assert.notNull(this.hostname, "Property 'hostname' is required");
@@ -76,9 +76,9 @@ public class MailSendService implements InitializingBean {
         }
         // 收件人的邮箱
         for (String to : toEmails) {
-            if (RegexpUtil.isMatch(to, parseEmail)) {
-                String toDisplayName = RegexpUtil.parseGroup(to, parseEmail, 1);
-                String toEmail = RegexpUtil.parseGroup(to, parseEmail, 2);
+            if (RegexpUtil.isMatch(to, PARSE_EMAIL)) {
+                String toDisplayName = RegexpUtil.parseGroup(to, PARSE_EMAIL, 1);
+                String toEmail = RegexpUtil.parseGroup(to, PARSE_EMAIL, 2);
                 if (validateEmail(toEmail)) {
                     email.addTo(toEmail, toDisplayName);
                 }
@@ -91,7 +91,7 @@ public class MailSendService implements InitializingBean {
         if (email.getToAddresses().isEmpty()) {
             throw new EmailException("收件人列表为空:" + toEmails);
         }
-        if (logger.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             StringBuffer debug = new StringBuffer("\r\n邮件发送信息如下:");
             debug.append("\r\nEmailType:").append(type.toString());
             debug.append("\r\nCharset:").append(this.charset);
@@ -100,7 +100,7 @@ public class MailSendService implements InitializingBean {
             debug.append("\r\nFrom:").append(this.from);
             debug.append("\r\nDisplayName:").append(this.displayName);
             debug.append("\r\nTos:").append(toEmails);
-            logger.debug(debug);
+            LOG.debug(debug);
         }
         return email;
     }
@@ -123,7 +123,7 @@ public class MailSendService implements InitializingBean {
             email.setMsg(message);
             send(email);
         } catch (EmailException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -142,9 +142,9 @@ public class MailSendService implements InitializingBean {
             email.setMsg(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model));
             send(email);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (EmailException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -162,7 +162,7 @@ public class MailSendService implements InitializingBean {
             email.setContent(message, EmailConstants.TEXT_HTML);
             send(email);
         } catch (EmailException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -179,9 +179,9 @@ public class MailSendService implements InitializingBean {
             email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model), EmailConstants.TEXT_HTML);
             send(email);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (EmailException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -207,9 +207,9 @@ public class MailSendService implements InitializingBean {
             }
             send(email);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (EmailException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -240,9 +240,9 @@ public class MailSendService implements InitializingBean {
             }
             send(email);
         } catch (EmailException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
         }
     }
 
@@ -279,7 +279,7 @@ public class MailSendService implements InitializingBean {
     }
 
     private static enum EmailType {
-        simple, html;
+        simple, html;//NOSONAR
 
         public static Email createEmail(EmailType type) {
             switch (type) {
@@ -379,17 +379,17 @@ public class MailSendService implements InitializingBean {
                 do {
                     try {
                         String code = email.send();
-                        if (logger.isDebugEnabled()) {
-                            logger.debug("\r\n邮件<<" + email.getSubject() + ">>成功发送至:" + email.getToAddresses() + "\r\n返回代码:" + code);
+                        if (LOG.isDebugEnabled()) {
+                            LOG.debug("\r\n邮件<<" + email.getSubject() + ">>成功发送至:" + email.getToAddresses() + "\r\n返回代码:" + code);
                         }
                         success = true;
                     } catch (EmailException e) {
-                        logger.error("发送次数:" + num + "," + e.getMessage(), e);
+                        LOG.error("发送次数:" + num + "," + e.getMessage(), e);
                         Thread.currentThread().sleep(2000);
                     }
                 } while (!success && num++ < 5);
             } catch (InterruptedException e) {
-                logger.error(e.getMessage(), e);
+                LOG.error(e.getMessage(), e);
             }
         }
     }
