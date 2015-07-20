@@ -1,5 +1,8 @@
 package com.fantasy.framework.util.web.context;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
@@ -12,6 +15,7 @@ public class AttributeMap implements Map {
 	protected static final String UNSUPPORTED = "method makes no sense for a simplified map";
 	private static final Object PAGE_CONTEXT = null;
 	Map context;
+	private final static Log LOGGER = LogFactory.getLog(AttributeMap.class);
 
 	public AttributeMap(Map context) {
 		this.context = context;
@@ -54,6 +58,7 @@ public class AttributeMap implements Map {
 			try {
 				return pc.findAttribute(key.toString());
 			} catch (NullPointerException npe) {
+				LOGGER.error(npe.getMessage(),npe);
 				return null;
 			}
 		}

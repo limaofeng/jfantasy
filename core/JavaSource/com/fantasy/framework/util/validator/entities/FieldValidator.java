@@ -53,8 +53,10 @@ public class FieldValidator {
 				validator.validate(value);
 			}
 		} catch (StackValidationException e) {
+			LOGGER.error(e.getMessage(),e);
 			return e.getStack();
 		} catch (ValidationException e) {
+			LOGGER.error(e.getMessage(),e);
 			if (this.params.containsKey("message")) {
 				return new Error[] { new Error(((String) this.params.get("message")).toString()) };
 			}
