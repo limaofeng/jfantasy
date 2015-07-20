@@ -56,7 +56,7 @@ public class MD5 {
         try {
             return content.getBytes(charset);
         } catch (UnsupportedEncodingException e) {
-            throw new IgnoreException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset);
+            throw new IgnoreException("MD5签名过程中出现错误,指定的编码集不对,您目前指定的编码集是:" + charset,e);
         }
     }
 

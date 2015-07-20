@@ -6,6 +6,8 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.typeConverter.DateFormat;
 import ognl.DefaultTypeConverter;
 import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;
@@ -14,7 +16,7 @@ import java.util.Date;
 import java.util.Map;
 
 public class PrimitiveTypeConverter extends DefaultTypeConverter {
-
+    private final static Log LOGGER = LogFactory.getLog(PrimitiveTypeConverter.class);
     @SuppressWarnings("rawtypes")
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (value != null && Date.class.isAssignableFrom(value.getClass()) && toType == String.class) {
@@ -24,6 +26,7 @@ public class PrimitiveTypeConverter extends DefaultTypeConverter {
                 DateFormat dateFormat = (DateFormat) ClassUtil.getParamAnno((Method) member);
                 return DateUtil.parse(StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value), dateFormat.pattern());
             } catch (Exception e) {
+                LOGGER.error(e.getMessage(),e);
                 return ConvertUtils.convert(value,Date.class);
             }
         } else if (ClassUtil.isArray(value)) {

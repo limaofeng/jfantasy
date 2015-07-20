@@ -119,8 +119,8 @@ public class AsmUtil implements Opcodes {
             try {
                 return FantasyClassLoader.getClassLoader().loadClass(bytes, className);
             } catch (ClassNotFoundException ex) {
-                LOG.error(e.getMessage(), e);
-                throw new RuntimeException(e.getMessage(),e);
+                LOG.error(e.getMessage(), ex);
+                throw new RuntimeException(e.getMessage(),ex);
             }
         } catch (ClassNotFoundException e) {
             LOG.error(e.getMessage(), e);
