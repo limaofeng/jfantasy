@@ -37,7 +37,7 @@ public class JSON {
     public static class Mirror {
 
         public String serialize(Object object, String... ignoreProperties) {
-            return JSON.serialize(object, ignoreProperties);
+            return JSON.newSerialize(object, ignoreProperties);
         }
 
         public Object deserialize(String json) {
@@ -178,7 +178,11 @@ public class JSON {
 
     }
 
-    public static String serialize(Object object, String... ignoreProperties) {
+    public static String serialize(Object object) {
+        return newSerialize(object);
+    }
+
+    private static String newSerialize(Object object, String... ignoreProperties) {
         try {
             if (object == null) {
                 return null;
@@ -231,12 +235,15 @@ public class JSON {
                 threadLocal.set(local = new ThreadLocalObjectMapper(OBJECT_MAPPER_CACHE.get(DEFAULT_KEY)));
             }
             try {
+                if (!ClassUtil.isArray(classed) && json.startsWith("[") && json.endsWith("]")) {
+                    json = json.substring(1, json.length() - 2);
+                }
                 return local.getObjectMapper().readValue(json, classed);
             } finally {
                 threadLocal.remove();
             }
         } catch (IOException e) {
-            LOG.error(e.getMessage() + " source json string : " + json + " => " + classed,e);
+            LOG.error(e.getMessage() + " source json string : " + json + " => " + classed, e);
         }
         return null;
     }

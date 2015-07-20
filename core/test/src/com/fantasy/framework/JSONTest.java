@@ -10,9 +10,13 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import junit.framework.Assert;
+import ognl.Ognl;
+import ognl.OgnlException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
+
+import java.util.HashMap;
 
 /**
  * json 测试类
@@ -29,14 +33,14 @@ public class JSONTest {
     }
 
     @Test
-    public void serialize(){
+    public void serialize() throws OgnlException {
         Member member= new Member();
         member.setUsername("limaofeng");
         member.setPassword("123456");
         member.setNickName("张三");
 
         //测试普通json转换
-        Assert.assertEquals(JSON.unicode().serialize(member),"{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"\\u5F20\\u4E09\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":null,\"details\":null}");
+        Assert.assertEquals(JSON.unicode().serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"\\u5F20\\u4E09\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":null,\"details\":null}");
         //测试text json 转换
         Assert.assertEquals(JSON.serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"张三\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":null,\"details\":null}");
         //测试set json 转换
@@ -45,13 +49,12 @@ public class JSONTest {
         member.setLastLoginTime(DateUtil.parse("2014-10-20 10:29:34"));
         Assert.assertEquals(JSON.serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"张三\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":\"2014-10-20 10:29:34\",\"details\":null}");
 
-//        Article article = new Article();
-//
-//        LOG.debug(JSON.serialize(article));
-//
-//        Class newArticle = AsmUtil.makeClass(Article.class.getName()+"$new", Article.class.getName(),new Property("name", String.class));
-//
-//        LOG.debug(JSON.serialize(ClassUtil.newInstance(newArticle)));
+        Ognl.getValue("@com.fantasy.framework.util.jackson.JSON@serialize(pager)",new HashMap(){
+            {
+                this.put("pager",new Object());
+                this.put("array",new String[0]);
+            }
+        });
     }
 
     @Test

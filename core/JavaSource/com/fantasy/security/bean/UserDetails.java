@@ -81,9 +81,6 @@ public class UserDetails implements Serializable {
     @Column(name = "AVATAR", length = 500)
     private String avatarStore;
 
-    @Transient
-    private FileDetail avatar;
-
     @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, mappedBy = "details")
     private User user;
 

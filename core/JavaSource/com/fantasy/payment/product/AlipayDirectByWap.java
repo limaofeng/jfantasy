@@ -42,7 +42,7 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
         OrderDetails orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
-        String return_url = context.getReturnUrl(payment.getSn());// 回调处理URL
+        String returnUrl = context.getReturnUrl(payment.getSn());// 回调处理URL
         String notify_url = context.getNotifyUrl(payment.getSn());// 消息通知URL
 
         //操作中断返回地址
@@ -68,7 +68,7 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
         //必填
 
         //请求业务参数详细
-        String req_dataToken = "<direct_trade_create_req><notify_url>" + notify_url + "</notify_url><call_back_url>" + return_url + "</call_back_url><seller_account_name>" + seller_email + "</seller_account_name><out_trade_no>" + out_trade_no + "</out_trade_no><subject>" + subject + "</subject><total_fee>" + total_fee + "</total_fee><merchant_url>" + merchant_url + "</merchant_url></direct_trade_create_req>";
+        String req_dataToken = "<direct_trade_create_req><notify_url>" + notify_url + "</notify_url><call_back_url>" + returnUrl + "</call_back_url><seller_account_name>" + seller_email + "</seller_account_name><out_trade_no>" + out_trade_no + "</out_trade_no><subject>" + subject + "</subject><total_fee>" + total_fee + "</total_fee><merchant_url>" + merchant_url + "</merchant_url></direct_trade_create_req>";
         //必填
 
         //返回格式
