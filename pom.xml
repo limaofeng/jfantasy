@@ -9,6 +9,14 @@
     <packaging>pom</packaging>
     <version>3.3.5.Alphal</version>
 
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>local private nexus releases</name>
+            <url>http://maven.hoolue.com/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
