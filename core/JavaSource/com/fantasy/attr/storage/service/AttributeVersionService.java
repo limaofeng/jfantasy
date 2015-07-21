@@ -117,7 +117,7 @@ public class AttributeVersionService {
         if (version == null) {
             return null;
         }
-        AttributeVersion _rev = BeanUtil.copyProperties(new AttributeVersion(), version);
+        AttributeVersion rev = BeanUtil.copyProperties(new AttributeVersion(), version);
         List<Attribute> attributes = new ArrayList<Attribute>();
         for (Attribute attribute : version.getAttributes()) {
             Hibernate.initialize(attribute);
@@ -130,8 +130,8 @@ public class AttributeVersionService {
             attributeType.setConverter(converter);
             attributes.get(attributes.size() - 1).setAttributeType(attributeType);
         }
-        _rev.setAttributes(attributes);
-        return _rev;
+        rev.setAttributes(attributes);
+        return rev;
     }
 
     /**
@@ -146,7 +146,7 @@ public class AttributeVersionService {
         if (version == null) {
             return null;
         }
-        AttributeVersion _rev = BeanUtil.copyProperties(new AttributeVersion(), version);
+        AttributeVersion rev = BeanUtil.copyProperties(new AttributeVersion(), version);
         List<Attribute> attributes = new ArrayList<Attribute>();
         for (Attribute attribute : version.getAttributes()) {
             Hibernate.initialize(attribute);
@@ -159,8 +159,8 @@ public class AttributeVersionService {
             attributeType.setConverter(converter);
             attributes.get(attributes.size() - 1).setAttributeType(attributeType);
         }
-        _rev.setAttributes(attributes);
-        return _rev;
+        rev.setAttributes(attributes);
+        return rev;
     }
 
     public static AttributeVersion version(Long id) {

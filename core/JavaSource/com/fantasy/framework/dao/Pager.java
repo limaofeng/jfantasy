@@ -201,11 +201,11 @@ public class Pager<T> implements Serializable {
             this.orders = new Order[]{Order.valueOf(Order.class, order)};
         } else {
             List<Order> list = new ArrayList<Order>();
-            for (String _order : StringUtil.tokenizeToStringArray(order, ",;")) {
-                if ((!StringUtils.equals("desc", _order)) && (!StringUtils.equals("asc", _order))) {
-                    throw new IllegalArgumentException("排序方向" + _order + "不是合法值");
+            for (String orders : StringUtil.tokenizeToStringArray(order, ",;")) {
+                if ((!StringUtils.equals("desc", orders)) && (!StringUtils.equals("asc", orders))) {
+                    throw new IllegalArgumentException("排序方向" + orders + "不是合法值");
                 }
-                list.add(Order.valueOf(Order.class, _order));
+                list.add(Order.valueOf(Order.class, orders));
             }
             this.orders = list.toArray(new Order[list.size()]);
         }

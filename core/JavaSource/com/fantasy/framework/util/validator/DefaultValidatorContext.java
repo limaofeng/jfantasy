@@ -79,8 +79,8 @@ public class DefaultValidatorContext implements ValidatorContext {
             List<FieldValidator> fieldValidators = new ArrayList<FieldValidator>();
             for (Element ele : childNodes) {
                 Map<String, String> params = new HashMap<String, String>();
-                for (Element ele_ : ele.getChildren()) {
-                    params.put(ele_.getName(), ele_.getTextTrim());
+                for (Element eles : ele.getChildren()) {
+                    params.put(eles.getName(), eles.getTextTrim());
                 }
                 fieldValidators.add(new FieldValidator(ele.getAttributeValue("type"), params));
             }

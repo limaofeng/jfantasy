@@ -26,10 +26,10 @@ public class RSA {
      *
      * @param content       待签名数据
      * @param privateKey    商户私钥
-     * @param input_charset 编码格式
+     * @param inputCharset 编码格式
      * @return 签名值
      */
-    public static String sign(String content, String privateKey, String input_charset) {
+    public static String sign(String content, String privateKey, String inputCharset) {
         try {
             PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(privateKey));
             KeyFactory keyf = KeyFactory.getInstance("RSA");
@@ -38,7 +38,7 @@ public class RSA {
             Signature signature = Signature.getInstance(SIGN_ALGORITHMS);
 
             signature.initSign(priKey);
-            signature.update(content.getBytes(input_charset));
+            signature.update(content.getBytes(inputCharset));
 
             byte[] signed = signature.sign();
 
@@ -66,21 +66,21 @@ public class RSA {
      *
      * @param content        待签名数据
      * @param sign           签名值
-     * @param ali_public_key 支付宝公钥
-     * @param input_charset  编码格式
+     * @param aliPublicKey 支付宝公钥
+     * @param inputCharset  编码格式
      * @return 布尔值
      */
-    public static boolean verify(String content, String sign, String ali_public_key, String input_charset) {
+    public static boolean verify(String content, String sign, String aliPublicKey, String inputCharset) {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
-            byte[] encodedKey = Base64.decode(ali_public_key);
+            byte[] encodedKey = Base64.decode(aliPublicKey);
             PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
 
             Signature signature = java.security.Signature.getInstance(SIGN_ALGORITHMS);
 
             signature.initVerify(pubKey);
-            signature.update(content.getBytes(input_charset));
+            signature.update(content.getBytes(inputCharset));
 
             return signature.verify(Base64.decode(sign));
 
@@ -102,12 +102,12 @@ public class RSA {
      * 解密
      *
      * @param content       密文
-     * @param private_key   商户私钥
-     * @param input_charset 编码格式
+     * @param privateKey   商户私钥
+     * @param inputCharset 编码格式
      * @return 解密后的字符串
      */
-    public static String decrypt(String content, String private_key, String input_charset) throws Exception {
-        PrivateKey prikey = getPrivateKey(private_key);
+    public static String decrypt(String content, String privateKey, String inputCharset) throws Exception {
+        PrivateKey prikey = getPrivateKey(privateKey);
 
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, prikey);
@@ -131,7 +131,7 @@ public class RSA {
             writer.write(cipher.doFinal(block));
         }
 
-        return new String(writer.toByteArray(), input_charset);
+        return new String(writer.toByteArray(), inputCharset);
     }
 
 

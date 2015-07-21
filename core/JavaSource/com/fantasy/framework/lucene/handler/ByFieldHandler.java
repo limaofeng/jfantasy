@@ -16,16 +16,16 @@ public abstract class ByFieldHandler extends PropertyFieldHandler {
 		StringBuilder sb = new StringBuilder();
 		Class<?> type = this.field.getType();
 		if (type.isArray()) {
-			for (Iterator<?> i$ = objList.iterator(); i$.hasNext();) {
-				Object o = i$.next();
+			for (Iterator<?> i = objList.iterator(); i.hasNext();) {
+				Object o = i.next();
 				Object value = FieldUtil.get(o, this.field);
 				if (value != null){
                     sb.append(getArrayString(value, type.getComponentType())).append(";");
                 }
 			}
 		} else {
-			for (Iterator<?> i$ = objList.iterator(); i$.hasNext();) {
-				Object o = i$.next();
+			for (Iterator<?> i = objList.iterator(); i.hasNext();) {
+				Object o = i.next();
 				Object value = FieldUtil.get(o, this.field);
 				if (value != null) {
 					sb.append(value.toString()).append(";");

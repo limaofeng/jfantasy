@@ -14,8 +14,8 @@ import com.octo.captcha.service.image.DefaultManageableImageCaptchaService;
 public class FantasyCaptchaService extends DefaultManageableImageCaptchaService {
 
 	@Override
-	public Boolean validateResponseForID(String ID, Object response) throws CaptchaServiceException {
-		return super.validateResponseForID(ID, response);
+	public Boolean validateResponseForID(String iD, Object response) throws CaptchaServiceException {
+		return super.validateResponseForID(iD, response);
 	}
 
 }

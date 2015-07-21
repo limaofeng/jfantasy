@@ -86,15 +86,15 @@ public class OgnlUtil {
     public void setValue(String name, Map<String, Object> context, Object root, Object value) throws OgnlException {
         if ((name.contains(".") || RegexpUtil.isMatch(name, "\\[\\d+\\]$")) && !name.trim().startsWith("new")) {
             String[] ns = name.split("\\.");
-            String _q = "";
+            String q = "";
             for (int i = 0; i < ns.length - (RegexpUtil.isMatch(name, "\\[\\d+\\]$") ? 0 : 1); i++) {
-                String _name = _q + ns[i];
+                String _name = q + ns[i];
                 if (RegexpUtil.isMatch(_name, "\\[\\d+\\]$")) {// is array or list
                     int index = Integer.valueOf(RegexpUtil.parseGroup(_name, "\\[(\\d+)\\]$", 1)).intValue();//array length
-                    String _arrayName = RegexpUtil.replace(_name, "\\[\\d+\\]$", "");
-                    Object array = getValue(_arrayName, root);
-                    Object parent = _arrayName.contains(".") ? getValue(RegexpUtil.replace(_arrayName, "\\.[^.]+$", ""), root) : root;
-                    String shortName = _arrayName.contains(".") ? RegexpUtil.parseGroup(_arrayName, "\\.([^.]+)$", 1) : _arrayName;
+                    String arrayName = RegexpUtil.replace(_name, "\\[\\d+\\]$", "");
+                    Object array = getValue(arrayName, root);
+                    Object parent = arrayName.contains(".") ? getValue(RegexpUtil.replace(arrayName, "\\.[^.]+$", ""), root) : root;
+                    String shortName = arrayName.contains(".") ? RegexpUtil.parseGroup(arrayName, "\\.([^.]+)$", 1) : arrayName;
                     Property property = ClassUtil.getProperty(parent, shortName);
                     if (ClassUtil.isList(property.getPropertyType())) {
                         Class listType = ClassUtil.getMethodGenericReturnType(property.getReadMethod().getMethod());
@@ -104,7 +104,7 @@ public class OgnlUtil {
                         }
                         OgnlUtil.getInstance().setValue(shortName, parent, list);
                         Object object = OgnlUtil.getInstance().getValue(shortName + "[" + index + "]", parent);
-                        if ((_arrayName + "[" + index + "]").equals(name)) {
+                        if ((arrayName + "[" + index + "]").equals(name)) {
                             continue;
                         }
                         if (object == null) {
@@ -115,11 +115,11 @@ public class OgnlUtil {
                             array = ClassUtil.newInstance(property.getPropertyType().getComponentType(), index + 1);
                             OgnlUtil.getInstance().setValue(shortName, parent, array);
                         } else if (Array.getLength(array) <= index) {
-                            Object _array = ClassUtil.newInstance(property.getPropertyType().getComponentType(), index + 1);
+                            Object arrays = ClassUtil.newInstance(property.getPropertyType().getComponentType(), index + 1);
                             for (int j = 0, len = Array.getLength(array); j < len; j++) {
-                                Array.set(_array, j, Array.get(array, j));
+                                Array.set(arrays, j, Array.get(array, j));
                             }
-                            OgnlUtil.getInstance().setValue(shortName, parent, _array);
+                            OgnlUtil.getInstance().setValue(shortName, parent, arrays);
                         }
                         if (RegexpUtil.isMatch(name, "\\[\\d+\\]$")) {
                             continue;
@@ -136,7 +136,7 @@ public class OgnlUtil {
                         Ognl.setValue(compile(_name), context, root, "EMPTY");
                     }
                 }
-                _q = ns[i] + ".";
+                q = ns[i] + ".";
             }
         }
         Ognl.setValue(compile(name), context, root, value);

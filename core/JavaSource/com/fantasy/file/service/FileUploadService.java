@@ -67,8 +67,8 @@ public class FileUploadService {
                 }
                 //查询上传的片段
                 List<FilePart> fileParts = filePartService.find(entireFileHash);
-                FilePart _part = ObjectUtil.remove(fileParts, "index", 0);
-                if (_part == null) {
+                FilePart part = ObjectUtil.remove(fileParts, "index", 0);
+                if (part == null) {
                     List<FilePart> joinFileParts = new ArrayList<FilePart>();
                     ObjectUtil.join(joinFileParts, fileParts, "index");
 
@@ -77,11 +77,11 @@ public class FileUploadService {
                         File tmp = FileUtil.tmp();
                         //合并 Part 文件
                         FileOutputStream out = new FileOutputStream(tmp);
-                        for (FilePart _filePart : joinFileParts) {
-                            InputStream in = fileManager.readFile(_filePart.getAbsolutePath());
+                        for (FilePart filesPart : joinFileParts) {
+                            InputStream in = fileManager.readFile(filesPart.getAbsolutePath());
                             StreamUtil.copy(in, out);
                             StreamUtil.closeQuietly(in);
-                            fileManager.removeFile(_filePart.getAbsolutePath());
+                            fileManager.removeFile(filesPart.getAbsolutePath());
                             ObjectUtil.remove(fileParts, SpELUtil.getExpression(" absolutePath == #value.getAbsolutePath() and fileManagerId == #value.getFileManagerId() "), filePart);
                         }
                         StreamUtil.closeQuietly(out);
@@ -93,8 +93,8 @@ public class FileUploadService {
                         FileUtil.delFile(tmp);
 
                         //删除 Part 文件
-                        for (FilePart _filePart : fileParts) {
-                            fileManager.removeFile(_filePart.getAbsolutePath());
+                        for (FilePart filesPart : fileParts) {
+                            fileManager.removeFile(filesPart.getAbsolutePath());
                         }
 
                         //在File_PART 表冗余一条数据 片段为 0
@@ -102,8 +102,8 @@ public class FileUploadService {
                     }
                 } else {
                     //删除 Part 文件
-                    for (FilePart _filePart : fileParts) {
-                        fileManager.removeFile(_filePart.getAbsolutePath());
+                    for (FilePart filesPart : fileParts) {
+                        fileManager.removeFile(filesPart.getAbsolutePath());
                     }
                 }
             } else {
@@ -164,8 +164,8 @@ public class FileUploadService {
                 }
                 //查询上传的片段
                 List<FilePart> fileParts = filePartService.find(entireFileHash);
-                FilePart _part = ObjectUtil.remove(fileParts, "index", 0);
-                if (_part == null) {
+                FilePart part = ObjectUtil.remove(fileParts, "index", 0);
+                if (part == null) {
                     List<FilePart> joinFileParts = new ArrayList<FilePart>();
                     ObjectUtil.join(joinFileParts, fileParts, "index");
 
@@ -174,11 +174,11 @@ public class FileUploadService {
                         File tmp = FileUtil.tmp();
                         //合并 Part 文件
                         FileOutputStream out = new FileOutputStream(tmp);
-                        for (FilePart _filePart : joinFileParts) {
-                            InputStream in = fileManager.readFile(_filePart.getAbsolutePath());
+                        for (FilePart filesPart : joinFileParts) {
+                            InputStream in = fileManager.readFile(filesPart.getAbsolutePath());
                             StreamUtil.copy(in, out);
                             StreamUtil.closeQuietly(in);
-                            fileManager.removeFile(_filePart.getAbsolutePath());
+                            fileManager.removeFile(filesPart.getAbsolutePath());
                             ObjectUtil.remove(fileParts, SpELUtil.getExpression(" absolutePath == #value.getAbsolutePath() and fileManagerId == #value.getFileManagerId() "), filePart);
                         }
                         StreamUtil.closeQuietly(out);
@@ -190,8 +190,8 @@ public class FileUploadService {
                         FileUtil.delFile(tmp);
 
                         //删除 Part 文件
-                        for (FilePart _filePart : fileParts) {
-                            fileManager.removeFile(_filePart.getAbsolutePath());
+                        for (FilePart filesPart : fileParts) {
+                            fileManager.removeFile(filesPart.getAbsolutePath());
                         }
 
                         //在File_PART 表冗余一条数据 片段为 0
@@ -199,8 +199,8 @@ public class FileUploadService {
                     }
                 } else {
                     //删除 Part 文件
-                    for (FilePart _filePart : fileParts) {
-                        fileManager.removeFile(_filePart.getAbsolutePath());
+                    for (FilePart filesPart : fileParts) {
+                        fileManager.removeFile(filesPart.getAbsolutePath());
                     }
                 }
             } else {

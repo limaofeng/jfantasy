@@ -417,10 +417,10 @@ public final class ObjectUtil {
         }
         String key = collectoin.iterator().next().getClass().toString().concat("|").concat(orderBy);
         if (!comparatorMap.containsKey(key)) {
-            final String _orderBy = orderBy;
+            final String orderBys = orderBy;
             comparatorMap.put(key, new Comparator<T>() {
                 public int compare(Object o1, Object o2) {
-                    return compareField(o1, o2, _orderBy);
+                    return compareField(o1, o2, orderBys);
                 }
             });
         }

@@ -338,19 +338,19 @@ public abstract class AbstractBuffer implements Buffer {
             length = capacity() - index;
         }
 
-        byte[] src_array = src.array();
-        byte[] dst_array = array();
-        if ((src_array != null) && (dst_array != null)) {
-            System.arraycopy(src_array, src.getIndex(), dst_array, index, length);
-        } else if (src_array != null) {
+        byte[] srcArray = src.array();
+        byte[] dstArray = array();
+        if ((srcArray != null) && (dstArray != null)) {
+            System.arraycopy(srcArray, src.getIndex(), dstArray, index, length);
+        } else if (srcArray != null) {
             int s = src.getIndex();
             for (int i = 0; i < length; i++){
-                poke(index++, src_array[(s++)]);
+                poke(index++, srcArray[(s++)]);
             }
-        } else if (dst_array != null) {
+        } else if (dstArray != null) {
             int s = src.getIndex();
             for (int i = 0; i < length; i++){
-                dst_array[(index++)] = src.peek(s++);
+                dstArray[(index++)] = src.peek(s++);
             }
         } else {
             int s = src.getIndex();
@@ -368,9 +368,9 @@ public abstract class AbstractBuffer implements Buffer {
             length = capacity() - index;
         }
 
-        byte[] dst_array = array();
-        if (dst_array != null) {
-            System.arraycopy(b, offset, dst_array, index, length);
+        byte[] dstArray = array();
+        if (dstArray != null) {
+            System.arraycopy(b, offset, dstArray, index, length);
         } else {
             int s = offset;
             for (int i = 0; i < length; i++){

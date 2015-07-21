@@ -174,8 +174,8 @@ public class ReflectionUtils {
     public static List<Object> convertElementPropertyToList(Collection<Object> collection, String propertyName) {
         List<Object> list = new ArrayList<Object>();
         try {
-            for (Iterator<?> i$ = collection.iterator(); i$.hasNext(); ) {
-                Object obj = i$.next();
+            for (Iterator<?> i = collection.iterator(); i.hasNext(); ) {
+                Object obj = i.next();
                 list.add(PropertyUtils.getProperty(obj, propertyName));
             }
         } catch (Exception e) {

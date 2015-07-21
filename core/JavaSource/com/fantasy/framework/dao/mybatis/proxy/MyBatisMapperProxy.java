@@ -70,10 +70,10 @@ public class MyBatisMapperProxy implements InvocationHandler {
 	private Class<?> getDeclaringInterface(Class<?> declaringInterface, Method method) {
 		if (!this.sqlSession.getConfiguration().hasStatement(declaringInterface.getName() + "." + method.getName())) {
 			Class<?>[] declaringInterfaces = declaringInterface.getInterfaces();
-			for (Class<?> declaringinterface_ : declaringInterfaces) {
-				this.logger.debug("向父接口查找Mapper:" + declaringinterface_.getName() + "." + method.getName());
-				if (this.sqlSession.getConfiguration().hasStatement(declaringinterface_.getName() + "." + method.getName())) {
-					return declaringinterface_;
+			for (Class<?> declaringinterface : declaringInterfaces) {
+				this.logger.debug("向父接口查找Mapper:" + declaringinterface.getName() + "." + method.getName());
+				if (this.sqlSession.getConfiguration().hasStatement(declaringinterface.getName() + "." + method.getName())) {
+					return declaringinterface;
 				}
 			}
 			throw new RuntimeException(declaringInterface.getName() + "." + method.getName() + "未正确配置!");

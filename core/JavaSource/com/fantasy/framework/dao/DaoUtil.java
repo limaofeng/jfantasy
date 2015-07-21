@@ -48,8 +48,8 @@ public class DaoUtil {
 		for (Map.Entry<Pager<T>, FindPagerCallBack<T>> entry : pagers.entrySet()) {
 			totalCount += entry.getKey().getTotalCount();
 			if (first < totalCount && entry.getKey().getTotalCount() > 0) {
-				int c_first = first - (totalCount - entry.getKey().getTotalCount()) + pager.getPageItems().size();
-				entry.getKey().setFirst(c_first);
+				int cFirst = first - (totalCount - entry.getKey().getTotalCount()) + pager.getPageItems().size();
+				entry.getKey().setFirst(cFirst);
 				entry.getKey().setPageSize(pageSize - pager.getPageItems().size());
 				Pager<T> page = entry.getValue().call(entry.getKey(), param);
 				pager.getPageItems().addAll(page.getPageItems());

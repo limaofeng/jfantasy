@@ -239,9 +239,9 @@ public class ByteArrayBuffer extends AbstractBuffer {
             length = capacity() - index;
         }
 
-        byte[] src_array = src.array();
-        if (src_array != null) {
-            System.arraycopy(src_array, src.getIndex(), this._bytes, index, length);
+        byte[] srcArray = src.array();
+        if (srcArray != null) {
+            System.arraycopy(srcArray, src.getIndex(), this._bytes, index, length);
         } else {
             int s = src.getIndex();
             for (int i = 0; i < length; i++) {

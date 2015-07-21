@@ -386,8 +386,8 @@ public class FileUtil {
             } else {
                 File[] files = file.listFiles();
                 if (files != null) {
-                    for (File _file : files) {
-                        delFile(_file);
+                    for (File eFile : files) {
+                        delFile(eFile);
                     }
                 }
                 if (!file.delete()) {
@@ -486,8 +486,8 @@ public class FileUtil {
         return null;
     }
 
-    public static ZipOutputStream compress(String _unZipFile, OutputStream zipOut) throws IOException {
-        File srcFile = new File(_unZipFile);
+    public static ZipOutputStream compress(String unZipFile, OutputStream zipOut) throws IOException {
+        File srcFile = new File(unZipFile);
         DataInputStream dis = new DataInputStream(new FileInputStream(srcFile));
         ZipOutputStream zos = new ZipOutputStream(zipOut);
         zos.setMethod(ZipOutputStream.DEFLATED);
