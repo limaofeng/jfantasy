@@ -105,13 +105,13 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
      * 如果接口中没有上传文件参数，那么strParaFileName与strFilePath设置为空值
      * 如：buildRequest("", "",sParaTemp)
      *
-     * @param ALIPAYGATEWAYNEW 支付宝网关地址
+     * @param aLIPAYGATEWAYNEW 支付宝网关地址
      * @param strParaFileName    文件类型的参数名
      * @param strFilePath        文件路径
      * @param sParaTemp          请求参数数组
      * @return 支付宝处理结果
      */
-    public static String buildRequest(String ALIPAYGATEWAYNEW, String strParaFileName, String strFilePath, Map<String, String> sParaTemp, PaymentConfig paymentConfig) throws IOException {
+    public static String buildRequest(String aLIPAYGATEWAYNEW, String strParaFileName, String strFilePath, Map<String, String> sParaTemp, PaymentConfig paymentConfig) throws IOException {
         //待请求参数数组
         Map<String, String> sPara = buildRequestPara(sParaTemp, paymentConfig);
 
@@ -122,7 +122,7 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
         request.setCharset(input_charset);
 
         request.setParameters(generatNameValuePair(sPara));
-        request.setUrl(ALIPAYGATEWAYNEW);
+        request.setUrl(aLIPAYGATEWAYNEW);
         HttpResponse response = httpProtocolHandler.execute(request, strParaFileName, strFilePath);
         return response.getStringResult();
     }

@@ -88,10 +88,10 @@ public class OgnlUtil {
             String[] ns = name.split("\\.");
             String q = "";
             for (int i = 0; i < ns.length - (RegexpUtil.isMatch(name, "\\[\\d+\\]$") ? 0 : 1); i++) {
-                String _name = q + ns[i];
-                if (RegexpUtil.isMatch(_name, "\\[\\d+\\]$")) {// is array or list
-                    int index = Integer.valueOf(RegexpUtil.parseGroup(_name, "\\[(\\d+)\\]$", 1)).intValue();//array length
-                    String arrayName = RegexpUtil.replace(_name, "\\[\\d+\\]$", "");
+                String names = q + ns[i];
+                if (RegexpUtil.isMatch(names, "\\[\\d+\\]$")) {// is array or list
+                    int index = Integer.valueOf(RegexpUtil.parseGroup(names, "\\[(\\d+)\\]$", 1)).intValue();//array length
+                    String arrayName = RegexpUtil.replace(names, "\\[\\d+\\]$", "");
                     Object array = getValue(arrayName, root);
                     Object parent = arrayName.contains(".") ? getValue(RegexpUtil.replace(arrayName, "\\.[^.]+$", ""), root) : root;
                     String shortName = arrayName.contains(".") ? RegexpUtil.parseGroup(arrayName, "\\.([^.]+)$", 1) : arrayName;
@@ -130,10 +130,10 @@ public class OgnlUtil {
                         }
                     }
                 } else {
-                    Object v = getValue(_name, root);
+                    Object v = getValue(names, root);
                     if (v == null) {
-                        logger.debug("p:" + _name);
-                        Ognl.setValue(compile(_name), context, root, "EMPTY");
+                        logger.debug("p:" + names);
+                        Ognl.setValue(compile(names), context, root, "EMPTY");
                     }
                 }
                 q = ns[i] + ".";

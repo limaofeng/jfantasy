@@ -618,17 +618,17 @@ public final class ImageUtil {
 
     private static int HexToDec(String cadhex) {
         int n, i, j, k, decimal;
-        String CADHEX;
+        String cADHEX;
         n = 0;
         i = 0;
         j = 0;
         k = 0;
         decimal = 0;
-        CADHEX = null;
+        cADHEX = null;
         n = cadhex.length();
-        CADHEX = cadhex.trim().toUpperCase();
+        cADHEX = cadhex.trim().toUpperCase();
         while (i < n) {
-            j = CADHEX.charAt(i);
+            j = cADHEX.charAt(i);
             if ((j >= 48) && (j < 65)) {
                 j = j - 48;
             }
