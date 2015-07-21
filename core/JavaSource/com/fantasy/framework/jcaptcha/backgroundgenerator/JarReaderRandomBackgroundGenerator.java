@@ -117,10 +117,10 @@ public class JarReaderRandomBackgroundGenerator implements BackgroundGenerator {
     private BufferedImage tile(BufferedImage tileImage) {
         BufferedImage image = new BufferedImage(getImageWidth(), getImageHeight(), tileImage.getType());
         Graphics2D g2 = (Graphics2D) image.getGraphics();
-        int NumberX = getImageWidth() / tileImage.getWidth();
-        int NumberY = getImageHeight() / tileImage.getHeight();
-        for (int k = 0; k <= NumberY; k++) {
-            for (int l = 0; l <= NumberX; l++) {
+        int numberX = getImageWidth() / tileImage.getWidth();
+        int numberY = getImageHeight() / tileImage.getHeight();
+        for (int k = 0; k <= numberY; k++) {
+            for (int l = 0; l <= numberX; l++) {
                 g2.drawImage(tileImage, l * tileImage.getWidth(), k * tileImage.getHeight(), Math.min(tileImage.getWidth(), getImageWidth()), Math.min(tileImage.getHeight(), getImageHeight()), null);
             }
 

@@ -27,17 +27,17 @@ public class CustomBeanTypeConverter extends DefaultTypeConverter {
     @Transactional
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (CustomBean.class.isAssignableFrom(toType)) {
-            String _value = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
-            if(StringUtil.isBlank(_value)){
+            String values = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            if(StringUtil.isBlank(values)){
                 return Array.newInstance(toType.getComponentType(),0);
             }
-            return customBeanService.get(Long.valueOf(_value));
+            return customBeanService.get(Long.valueOf(values));
         } else if (CustomBean[].class.isAssignableFrom(toType)) {
-            String _value = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
-            if(StringUtil.isBlank(_value)){
+            String values = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            if(StringUtil.isBlank(values)){
                 return Array.newInstance(toType.getComponentType(),0);
             }
-            String[] ids = _value.split(",");
+            String[] ids = values.split(",");
             List<CustomBean> customBeanList = new ArrayList<CustomBean>();
             for (String id : ids) {
                 customBeanList.add(customBeanService.get(Long.valueOf(id)));

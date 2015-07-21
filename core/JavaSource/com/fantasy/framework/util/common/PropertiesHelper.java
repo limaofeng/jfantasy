@@ -28,8 +28,8 @@ public class PropertiesHelper {
             Properties props = new Properties();
             while (urls.hasNext()) {
                 URL url = urls.next();
-                Properties _props = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
-                for (Map.Entry entry : _props.entrySet()) {
+                Properties eProps = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
+                for (Map.Entry entry : eProps.entrySet()) {
                     if (!props.containsKey(entry.getKey())) {
                         props.put(entry.getKey(), entry.getValue());
                     }

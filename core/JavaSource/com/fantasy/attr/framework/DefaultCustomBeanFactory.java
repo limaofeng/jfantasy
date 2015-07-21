@@ -99,9 +99,9 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         attributeTypes.add(AttributeTypeUtils.primitive("Date[]", Date[].class));
 
         for (AttributeType attributeType : attributeTypes) {
-            AttributeType _attributeType = attributeTypeService.findUniqueByJavaType(attributeType.getDataType());
-            if (_attributeType != null) {
-                attributeType.setId(_attributeType.getId());
+            AttributeType eAttributeType = attributeTypeService.findUniqueByJavaType(attributeType.getDataType());
+            if (eAttributeType != null) {
+                attributeType.setId(eAttributeType.getId());
             }
             attributeTypeService.save(attributeType);
         }

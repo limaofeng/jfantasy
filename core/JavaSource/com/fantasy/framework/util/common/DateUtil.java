@@ -376,21 +376,21 @@ public class DateUtil {
                 hour = hour % 24;
                 break;
         }
-        final String _day = String.valueOf(day), _hour = String.valueOf(hour), _minute = String.valueOf(minute), _second = String.valueOf(second);
+        final String days = String.valueOf(day), hours = String.valueOf(hour), minutes = String.valueOf(minute), seconds = String.valueOf(second);
         String retVal = RegexpUtil.replace(format, "dd|HH|mm|ss", new RegexpUtil.AbstractReplaceCallBack() {
             @Override
             public String doReplace(String text, int index, Matcher matcher) {
                 if ("dd".equals(text)) {
-                    return _day;
+                    return days;
                 }
                 if ("HH".equals(text)) {
-                    return _hour;
+                    return hours;
                 }
                 if ("mm".equals(text)) {
-                    return _minute;
+                    return minutes;
                 }
                 if ("ss".equals(text)) {
-                    return _second;
+                    return seconds;
                 }
                 return text;
             }

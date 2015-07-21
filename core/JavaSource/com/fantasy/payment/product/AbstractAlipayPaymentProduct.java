@@ -87,7 +87,7 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
      * @return 要请求的参数数组
      */
     protected static Map<String, String> buildRequestPara(Map<String, String> sParaTemp, PaymentConfig config) {
-        String sign_type = sParaTemp.get("sign_type");
+        String signType = sParaTemp.get("sign_type");
         //除去数组中的空值和签名参数
         Map<String, String> sPara = paraFilter(sParaTemp);
         //生成签名结果
@@ -95,7 +95,7 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
         //签名结果与签名方式加入请求提交参数组中
         sPara.put("sign", mysign);
         if (!"alipay.wap.trade.create.direct".equals(sPara.get("service")) && !"alipay.wap.auth.authAndExecute".equals(sPara.get("service"))) {
-            sPara.put("sign_type", sign_type);
+            sPara.put("sign_type", signType);
         }
         return sPara;
     }
@@ -105,13 +105,13 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
      * 如果接口中没有上传文件参数，那么strParaFileName与strFilePath设置为空值
      * 如：buildRequest("", "",sParaTemp)
      *
-     * @param ALIPAY_GATEWAY_NEW 支付宝网关地址
+     * @param aLIPAYGATEWAYNEW 支付宝网关地址
      * @param strParaFileName    文件类型的参数名
      * @param strFilePath        文件路径
      * @param sParaTemp          请求参数数组
      * @return 支付宝处理结果
      */
-    public static String buildRequest(String ALIPAY_GATEWAY_NEW, String strParaFileName, String strFilePath, Map<String, String> sParaTemp, PaymentConfig paymentConfig) throws IOException {
+    public static String buildRequest(String aLIPAYGATEWAYNEW, String strParaFileName, String strFilePath, Map<String, String> sParaTemp, PaymentConfig paymentConfig) throws IOException {
         //待请求参数数组
         Map<String, String> sPara = buildRequestPara(sParaTemp, paymentConfig);
 
@@ -122,7 +122,7 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
         request.setCharset(input_charset);
 
         request.setParameters(generatNameValuePair(sPara));
-        request.setUrl(ALIPAY_GATEWAY_NEW);
+        request.setUrl(aLIPAYGATEWAYNEW);
         HttpResponse response = httpProtocolHandler.execute(request, strParaFileName, strFilePath);
         return response.getStringResult();
     }
@@ -133,8 +133,8 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
      * @param text 要解析的字符串
      * @return 解析结果
      */
-    public static String getRequestToken(String text, String sign_type) throws Exception {
-        String request_token = "";
+    public static String getRequestToken(String text, String signType) throws Exception {
+        String requestToken = "";
         //以“&”字符切割字符串
         String[] strSplitText = text.split("&");
         //把切割后的字符串数组变成变量与数值组合的字典数组
@@ -154,17 +154,17 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
         }
 
         if (paraText.get("res_data") != null) {
-            String res_data = paraText.get("res_data");
+            String resData = paraText.get("res_data");
             //解析加密部分字符串（RSA与MD5区别仅此一句）
-            if ("0001".equals(sign_type)) {
-                res_data = RSA.decrypt(res_data, PaymentContext.getContext().getPaymentConfig().getBargainorKey(), input_charset);
+            if ("0001".equals(signType)) {
+                resData = RSA.decrypt(resData, PaymentContext.getContext().getPaymentConfig().getBargainorKey(), input_charset);
             }
 
             //token从res_data中解析出来（也就是说res_data中已经包含token的内容）
-            Document document = DocumentHelper.parseText(res_data);
-            request_token = document.selectSingleNode("//direct_trade_create_res/request_token").getText();
+            Document document = DocumentHelper.parseText(resData);
+            requestToken = document.selectSingleNode("//direct_trade_create_res/request_token").getText();
         }
-        return request_token;
+        return requestToken;
     }
 
     /**
@@ -202,21 +202,21 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
      */
     public static boolean verifyNotify(Map<String, String> params) throws Exception {
         //获取是否是支付宝服务器发来的请求的验证结果
-        boolean _verifyResponse;
+        boolean verifyResponse;
         try {
             //XML解析notify_data数据，获取notify_id
             Document document = DocumentHelper.parseText(params.get("notify_data"));
-            String notify_id = document.selectSingleNode("//notify/notify_id").getText();
-            _verifyResponse = verifyResponse(PaymentContext.getContext().getPaymentConfig().getBargainorId(), notify_id);
+            String notifyId = document.selectSingleNode("//notify/notify_id").getText();
+            verifyResponse = verifyResponse(PaymentContext.getContext().getPaymentConfig().getBargainorId(), notifyId);
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
-            _verifyResponse = false;
+            verifyResponse = false;
         }
         //获取返回时的签名验证结果
         //判断responsetTxt是否为true，isSign是否为true
         //responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关
         //isSign不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
-        return getSignVeryfy(params, ObjectUtil.defaultValue(params.get("sign"), ""), false) && _verifyResponse;
+        return getSignVeryfy(params, ObjectUtil.defaultValue(params.get("sign"), ""), false) && verifyResponse;
     }
 
 
@@ -257,17 +257,17 @@ public abstract class AbstractAlipayPaymentProduct extends AbstractPaymentProduc
      * 获取远程服务器ATN结果,验证返回URL
      *
      * @param partner   合作身份者ID
-     * @param notify_id 通知校验ID
+     * @param notifyId 通知校验ID
      * @return 服务器ATN结果
      * 验证结果集：
      * invalid命令参数不对 出现这个错误，请检测返回处理中partner和key是否为空
      * true 返回正确信息
      * false 请检查防火墙或者是服务器阻止端口问题以及验证时间是否超过一分钟
      */
-    public static boolean verifyResponse(String partner, String notify_id) {
+    public static boolean verifyResponse(String partner, String notifyId) {
         //获取远程服务器ATN结果，验证是否是支付宝服务器发来的请求
-        String veryfy_url = HTTPS_VERIFY_URL + "partner=" + partner + "&notify_id=" + notify_id;
-        return checkUrl(veryfy_url);
+        String veryfyUrl = HTTPS_VERIFY_URL + "partner=" + partner + "&notify_id=" + notifyId;
+        return checkUrl(veryfyUrl);
     }
 
     /**

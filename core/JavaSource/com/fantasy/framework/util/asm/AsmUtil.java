@@ -116,6 +116,7 @@ public class AsmUtil implements Opcodes {
             FileUtil.writeFile(bytes, PathUtil.classes() + "/" + className.replace(".", File.separator) + ".class");
             return FantasyClassLoader.getClassLoader().loadClass(PathUtil.classes(), className);
         } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
             try {
                 return FantasyClassLoader.getClassLoader().loadClass(bytes, className);
             } catch (ClassNotFoundException ex) {

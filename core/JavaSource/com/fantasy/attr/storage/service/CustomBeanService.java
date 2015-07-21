@@ -38,15 +38,15 @@ public class CustomBeanService {
         if (version == null) {
             return;
         }
-        CustomBean _customBean = new CustomBean();
+        CustomBean customBeans = new CustomBean();
         List<AttributeValue> attributeValues = new ArrayList<AttributeValue>();
-        _customBean.setId(customBean.getId());
-        if (_customBean.getId() == null) {
-            _customBean.setDefinition(definition);
-            _customBean.setVersion(version.getId());
-            _customBean = customBeanDao.save(_customBean);
-            _customBean.setAttributeValues(attributeValues);
-            customBean.setId(_customBean.getId());
+        customBeans.setId(customBean.getId());
+        if (customBeans.getId() == null) {
+            customBeans.setDefinition(definition);
+            customBeans.setVersion(version.getId());
+            customBeans = customBeanDao.save(customBeans);
+            customBeans.setAttributeValues(attributeValues);
+            customBean.setId(customBeans.getId());
         } else {
             attributeValues = this.customBeanDao.get(customBean.getId()).getAttributeValues();
         }
@@ -57,7 +57,7 @@ public class CustomBeanService {
                 attributeValue.setAttribute(attribute);
                 attributeValue.setValue(OgnlUtil.getInstance().getValue(attribute.getCode(), customBean) == null ? null : OgnlUtil.getInstance().getValue(attribute.getCode(), customBean).toString());
                 attributeValue.setVersion(version);
-                attributeValue.setTargetId(_customBean.getId());
+                attributeValue.setTargetId(customBeans.getId());
                 attributeValues.add(attributeValue);
             }
             String value = customBeanFactory.getOgnlUtil(attribute.getAttributeType()).getValue(attribute.getCode(), customBean, String.class);
@@ -79,16 +79,16 @@ public class CustomBeanService {
     }
 
     public com.fantasy.attr.framework.CustomBean get(Long id) {
-        CustomBean _customBean = customBeanDao.get(id);
-        if (_customBean == null) {
+        CustomBean customBeans = customBeanDao.get(id);
+        if (customBeans == null) {
             return null;
         }
-        com.fantasy.attr.framework.CustomBean customBean = ClassUtil.newInstance(_customBean.getDefinition().getClassName(), com.fantasy.attr.framework.CustomBean.class);
+        com.fantasy.attr.framework.CustomBean customBean = ClassUtil.newInstance(customBeans.getDefinition().getClassName(), com.fantasy.attr.framework.CustomBean.class);
         assert customBean != null;
-        customBean.setId(_customBean.getId());
+        customBean.setId(customBeans.getId());
         AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(customBean.getClass().getName());
         for (Attribute attribute : version.getAttributes()) {
-            AttributeValue attributeValue = ObjectUtil.find(_customBean.getAttributeValues(), "attribute.code", attribute.getCode());
+            AttributeValue attributeValue = ObjectUtil.find(customBeans.getAttributeValues(), "attribute.code", attribute.getCode());
             if (attributeValue != null) {
                 customBeanFactory.getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), customBean, attributeValue.getValue());
             }

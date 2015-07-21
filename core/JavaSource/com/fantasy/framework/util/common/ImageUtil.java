@@ -248,9 +248,9 @@ public final class ImageUtil {
         g.drawImage(target, 0, 0, wideth, height, imageObserver);
         g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_ATOP, alpha / 100.0F));
 
-        int wideth_biao = press.getWidth();
-        int height_biao = press.getHeight();
-        g.drawImage(press, wideth - wideth_biao - x, height - height_biao - y, wideth_biao, height_biao, imageObserver);
+        int widethBiao = press.getWidth();
+        int heightBiao = press.getHeight();
+        g.drawImage(press, wideth - widethBiao - x, height - heightBiao - y, widethBiao, heightBiao, imageObserver);
         g.dispose();
         return image;
     }
@@ -281,8 +281,8 @@ public final class ImageUtil {
 
     public static BufferedImage pressText(String pressText, String targetImg, String fontName, int fontStyle, int color, int fontSize, int x, int y) {
         try {
-            File _file = new File(targetImg);
-            Image src = ImageIO.read(_file);
+            File file = new File(targetImg);
+            Image src = ImageIO.read(file);
             int wideth = src.getWidth(null);
             int height = src.getHeight(null);
             BufferedImage image = new BufferedImage(wideth, height, BufferedImage.TYPE_INT_RGB);
@@ -586,9 +586,9 @@ public final class ImageUtil {
     }
 
     private static int getFileAttribute(byte[] byte2, int n, int m, String fileextendname) {
-        int j, FileAttributeValue;
+        int j, fileAttriButeValue;
         j = 0;
-        FileAttributeValue = 0;
+        fileAttriButeValue = 0;
         String str, str1;
         str = "";
         str1 = "";
@@ -612,23 +612,23 @@ public final class ImageUtil {
                 str = str + str1;
             }
         }
-        FileAttributeValue = HexToDec(str);
-        return FileAttributeValue;
+        fileAttriButeValue = HexToDec(str);
+        return fileAttriButeValue;
     }
 
     private static int HexToDec(String cadhex) {
         int n, i, j, k, decimal;
-        String CADHEX1;
+        String cADHEX;
         n = 0;
         i = 0;
         j = 0;
         k = 0;
         decimal = 0;
-        CADHEX1 = null;
+        cADHEX = null;
         n = cadhex.length();
-        CADHEX1 = cadhex.trim().toUpperCase();
+        cADHEX = cadhex.trim().toUpperCase();
         while (i < n) {
-            j = CADHEX1.charAt(i);
+            j = cADHEX.charAt(i);
             if ((j >= 48) && (j < 65)) {
                 j = j - 48;
             }

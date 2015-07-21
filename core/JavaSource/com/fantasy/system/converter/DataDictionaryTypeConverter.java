@@ -27,8 +27,8 @@ public class DataDictionaryTypeConverter extends DefaultTypeConverter {
     @Transactional
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (toType == DataDictionary.class) {
-            String _value = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
-            return dataDictionaryService.get(_value);
+            String values = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            return dataDictionaryService.get(values);
         } else if (toType == DataDictionary[].class) {
             String values = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
             if (StringUtil.isBlank(values)) {

@@ -154,8 +154,8 @@ public class BuguParser {
     public static Query parse(Query... queries) {
         Assert.isTrue(queries.length != 0, "param queries length must be greater than 1 ");
         BooleanQuery query = new BooleanQuery();
-        for (Query _query : queries) {
-            query.add(_query, BooleanClause.Occur.MUST);
+        for (Query querys : queries) {
+            query.add(querys, BooleanClause.Occur.MUST);
         }
         return query;
     }

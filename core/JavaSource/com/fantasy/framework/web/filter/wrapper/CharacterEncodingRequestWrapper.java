@@ -36,19 +36,19 @@ public class CharacterEncodingRequestWrapper extends HttpServletRequestWrapper {
             return parameterMaps.get(name);
         if (values == null || values.length == 0)
             return values;
-        String[] _newValues = new String[values.length];
+        String[] newValues = new String[values.length];
         for (int i = 0; i < values.length; i++) {
             if (Charset.forName("ASCII").newEncoder().canEncode(values[i])) {
-                _newValues[i] = StringUtil.decodeURI(values[i], getRequest().getCharacterEncoding());
-                LOG.debug(name + " 的原始编码为[ASCII]转编码:" + values[i] + "=>" + _newValues[i]);
+                newValues[i] = StringUtil.decodeURI(values[i], getRequest().getCharacterEncoding());
+                LOG.debug(name + " 的原始编码为[ASCII]转编码:" + values[i] + "=>" + newValues[i]);
             } else if (Charset.forName("ISO-8859-1").newEncoder().canEncode(values[i])) {
-                _newValues[i] = WebUtil.transformCoding(values[i], "ISO-8859-1", getRequest().getCharacterEncoding());
-                LOG.debug(name + " 的原始编码为[ISO-8859-1]转编码:" + values[i] + "=>" + _newValues[i]);
+                newValues[i] = WebUtil.transformCoding(values[i], "ISO-8859-1", getRequest().getCharacterEncoding());
+                LOG.debug(name + " 的原始编码为[ISO-8859-1]转编码:" + values[i] + "=>" + newValues[i]);
             } else {
-                _newValues[i] = values[i];
+                newValues[i] = values[i];
             }
         }
-        parameterMaps.put(name, _newValues);
+        parameterMaps.put(name, newValues);
         return parameterMaps.get(name);
     }
 

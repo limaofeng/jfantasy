@@ -68,18 +68,18 @@ public class FileManagerFactory implements InitializingBean {
         TransactionStatus status = transactionManager.getTransaction(def);
         try {
             // 创建默认目录
-            final String webroot_path = StringUtil.defaultValue(PathUtil.root(), PathUtil.classes());
+            final String webrootPath = StringUtil.defaultValue(PathUtil.root(), PathUtil.classes());
             FileManagerConfig fileManagerConfig = fileManagerService.get(WEBROOT_FILEMANAGER_ID);
             if (fileManagerConfig == null) {
                 fileManagerService.save(local, WEBROOT_FILEMANAGER_ID, "项目WEB根目录", "应用启动是检查并修改该目录", new HashMap<String, String>() {
                     {
-                        this.put("defaultDir", webroot_path);
+                        this.put("defaultDir", webrootPath);
                     }
                 });
             } else {
                 ConfigParam defaultDir = ObjectUtil.find(fileManagerConfig.getConfigParams(), "name", "defaultDir");
-                if (defaultDir == null || !webroot_path.equals(defaultDir.getValue())) {
-                    fileManagerConfig.addConfigParam("defaultDir", webroot_path);
+                if (defaultDir == null || !webrootPath.equals(defaultDir.getValue())) {
+                    fileManagerConfig.addConfigParam("defaultDir", webrootPath);
                     fileManagerService.save(fileManagerConfig);
                 }
             }
