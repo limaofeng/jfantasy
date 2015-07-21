@@ -16,7 +16,9 @@ import java.util.Date;
 import java.util.Map;
 
 public class PrimitiveTypeConverter extends DefaultTypeConverter {
-    private final static Log LOGGER = LogFactory.getLog(PrimitiveTypeConverter.class);
+
+    private final static Log LOG = LogFactory.getLog(PrimitiveTypeConverter.class);
+
     @SuppressWarnings("rawtypes")
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
         if (value != null && Date.class.isAssignableFrom(value.getClass()) && toType == String.class) {
@@ -25,8 +27,8 @@ public class PrimitiveTypeConverter extends DefaultTypeConverter {
             try {
                 DateFormat dateFormat = (DateFormat) ClassUtil.getParamAnno((Method) member);
                 return DateUtil.parse(StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value), dateFormat.pattern());
-            } catch (Exception e) {
-                LOGGER.error(e.getMessage(),e);
+            } catch (RuntimeException e) {
+                LOG.error(e.getMessage(),e);
                 return ConvertUtils.convert(value,Date.class);
             }
         } else if (ClassUtil.isArray(value)) {
@@ -34,11 +36,12 @@ public class PrimitiveTypeConverter extends DefaultTypeConverter {
             for (int i = 0, len = Array.getLength(value); i < len; i++) {
                 buffer.append(this.convertValue(context, target, member, propertyName, Array.get(value, i), toType));
                 if (i != len - 1) {
-                    buffer.append(";");//TODO 如果输入的文字中存在相同的分割符。将造成数据问题
+                    buffer.append(";");
                 }
             }
             return buffer.toString();
         } else if (ClassUtil.isArray(toType)) {
+            assert value != null;
             String[] array = StringUtil.tokenizeToStringArray(value.toString(), ";");
             Object ret = Array.newInstance(toType.getComponentType(), array.length);
             for (int i = 0; i < array.length; i++) {
