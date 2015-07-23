@@ -201,11 +201,11 @@ public class Pager<T> implements Serializable {
             this.orders = new Order[]{Order.valueOf(Order.class, order)};
         } else {
             List<Order> list = new ArrayList<Order>();
-            for (String orders : StringUtil.tokenizeToStringArray(order, ",;")) {
-                if ((!StringUtils.equals("desc", orders)) && (!StringUtils.equals("asc", orders))) {
-                    throw new IllegalArgumentException("排序方向" + orders + "不是合法值");
+            for (String ordersTemp : StringUtil.tokenizeToStringArray(order, ",;")) {
+                if ((!StringUtils.equals("desc", ordersTemp)) && (!StringUtils.equals("asc", ordersTemp))) {
+                    throw new IllegalArgumentException("排序方向" + ordersTemp + "不是合法值");
                 }
-                list.add(Order.valueOf(Order.class, orders));
+                list.add(Order.valueOf(Order.class, ordersTemp));
             }
             this.orders = list.toArray(new Order[list.size()]);
         }
@@ -219,7 +219,7 @@ public class Pager<T> implements Serializable {
         return (StringUtils.isNotBlank(this.orderBy)) && (ObjectUtil.isNotNull(orders));
     }
 
-    public static enum Order {
+    public enum Order {
         desc, asc
     }
 
