@@ -17,7 +17,7 @@ import java.util.Map.Entry;
 
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
-	private static final Log logger = LogFactory.getLog(XSSRequestWrapper.class);
+	private static final Log LOGGER = LogFactory.getLog(XSSRequestWrapper.class);
 
 	private Map<String, String[]> parameterMaps = new HashMap<String, String[]>();
 
@@ -59,8 +59,8 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 			if (RegexpUtil.find(escapeStr, "^http://") && !WebUtil.getRequestUrl((HttpServletRequest) super.getRequest()).startsWith(escapeStr)) {
 				escapeStr = "base64:" + new String(Base64Util.encode(escapeStr.getBytes()));
 			}
-			if (logger.isDebugEnabled()) {
-				logger.debug(name + "[" + values[i] + "]" + " => htmlEscape => [" + escapeStr + "]");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug(name + "[" + values[i] + "]" + " => htmlEscape => [" + escapeStr + "]");
 			}
 			Array.set(vals, i, escapeStr);
 		}

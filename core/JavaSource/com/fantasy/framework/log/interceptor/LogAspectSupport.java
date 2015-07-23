@@ -30,7 +30,7 @@ public class LogAspectSupport implements InitializingBean {
 
     private LogOperationSource logOperationSource;
 
-    protected final Log logger = LogFactory.getLog(getClass());
+    protected final Log LOGGER = LogFactory.getLog(getClass());
 
     private LogManager logManager;
 
@@ -87,7 +87,7 @@ public class LogAspectSupport implements InitializingBean {
         if (!CollectionUtils.isEmpty(logOp)) {
             Collection<LogOperationContext> ops = createOperationContext(logOp, method, args, target, targetClass);
             for (LogOperationContext context : ops) {
-                logger.debug("Log Info : " + context.isConditionPassing() + " - " + context.text());
+                LOGGER.debug("Log Info : " + context.isConditionPassing() + " - " + context.text());
             }
         }
         return invoker.invoke();

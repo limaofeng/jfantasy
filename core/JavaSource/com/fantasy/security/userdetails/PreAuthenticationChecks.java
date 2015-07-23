@@ -26,7 +26,7 @@ public class PreAuthenticationChecks implements UserDetailsChecker, Initializing
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	protected final static Log logger = LogFactory.getLog(PostAuthenticationChecks.class);
+	protected final static Log LOGGER = LogFactory.getLog(PostAuthenticationChecks.class);
 
 	private List<UserDetailsChecker> userDetailsCheckers = null;
 
@@ -53,15 +53,15 @@ public class PreAuthenticationChecks implements UserDetailsChecker, Initializing
 
 		public void check(UserDetails user) {
 			if (!user.isAccountNonLocked()) {
-				logger.debug("User account is locked");
+				LOGGER.debug("User account is locked");
 				throw new LockedException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.locked", "User account is locked"));
 			}
 			if (!user.isEnabled()) {
-				logger.debug("User account is disabled");
+				LOGGER.debug("User account is disabled");
 				throw new DisabledException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.disabled", "User is disabled"));
 			}
 			if (!user.isAccountNonExpired()) {
-				logger.debug("User account is expired");
+				LOGGER.debug("User account is expired");
 				throw new AccountExpiredException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.expired", "User account has expired"));
 			}
 		}

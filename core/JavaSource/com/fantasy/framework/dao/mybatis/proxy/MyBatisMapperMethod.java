@@ -28,7 +28,7 @@ import java.util.Map;
  * @since 2012-10-28 下午08:39:09
  */
 public class MyBatisMapperMethod {
-    protected final Log logger = LogFactory.getLog(MyBatisMapperMethod.class);
+    protected final Log LOGGER = LogFactory.getLog(MyBatisMapperMethod.class);
     private SqlSession sqlSession;
     private Configuration config;
     private SqlCommandType type;

@@ -22,7 +22,7 @@ import com.fantasy.framework.util.common.StringUtil;
  */
 public class KeywordsInterceptor {
 
-	private static final Logger logger = Logger.getLogger(KeywordsInterceptor.class);
+	private static final Logger LOGGER = Logger.getLogger(KeywordsInterceptor.class);
 
 	public void reloadDictionary() {
 		Dictionary dictionary = Dictionary.getInstance();
@@ -40,11 +40,11 @@ public class KeywordsInterceptor {
 			method = ClassUtil.getDeclaredMethod(Dictionary.class, "loadStopWordDict");
 			method.invoke(dictionary);
 		} catch (IllegalArgumentException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (IllegalAccessException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 

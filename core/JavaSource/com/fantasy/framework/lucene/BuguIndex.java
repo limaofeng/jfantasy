@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BuguIndex implements InitializingBean {
 
-    private static final Log logger = LogFactory.getLog(BuguIndex.class);
+    private static final Log LOGGER = LogFactory.getLog(BuguIndex.class);
 
     private static BuguIndex instance;
     /**
@@ -168,16 +168,16 @@ public class BuguIndex implements InitializingBean {
                     writer.commit();
                     writer.close();
                 } catch (CorruptIndexException ex) {
-                    logger.error("Can not commit and close the lucene index", ex);
+                    LOGGER.error("Can not commit and close the lucene index", ex);
                 } catch (IOException ex) {
-                    logger.error("Can not commit and close the lucene index", ex);
+                    LOGGER.error("Can not commit and close the lucene index", ex);
                 } finally {
                     try {
                         if ((dir != null) && (IndexWriter.isLocked(dir))) {
                             IndexWriter.unlock(dir);
                         }
                     } catch (IOException ex) {
-                        logger.error("Can not unlock the lucene index", ex);
+                        LOGGER.error("Can not unlock the lucene index", ex);
                     }
                 }
             }

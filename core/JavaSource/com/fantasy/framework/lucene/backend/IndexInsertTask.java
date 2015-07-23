@@ -11,7 +11,7 @@ import com.fantasy.framework.lucene.cache.IndexWriterCache;
 import com.fantasy.framework.lucene.mapper.MapperUtil;
 
 public class IndexInsertTask implements Runnable {
-	private static final Logger logger = Logger.getLogger(IndexInsertTask.class);
+	private static final Logger LOGGER = Logger.getLogger(IndexInsertTask.class);
 	private Object entity;
 
 	public IndexInsertTask(Object entity) {
@@ -29,9 +29,9 @@ public class IndexInsertTask implements Runnable {
 		try {
 			writer.addDocument(doc);
 		} catch (CorruptIndexException ex) {
-			logger.error("IndexWriter can not add a document to the lucene index", ex);
+			LOGGER.error("IndexWriter can not add a document to the lucene index", ex);
 		} catch (IOException ex) {
-			logger.error("IndexWriter can not add a document to the lucene index", ex);
+			LOGGER.error("IndexWriter can not add a document to the lucene index", ex);
 		}
 	}
 }

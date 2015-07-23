@@ -21,7 +21,7 @@ import java.util.*;
  */
 public class ReflectionUtils {
 
-    private static Logger logger = LoggerFactory.getLogger(ReflectionUtils.class);
+    private static Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
 
     static {
         DateConverter dc = new DateConverter();
@@ -55,7 +55,7 @@ public class ReflectionUtils {
         try {
             result = (T) field.get(object);
         } catch (IllegalAccessException e) {
-            logger.error("不可能抛出的异常{}", e.getMessage(),e);
+            LOGGER.error("不可能抛出的异常{}", e.getMessage(),e);
         }
         return result;
     }
@@ -69,7 +69,7 @@ public class ReflectionUtils {
         try {
             field.set(object, value);
         } catch (IllegalAccessException e) {
-            logger.error("不可能抛出的异常:{}", e.getMessage(),e);
+            LOGGER.error("不可能抛出的异常:{}", e.getMessage(),e);
         }
     }
 
@@ -94,7 +94,7 @@ public class ReflectionUtils {
             try {
                 return superClass.getDeclaredField(fieldName);
             } catch (NoSuchFieldException localNoSuchFieldException) {
-                logger.error(localNoSuchFieldException.getMessage(),localNoSuchFieldException);
+                LOGGER.error(localNoSuchFieldException.getMessage(),localNoSuchFieldException);
                 superClass = superClass.getSuperclass();
             }
         }
@@ -114,7 +114,7 @@ public class ReflectionUtils {
             try {
                 return superClass.getDeclaredMethod(methodName, parameterTypes);
             } catch (NoSuchMethodException localNoSuchMethodException) {
-                logger.error(localNoSuchMethodException.getMessage(),localNoSuchMethodException);
+                LOGGER.error(localNoSuchMethodException.getMessage(),localNoSuchMethodException);
                 superClass = superClass.getSuperclass();
             }
 
@@ -140,11 +140,11 @@ public class ReflectionUtils {
             if (interfaceClazz.equals(((ParameterizedType) genType).getRawType())) {
                 Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
                 if ((index >= params.length) || (index < 0)) {
-                    logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
+                    LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
                     return Object.class;
                 }
                 if (!(params[index] instanceof Class<?>)) {
-                    logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+                    LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
                     return Object.class;
                 }
                 return (Class<?>) params[index];
@@ -156,16 +156,16 @@ public class ReflectionUtils {
     public static Class<?> getSuperClassGenricType(Class<?> clazz, int index) {
         Type genType = clazz.getGenericSuperclass();
         if (!(genType instanceof ParameterizedType)) {
-            logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+            LOGGER.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
             return Object.class;
         }
         Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
         if ((index >= params.length) || (index < 0)) {
-            logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
+            LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
             return Object.class;
         }
         if (!(params[index] instanceof Class<?>)) {
-            logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+            LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
             return Object.class;
         }
         return (Class<?>) params[index];

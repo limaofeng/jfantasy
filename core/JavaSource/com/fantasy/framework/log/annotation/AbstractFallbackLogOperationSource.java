@@ -17,7 +17,7 @@ public abstract class AbstractFallbackLogOperationSource implements LogOperation
 
 	private final static Collection<LogOperation> NULL_ATTRIBUTE = Collections.emptyList();
 
-	protected final Log logger = LogFactory.getLog(getClass());
+	protected final Log LOGGER = LogFactory.getLog(getClass());
 
 	final Map<Object, Collection<LogOperation>> attributeCache = new ConcurrentHashMap<Object, Collection<LogOperation>>();
 
@@ -34,8 +34,8 @@ public abstract class AbstractFallbackLogOperationSource implements LogOperation
 			if (logOps == null) {
 				this.attributeCache.put(cacheKey, NULL_ATTRIBUTE);
 			} else {
-				if (logger.isDebugEnabled()) {
-					logger.debug("Adding cacheable method '" + method.getName() + "' with attribute: " + logOps);
+				if (LOGGER.isDebugEnabled()) {
+					LOGGER.debug("Adding cacheable method '" + method.getName() + "' with attribute: " + logOps);
 				}
 				this.attributeCache.put(cacheKey, logOps);
 			}

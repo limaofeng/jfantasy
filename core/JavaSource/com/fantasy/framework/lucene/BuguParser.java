@@ -14,7 +14,7 @@ import java.util.Date;
 
 public class BuguParser {
 
-    private static final Logger logger = Logger.getLogger(BuguParser.class);
+    private static final Logger LOGGER = Logger.getLogger(BuguParser.class);
 
     /**
      * 单个字段匹配
@@ -122,7 +122,7 @@ public class BuguParser {
         try {
             query = MultiFieldQueryParser.parse(BuguIndex.getInstance().getVersion(),value, fields, occurs, BuguIndex.getInstance().getAnalyzer());
         } catch (ParseException ex) {
-            logger.error("MultiFieldQueryParser can not parse the value " + value, ex);
+            LOGGER.error("MultiFieldQueryParser can not parse the value " + value, ex);
         }
         return query;
     }
@@ -140,7 +140,7 @@ public class BuguParser {
         try {
             query = MultiFieldQueryParser.parse(BuguIndex.getInstance().getVersion(),values, fields, occurs, BuguIndex.getInstance().getAnalyzer());
         } catch (ParseException ex) {
-            logger.error("MultiFieldQueryParser can not parse the values " + Arrays.toString(values), ex);
+            LOGGER.error("MultiFieldQueryParser can not parse the values " + Arrays.toString(values), ex);
         }
         return query;
     }
@@ -193,7 +193,7 @@ public class BuguParser {
         try {
             query = parser.parse(value);
         } catch (ParseException ex) {
-            logger.error("Can not parse the value " + value, ex);
+            LOGGER.error("Can not parse the value " + value, ex);
         }
         return query;
     }

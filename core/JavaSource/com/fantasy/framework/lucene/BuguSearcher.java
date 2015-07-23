@@ -34,7 +34,7 @@ import java.util.List;
  */
 @SuppressWarnings("unchecked")
 public abstract class BuguSearcher<T> {
-    private static final Logger logger = Logger.getLogger(BuguSearcher.class);
+    private static final Logger LOGGER = Logger.getLogger(BuguSearcher.class);
     private Class<T> entityClass;
     private String idName;
     private LoadEntityMode loadMode;
@@ -49,7 +49,7 @@ public abstract class BuguSearcher<T> {
             // 获取对象的主键idName
             idName = FieldsCache.getInstance().getIdField(this.entityClass).getName();
         } catch (IdException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         this.luceneDao = DaoCache.getInstance().get(this.entityClass);
     }
@@ -82,7 +82,7 @@ public abstract class BuguSearcher<T> {
         try {
             searcher.getIndexReader().decRef();
         } catch (IOException ex) {
-            logger.error("Something is wrong when decrease the reference of IndexReader", ex);
+            LOGGER.error("Something is wrong when decrease the reference of IndexReader", ex);
         }
     }
 
@@ -104,7 +104,7 @@ public abstract class BuguSearcher<T> {
                 data.add(this.build(doc));
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             close(searcher);
         }
@@ -149,7 +149,7 @@ public abstract class BuguSearcher<T> {
                 }
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             close(searcher);
         }
@@ -201,7 +201,7 @@ public abstract class BuguSearcher<T> {
                 return SortField.STRING;
             }
         } catch (FieldException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return SortField.STRING;
     }
@@ -214,7 +214,7 @@ public abstract class BuguSearcher<T> {
                 try {
                     field = FieldsCache.getInstance().getField(this.entityClass, fieldName);
                 } catch (FieldException ex) {
-                    logger.error(ex.getMessage(), ex);
+                    LOGGER.error(ex.getMessage(), ex);
                 }
                 Object fieldValue = FieldUtil.get(obj, field);
                 if (fieldValue != null) {
@@ -222,7 +222,7 @@ public abstract class BuguSearcher<T> {
                     try {
                         result = highlighter.getResult(fieldName, fieldValue.toString());
                     } catch (Exception ex) {
-                        logger.error("Something is wrong when getting the highlighter result", ex);
+                        LOGGER.error("Something is wrong when getting the highlighter result", ex);
                     }
                     if (!StringUtil.isEmpty(result)) {
                         FieldUtil.set(obj, field, result);
@@ -246,7 +246,7 @@ public abstract class BuguSearcher<T> {
                         OgnlUtil.getInstance().setValue(fieldable.name(), object, fieldable.stringValue());
                     }
                 } catch (FieldException e) {
-                    logger.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
             return object;

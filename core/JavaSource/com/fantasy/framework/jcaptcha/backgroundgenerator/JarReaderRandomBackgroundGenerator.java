@@ -27,7 +27,7 @@ import java.util.zip.ZipInputStream;
  */
 public class JarReaderRandomBackgroundGenerator implements BackgroundGenerator {
 
-    private static final Log logger = LogFactory.getLog(JarReaderRandomBackgroundGenerator.class);
+    private static final Log LOGGER = LogFactory.getLog(JarReaderRandomBackgroundGenerator.class);
 
     private List<Object> images = new ArrayList<Object>();
 
@@ -105,11 +105,11 @@ public class JarReaderRandomBackgroundGenerator implements BackgroundGenerator {
                 files.put(ze.getName(), new ByteArrayInputStream(b));
             }
         } catch (NullPointerException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (FileNotFoundException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return files;
     }
