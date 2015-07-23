@@ -166,17 +166,13 @@ public class UserGroup extends BaseBusEntity {
 			if (resourceIds.isEmpty()) {
 				return grantedAuthorities;
 			}
-
-			List<Resource> resources = new ArrayList<Resource>();
-
-			for (Resource re : resources) {
-				if (!re.isEnabled()){
-                    continue;
-                }
-				grantedAuthorities.add(re.getUrlAuthoritie());
+			for (Resource re : this.getResources()) {
+				if (re.isEnabled()) {
+					grantedAuthorities.add(re.getUrlAuthoritie());
+				}
 			}
 		}
-		return (List<GrantedAuthority>) grantedAuthorities;
+		return grantedAuthorities;
 	}
 
 	@JsonIgnore
