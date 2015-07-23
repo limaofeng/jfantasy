@@ -17,8 +17,7 @@ public class DefaultValidateable implements Validateable {
 
 	public Map<String, List<String>> validate(String method, Map<String, ?> map) {
 		Map<String, List<String>> errorMsg = new HashMap<String, List<String>>();
-		Map<String, List<FieldValidator>> fieldValidators = getFieldValidators(method);
-		for (Map.Entry<String, List<FieldValidator>> entry : fieldValidators.entrySet()) {
+		for (Map.Entry<String, List<FieldValidator>> entry : getFieldValidators(method).entrySet()) {
 			String field = entry.getKey();
 			for (FieldValidator fieldValidator : entry.getValue()) {
 				Object value = OgnlUtil.getInstance().getValue(field, map);

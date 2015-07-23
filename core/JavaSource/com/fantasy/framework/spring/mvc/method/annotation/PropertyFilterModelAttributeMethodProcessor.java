@@ -149,7 +149,6 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
     }
 
     private ServletRequest prepareServletRequest(Object target, NativeWebRequest request, MethodParameter parameter) {
-        String[] modelPrefixNames = this.modelPrefixNames;
         HttpServletRequest nativeRequest = (HttpServletRequest) request.getNativeRequest();
         MultipartRequest multipartRequest = WebUtils.getNativeRequest(nativeRequest, MultipartRequest.class);
         MockHttpServletRequest mockRequest = null;
