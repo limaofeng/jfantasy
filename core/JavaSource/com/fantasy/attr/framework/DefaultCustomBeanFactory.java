@@ -68,8 +68,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
                 try {
                     lock.lock();
                     DefaultCustomBeanFactory.this.initAttributeTypes();
-                    List<AttributeVersion> versions = attributeVersionService.getAttributeVersions();
-                    for (AttributeVersion version : versions) {
+                    for (AttributeVersion version : attributeVersionService.getAttributeVersions()) {
                         if (ClassUtil.forName(version.getTargetClassName()) == null) {
                             LOG.debug("target:" + version.getTargetClassName());
                             continue;
@@ -213,8 +212,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     }
 
     public Attribute getAttribute(Class<?> entityClass, String propertyName) {
-        List<AttributeVersion> versions = getVersionsByEntityClass(entityClass);
-        for (AttributeVersion version : versions) {
+        for (AttributeVersion version : getVersionsByEntityClass(entityClass)) {
             AttributeVersion attributeVersion = getVersion(entityClass.getName(), version.getNumber());
             String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
             assert attributeVersion != null;
@@ -230,13 +228,13 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
     }
 
     private List<AttributeVersion> getVersionsByEntityClass(Class<?> entityClass) {
-        List<AttributeVersion> versions = new ArrayList<AttributeVersion>();
+        List<AttributeVersion> _versions = new ArrayList<AttributeVersion>();
         for (AttributeVersion version : this.versions.values()) {
             if (entityClass.getName().equals(version.getTargetClassName())) {
-                versions.add(version);
+                _versions.add(version);
             }
         }
-        return versions;
+        return _versions;
     }
 
     public OgnlUtil getOgnlUtil(AttributeType attributeType) {
