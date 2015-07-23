@@ -1010,12 +1010,12 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         if (!filter.getPropertyType().isAssignableFrom(Enum.class)) {
             return filter.getPropertyValue();
         }
-        Class<?> entityClass = this.entityClass;
+        Class<?> entityClassTemp = this.entityClass;
         String[] propertyNames = filter.getPropertyName().split("\\.");
         for (int i = 0; i < propertyNames.length - 1; i++) {
-            entityClass = ClassUtil.getProperty(entityClass, propertyNames[i]).getPropertyType();
+            entityClassTemp = ClassUtil.getProperty(entityClassTemp, propertyNames[i]).getPropertyType();
         }
-        return filter.getPropertyValue(ClassUtil.getProperty(entityClass, propertyNames[propertyNames.length - 1]).getPropertyType());
+        return filter.getPropertyValue(ClassUtil.getProperty(entityClassTemp, propertyNames[propertyNames.length - 1]).getPropertyType());
     }
 
     public static String getAlias(String property) {
