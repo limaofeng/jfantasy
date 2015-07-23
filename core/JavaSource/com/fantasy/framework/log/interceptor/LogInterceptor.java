@@ -24,7 +24,7 @@ public class LogInterceptor extends LogAspectSupport implements MethodIntercepto
                 try {
                     return invocation.proceed();
                 } catch (Throwable ex) {//NOSONAR
-                    logger.debug(ex.getMessage(), ex);
+                    LOGGER.debug(ex.getMessage(), ex);
                     throw new ThrowableWrapper(ex);
                 }
             }
@@ -32,7 +32,7 @@ public class LogInterceptor extends LogAspectSupport implements MethodIntercepto
         try {
             return execute(aopAllianceInvoker, invocation.getThis(), method, invocation.getArguments());
         } catch (ThrowableWrapper th) {
-            logger.error(th.getMessage(),th);
+            LOGGER.error(th.getMessage(),th);
             throw th.original;
         }
     }
