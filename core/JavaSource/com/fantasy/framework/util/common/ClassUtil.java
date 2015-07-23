@@ -22,7 +22,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings({"unchecked", "rawtypes"})
 public class ClassUtil extends org.springframework.util.ClassUtils {
-    private static final Logger logger = Logger.getLogger(ClassUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(ClassUtil.class);
 
     public static final IClassFactory classFactory = ClassFactory.getFastClassFactory();
     private static final ConcurrentHashMap<Class<?>, BeanInfo> beanInfoCache = new ConcurrentHashMap<Class<?>, BeanInfo>();
@@ -32,7 +32,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             try {
                 beanInfoCache.putIfAbsent(clazz, Introspector.getBeanInfo(clazz, Object.class));
             } catch (IntrospectionException e) {
-                logger.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return beanInfoCache.get(clazz);
@@ -51,7 +51,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).newInstance();
         } catch (Exception e) {
-            logger.error("创建类:" + clazz + "\t时出现异常!", e);
+            LOGGER.error("创建类:" + clazz + "\t时出现异常!", e);
         }
         return null;
     }
@@ -118,7 +118,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return (T)newInstance(FantasyClassLoader.getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         return null;
     }
@@ -127,7 +127,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return tClass.cast(newInstance(FantasyClassLoader.getClassLoader().loadClass(className)));
         } catch (ClassNotFoundException e) {
-            logger.error(e);
+            LOGGER.error(e);
         }
         return null;
     }
@@ -152,7 +152,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return StringUtil.isNotBlank(className) ? (Class<T>) forName(className, FantasyClassLoader.getClassLoader()) : null;
         } catch (ClassNotFoundException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
         }
         return null;
     }
@@ -190,7 +190,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).getMethod(method);
         } catch (Exception e) {
-            logger.error(clazz + "." + method + "-" + e.getMessage(),e);
+            LOGGER.error(clazz + "." + method + "-" + e.getMessage(),e);
         }
         return null;
     }
@@ -199,7 +199,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).getMethod(method, paramTypes);
         } catch (Exception e) {
-            logger.error(clazz + "." + method + "-" + e.getMessage(),e);
+            LOGGER.error(clazz + "." + method + "-" + e.getMessage(),e);
         }
         return null;
     }
@@ -361,7 +361,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return JavassistUtil.getParamNames(classname, methodname, parameterTypes);
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return new String[0];
     }
@@ -426,13 +426,13 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
                 if (ObjectUtil.isNotNull(methodProxy)) {
                     Annotation annotation = getMethodAnno(methodProxy.getMethod(), annotClass);
                     if (ObjectUtil.isNotNull(annotation)) {
-                        logger.error("找到" + annotation + "耗时：" + (System.currentTimeMillis() - start) + "ms");
+                        LOGGER.error("找到" + annotation + "耗时：" + (System.currentTimeMillis() - start) + "ms");
                         return annotation;
                     }
                 }
             }
         }
-        logger.error("未找到耗时：" + (System.currentTimeMillis() - start) + "ms");
+        LOGGER.error("未找到耗时：" + (System.currentTimeMillis() - start) + "ms");
         return null;
     }
 
@@ -467,9 +467,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
                     return (T) annot;
                 }
             } catch (ClassNotFoundException e) {
-                logger.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             } catch (LinkageError e) {
-                logger.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return null;
@@ -482,16 +482,16 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     public static <T> Class<T> getSuperClassGenricType(Class<T> clazz, int index) {
         Type genType = clazz.getGenericSuperclass();
         if (!(genType instanceof ParameterizedType)) {
-            logger.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
+            LOGGER.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
             return (Class<T>) Object.class;
         }
         Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
         if ((index >= params.length) || (index < 0)) {
-            logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
+            LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
             return (Class<T>) Object.class;
         }
         if (!(params[index] instanceof Class<?>)) {
-            logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+            LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
             return (Class<T>) Object.class;
         }
         return (Class<T>) params[index];
@@ -510,11 +510,11 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             if (interfaceClazz.equals(((ParameterizedType) genType).getRawType())) {
                 Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
                 if ((index >= params.length) || (index < 0)) {
-                    logger.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
+                    LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
                     return Object.class;
                 }
                 if (!(params[index] instanceof Class<?>)) {
-                    logger.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
+                    LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
                     return Object.class;
                 }
                 return (Class<?>) params[index];

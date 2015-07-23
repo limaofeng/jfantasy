@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 public class HostAddressUtil {
 	
-	private static final Logger logger = Logger.getLogger(HostAddressUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(HostAddressUtil.class);
 
 	public static List<String> getLocalAddresses() {
 		List<String> list = new ArrayList<String>();
@@ -18,7 +18,7 @@ public class HostAddressUtil {
 		try {
 			interfaceList = NetworkInterface.getNetworkInterfaces();
 		} catch (SocketException ex) {
-			logger.error("Error when getting local network interfaces", ex);
+			LOGGER.error("Error when getting local network interfaces", ex);
 		}
 		if (interfaceList != null) {
 			while (interfaceList.hasMoreElements()) {

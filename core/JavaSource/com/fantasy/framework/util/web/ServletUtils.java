@@ -14,7 +14,7 @@ import java.util.StringTokenizer;
 import java.util.TreeMap;
 
 public class ServletUtils {
-	private static final Log logger = LogFactory.getLog(ServletUtils.class);
+	private static final Log LOGGER = LogFactory.getLog(ServletUtils.class);
 	public static final String TEXT_TYPE = "text/plain";
 	public static final String JSON_TYPE = "application/json";
 	public static final String XML_TYPE = "text/xml";
@@ -28,7 +28,7 @@ public class ServletUtils {
 		try {
 			poweredBy = PropertiesHelper.load("/props/application.properties").getProperty("system.PoweredBy", "fantasy.com");
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -140,7 +140,7 @@ public class ServletUtils {
 			String encodedfileName = new String(fileName.getBytes(), "ISO8859-1");
 			response.setHeader("Content-Disposition", "attachment; filename=\"" + encodedfileName + "\"");
 		} catch (UnsupportedEncodingException localUnsupportedEncodingException) {
-			logger.error(localUnsupportedEncodingException.getMessage(),localUnsupportedEncodingException);
+			LOGGER.error(localUnsupportedEncodingException.getMessage(),localUnsupportedEncodingException);
 		}
 	}
 

@@ -28,7 +28,7 @@ public class AreaService{
     @Autowired
     private AreaDao areaDao;
 
-    private static final Log logger = LogFactory.getLog(AreaService.class);
+    private static final Log LOGGER = LogFactory.getLog(AreaService.class);
 
     @SuppressWarnings("unchecked")
     @CacheEvict(value = {"fantasy.common.AreaService"}, allEntries = true)

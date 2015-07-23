@@ -14,7 +14,7 @@ import com.fantasy.framework.lucene.mapper.FieldUtil;
 import com.fantasy.framework.lucene.mapper.MapperUtil;
 
 public class IndexUpdateTask implements Runnable {
-	private static final Logger logger = Logger.getLogger(IndexUpdateTask.class);
+	private static final Logger LOGGER = Logger.getLogger(IndexUpdateTask.class);
 	private Object entity;
 
 	public IndexUpdateTask(Object entity) {
@@ -34,9 +34,9 @@ public class IndexUpdateTask implements Runnable {
 		try {
 			writer.updateDocument(term, doc);
 		} catch (CorruptIndexException ex) {
-			logger.error("IndexWriter can not update the document", ex);
+			LOGGER.error("IndexWriter can not update the document", ex);
 		} catch (IOException ex) {
-			logger.error("IndexWriter can not update the document", ex);
+			LOGGER.error("IndexWriter can not update the document", ex);
 		}
 	}
 }

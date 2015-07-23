@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 @Deprecated
 public class VideoTranscodingToMp4Job implements Job {
 
-    private static final Log logger = LogFactory.getLog(VideoTranscodingToMp4Job.class);
+    private static final Log LOGGER = LogFactory.getLog(VideoTranscodingToMp4Job.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -29,15 +29,15 @@ public class VideoTranscodingToMp4Job implements Job {
             BufferedReader br = new BufferedReader(new InputStreamReader(stderr));
             String line;
             while ((line = br.readLine()) != null){
-                logger.debug("Process exitValue:" + line);
+                LOGGER.debug("Process exitValue:" + line);
             }
             int exitVal = proc.waitFor();
             StreamUtil.closeQuietly(stderr);
-            logger.debug("Process exitValue:" + exitVal);
+            LOGGER.debug("Process exitValue:" + exitVal);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (InterruptedException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

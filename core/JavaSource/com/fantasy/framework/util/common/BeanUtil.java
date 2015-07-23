@@ -10,7 +10,7 @@ import java.util.List;
 
 public class BeanUtil {
 
-    private static final Log logger = LogFactory.getLog(BeanUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(BeanUtil.class);
 
     public static void setValue(Object target, String fieldName, Object value) {
         ClassUtil.setValue(target, fieldName, value);

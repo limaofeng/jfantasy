@@ -13,7 +13,7 @@ import java.util.Map;
 
 public class FreeMarkerTemplateUtils {
 
-    private final static Logger logger = LoggerFactory.getLogger(FreeMarkerTemplateUtils.class);
+    private final static Logger LOGGER = LoggerFactory.getLogger(FreeMarkerTemplateUtils.class);
 
     /**
      * @param data 初始数据
@@ -24,9 +24,9 @@ public class FreeMarkerTemplateUtils {
         try {
             t.process(data, out);
         } catch (TemplateException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             StreamUtil.closeQuietly(out);
         }
@@ -42,9 +42,9 @@ public class FreeMarkerTemplateUtils {
             Map<String, Object> rootMap = ObjectUtil.toMap(data);
             t.process(rootMap, out);
         } catch (TemplateException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             StreamUtil.closeQuietly(out);
         }
@@ -54,9 +54,9 @@ public class FreeMarkerTemplateUtils {
         try {
             t.process(model, out);
         } catch (TemplateException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             StreamUtil.closeQuietly(out);
         }
@@ -68,9 +68,9 @@ public class FreeMarkerTemplateUtils {
             writer = new BufferedWriter(new OutputStreamWriter(out, t.getEncoding()));
             t.process(model, writer);
         } catch (TemplateException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (writer != null) {
                 StreamUtil.closeQuietly(writer);
@@ -85,9 +85,9 @@ public class FreeMarkerTemplateUtils {
             Map<String, Object> rootMap = ObjectUtil.toMap(data);
             t.process(rootMap, writer);
         } catch (TemplateException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             if (writer != null) {
                 StreamUtil.closeQuietly(writer);

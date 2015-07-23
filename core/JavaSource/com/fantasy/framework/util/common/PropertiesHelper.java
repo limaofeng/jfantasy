@@ -16,7 +16,7 @@ import java.util.*;
  */
 public class PropertiesHelper {
 
-    public static final Log logger = LogFactory.getLog(PropertiesHelper.class);
+    public static final Log LOGGER = LogFactory.getLog(PropertiesHelper.class);
 
     public static final PropertiesHelper nullPropertiesHelper = new PropertiesHelper(new Properties());
 
@@ -37,7 +37,7 @@ public class PropertiesHelper {
             }
             return new PropertiesHelper(props);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             return nullPropertiesHelper;
         }
     }

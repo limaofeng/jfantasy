@@ -72,7 +72,7 @@ class ConfigurationClassEnhancer {
 
     private static final String BEAN_FACTORY_FIELD = "$$beanFactory";
 
-    private static final Log logger = LogFactory.getLog(ConfigurationClassEnhancer.class);
+    private static final Log LOGGER = LogFactory.getLog(ConfigurationClassEnhancer.class);
 
 
     /**
@@ -82,8 +82,8 @@ class ConfigurationClassEnhancer {
      */
     public Class<?> enhance(Class<?> configClass) {
         if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug(String.format("Ignoring request to enhance %s as it has " +
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug(String.format("Ignoring request to enhance %s as it has " +
                                 "already been enhanced. This usually indicates that more than one " +
                                 "ConfigurationClassPostProcessor has been registered (e.g. via " +
                                 "<context:annotation-config>). This is harmless, but you may " +
@@ -93,8 +93,8 @@ class ConfigurationClassEnhancer {
             return configClass;
         }
         Class<?> enhancedClass = createClass(newEnhancer(configClass));
-        if (logger.isDebugEnabled()) {
-            logger.debug(String.format("Successfully enhanced %s; enhanced class name is: %s",
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug(String.format("Successfully enhanced %s; enhanced class name is: %s",
                     configClass.getName(), enhancedClass.getName()));
         }
         return enhancedClass;
@@ -299,7 +299,7 @@ class ConfigurationClassEnhancer {
                 // (i.e. via a getBean() call) -> invoke the super implementation of the method to actually
                 // create the bean instance.
                 if (BeanFactoryPostProcessor.class.isAssignableFrom(beanMethod.getReturnType())) {
-                    logger.warn(String.format("@Bean method %s.%s is non-static and returns an object " +
+                    LOGGER.warn(String.format("@Bean method %s.%s is non-static and returns an object " +
                                     "assignable to Spring's BeanFactoryPostProcessor interface. This will " +
                                     "result in a failure to process annotations such as @Autowired, " +
                                     "@Autowired and @PostConstruct within the method's declaring " +

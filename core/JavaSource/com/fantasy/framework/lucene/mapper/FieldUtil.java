@@ -9,7 +9,7 @@ import com.fantasy.framework.util.ognl.OgnlUtil;
 
 public class FieldUtil {
 	
-	private static final Logger logger = Logger.getLogger(FieldUtil.class);
+	private static final Logger LOGGER = Logger.getLogger(FieldUtil.class);
 
 	public static Object get(Object obj, Field f) {
 		return get(obj, f.getName());
@@ -46,7 +46,7 @@ public class FieldUtil {
 	public static Class<?> getRealType(Class<?> clazz) {
 		Class<?> cls = clazz;
 		if (clazz.isInterface()) {
-			logger.error("The implementation of interface " + clazz.toString() + " is not specified.");
+			LOGGER.error("The implementation of interface " + clazz.toString() + " is not specified.");
 		}
 		return cls;
 	}

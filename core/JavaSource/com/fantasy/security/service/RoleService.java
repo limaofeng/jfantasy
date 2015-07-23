@@ -18,7 +18,7 @@ import java.util.List;
 @Transactional
 public class RoleService{
 
-	private static final Log logger = LogFactory.getLog(RoleService.class);
+	private static final Log LOGGER = LogFactory.getLog(RoleService.class);
 
 
 	@Autowired

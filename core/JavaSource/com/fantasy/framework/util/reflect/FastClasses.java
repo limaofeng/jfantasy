@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 
 public class FastClasses<T> implements IClass<T> {
-	private static final Log logger = LogFactory.getLog(FastClasses.class);
+	private static final Log LOGGER = LogFactory.getLog(FastClasses.class);
 	private Class<T> clazz;
 	private FastClass fastClass;
 	private BeanInfo beanInfo;
@@ -65,7 +65,7 @@ public class FastClasses<T> implements IClass<T> {
 						this.methodProxys.put(name.toString(), new MethodProxy(method, parameters));
 					}
 				} catch (Exception e) {
-					logger.error(e.getMessage(),e);
+					LOGGER.error(e.getMessage(),e);
 				}
 			}
 			for (Constructor<?> constructor : clazz.getConstructors()) {
@@ -181,7 +181,7 @@ public class FastClasses<T> implements IClass<T> {
                 }
                 this.fields.put(name, field);
             } catch (Exception e) {
-                logger.error(e);
+				LOGGER.error(e);
                 this.fields.put(name, field);
             }
         }else{
@@ -208,7 +208,7 @@ public class FastClasses<T> implements IClass<T> {
 				}
 				this.fields.put(name, field);
 			} catch (Exception e) {
-				logger.error(e);
+				LOGGER.error(e);
 				this.fields.put(name, field);
 			}
 		} else {

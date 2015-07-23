@@ -35,7 +35,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
 
     }
 
-    private static final Log logger = LogFactory.getLog(SpringContextUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(SpringContextUtil.class);
 
     private static ApplicationContext applicationContext; // Spring应用上下文环境
 
@@ -46,7 +46,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
      * @throws BeansException
      */
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        logger.debug(applicationContext);
+        LOGGER.debug(applicationContext);
         if (ObjectUtil.isNull(SpringContextUtil.applicationContext)) {
             SpringContextUtil.applicationContext = applicationContext;
         }
@@ -70,13 +70,13 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
         try {
             return applicationContext.getBean(name);
         } catch (NoSuchBeanDefinitionException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("{Bean:" + name + "}没有找到!", e);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("{Bean:" + name + "}没有找到!", e);
             }
             return null;
         } catch (BeansException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("{Bean:" + name + "}没有找到!", e);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("{Bean:" + name + "}没有找到!", e);
             }
             throw e;
         }
@@ -94,17 +94,17 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
         try {
             return applicationContext.getBean(name, requiredType);
         } catch (NoSuchBeanDefinitionException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!", e);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!", e);
             }
             return null;
         } catch (BeansException e) {
-            if (logger.isErrorEnabled()) {
-                logger.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!", e);
+            if (LOGGER.isErrorEnabled()) {
+                LOGGER.error("{Bean:" + name + ",Class:" + requiredType + "}没有找到!", e);
             }
             throw e;
         } catch (NullPointerException e) {
-            logger.error("查找Bean:" + name + "时发现applicationContext未启动", e);
+            LOGGER.error("查找Bean:" + name + "时发现applicationContext未启动", e);
             return null;
         }
     }
@@ -203,7 +203,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
         try {
             return applicationContext.getResources(pattern);
         } catch (IOException e) {
-            logger.error(e);
+            LOGGER.error(e);
             return null;
         }
     }

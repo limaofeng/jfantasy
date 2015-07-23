@@ -7,19 +7,19 @@ import java.security.MessageDigest;
 
 public class Decoder {
 
-	private static final Log logger = LogFactory.getLog(Decoder.class);
+	private static final Log LOGGER = LogFactory.getLog(Decoder.class);
 
 	public static UserResult decode(String userStamp) {
 		if (userStamp == null) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("userStamp is NULL ");
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("userStamp is NULL ");
 			}
 			return null;
 		}
 		char[] stamp = userStamp.toCharArray();
 		if ((stamp.length != 16) || (!v(stamp))) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("无效的userStamp : " + userStamp);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("无效的userStamp : " + userStamp);
 			}
 			return null;
 		}
@@ -55,7 +55,7 @@ public class Decoder {
                 }
             }
 		} catch (Exception e) {
-			logger.error(e.getMessage(),e);
+			LOGGER.error(e.getMessage(), e);
 			return false;
 		}
 		return true;

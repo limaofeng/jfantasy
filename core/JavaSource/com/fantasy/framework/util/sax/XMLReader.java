@@ -18,11 +18,11 @@ import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
 public class XMLReader {
-	private static final Log logger = LogFactory.getLog(XMLReader.class);
+	private static final Log LOGGER = LogFactory.getLog(XMLReader.class);
 
 	public static XmlElement reader(String path) {
 		File xmlfile = new File(path);
-		logger.info("开始解析XML文件：[" + path + "]");
+		LOGGER.info("开始解析XML文件：[" + path + "]");
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setValidating(false);
 		SAXParser saxParse = null;
@@ -30,20 +30,20 @@ public class XMLReader {
 			saxParse = factory.newSAXParser();
 			SaxXmlHandler handler = new SaxXmlHandler();
 			saxParse.parse(xmlfile, handler);
-			logger.info("XML文件：[" + path + "]解析完成");
+			LOGGER.info("XML文件：[" + path + "]解析完成");
 			return handler.getElement();
 		} catch (ParserConfigurationException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (SAXException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
 	public static XmlElement reader(String path, InputStream stream) {
-		logger.info("开始解析XML文件：[" + path + "]");
+		LOGGER.info("开始解析XML文件：[" + path + "]");
 		SAXParserFactory factory = SAXParserFactory.newInstance();
 		factory.setValidating(false);
 		SAXParser saxParse = null;
@@ -51,21 +51,21 @@ public class XMLReader {
 			saxParse = factory.newSAXParser();
 			SaxXmlHandler handler = new SaxXmlHandler();
 			saxParse.parse(stream, handler);
-			logger.info("XML文件：[" + path + "]解析完成");
+			LOGGER.info("XML文件：[" + path + "]解析完成");
 			return handler.getElement();
 		} catch (ParserConfigurationException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (SAXException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 		return null;
 	}
 
 	public static String toJSON(XmlElement element) {
 		String retVal = parse(element);
-		logger.info("将XML文件转为JSON：" + retVal);
+		LOGGER.info("将XML文件转为JSON：" + retVal);
 		return retVal;
 	}
 

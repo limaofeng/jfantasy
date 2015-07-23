@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 @SuppressWarnings("unchecked")
 public final class ObjectUtil {
 
-    private static final Log logger = LogFactory.getLog(ObjectUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(ObjectUtil.class);
 
     private static final ConcurrentMap<String, Comparator<?>> comparatorMap = new ConcurrentHashMap<String, Comparator<?>>();
 
@@ -64,7 +64,7 @@ public final class ObjectUtil {
                 return (T) BeanUtils.cloneBean(object);
             }
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw new IgnoreException(e.getMessage());
         }
     }
@@ -712,7 +712,7 @@ public final class ObjectUtil {
                 list.add(termAtt.toString());
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
         return list;
     }

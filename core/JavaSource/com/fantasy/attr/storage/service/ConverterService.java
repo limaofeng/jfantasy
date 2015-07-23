@@ -21,7 +21,7 @@ import java.util.List;
 @Transactional
 public class ConverterService {
 
-    private static final Log logger = LogFactory.getLog(ConverterService.class);
+    private static final Log LOGGER = LogFactory.getLog(ConverterService.class);
 
     @Autowired
     private ConverterDao converterDao;

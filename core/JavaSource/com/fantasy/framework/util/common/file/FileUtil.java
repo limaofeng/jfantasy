@@ -21,7 +21,7 @@ import java.util.zip.*;
 
 public class FileUtil {
 
-    private static final Log logger = LogFactory.getLog(FileUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(FileUtil.class);
 
     static {
         MimeUtil.registerMimeDetector("eu.medsea.mimeutil.detector.MagicMimeMimeDetector");
@@ -116,7 +116,7 @@ public class FileUtil {
             out.write(content);
             out.close();
         } catch (IOException ex) {
-            logger.error(ex);
+            LOGGER.error(ex);
             throw new IgnoreException(ex.getMessage());
         }
     }
@@ -128,9 +128,9 @@ public class FileUtil {
             fos.write(content, 0, content.length);
             fos.flush();
             StreamUtil.closeQuietly(fos);
-            logger.debug("Write File:" + file);
+            LOGGER.debug("Write File:" + file);
         } catch (IOException ex) {
-            logger.error(ex);
+            LOGGER.error(ex);
             throw ex;
         }
     }
@@ -226,7 +226,7 @@ public class FileUtil {
             FileInputStream fin = new FileInputStream(oldPath);
 
             createFolder(RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", ""));
-            logger.debug("创建文件 ：" + RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", "") + "|" + newPath);
+            LOGGER.debug("创建文件 ：" + RegexpUtil.replace(newPath, "(([a-zA-Z0-9]|([(]|[)]|[ ]))+)[.]([a-zA-Z0-9]+)$", "") + "|" + newPath);
             FileOutputStream fout = new FileOutputStream(newPath);
 
             GZIPOutputStream gzout = new GZIPOutputStream(fout);
@@ -239,7 +239,7 @@ public class FileUtil {
             fout.close();
             fin.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -257,7 +257,7 @@ public class FileUtil {
             fout.close();
             fin.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -328,7 +328,7 @@ public class FileUtil {
             try {
                 copyFile(sourceFile, targetFile);
                 if (sourceFile.exists()){
-                    logger.debug("delete file:" + sourceFile + ":" + sourceFile.delete());
+                    LOGGER.debug("delete file:" + sourceFile + ":" + sourceFile.delete());
                 }
             } catch (IOException e) {
                 throw new IgnoreException(e.getMessage(),e);
@@ -352,8 +352,8 @@ public class FileUtil {
     }
 
     private static void copyOnlyFile(File sourceFile, File targetFile) throws IOException {
-        logger.debug("copy from:" + sourceFile);
-        logger.debug("copy to:" + targetFile);
+        LOGGER.debug("copy from:" + sourceFile);
+        LOGGER.debug("copy to:" + targetFile);
         File parentFile = targetFile.getParentFile();
         if (!parentFile.exists() && !parentFile.mkdirs()){
             throw new IgnoreException("创建文件" + parentFile.getAbsolutePath() + "失败");
@@ -391,7 +391,7 @@ public class FileUtil {
                     }
                 }
                 if (!file.delete()) {
-                    logger.error("删除文件" + file.getAbsolutePath() + "失败");
+                    LOGGER.error("删除文件" + file.getAbsolutePath() + "失败");
                 }
             }
         }
@@ -399,7 +399,7 @@ public class FileUtil {
 
     private static void delOnlyFile(File file) {
         if (file.exists() && !file.delete()){
-            logger.error("删除文件" + file.getAbsolutePath() + "失败");
+            LOGGER.error("删除文件" + file.getAbsolutePath() + "失败");
         }
     }
 
@@ -543,11 +543,11 @@ public class FileUtil {
             }
             zis.closeEntry();
         } catch (NullPointerException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (FileNotFoundException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

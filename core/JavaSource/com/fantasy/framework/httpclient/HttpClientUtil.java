@@ -27,7 +27,7 @@ import java.util.Map;
  */
 public class HttpClientUtil {
 
-    private static final Log logger = LogFactory.getLog(HttpClientUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(HttpClientUtil.class);
 
     static {
         Protocol myhttps = new Protocol("https", new DefaultProtocolSocketFactory(), 443);
@@ -97,10 +97,10 @@ public class HttpClientUtil {
             response.setResponseHeaders(method.getResponseHeaders());
             return response;
         } catch (URIException e) {
-            logger.error("执行HTTP Get请求时，编码查询字符串“" + request.queryString() + "”发生异常！", e);
+            LOGGER.error("执行HTTP Get请求时，编码查询字符串“" + request.queryString() + "”发生异常！", e);
             throw e;
         } catch (IOException e) {
-            logger.error("执行HTTP Get请求" + url + "时，发生异常！", e);
+            LOGGER.error("执行HTTP Get请求" + url + "时，发生异常！", e);
             throw e;
         }
     }
@@ -155,7 +155,7 @@ public class HttpClientUtil {
             response.setResponseHeaders(method.getResponseHeaders());
             return response;
         } catch (IOException e) {
-            logger.error("执行HTTP Post请求" + url + "时，发生异常！", e);
+            LOGGER.error("执行HTTP Post请求" + url + "时，发生异常！", e);
             throw e;
         }
     }

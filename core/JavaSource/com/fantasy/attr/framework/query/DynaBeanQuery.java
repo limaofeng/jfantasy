@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class DynaBeanQuery {
 
-    private final static Log logger = LogFactory.getLog(DynaBeanQuery.class);
+    private final static Log LOGGER = LogFactory.getLog(DynaBeanQuery.class);
 
     private List<Column> columns = new ArrayList<Column>();
     private List<Column> subColumns = new ArrayList<Column>();
@@ -46,12 +46,12 @@ public class DynaBeanQuery {
     }
 
     public String[] toColumns(String alias, String propertyName) {
-        logger.debug("alias:" + alias + ",propertyName:" + propertyName);
+        LOGGER.debug("alias:" + alias + ",propertyName:" + propertyName);
         return new String[]{"attribute1_" + ".value"};
     }
 
     public String[] toColumns(String alias, int propertyIndex) {
-        logger.debug("alias:" + alias + ",propertyIndex:" + propertyIndex);
+        LOGGER.debug("alias:" + alias + ",propertyIndex:" + propertyIndex);
         return new String[]{"attribute1_" + ".value"};
     }
 

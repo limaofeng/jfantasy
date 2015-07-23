@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class DataDictJob implements Job {
 
-    private static final Logger logger = Logger.getLogger(DataDictJob.class);
+    private static final Logger LOGGER = Logger.getLogger(DataDictJob.class);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
@@ -24,11 +24,11 @@ public class DataDictJob implements Job {
             DataDictionaryService dictionaryService = SpringContextUtil.getBeanByType(DataDictionaryService.class);
             getFileManager().writeFile("/static/data/data-dict-type.json", new ByteArrayInputStream(JSON.serialize(dictionaryService.allTypes()).getBytes("UTF-8")));
             getFileManager().writeFile("/static/data/data-dict.json", new ByteArrayInputStream(JSON.serialize(dictionaryService.allDataDicts()).getBytes("UTF-8")));
-            if (logger.isDebugEnabled()) {
-                logger.debug("生成:/static/data/data-dict-type.json 与 /static/data/data-dict.json 成功!");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("生成:/static/data/data-dict-type.json 与 /static/data/data-dict.json 成功!");
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -39,7 +39,7 @@ public class DataDictJob implements Job {
             try {
                 Thread.currentThread().sleep(TimeUnit.SECONDS.toMillis(100));
             } catch (InterruptedException e) {
-                logger.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
             fileManager = FileManagerFactory.getWebRootFileManager();
         }

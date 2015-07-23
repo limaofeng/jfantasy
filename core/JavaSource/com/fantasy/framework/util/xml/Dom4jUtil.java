@@ -12,13 +12,13 @@ import java.util.List;
 
 public final class Dom4jUtil {
 
-	private static final Log logger = LogFactory.getLog(Dom4jUtil.class);
+	private static final Log LOGGER = LogFactory.getLog(Dom4jUtil.class);
 
 	public static Document reader(InputStream inputStream) {
 		try {
 			return new SAXReader().read(inputStream);
 		} catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new IgnoreException(e.getMessage());
 		}
 	}
@@ -27,7 +27,7 @@ public final class Dom4jUtil {
 		try {
 			return new SAXReader().read(url);
 		} catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new IgnoreException(e.getMessage());
 		}
 	}
@@ -40,9 +40,9 @@ public final class Dom4jUtil {
 		// 获取属性
 		List<Attribute> attrs = root.attributes();
 		if (attrs != null && attrs.size() > 0) {
-			logger.error(prefix);
+			LOGGER.error(prefix);
 			for (Attribute attr : attrs) {
-				logger.error(attr.getValue() + " ");
+				LOGGER.error(attr.getValue() + " ");
 			}
 		}
 		// 获取他的子节点
@@ -55,20 +55,20 @@ public final class Dom4jUtil {
 
 	public static class MyVistor extends VisitorSupport {
 		public void visit(Attribute node) {
-			logger.debug("Attibute: " + node.getName() + "=" + node.getValue());
+			LOGGER.debug("Attibute: " + node.getName() + "=" + node.getValue());
 		}
 
 		public void visit(Element node) {
 			if (node.isTextOnly()) {
-				logger.debug("Element: " + node.getName() + "=" + node.getText());
+				LOGGER.debug("Element: " + node.getName() + "=" + node.getText());
 			} else {
-				logger.debug("root:"+node.getName());
+				LOGGER.debug("root:" + node.getName());
 			}
 		}
 
 		@Override
 		public void visit(ProcessingInstruction node) {
-			logger.debug("PI:" + node.getTarget() + " " + node.getText());
+			LOGGER.debug("PI:" + node.getTarget() + " " + node.getText());
 		}
 	}
 

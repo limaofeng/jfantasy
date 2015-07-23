@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class IndexWriterCache {
-	private static final Log logger = LogFactory.getLog(IndexWriterCache.class);
+	private static final Log LOGGER = LogFactory.getLog(IndexWriterCache.class);
 
 	private static IndexWriterCache instance = new IndexWriterCache();
 	private Map<String, IndexWriter> cache;
@@ -46,7 +46,7 @@ public class IndexWriterCache {
                         cfg.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
                         writer = new IndexWriter(dir, cfg);
                     } catch (IOException ex) {
-                        logger.error("Something is wrong when create IndexWriter for " + name, ex);
+                        LOGGER.error("Something is wrong when create IndexWriter for " + name, ex);
                     }
                     this.cache.put(name, writer);
                 }

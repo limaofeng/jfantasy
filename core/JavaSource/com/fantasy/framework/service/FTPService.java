@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 public class FTPService {
 
     private static final String ISO_8859_1 = "ISO-8859-1";
-    private static Log log = LogFactory.getLog(FTPService.class);
+    private static Log LOG = LogFactory.getLog(FTPService.class);
 
     /**
      * 端口
@@ -119,7 +119,7 @@ public class FTPService {
      * @throws IOException
      */
     protected FTPClient login() throws IOException {
-        if (log.isDebugEnabled()) {
+        if (LOG.isDebugEnabled()) {
             StringBuffer debug = new StringBuffer("\r\n准备开始连接FTP服务器:" + this.hostname + ",连接信息如下");
             debug.append("\r\nSystemKey:").append(this.systemKey);
             debug.append("\r\nServerLanguageCode:").append(this.serverLanguageCode);
@@ -131,19 +131,19 @@ public class FTPService {
             debug.append("\r\nBufferSize:").append(bufferSize);
             debug.append("\r\nControlEncoding:").append(controlEncoding);
             debug.append("\r\nTimeout:").append(timeout);
-            log.debug(debug);
+            LOG.debug(debug);
         }
         FTPClient ftpClient = new FTPClient();
         FTPClientConfig config = new FTPClientConfig(this.systemKey);
         config.setServerLanguageCode(this.serverLanguageCode);
 
-        if (log.isDebugEnabled()) {
-            log.debug("开始连接到FTP服务器[" + this.hostname + ":" + this.port + "]");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("开始连接到FTP服务器[" + this.hostname + ":" + this.port + "]");
         }
         ftpClient.connect(this.hostname, this.port);
 
-        if (log.isDebugEnabled()) {
-            log.debug("开始登录FTP服务器[" + this.username + "/" + this.password + "]");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("开始登录FTP服务器[" + this.username + "/" + this.password + "]");
         }
         ftpClient.login(this.username, this.password);
 
@@ -152,8 +152,8 @@ public class FTPService {
             ftpClient.disconnect();
             throw new IOException("[" + reply + "]登录ftp服务器失败,请检查[" + this.hostname + ":" + this.port + "][" + this.username + "/" + this.password + "]是否正确!");
         }
-        if (log.isDebugEnabled()) {
-            log.debug("ftp登录成功[" + ftpClient + "]");
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("ftp登录成功[" + ftpClient + "]");
         }
 
         ftpClient.setFileType(this.fileType);
@@ -179,13 +179,13 @@ public class FTPService {
     private void closeConnection(FTPClient ftpClient) {
         try {
             if (ftpClient.isConnected()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("关闭ftp连接[" + ftpClient + "]");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("关闭ftp连接[" + ftpClient + "]");
                 }
                 ftpClient.disconnect();
             }
         } catch (IOException e) {
-            log.error("关闭FTP连接失败!", e);
+            LOG.error("关闭FTP连接失败!", e);
         }
     }
 
@@ -432,8 +432,8 @@ public class FTPService {
      * @throws IOException
      */
     protected void deleteRemoteFile(String remoteFile, FTPClient ftpClient) throws IOException {
-        if (log.isDebugEnabled()) {
-            log.debug("从FTP[" + this.hostname + "]上删除文件:" + remoteFile);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("从FTP[" + this.hostname + "]上删除文件:" + remoteFile);
         }
         int replyCode = ftpClient.dele(encode(remoteFile));
         if (replyCode != 250) {
@@ -466,8 +466,8 @@ public class FTPService {
             }
         }
         boolean success = ftpClient.rmd(encode(remoteFolder)) != 550;
-        if (log.isDebugEnabled()) {
-            log.debug("从FTP[" + this.hostname + "]上删除文件夹:" + remoteFolder + "\t处理结果:" + success);
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("从FTP[" + this.hostname + "]上删除文件夹:" + remoteFolder + "\t处理结果:" + success);
         }
     }
 
@@ -478,13 +478,13 @@ public class FTPService {
             ftpClient.cdup();
             return code != FTPReply.FILE_UNAVAILABLE;
         } catch (IOException e) {
-            log.error("检查远程虚拟目录是否存在时出现异常!", e);
+            LOG.error("检查远程虚拟目录是否存在时出现异常!", e);
         }
         return false;
     }
 
     protected void createDir(String dir, FTPClient ftpClient) {
-        log.debug("在FTP[" + this.hostname + "]上创建目录[" + decode(dir) + "]");
+        LOG.debug("在FTP[" + this.hostname + "]上创建目录[" + decode(dir) + "]");
         StringTokenizer s = new StringTokenizer(dir, "/");
         s.countTokens();
         String pathName = "";
@@ -496,7 +496,7 @@ public class FTPService {
                     throw new IOException();
                 }
             } catch (IOException e) {
-                log.error("创建远程目录[" + decode(dir) + "]时出现异常 ", e);
+                LOG.error("创建远程目录[" + decode(dir) + "]时出现异常 ", e);
             }
         }
     }
@@ -542,8 +542,8 @@ public class FTPService {
             } else {
                 File localFile = FileUtil.createFile(localFolder, file.getName());
                 String remote = remoteFolder + file.getName();
-                if (log.isDebugEnabled()) {
-                    log.debug("创建文件[" + localFile.getAbsolutePath() + "]");
+                if (LOG.isDebugEnabled()) {
+                    LOG.debug("创建文件[" + localFile.getAbsolutePath() + "]");
                 }
                 download(remote, new FileOutputStream(localFile), ftpClient);
             }
@@ -588,8 +588,8 @@ public class FTPService {
         if (localFile.isDirectory()) {
             localFile = FileUtil.createFile(localFile, RegexpUtil.parseGroup(remote, "[^\\/]+$", 0));
         }
-        if (log.isDebugEnabled()) {
-            log.debug("开始下载文件:" + remote + " > " + localFile.getAbsolutePath());
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("开始下载文件:" + remote + " > " + localFile.getAbsolutePath());
         }
         download(remote, new FileOutputStream(localFile));
     }

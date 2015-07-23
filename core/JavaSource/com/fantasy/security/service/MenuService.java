@@ -29,7 +29,7 @@ public class MenuService{
     @Autowired
     private MenuDao menuDao;
 
-    private static final Log logger = LogFactory.getLog(MenuService.class);
+    private static final Log LOGGER = LogFactory.getLog(MenuService.class);
 
 
     public List<Menu> loadMenus(Long parentId) {
@@ -48,8 +48,8 @@ public class MenuService{
                 }
             }
         }
-        if (logger.isDebugEnabled()) {
-            logger.debug("parentId:" + parentId + "对于的菜单不存在");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("parentId:" + parentId + "对于的菜单不存在");
         }
         return null;
     }

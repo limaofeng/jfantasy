@@ -21,7 +21,7 @@ import java.util.regex.Pattern;
  */
 public class RegexpUtil {
 
-	private static final Log logger = LogFactory.getLog(RegexpUtil.class);
+	private static final Log LOGGER = LogFactory.getLog(RegexpUtil.class);
 
 	private static ConcurrentHashMap<String, Pattern> patternCache = new ConcurrentHashMap<String, Pattern>();
 
@@ -39,8 +39,8 @@ public class RegexpUtil {
 			throw new IgnoreException("pattern string is space");
 		}
 		if (!patternCache.containsKey(patternString)) {
-			if (logger.isDebugEnabled()) {
-				logger.debug("缓存正则表达式:" + patternString);
+			if (LOGGER.isDebugEnabled()) {
+				LOGGER.debug("缓存正则表达式:" + patternString);
 			}
 			patternCache.putIfAbsent(patternString, Pattern.compile(patternString, Pattern.CASE_INSENSITIVE));
 		}
