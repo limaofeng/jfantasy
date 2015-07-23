@@ -21,7 +21,7 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 public class ClassPathScanner implements ResourceLoaderAware {
-    private static final Log logger = LogFactory.getLog(ClassPathScanner.class);
+    private static final Log LOGGER = LogFactory.getLog(ClassPathScanner.class);
     protected static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
     private static ClassPathScanner instance = new ClassPathScanner();
@@ -52,8 +52,8 @@ public class ClassPathScanner implements ResourceLoaderAware {
                 MetadataReader metadataReader = this.metadataReaderFactory.getMetadataReader(resource);
                 String clazzName = metadataReader.getClassMetadata().getClassName();
                 candidates.add(clazzName);
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Find Class : " + clazzName);
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("Find Class : " + clazzName);
                 }
             }
         } catch (IOException ex) {
@@ -83,9 +83,9 @@ public class ClassPathScanner implements ResourceLoaderAware {
                 try {
                     String clazzName = metadataReader.getClassMetadata().getClassName();
                     candidates.add(Class.forName(clazzName));
-                    logger.debug("Find Annotationed Class " + clazzName + "(@" + anno.getName() + ")");
+                    LOGGER.debug("Find Annotationed Class " + clazzName + "(@" + anno.getName() + ")");
                 } catch (ClassNotFoundException ignored) {
-                    logger.error(ignored.getMessage(),ignored);
+                    LOGGER.error(ignored.getMessage(),ignored);
                 }
             }
         } catch (IOException ex) {
@@ -126,9 +126,9 @@ public class ClassPathScanner implements ResourceLoaderAware {
                         candidates.add(clazz);
                     }
                 } catch (ClassNotFoundException localClassNotFoundException) {
-                    logger.error(localClassNotFoundException.getMessage(), localClassNotFoundException);
+                    LOGGER.error(localClassNotFoundException.getMessage(), localClassNotFoundException);
                 } catch (NoClassDefFoundError e) {
-                    logger.error(e.getMessage(), e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         } catch (IOException ex) {

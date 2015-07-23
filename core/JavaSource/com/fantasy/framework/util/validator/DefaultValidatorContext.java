@@ -21,7 +21,7 @@ import java.util.concurrent.ConcurrentMap;
 
 public class DefaultValidatorContext implements ValidatorContext {
     private static final String VALIDATION_XML = "-validation.xml";
-    private static final Log logger = LogFactory.getLog(DefaultValidatorContext.class);
+    private static final Log LOGGER = LogFactory.getLog(DefaultValidatorContext.class);
 
     private static DefaultValidatorContext context = new DefaultValidatorContext();
 
@@ -100,8 +100,8 @@ public class DefaultValidatorContext implements ValidatorContext {
         if (!ObjectUtil.isNull(stream)) {
             this.parser.setClazz(classes);
             JdomUtil.parse(stream, this.parser);
-            if (logger.isDebugEnabled()) {
-                logger.debug("解析完成:" + classes.getResource(String.valueOf(classes.getSimpleName()) + VALIDATION_XML).getPath());
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("解析完成:" + classes.getResource(String.valueOf(classes.getSimpleName()) + VALIDATION_XML).getPath());
             }
         }
         if ((!ObjectUtil.isNull(classes.getSuperclass())) && (classes.getSuperclass() != Object.class)) {
@@ -111,8 +111,8 @@ public class DefaultValidatorContext implements ValidatorContext {
     }
 
     public static ValidatorContext getInstance() {
-        if (logger.isDebugEnabled()) {
-            logger.debug("验证器获取规则如:" + Object.class.getName() + VALIDATION_XML);
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("验证器获取规则如:" + Object.class.getName() + VALIDATION_XML);
         }
         return context;
     }
@@ -120,7 +120,7 @@ public class DefaultValidatorContext implements ValidatorContext {
     public Validateable getValidateable(Class<?> classes) {
         if (!this.validateables.containsKey(classes)) {
             this.validateables.putIfAbsent(classes, read(new DefaultValidateable(), classes));
-            logger.debug("初始化[" + classes.getName() + "]验证管理器成功!");
+            LOGGER.debug("初始化[" + classes.getName() + "]验证管理器成功!");
         }
         return this.validateables.get(classes);
     }

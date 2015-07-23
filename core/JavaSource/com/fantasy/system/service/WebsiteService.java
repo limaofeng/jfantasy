@@ -23,7 +23,7 @@ import java.util.List;
 @Transactional
 public class WebsiteService {
 
-    private static final Log logger = LogFactory.getLog(WebsiteService.class);
+    private static final Log LOGGER = LogFactory.getLog(WebsiteService.class);
 
     @Autowired
     private WebsiteDao websiteDao;

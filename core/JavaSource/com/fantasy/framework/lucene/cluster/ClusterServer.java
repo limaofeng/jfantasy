@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import com.fantasy.framework.lucene.BuguIndex;
 
 public class ClusterServer implements Runnable {
-	private static final Logger logger = Logger.getLogger(ClusterServer.class);
+	private static final Logger LOGGER = Logger.getLogger(ClusterServer.class);
 	private Selector selector;
 	private ServerSocketChannel serverChannel;
 	private ByteBuffer buffer;
@@ -26,7 +26,7 @@ public class ClusterServer implements Runnable {
 		try {
 			init();
 		} catch (IOException ex) {
-			logger.error("Error when init cluster server", ex);
+			LOGGER.error("Error when init cluster server", ex);
 		}
 		loop();
 	}
@@ -49,7 +49,7 @@ public class ClusterServer implements Runnable {
 			try {
 				i = this.selector.select();
 			} catch (IOException ex) {
-				logger.error("Error when selecting", ex);
+				LOGGER.error("Error when selecting", ex);
 			}
 			if (i == 0) {
 				continue;
@@ -74,7 +74,7 @@ public class ClusterServer implements Runnable {
 			sc.configureBlocking(false);
 			sc.register(this.selector, 1);
 		} catch (IOException ex) {
-			logger.error("Error when handle accept", ex);
+			LOGGER.error("Error when handle accept", ex);
 		}
 	}
 
@@ -97,14 +97,14 @@ public class ClusterServer implements Runnable {
 				this.cluster.getExecutor().execute(task);
 			}
 		} catch (IOException ex) {
-			logger.error("Error when handle read", ex);
+			LOGGER.error("Error when handle read", ex);
 		} catch (ClassNotFoundException ex) {
-			logger.error("Error when handle read", ex);
+			LOGGER.error("Error when handle read", ex);
 		} finally {
 			try {
 				sc.close();
 			} catch (IOException ex) {
-				logger.error("Error when close SocketChannel", ex);
+				LOGGER.error("Error when close SocketChannel", ex);
 			}
 		}
 	}
@@ -114,7 +114,7 @@ public class ClusterServer implements Runnable {
 			this.serverChannel.close();
 			this.selector.close();
 		} catch (IOException ex) {
-			logger.error("Error when close cluster server", ex);
+			LOGGER.error("Error when close cluster server", ex);
 		}
 	}
 }

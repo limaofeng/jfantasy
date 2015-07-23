@@ -20,7 +20,7 @@ import com.fantasy.framework.lucene.mapper.MapperUtil;
  * @version 1.0
  */
 public class IndexRemoveTask implements Runnable {
-	private static final Logger logger = Logger.getLogger(IndexRemoveTask.class);
+	private static final Logger LOGGER = Logger.getLogger(IndexRemoveTask.class);
 	private Class<?> clazz;
 	private String id;
 
@@ -37,9 +37,9 @@ public class IndexRemoveTask implements Runnable {
 		try {
 			writer.deleteDocuments(term);
 		} catch (CorruptIndexException ex) {
-			logger.error("IndexWriter can not delete a document from the lucene index", ex);
+			LOGGER.error("IndexWriter can not delete a document from the lucene index", ex);
 		} catch (IOException ex) {
-			logger.error("IndexWriter can not delete a document from the lucene index", ex);
+			LOGGER.error("IndexWriter can not delete a document from the lucene index", ex);
 		}
 	}
 }

@@ -16,7 +16,7 @@ import java.util.concurrent.TimeUnit;
 
 public class FileManagerTemplateLoader implements TemplateLoader {
 
-	private final static Log logger = LogFactory.getLog(FileManagerTemplateLoader.class);
+	private final static Log LOGGER = LogFactory.getLog(FileManagerTemplateLoader.class);
 	
 	private FileManager fileManager;
 	private String fileManagerBeanName;
@@ -30,7 +30,7 @@ public class FileManagerTemplateLoader implements TemplateLoader {
 				try {
 					Thread.currentThread().sleep(TimeUnit.MILLISECONDS.toNanos(1000));
 				} catch (InterruptedException e) {
-					logger.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 				}
 			}
 			return fileManager = FileManagerFactory.getInstance().getFileManager(fileManagerBeanName);

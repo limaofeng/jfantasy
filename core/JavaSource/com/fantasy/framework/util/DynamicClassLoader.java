@@ -19,7 +19,7 @@ import java.net.URLConnection;
  * @version 1.0
  */
 public class DynamicClassLoader extends ClassLoader {
-	private static final Log logger = LogFactory.getLog(DynamicClassLoader.class);
+	private static final Log LOGGER = LogFactory.getLog(DynamicClassLoader.class);
 
 	public DynamicClassLoader(ClassLoader parent) {
 		super(parent);
@@ -28,7 +28,7 @@ public class DynamicClassLoader extends ClassLoader {
 	public Class<?> loadClass(String classPath, String className) throws ClassNotFoundException {
 		try {
 			String url = classPathParser(classPath) + classNameParser(className);
-			logger.debug(url);
+			LOGGER.debug(url);
 			URL myUrl = new URL(url);
 			URLConnection connection = myUrl.openConnection();
 			InputStream input = connection.getInputStream();
@@ -42,9 +42,9 @@ public class DynamicClassLoader extends ClassLoader {
 			byte[] classData = buffer.toByteArray();
 			return defineClass(noSuffix(className), classData, 0, classData.length);
 		} catch (MalformedURLException e) {
-			logger.error(e.getMessage(),e);
+			LOGGER.error(e.getMessage(),e);
 		} catch (IOException e) {
-			logger.error(e.getMessage(),e);
+			LOGGER.error(e.getMessage(),e);
 		}
 		return null;
 	}

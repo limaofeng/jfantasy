@@ -51,7 +51,7 @@ import java.util.Date;
  */
 @SuppressWarnings({ "unchecked", "rawtypes" })
 public class DataSourceTemplateLoader implements TemplateLoader, InitializingBean {
-	private static final Log log = LogFactory.getLog(DataSourceTemplateLoader.class);
+	private static final Log LOG = LogFactory.getLog(DataSourceTemplateLoader.class);
 
 	private JdbcTemplate jdbcTemplate;
 
@@ -89,7 +89,7 @@ public class DataSourceTemplateLoader implements TemplateLoader, InitializingBea
 		Assert.hasText(tableName, "'tableName' must be not blank");
 		Assert.hasText(templateNameColumn, "'templateNameColumn' must be not blank");
 		Assert.hasText(templateContentColumn, "'templateContentColumn' must be not blank");
-		log.info("Freemarker template load sql:" + getSql(templateContentColumn));
+		LOG.info("Freemarker template load sql:" + getSql(templateContentColumn));
 	}
 
 	public Object findTemplateSource(final String name) throws IOException {

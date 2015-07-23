@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider implements InitializingBean {
 
-	private final static Log log = LogFactory.getLog(UserDetailsAuthenticationProvider.class);
+	private final static Log LOG = LogFactory.getLog(UserDetailsAuthenticationProvider.class);
 
 	private DaoAuthenticationProvider daoProvider;
 
@@ -36,9 +36,9 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 		try {
 			return (UserDetails) retrieveUser.invoke(daoProvider, username, authentication);
 		} catch (IllegalArgumentException e) {
-			log.error(e.getMessage(), e);
+			LOG.error(e.getMessage(), e);
 		} catch (IllegalAccessException e) {
-			log.error(e.getMessage(), e);
+			LOG.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
 			logger.error(e.getMessage(),e);
 			throw (AuthenticationException) e.getTargetException();
@@ -51,14 +51,14 @@ public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthen
 			// 原来的验证方法
 			additionalAuthenticationChecks.invoke(daoProvider, userDetails, authentication);
 		} catch (IllegalArgumentException e) {
-			log.error(e.getMessage(), e);
+			LOG.error(e.getMessage(), e);
 		} catch (IllegalAccessException e) {
-			log.error(e.getMessage(), e);
+			LOG.error(e.getMessage(), e);
 		} catch (InvocationTargetException e) {
 			if (e.getTargetException() instanceof AuthenticationException) {
 				throw (AuthenticationException) e.getTargetException();
 			} else {
-				log.error(e.getMessage(), e);
+				LOG.error(e.getMessage(), e);
 			}
 		}
 	}

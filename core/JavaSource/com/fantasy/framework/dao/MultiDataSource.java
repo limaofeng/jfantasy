@@ -15,7 +15,7 @@ import java.util.Map;
 
 public class MultiDataSource extends AbstractRoutingDataSource {
 
-    private static final Logger logger = Logger.getLogger(MultiDataSource.class);
+    private static final Logger LOGGER = Logger.getLogger(MultiDataSource.class);
 
     private CatalogConverter catalogConverter;
 
@@ -31,7 +31,7 @@ public class MultiDataSource extends AbstractRoutingDataSource {
         Connection connection = super.getConnection();
         String catalog = getCatalog();
         if (ObjectUtil.isNull(getDataSource())) {
-            logger.error("没有匹配到DataSource:" + connection);
+            LOGGER.error("没有匹配到DataSource:" + connection);
         }
         if (StringUtil.isNotBlank(catalog)) {
             setCatalog(connection, catalog);
@@ -47,7 +47,7 @@ public class MultiDataSource extends AbstractRoutingDataSource {
         try {
             connection.setCatalog(catalogConverter.convert(catalog));
         } catch (Exception e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -63,7 +63,7 @@ public class MultiDataSource extends AbstractRoutingDataSource {
     protected Object determineCurrentLookupKey() {
         com.fantasy.framework.dao.annotations.DataSource dataSource = getDataSource();
         if (ObjectUtil.isNull(dataSource)) {
-            logger.error("没有匹配到DataSource,将使用默认数据源!");
+            LOGGER.error("没有匹配到DataSource,将使用默认数据源!");
             return null;
         }
         if (containsDataSource(dataSource.name())){
@@ -76,7 +76,7 @@ public class MultiDataSource extends AbstractRoutingDataSource {
             resolvedDataSources.put(lookupKey, object);
             return dataSource.name();
         } catch (BeansException e) {
-            logger.error("没有匹配到DataSource,将使用默认数据源!",e);
+            LOGGER.error("没有匹配到DataSource,将使用默认数据源!", e);
         }
         return null;
     }

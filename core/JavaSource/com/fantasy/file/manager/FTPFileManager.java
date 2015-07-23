@@ -20,7 +20,7 @@ import java.util.List;
 
 public class FTPFileManager implements FileManager {
 
-	private final static Log logger = LogFactory.getLog(FTPFileManager.class);
+	private final static Log LOGGER = LogFactory.getLog(FTPFileManager.class);
 
 	private FTPService ftpService;
 
@@ -150,7 +150,7 @@ public class FTPFileManager implements FileManager {
 			try {
 				return FileUtil.getMimeType(getInputStream());
 			} catch (IOException e) {
-				logger.error(" getContentType Error : ", e);
+				LOGGER.error(" getContentType Error : ", e);
 				return getFtpFile().getType() + "";
 			}
 		}
@@ -226,7 +226,7 @@ public class FTPFileManager implements FileManager {
 		try {
 			this.ftpService.deleteRemoteFile(remotePath);
 		} catch (IOException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 		}
 	}
 
@@ -242,9 +242,9 @@ public class FTPFileManager implements FileManager {
 		fileManager.setFtpService(ftpService);
 
 		FileItem fileItem = fileManager.getFileItem("/urcbweb");
-		logger.debug(fileItem.getName() + "\t" + fileItem.getAbsolutePath());
+		LOGGER.debug(fileItem.getName() + "\t" + fileItem.getAbsolutePath());
 		for (FileItem f : fileItem.listFileItems()) {
-			logger.debug(f.getName() + "\t" + f.getAbsolutePath());
+			LOGGER.debug(f.getName() + "\t" + f.getAbsolutePath());
 		}
 
 	}

@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class IndexSearcherCache {
 
-	private static final Logger logger = Logger.getLogger(IndexSearcherCache.class);
+	private static final Logger LOGGER = Logger.getLogger(IndexSearcherCache.class);
 
 	private static IndexSearcherCache instance = new IndexSearcherCache();
 	private Map<String, IndexSearcher> cache;
@@ -39,9 +39,9 @@ public class IndexSearcherCache {
                     try {
                         reader = IndexReader.open(writer, true);
                     } catch (CorruptIndexException ex) {
-                        logger.error("Something is wrong when open lucene IndexWriter", ex);
+                        LOGGER.error("Something is wrong when open lucene IndexWriter", ex);
                     } catch (IOException ex) {
-                        logger.error("Something is wrong when open lucene IndexWriter", ex);
+                        LOGGER.error("Something is wrong when open lucene IndexWriter", ex);
                     }
                     searcher = new IndexSearcher(reader);
                     this.cache.put(name, searcher);

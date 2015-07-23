@@ -27,7 +27,7 @@ import java.util.List;
 @Transactional
 public class AttributeTypeService {
 
-    private static final Log logger = LogFactory.getLog(AttributeTypeService.class);
+    private static final Log LOGGER = LogFactory.getLog(AttributeTypeService.class);
 
     @Autowired
     private AttributeTypeDao attributeTypeDao;

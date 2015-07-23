@@ -6,7 +6,7 @@ import java.io.*;
 
 public abstract class StreamUtil {
 
-    private static final Logger logger = Logger.getLogger(StreamUtil.class);
+    private static final Logger LOGGER = Logger.getLogger(StreamUtil.class);
 
     public static final int DEFAULT_BUFFER_SIZE = 2048;
 
@@ -58,7 +58,7 @@ public abstract class StreamUtil {
         try {
             input.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
         }
     }
 
@@ -66,7 +66,7 @@ public abstract class StreamUtil {
         try {
             output.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
         }
     }
 
@@ -74,7 +74,7 @@ public abstract class StreamUtil {
         try {
             writer.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
         }
     }
 
@@ -82,7 +82,7 @@ public abstract class StreamUtil {
         try {
             in.close();
         } catch (IOException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
         }
     }
 }

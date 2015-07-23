@@ -28,7 +28,7 @@ import java.util.List;
 @Transactional
 public class DataDictionaryService implements InitializingBean {
 
-    private static final Log logger = LogFactory.getLog(DataDictionaryService.class);
+    private static final Log LOGGER = LogFactory.getLog(DataDictionaryService.class);
 
     public static final JobKey jobKey = JobKey.jobKey("DataDictionary", "SYSTEM");
 
@@ -44,11 +44,11 @@ public class DataDictionaryService implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         if (!this.scheduleService.isStartTimerTisk()) {
-            logger.error(" scheduler 定时任务未启动！");
+            LOGGER.error(" scheduler 定时任务未启动！");
             return;
         }
         if (this.scheduleService.checkExists(jobKey)) {
-            logger.debug("添加用于生成 json 文件的 Job ");
+            LOGGER.debug("添加用于生成 json 文件的 Job ");
             this.scheduleService.addJob(jobKey, DataDictJob.class);
         }
     }

@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class FieldsCache {
-	private static final Logger logger = Logger.getLogger(FieldsCache.class);
+	private static final Logger LOGGER = Logger.getLogger(FieldsCache.class);
 
 	private static FieldsCache instance = new FieldsCache();
 	private Map<String, Field[]> cache;
@@ -81,7 +81,7 @@ public class FieldsCache {
 		try {
 			f = getIdField(clazz);
 		} catch (IdException ex) {
-			logger.error(ex.getMessage(), ex);
+			LOGGER.error(ex.getMessage(), ex);
 		}
 		if (f != null) {
 			name = f.getName();

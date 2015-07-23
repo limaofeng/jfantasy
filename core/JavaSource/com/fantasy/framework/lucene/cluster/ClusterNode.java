@@ -8,7 +8,7 @@ import java.net.SocketAddress;
 import java.nio.channels.SocketChannel;
 
 public class ClusterNode {
-	private static final Logger logger = Logger.getLogger(ClusterNode.class);
+	private static final Logger LOGGER = Logger.getLogger(ClusterNode.class);
 	private String host;
 	private int port;
 
@@ -28,13 +28,13 @@ public class ClusterNode {
             }
 			channel.write(BufferUtil.toBuffer(message));
 		} catch (IOException ex) {
-			logger.error("Error when transmit message to host: " + this.host + ", port: " + this.port, ex);
+			LOGGER.error("Error when transmit message to host: " + this.host + ", port: " + this.port, ex);
 		} finally {
 			if (channel != null){
                 try {
                     channel.close();
                 } catch (IOException ex) {
-                    logger.error("Error when close channel host: " + this.host + ", port: " + this.port, ex);
+					LOGGER.error("Error when close channel host: " + this.host + ", port: " + this.port, ex);
                 }
             }
 		}

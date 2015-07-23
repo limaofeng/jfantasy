@@ -16,7 +16,7 @@ import com.fantasy.framework.util.common.StreamUtil;
 
 public class ZipUtil {
 
-	private static final Log logger = LogFactory.getLog(ZipUtil.class);
+	private static final Log LOGGER = LogFactory.getLog(ZipUtil.class);
 
 	/**
 	 * zip压缩
@@ -82,7 +82,7 @@ public class ZipUtil {
 				StreamUtil.copy(in, out);
 				StreamUtil.closeQuietly(in);
 			} catch (IOException e) {
-				logger.error(e.getMessage(), e);
+				LOGGER.error(e.getMessage(), e);
 			}
 		}
 		out.setEncoding(encoding);
