@@ -84,34 +84,34 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         ClassUtil.setValue(this, "sessionFactory", sessionFactory);
 
         //========================== 添加默认监听器 ==========================
-        Map<String, List<Object>> eventListeners = new HashMap<String, List<Object>>();
+        Map<String, List<Object>> eventListenerMap = new HashMap<String, List<Object>>();
         for (Map.Entry<String, List<Object>> entry : this.eventListeners.entrySet()) {
-            addEventListener(entry.getKey(), eventListeners, entry.getValue());
+            addEventListener(entry.getKey(), eventListenerMap, entry.getValue());
         }
         //添加动态属性版本监听
-        addEventListener(EventType.DELETE.eventName(),eventListeners,SpringContextUtil.getBeanByType(AttributeVersionEventListener.class));
+        addEventListener(EventType.DELETE.eventName(),eventListenerMap,SpringContextUtil.getBeanByType(AttributeVersionEventListener.class));
         //========================== 添加非主键的序列生成器 ==========================
-        addEventListener("save-update", eventListeners, SpringContextUtil.getBeanByType(PropertyGeneratorSaveOrUpdatEventListener.class));
+        addEventListener("save-update", eventListenerMap, SpringContextUtil.getBeanByType(PropertyGeneratorSaveOrUpdatEventListener.class));
         // 添加 lucene 索引生成监听
         if (SpringContextUtil.getBeanByType(BuguIndex.class) != null) {
             EntityChangedEventListener entityChangedEventListener = new EntityChangedEventListener();
-            addEventListener("post-insert", eventListeners, entityChangedEventListener);
-            addEventListener("post-update", eventListeners, entityChangedEventListener);
-            addEventListener("post-delete", eventListeners, entityChangedEventListener);
+            addEventListener("post-insert", eventListenerMap, entityChangedEventListener);
+            addEventListener("post-update", eventListenerMap, entityChangedEventListener);
+            addEventListener("post-delete", eventListenerMap, entityChangedEventListener);
         }
 
         VersionChangedEventListener versionChangedEventListener = new VersionChangedEventListener();
-        addEventListener("post-insert", eventListeners, versionChangedEventListener);
-        addEventListener("post-update", eventListeners, versionChangedEventListener);
-        addEventListener("post-delete", eventListeners, versionChangedEventListener);
+        addEventListener("post-insert", eventListenerMap, versionChangedEventListener);
+        addEventListener("post-update", eventListenerMap, versionChangedEventListener);
+        addEventListener("post-delete", eventListenerMap, versionChangedEventListener);
 
         // FileEventListener 监听器,用户转存文件或者删除文件
         FileManagerEventListener fileManagerEventListener = SpringContextUtil.createBean(FileManagerEventListener.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
-		addEventListener("post-insert", eventListeners, fileManagerEventListener);
-		addEventListener("post-update", eventListeners, fileManagerEventListener);
-		addEventListener("post-delete", eventListeners, fileManagerEventListener);
+		addEventListener("post-insert", eventListenerMap, fileManagerEventListener);
+		addEventListener("post-update", eventListenerMap, fileManagerEventListener);
+		addEventListener("post-delete", eventListenerMap, fileManagerEventListener);
 
-        this.eventListeners.putAll(eventListeners);
+        this.eventListeners.putAll(eventListenerMap);
         EventListenerRegistry registry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
         for (Map.Entry<String, List<Object>> event : this.eventListeners.entrySet()) {
             for (Object listener : event.getValue()) {

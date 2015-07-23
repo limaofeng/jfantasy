@@ -113,21 +113,21 @@ public class Response {
      * @throws IOException
      */
     public String getText(String charset, boolean pretty) throws IOException {
-        InputStream in = new ByteArrayInputStream(cache().toByteArray());
+        InputStream intemp = new ByteArrayInputStream(cache().toByteArray());
         BufferedReader reader = null;
         StringBuilder html = new StringBuilder();
         try {
             if (StringUtil.isNull(charset)) {
-                reader = new BufferedReader(new InputStreamReader(in));
+                reader = new BufferedReader(new InputStreamReader(intemp));
             } else {
-                reader = new BufferedReader(new InputStreamReader(in, charset));
+                reader = new BufferedReader(new InputStreamReader(intemp, charset));
             }
             String line;
             while ((line = reader.readLine()) != null) {
                 html.append(line).append(pretty ? System.getProperty("line.separator") : "");
             }
         } finally {
-            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(intemp);
             IOUtils.closeQuietly(reader);
         }
         return html.toString();
@@ -231,15 +231,15 @@ public class Response {
      * @throws IOException
      */
     public void write(OutputStream out) throws IOException {
-        InputStream in = getInputStream();
+        InputStream intemp = getInputStream();
         try {
             byte[] buf = new byte[1024];
             int num;
-            while ((num = in.read(buf, 0, buf.length)) != -1) {
+            while ((num = intemp.read(buf, 0, buf.length)) != -1) {
                 out.write(buf, 0, num);
             }
         } finally {
-            IOUtils.closeQuietly(in);
+            IOUtils.closeQuietly(intemp);
             IOUtils.closeQuietly(out);
         }
     }

@@ -171,12 +171,10 @@ public class UploadFileManager implements FileManager {
             if (!this.isDirectory()) {
                 return fileItems;
             }
-            List<Folder> folders = uploadFileManager.fileService.listFolder(this.folder.getAbsolutePath(), this.folder.getFileManagerId(), "name");
-            for (Folder folder : folders) {
+            for (Folder folder : uploadFileManager.fileService.listFolder(this.folder.getAbsolutePath(), this.folder.getFileManagerId(), "name")) {
                 fileItems.add(new UploadFileItem(folder, uploadFileManager));
             }
-            List<FileDetail> fileDetails = uploadFileManager.fileService.listFileDetail(this.folder.getAbsolutePath(), this.folder.getFileManagerId(), "fileName");
-            for (FileDetail folder : fileDetails) {
+            for (FileDetail folder : uploadFileManager.fileService.listFileDetail(this.folder.getAbsolutePath(), this.folder.getFileManagerId(), "fileName")) {
                 fileItems.add(new UploadFileItem(folder, uploadFileManager));
             }
             return fileItems;
