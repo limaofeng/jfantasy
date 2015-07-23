@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AreaChangeInterceptor implements InitializingBean {
 
-	private static final Logger logger = Logger.getLogger(AreaChangeInterceptor.class);
+	private static final Logger LOGGER = Logger.getLogger(AreaChangeInterceptor.class);
 
 	private Runnable runJavaScript = null;
 
@@ -30,7 +30,7 @@ public class AreaChangeInterceptor implements InitializingBean {
 				try {
                     new AreaJsJob().execute(null);
 				} catch (JobExecutionException e) {
-					logger.error(e.getMessage(), e);
+					LOGGER.error(e.getMessage(), e);
 				}
 			}
 		};

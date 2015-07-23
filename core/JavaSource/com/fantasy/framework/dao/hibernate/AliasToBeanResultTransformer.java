@@ -34,7 +34,7 @@ import java.util.StringTokenizer;
 public class AliasToBeanResultTransformer implements ResultTransformer {
     private static final long serialVersionUID = -5199190581393587893L;
 
-    private final static Log logger = LogFactory.getLog(AliasToBeanResultTransformer.class);
+    private final static Log LOGGER = LogFactory.getLog(AliasToBeanResultTransformer.class);
 
     private final Class<?> resultClass;
     private Setter[] setters;
@@ -76,7 +76,7 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
                         try {
                             setters[i] = propertyAccessor.getSetter(resultClass, alias);
                         } catch (PropertyNotFoundException e) {
-                            logger.error(e.getMessage(), e);
+                            LOGGER.error(e.getMessage(), e);
                         }
                     }
                 }
@@ -92,10 +92,10 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
                 }
             }
         } catch (InstantiationException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
             throw new HibernateException("Could not instantiate resultclass: " + resultClass.getName());
         } catch (IllegalAccessException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
             throw new HibernateException("Could not instantiate resultclass: " + resultClass.getName());
         }
         return result;

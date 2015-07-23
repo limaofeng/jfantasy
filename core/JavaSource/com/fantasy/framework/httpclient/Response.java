@@ -20,7 +20,7 @@ import java.util.Arrays;
  */
 public class Response {
 
-    private static final Log logger = LogFactory.getLog(Response.class);
+    private static final Log LOGGER = LogFactory.getLog(Response.class);
 
     private String url;
     private int statusCode;
@@ -154,7 +154,7 @@ public class Response {
      */
     private ByteArrayOutputStream cache() throws IOException {
         if (this.out == null) {
-            logger.debug("将文件写入缓冲区");
+            LOGGER.debug("将文件写入缓冲区");
             this.out = new ByteArrayOutputStream();
             try {
                 byte[] buf = new byte[1024];

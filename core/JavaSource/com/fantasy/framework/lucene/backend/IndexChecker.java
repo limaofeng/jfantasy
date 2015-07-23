@@ -18,7 +18,7 @@ import com.fantasy.framework.lucene.exception.FieldException;
 
 public class IndexChecker {
 
-	private static final Logger logger = Logger.getLogger(IndexChecker.class);
+	private static final Logger LOGGER = Logger.getLogger(IndexChecker.class);
 
 	/**
 	 * 判断Class是否标注了 @Indexed 注解
@@ -41,7 +41,7 @@ public class IndexChecker {
 		try {
 			field = FieldsCache.getInstance().getField(clazz, key);
 		} catch (FieldException ex) {
-			logger.error(ex.getMessage(), ex);
+			LOGGER.error(ex.getMessage(), ex);
 		}
 		if ((field.getAnnotation(IndexProperty.class) != null) || (field.getAnnotation(IndexEmbed.class) != null) || (field.getAnnotation(IndexEmbedList.class) != null) || (field.getAnnotation(IndexRef.class) != null) || (field.getAnnotation(IndexRefList.class) != null) || (field.getAnnotation(IndexRefBy.class) != null) || (field.getAnnotation(BoostSwitch.class) != null) || (field.getAnnotation(IndexFilter.class) != null)) {
 			result = true;

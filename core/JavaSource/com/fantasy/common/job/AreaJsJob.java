@@ -16,17 +16,17 @@ import java.util.concurrent.TimeUnit;
 
 public class AreaJsJob implements Job {
 
-    private static final Logger logger = Logger.getLogger(AreaJsJob.class);
+    private static final Logger LOGGER = Logger.getLogger(AreaJsJob.class);
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
             AreaService areaService = SpringContextUtil.getBeanByType(AreaService.class);
             getFileManager().writeFile("/static/data/area.json",new ByteArrayInputStream(JSON.serialize(areaService.allAreas()).getBytes()));
-            if (logger.isDebugEnabled()) {
-                logger.debug("生成:/static/js/area.json成功!");
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("生成:/static/js/area.json成功!");
             }
         } catch (IOException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -37,7 +37,7 @@ public class AreaJsJob implements Job {
             try {
                 Thread.currentThread().sleep(TimeUnit.SECONDS.toMillis(100));
             } catch (InterruptedException e) {
-                logger.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
             fileManager = FileManagerFactory.getWebRootFileManager();
         }

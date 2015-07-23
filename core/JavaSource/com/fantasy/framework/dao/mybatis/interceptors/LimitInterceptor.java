@@ -44,7 +44,7 @@ import java.util.regex.Matcher;
 @Intercepts({@Signature(type = Executor.class, method = "query", args = {MappedStatement.class, Object.class, RowBounds.class, ResultHandler.class})})
 public class LimitInterceptor implements Interceptor {
 
-    private static final Logger logger = Logger.getLogger(LimitInterceptor.class);
+    private static final Logger LOGGER = Logger.getLogger(LimitInterceptor.class);
 
     private static int MAPPED_STATEMENT_INDEX = 0;
     private static int PARAMETER_INDEX = 1;
@@ -59,7 +59,7 @@ public class LimitInterceptor implements Interceptor {
             }
             return invocation.proceed();
         } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
             throw e;
         }
     }
@@ -122,7 +122,7 @@ public class LimitInterceptor implements Interceptor {
                 count = rs.getInt(1);
             }
         } catch (SQLException e) {
-            logger.error(e.getMessage(), e);
+            LOGGER.error(e.getMessage(), e);
         } finally {
             try {
                 if (rs != null) {
@@ -135,7 +135,7 @@ public class LimitInterceptor implements Interceptor {
                     connection.close();
                 }
             } catch (SQLException e) {
-                logger.error(e.getMessage(), e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
         return count;

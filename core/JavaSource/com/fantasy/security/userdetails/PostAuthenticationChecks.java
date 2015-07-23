@@ -24,7 +24,7 @@ public class PostAuthenticationChecks implements UserDetailsChecker, Initializin
 
 	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	protected final static Log logger = LogFactory.getLog(PostAuthenticationChecks.class);
+	protected final static Log LOGGER = LogFactory.getLog(PostAuthenticationChecks.class);
 
 	private List<UserDetailsChecker> userDetailsCheckers = null;
 
@@ -50,7 +50,7 @@ public class PostAuthenticationChecks implements UserDetailsChecker, Initializin
 	private class DefaultPostAuthenticationChecks implements UserDetailsChecker {
 		public void check(UserDetails user) {
 			if (!user.isCredentialsNonExpired()) {
-				logger.debug("User account credentials have expired");
+				LOGGER.debug("User account credentials have expired");
 				throw new CredentialsExpiredException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired", "User credentials have expired"));
 			}
 		}

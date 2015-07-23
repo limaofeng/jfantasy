@@ -23,7 +23,7 @@ import java.util.Set;
  * @version 1.0
  */
 public class MyBatisMapperProxy implements InvocationHandler {
-	protected final Log logger = LogFactory.getLog(MyBatisMapperProxy.class);
+	protected final Log LOGGER = LogFactory.getLog(MyBatisMapperProxy.class);
 
 	private SqlSession sqlSession;
 
@@ -71,7 +71,7 @@ public class MyBatisMapperProxy implements InvocationHandler {
 		if (!this.sqlSession.getConfiguration().hasStatement(declaringInterface.getName() + "." + method.getName())) {
 			Class<?>[] declaringInterfaces = declaringInterface.getInterfaces();
 			for (Class<?> declaringinterface : declaringInterfaces) {
-				this.logger.debug("向父接口查找Mapper:" + declaringinterface.getName() + "." + method.getName());
+				this.LOGGER.debug("向父接口查找Mapper:" + declaringinterface.getName() + "." + method.getName());
 				if (this.sqlSession.getConfiguration().hasStatement(declaringinterface.getName() + "." + method.getName())) {
 					return declaringinterface;
 				}

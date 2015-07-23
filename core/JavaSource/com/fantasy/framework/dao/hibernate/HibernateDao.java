@@ -47,7 +47,7 @@ import java.util.regex.Matcher;
  * @since 2013-9-11 下午4:17:39
  */
 public abstract class HibernateDao<T, PK extends Serializable> {
-    protected Logger logger = LoggerFactory.getLogger(getClass());
+    protected Logger LOGGER = LoggerFactory.getLogger(getClass());
     protected SessionFactory sessionFactory;
     protected Class<T> entityClass;
 
@@ -83,10 +83,10 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         try {
             getSession().saveOrUpdate(entity = clean(entity));
         } catch (NonUniqueObjectException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
             getSession().merge(entity);
         }
-        this.logger.debug("save entity: {}", entity);
+        this.LOGGER.debug("save entity: {}", entity);
         return entity;
     }
 
@@ -100,10 +100,10 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         try {
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
-            logger.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(),e);
             getSession().merge(entity);
         }
-        this.logger.debug("update entity: {}", entity);
+        this.LOGGER.debug("update entity: {}", entity);
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     public void merge(T entity) {
         Assert.notNull(entity, "entity不能为空");
         getSession().merge(entity);
-        this.logger.debug("update entity: {}", entity);
+        this.LOGGER.debug("update entity: {}", entity);
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
     public void merge(String m, T entity) {
         Assert.notNull(entity, "entity不能为空");
         getSession().merge(m, entity);
-        this.logger.debug("update entity: {}", entity);
+        this.LOGGER.debug("update entity: {}", entity);
     }
 
     /**
@@ -270,7 +270,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                     for (Object odl : oldFks) {
                         if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), getIdValue(targetEntityClass, odl)) == null) {
                             this.getSession().delete(odl);
-                            logger.debug("删除数据" + getIdValue(targetEntityClass, odl));
+                            LOGGER.debug("删除数据" + getIdValue(targetEntityClass, odl));
                         }
                     }
                 }
@@ -391,7 +391,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         }else {
             getSession().delete(entity);
         }
-        this.logger.debug("delete entity: {}", entity);
+        this.LOGGER.debug("delete entity: {}", entity);
     }
 
     /**
@@ -405,7 +405,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         if (t != null) {
             delete(t);
         }
-        this.logger.debug("delete entity {},id is {}", this.entityClass.getSimpleName(), id);
+        this.LOGGER.debug("delete entity {},id is {}", this.entityClass.getSimpleName(), id);
     }
 
     /**
@@ -685,7 +685,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 changePropertyName(criteria, alias, criterion);
             }
         } else if (c instanceof SQLCriterion) {
-            logger.debug("未处理：" + c.toString());
+            LOGGER.debug("未处理：" + c.toString());
         } else if (c instanceof LogicalExpression) {
             changePropertyName(criteria, alias, (Criterion) ReflectionUtils.getFieldValue(c, "lhs"));
             changePropertyName(criteria, alias, (Criterion) ReflectionUtils.getFieldValue(c, "rhs"));
@@ -823,8 +823,8 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             }
 
         }), "[_]([a-zA-Z0-9]+)$", ".$1");
-        if (logger.isDebugEnabled()) {
-            logger.debug("使用别名后的新的排序字段{new:" + newOrderBy + ",old:" + orderBy + "}");
+        if (LOGGER.isDebugEnabled()) {
+            LOGGER.debug("使用别名后的新的排序字段{new:" + newOrderBy + ",old:" + orderBy + "}");
         }
         return newOrderBy;
     }
@@ -879,7 +879,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
             orderEntries = (List<OrderEntry>) ReflectionUtils.getFieldValue(impl, "orderEntries");
             ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList<OrderEntry>());
         } catch (Exception e) {
-            this.logger.error("不可能抛出的异常:{}", e.getMessage(),e);
+            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(),e);
         }
         int totalCount = Integer.valueOf(c.setProjection(Projections.rowCount()).uniqueResult().toString());
         c.setProjection(projection);
@@ -892,7 +892,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         try {
             ReflectionUtils.setFieldValue(impl, "orderEntries", orderEntries);
         } catch (Exception e) {
-            this.logger.error("不可能抛出的异常:{}", e.getMessage(),e);
+            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(),e);
         }
         return totalCount;
     }
@@ -1031,14 +1031,14 @@ public abstract class HibernateDao<T, PK extends Serializable> {
                 aliasName = "_" + objeactName.replaceAll("\\.", "_");
                 if (alias.add(aliasName)) {
                     criteria.createAlias(objeactName, aliasName);
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("为查询建立别名:createAlias(" + objeactName + "," + aliasName + ")");
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("为查询建立别名:createAlias(" + objeactName + "," + aliasName + ")");
                     }
                 }
             }
             String newProperty = aliasName + property.substring(property.lastIndexOf("."));
-            if (logger.isDebugEnabled()) {
-                logger.debug("使用别名时使用的属性名称:" + newProperty);
+            if (LOGGER.isDebugEnabled()) {
+                LOGGER.debug("使用别名时使用的属性名称:" + newProperty);
             }
             return newProperty;
         } else {

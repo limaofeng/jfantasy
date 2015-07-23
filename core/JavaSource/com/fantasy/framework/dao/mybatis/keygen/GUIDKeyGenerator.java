@@ -23,7 +23,7 @@ import java.util.Random;
  * @version 1.0
  */
 public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
-	private static final Logger logger = Logger.getLogger(GUIDKeyGenerator.class);
+	private static final Logger LOGGER = Logger.getLogger(GUIDKeyGenerator.class);
 	private Random random;
 	private String s_id;
 
@@ -50,7 +50,7 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 		try {
 			s_id = InetAddress.getLocalHost().toString();
 		} catch (UnknownHostException e) {
-			logger.error(e);
+			LOGGER.error(e);
 		}
 	}
 
@@ -66,8 +66,8 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 		sb.append(raw.substring(16, 20));
 		sb.append("-");
 		sb.append(raw.substring(20));
-		if (logger.isDebugEnabled()){
-            logger.debug("生成的GUID:" + sb.toString());
+		if (LOGGER.isDebugEnabled()){
+			LOGGER.debug("生成的GUID:" + sb.toString());
         }
 		return sb.toString();
 	}
@@ -90,7 +90,7 @@ public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
 		try {
 			Ognl.setValue(keyProperties[0], paramObject, getGUID());
 		} catch (Exception e) {
-			logger.error("自动设置ID失败", e);
+			LOGGER.error("自动设置ID失败", e);
 		}
 	}
 

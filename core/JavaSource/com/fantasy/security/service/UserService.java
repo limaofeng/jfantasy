@@ -26,7 +26,7 @@ import java.util.List;
 @Transactional
 public class UserService {
 
-    private static final Log logger = LogFactory.getLog(UserService.class);
+    private static final Log LOGGER = LogFactory.getLog(UserService.class);
 
     @Autowired
     private MailSendService mailSendService;

@@ -14,7 +14,7 @@ import java.net.URL;
 import java.util.List;
 
 public class JdomUtil {
-	private static final Log logger = LogFactory.getLog(JdomUtil.class);
+	private static final Log LOGGER = LogFactory.getLog(JdomUtil.class);
 
 	public static Document reader(String filePath) {
 		return reader(new File(filePath));
@@ -24,7 +24,7 @@ public class JdomUtil {
 		try {
 			return reader(new FileInputStream(file));
 		} catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new IgnoreException(e.getMessage());
 		}
 	}
@@ -33,7 +33,7 @@ public class JdomUtil {
 		try {
 			return new SAXBuilder().build(inputStream);
 		} catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new IgnoreException(e.getMessage());
 		}
 	}
@@ -42,7 +42,7 @@ public class JdomUtil {
 		try {
 			return new SAXBuilder().build(url);
 		} catch (Exception e) {
-			logger.error(e);
+			LOGGER.error(e);
 			throw new IgnoreException(e.getMessage());
 		}
 	}

@@ -14,18 +14,18 @@ public class SpringLogAnnotationParser implements LogAnnotationParser, Serializa
 		Collection<Log> logs = getAnnotations(ae, Log.class);
 		if (logs != null) {
 			ops = lazyInit(ops);
-			for (Log log : logs) {
-				ops.add(parseAnnotation(ae, log));
+			for (Log LOG : logs) {
+				ops.add(parseAnnotation(ae, LOG));
 			}
 		}
 		return ops;
 	}
 
-	LogOperation parseAnnotation(AnnotatedElement ae, Log log) {
+	LogOperation parseAnnotation(AnnotatedElement ae, Log LOG) {
 		LogOperation cuo = new LogOperation();
-		cuo.setCondition(log.condition());
-		cuo.setType(log.type());
-		cuo.setText(log.text());
+		cuo.setCondition(LOG.condition());
+		cuo.setType(LOG.type());
+		cuo.setText(LOG.text());
 		return cuo;
 	}
 

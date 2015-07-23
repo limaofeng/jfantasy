@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class CaptchaChecker implements UserDetailsChecker {
 
-	private static final Log logger = LogFactory.getLog(CaptchaChecker.class);
+	private static final Log LOGGER = LogFactory.getLog(CaptchaChecker.class);
 
 	private CaptchaService captchaService;
 	private String captchaParameter = "captcha";
@@ -48,7 +48,7 @@ public class CaptchaChecker implements UserDetailsChecker {
             }
 			return this.captchaService.validateResponseForID(captchaID, challengeResponse.toUpperCase()).booleanValue();
 		} catch (CaptchaServiceException e) {
-			logger.error(e.getMessage(), e);
+			LOGGER.error(e.getMessage(), e);
 			return false;
 		}
 	}
