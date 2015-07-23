@@ -183,12 +183,11 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
      * 输出线程可以开始取值了.
      */
     private void signalNotEmpty() {
-        ReentrantLock takeLock = this.takeLock;
-        takeLock.lock();
+        this.takeLock.lock();
         try {
             this.notEmpty.signal();
         } finally {
-            takeLock.unlock();
+            this.takeLock.unlock();
         }
     }
 

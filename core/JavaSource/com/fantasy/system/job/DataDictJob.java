@@ -22,8 +22,8 @@ public class DataDictJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         try {
             DataDictionaryService dictionaryService = SpringContextUtil.getBeanByType(DataDictionaryService.class);
-            getFileManager().writeFile("/static/data/data-dict-type.json", new ByteArrayInputStream(JSON.serialize(dictionaryService.allTypes()).getBytes()));
-            getFileManager().writeFile("/static/data/data-dict.json", new ByteArrayInputStream(JSON.serialize(dictionaryService.allDataDicts()).getBytes()));
+            getFileManager().writeFile("/static/data/data-dict-type.json", new ByteArrayInputStream(JSON.serialize(dictionaryService.allTypes()).getBytes("UTF-8")));
+            getFileManager().writeFile("/static/data/data-dict.json", new ByteArrayInputStream(JSON.serialize(dictionaryService.allDataDicts()).getBytes("UTF-8")));
             if (logger.isDebugEnabled()) {
                 logger.debug("生成:/static/data/data-dict-type.json 与 /static/data/data-dict.json 成功!");
             }

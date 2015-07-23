@@ -95,12 +95,10 @@ public class MethodProxy {
         try {
             if ((this.method instanceof FastMethod)) {
                 Class<?> declaringClass = ((FastMethod) this.method).getDeclaringClass();
-                FastMethod method = (FastMethod) this.method;
-                return JavassistUtil.getParamNames(declaringClass.getName(), method.getName(), this.parameterTypes);
+                return JavassistUtil.getParamNames(declaringClass.getName(), ((FastMethod)this.method).getName(), this.parameterTypes);
             }
             Class<?> declaringClass = ((Method) this.method).getDeclaringClass();
-            Method method = (Method) this.method;
-            return JavassistUtil.getParamNames(declaringClass.getName(), method.getName(), this.parameterTypes);
+            return JavassistUtil.getParamNames(declaringClass.getName(), ((FastMethod)this.method).getName(), this.parameterTypes);
         } catch (NotFoundException e) {
             LOG.error(e.getMessage(), e);
         } catch (JavassistUtil.MissingLVException e) {

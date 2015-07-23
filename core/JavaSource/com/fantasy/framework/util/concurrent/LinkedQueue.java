@@ -115,10 +115,6 @@ public class LinkedQueue<E> extends AbstractQueue<E> implements BlockingQueue<E>
             throw new NullPointerException();
         }
         int c = -1;
-        final ReentrantLock putLock;
-        putLock = this.putLock;
-        final AtomicInteger count;
-        count = this.count;
         putLock.lockInterruptibly();
         try {
             try {
