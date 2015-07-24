@@ -98,7 +98,7 @@ public class FileFilter extends GenericFilterBean {
                 return;
             }
             // 只自动缩放 image/jpeg 格式的图片
-            if (!"image/jpeg".equals(fileItem.getContentType())) {
+            if (!fileItem.getContentType().contains("image/")) {
                 chain.doFilter(request, response);
                 return;
             }
