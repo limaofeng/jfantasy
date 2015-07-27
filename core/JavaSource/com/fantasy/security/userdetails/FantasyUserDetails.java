@@ -1,16 +1,15 @@
 package com.fantasy.security.userdetails;
 
-import java.util.List;
-
-import org.springframework.security.core.userdetails.UserDetails;
-
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.UserGroup;
+import org.springframework.security.core.userdetails.UserDetails;
 
-public interface FantasyUserDetails extends UserDetails{
+import java.util.List;
 
-	List<UserGroup> getUserGroups();
+public interface FantasyUserDetails extends UserDetails {
 
-	List<Role> getRoles();
+    List<UserGroup> getUserGroups();
+
+    List<Role> getRoles();
 
 }
