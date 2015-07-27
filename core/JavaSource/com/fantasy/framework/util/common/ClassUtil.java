@@ -275,7 +275,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return (Class<T>)Object.class;
     }
 
-    public static Class<?> getMethodGenericReturnType(Method method) {
+    public static <T> Class<T> getMethodGenericReturnType(Method method) {
         return getMethodGenericReturnType(method, 0);
     }
 
@@ -328,7 +328,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return getMethodGenericParameterTypes(method, 0);
     }
 
-    public static Class<?> getFieldGenericType(Field field) {
+    public static <T> Class<T> getFieldGenericType(Field field) {
         return getFieldGenericType(field, 0);
     }
 
@@ -340,7 +340,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return field.getAnnotation(annotClass);
     }
 
-    public static Class<?> getFieldGenericType(Field field, int index) {
+    public static <T> Class<T> getFieldGenericType(Field field, int index) {
         Type genericFieldType = field.getGenericType();
         if ((genericFieldType instanceof ParameterizedType)) {
             ParameterizedType aType = (ParameterizedType) genericFieldType;
@@ -348,9 +348,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             if ((index >= fieldArgTypes.length) || (index < 0)) {
                 throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
             }
-            return (Class<?>) fieldArgTypes[index];
+            return (Class<T>) fieldArgTypes[index];
         }
-        return Object.class;
+        return (Class<T>) Object.class;
     }
 
     public static String[] getParamNames(Class<?> clazz, String methodname, Class<?>[] parameterTypes) {
@@ -497,30 +497,30 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return (Class<T>) params[index];
     }
 
-    public static Class<?> getInterfaceGenricType(Class<?> clazz, Class<?> interfaceClazz) {
+    public static <T> Class<T> getInterfaceGenricType(Class<?> clazz, Class<?> interfaceClazz) {
         return getInterfaceGenricType(clazz, interfaceClazz, 0);
     }
 
-    public static Class<?> getInterfaceGenricType(Class<?> clazz, Class<?> interfaceClazz, int index) {
+    public static <T> Class<T> getInterfaceGenricType(Class<?> clazz, Class<?> interfaceClazz, int index) {
         Type[] genTypes = clazz.getGenericInterfaces();
         for (Type genType : genTypes) {
             if (!(genType instanceof ParameterizedType)) {
-                return Object.class;
+                return (Class<T>)Object.class;
             }
             if (interfaceClazz.equals(((ParameterizedType) genType).getRawType())) {
                 Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
                 if ((index >= params.length) || (index < 0)) {
                     LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
-                    return Object.class;
+                    return (Class<T>)Object.class;
                 }
                 if (!(params[index] instanceof Class<?>)) {
                     LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
-                    return Object.class;
+                    return (Class<T>)Object.class;
                 }
-                return (Class<?>) params[index];
+                return (Class<T>) params[index];
             }
         }
-        return Object.class;
+        return (Class<T>)Object.class;
     }
 
 }
