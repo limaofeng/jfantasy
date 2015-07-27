@@ -278,8 +278,7 @@ public interface FileItem {
          */
         public long getContentLength() {
             Long contentLength = (Long) metadata.get(HttpHeaders.CONTENT_LENGTH);
-            if (contentLength == null) return 0;
-            return contentLength;
+            return contentLength == null ? 0 : contentLength;
         }
 
         /**

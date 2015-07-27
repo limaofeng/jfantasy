@@ -313,7 +313,7 @@ public class DateUtil {
                 smallCalendar.clear(Calendar.DATE);
                 bigCalendar.clear(Calendar.DATE);
                 break;
-            case Calendar.DATE:
+            case Calendar.DATE://NOSONAR
                 smallCalendar.clear(Calendar.HOUR);
                 smallCalendar.clear(Calendar.HOUR_OF_DAY);
                 bigCalendar.clear(Calendar.HOUR);
