@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Table(name = "FILE_FILEDETAIL")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "folder", "realPath"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class FileDetail extends BaseBusEntity {
+public class FileDetail extends BaseBusEntity implements Cloneable {
 
     private static final long serialVersionUID = -3377507500960127984L;
 
@@ -213,7 +213,8 @@ public class FileDetail extends BaseBusEntity {
         this.ext = ext;
     }
 
-    public FileDetail clone(){
+    @Override
+    public Object clone() throws CloneNotSupportedException {
         return ObjectUtil.clone(this);
     }
 

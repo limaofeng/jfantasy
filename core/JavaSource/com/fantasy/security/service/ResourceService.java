@@ -8,6 +8,8 @@ import com.fantasy.security.bean.Resource;
 import com.fantasy.security.bean.enums.ResourceType;
 import com.fantasy.security.dao.ResourceDao;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +22,8 @@ import java.util.Map;
 @Service
 @Transactional
 public class ResourceService {
+
+    private final static Log LOG = LogFactory.getLog(ResourceService.class);
 
     public static final String RESOURCE_ALL_CACHE_KEY = "RESOURCE_ALL_CACHE_KEY";
 
@@ -72,7 +76,16 @@ public class ResourceService {
             if (ObjectUtil.isNull(data)) {
                 List<Resource> resources = new ArrayList<Resource>();
                 for (Resource resource : resourceDao.getAll()) {
-                    resources.add(resource.clone());
+                    Resource newRes = null;
+                    try {
+                        newRes = (Resource)resource.clone();
+                    } catch (CloneNotSupportedException e) {
+                        LOG.error(e.getMessage(),e);
+                    }
+                    if(newRes == null){
+                        continue;
+                    }
+                    resources.add(newRes);
                 }
                 Map<Long, Resource> resourceMap = new HashMap<Long, Resource>();
                 for (Resource resource : resources) {
@@ -138,7 +151,15 @@ public class ResourceService {
         if (ObjectUtil.isNull(data)) {
             List<Resource> resources = new ArrayList<Resource>();
             for (Resource resource : resourceDao.getAll()) {
-                Resource newRes = resource.clone();
+                Resource newRes = null;
+                try {
+                    newRes = (Resource)resource.clone();
+                } catch (CloneNotSupportedException e) {
+                    LOG.error(e.getMessage(),e);
+                }
+                if(newRes == null){
+                    continue;
+                }
                 newRes.setUserGroups(resource.getUserGroups());
                 newRes.setRoles(resource.getRoles());
                 resources.add(newRes);
