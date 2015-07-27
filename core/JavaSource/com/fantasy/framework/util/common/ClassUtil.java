@@ -262,7 +262,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return getSuperClassGenricType(clazz, 0);
     }
 
-    public static Class<?> getMethodGenericReturnType(Method method, int index) {
+    public static <T> Class<T> getMethodGenericReturnType(Method method, int index) {
         Type returnType = method.getGenericReturnType();
         if ((returnType instanceof ParameterizedType)) {
             ParameterizedType type = (ParameterizedType) returnType;
@@ -270,9 +270,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             if ((index >= typeArguments.length) || (index < 0)) {
                 throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
             }
-            return (Class<?>) typeArguments[index];
+            return (Class<T>) typeArguments[index];
         }
-        return Object.class;
+        return (Class<T>)Object.class;
     }
 
     public static Class<?> getMethodGenericReturnType(Method method) {
