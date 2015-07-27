@@ -17,7 +17,7 @@ public class ProductDao extends HibernateDao<Product, Long> {
 	public Pager<Product> findPager(Pager<Product> pager, List<PropertyFilter> filters) {
 		// 添加可用库存的查询转换方式
 		List<Criterion> usableStoreCriterions = new ArrayList<Criterion>();
-		for (PropertyFilter filter : ObjectUtil.filter(filters,"propertyName",new String[]{"usableStore"})) {
+		for (PropertyFilter filter : ObjectUtil.filter(filters,"propertyName","usableStore")) {
 			usableStoreCriterions.add(sqlRestriction(buildPropertyFilterCriterion(filter.getPropertyName(), filter.getPropertyValue(), filter.getMatchType()), "({alias}.STORE - {alias}.FREEZE_STORE)"));
 			filters.remove(filter);
 		}
