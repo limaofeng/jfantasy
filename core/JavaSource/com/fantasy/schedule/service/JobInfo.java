@@ -15,7 +15,7 @@ public class JobInfo {
     private String name;
     private String group;
     private boolean running;
-    private Class<? extends Job> jobClass;
+    private Class<Job> jobClass;
     private JobDataMap jobDataMap;
     private TriggerType type;
     private String cronExpression;
@@ -31,7 +31,7 @@ public class JobInfo {
         this.key = jobDetail.getKey();
         this.name = this.key.getName();
         this.group = this.key.getGroup();
-        this.jobClass = jobDetail.getJobClass();
+        this.jobClass = (Class<Job>)jobDetail.getJobClass();
         this.jobDataMap = jobDetail.getJobDataMap();
     }
 
@@ -83,7 +83,7 @@ public class JobInfo {
         return jobClass;
     }
 
-    public void setJobClass(Class<? extends Job> jobClass) {
+    public void setJobClass(Class<Job> jobClass) {
         this.jobClass = jobClass;
     }
 

@@ -140,7 +140,7 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         }
     }
 
-    private Class<?> makeClass(String attrClassName) {
+    private <T> Class<T> makeClass(String attrClassName) {
         AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(attrClassName);
         if (version != null) {
             return makeClass(version);

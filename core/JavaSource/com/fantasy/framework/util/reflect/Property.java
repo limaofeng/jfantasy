@@ -33,8 +33,8 @@ public class Property {
 		this.writeMethodProxy.invoke(target, value);
 	}
 
-	public Class<?> getPropertyType() {
-		return this.propertyType;
+	public <T> Class<T> getPropertyType() {
+		return (Class<T>)this.propertyType;
 	}
 
 	public String getName() {
