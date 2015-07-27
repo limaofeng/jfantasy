@@ -80,7 +80,7 @@ class ConfigurationClassEnhancer {
      * container-aware callbacks capable of respecting scoping and other bean semantics.
      * @return the enhanced subclass
      */
-    public Class<?> enhance(Class<?> configClass) {
+    public Class enhance(Class configClass) {
         if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(String.format("Ignoring request to enhance %s as it has " +
