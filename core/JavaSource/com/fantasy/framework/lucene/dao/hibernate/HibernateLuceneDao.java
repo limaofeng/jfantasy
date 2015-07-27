@@ -11,7 +11,7 @@ import org.hibernate.criterion.Criterion;
 import java.io.Serializable;
 import java.util.List;
 
-public abstract class HibernateLuceneDao<T, PK extends Serializable> extends HibernateDao<T, PK> implements LuceneDao<T> {
+public abstract class HibernateLuceneDao<T, PK extends Serializable> extends HibernateDao<T, PK> implements LuceneDao<T> {//NOSONAR
 
     @Override
     public long count() {

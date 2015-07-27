@@ -46,7 +46,7 @@ import java.util.regex.Matcher;
  * @version 1.0
  * @since 2013-9-11 下午4:17:39
  */
-public abstract class HibernateDao<T, PK extends Serializable> {
+public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     protected Logger LOGGER = LoggerFactory.getLogger(getClass());
     protected SessionFactory sessionFactory;
     protected Class<T> entityClass;
