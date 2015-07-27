@@ -260,7 +260,7 @@ public class PropertiesHelper {
 
         private Enumeration<E> determineCurrentEnumeration() {
             if (cur != null && !cur.hasMoreElements()) {
-                if (enums.size() > 0) {
+                if (!enums.isEmpty()) {
                     cur = enums.removeLast();
                 } else {
                     cur = null;

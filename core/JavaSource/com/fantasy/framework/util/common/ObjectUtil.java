@@ -320,7 +320,7 @@ public final class ObjectUtil {
     public static <T> int indexOf(T[] objs, T o) {
         for (int i = 0; i < objs.length; i++) {
             if (ClassUtil.isList(o)) {
-                if (!ClassUtil.isList(objs[i]) || ((List<Object>) o).size() == 0) {
+                if (!ClassUtil.isList(objs[i]) || ((List<Object>) o).isEmpty()) {
                     continue;
                 }
                 if (((List<Object>) o).size() != ((List<Object>) objs[i]).size()) {

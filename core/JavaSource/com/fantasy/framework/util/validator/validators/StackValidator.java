@@ -1,10 +1,5 @@
 package com.fantasy.framework.util.validator.validators;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.validator.Validateable;
 import com.fantasy.framework.util.validator.Validator;
@@ -13,6 +8,11 @@ import com.fantasy.framework.util.validator.entities.FieldValidator;
 import com.fantasy.framework.util.validator.exception.Error;
 import com.fantasy.framework.util.validator.exception.StackValidationException;
 import com.fantasy.framework.util.validator.exception.ValidationException;
+
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class StackValidator implements Validator {
 	private Validateable validateable;
@@ -37,7 +37,7 @@ public class StackValidator implements Validator {
 				}
 			}
 		}
-		if (errorMsg.size() > 0) {
+		if (!errorMsg.isEmpty()) {
 			StackValidationException exception = new StackValidationException();
 			for (Map.Entry<String, List<String>> entry : errorMsg.entrySet()) {
 				String key = entry.getKey();

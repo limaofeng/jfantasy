@@ -39,7 +39,7 @@ public class EntityChangedListener {
                 }
             }
         }
-        if (refBySet.size() > 0) {
+        if (!refBySet.isEmpty()) {
             this.refListener = new RefEntityChangedListener(refBySet);
             if ((byId) && (!byOther)) {
                 this.onlyIdRefBy = true;
