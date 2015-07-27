@@ -6,6 +6,8 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.struts2.util.StrutsTypeConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -14,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 public class FileDetailStoreConverter extends StrutsTypeConverter {
+
+    private final static Log LOG = LogFactory.getLog(FileDetailStoreConverter.class);
 
 	@Autowired
 	private FileService fileService;
@@ -37,7 +41,12 @@ public class FileDetailStoreConverter extends StrutsTypeConverter {
 				if (fileDetail == null) {
 					continue;
 				}
-				return fileDetail.clone();
+				try {
+					return fileDetail.clone();
+				} catch (CloneNotSupportedException e) {
+                    LOG.error(e.getMessage(),e);
+					return null;
+				}
 			}
 			return null;
 		}else if(FileDetail[].class.isAssignableFrom(toClass)){

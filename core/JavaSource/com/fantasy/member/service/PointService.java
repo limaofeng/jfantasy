@@ -48,7 +48,6 @@ public class PointService {
 	 * @return
 	 */
 	public Point save(Point point) {
-		;
 		return this.pointDao.save(point);
 	}
 	

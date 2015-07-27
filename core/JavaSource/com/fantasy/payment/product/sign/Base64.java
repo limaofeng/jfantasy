@@ -1,9 +1,3 @@
-/*
- * Copyright (C) 2010 The MobileSecurePay Project
- * All right reserved.
- * author: shiqun.shi@alipay.com
- */
-
 package com.fantasy.payment.product.sign;
 
 import org.apache.log4j.Logger;
@@ -224,8 +218,7 @@ public final class Base64 {
         d4 = base64Data[dataIndex];
         if (!isData((d3)) || !isData((d4))) {//Check if they are PAD characters
             if (isPad(d3) && isPad(d4)) {
-                if ((b2 & 0xf) != 0)//last 4 bits should be zero
-                {
+                if ((b2 & 0xf) != 0) {//last 4 bits should be zero
                     return null;
                 }
                 byte[] tmp = new byte[i * 3 + 1];
@@ -234,8 +227,7 @@ public final class Base64 {
                 return tmp;
             } else if (!isPad(d3) && isPad(d4)) {
                 b3 = BASE_64_ALPHABET[d3];
-                if ((b3 & 0x3) != 0)//last 2 bits should be zero
-                {
+                if ((b3 & 0x3) != 0) {//last 2 bits should be zero
                     return null;
                 }
                 byte[] tmp = new byte[i * 3 + 2];
