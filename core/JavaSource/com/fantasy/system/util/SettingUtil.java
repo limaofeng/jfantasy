@@ -167,8 +167,12 @@ public class SettingUtil {
     }
 
     private static Website current() {
-        User user = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser();
-        return SpringContextUtil.getBeanByType(WebsiteService.class).findUniqueByKey(user.getWebsite().getKey());
+        Website website = threadLocal.get();
+        if(website == null){
+            User user = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser();
+            threadLocal.set(website = SpringContextUtil.getBeanByType(WebsiteService.class).findUniqueByKey(user.getWebsite().getKey()));
+        }
+        return website;
     }
 
 }

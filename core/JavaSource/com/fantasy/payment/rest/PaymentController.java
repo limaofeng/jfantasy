@@ -3,7 +3,6 @@ package com.fantasy.payment.rest;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.error.PaymentException;
-import com.fantasy.payment.service.PaymentConfiguration;
 import com.fantasy.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +16,6 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
-    @Autowired
-    private PaymentConfiguration paymentConfiguration;
 
     @RequestMapping(value = "/{sn}")
     public Payment view(@PathVariable String sn) throws Exception {

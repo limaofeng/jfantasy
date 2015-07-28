@@ -8,15 +8,13 @@ import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -27,8 +25,6 @@ public class AreaService{
 
     @Autowired
     private AreaDao areaDao;
-
-    private static final Log LOGGER = LogFactory.getLog(AreaService.class);
 
     @SuppressWarnings("unchecked")
     @CacheEvict(value = {"fantasy.common.AreaService"}, allEntries = true)

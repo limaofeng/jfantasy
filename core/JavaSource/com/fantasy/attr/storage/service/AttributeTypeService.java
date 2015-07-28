@@ -7,8 +7,6 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import ognl.TypeConverter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,8 +24,6 @@ import java.util.List;
 @Service
 @Transactional
 public class AttributeTypeService {
-
-    private static final Log LOGGER = LogFactory.getLog(AttributeTypeService.class);
 
     @Autowired
     private AttributeTypeDao attributeTypeDao;

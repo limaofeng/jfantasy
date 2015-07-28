@@ -2,15 +2,11 @@ package com.fantasy.framework.util.common;
 
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.reflect.Property;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Array;
 import java.util.List;
 
 public class BeanUtil {
-
-    private static final Log LOGGER = LogFactory.getLog(BeanUtil.class);
 
     public static void setValue(Object target, String fieldName, Object value) {
         ClassUtil.setValue(target, fieldName, value);

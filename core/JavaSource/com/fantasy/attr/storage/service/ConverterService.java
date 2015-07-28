@@ -7,8 +7,6 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import ognl.TypeConverter;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +18,6 @@ import java.util.List;
 @Service
 @Transactional
 public class ConverterService {
-
-    private static final Log LOGGER = LogFactory.getLog(ConverterService.class);
 
     @Autowired
     private ConverterDao converterDao;

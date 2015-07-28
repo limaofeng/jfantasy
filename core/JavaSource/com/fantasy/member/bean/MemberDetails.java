@@ -99,9 +99,6 @@ public class MemberDetails implements Serializable {
     @Column(name = "AVATAR", length = 500)
     private String avatarStore;
 
-    @Transient
-    private FileDetail avatar;
-
     public Integer getScore() {
         return score;
     }

@@ -24,7 +24,7 @@ public class Arith {
 	}
 
 	public static double div(double v1, double v2) {
-		return div(v1, v2, 10);
+		return div(v1, v2, DEF_DIV_SCALE);
 	}
 
 	public static double div(double v1, double v2, int scale) {

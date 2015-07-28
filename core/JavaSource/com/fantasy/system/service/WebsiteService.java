@@ -1,15 +1,11 @@
 package com.fantasy.system.service;
 
-import com.fantasy.file.service.FileManagerService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.system.bean.Setting;
 import com.fantasy.system.bean.Website;
-import com.fantasy.system.dao.SettingDao;
 import com.fantasy.system.dao.WebsiteDao;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,14 +19,8 @@ import java.util.List;
 @Transactional
 public class WebsiteService {
 
-    private static final Log LOGGER = LogFactory.getLog(WebsiteService.class);
-
     @Autowired
     private WebsiteDao websiteDao;
-    @Autowired
-    private SettingDao settingDao;
-    @Autowired
-    private FileManagerService fileManagerService;
 
     @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Website findUniqueByKey(String key) {
