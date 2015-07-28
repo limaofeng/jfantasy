@@ -68,10 +68,11 @@ public class BufferUtil {
     }
 
     public static void putHexInt(Buffer buffer, int n) {
-        if (n < 0) {
+        int nt = n;
+        if (nt < 0) {
             buffer.put(MINUS);
 
-            if (n == -2147483648) {
+            if (nt == -2147483648) {
                 buffer.put((byte) 56);
                 buffer.put((byte) 48);
                 buffer.put((byte) 48);
@@ -83,23 +84,23 @@ public class BufferUtil {
 
                 return;
             }
-            n = -n;
+            nt = -nt;
         }
 
-        if (n < 16) {
-            buffer.put(DIGIT[n]);
+        if (nt < 16) {
+            buffer.put(DIGIT[nt]);
         } else {
             boolean started = false;
             for (int hex : hexDivisors) {
-                if (n < hex) {
+                if (nt < hex) {
                     if (started){
                         buffer.put((byte) 48);
                     }
                 } else {
                     started = true;
-                    int d = n / hex;
+                    int d = nt / hex;
                     buffer.put(DIGIT[d]);
-                    n -= d * hex;
+                    nt -= d * hex;
                 }
             }
         }
