@@ -20,26 +20,26 @@ public @interface IndexEmbedBy {
      *
      * @return class
      */
-    public abstract Class<?>[] value();
+    Class[] value();
 
     /**
      * analyze——boolean型，表示是否需要分词
      *
      * @return boolean
      */
-    public abstract boolean[] analyze() default false;
+    boolean[] analyze() default false;
 
     /**
      * store——boolean型，表示是否需要存储
      *
      * @return boolean
      */
-    public abstract boolean[] store() default true;
+    boolean[] store() default true;
 
     /**
      * boost——float型，表示该Field的权重
      *
      * @return boolean
      */
-    public abstract float[] boost() default 1.0f;
+    float[] boost() default 1.0f;
 }

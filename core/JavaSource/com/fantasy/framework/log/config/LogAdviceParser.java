@@ -88,7 +88,7 @@ public class LogAdviceParser extends AbstractSingleBeanDefinitionParser {
 	private static final String DEFS_ELEMENT = "caching";
 
 	@Override
-	protected Class<?> getBeanClass(Element element) {
+	protected Class<CacheInterceptor> getBeanClass(Element element) {
 		return CacheInterceptor.class;
 	}
 

@@ -1,8 +1,8 @@
 package com.fantasy.framework.log.interceptor;
 
-import java.lang.reflect.Method;
-
 import org.springframework.util.Assert;
+
+import java.lang.reflect.Method;
 
 public class LogExpressionRootObject {
 
@@ -40,7 +40,7 @@ public class LogExpressionRootObject {
 		return this.target;
 	}
 
-	public Class<?> getTargetClass() {
+	public Class getTargetClass() {
 		return this.targetClass;
 	}
 }

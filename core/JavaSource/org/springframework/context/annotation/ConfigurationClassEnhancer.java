@@ -119,7 +119,7 @@ class ConfigurationClassEnhancer {
      * Uses enhancer to generate a subclass of superclass,
      * ensuring that callbacks are registered for the new subclass.
      */
-    private Class<?> createClass(Enhancer enhancer) {
+    private Class createClass(Enhancer enhancer) {
         Class<?> subclass = enhancer.createClass();
         // Registering callbacks statically (as opposed to thread-local)
         // is critical for usage in an OSGi environment (SPR-5932)...
@@ -184,7 +184,7 @@ class ConfigurationClassEnhancer {
             throw new IllegalStateException("No callback available for method " + method.getName());
         }
 
-        public Class<?>[] getCallbackTypes() {
+        public Class[] getCallbackTypes() {
             return this.callbackTypes;
         }
     }

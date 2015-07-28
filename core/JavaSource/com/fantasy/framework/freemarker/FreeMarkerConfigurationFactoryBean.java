@@ -97,7 +97,7 @@ public class FreeMarkerConfigurationFactoryBean extends FreeMarkerConfigurationF
         return this.configuration;
     }
 
-    public Class<? extends Configuration> getObjectType() {
+    public Class<Configuration> getObjectType() {
         return Configuration.class;
     }
 

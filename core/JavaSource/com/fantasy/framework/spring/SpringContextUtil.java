@@ -168,8 +168,8 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
      * @return Class 注册对象的类型
      * @throws NoSuchBeanDefinitionException
      */
-    public static synchronized Class<?> getType(String name) throws NoSuchBeanDefinitionException {
-        return applicationContext.getType(name);
+    public static synchronized <T> Class<T> getType(String name) throws NoSuchBeanDefinitionException {
+        return (Class<T>)applicationContext.getType(name);
     }
 
     /**

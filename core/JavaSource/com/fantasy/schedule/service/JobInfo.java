@@ -79,7 +79,7 @@ public class JobInfo {
         this.running = running;
     }
 
-    public Class<? extends Job> getJobClass() {
+    public Class<Job> getJobClass() {
         return jobClass;
     }
 

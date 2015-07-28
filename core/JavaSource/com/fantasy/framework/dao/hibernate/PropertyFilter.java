@@ -147,8 +147,8 @@ public class PropertyFilter {
         return clazz.cast(ConvertUtils.convert(this.getPropertyValue(), clazz));
     }
 
-    public Class<?> getPropertyType() {
-        return this.propertyType;
+    public <T> Class<T> getPropertyType() {
+        return (Class<T>)this.propertyType;
     }
 
     public MatchType getMatchType() {
@@ -239,13 +239,13 @@ public class PropertyFilter {
     public static enum PropertyType {
         S(String.class), I(Integer.class), L(Long.class), N(Double.class), D(Date.class), B(Boolean.class), M(BigDecimal.class), E(Enum.class);
 
-        private Class<?> clazz;
+        private Class clazz;
 
-        private PropertyType(Class<?> clazz) {
+        PropertyType(Class<?> clazz) {
             this.clazz = clazz;
         }
 
-        public Class<?> getValue() {
+        public Class getValue() {
             return this.clazz;
         }
 

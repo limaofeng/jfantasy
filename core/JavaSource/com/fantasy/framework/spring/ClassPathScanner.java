@@ -70,8 +70,8 @@ public class ClassPathScanner implements ResourceLoaderAware {
      * @param anno        注解
      * @return 标注注解的Class
      */
-    public <T extends Annotation> Set<Class<?>> findAnnotationedClasses(String basepackage, Class<T> anno) {
-        Set<Class<?>> candidates = new LinkedHashSet<Class<?>>();
+    public <T extends Annotation,E> Set<Class<E>> findAnnotationedClasses(String basepackage, Class<T> anno) {
+        Set<Class<E>> candidates = new LinkedHashSet<Class<E>>();
         try {
             String packageSearchPath = "classpath*:" + ClassUtil.convertClassNameToResourcePath(basepackage) + "/" + this.resourcePattern;
             Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
@@ -82,7 +82,7 @@ public class ClassPathScanner implements ResourceLoaderAware {
                 }
                 try {
                     String clazzName = metadataReader.getClassMetadata().getClassName();
-                    candidates.add(Class.forName(clazzName));
+                    candidates.add((Class<E>) Class.forName(clazzName));
                     LOGGER.debug("Find Annotationed Class " + clazzName + "(@" + anno.getName() + ")");
                 } catch (ClassNotFoundException ignored) {
                     LOGGER.error(ignored.getMessage(),ignored);
@@ -107,9 +107,9 @@ public class ClassPathScanner implements ResourceLoaderAware {
      * @param interfaceClass 接口或者父类
      * @return class
      */
-    public Set<Class<?>> findInterfaceClasses(String basepackage, Class<?> interfaceClass) {
+    public <T,E> Set<Class<T>> findInterfaceClasses(String basepackage, Class<E> interfaceClass) {
 
-        Set<Class<?>> candidates = new LinkedHashSet<Class<?>>();
+        Set<Class<T>> candidates = new LinkedHashSet<Class<T>>();
         try {
             String packageSearchPath = "classpath*:" + ClassUtil.convertClassNameToResourcePath(basepackage) + "/" + this.resourcePattern;
             Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
@@ -123,7 +123,7 @@ public class ClassPathScanner implements ResourceLoaderAware {
                 try {
                     Class<?> clazz = Class.forName(clazzName);
                     if (interfaceClass.isAssignableFrom(clazz)) {
-                        candidates.add(clazz);
+                        candidates.add((Class<T>) clazz);
                     }
                 } catch (ClassNotFoundException localClassNotFoundException) {
                     LOGGER.error(localClassNotFoundException.getMessage(), localClassNotFoundException);

@@ -25,7 +25,7 @@ public class DynamicClassLoader extends ClassLoader {
 		super(parent);
 	}
 
-	public Class<?> loadClass(String classPath, String className) throws ClassNotFoundException {
+	public Class loadClass(String classPath, String className) throws ClassNotFoundException {
 		try {
 			String url = classPathParser(classPath) + classNameParser(className);
 			LOGGER.debug(url);
@@ -49,7 +49,7 @@ public class DynamicClassLoader extends ClassLoader {
 		return null;
 	}
 
-    public Class<?> loadClass(byte[] classData, String className) throws ClassNotFoundException {
+    public Class loadClass(byte[] classData, String className) throws ClassNotFoundException {
         return defineClass(noSuffix(className), classData, 0, classData.length);
     }
 
