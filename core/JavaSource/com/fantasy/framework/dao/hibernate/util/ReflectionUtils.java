@@ -123,15 +123,15 @@ public class ReflectionUtils {
     }
 
     @SuppressWarnings("unchecked")
-    public static <T> Class<T> getSuperClassGenricType(Class<?> clazz) {
+    public static <T> Class<T> getSuperClassGenricType(Class clazz) {
         return (Class<T>) getSuperClassGenricType(clazz, 0);
     }
 
-    public static Class<?> getInterfaceGenricType(Class<?> clazz, Class<?> interfaceClazz) {
+    public static Class getInterfaceGenricType(Class clazz, Class interfaceClazz) {
         return getInterfaceGenricType(clazz, interfaceClazz, 0);
     }
 
-    public static Class<?> getInterfaceGenricType(Class<?> clazz, Class<?> interfaceClazz, int index) {
+    public static Class getInterfaceGenricType(Class clazz, Class interfaceClazz, int index) {
         Type[] genTypes = clazz.getGenericInterfaces();
         for (Type genType : genTypes) {
             if (!(genType instanceof ParameterizedType)) {
@@ -153,7 +153,7 @@ public class ReflectionUtils {
         return Object.class;
     }
 
-    public static Class<?> getSuperClassGenricType(Class<?> clazz, int index) {
+    public static Class getSuperClassGenricType(Class clazz, int index) {
         Type genType = clazz.getGenericSuperclass();
         if (!(genType instanceof ParameterizedType)) {
             LOGGER.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");

@@ -1,6 +1,7 @@
 package com.fantasy.framework.dao.mybatis.proxy;
 
 import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.error.IgnoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.ibatis.binding.BindingException;
@@ -67,7 +68,7 @@ public class MyBatisMapperProxy implements InvocationHandler {
 		return result;
 	}
 
-	private Class<?> getDeclaringInterface(Class<?> declaringInterface, Method method) {
+	private Class getDeclaringInterface(Class declaringInterface, Method method) {
 		if (!this.sqlSession.getConfiguration().hasStatement(declaringInterface.getName() + "." + method.getName())) {
 			Class<?>[] declaringInterfaces = declaringInterface.getInterfaces();
 			for (Class<?> declaringinterface : declaringInterfaces) {
@@ -76,12 +77,12 @@ public class MyBatisMapperProxy implements InvocationHandler {
 					return declaringinterface;
 				}
 			}
-			throw new RuntimeException(declaringInterface.getName() + "." + method.getName() + "未正确配置!");
+			throw new IgnoreException(declaringInterface.getName() + "." + method.getName() + "未正确配置!");
 		}
 		return declaringInterface;
 	}
 
-	private Class<?> findDeclaringInterface(Object proxy, Method method) {
+	private Class findDeclaringInterface(Object proxy, Method method) {
 		Class<?> declaringInterface = null;
 		for (Class<?> iface : proxy.getClass().getInterfaces()) {
 			Method m = ReflectionUtils.findMethod(iface, method.getName(), method.getParameterTypes());

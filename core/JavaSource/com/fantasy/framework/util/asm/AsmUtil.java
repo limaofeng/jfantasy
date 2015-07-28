@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.asm;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.PathUtil;
@@ -35,23 +36,23 @@ public class AsmUtil implements Opcodes {
      * @param properties bean 属性
      * @return 新生成的 class
      */
-    public static Class<?> makeClass(String className, Property... properties) {
+    public static Class makeClass(String className, Property... properties) {
         return makeClass(className, Object.class.getName(), new Class[0], properties, new MethodInfo[0]);
     }
 
-    public static Class<?> makeClass(String className, Class[] interfaces, Property... properties) {
+    public static Class makeClass(String className, Class[] interfaces, Property... properties) {
         return makeClass(className, Object.class.getName(), interfaces, properties, new MethodInfo[0]);
     }
 
-    public static Class<?> makeClass(String className, String superClassName, Property... properties) {
+    public static Class makeClass(String className, String superClassName, Property... properties) {
         return makeClass(className, superClassName, new Class[0], properties, new MethodInfo[0]);
     }
 
-    public static Class<?> makeClass(String className, String superClassName, Class[] interfaces, Property... properties) {
+    public static Class makeClass(String className, String superClassName, Class[] interfaces, Property... properties) {
         return makeClass(className, superClassName, interfaces, properties, new MethodInfo[0]);
     }
 
-    public static Class<?> makeClass(String className, String superClassName, Class[] interfaces, Property[] properties, MethodInfo[] methodInfos) {
+    public static Class makeClass(String className, String superClassName, Class[] interfaces, Property[] properties, MethodInfo[] methodInfos) {
         ClassWriter cw = new ClassWriter(F_FULL);
 
         String newClassInternalName = className.replace('.', '/');
@@ -121,11 +122,11 @@ public class AsmUtil implements Opcodes {
                 return FantasyClassLoader.getClassLoader().loadClass(bytes, className);
             } catch (ClassNotFoundException ex) {
                 LOG.error(e.getMessage(), ex);
-                throw new RuntimeException(e.getMessage(),ex);
+                throw new IgnoreException(e.getMessage(),ex);
             }
         } catch (ClassNotFoundException e) {
             LOG.error(e.getMessage(), e);
-            throw new RuntimeException(e.getMessage());
+            throw new IgnoreException(e.getMessage());
         }
     }
 

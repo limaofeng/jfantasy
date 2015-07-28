@@ -21,15 +21,18 @@ public class PrimitiveTypeConverter extends DefaultTypeConverter {
 
     @SuppressWarnings("rawtypes")
     public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-        if (value != null && Date.class.isAssignableFrom(value.getClass()) && toType == String.class) {
-            return DateUtil.format((Date)value,"yyyy-MM-dd HH:mm:ss");
-        }else if (Date.class.isAssignableFrom(toType)) {
+        if (value == null) {
+            return super.convertValue(context, target, member, propertyName, value, toType);
+        }
+        if (Date.class.isAssignableFrom(value.getClass()) && toType == String.class) {
+            return DateUtil.format((Date) value, "yyyy-MM-dd HH:mm:ss");
+        } else if (Date.class.isAssignableFrom(toType)) {
             try {
                 DateFormat dateFormat = (DateFormat) ClassUtil.getParamAnno((Method) member);
                 return DateUtil.parse(StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value), dateFormat.pattern());
             } catch (RuntimeException e) {
-                LOG.error(e.getMessage(),e);
-                return ConvertUtils.convert(value,Date.class);
+                LOG.error(e.getMessage(), e);
+                return ConvertUtils.convert(value, Date.class);
             }
         } else if (ClassUtil.isArray(value)) {
             StringBuilder buffer = new StringBuilder();
@@ -41,14 +44,14 @@ public class PrimitiveTypeConverter extends DefaultTypeConverter {
             }
             return buffer.toString();
         } else if (ClassUtil.isArray(toType)) {
-            assert value != null;
             String[] array = StringUtil.tokenizeToStringArray(value.toString(), ";");
             Object ret = Array.newInstance(toType.getComponentType(), array.length);
             for (int i = 0; i < array.length; i++) {
                 Array.set(ret, i, this.convertValue(context, target, member, propertyName, array[i], toType.getComponentType()));
             }
             return ret;
+        }else{
+            return super.convertValue(context, target, member, propertyName, value, toType);
         }
-        return super.convertValue(context, target, member, propertyName, value, toType);
     }
 }

@@ -230,23 +230,4 @@ public class FTPFileManager implements FileManager {
 		}
 	}
 
-	public static void main(String[] args) throws IOException {
-		FTPFileManager fileManager = new FTPFileManager();
-
-		FTPService ftpService = new FTPService();
-		ftpService.setHostname("127.0.0.1");
-		ftpService.setUsername("lmf");
-		ftpService.setPassword("123456");
-		ftpService.setControlEncoding("gbk");
-
-		fileManager.setFtpService(ftpService);
-
-		FileItem fileItem = fileManager.getFileItem("/urcbweb");
-		LOGGER.debug(fileItem.getName() + "\t" + fileItem.getAbsolutePath());
-		for (FileItem f : fileItem.listFileItems()) {
-			LOGGER.debug(f.getName() + "\t" + f.getAbsolutePath());
-		}
-
-	}
-
 }

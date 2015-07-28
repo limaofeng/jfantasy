@@ -70,8 +70,8 @@ public class ClassPathScanner implements ResourceLoaderAware {
      * @param anno        注解
      * @return 标注注解的Class
      */
-    public <T extends Annotation> Set<Class<?>> findAnnotationedClasses(String basepackage, Class<T> anno) {
-        Set<Class<?>> candidates = new LinkedHashSet<Class<?>>();
+    public <T extends Annotation> Set<Class> findAnnotationedClasses(String basepackage, Class<T> anno) {
+        Set<Class> candidates = new LinkedHashSet<Class>();
         try {
             String packageSearchPath = "classpath*:" + ClassUtil.convertClassNameToResourcePath(basepackage) + "/" + this.resourcePattern;
             Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);
@@ -107,9 +107,9 @@ public class ClassPathScanner implements ResourceLoaderAware {
      * @param interfaceClass 接口或者父类
      * @return class
      */
-    public Set<Class<?>> findInterfaceClasses(String basepackage, Class<?> interfaceClass) {
+    public <T> Set<Class> findInterfaceClasses(String basepackage, Class<T> interfaceClass) {
 
-        Set<Class<?>> candidates = new LinkedHashSet<Class<?>>();
+        Set<Class> candidates = new LinkedHashSet<Class>();
         try {
             String packageSearchPath = "classpath*:" + ClassUtil.convertClassNameToResourcePath(basepackage) + "/" + this.resourcePattern;
             Resource[] resources = this.resourcePatternResolver.getResources(packageSearchPath);

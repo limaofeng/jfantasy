@@ -65,7 +65,7 @@ public class DefaultValidatorContext implements ValidatorContext {
             for (Element ele : element.getChildren()) {
                 params.put(ele.getName(), ele.getTextTrim());
             }
-            if (params.size() == 0) {
+            if (params.isEmpty()) {
                 return ClassUtil.newInstance(classel);
             }
             DefaultParamsValidator defaultParamsValidator = ClassUtil.newInstance(classel);

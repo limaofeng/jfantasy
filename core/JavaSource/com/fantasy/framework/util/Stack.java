@@ -41,10 +41,10 @@ public class Stack<T> {
 	/**
 	 * 判断栈 是否为空
 	 * 
-	 * @return
+	 * @return boolean
 	 */
 	public boolean empty() {
-		return list.size() == 0;
+		return list.isEmpty();
 	}
 
 	/**

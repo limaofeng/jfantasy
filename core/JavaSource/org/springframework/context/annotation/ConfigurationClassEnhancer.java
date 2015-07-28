@@ -80,7 +80,7 @@ class ConfigurationClassEnhancer {
      * container-aware callbacks capable of respecting scoping and other bean semantics.
      * @return the enhanced subclass
      */
-    public Class<?> enhance(Class<?> configClass) {
+    public Class enhance(Class configClass) {
         if (EnhancedConfiguration.class.isAssignableFrom(configClass)) {
             if (LOGGER.isDebugEnabled()) {
                 LOGGER.debug(String.format("Ignoring request to enhance %s as it has " +
@@ -119,7 +119,7 @@ class ConfigurationClassEnhancer {
      * Uses enhancer to generate a subclass of superclass,
      * ensuring that callbacks are registered for the new subclass.
      */
-    private Class<?> createClass(Enhancer enhancer) {
+    private Class createClass(Enhancer enhancer) {
         Class<?> subclass = enhancer.createClass();
         // Registering callbacks statically (as opposed to thread-local)
         // is critical for usage in an OSGi environment (SPR-5932)...
@@ -184,7 +184,7 @@ class ConfigurationClassEnhancer {
             throw new IllegalStateException("No callback available for method " + method.getName());
         }
 
-        public Class<?>[] getCallbackTypes() {
+        public Class[] getCallbackTypes() {
             return this.callbackTypes;
         }
     }

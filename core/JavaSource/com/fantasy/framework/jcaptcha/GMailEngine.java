@@ -17,33 +17,34 @@ import com.octo.captcha.component.word.wordgenerator.ComposeDictionaryWordGenera
 import com.octo.captcha.component.word.wordgenerator.WordGenerator;
 import com.octo.captcha.engine.image.ListImageCaptchaEngine;
 import com.octo.captcha.image.gimpy.GimpyFactory;
+
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.image.ImageFilter;
 
 public class GMailEngine extends ListImageCaptchaEngine {
 
-	protected void buildInitialFactories() {
-		int minWordLength = 4;
-		int maxWordLength = 5;
-		int fontSize = 15;
-		int imageWidth = 54;
-		int imageHeight = 20;
+    protected void buildInitialFactories() {
+        int minWordLength = 4;
+        int maxWordLength = 5;
+        int fontSize = 15;
+        int imageWidth = 54;
+        int imageHeight = 20;
 
-		WordGenerator dictionnaryWords = new ComposeDictionaryWordGenerator(new FileDictionary("toddlist"));
+        WordGenerator dictionnaryWords = new ComposeDictionaryWordGenerator(new FileDictionary("toddlist"));
 
-		TextPaster randomPaster = new DecoratedRandomTextPaster(Integer.valueOf(minWordLength), Integer.valueOf(maxWordLength), new RandomListColorGenerator(new Color[] { new Color(23, 170, 27), new Color(220, 34, 11), new Color(23, 67, 172) }), new TextDecorator[0]);
+        TextPaster randomPaster = new DecoratedRandomTextPaster(Integer.valueOf(minWordLength), Integer.valueOf(maxWordLength), new RandomListColorGenerator(new Color[]{new Color(23, 170, 27), new Color(220, 34, 11), new Color(23, 67, 172)}), new TextDecorator[0]);
 
-		BackgroundGenerator background = new UniColorBackgroundGenerator(Integer.valueOf(imageWidth), Integer.valueOf(imageHeight), Color.white);
-		FontGenerator font = new RandomFontGenerator(Integer.valueOf(fontSize), Integer.valueOf(fontSize), new Font[] { new Font("nyala", 1, fontSize), new Font("Bell MT", 0, fontSize), new Font("Credit valley", 1, fontSize) });
+        BackgroundGenerator background = new UniColorBackgroundGenerator(Integer.valueOf(imageWidth), Integer.valueOf(imageHeight), Color.white);
+        FontGenerator font = new RandomFontGenerator(Integer.valueOf(fontSize), Integer.valueOf(fontSize), new Font[]{new Font("nyala", 1, fontSize), new Font("Bell MT", 0, fontSize), new Font("Credit valley", 1, fontSize)});
 
-		ImageDeformation postDef = new ImageDeformationByFilters(new ImageFilter[0]);
-		ImageDeformation backDef = new ImageDeformationByFilters(new ImageFilter[0]);
-		ImageDeformation textDef = new ImageDeformationByFilters(new ImageFilter[0]);
+        ImageDeformation postDef = new ImageDeformationByFilters(new ImageFilter[0]);
+        ImageDeformation backDef = new ImageDeformationByFilters(new ImageFilter[0]);
+        ImageDeformation textDef = new ImageDeformationByFilters(new ImageFilter[0]);
 
-		WordToImage word2image = new DeformedComposedWordToImage(font, background, randomPaster, backDef, textDef, postDef);
+        WordToImage word2image = new DeformedComposedWordToImage(font, background, randomPaster, backDef, textDef, postDef);
 
-		addFactory(new GimpyFactory(dictionnaryWords, word2image));
-	}
+        addFactory(new GimpyFactory(dictionnaryWords, word2image));
+    }
 
 }

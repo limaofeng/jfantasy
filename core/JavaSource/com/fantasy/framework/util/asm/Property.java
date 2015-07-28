@@ -131,7 +131,7 @@ public class Property {
         return name;
     }
 
-    public Class<?> getType() {
+    public Class getType() {
         return type;
     }
 
@@ -143,7 +143,7 @@ public class Property {
         return read;
     }
 
-    public Class<?>[] getGenericTypes() {
+    public Class[] getGenericTypes() {
         return genericTypes;
     }
 

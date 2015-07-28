@@ -94,10 +94,7 @@ public final class ObjectUtil {
         return toString(objs, null, sign);
     }
 
-    public static <T> List<T> filter(List<T> list, String fieldName, Object[] values) {
-        if (values.length == 1 && ClassUtil.isArray(Array.get(values, 0))) {
-            values = (Object[]) Array.get(values, 0);
-        }
+    public static <T> List<T> filter(List<T> list, String fieldName, Object... values) {
         List<T> filter = new ArrayList<T>();
         for (Object v : values) {
             T t = find(list, fieldName, v);
@@ -320,7 +317,7 @@ public final class ObjectUtil {
     public static <T> int indexOf(T[] objs, T o) {
         for (int i = 0; i < objs.length; i++) {
             if (ClassUtil.isList(o)) {
-                if (!ClassUtil.isList(objs[i]) || ((List<Object>) o).size() == 0) {
+                if (!ClassUtil.isList(objs[i]) || ((List<Object>) o).isEmpty()) {
                     continue;
                 }
                 if (((List<Object>) o).size() != ((List<Object>) objs[i]).size()) {

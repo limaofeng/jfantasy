@@ -39,7 +39,7 @@ public final class Dom4jUtil {
         }
 		// 获取属性
 		List<Attribute> attrs = root.attributes();
-		if (attrs != null && attrs.size() > 0) {
+		if (attrs != null && !attrs.isEmpty()) {
 			LOGGER.error(prefix);
 			for (Attribute attr : attrs) {
 				LOGGER.error(attr.getValue() + " ");

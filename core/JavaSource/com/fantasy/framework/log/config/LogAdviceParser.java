@@ -1,9 +1,5 @@
 package com.fantasy.framework.log.config;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-
 import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.parsing.ReaderContext;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -13,15 +9,14 @@ import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.AbstractSingleBeanDefinitionParser;
 import org.springframework.beans.factory.xml.ParserContext;
 import org.springframework.cache.annotation.AnnotationCacheOperationSource;
-import org.springframework.cache.interceptor.CacheEvictOperation;
-import org.springframework.cache.interceptor.CacheInterceptor;
-import org.springframework.cache.interceptor.CacheOperation;
-import org.springframework.cache.interceptor.CachePutOperation;
-import org.springframework.cache.interceptor.CacheableOperation;
-import org.springframework.cache.interceptor.NameMatchCacheOperationSource;
+import org.springframework.cache.interceptor.*;
 import org.springframework.util.StringUtils;
 import org.springframework.util.xml.DomUtils;
 import org.w3c.dom.Element;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 public class LogAdviceParser extends AbstractSingleBeanDefinitionParser {
 
@@ -93,7 +88,7 @@ public class LogAdviceParser extends AbstractSingleBeanDefinitionParser {
 	private static final String DEFS_ELEMENT = "caching";
 
 	@Override
-	protected Class<?> getBeanClass(Element element) {
+	protected Class<CacheInterceptor> getBeanClass(Element element) {
 		return CacheInterceptor.class;
 	}
 
@@ -103,7 +98,7 @@ public class LogAdviceParser extends AbstractSingleBeanDefinitionParser {
 		LogNamespaceHandler.parseKeyGenerator(element, builder.getBeanDefinition());
 
 		List<Element> cacheDefs = DomUtils.getChildElementsByTagName(element, DEFS_ELEMENT);
-		if (cacheDefs.size() >= 1) {
+		if (!cacheDefs.isEmpty()) {
 			// Using attributes source.
 			List<RootBeanDefinition> attributeSourceDefinitions = parseDefinitionsSources(cacheDefs, parserContext);
 			builder.addPropertyValue("cacheOperationSources", attributeSourceDefinitions);

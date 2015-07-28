@@ -43,5 +43,27 @@ public class Renderer extends BaseBusEntity {
         this.id = id;
     }
 
+    public String getUpdateTemplate() {
+        return updateTemplate;
+    }
 
+    public void setUpdateTemplate(String updateTemplate) {
+        this.updateTemplate = updateTemplate;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getInsertTemplate() {
+        return insertTemplate;
+    }
+
+    public void setInsertTemplate(String insertTemplate) {
+        this.insertTemplate = insertTemplate;
+    }
 }

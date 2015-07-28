@@ -75,11 +75,11 @@ public class MethodProxy {
         return new MethodProxy(method);
     }
 
-    public Class<?>[] getParameterTypes() {
+    public Class[] getParameterTypes() {
         return this.parameterTypes;
     }
 
-    public Class<?> getReturnType() {
+    public Class getReturnType() {
         return this.returnType;
     }
 

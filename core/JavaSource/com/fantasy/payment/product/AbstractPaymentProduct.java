@@ -57,7 +57,7 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
 
     protected static Map<String, String> paraFilter(Map<String, String> sArray) {
         Map<String, String> result = new HashMap<String, String>();
-        if (sArray == null || sArray.size() <= 0) {
+        if (sArray == null || sArray.isEmpty()) {
             return result;
         }
         for (String key : sArray.keySet()) {

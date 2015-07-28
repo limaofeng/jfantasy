@@ -8,6 +8,8 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 import ognl.DefaultTypeConverter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Array;
@@ -15,6 +17,8 @@ import java.lang.reflect.Member;
 import java.util.Map;
 
 public class FileDetailTypeConverter extends DefaultTypeConverter {
+
+    private final static Log LOG = LogFactory.getLog(FileDetailTypeConverter.class);
 
     @Autowired
     private FileService fileService;
@@ -58,7 +62,11 @@ public class FileDetailTypeConverter extends DefaultTypeConverter {
                 if (fileDetail == null) {
                     continue;
                 }
-                fileDetails[i] = fileDetail.clone();
+                try {
+                    fileDetails[i] = (FileDetail)fileDetail.clone();
+                } catch (CloneNotSupportedException e) {
+                    LOG.error(e.getMessage(),e);
+                }
             }
             return fileDetails;
         } else if (value instanceof FileDetail && toType == String.class) {

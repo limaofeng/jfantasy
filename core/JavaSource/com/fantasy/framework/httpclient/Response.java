@@ -301,7 +301,7 @@ public class Response {
      */
     public String getCookie(String name) {
         for (Cookie cookie : this.getCookies()) {
-            if (cookie.getName().toUpperCase().equals(name.toUpperCase())) {
+            if (cookie.getName().equalsIgnoreCase(name)) {
                 return cookie.getValue();
             }
         }

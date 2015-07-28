@@ -53,7 +53,7 @@ public class LimitInterceptor implements Interceptor {
 
     public Object intercept(Invocation invocation) throws Throwable {
         try {
-            Pager<?> pager = getPager(invocation.getArgs()[PARAMETER_INDEX]);
+            Pager pager = getPager(invocation.getArgs()[PARAMETER_INDEX]);
             if (ObjectUtil.isNotNull(pager)) {// 如果参数中有Pager对象，执行翻页逻辑,否则按普通逻辑处理查询
                 return processIntercept(invocation, invocation.getArgs());
             }
@@ -74,7 +74,7 @@ public class LimitInterceptor implements Interceptor {
     private Object processIntercept(Invocation invocation, final Object[] queryArgs) throws Throwable {
         MappedStatement ms = (MappedStatement) queryArgs[MAPPED_STATEMENT_INDEX];
         Map<String, Object> parameter = (Map<String, Object>) queryArgs[PARAMETER_INDEX];
-        Pager<?> pager = getPager(parameter);
+        Pager pager = getPager(parameter);
         if (pager.getFirst() == 0) {//TODO 如果设置了，数据开始的位置，不通过页面计算开始位置,这个位置这样判断会不会有问题勒
             pager.setTotalCount(executeForCount(ms, parameter));
         }
@@ -88,11 +88,11 @@ public class LimitInterceptor implements Interceptor {
      * @param parameterObject Object
      * @return Pager
      */
-    private Pager<?> getPager(Object parameterObject) throws Throwable {
-        Pager<?> pager = null;
+    private Pager getPager(Object parameterObject) throws Throwable {
+        Pager pager = null;
         if (ObjectUtil.isNotNull(parameterObject) && Map.class.isAssignableFrom(parameterObject.getClass())) {
             Map<String, Object> param = (Map<String, Object>) parameterObject;
-            pager = param.containsKey("pager") ? (Pager<?>) param.get("pager") : null;
+            pager = param.containsKey("pager") ? (Pager) param.get("pager") : null;
         }
         return pager;
     }

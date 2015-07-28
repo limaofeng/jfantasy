@@ -284,8 +284,8 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
         return this.sqlSessionFactory;
     }
 
-    public Class<? extends SqlSessionFactory> getObjectType() {
-        return this.sqlSessionFactory == null ? SqlSessionFactory.class : this.sqlSessionFactory.getClass();
+    public Class<SqlSessionFactory> getObjectType() {
+        return this.sqlSessionFactory == null ? SqlSessionFactory.class : (Class<SqlSessionFactory>)this.sqlSessionFactory.getClass();
     }
 
     public void setDialect(Dialect dialect) {

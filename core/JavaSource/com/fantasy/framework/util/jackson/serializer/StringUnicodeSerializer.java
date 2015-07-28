@@ -13,27 +13,27 @@ import java.io.IOException;
 
 public class StringUnicodeSerializer extends JsonSerializer<String> {
 
-	private final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
-	private final int[] ESCAPE_CODES = CharTypes.get7BitOutputEscapes();
+    private final char[] HEX_CHARS = "0123456789ABCDEF".toCharArray();
+    private final int[] ESCAPE_CODES = CharTypes.get7BitOutputEscapes();
 
-	private void writeUnicodeEscape(JsonGenerator gen, char c) throws IOException {
-		gen.writeRaw('\\');
-		gen.writeRaw('u');
-		gen.writeRaw(HEX_CHARS[(c >> 12) & 0xF]);
-		gen.writeRaw(HEX_CHARS[(c >> 8) & 0xF]);
-		gen.writeRaw(HEX_CHARS[(c >> 4) & 0xF]);
-		gen.writeRaw(HEX_CHARS[c & 0xF]);
-	}
+    private void writeUnicodeEscape(JsonGenerator gen, char c) throws IOException {
+        gen.writeRaw('\\');
+        gen.writeRaw('u');
+        gen.writeRaw(HEX_CHARS[(c >> 12) & 0xF]);
+        gen.writeRaw(HEX_CHARS[(c >> 8) & 0xF]);
+        gen.writeRaw(HEX_CHARS[(c >> 4) & 0xF]);
+        gen.writeRaw(HEX_CHARS[c & 0xF]);
+    }
 
-	private void writeShortEscape(JsonGenerator gen, char c) throws IOException {
-		gen.writeRaw('\\');
-		gen.writeRaw(c);
-	}
+    private void writeShortEscape(JsonGenerator gen, char c) throws IOException {
+        gen.writeRaw('\\');
+        gen.writeRaw(c);
+    }
 
-	@Override
-	public void serialize(String str, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
-		int status = ((JsonWriteContext) gen.getOutputContext()).writeValue();
-		switch (status) {
+    @Override
+    public void serialize(String str, JsonGenerator gen, SerializerProvider provider) throws IOException, JsonProcessingException {
+        int status = ((JsonWriteContext) gen.getOutputContext()).writeValue();
+        switch (status) {
             case JsonWriteContext.STATUS_OK_AFTER_COLON:
                 gen.writeRaw(':');
                 break;

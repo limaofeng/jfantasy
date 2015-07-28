@@ -313,7 +313,7 @@ public class DateUtil {
                 smallCalendar.clear(Calendar.DATE);
                 bigCalendar.clear(Calendar.DATE);
                 break;
-            case Calendar.DATE:
+            case Calendar.DATE://NOSONAR
                 smallCalendar.clear(Calendar.HOUR);
                 smallCalendar.clear(Calendar.HOUR_OF_DAY);
                 bigCalendar.clear(Calendar.HOUR);
@@ -355,12 +355,6 @@ public class DateUtil {
         between = Math.abs(between);
         long day = Calendar.DATE == field ? field : 0, hour = (field == Calendar.HOUR_OF_DAY || field == Calendar.HOUR) ? between : 0, minute = (field == Calendar.MINUTE) ? between : 0, second = (field == Calendar.SECOND) ? between : 0;
         switch (field) {
-            case Calendar.DATE:
-                break;
-            case Calendar.MONTH:
-                break;
-            case Calendar.YEAR:
-                throw new RuntimeException("不支持的时间转换格式:" + field);
             case Calendar.SECOND:
                 minute = second / 60;
                 second = second % 60;
@@ -375,6 +369,8 @@ public class DateUtil {
                 day = hour / 24;
                 hour = hour % 24;
                 break;
+            default://Calendar.DATE or Calendar.MONTH or Calendar.YEAR
+                throw new IgnoreException("不支持的时间转换格式:" + field);
         }
         final String days = String.valueOf(day), hours = String.valueOf(hour), minutes = String.valueOf(minute), seconds = String.valueOf(second);
         String retVal = RegexpUtil.replace(format, "dd|HH|mm|ss", new RegexpUtil.AbstractReplaceCallBack() {

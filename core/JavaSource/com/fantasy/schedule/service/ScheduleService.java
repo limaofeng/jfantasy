@@ -86,16 +86,16 @@ public class ScheduleService {
         }
     }
 
-    public List<? extends Trigger> getTriggers(JobKey jobKey) {
+    public List<Trigger> getTriggers(JobKey jobKey) {
         try {
-            return this.scheduler.getTriggersOfJob(jobKey);
+            return (List<Trigger>) this.scheduler.getTriggersOfJob(jobKey);
         } catch (SchedulerException e) {
             LOGGER.error(e.getMessage(), e);
             return new ArrayList<Trigger>();
         }
     }
 
-    public List<? extends TriggerKey> getTriggers() {
+    public List<TriggerKey> getTriggers() {
         List<TriggerKey> triggerKeys = new ArrayList<TriggerKey>();
         try {
             for (String group : this.scheduler.getTriggerGroupNames()) {
@@ -109,7 +109,7 @@ public class ScheduleService {
         }
     }
 
-    public List<? extends TriggerKey> getTriggers(GroupMatcher<TriggerKey> matcher) {
+    public List<TriggerKey> getTriggers(GroupMatcher<TriggerKey> matcher) {
         List<TriggerKey> triggerKeys = new ArrayList<TriggerKey>();
         try {
             triggerKeys.addAll(this.scheduler.getTriggerKeys(matcher));
