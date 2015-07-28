@@ -35,7 +35,7 @@ public class EmbedByFieldHandler extends ByFieldHandler {
                 if (bs.length > 0) {
                     boost = bs[i];
                 }
-                if ((this.obj instanceof List<?>)) {
+                if (this.obj instanceof List<?>) {
                     processList((List<?>) this.obj, doc, analyze, store, boost);
                     break;
                 }

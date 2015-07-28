@@ -31,7 +31,7 @@ public class DataSourceTransactionManager extends AbstractPlatformTransactionMan
 	}
 
 	public void setDataSource(DataSource dataSource) {
-		if ((dataSource instanceof TransactionAwareDataSourceProxy)){
+		if (dataSource instanceof TransactionAwareDataSourceProxy){
             this.dataSource = ((TransactionAwareDataSourceProxy) dataSource).getTargetDataSource();
         }else{
             this.dataSource = dataSource;

@@ -82,7 +82,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 				parent = node;
 				prev = null;
 				ni = 0;
-				node = node._children == null ? null : node._children[(c % this._width)];
+				node = node._children == null ? null : node._children[c % this._width];
 			}
 
 			while (node != null) {
@@ -116,8 +116,8 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 				if (parent._children == null){
                     parent._children = new Node[this._width];
                 }
-				parent._children[(c % this._width)] = node;
-				int oi = node._ochar != null ? (node._ochar[0] % this._width) : 0;
+				parent._children[c % this._width] = node;
+				int oi = node._ochar != null ? node._ochar[0] % this._width : 0;
 				if ((node._ochar != null) && (node._char[0] % this._width != oi)) {
 					if (parent._children[oi] == null) {
 						parent._children[oi] = node;
@@ -152,7 +152,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 		if (key == null){
             return this._nullValue;
         }
-		if ((key instanceof String)){
+		if (key instanceof String){
             return get((String) key);
         }
 		return get(key.toString());
@@ -181,7 +181,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 
 			if (ni == -1) {
 				ni = 0;
-				node = node._children == null ? null : node._children[(c % this._width)];
+				node = node._children == null ? null : node._children[c % this._width];
 			}
 			while (true) {
 				if (node != null) {
@@ -221,11 +221,11 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 		int ni = -1;
 
 		for (int i = 0; i < length; i++) {
-			char c = key[(offset + i)];
+			char c = key[offset + i];
 
 			if (ni == -1) {
 				ni = 0;
-				node = node._children == null ? null : node._children[(c % this._width)];
+				node = node._children == null ? null : node._children[c % this._width];
 			}
 			while (true) {
 				if (node != null) {
@@ -266,12 +266,12 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 		int ni = -1;
 
 		for (int i = 0; i < maxLength; i++) {
-			char c = (char) key[(offset + i)];
+			char c = (char) key[offset + i];
 
 			if (ni == -1) {
 				ni = 0;
 
-				Node<V> child = node._children == null ? null : node._children[(c % this._width)];
+				Node<V> child = node._children == null ? null : node._children[c % this._width];
 
 				if ((child == null) && (i > 0)){
                     return node;
@@ -329,7 +329,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 
 			if (ni == -1) {
 				ni = 0;
-				node = node._children == null ? null : node._children[(c % this._width)];
+				node = node._children == null ? null : node._children[c % this._width];
 			}
 			while (true) {
 				if (node != null) {
@@ -490,9 +490,9 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			}
 			split._children = this._children;
 			this._children = new Node[map._width];
-			this._children[(split._char[0] % map._width)] = split;
-			if ((split._ochar != null) && (this._children[(split._ochar[0] % map._width)] != split)) {
-				this._children[(split._ochar[0] % map._width)] = split;
+			this._children[split._char[0] % map._width] = split;
+			if ((split._ochar != null) && (this._children[split._ochar[0] % map._width] != split)) {
+				this._children[split._ochar[0] % map._width] = split;
 			}
 			return split;
 		}

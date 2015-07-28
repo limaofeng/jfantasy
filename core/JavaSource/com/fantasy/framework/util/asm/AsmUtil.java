@@ -142,12 +142,12 @@ public class AsmUtil implements Opcodes {
 
         // set方法
         if (property.isWrite()) {
-            makeMethod(classWriter, "set" + StringUtil.upperCaseFirst(fieldName), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(property.getType())}), property.getGenericTypes().length != 0 ? ("(" + getSignature(property.getType(), property.getGenericTypes()) + ")V") : null, property.getSetMethodCreator());
+            makeMethod(classWriter, "set" + StringUtil.upperCaseFirst(fieldName), Type.getMethodDescriptor(Type.getReturnType("V"), new Type[]{Type.getType(property.getType())}), property.getGenericTypes().length != 0 ? "(" + getSignature(property.getType(), property.getGenericTypes()) + ")V" : null, property.getSetMethodCreator());
         }
 
         // get方法
         if (property.isRead()) {
-            makeMethod(classWriter, (boolean.class == property.getType() ? "is" : "get") + StringUtil.upperCaseFirst(fieldName), Type.getMethodDescriptor(Type.getType(property.getType()), new Type[0]), property.getGenericTypes().length != 0 ? ("()" + getSignature(property.getType(), property.getGenericTypes())) : null, property.getGetMethodCreator());
+            makeMethod(classWriter, (boolean.class == property.getType() ? "is" : "get") + StringUtil.upperCaseFirst(fieldName), Type.getMethodDescriptor(Type.getType(property.getType()), new Type[0]), property.getGenericTypes().length != 0 ? "()" + getSignature(property.getType(), property.getGenericTypes()) : null, property.getGetMethodCreator());
         }
     }
 

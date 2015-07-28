@@ -45,6 +45,6 @@ public class TemplateUtil {
     }
 
     public String toSimpleJavaType(String javaType) {
-	return javaType.split("\\.")[(javaType.split("\\.").length - 1)];
+	return javaType.split("\\.")[javaType.split("\\.").length - 1];
     }
 }

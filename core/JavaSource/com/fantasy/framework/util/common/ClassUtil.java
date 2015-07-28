@@ -64,7 +64,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
      * @return class
      */
     public static <T> Class<T> getRealClass(T target) {
-        if ((target instanceof Class<?>)) {
+        if (target instanceof Class<?>) {
             return (Class<T>) target;
         }
         return (Class<T>) getRealClass(target.getClass());
@@ -264,7 +264,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static Class<?> getMethodGenericReturnType(Method method, int index) {
         Type returnType = method.getGenericReturnType();
-        if ((returnType instanceof ParameterizedType)) {
+        if (returnType instanceof ParameterizedType) {
             ParameterizedType type = (ParameterizedType) returnType;
             Type[] typeArguments = type.getActualTypeArguments();
             if ((index >= typeArguments.length) || (index < 0)) {
@@ -294,7 +294,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             throw new IgnoreException("你输入的索引" + (index < 0 ? "不能小于0" : "超出了参数的总数"));
         }
         Type genericParameterType = genericParameterTypes[index];
-        if ((genericParameterType instanceof ParameterizedType)) {
+        if (genericParameterType instanceof ParameterizedType) {
             ParameterizedType aType = (ParameterizedType) genericParameterType;
             Type[] parameterArgTypes = aType.getActualTypeArguments();
             for (Type parameterArgType : parameterArgTypes) {
@@ -310,7 +310,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         Type[] genericParameterTypes = method.getGenericParameterTypes();
         for (int i = 0; i < genericParameterTypes.length; i++) {
             Type genericParameterType = genericParameterTypes[i];
-            if ((genericParameterType instanceof ParameterizedType)) {
+            if (genericParameterType instanceof ParameterizedType) {
                 ParameterizedType aType = (ParameterizedType) genericParameterType;
                 Type[] parameterArgTypes = aType.getActualTypeArguments();
                 for (Type parameterArgType : parameterArgTypes) {
@@ -342,7 +342,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
 
     public static Class<?> getFieldGenericType(Field field, int index) {
         Type genericFieldType = field.getGenericType();
-        if ((genericFieldType instanceof ParameterizedType)) {
+        if (genericFieldType instanceof ParameterizedType) {
             ParameterizedType aType = (ParameterizedType) genericFieldType;
             Type[] fieldArgTypes = aType.getActualTypeArguments();
             if ((index >= fieldArgTypes.length) || (index < 0)) {

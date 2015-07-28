@@ -47,7 +47,7 @@ public abstract class AbstractBuffer implements Buffer {
 
     public ByteArrayBuffer duplicate(int access) {
         Buffer b = buffer();
-        if ((b instanceof Buffer.CaseInsensitve)) {
+        if (b instanceof Buffer.CaseInsensitve) {
             return new ByteArrayBuffer.CaseInsensitive(asArray(), 0, length(), access);
         }
         return new ByteArrayBuffer(asArray(), 0, length(), access);
@@ -128,7 +128,7 @@ public abstract class AbstractBuffer implements Buffer {
         }
         Buffer b = (Buffer) obj;
 
-        if (((this instanceof Buffer.CaseInsensitve)) || ((b instanceof Buffer.CaseInsensitve))) {
+        if ((this instanceof Buffer.CaseInsensitve) || (b instanceof Buffer.CaseInsensitve)) {
             return equalsIgnoreCase(b);
         }
 
@@ -136,7 +136,7 @@ public abstract class AbstractBuffer implements Buffer {
             return false;
         }
 
-        if ((this._hash != 0) && ((obj instanceof AbstractBuffer))) {
+        if ((this._hash != 0) && (obj instanceof AbstractBuffer)) {
             AbstractBuffer ab = (AbstractBuffer) obj;
             if ((ab._hash != 0) && (this._hash != ab._hash)){
                 return false;
@@ -164,7 +164,7 @@ public abstract class AbstractBuffer implements Buffer {
         if (b.length() != length()){
             return false;
         }
-        if ((this._hash != 0) && ((b instanceof AbstractBuffer))) {
+        if ((this._hash != 0) && (b instanceof AbstractBuffer)) {
             AbstractBuffer ab = (AbstractBuffer) b;
             if ((ab._hash != 0) && (this._hash != ab._hash)){
                 return false;
@@ -345,12 +345,12 @@ public abstract class AbstractBuffer implements Buffer {
         } else if (srcArray != null) {
             int s = src.getIndex();
             for (int i = 0; i < length; i++){
-                poke(index++, srcArray[(s++)]);
+                poke(index++, srcArray[s++]);
             }
         } else if (dstArray != null) {
             int s = src.getIndex();
             for (int i = 0; i < length; i++){
-                dstArray[(index++)] = src.peek(s++);
+                dstArray[index++] = src.peek(s++);
             }
         } else {
             int s = src.getIndex();
@@ -374,7 +374,7 @@ public abstract class AbstractBuffer implements Buffer {
         } else {
             int s = offset;
             for (int i = 0; i < length; i++){
-                poke(index++, b[(s++)]);
+                poke(index++, b[s++]);
             }
         }
         return length;
@@ -583,7 +583,7 @@ public abstract class AbstractBuffer implements Buffer {
                 return -1;
             }
             int p = put(buf, 0, l);
-            assert (l == p);
+            assert l == p;
             s -= l;
         }
         return total;

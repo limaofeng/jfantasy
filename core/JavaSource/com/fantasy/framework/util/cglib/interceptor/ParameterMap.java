@@ -14,7 +14,7 @@ public class ParameterMap extends HashMap<String, Object> {
 
     @SuppressWarnings("unchecked")
     public Object put(String key, Object value) {
-        if ((value instanceof String)) {
+        if (value instanceof String) {
             if (isArray(key)) {
                 String propertyName = getPropertyName(key);
                 String name = RegexpUtil.replaceFirst(key, "\\[.*?\\]", "");

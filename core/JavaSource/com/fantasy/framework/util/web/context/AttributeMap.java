@@ -30,7 +30,7 @@ public class AttributeMap implements Map {
 	}
 
 	public boolean containsKey(Object key) {
-		return (get(key) != null);
+		return get(key) != null;
 	}
 
 	public boolean containsValue(Object value) {

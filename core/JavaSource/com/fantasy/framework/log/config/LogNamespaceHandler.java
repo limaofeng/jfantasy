@@ -12,7 +12,7 @@ public class LogNamespaceHandler extends NamespaceHandlerSupport {
 	static final String DEFAULT_LOG_MANAGER_BEAN_NAME = "logManager";
 
 	static String extractCacheManager(Element element) {
-		return (element.hasAttribute(LogNamespaceHandler.LOG_MANAGER_ATTRIBUTE) ? element.getAttribute(LogNamespaceHandler.LOG_MANAGER_ATTRIBUTE) : LogNamespaceHandler.DEFAULT_LOG_MANAGER_BEAN_NAME);
+		return element.hasAttribute(LogNamespaceHandler.LOG_MANAGER_ATTRIBUTE) ? element.getAttribute(LogNamespaceHandler.LOG_MANAGER_ATTRIBUTE) : LogNamespaceHandler.DEFAULT_LOG_MANAGER_BEAN_NAME;
 	}
 
 	static BeanDefinition parseKeyGenerator(Element element, BeanDefinition def) {

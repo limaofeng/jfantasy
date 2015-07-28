@@ -98,7 +98,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
 									return false;
 								}
 								Entry entry = (Entry) obj;
-								return ((key == null) ? (entry.getKey() == null) : key.equals(entry.getKey())) && ((value == null) ? (entry.getValue() == null) : value.equals(entry.getValue()));
+								return (key == null) ? (entry.getKey() == null) : key.equals(entry.getKey()) && (value == null) ? (entry.getValue() == null) : value.equals(entry.getValue());
 							}
 
 							public int hashCode() {

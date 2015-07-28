@@ -159,7 +159,7 @@ public class MyBatisMapperMethod {
     private String getParamNameFromAnnotation(int i, String paramName) {
         Object[] paramAnnos = this.method.getParameterAnnotations()[i];
         for (Object paramAnno : paramAnnos) {
-            if ((paramAnno instanceof Param)) {
+            if (paramAnno instanceof Param) {
                 this.hasNamedParameters = true;
                 paramName = ((Param) paramAnno).value();
             }

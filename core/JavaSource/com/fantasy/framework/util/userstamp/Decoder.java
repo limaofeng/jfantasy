@@ -50,7 +50,7 @@ public class Decoder {
 			algorithm.update((new String(userStamp, 0, 14) + "ldg").getBytes());
 			byte[] messageDigest = algorithm.digest();
 			for (int i = 0; i < 2; i++){
-                if (userStamp[(14 + i)] != Encoder.NToC(Math.abs(messageDigest[i]) % 62)){
+                if (userStamp[14 + i] != Encoder.NToC(Math.abs(messageDigest[i]) % 62)){
                     return false;
                 }
             }

@@ -14,7 +14,7 @@ public class Encoder {
 			algorithm.update((new String(userStamp, 0, 14) + "ldg").getBytes());
 			byte[] messageDigest = algorithm.digest();
 			for (int i = 0; i < 2; i++){
-                userStamp[(14 + i)] = NToC(Math.abs(messageDigest[i]) % 62);
+                userStamp[14 + i] = NToC(Math.abs(messageDigest[i]) % 62);
             }
 		} catch (NoSuchAlgorithmException e) {
 			throw new IgnoreException(e.getMessage(),e);
@@ -54,7 +54,7 @@ public class Encoder {
 		}
 		int i = 5;
 		do{
-			stamp[RandomType.sequence[randomType][(i++)]] = NToC(userId % 62);
+			stamp[RandomType.sequence[randomType][i++]] = NToC(userId % 62);
 		}while ((userId /= 62) != 0);
 		stamp[2] = NToC(i - 5 | r.nextInt(8) << 3);
 		for (; i < 10; i++) {

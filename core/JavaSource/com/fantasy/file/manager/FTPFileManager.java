@@ -1,4 +1,4 @@
-package com.fantasy.file.manager;
+	package com.fantasy.file.manager;
 
 import com.fantasy.file.FileItem;
 import com.fantasy.file.FileItemFilter;
@@ -186,7 +186,7 @@ public class FTPFileManager implements FileManager {
 				return null;
 			}
 			boolean dir = this.ftpService.isDir(remotePath);
-			remotePath = dir ? (remotePath.endsWith("/") ? remotePath : (remotePath + "/")) : remotePath;
+			remotePath = dir ? (remotePath.endsWith("/") ? remotePath : remotePath + "/") : remotePath;
 			String parentPath = RegexpUtil.replace(remotePath, "[^/]+[/][^/]*$", "");
 			if (dir) {
 				return retrieveFileItem(this.ftpService.listFiles(RegexpUtil.replace(remotePath, "/$", ""))[0], parentPath);

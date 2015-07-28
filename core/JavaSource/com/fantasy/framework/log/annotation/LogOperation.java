@@ -41,7 +41,7 @@ public class LogOperation {
 
 	@Override
 	public boolean equals(Object other) {
-		return (other instanceof LogOperation && toString().equals(other.toString()));
+		return other instanceof LogOperation && toString().equals(other.toString());
 	}
 
 	@Override

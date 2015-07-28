@@ -22,7 +22,7 @@ public class DefaultValidateable implements Validateable {
 			String field = entry.getKey();
 			for (FieldValidator fieldValidator : entry.getValue()) {
 				Object value = OgnlUtil.getInstance().getValue(field, map);
-				if ((value instanceof List<?>)) {
+				if (value instanceof List<?>) {
 					int i = 0;
 					for (Iterator<?> localIterator3 = ((List<?>) value).iterator(); localIterator3.hasNext();) {
 						Object v = localIterator3.next();

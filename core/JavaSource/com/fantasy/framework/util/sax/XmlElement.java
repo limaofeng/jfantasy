@@ -34,7 +34,7 @@ public class XmlElement extends Observable implements Cloneable {
 	}
 
 	public List<XmlElement> getChildNodes() {
-		return this.childNodes == null ? (this.childNodes = new ArrayList<XmlElement>()) : this.childNodes;
+		return this.childNodes == null ? this.childNodes = new ArrayList<XmlElement>() : this.childNodes;
 	}
 
 	public void setChildNodes(List<XmlElement> childNodes) {
@@ -50,7 +50,7 @@ public class XmlElement extends Observable implements Cloneable {
 	}
 
 	public Map<String, String> getAttribute() {
-		return this.attribute == null ? (this.attribute = new HashMap<String, String>()) : this.attribute;
+		return this.attribute == null ? this.attribute = new HashMap<String, String>() : this.attribute;
 	}
 
 	public void setAttribute(Map<String, String> attribute) {

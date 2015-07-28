@@ -287,11 +287,11 @@ public class FileUtil {
             byte b2 = Integer.valueOf(s3, 2).byteValue();
             byte[] bf = new byte[3];
             bf[0] = b0;
-            fullByte[(i * 3)] = bf[0];
+            fullByte[i * 3] = bf[0];
             bf[1] = b1;
-            fullByte[(i * 3 + 1)] = bf[1];
+            fullByte[i * 3 + 1] = bf[1];
             bf[2] = b2;
-            fullByte[(i * 3 + 2)] = bf[2];
+            fullByte[i * 3 + 2] = bf[2];
         }
 
         return fullByte;
@@ -457,7 +457,7 @@ public class FileUtil {
 
     public static String getExtension(String fileName) {
         String[] ress = fileName.split("\\.");
-        return ress.length < 2 ? "" : ress[(ress.length - 1)];
+        return ress.length < 2 ? "" : ress[ress.length - 1];
     }
 
     public static File writeFile(InputStream in, String filePath) throws IOException {

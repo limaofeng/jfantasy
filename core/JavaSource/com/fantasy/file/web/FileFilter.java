@@ -127,7 +127,7 @@ public class FileFilter extends GenericFilterBean {
             response.setHeader("Pragma", "public");
             response.setContentLength((int) fileItem.getSize());
 
-            String fileName = (Browser.mozilla == WebUtil.browser(request) ? new String(fileItem.getName().getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(fileItem.getName(), "UTF-8"));
+            String fileName = Browser.mozilla == WebUtil.browser(request) ? new String(fileItem.getName().getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(fileItem.getName(), "UTF-8");
             response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         } else {
             ServletUtils.setExpiresHeader(response, 1000 * 60 * 5);

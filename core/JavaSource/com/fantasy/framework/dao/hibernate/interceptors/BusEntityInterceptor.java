@@ -33,7 +33,7 @@ public class BusEntityInterceptor extends EmptyInterceptor {
 	private String defaultCreator = "unknown";
 
 	public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
-		if ((entity instanceof BaseBusEntity)) {
+		if (entity instanceof BaseBusEntity) {
 			String modifier = defaultModifier;
 			UserDetails userDetails = SpringSecurityUtils.getCurrentUser();
 			if (ObjectUtil.isNotNull(userDetails)) {
@@ -57,7 +57,7 @@ public class BusEntityInterceptor extends EmptyInterceptor {
 	}
 
 	public boolean onSave(Object entity, Serializable id, Object[] state, String[] propertyNames, Type[] types) {
-		if ((entity instanceof BaseBusEntity)) {
+		if (entity instanceof BaseBusEntity) {
 			String creator = defaultCreator;
 			Date now = DateUtil.now();
 			UserDetails userDetails = SpringSecurityUtils.getCurrentUser();

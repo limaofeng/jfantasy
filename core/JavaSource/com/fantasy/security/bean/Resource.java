@@ -181,7 +181,7 @@ public class Resource extends BaseBusEntity {
 	@JsonIgnore
 	public String getRoleAuthorities() {
 		AtomicReference<StringBuffer> roleAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
-		for (Role role : (getRoles() == null ? new ArrayList<Role>() : getRoles())) {
+		for (Role role : getRoles() == null ? new ArrayList<Role>() : getRoles()) {
 			if (!role.isEnabled()){
                 continue;
             }
@@ -210,7 +210,7 @@ public class Resource extends BaseBusEntity {
 	@JsonIgnore
 	public String getUserGroupAuthorities() {
 		AtomicReference<StringBuffer> userGroupAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
-		for (UserGroup userGroup : (getUserGroups() == null ? new ArrayList<UserGroup>() : getUserGroups())) {
+		for (UserGroup userGroup : getUserGroups() == null ? new ArrayList<UserGroup>() : getUserGroups()) {
 			if (userGroup.isEnabled()) {
 				List<GrantedAuthority> authorities = userGroup.getGroupAuthorities();
 				for (GrantedAuthority authority : authorities) {

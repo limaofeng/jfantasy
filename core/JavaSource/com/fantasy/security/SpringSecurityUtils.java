@@ -26,7 +26,7 @@ public class SpringSecurityUtils {
 		Authentication authentication = getAuthentication();
 		if (authentication != null) {
 			Object principal = authentication.getPrincipal();
-			if ((principal instanceof UserDetails)) {
+			if (principal instanceof UserDetails) {
 				return (UserDetails) principal;
 			}
 		}
@@ -38,7 +38,7 @@ public class SpringSecurityUtils {
 		Authentication authentication = getAuthentication();
 		if (authentication != null) {
 			Object principal = authentication.getPrincipal();
-			if ((principal instanceof UserDetails)) {
+			if (principal instanceof UserDetails) {
 				return clazz.cast(principal);
 			}
 		}
@@ -57,7 +57,7 @@ public class SpringSecurityUtils {
 		Authentication authentication = getAuthentication();
 		if (authentication != null) {
 			Object details = authentication.getDetails();
-			if ((details instanceof WebAuthenticationDetails)) {
+			if (details instanceof WebAuthenticationDetails) {
 				WebAuthenticationDetails webDetails = (WebAuthenticationDetails) details;
 				return webDetails.getRemoteAddress();
 			}

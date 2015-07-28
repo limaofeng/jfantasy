@@ -622,9 +622,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {
         DetachedCriteria dc = DetachedCriteria.forClass(this.entityClass);
         Map<String, DetachedCriteria> cascadeCriterions = new HashMap<String, DetachedCriteria>();
         for (Criterion c : criterions) {
-            if ((c instanceof NotExpression)) {
+            if (c instanceof NotExpression) {
                 Criterion criterion = (Criterion) ReflectionUtils.getFieldValue(c, "criterion");
-                if ((criterion instanceof InExpression)) {
+                if (criterion instanceof InExpression) {
                     String propertyName = (String) ReflectionUtils.getFieldValue(criterion, "propertyName");
                     if (propertyName.lastIndexOf('.') > 0) {
                         addCriterion(dc, cascadeCriterions, c, propertyName);

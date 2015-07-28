@@ -14,7 +14,7 @@ abstract class LogOperationSourcePointcut extends StaticMethodMatcherPointcut im
 
 	public boolean matches(Method method, Class<?> targetClass) {
 		LogOperationSource cas = getLogOperationSource();
-		return (cas != null && !CollectionUtils.isEmpty(cas.getOperations(method, targetClass)));
+		return cas != null && !CollectionUtils.isEmpty(cas.getOperations(method, targetClass));
 	}
 
 	@Override
