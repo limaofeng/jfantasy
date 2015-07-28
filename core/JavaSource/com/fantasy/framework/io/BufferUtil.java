@@ -106,7 +106,8 @@ public class BufferUtil {
         }
     }
 
-    public static void prependHexInt(Buffer buffer, int n) {
+    public static void prependHexInt(Buffer buffer, int ns) {
+        int n = ns;
         if (n == 0) {
             int gi = buffer.getIndex();
             gi--;

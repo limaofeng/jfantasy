@@ -491,7 +491,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			split._children = this._children;
 			this._children = new Node[map._width];
 			this._children[split._char[0] % map._width] = split;
-			if ((split._ochar != null) && (this._children[split._ochar[0] % map._width] != split)) {
+			if (split._ochar != null && this._children[split._ochar[0] % map._width] != split) {
 				this._children[split._ochar[0] % map._width] = split;
 			}
 			return split;
