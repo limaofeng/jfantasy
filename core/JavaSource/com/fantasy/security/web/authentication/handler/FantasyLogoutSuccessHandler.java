@@ -17,31 +17,30 @@ import com.fantasy.framework.util.common.ObjectUtil;
 
 /**
  * 成功登出后的操作
- * 
+ *
  * @author 李茂峰
- * 
  */
 public class FantasyLogoutSuccessHandler extends SimpleUrlLogoutSuccessHandler implements InitializingBean {
 
-	private List<LogoutSuccessHandler> handlers = null;
+    private List<LogoutSuccessHandler> handlers = null;
 
-	public void afterPropertiesSet() throws Exception {
-		if (ObjectUtil.isNull(handlers)) {
-			handlers = new ArrayList<LogoutSuccessHandler>();
-		}
-	}
+    public void afterPropertiesSet() throws Exception {
+        if (ObjectUtil.isNull(handlers)) {
+            handlers = new ArrayList<LogoutSuccessHandler>();
+        }
+    }
 
-	@Override
-	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		for (LogoutSuccessHandler handler : handlers) {
-			handler.onLogoutSuccess(request, response, authentication);
-		}
-		super.onLogoutSuccess(request, response, authentication);
-	}
+    @Override
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        for (LogoutSuccessHandler handler : handlers) {
+            handler.onLogoutSuccess(request, response, authentication);
+        }
+        super.onLogoutSuccess(request, response, authentication);
+    }
 
-	public void setHandlers(List<LogoutSuccessHandler> handlers) {
-		this.handlers = handlers;
-	}
-	
-	
+    public void setHandlers(List<LogoutSuccessHandler> handlers) {
+        this.handlers = handlers;
+    }
+
+
 }

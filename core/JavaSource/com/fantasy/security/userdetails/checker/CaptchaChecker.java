@@ -13,56 +13,55 @@ import org.springframework.security.core.userdetails.UserDetailsChecker;
 import javax.servlet.http.HttpServletRequest;
 
 /**
- * 
- * @功能描述 
  * @author 李茂峰
- * @since 2013-9-13 上午10:32:02
  * @version 1.0
+ * @功能描述
+ * @since 2013-9-13 上午10:32:02
  */
 public class CaptchaChecker implements UserDetailsChecker {
 
-	private static final Log LOGGER = LogFactory.getLog(CaptchaChecker.class);
+    private static final Log LOGGER = LogFactory.getLog(CaptchaChecker.class);
 
-	private CaptchaService captchaService;
-	private String captchaParameter = "captcha";
-	private String exceptionMessage = "验证码输入错误";
+    private CaptchaService captchaService;
+    private String captchaParameter = "captcha";
+    private String exceptionMessage = "验证码输入错误";
 
-	public void check(UserDetails toCheck) {
-		if (!validateCaptchaChallenge(ActionContext.getContext().getHttpRequest())) {
-			throw new AuthenticationServiceException(exceptionMessage);
-		}
-	}
+    public void check(UserDetails toCheck) {
+        if (!validateCaptchaChallenge(ActionContext.getContext().getHttpRequest())) {
+            throw new AuthenticationServiceException(exceptionMessage);
+        }
+    }
 
-	/**
-	 * 验证验证码
-	 * 
-	 * @param request
-	 * @return
-	 */
-	protected boolean validateCaptchaChallenge(HttpServletRequest request) {
-		try {
-			String captchaID = request.getSession().getId();
-			String challengeResponse = request.getParameter(this.captchaParameter);
-			if (StringUtil.isBlank(challengeResponse)){
+    /**
+     * 验证验证码
+     *
+     * @param request
+     * @return
+     */
+    protected boolean validateCaptchaChallenge(HttpServletRequest request) {
+        try {
+            String captchaID = request.getSession().getId();
+            String challengeResponse = request.getParameter(this.captchaParameter);
+            if (StringUtil.isBlank(challengeResponse)) {
                 return false;
             }
-			return this.captchaService.validateResponseForID(captchaID, challengeResponse.toUpperCase()).booleanValue();
-		} catch (CaptchaServiceException e) {
-			LOGGER.error(e.getMessage(), e);
-			return false;
-		}
-	}
+            return this.captchaService.validateResponseForID(captchaID, challengeResponse.toUpperCase()).booleanValue();
+        } catch (CaptchaServiceException e) {
+            LOGGER.error(e.getMessage(), e);
+            return false;
+        }
+    }
 
-	public void setCaptchaService(CaptchaService captchaService) {
-		this.captchaService = captchaService;
-	}
+    public void setCaptchaService(CaptchaService captchaService) {
+        this.captchaService = captchaService;
+    }
 
-	public void setCaptchaParameter(String captchaParameter) {
-		this.captchaParameter = captchaParameter;
-	}
+    public void setCaptchaParameter(String captchaParameter) {
+        this.captchaParameter = captchaParameter;
+    }
 
-	public void setExceptionMessage(String exceptionMessage) {
-		this.exceptionMessage = exceptionMessage;
-	}
+    public void setExceptionMessage(String exceptionMessage) {
+        this.exceptionMessage = exceptionMessage;
+    }
 
 }

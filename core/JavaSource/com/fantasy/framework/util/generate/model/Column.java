@@ -13,58 +13,58 @@ public class Column {
     private boolean isNull;
 
     public String getColumnName() {
-	return this.columnName;
+        return this.columnName;
     }
 
     public void setColumnName(String columnName) {
-	this.columnName = columnName;
+        this.columnName = columnName;
     }
 
     public String getDataType() {
-	return this.dataType;
+        return this.dataType;
     }
 
     public void setDataType(String dataType) {
-	this.dataType = dataType;
+        this.dataType = dataType;
     }
 
     public int getDataLength() {
-	return this.dataLength;
+        return this.dataLength;
     }
 
     public void setDataLength(int dataLength) {
-	this.dataLength = dataLength;
+        this.dataLength = dataLength;
     }
 
     public String getNullable() {
-	return this.nullable;
+        return this.nullable;
     }
 
     public void setNullable(String nullable) {
-	this.nullable = nullable;
+        this.nullable = nullable;
     }
 
     public String getComments() {
-	return this.comments == null ? "" : this.comments;
+        return this.comments == null ? "" : this.comments;
     }
 
     public void setComments(String comments) {
-	this.comments = comments;
+        this.comments = comments;
     }
 
     public String getDataDefault() {
-	return this.dataDefault;
+        return this.dataDefault;
     }
 
     public void setDataDefault(String dataDefault) {
-	this.dataDefault = dataDefault;
+        this.dataDefault = dataDefault;
     }
 
     public boolean isNull() {
-	return this.isNull;
+        return this.isNull;
     }
 
     public void setNull(boolean isNull) {
-	this.isNull = isNull;
+        this.isNull = isNull;
     }
 }

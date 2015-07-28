@@ -14,40 +14,40 @@ import java.sql.Statement;
 
 /**
  * 序列生成器
- * 
+ *
  * @author 李茂峰
- * @since 2013-1-14 下午02:08:52
  * @version 1.0
+ * @since 2013-1-14 下午02:08:52
  */
 public class SequenceKeyGenerator implements KeyGenerator {
 
-	private static final Logger LOG = Logger.getLogger(SequenceKeyGenerator.class);
+    private static final Logger LOG = Logger.getLogger(SequenceKeyGenerator.class);
 
-	private DataBaseKeyGenerator dataBaseKeyGenerator;
+    private DataBaseKeyGenerator dataBaseKeyGenerator;
 
-	public void processBefore(Executor paramExecutor, MappedStatement paramMappedStatement, Statement paramStatement, Object paramObject) {
-		String[] keyProperties = paramMappedStatement.getKeyProperties();
-		if (keyProperties.length == 1){
+    public void processBefore(Executor paramExecutor, MappedStatement paramMappedStatement, Statement paramStatement, Object paramObject) {
+        String[] keyProperties = paramMappedStatement.getKeyProperties();
+        if (keyProperties.length == 1) {
             try {
                 Ognl.setValue(keyProperties[0], paramObject, Long.valueOf(getKeyGenerator().nextValue(paramObject.getClass().getName())));
             } catch (OgnlException e) {
                 LOG.error(e.getMessage(), e);
             }
         }
-	}
+    }
 
-	private DataBaseKeyGenerator getKeyGenerator() {
-		if (ObjectUtil.isNull(this.dataBaseKeyGenerator)) {
-			this.dataBaseKeyGenerator = SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class);
-		}
-		return this.dataBaseKeyGenerator;
-	}
+    private DataBaseKeyGenerator getKeyGenerator() {
+        if (ObjectUtil.isNull(this.dataBaseKeyGenerator)) {
+            this.dataBaseKeyGenerator = SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class);
+        }
+        return this.dataBaseKeyGenerator;
+    }
 
-	public void processAfter(Executor paramExecutor, MappedStatement paramMappedStatement, Statement paramStatement, Object paramObject) {
-	}
+    public void processAfter(Executor paramExecutor, MappedStatement paramMappedStatement, Statement paramStatement, Object paramObject) {
+    }
 
-	public void setDataBaseKeyGenerator(DataBaseKeyGenerator dataBaseKeyGenerator) {
-		this.dataBaseKeyGenerator = dataBaseKeyGenerator;
-	}
+    public void setDataBaseKeyGenerator(DataBaseKeyGenerator dataBaseKeyGenerator) {
+        this.dataBaseKeyGenerator = dataBaseKeyGenerator;
+    }
 
 }

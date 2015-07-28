@@ -93,13 +93,13 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
                         final Object value = XSSRequestWrapper.this.getParameterValues(key);
                         entries.add(new Entry() {
 
-							public boolean equals(Object obj) {
-								if (!(obj instanceof Entry)) {
-									return false;
-								}
-								Entry entry = (Entry) obj;
-								return key == null ? (entry.getKey() == null) : key.equals(entry.getKey()) && value == null ? (entry.getValue() == null) : value.equals(entry.getValue());
-							}
+                            public boolean equals(Object obj) {
+                                if (!(obj instanceof Entry)) {
+                                    return false;
+                                }
+                                Entry entry = (Entry) obj;
+                                return key == null ? (entry.getKey() == null) : key.equals(entry.getKey()) && value == null ? (entry.getValue() == null) : value.equals(entry.getValue());
+                            }
 
                             public int hashCode() {
                                 return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());

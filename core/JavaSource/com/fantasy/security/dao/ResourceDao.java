@@ -15,48 +15,48 @@ import java.util.Map;
 @Repository("fantasy.auth.hibernate.ResourceDao")
 public class ResourceDao extends HibernateDao<Resource, Long> {
 
-	@SuppressWarnings("unchecked")
-	public Map<Long, List<Long>> getRelations() {
-		Map<Long, List<Long>> res = new HashMap<Long, List<Long>>();
-		SQLQuery query = this.createSQLQuery("select t.RESOURCE_ID as RESOURCE_ID,t.SUB_RESOURCE_ID as SUB_RESOURCE_ID from auth_relation_resource t");
-		query = distinct(query,ResourceRelation.class);
-		List<ResourceRelation> list = query.list();
-		for (ResourceRelation r : list) {
-			if (ObjectUtil.isNull(r.getResourceId()) || ObjectUtil.isNull(r.getSubResourceId())){
+    @SuppressWarnings("unchecked")
+    public Map<Long, List<Long>> getRelations() {
+        Map<Long, List<Long>> res = new HashMap<Long, List<Long>>();
+        SQLQuery query = this.createSQLQuery("select t.RESOURCE_ID as RESOURCE_ID,t.SUB_RESOURCE_ID as SUB_RESOURCE_ID from auth_relation_resource t");
+        query = distinct(query, ResourceRelation.class);
+        List<ResourceRelation> list = query.list();
+        for (ResourceRelation r : list) {
+            if (ObjectUtil.isNull(r.getResourceId()) || ObjectUtil.isNull(r.getSubResourceId())) {
                 continue;
             }
-			if (!res.containsKey(r.getResourceId())) {
-				res.put(r.getResourceId(), new ArrayList<Long>());
-			}
-			List<Long> subResourceIds = res.get(r.getResourceId());
-			subResourceIds.add(r.getSubResourceId());
-		}
-		return res;
-	}
+            if (!res.containsKey(r.getResourceId())) {
+                res.put(r.getResourceId(), new ArrayList<Long>());
+            }
+            List<Long> subResourceIds = res.get(r.getResourceId());
+            subResourceIds.add(r.getSubResourceId());
+        }
+        return res;
+    }
 
-	public static class ResourceRelation {
+    public static class ResourceRelation {
 
-		@Column(name = "RESOURCE_ID")
-		private Long resourceId;
-		@Column(name = "SUB_RESOURCE_ID")
-		private Long subResourceId;
+        @Column(name = "RESOURCE_ID")
+        private Long resourceId;
+        @Column(name = "SUB_RESOURCE_ID")
+        private Long subResourceId;
 
-		public Long getResourceId() {
-			return resourceId;
-		}
+        public Long getResourceId() {
+            return resourceId;
+        }
 
-		public void setResourceId(Long resourceId) {
-			this.resourceId = resourceId;
-		}
+        public void setResourceId(Long resourceId) {
+            this.resourceId = resourceId;
+        }
 
-		public Long getSubResourceId() {
-			return subResourceId;
-		}
+        public Long getSubResourceId() {
+            return subResourceId;
+        }
 
-		public void setSubResourceId(Long subResourceId) {
-			this.subResourceId = subResourceId;
-		}
+        public void setSubResourceId(Long subResourceId) {
+            this.subResourceId = subResourceId;
+        }
 
-	}
+    }
 
 }

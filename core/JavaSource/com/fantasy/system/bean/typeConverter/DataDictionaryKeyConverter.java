@@ -11,13 +11,13 @@ import java.util.Map;
 
 public class DataDictionaryKeyConverter extends DefaultTypeConverter {
 
-	@SuppressWarnings("rawtypes")
-	public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-		if (DataDictionaryKey.class.isAssignableFrom(toType)) {
-			String key = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
-			return DataDictionaryKey.newInstance(key.split(":")[1], key.split(":")[0]);
-		}
-		return super.convertValue(context, target, member, propertyName, value, toType);
-	}
+    @SuppressWarnings("rawtypes")
+    public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
+        if (DataDictionaryKey.class.isAssignableFrom(toType)) {
+            String key = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            return DataDictionaryKey.newInstance(key.split(":")[1], key.split(":")[0]);
+        }
+        return super.convertValue(context, target, member, propertyName, value, toType);
+    }
 
 }

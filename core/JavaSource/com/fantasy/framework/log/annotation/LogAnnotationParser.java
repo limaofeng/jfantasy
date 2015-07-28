@@ -5,6 +5,6 @@ import java.util.Collection;
 
 public interface LogAnnotationParser {
 
-	Collection<LogOperation> parseLogAnnotations(AnnotatedElement ae);
+    Collection<LogOperation> parseLogAnnotations(AnnotatedElement ae);
 
 }

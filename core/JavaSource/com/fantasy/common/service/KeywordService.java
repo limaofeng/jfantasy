@@ -29,81 +29,81 @@ import com.fantasy.framework.util.common.StringUtil;
 @Transactional
 public class KeywordService implements InitializingBean {
 
-	@Autowired
-	private KeywordsDao keywordsDao;
-	@Autowired
-	private HotKeywordsDao hotKeywordsDao;
+    @Autowired
+    private KeywordsDao keywordsDao;
+    @Autowired
+    private HotKeywordsDao hotKeywordsDao;
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
+    @Override
+    public void afterPropertiesSet() throws Exception {
 
-	}
+    }
 
-	/**
-	 * 获取热门关键字
-	 * 
-	 * @功能描述
-	 * @param timeUnit
-	 * @param target
-	 * @param size
-	 * @return
-	 */
-	public String[] getKeywords(String key, TimeUnit timeUnit, String time, int size) {
-		List<HotKeywords> hotSearch = this.hotKeywordsDao.find(new Criterion[] { Restrictions.eq("key", key), Restrictions.eq("timeUnit", timeUnit), Restrictions.eq("time", time) }, "hitCount", "desc", 0, size);
-		return ObjectUtil.toFieldArray(hotSearch, "Keywords", String.class);
-	}
+    /**
+     * 获取热门关键字
+     *
+     * @param timeUnit
+     * @param target
+     * @param size
+     * @return
+     * @功能描述
+     */
+    public String[] getKeywords(String key, TimeUnit timeUnit, String time, int size) {
+        List<HotKeywords> hotSearch = this.hotKeywordsDao.find(new Criterion[]{Restrictions.eq("key", key), Restrictions.eq("timeUnit", timeUnit), Restrictions.eq("time", time)}, "hitCount", "desc", 0, size);
+        return ObjectUtil.toFieldArray(hotSearch, "Keywords", String.class);
+    }
 
-	/**
-	 * 关键词
-	 * 
-	 * @功能描述 该功能会自动将关键词保存到 HotKeywords
-	 * @param key
-	 * @param text
-	 */
-	@SuppressWarnings("unchecked")
-	public List<String> analyze(String key, String text) {
-		if (StringUtil.isBlank(text)) {
-			return Collections.EMPTY_LIST;
-		}
-		List<String> keywords = ObjectUtil.analyze(text);
-		for (String words : keywords) {
-			this.addHotKeywords(key, words);
-		}
-		return keywords;
-	}
+    /**
+     * 关键词
+     *
+     * @param key
+     * @param text
+     * @功能描述 该功能会自动将关键词保存到 HotKeywords
+     */
+    @SuppressWarnings("unchecked")
+    public List<String> analyze(String key, String text) {
+        if (StringUtil.isBlank(text)) {
+            return Collections.EMPTY_LIST;
+        }
+        List<String> keywords = ObjectUtil.analyze(text);
+        for (String words : keywords) {
+            this.addHotKeywords(key, words);
+        }
+        return keywords;
+    }
 
-	public void addKeywords(String keywords) {
+    public void addKeywords(String keywords) {
 
-	}
+    }
 
-	public void removeKeywords(String keywords) {
+    public void removeKeywords(String keywords) {
 
-	}
+    }
 
-	/**
-	 * 保存单个关键字
-	 * 
-	 * @功能描述
-	 * @param key
-	 * @param keywords
-	 */
-	public HotKeywords addHotKeywords(String key, String keywords) {
-		String time = DateUtil.format("yyyyMMdd");
-		HotKeywords hotKeywords = this.hotKeywordsDao.findUnique(Restrictions.eq("key", key), Restrictions.eq("keywords", keywords), Restrictions.eq("timeUnit", TimeUnit.day), Restrictions.eq("time", time));
-		if (hotKeywords == null) {
-			hotKeywords = new HotKeywords();
-			hotKeywords.setKey(key);
-			hotKeywords.setKeywords(keywords);
-			hotKeywords.setTimeUnit(TimeUnit.day);
-			hotKeywords.setTime(time);
-			hotKeywords.setHitCount(0);
-		}
-		hotKeywords.setHitCount(hotKeywords.getHitCount() + 1);
-		return this.hotKeywordsDao.save(hotKeywords);
-	}
-	
-	public Pager<Keywords> findPager(Pager<Keywords> pager,List<PropertyFilter> filters){
-		return this.keywordsDao.findPager(pager, filters);
-	}
+    /**
+     * 保存单个关键字
+     *
+     * @param key
+     * @param keywords
+     * @功能描述
+     */
+    public HotKeywords addHotKeywords(String key, String keywords) {
+        String time = DateUtil.format("yyyyMMdd");
+        HotKeywords hotKeywords = this.hotKeywordsDao.findUnique(Restrictions.eq("key", key), Restrictions.eq("keywords", keywords), Restrictions.eq("timeUnit", TimeUnit.day), Restrictions.eq("time", time));
+        if (hotKeywords == null) {
+            hotKeywords = new HotKeywords();
+            hotKeywords.setKey(key);
+            hotKeywords.setKeywords(keywords);
+            hotKeywords.setTimeUnit(TimeUnit.day);
+            hotKeywords.setTime(time);
+            hotKeywords.setHitCount(0);
+        }
+        hotKeywords.setHitCount(hotKeywords.getHitCount() + 1);
+        return this.hotKeywordsDao.save(hotKeywords);
+    }
+
+    public Pager<Keywords> findPager(Pager<Keywords> pager, List<PropertyFilter> filters) {
+        return this.keywordsDao.findPager(pager, filters);
+    }
 
 }

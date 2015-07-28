@@ -17,32 +17,32 @@ import com.fantasy.framework.util.common.ObjectUtil;
 
 /**
  * 登陆失败后的操作
- * 
- * @功能描述
+ *
  * @author 李茂峰
- * @since 2013-6-28 下午04:47:46
  * @version 1.0
+ * @功能描述
+ * @since 2013-6-28 下午04:47:46
  */
 public class FantasyLoginFailureHandler extends ExceptionMappingAuthenticationFailureHandler implements InitializingBean {
 
-	private List<AuthenticationFailureHandler> handlers = null;
+    private List<AuthenticationFailureHandler> handlers = null;
 
-	public void afterPropertiesSet() throws Exception {
-		if (ObjectUtil.isNull(handlers)) {
-			handlers = new ArrayList<AuthenticationFailureHandler>();
-		}
-	}
+    public void afterPropertiesSet() throws Exception {
+        if (ObjectUtil.isNull(handlers)) {
+            handlers = new ArrayList<AuthenticationFailureHandler>();
+        }
+    }
 
-	@Override
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
-		for (AuthenticationFailureHandler handler : handlers) {
-			handler.onAuthenticationFailure(request, response, exception);
-		}
-		super.onAuthenticationFailure(request, response, exception);
-	}
-	
-	public void setHandlers(List<AuthenticationFailureHandler> handlers) {
-		this.handlers = handlers;
-	}
+    @Override
+    public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException exception) throws IOException, ServletException {
+        for (AuthenticationFailureHandler handler : handlers) {
+            handler.onAuthenticationFailure(request, response, exception);
+        }
+        super.onAuthenticationFailure(request, response, exception);
+    }
+
+    public void setHandlers(List<AuthenticationFailureHandler> handlers) {
+        this.handlers = handlers;
+    }
 
 }

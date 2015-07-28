@@ -6,6 +6,7 @@ import com.fantasy.system.service.WebAccessLogService;
 import org.springframework.security.core.Authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,24 +14,24 @@ import java.io.IOException;
 
 public class MemberLogOutSuccessHandler extends FantasyLogoutSuccessHandler {
 
-	@Autowired
-	private MemberService memberService;
-	@Autowired
-	private WebAccessLogService accessLogService;
+    @Autowired
+    private MemberService memberService;
+    @Autowired
+    private WebAccessLogService accessLogService;
 
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		super.afterPropertiesSet();
-	}
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        super.afterPropertiesSet();
+    }
 
-	@Override
-	public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-		super.onLogoutSuccess(request, response, authentication);
-		if (authentication != null) {
-			MemberUser details = (MemberUser) authentication.getPrincipal();
-			memberService.logout(details.getUser());
-			accessLogService.log(request, details);
-		}
-	}
+    @Override
+    public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+        super.onLogoutSuccess(request, response, authentication);
+        if (authentication != null) {
+            MemberUser details = (MemberUser) authentication.getPrincipal();
+            memberService.logout(details.getUser());
+            accessLogService.log(request, details);
+        }
+    }
 
 }

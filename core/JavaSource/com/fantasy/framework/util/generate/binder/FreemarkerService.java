@@ -5,9 +5,9 @@ import java.util.Map;
 
 public class FreemarkerService {
 
-	public void writer(Map data, Class<MyBatisBinder> class1, String string, String string2, Writer out) {
-		// TODO Auto-generated method stub
-		
-	}
+    public void writer(Map data, Class<MyBatisBinder> class1, String string, String string2, Writer out) {
+        // TODO Auto-generated method stub
+
+    }
 
 }

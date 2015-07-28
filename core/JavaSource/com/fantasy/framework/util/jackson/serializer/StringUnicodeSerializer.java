@@ -43,24 +43,24 @@ public class StringUnicodeSerializer extends JsonSerializer<String> {
             case JsonWriteContext.STATUS_EXPECT_NAME:
                 throw new JsonGenerationException("Can not write string value here");
             default:
-		}
-		gen.writeRaw('"');// 写入JSON中字符串的开头引号
-		for (char c : str.toCharArray()) {
-			if (c >= 0x80) {
-				writeUnicodeEscape(gen, c); // 为所有非ASCII字符生成转义的unicode字符
-			} else {
-				// 为ASCII字符中前128个字符使用转义的unicode字符
-				int code = c < ESCAPE_CODES.length ? ESCAPE_CODES[c] : 0;
-				if (code == 0) {
-					gen.writeRaw(c); // 此处不用转义
-				} else if (code < 0) {
-					writeUnicodeEscape(gen, (char) (-code - 1)); // 通用转义字符
-				} else {
-					writeShortEscape(gen, (char) code); // 短转义字符 (\n \t ...)
-				}
-			}
-		}
-		gen.writeRaw('"');// 写入JSON中字符串的结束引号
-	}
+        }
+        gen.writeRaw('"');// 写入JSON中字符串的开头引号
+        for (char c : str.toCharArray()) {
+            if (c >= 0x80) {
+                writeUnicodeEscape(gen, c); // 为所有非ASCII字符生成转义的unicode字符
+            } else {
+                // 为ASCII字符中前128个字符使用转义的unicode字符
+                int code = c < ESCAPE_CODES.length ? ESCAPE_CODES[c] : 0;
+                if (code == 0) {
+                    gen.writeRaw(c); // 此处不用转义
+                } else if (code < 0) {
+                    writeUnicodeEscape(gen, (char) (-code - 1)); // 通用转义字符
+                } else {
+                    writeShortEscape(gen, (char) code); // 短转义字符 (\n \t ...)
+                }
+            }
+        }
+        gen.writeRaw('"');// 写入JSON中字符串的结束引号
+    }
 
 }

@@ -7,26 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class DataBaseKeyGenerator {
 
-	private static DataBaseKeyGenerator dataBaseKeyGenerator;
+    private static DataBaseKeyGenerator dataBaseKeyGenerator;
 
-	private int poolSize = 2;
+    private int poolSize = 2;
 
-	public static DataBaseKeyGenerator getInstance() {
-		if (ObjectUtil.isNull(dataBaseKeyGenerator)) {
-			dataBaseKeyGenerator = SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class);
-		}
-		return dataBaseKeyGenerator;
-	}
+    public static DataBaseKeyGenerator getInstance() {
+        if (ObjectUtil.isNull(dataBaseKeyGenerator)) {
+            dataBaseKeyGenerator = SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class);
+        }
+        return dataBaseKeyGenerator;
+    }
 
-	@Autowired
-	private SequenceService sequenceService;
+    @Autowired
+    private SequenceService sequenceService;
 
-	public long nextValue(String key) {
-		return SequenceInfo.retrieve(this.sequenceService,this.poolSize,key).nextValue();
-	}
+    public long nextValue(String key) {
+        return SequenceInfo.retrieve(this.sequenceService, this.poolSize, key).nextValue();
+    }
 
-	public void setPoolSize(int poolSize) {
-		this.poolSize = poolSize;
-	}
+    public void setPoolSize(int poolSize) {
+        this.poolSize = poolSize;
+    }
 
 }
