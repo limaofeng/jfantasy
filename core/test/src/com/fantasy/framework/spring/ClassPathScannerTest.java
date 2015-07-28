@@ -36,16 +36,16 @@ public class ClassPathScannerTest {
 
     @Test
     public void testFindAnnotationedClasses() throws Exception {
-        Set<Class<?>> classes = pathScanner.findAnnotationedClasses("", Indexed.class);
-        for (Class<?> clazz : classes) {
+        Set<Class> classes = pathScanner.findAnnotationedClasses("", Indexed.class);
+        for (Class clazz : classes) {
             logger.debug(clazz);
         }
     }
 
     @Test
     public void testFindInterfaceClasses() throws Exception {
-        Set<Class<?>> classes = ClassPathScanner.getInstance().findInterfaceClasses("com.fantasy", DefaultTypeConverter.class);
-        for (Class<?> clazz : classes) {
+        Set<Class> classes = ClassPathScanner.getInstance().findInterfaceClasses("com.fantasy", DefaultTypeConverter.class);
+        for (Class clazz : classes) {
             logger.debug(clazz);
         }
     }
