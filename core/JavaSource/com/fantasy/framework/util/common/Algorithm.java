@@ -13,7 +13,7 @@ public class Algorithm {
         int stopIndex = items.size() - 1;
         int middle = (int) Math.floor((double) (stopIndex + startIndex) / 2.0D);
         int s;
-        while ((s = middle < 0 ? (middle = 0) : comparator.compare(items.get(middle), val)) != 0 && (startIndex < stopIndex)) {
+        while ((s = middle < 0 ? (middle = 0) : comparator.compare(items.get(middle), val)) != 0 && startIndex < stopIndex) {
             if (s > 0) {
                 stopIndex = middle - 1;
             } else if (s < 0) {

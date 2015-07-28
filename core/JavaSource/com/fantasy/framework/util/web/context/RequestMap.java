@@ -44,7 +44,7 @@ public class RequestMap extends AbstractMap implements Serializable {
                             return false;
                         }
                         Entry entry = (Entry) obj;
-                        return (key == null) ? (entry.getKey() == null) : key.equals(entry.getKey()) && (value == null) ? (entry.getValue() == null) : value.equals(entry.getValue());
+                        return key == null ? (entry.getKey() == null) : key.equals(entry.getKey()) && value == null ? (entry.getValue() == null) : value.equals(entry.getValue());
                     }
                     public int hashCode() {
                         return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());

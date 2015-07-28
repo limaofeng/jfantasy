@@ -39,7 +39,7 @@ public class ApplicationMap extends AbstractMap {
 							return false;
 						}
 						Map.Entry entry = (Map.Entry) obj;
-						return (key == null) ? (entry.getKey() == null) : key.equals(entry.getKey()) && (value == null) ? (entry.getValue() == null) : value.equals(entry.getValue());
+						return key == null ? (entry.getKey() == null) : key.equals(entry.getKey()) && value == null ? (entry.getValue() == null) : value.equals(entry.getValue());
 					}
 
 					public int hashCode() {

@@ -600,7 +600,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         try {
             first = this.head.next;
             this.head.next = null;
-            assert (this.head.item == null);
+            assert this.head.item == null;
             this.last = this.head;
             if (this.count.getAndSet(0) == this.capacity) {
                 this.notFull.signalAll();
