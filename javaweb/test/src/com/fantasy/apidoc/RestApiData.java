@@ -15,7 +15,7 @@ public class RestApiData {
 
     @Test
     public void generate(){
-        Set<Class<?>> restClasses = ClassPathScanner.getInstance().findAnnotationedClasses("com.fantasy", RestController.class);
+        Set<Class> restClasses = ClassPathScanner.getInstance().findAnnotationedClasses("com.fantasy", RestController.class);
         LOG.debug("查找到的 REST API");
         for(Class<?> restClass : restClasses){
             LOG.debug(restClass);

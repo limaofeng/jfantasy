@@ -217,8 +217,7 @@ public class DateUtil {
     }
 
     public static Date nextHour(Date date) {
-        date = add(date, 10, 1);
-        return roundTo(DateType.HOUR, date);
+        return roundTo(DateType.HOUR, add(date, 10, 1));
     }
 
     /**
@@ -286,12 +285,14 @@ public class DateUtil {
     /**
      * 获取日期间隔
      *
-     * @param big   大的日期
-     * @param small 小的日期
+     * @param big_   大的日期
+     * @param small_ 小的日期
      * @param field 比较日期字段
      * @return date
      */
-    public static long interval(Date big, Date small, int field) {
+    public static long interval(Date big_, Date small_, int field) {
+        Date big = big_;
+        Date small = small_;
         boolean positive = big.after(small);
         if (!positive) {
             Date temp = big;

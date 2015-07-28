@@ -86,7 +86,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			}
 
 			while (node != null) {
-				if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
+				if (node._char[ni] == c || (this._ignoreCase && node._ochar[ni] == c)) {
 					prev = null;
 					ni++;
 					if (ni != node._char.length){
@@ -229,7 +229,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			}
 			while (true) {
 				if (node != null) {
-					if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
+					if (node._char[ni] == c || (this._ignoreCase && node._ochar[ni] == c)) {
 						ni++;
 						if (ni != node._char.length){
                             break;
@@ -280,7 +280,7 @@ public class StringMap<V> extends AbstractMap<String, V> implements Externalizab
 			}
 			while (true) {
 				if (node != null) {
-					if ((node._char[ni] == c) || ((this._ignoreCase) && (node._ochar[ni] == c))) {
+					if (node._char[ni] == c || (this._ignoreCase && node._ochar[ni] == c)) {
 						ni++;
 						if (ni != node._char.length){
                             break;

@@ -222,7 +222,8 @@ public abstract class AbstractBuffer implements Buffer {
         return peek(this._get++);
     }
 
-    public int get(byte[] b, int offset, int length) {
+    public int get(byte[] b, int offset, int size) {
+        int length = size;
         int gi = getIndex();
         int l = length();
         if (l == 0) {
