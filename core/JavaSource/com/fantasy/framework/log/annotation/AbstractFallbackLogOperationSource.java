@@ -99,7 +99,7 @@ public abstract class AbstractFallbackLogOperationSource implements LogOperation
 				return false;
 			}
 			DefaultCacheKey otherKey = (DefaultCacheKey) other;
-			return (this.method.equals(otherKey.method) && ObjectUtils.nullSafeEquals(this.targetClass, otherKey.targetClass));
+			return this.method.equals(otherKey.method) && ObjectUtils.nullSafeEquals(this.targetClass, otherKey.targetClass);
 		}
 
 		@Override

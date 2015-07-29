@@ -341,7 +341,7 @@ class ConfigurationClassEnhancer {
          * @return whether <var>beanName</var> already exists in the factory
          */
         private boolean factoryContainsBean(ConfigurableBeanFactory beanFactory, String beanName) {
-            return (beanFactory.containsBean(beanName) && !beanFactory.isCurrentlyInCreation(beanName));
+            return beanFactory.containsBean(beanName) && !beanFactory.isCurrentlyInCreation(beanName);
         }
 
         /**
@@ -352,8 +352,8 @@ class ConfigurationClassEnhancer {
          */
         private boolean isCurrentlyInvokedFactoryMethod(Method method) {
             Method currentlyInvoked = SimpleInstantiationStrategy.getCurrentlyInvokedFactoryMethod();
-            return (currentlyInvoked != null && method.getName().equals(currentlyInvoked.getName()) &&
-                    Arrays.equals(method.getParameterTypes(), currentlyInvoked.getParameterTypes()));
+            return currentlyInvoked != null && method.getName().equals(currentlyInvoked.getName()) &&
+                    Arrays.equals(method.getParameterTypes(), currentlyInvoked.getParameterTypes());
         }
 
         /**

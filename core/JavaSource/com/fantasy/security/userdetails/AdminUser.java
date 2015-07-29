@@ -13,20 +13,20 @@ import java.util.List;
 
 public class AdminUser extends SimpleUser<User> {
 
-	private static final long serialVersionUID = -9218623309445642304L;
+    private static final long serialVersionUID = -9218623309445642304L;
 
-	private List<Menu> menus;
+    private List<Menu> menus;
 
-	public AdminUser(User user) {
-		super(user);
-	}
+    public AdminUser(User user) {
+        super(user);
+    }
 
-	public synchronized List<Menu> getMenus() {
-		if (menus == null) {
+    public synchronized List<Menu> getMenus() {
+        if (menus == null) {
             MenuService menuService = SpringContextUtil.getBeanByType(MenuService.class);
-			menus = menuService.tree(menuService.list(new Criterion[]{Restrictions.like("path", SettingUtil.getRootMenuId() + Menu.PATH_SEPARATOR, MatchMode.START),Restrictions.ne("id",SettingUtil.getRootMenuId())}, "sort", "asc"));
-		}
-		return menus;
-	}
+            menus = menuService.tree(menuService.list(new Criterion[]{Restrictions.like("path", SettingUtil.getRootMenuId() + Menu.PATH_SEPARATOR, MatchMode.START), Restrictions.ne("id", SettingUtil.getRootMenuId())}, "sort", "asc"));
+        }
+        return menus;
+    }
 
 }

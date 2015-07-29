@@ -6,6 +6,6 @@ import com.fantasy.framework.dao.hibernate.HibernateDao;
 import com.fantasy.security.bean.User;
 
 @Repository("fantasy.auth.hibernate.UserDao")
-public class UserDao extends HibernateDao<User, Long>{
-	
+public class UserDao extends HibernateDao<User, Long> {
+
 }

@@ -108,7 +108,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     }
 
     public void setDataSource(DataSource dataSource) {
-        if ((dataSource instanceof TransactionAwareDataSourceProxy)) {
+        if (dataSource instanceof TransactionAwareDataSourceProxy) {
             this.dataSource = ((TransactionAwareDataSourceProxy) dataSource).getTargetDataSource();
         } else {
             this.dataSource = dataSource;
@@ -301,7 +301,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     }
 
     public void onApplicationEvent(ApplicationEvent event) {
-        if ((this.failFast) && ((event instanceof ContextRefreshedEvent))) {
+        if ((this.failFast) && (event instanceof ContextRefreshedEvent)) {
             this.sqlSessionFactory.getConfiguration().getMappedStatementNames();
         }
     }

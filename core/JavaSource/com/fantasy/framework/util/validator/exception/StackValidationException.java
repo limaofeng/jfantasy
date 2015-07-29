@@ -5,23 +5,23 @@ import java.util.List;
 
 public class StackValidationException extends ValidationException {
 
-	private static final long serialVersionUID = 2298535691065890585L;
-	
-	protected List<Error> errors = new ArrayList<Error>();
+    private static final long serialVersionUID = 2298535691065890585L;
 
-	public StackValidationException() {
-		super(StackValidationException.class.getName());
-	}
+    protected List<Error> errors = new ArrayList<Error>();
 
-	public StackValidationException(String message) {
-		super(message);
-	}
+    public StackValidationException() {
+        super(StackValidationException.class.getName());
+    }
 
-	public void addError(Error error) {
-		this.errors.add(error);
-	}
+    public StackValidationException(String message) {
+        super(message);
+    }
 
-	public Error[] getStack() {
-		return (Error[]) this.errors.toArray(new Error[this.errors.size()]);
-	}
+    public void addError(Error error) {
+        this.errors.add(error);
+    }
+
+    public Error[] getStack() {
+        return (Error[]) this.errors.toArray(new Error[this.errors.size()]);
+    }
 }

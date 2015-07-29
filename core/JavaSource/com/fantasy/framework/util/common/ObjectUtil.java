@@ -466,7 +466,7 @@ public final class ObjectUtil {
             return -1;
         }
         Object[] ary = {f1, f2};
-        if (((f1 instanceof String)) && ((f2 instanceof String))) {
+        if ((f1 instanceof String) && (f2 instanceof String)) {
             Arrays.sort(ary, Collator.getInstance(Locale.CHINA));
         } else {
             Arrays.sort(ary);

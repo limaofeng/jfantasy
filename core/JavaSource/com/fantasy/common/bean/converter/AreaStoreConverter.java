@@ -15,16 +15,16 @@ import com.fantasy.framework.util.jackson.JSON;
 
 public class AreaStoreConverter extends DefaultTypeConverter {
 
-	@Autowired
-	public AreaService areaService;
+    @Autowired
+    public AreaService areaService;
 
-	@SuppressWarnings("rawtypes")
-	public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
-		if (String.class.isAssignableFrom(toType)) {
-			String id = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
-			return StringUtil.isNotBlank(id) ? JSON.serialize(areaService.get(id)) : "";
-		}
-		return super.convertValue(context, target, member, propertyName, value, toType);
-	}
+    @SuppressWarnings("rawtypes")
+    public Object convertValue(Map context, Object target, Member member, String propertyName, Object value, Class toType) {
+        if (String.class.isAssignableFrom(toType)) {
+            String id = StringUtil.nullValue(ClassUtil.isArray(value) ? Array.get(value, 0) : value);
+            return StringUtil.isNotBlank(id) ? JSON.serialize(areaService.get(id)) : "";
+        }
+        return super.convertValue(context, target, member, propertyName, value, toType);
+    }
 
 }

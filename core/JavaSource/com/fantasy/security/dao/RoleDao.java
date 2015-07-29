@@ -7,5 +7,5 @@ import com.fantasy.security.bean.Role;
 
 @Repository("fantasy.auth.hibernate.RoleDao")
 public class RoleDao extends HibernateDao<Role, String> {
-	
+
 }

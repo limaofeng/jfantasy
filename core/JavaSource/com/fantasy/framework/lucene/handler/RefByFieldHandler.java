@@ -7,18 +7,18 @@ import java.lang.reflect.Field;
 import java.util.List;
 
 public class RefByFieldHandler extends ByFieldHandler {
-	private Class<?> refBy;
+    private Class<?> refBy;
 
-	public RefByFieldHandler(Class<?> refBy, Object obj, Field field, String prefix) {
-		super(obj, field, prefix);
-		this.refBy = refBy;
-	}
+    public RefByFieldHandler(Class<?> refBy, Object obj, Field field, String prefix) {
+        super(obj, field, prefix);
+        this.refBy = refBy;
+    }
 
-	public void handle(Document doc) {
-		IndexRefBy irb = (IndexRefBy) this.field.getAnnotation(IndexRefBy.class);
-		Class<?>[] cls = irb.value();
-		int len = cls.length;
-		for (int i = 0; i < len; i++){
+    public void handle(Document doc) {
+        IndexRefBy irb = (IndexRefBy) this.field.getAnnotation(IndexRefBy.class);
+        Class<?>[] cls = irb.value();
+        int len = cls.length;
+        for (int i = 0; i < len; i++) {
             if (cls[i].equals(this.refBy)) {
                 boolean analyze = false;
                 boolean[] as = irb.analyze();
@@ -35,7 +35,7 @@ public class RefByFieldHandler extends ByFieldHandler {
                 if (bs.length > 0) {
                     boost = bs[i];
                 }
-                if ((this.obj instanceof List<?>)) {
+                if (this.obj instanceof List<?>) {
                     processList((List<?>) this.obj, doc, analyze, store, boost);
                     break;
                 }
@@ -44,5 +44,5 @@ public class RefByFieldHandler extends ByFieldHandler {
             }
         }
 
-	}
+    }
 }

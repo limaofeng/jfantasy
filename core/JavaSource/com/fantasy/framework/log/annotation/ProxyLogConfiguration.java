@@ -10,9 +10,9 @@ import com.fantasy.framework.log.interceptor.LogInterceptor;
 @Configuration
 class ProxyLogConfiguration extends AbstractLogConfiguration {
 
-	@Bean
-	@Role(BeanDefinition.ROLE_INFRASTRUCTURE)
-	public LogInterceptor logInterceptor() {
-		return new LogInterceptor();
-	}
+    @Bean
+    @Role(BeanDefinition.ROLE_INFRASTRUCTURE)
+    public LogInterceptor logInterceptor() {
+        return new LogInterceptor();
+    }
 }

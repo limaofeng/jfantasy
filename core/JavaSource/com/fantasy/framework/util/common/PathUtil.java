@@ -79,7 +79,7 @@ public class PathUtil {
 
     public static String getFileName(String path) {
         String[] ress = path.split("/");
-        return ress[(ress.length - 1)];
+        return ress[ress.length - 1];
     }
 
     public static String getFilePath(String path, String fileName) {
@@ -88,7 +88,7 @@ public class PathUtil {
 
     public static String getExtension(String uri) {
         String[] ress = uri.split("\\.");
-        return ress.length < 2 ? "" : ress[(ress.length - 1)];
+        return ress.length < 2 ? "" : ress[ress.length - 1];
     }
 
     public static String classes() {

@@ -94,7 +94,7 @@ public class ByteArrayBuffer extends AbstractBuffer {
         if ((obj == null) || (!(obj instanceof Buffer))) {
             return false;
         }
-        if ((obj instanceof Buffer.CaseInsensitve)) {
+        if (obj instanceof Buffer.CaseInsensitve) {
             return equalsIgnoreCase((Buffer) obj);
         }
 
@@ -104,7 +104,7 @@ public class ByteArrayBuffer extends AbstractBuffer {
             return false;
         }
 
-        if ((this._hash != 0) && ((obj instanceof AbstractBuffer))) {
+        if ((this._hash != 0) && (obj instanceof AbstractBuffer)) {
             AbstractBuffer ab = (AbstractBuffer) obj;
             if ((ab._hash != 0) && (this._hash != ab._hash)) {
                 return false;
@@ -134,7 +134,7 @@ public class ByteArrayBuffer extends AbstractBuffer {
             return false;
         }
 
-        if ((this._hash != 0) && ((b instanceof AbstractBuffer))) {
+        if ((this._hash != 0) && (b instanceof AbstractBuffer)) {
             AbstractBuffer ab = (AbstractBuffer) b;
             if ((ab._hash != 0) && (this._hash != ab._hash)){
                 return false;
@@ -186,7 +186,7 @@ public class ByteArrayBuffer extends AbstractBuffer {
     }
 
     public byte get() {
-        return this._bytes[(this._get++)];
+        return this._bytes[this._get++];
     }
 
     public int hashCode() {
@@ -245,7 +245,7 @@ public class ByteArrayBuffer extends AbstractBuffer {
         } else {
             int s = src.getIndex();
             for (int i = 0; i < length; i++) {
-                this._bytes[(index++)] = src.peek(s++);
+                this._bytes[index++] = src.peek(s++);
             }
         }
         return length;

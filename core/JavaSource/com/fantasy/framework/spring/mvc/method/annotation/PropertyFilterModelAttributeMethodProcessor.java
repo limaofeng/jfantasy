@@ -201,7 +201,7 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
     protected boolean isBindExceptionRequired(WebDataBinder binder, MethodParameter parameter) {
         int i = parameter.getParameterIndex();
         Class<?>[] paramTypes = parameter.getMethod().getParameterTypes();
-        boolean hasBindingResult = (paramTypes.length > (i + 1) && Errors.class.isAssignableFrom(paramTypes[i + 1]));
+        boolean hasBindingResult = paramTypes.length > (i + 1) && Errors.class.isAssignableFrom(paramTypes[i + 1]);
 
         return !hasBindingResult;
     }

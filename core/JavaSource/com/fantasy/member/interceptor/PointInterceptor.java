@@ -16,23 +16,23 @@ import com.fantasy.member.service.MemberService;
 @Aspect
 public class PointInterceptor {
 
-	@Autowired
-	private MemberService memberService;
+    @Autowired
+    private MemberService memberService;
 
-	@After("execution(public * com.fantasy.member.service.PointService.save(com.fantasy.member.bean.Point))")
-	@Transactional
-	public void memberScore(JoinPoint point) {
-		Point pointBean = (Point) point.getArgs()[0];
-		Member member = pointBean.getMember();
-		Integer oldScore = member.getDetails().getScore();
-		oldScore = oldScore == null ? 0 : oldScore;
-		if (Point.Status.add == pointBean.getStatus()) {
-			oldScore += pointBean.getScore();
-		} else if (Point.Status.pay == pointBean.getStatus()) {
-			oldScore = oldScore - pointBean.getScore();
-		}
-		member.getDetails().setScore(oldScore);
-		memberService.save(member);
-	}
+    @After("execution(public * com.fantasy.member.service.PointService.save(com.fantasy.member.bean.Point))")
+    @Transactional
+    public void memberScore(JoinPoint point) {
+        Point pointBean = (Point) point.getArgs()[0];
+        Member member = pointBean.getMember();
+        Integer oldScore = member.getDetails().getScore();
+        oldScore = oldScore == null ? 0 : oldScore;
+        if (Point.Status.add == pointBean.getStatus()) {
+            oldScore += pointBean.getScore();
+        } else if (Point.Status.pay == pointBean.getStatus()) {
+            oldScore = oldScore - pointBean.getScore();
+        }
+        member.getDetails().setScore(oldScore);
+        memberService.save(member);
+    }
 
 }

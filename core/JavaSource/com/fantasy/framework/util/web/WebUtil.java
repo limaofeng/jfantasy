@@ -121,7 +121,7 @@ public class WebUtil {
     public static int getPort(String url) {
         String scheme = getScheme(url);
         String port = RegexpUtil.parseGroup(url, ":([0-9]+)", 1);
-        return Integer.valueOf(port == null ? ("http".equals(scheme) ? "80" : "443") : port);
+        return Integer.valueOf(port == null ? "http".equals(scheme) ? "80" : "443" : port);
     }
 
     /**
@@ -476,7 +476,7 @@ public class WebUtil {
 
     public static String getSessionId(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
-        return (session != null ? session.getId() : null);
+        return session != null ? session.getId() : null;
     }
 
     public static String getMethod(HttpServletRequest request) {

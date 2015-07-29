@@ -184,9 +184,9 @@ public class LimitInterceptor implements Interceptor {
         if (parameterObject == null) {
             return sqlSourceParser.parse(mapperSQL, Object.class, null);
         } else {
-            Class parameterType = parameterObject.getClass();
-            Pager pager = getPager(parameterObject);
-            int pageSize = (pager.getTotalCount() - pager.getFirst()) < pager.getPageSize() ? (pager.getTotalCount() - pager.getFirst()) : pager.getPageSize();
+            Class<?> parameterType = parameterObject.getClass();
+            Pager<?> pager = getPager(parameterObject);
+            int pageSize = pager.getTotalCount() - pager.getFirst() < pager.getPageSize() ? pager.getTotalCount() - pager.getFirst() : pager.getPageSize();
             String newSql = this.dialect.getLimitString(mapperSQL, pager.getFirst(), pageSize);
             return sqlSourceParser.parse(newSql, parameterType, parameterObject);
         }

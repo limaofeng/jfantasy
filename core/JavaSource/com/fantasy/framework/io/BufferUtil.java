@@ -223,7 +223,7 @@ public class BufferUtil {
     }
 
     public static String to8859_1_String(Buffer buffer) {
-        if ((buffer instanceof BufferCache.CachedBuffer)){
+        if (buffer instanceof BufferCache.CachedBuffer){
             return buffer.toString();
         }
         return buffer.toString("ISO-8859-1");

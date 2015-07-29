@@ -30,7 +30,7 @@ public class SpringLogAnnotationParser implements LogAnnotationParser, Serializa
 	}
 
 	private <T extends Annotation> Collection<LogOperation> lazyInit(Collection<LogOperation> ops) {
-		return (ops != null ? ops : new ArrayList<LogOperation>(1));
+		return ops != null ? ops : new ArrayList<LogOperation>(1);
 	}
 
 	private static <T extends Annotation> Collection<T> getAnnotations(AnnotatedElement ae, Class<T> annotationType) {
@@ -45,7 +45,7 @@ public class SpringLogAnnotationParser implements LogAnnotationParser, Serializa
 				anns.add(ann);
 			}
 		}
-		return (anns.isEmpty() ? null : anns);
+		return anns.isEmpty() ? null : anns;
 	}
 
 }

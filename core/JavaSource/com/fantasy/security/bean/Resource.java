@@ -178,11 +178,11 @@ public class Resource extends BaseBusEntity implements Cloneable {
         getSubResources().add(resource);
     }
 
-    @JsonIgnore
-    public String getRoleAuthorities() {
-        AtomicReference<StringBuffer> roleAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
-        for (Role role : (getRoles() == null ? new ArrayList<Role>() : getRoles())) {
-            if (!role.isEnabled()) {
+	@JsonIgnore
+	public String getRoleAuthorities() {
+		AtomicReference<StringBuffer> roleAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
+		for (Role role : getRoles() == null ? new ArrayList<Role>() : getRoles()) {
+			if (!role.isEnabled()){
                 continue;
             }
             List<GrantedAuthority> authorities = role.getRoleAuthorities();
@@ -207,19 +207,19 @@ public class Resource extends BaseBusEntity implements Cloneable {
         return RegexpUtil.replace(authorities.get().toString(), ",$", "");
     }
 
-    @JsonIgnore
-    public String getUserGroupAuthorities() {
-        AtomicReference<StringBuffer> userGroupAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
-        for (UserGroup userGroup : (getUserGroups() == null ? new ArrayList<UserGroup>() : getUserGroups())) {
-            if (userGroup.isEnabled()) {
-                List<GrantedAuthority> authorities = userGroup.getGroupAuthorities();
-                for (GrantedAuthority authority : authorities) {
-                    userGroupAuthorities.get().append(authority.getAuthority()).append(",");
-                }
-            }
-        }
-        return RegexpUtil.replace(userGroupAuthorities.get().toString(), ",$", "");
-    }
+	@JsonIgnore
+	public String getUserGroupAuthorities() {
+		AtomicReference<StringBuffer> userGroupAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
+		for (UserGroup userGroup : getUserGroups() == null ? new ArrayList<UserGroup>() : getUserGroups()) {
+			if (userGroup.isEnabled()) {
+				List<GrantedAuthority> authorities = userGroup.getGroupAuthorities();
+				for (GrantedAuthority authority : authorities) {
+					userGroupAuthorities.get().append(authority.getAuthority()).append(",");
+				}
+			}
+		}
+		return RegexpUtil.replace(userGroupAuthorities.get().toString(), ",$", "");
+	}
 
     @JsonIgnore
     public GrantedAuthority getUrlAuthoritie() {

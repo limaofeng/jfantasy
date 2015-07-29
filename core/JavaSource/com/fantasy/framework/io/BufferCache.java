@@ -49,7 +49,7 @@ public class BufferCache {
     public Buffer lookup(Buffer buffer) {
         Buffer b = get(buffer);
         if (b == null) {
-            if ((buffer instanceof Buffer.CaseInsensitve)){
+            if (buffer instanceof Buffer.CaseInsensitve){
                 return buffer;
             }
             return new View.CaseInsensitive(buffer);
@@ -79,11 +79,11 @@ public class BufferCache {
     }
 
     public int getOrdinal(Buffer buffer) {
-        if ((buffer instanceof CachedBuffer)){
+        if (buffer instanceof CachedBuffer){
             return ((CachedBuffer) buffer).getOrdinal();
         }
         buffer = lookup(buffer);
-        if ((buffer != null) && ((buffer instanceof CachedBuffer))){
+        if ((buffer != null) && (buffer instanceof CachedBuffer)){
             return ((CachedBuffer) buffer).getOrdinal();
         }
         return -1;

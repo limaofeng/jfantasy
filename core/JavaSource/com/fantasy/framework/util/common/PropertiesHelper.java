@@ -245,7 +245,7 @@ public class PropertiesHelper {
         }
 
         public boolean hasNext() {
-            return (next != null);
+            return next != null;
         }
 
         public E next() {

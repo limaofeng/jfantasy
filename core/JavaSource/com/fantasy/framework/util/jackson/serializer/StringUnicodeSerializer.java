@@ -50,7 +50,7 @@ public class StringUnicodeSerializer extends JsonSerializer<String> {
                 writeUnicodeEscape(gen, c); // 为所有非ASCII字符生成转义的unicode字符
             } else {
                 // 为ASCII字符中前128个字符使用转义的unicode字符
-                int code = (c < ESCAPE_CODES.length ? ESCAPE_CODES[c] : 0);
+                int code = c < ESCAPE_CODES.length ? ESCAPE_CODES[c] : 0;
                 if (code == 0) {
                     gen.writeRaw(c); // 此处不用转义
                 } else if (code < 0) {

@@ -137,7 +137,7 @@ public abstract class BuguSearcher<T> {
             }
             pager.setTotalCount(hits.totalHits);
             List<T> data = new ArrayList<T>();
-            for (int i = (pager.getFirst() - between); i < hits.scoreDocs.length && hits.totalHits > 0; i++) {
+            for (int i = pager.getFirst() - between; i < hits.scoreDocs.length && hits.totalHits > 0; i++) {
                 ScoreDoc sdoc = hits.scoreDocs[i];
                 Document doc = searcher.doc(sdoc.doc);
                 data.add(this.build(doc));

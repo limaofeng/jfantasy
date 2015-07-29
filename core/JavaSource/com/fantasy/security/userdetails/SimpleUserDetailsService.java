@@ -14,17 +14,17 @@ import java.util.Locale;
 
 public class SimpleUserDetailsService implements UserDetailsService {
 
-	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private UserService userService;
 
-	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		User user = userService.findUniqueByUsername(username);
-		if (ObjectUtil.isNull(user)) {
-			throw new UsernameNotFoundException(messages.getMessage("JdbcDaoImpl.notFound", new Object[] { username }, "Username {0} not found", Locale.CANADA));
-		}
-		return new AdminUser(user);
-	}
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userService.findUniqueByUsername(username);
+        if (ObjectUtil.isNull(user)) {
+            throw new UsernameNotFoundException(messages.getMessage("JdbcDaoImpl.notFound", new Object[]{username}, "Username {0} not found", Locale.CANADA));
+        }
+        return new AdminUser(user);
+    }
 
 }

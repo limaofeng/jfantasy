@@ -19,7 +19,7 @@ public class MethodProxy {
 
     public MethodProxy(Object method) {
         this.method = method;
-        if ((method instanceof FastMethod)) {
+        if (method instanceof FastMethod) {
             this.parameterTypes = ((FastMethod) method).getParameterTypes();
             this.returnType = ((FastMethod) method).getReturnType();
         } else {
@@ -46,7 +46,7 @@ public class MethodProxy {
 
     public Object invoke(Object object, Object... params) {
         try {
-            if ((this.method instanceof FastMethod)) {
+            if (this.method instanceof FastMethod) {
                 if (params.length > 0) {
                     return ((FastMethod) this.method).invoke(object, params);
                 }
@@ -93,7 +93,7 @@ public class MethodProxy {
 
     public String[] getParamNames() {
         try {
-            if ((this.method instanceof FastMethod)) {
+            if (this.method instanceof FastMethod) {
                 Class<?> declaringClass = ((FastMethod) this.method).getDeclaringClass();
                 return JavassistUtil.getParamNames(declaringClass.getName(), ((FastMethod)this.method).getName(), this.parameterTypes);
             }

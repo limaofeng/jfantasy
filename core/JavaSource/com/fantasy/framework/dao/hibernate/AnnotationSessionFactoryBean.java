@@ -89,7 +89,7 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
             addEventListener(entry.getKey(), eventListenerMap, entry.getValue());
         }
         //添加动态属性版本监听
-        addEventListener(EventType.DELETE.eventName(),eventListenerMap,SpringContextUtil.getBeanByType(AttributeVersionEventListener.class));
+        addEventListener(EventType.DELETE.eventName(), eventListenerMap, SpringContextUtil.getBeanByType(AttributeVersionEventListener.class));
         //========================== 添加非主键的序列生成器 ==========================
         addEventListener("save-update", eventListenerMap, SpringContextUtil.getBeanByType(PropertyGeneratorSaveOrUpdatEventListener.class));
         // 添加 lucene 索引生成监听
@@ -107,18 +107,18 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
 
         // FileEventListener 监听器,用户转存文件或者删除文件
         FileManagerEventListener fileManagerEventListener = SpringContextUtil.createBean(FileManagerEventListener.class, SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
-		addEventListener("post-insert", eventListenerMap, fileManagerEventListener);
-		addEventListener("post-update", eventListenerMap, fileManagerEventListener);
-		addEventListener("post-delete", eventListenerMap, fileManagerEventListener);
+        addEventListener("post-insert", eventListenerMap, fileManagerEventListener);
+        addEventListener("post-update", eventListenerMap, fileManagerEventListener);
+        addEventListener("post-delete", eventListenerMap, fileManagerEventListener);
 
         this.eventListeners.putAll(eventListenerMap);
         EventListenerRegistry registry = ((SessionFactoryImpl) sessionFactory).getServiceRegistry().getService(EventListenerRegistry.class);
         for (Map.Entry<String, List<Object>> event : this.eventListeners.entrySet()) {
             for (Object listener : event.getValue()) {
-                if(EventType.SAVE_UPDATE.eventName().equals(event.getKey())){
-                    registry.prependListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
-                }else{
-                    registry.appendListeners(EventType.resolveEventTypeByName(event.getKey()),listener);
+                if (EventType.SAVE_UPDATE.eventName().equals(event.getKey())) {
+                    registry.prependListeners(EventType.resolveEventTypeByName(event.getKey()), listener);
+                } else {
+                    registry.appendListeners(EventType.resolveEventTypeByName(event.getKey()), listener);
                 }
             }
         }

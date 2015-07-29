@@ -26,7 +26,7 @@ public class StackValidator implements Validator {
 			field = entry.getKey();
 			for (FieldValidator fieldValidator : entry.getValue()) {
 				value = OgnlUtil.getInstance().getValue(field, object);
-				if ((value instanceof List<?>)) {
+				if (value instanceof List<?>) {
 					int i = 0;
 					for (Iterator<?> localIterator3 = ((List<?>) value).iterator(); localIterator3.hasNext();) {
 						Object v = localIterator3.next();

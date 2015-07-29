@@ -40,7 +40,7 @@ public class ParameterMap extends HashMap<String, String[]> {
                             return false;
                         }
                         Entry<String, String[]> entry = (Entry<String, String[]>) obj;
-                        return ((key == null) ? (entry.getKey() == null) : key.equals(entry.getKey())) && ((value == null) ? (entry.getValue() == null) : value == entry.getValue());
+                        return key == null ? (entry.getKey() == null) : key.equals(entry.getKey()) && value == null ? (entry.getValue() == null) : value == entry.getValue();
                     }
 
                     public int hashCode() {

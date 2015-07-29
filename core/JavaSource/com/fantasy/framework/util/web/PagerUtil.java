@@ -60,7 +60,7 @@ public class PagerUtil {
             params.put(currentPageName, new String[] { currentPage });
         }
         queryString = WebUtil.getQueryString(params);
-        return requestUri + (StringUtil.isNotBlank(queryString) ? ("?" + queryString) : "");
+        return requestUri + (StringUtil.isNotBlank(queryString) ? "?" + queryString : "");
     }
 
     public static String getPagerUrl(String requestUri, String queryString, String currentPage) {

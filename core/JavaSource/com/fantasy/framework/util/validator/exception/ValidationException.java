@@ -11,7 +11,7 @@ public class ValidationException extends Exception {
     }
 
     public String toString() {
-        if ((this instanceof StackValidationException)) {
+        if (this instanceof StackValidationException) {
             StackValidationException stack = (StackValidationException) this;
             return "ValidationException [message:" + getMessage() + ",errors:" + JSON.serialize(stack.errors) + "]";
         }

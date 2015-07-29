@@ -9,17 +9,16 @@ import com.fantasy.security.userdetails.exception.FirstLoginAuthenticationExcept
 
 /**
  * 密码过期验证
- * 
+ *
  * @author Administrator
- * 
  */
 public class PasswordExpiredUserDetailsChecker implements UserDetailsChecker {
 
-	@SuppressWarnings( { "unchecked", "unused" })
-	public void check(UserDetails userDetails) {
-		SimpleUser<FantasyUserDetails> simpleUser = (SimpleUser<FantasyUserDetails>) userDetails;
-		// 每90天需要换新密码!
-		throw new FirstLoginAuthenticationException("密码过期(密码有效期为90天)，请修改密码!");
-	}
+    @SuppressWarnings({"unchecked", "unused"})
+    public void check(UserDetails userDetails) {
+        SimpleUser<FantasyUserDetails> simpleUser = (SimpleUser<FantasyUserDetails>) userDetails;
+        // 每90天需要换新密码!
+        throw new FirstLoginAuthenticationException("密码过期(密码有效期为90天)，请修改密码!");
+    }
 
 }

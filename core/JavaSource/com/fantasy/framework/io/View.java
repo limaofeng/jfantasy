@@ -69,7 +69,7 @@ public class View extends AbstractBuffer {
 
     @Override
     public boolean equals(Object obj) {
-        return (this == obj) || (((obj instanceof Buffer)) && (obj.equals(this))) || (super.equals(obj));
+        return ((this == obj) || (obj instanceof Buffer) && (obj.equals(this)) || (super.equals(obj)));
     }
 
     @Override
@@ -136,7 +136,7 @@ public class View extends AbstractBuffer {
 
         @Override
         public boolean equals(Object obj) {
-            return (this == obj) || (((obj instanceof Buffer)) && (((Buffer) obj).equalsIgnoreCase(this))) || (super.equals(obj));
+            return ((this == obj) || (obj instanceof Buffer) && (((Buffer) obj).equalsIgnoreCase(this)) || (super.equals(obj)));
         }
     }
 }

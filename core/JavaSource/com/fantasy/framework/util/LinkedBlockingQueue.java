@@ -533,7 +533,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
             Object[] a = new Object[size];
             int k = 0;
             for (Node<E> p = this.head.next; p != null; p = p.next) {
-                a[(k++)] = p.item;
+                a[k++] = p.item;
             }
             return a;
         } finally {
@@ -551,7 +551,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
             }
             int k = 0;
             for (Node<E> p = this.head.next; p != null; p = p.next) {
-                a[(k++)] = (T) p.item;
+                a[k++] = (T) p.item;
             }
             return a;
         } finally {
@@ -578,7 +578,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         fullyLock();
         try {
             this.head.next = null;
-            assert (this.head.item == null);
+            assert this.head.item == null;
             this.last = this.head;
             if (this.count.getAndSet(0) == this.capacity) {
                 this.notFull.signalAll();
@@ -600,7 +600,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
         try {
             first = this.head.next;
             this.head.next = null;
-            assert (this.head.item == null);
+            assert this.head.item == null;
             this.last = this.head;
             if (this.count.getAndSet(0) == this.capacity) {
                 this.notFull.signalAll();
@@ -637,7 +637,7 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
             }
             if (n != 0) {
                 this.head.next = p;
-                assert (this.head.item == null);
+                assert this.head.item == null;
                 if (p == null) {
                     this.last = this.head;
                 }

@@ -12,45 +12,45 @@ import org.springframework.transaction.support.ResourceTransactionManager;
 import javax.sql.DataSource;
 
 public class DataSourceTransactionManager extends AbstractPlatformTransactionManager implements ResourceTransactionManager, InitializingBean {
-	private static final long serialVersionUID = 4259053668416751804L;
-	private transient DataSource dataSource;
+    private static final long serialVersionUID = 4259053668416751804L;
+    private transient DataSource dataSource;
     private static final Logger LOGGER = Logger.getLogger(DataSourceTransactionManager.class);
 
-	public DataSource getDataSource() {
-		return this.dataSource;
-	}
+    public DataSource getDataSource() {
+        return this.dataSource;
+    }
 
-	public void afterPropertiesSet() {
-		if (getDataSource() == null){
+    public void afterPropertiesSet() {
+        if (getDataSource() == null) {
             throw new IllegalArgumentException("Property 'dataSource' is required");
         }
-	}
+    }
 
-	public Object getResourceFactory() {
-		return getDataSource();
-	}
+    public Object getResourceFactory() {
+        return getDataSource();
+    }
 
-	public void setDataSource(DataSource dataSource) {
-		if ((dataSource instanceof TransactionAwareDataSourceProxy)){
+    public void setDataSource(DataSource dataSource) {
+        if (dataSource instanceof TransactionAwareDataSourceProxy) {
             this.dataSource = ((TransactionAwareDataSourceProxy) dataSource).getTargetDataSource();
-        }else{
+        } else {
             this.dataSource = dataSource;
         }
-	}
+    }
 
-	protected void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
-		LOGGER.debug(">doBegin");
-	}
+    protected void doBegin(Object transaction, TransactionDefinition definition) throws TransactionException {
+        LOGGER.debug(">doBegin");
+    }
 
-	protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
-		LOGGER.debug(">doCommit");
-	}
+    protected void doCommit(DefaultTransactionStatus status) throws TransactionException {
+        LOGGER.debug(">doCommit");
+    }
 
-	protected Object doGetTransaction() throws TransactionException {
-		LOGGER.debug(">doGetTransaction");
-		return null;
-	}
+    protected Object doGetTransaction() throws TransactionException {
+        LOGGER.debug(">doGetTransaction");
+        return null;
+    }
 
-	protected void doRollback(DefaultTransactionStatus status) throws TransactionException {
-	}
+    protected void doRollback(DefaultTransactionStatus status) throws TransactionException {
+    }
 }

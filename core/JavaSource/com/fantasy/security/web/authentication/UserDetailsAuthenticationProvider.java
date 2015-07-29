@@ -16,55 +16,55 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 public class UserDetailsAuthenticationProvider extends AbstractUserDetailsAuthenticationProvider implements InitializingBean {
 
-	private final static Log LOG = LogFactory.getLog(UserDetailsAuthenticationProvider.class);
+    private final static Log LOG = LogFactory.getLog(UserDetailsAuthenticationProvider.class);
 
-	private DaoAuthenticationProvider daoProvider;
+    private DaoAuthenticationProvider daoProvider;
 
-	private Method additionalAuthenticationChecks;
-	private Method retrieveUser;
+    private Method additionalAuthenticationChecks;
+    private Method retrieveUser;
 
-	public void doAfterPropertiesSet() throws Exception {
-		super.doAfterPropertiesSet();
-		additionalAuthenticationChecks = DaoAuthenticationProvider.class.getDeclaredMethod("additionalAuthenticationChecks", UserDetails.class, UsernamePasswordAuthenticationToken.class);
-		additionalAuthenticationChecks.setAccessible(true);
-		retrieveUser = DaoAuthenticationProvider.class.getDeclaredMethod("retrieveUser", String.class, UsernamePasswordAuthenticationToken.class);
-		retrieveUser.setAccessible(true);
-	}
+    public void doAfterPropertiesSet() throws Exception {
+        super.doAfterPropertiesSet();
+        additionalAuthenticationChecks = DaoAuthenticationProvider.class.getDeclaredMethod("additionalAuthenticationChecks", UserDetails.class, UsernamePasswordAuthenticationToken.class);
+        additionalAuthenticationChecks.setAccessible(true);
+        retrieveUser = DaoAuthenticationProvider.class.getDeclaredMethod("retrieveUser", String.class, UsernamePasswordAuthenticationToken.class);
+        retrieveUser.setAccessible(true);
+    }
 
-	@Override
-	protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-		try {
-			return (UserDetails) retrieveUser.invoke(daoProvider, username, authentication);
-		} catch (IllegalArgumentException e) {
-			LOG.error(e.getMessage(), e);
-		} catch (IllegalAccessException e) {
-			LOG.error(e.getMessage(), e);
-		} catch (InvocationTargetException e) {
-			logger.error(e.getMessage(),e);
-			throw (AuthenticationException) e.getTargetException();
-		}
-		throw new UsernameNotFoundException(messages.getMessage("JdbcDaoImpl.notFound", new Object[] { username }, "Username {0} not found", Locale.CHINA));
-	}
+    @Override
+    protected UserDetails retrieveUser(String username, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        try {
+            return (UserDetails) retrieveUser.invoke(daoProvider, username, authentication);
+        } catch (IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (InvocationTargetException e) {
+            logger.error(e.getMessage(), e);
+            throw (AuthenticationException) e.getTargetException();
+        }
+        throw new UsernameNotFoundException(messages.getMessage("JdbcDaoImpl.notFound", new Object[]{username}, "Username {0} not found", Locale.CHINA));
+    }
 
-	public void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
-		try {
-			// 原来的验证方法
-			additionalAuthenticationChecks.invoke(daoProvider, userDetails, authentication);
-		} catch (IllegalArgumentException e) {
-			LOG.error(e.getMessage(), e);
-		} catch (IllegalAccessException e) {
-			LOG.error(e.getMessage(), e);
-		} catch (InvocationTargetException e) {
-			if (e.getTargetException() instanceof AuthenticationException) {
-				throw (AuthenticationException) e.getTargetException();
-			} else {
-				LOG.error(e.getMessage(), e);
-			}
-		}
-	}
+    public void additionalAuthenticationChecks(UserDetails userDetails, UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        try {
+            // 原来的验证方法
+            additionalAuthenticationChecks.invoke(daoProvider, userDetails, authentication);
+        } catch (IllegalArgumentException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (InvocationTargetException e) {
+            if (e.getTargetException() instanceof AuthenticationException) {
+                throw (AuthenticationException) e.getTargetException();
+            } else {
+                LOG.error(e.getMessage(), e);
+            }
+        }
+    }
 
-	public void setDaoProvider(DaoAuthenticationProvider daoProvider) {
-		this.daoProvider = daoProvider;
-	}
+    public void setDaoProvider(DaoAuthenticationProvider daoProvider) {
+        this.daoProvider = daoProvider;
+    }
 
 }

@@ -10,34 +10,34 @@ import java.io.UnsupportedEncodingException;
 @Deprecated
 public class RequestUtil extends ServletRequestUtils {
 
-	public static String getStringsParameter(HttpServletRequest request, String name, String defaultVal) {
-		String strResult = defaultVal;
-		try {
-			StringBuffer bufResult = new StringBuffer();
-			String[] arrayTemp = getStringParameters(request, name);
+    public static String getStringsParameter(HttpServletRequest request, String name, String defaultVal) {
+        String strResult = defaultVal;
+        try {
+            StringBuffer bufResult = new StringBuffer();
+            String[] arrayTemp = getStringParameters(request, name);
 
-			if ((arrayTemp != null) && (arrayTemp.length > 0)) {
-				for (int num = 0; num < arrayTemp.length; num++) {
-					if (num == arrayTemp.length - 1){
+            if ((arrayTemp != null) && (arrayTemp.length > 0)) {
+                for (int num = 0; num < arrayTemp.length; num++) {
+                    if (num == arrayTemp.length - 1) {
                         bufResult.append(arrayTemp[num]);
-                    }else {
+                    } else {
                         bufResult.append(arrayTemp[num] + ",");
                     }
 
-				}
-			}
-			strResult = bufResult.toString();
-		} catch (Exception e) {
-			strResult = defaultVal;
-			throw new IgnoreException(e.getMessage(),e);
-		}
-		return strResult;
-	}
+                }
+            }
+            strResult = bufResult.toString();
+        } catch (Exception e) {
+            strResult = defaultVal;
+            throw new IgnoreException(e.getMessage(), e);
+        }
+        return strResult;
+    }
 
-	public static String getStrParam(ServletRequest request, String name, String defaultVal) throws UnsupportedEncodingException {
-		String str = getStringParameter(request, name, defaultVal);
-		str = new String(str.getBytes("8859_1"), "UTF-8");
-		return str;
-	}
+    public static String getStrParam(ServletRequest request, String name, String defaultVal) throws UnsupportedEncodingException {
+        String str = getStringParameter(request, name, defaultVal);
+        str = new String(str.getBytes("8859_1"), "UTF-8");
+        return str;
+    }
 
 }

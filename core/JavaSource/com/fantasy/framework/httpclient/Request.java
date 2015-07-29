@@ -75,9 +75,9 @@ public class Request {
         if (params != null) {
             List<Part> parts = new ArrayList<Part>();
             for (Map.Entry<String, Object> entry : params.entrySet()) {
-                if ((entry.getValue() instanceof String)){
+                if (entry.getValue() instanceof String){
                     addParam(entry.getKey(), entry.getValue().toString());
-                } else if ((entry.getValue() instanceof File)) {
+                } else if (entry.getValue() instanceof File) {
                     parts.add(new FilePart(entry.getKey(), File.class.cast(entry.getValue())));
                 }
             }

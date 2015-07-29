@@ -11,7 +11,7 @@ public class SexTypeHandler extends CharEnumTypeHandler<Sex> {
 
             @SuppressWarnings("rawtypes")
             public Object convert(Class classes, Object value) {
-                if ((value instanceof Sex)) {
+                if (value instanceof Sex) {
                     switch (((Sex) value).ordinal()) {
                         case 0:
                             return 'U';
@@ -24,7 +24,7 @@ public class SexTypeHandler extends CharEnumTypeHandler<Sex> {
                     }
                     return 'U';
                 }
-                if ((value instanceof String)) {
+                if (value instanceof String) {
                     switch (((String) value).charAt(0)) {
                         case 'F':
                             return Sex.female;

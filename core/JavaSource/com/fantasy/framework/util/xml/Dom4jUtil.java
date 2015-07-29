@@ -12,64 +12,64 @@ import java.util.List;
 
 public final class Dom4jUtil {
 
-	private static final Log LOGGER = LogFactory.getLog(Dom4jUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(Dom4jUtil.class);
 
-	public static Document reader(InputStream inputStream) {
-		try {
-			return new SAXReader().read(inputStream);
-		} catch (Exception e) {
-			LOGGER.error(e);
-			throw new IgnoreException(e.getMessage());
-		}
-	}
+    public static Document reader(InputStream inputStream) {
+        try {
+            return new SAXReader().read(inputStream);
+        } catch (Exception e) {
+            LOGGER.error(e);
+            throw new IgnoreException(e.getMessage());
+        }
+    }
 
-	public static Document reader(URL url) {
-		try {
-			return new SAXReader().read(url);
-		} catch (Exception e) {
-			LOGGER.error(e);
-			throw new IgnoreException(e.getMessage());
-		}
-	}
+    public static Document reader(URL url) {
+        try {
+            return new SAXReader().read(url);
+        } catch (Exception e) {
+            LOGGER.error(e);
+            throw new IgnoreException(e.getMessage());
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	public static void readNode(Element root, String prefix) {
-		if (root == null){
+    @SuppressWarnings("unchecked")
+    public static void readNode(Element root, String prefix) {
+        if (root == null) {
             return;
         }
-		// 获取属性
-		List<Attribute> attrs = root.attributes();
-		if (attrs != null && !attrs.isEmpty()) {
-			LOGGER.error(prefix);
-			for (Attribute attr : attrs) {
-				LOGGER.error(attr.getValue() + " ");
-			}
-		}
-		// 获取他的子节点
-		List<Element> childNodes = root.elements();
-		prefix += "\t";
-		for (Element e : childNodes) {
-			readNode(e, prefix);
-		}
-	}
+        // 获取属性
+        List<Attribute> attrs = root.attributes();
+        if (attrs != null && !attrs.isEmpty()) {
+            LOGGER.error(prefix);
+            for (Attribute attr : attrs) {
+                LOGGER.error(attr.getValue() + " ");
+            }
+        }
+        // 获取他的子节点
+        List<Element> childNodes = root.elements();
+        prefix += "\t";
+        for (Element e : childNodes) {
+            readNode(e, prefix);
+        }
+    }
 
-	public static class MyVistor extends VisitorSupport {
-		public void visit(Attribute node) {
-			LOGGER.debug("Attibute: " + node.getName() + "=" + node.getValue());
-		}
+    public static class MyVistor extends VisitorSupport {
+        public void visit(Attribute node) {
+            LOGGER.debug("Attibute: " + node.getName() + "=" + node.getValue());
+        }
 
-		public void visit(Element node) {
-			if (node.isTextOnly()) {
-				LOGGER.debug("Element: " + node.getName() + "=" + node.getText());
-			} else {
-				LOGGER.debug("root:" + node.getName());
-			}
-		}
+        public void visit(Element node) {
+            if (node.isTextOnly()) {
+                LOGGER.debug("Element: " + node.getName() + "=" + node.getText());
+            } else {
+                LOGGER.debug("root:" + node.getName());
+            }
+        }
 
-		@Override
-		public void visit(ProcessingInstruction node) {
-			LOGGER.debug("PI:" + node.getTarget() + " " + node.getText());
-		}
-	}
+        @Override
+        public void visit(ProcessingInstruction node) {
+            LOGGER.debug("PI:" + node.getTarget() + " " + node.getText());
+        }
+    }
 
 }

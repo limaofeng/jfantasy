@@ -52,15 +52,15 @@ public final class Base64 {
     }
 
     private static boolean isWhiteSpace(char octect) {
-        return (octect == 0x20 || octect == 0xd || octect == 0xa || octect == 0x9);
+        return octect == 0x20 || octect == 0xd || octect == 0xa || octect == 0x9;
     }
 
     private static boolean isPad(char octect) {
-        return (octect == PAD);
+        return octect == PAD;
     }
 
     private static boolean isData(char octect) {
-        return (octect < BASELENGTH && BASE_64_ALPHABET[octect] != -1);
+        return octect < BASELENGTH && BASE_64_ALPHABET[octect] != -1;
     }
 
     /**
@@ -174,7 +174,7 @@ public final class Base64 {
             return null;//should be divisible by four
         }
 
-        int numberQuadruple = (len / FOURBYTE);
+        int numberQuadruple = len / FOURBYTE    ;
 
         if (numberQuadruple == 0) {
             return new byte[0];
@@ -191,9 +191,9 @@ public final class Base64 {
 
         for (; i < numberQuadruple - 1; i++) {
 
-            if (!isData((d1 = base64Data[dataIndex++])) || !isData((d2 = base64Data[dataIndex++]))
-                    || !isData((d3 = base64Data[dataIndex++]))
-                    || !isData((d4 = base64Data[dataIndex++]))) {
+            if (!isData(d1 = base64Data[dataIndex++]) || !isData(d2 = base64Data[dataIndex++])
+                    || !isData(d3 = base64Data[dataIndex++])
+                    || !isData(d4 = base64Data[dataIndex++])) {
                 return null;
             }//if found "no data" just return null
 
@@ -207,7 +207,7 @@ public final class Base64 {
             decodedData[encodedIndex++] = (byte) (b3 << 6 | b4);
         }
 
-        if (!isData((d1 = base64Data[dataIndex++])) || !isData((d2 = base64Data[dataIndex++]))) {
+        if (!isData(d1 = base64Data[dataIndex++]) || !isData(d2 = base64Data[dataIndex++])) {
             return null;//if found "no data" just return null
         }
 
@@ -216,7 +216,7 @@ public final class Base64 {
 
         d3 = base64Data[dataIndex++];
         d4 = base64Data[dataIndex];
-        if (!isData((d3)) || !isData((d4))) {//Check if they are PAD characters
+        if (!isData(d3) || !isData(d4)) {//Check if they are PAD characters
             if (isPad(d3) && isPad(d4)) {
                 if ((b2 & 0xf) != 0) {//last 4 bits should be zero
                     return null;

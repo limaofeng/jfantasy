@@ -569,7 +569,7 @@ public abstract class StringUtil {
             int offset = i * 4;
             tmpBuilder.setLength(0);
 
-            tmpBuilder.append(String.format("%02X%02X%02X%02X", new Object[]{sidBytes[(11 + offset)] & 0xFF, sidBytes[(10 + offset)] & 0xFF, sidBytes[(9 + offset)] & 0xFF, sidBytes[(8 + offset)] & 0xFF}));
+            tmpBuilder.append(String.format("%02X%02X%02X%02X", new Object[]{sidBytes[11 + offset] & 0xFF, sidBytes[10 + offset] & 0xFF, sidBytes[9 + offset] & 0xFF, sidBytes[8 + offset] & 0xFF}));
 
             sidString.append('-').append(Long.parseLong(tmpBuilder.toString(), 16));
         }
@@ -585,9 +585,9 @@ public abstract class StringUtil {
         int byteCount = 0;
         byte[] sidBytes = new byte[8 + 4 * subAuthorityCount];
 
-        sidBytes[(byteCount++)] = (byte) Integer.parseInt(sidTokens[1]);
+        sidBytes[byteCount++] = (byte) Integer.parseInt(sidTokens[1]);
 
-        sidBytes[(byteCount++)] = (byte) subAuthorityCount;
+        sidBytes[byteCount++] = (byte) subAuthorityCount;
 
         String hexStr = Long.toHexString(Long.parseLong(sidTokens[2]));
 
@@ -596,7 +596,7 @@ public abstract class StringUtil {
         }
 
         for (int i = 0; i < hexStr.length(); i += 2) {
-            sidBytes[(byteCount++)] = (byte) Integer.parseInt(hexStr.substring(i, i + 2), 16);
+            sidBytes[byteCount++] = (byte) Integer.parseInt(hexStr.substring(i, i + 2), 16);
         }
 
         for (int i = 3; i < sidTokens.length; i++) {
@@ -607,7 +607,7 @@ public abstract class StringUtil {
             }
 
             for (int j = hexStr.length(); j > 0; j -= 2) {
-                sidBytes[(byteCount++)] = (byte) Integer.parseInt(hexStr.substring(j - 2, j), 16);
+                sidBytes[byteCount++] = (byte) Integer.parseInt(hexStr.substring(j - 2, j), 16);
             }
         }
 

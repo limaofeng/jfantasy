@@ -718,7 +718,7 @@ public final class ImageUtil {
                 int nindex = 0;
                 for (int j = 0; j < nheight; j++) {
                     for (int i = 0; i < nwidth; i++) {
-                        ndata[(nwidth * (nheight - j - 1) + i)] = (0xFF000000 | (brgb[(nindex + 2)] & 0xFF) << 16 | (brgb[(nindex + 1)] & 0xFF) << 8 | brgb[nindex] & 0xFF);
+                        ndata[nwidth * (nheight - j - 1) + i] = (0xFF000000 | (brgb[nindex + 2] & 0xFF) << 16 | (brgb[nindex + 1] & 0xFF) << 8 | brgb[nindex] & 0xFF);
                         nindex += 3;
                     }
                     nindex += npad;

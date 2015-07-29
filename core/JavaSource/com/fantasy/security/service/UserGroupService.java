@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public class UserGroupService{
+public class UserGroupService {
 
-	public List<UserGroup> getUserGroupsByResourceId(Long id) {
-		return null;
-	}
+    public List<UserGroup> getUserGroupsByResourceId(Long id) {
+        return null;
+    }
 }

@@ -37,7 +37,7 @@ public class FieldValidator {
 			if (validator == null) {
 				throw new IgnoreException(this.type + ",对应的验证器没有找到!");
 			}
-			if ((validator instanceof ParamsValidator)) {
+			if (validator instanceof ParamsValidator) {
 				ParamsValidator paramsValidator = (ParamsValidator) ParamsValidator.class.cast(validator);
 				if (paramsValidator.getParams() != null) {
 					for (Map.Entry<String, String> entry : paramsValidator.getParams().entrySet()) {

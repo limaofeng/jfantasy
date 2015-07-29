@@ -16,44 +16,43 @@ import com.fantasy.framework.util.common.ObjectUtil;
 
 /**
  * spring security 登陆后置验证
- * 
+ *
  * @author 李茂峰
- * 
  */
 public class PostAuthenticationChecks implements UserDetailsChecker, InitializingBean {
 
-	protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
+    protected MessageSourceAccessor messages = SpringSecurityMessageSource.getAccessor();
 
-	protected final static Log LOGGER = LogFactory.getLog(PostAuthenticationChecks.class);
+    protected final static Log LOGGER = LogFactory.getLog(PostAuthenticationChecks.class);
 
-	private List<UserDetailsChecker> userDetailsCheckers = null;
+    private List<UserDetailsChecker> userDetailsCheckers = null;
 
-	private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
+    private UserDetailsChecker postAuthenticationChecks = new DefaultPostAuthenticationChecks();
 
-	public void afterPropertiesSet() throws Exception {
-		if (ObjectUtil.isNull(userDetailsCheckers)) {
-			userDetailsCheckers = new ArrayList<UserDetailsChecker>();
-		}
-	}
+    public void afterPropertiesSet() throws Exception {
+        if (ObjectUtil.isNull(userDetailsCheckers)) {
+            userDetailsCheckers = new ArrayList<UserDetailsChecker>();
+        }
+    }
 
-	public void check(UserDetails userDetails) {
-		postAuthenticationChecks.check(userDetails);
-		for (UserDetailsChecker userDetailsChecker : userDetailsCheckers) {
-			userDetailsChecker.check(userDetails);
-		}
-	}
+    public void check(UserDetails userDetails) {
+        postAuthenticationChecks.check(userDetails);
+        for (UserDetailsChecker userDetailsChecker : userDetailsCheckers) {
+            userDetailsChecker.check(userDetails);
+        }
+    }
 
-	public void setUserDetailsCheckers(List<UserDetailsChecker> userDetailsCheckers) {
-		this.userDetailsCheckers = userDetailsCheckers;
-	}
+    public void setUserDetailsCheckers(List<UserDetailsChecker> userDetailsCheckers) {
+        this.userDetailsCheckers = userDetailsCheckers;
+    }
 
-	private class DefaultPostAuthenticationChecks implements UserDetailsChecker {
-		public void check(UserDetails user) {
-			if (!user.isCredentialsNonExpired()) {
-				LOGGER.debug("User account credentials have expired");
-				throw new CredentialsExpiredException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired", "User credentials have expired"));
-			}
-		}
-	}
+    private class DefaultPostAuthenticationChecks implements UserDetailsChecker {
+        public void check(UserDetails user) {
+            if (!user.isCredentialsNonExpired()) {
+                LOGGER.debug("User account credentials have expired");
+                throw new CredentialsExpiredException(messages.getMessage("AbstractUserDetailsAuthenticationProvider.credentialsExpired", "User credentials have expired"));
+            }
+        }
+    }
 
 }

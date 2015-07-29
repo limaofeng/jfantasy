@@ -22,45 +22,45 @@ import com.octo.captcha.engine.image.ListImageCaptchaEngine;
 import com.octo.captcha.image.gimpy.GimpyFactory;
 
 public class DefaultEngine extends ListImageCaptchaEngine {
-	private static final Integer MIN_WORD_LENGTH = 4;// 验证码最小长度
-	private static final Integer MAX_WORD_LENGTH = 4;// 验证码最大长度
-	private static final Integer IMAGE_HEIGHT = 28;// 验证码图片高度
-	private static final Integer IMAGE_WIDTH = 80;// 验证码图片宽度
-	private static final Integer MIN_FONT_SIZE = 16;// 验证码最小字体
-	private static final Integer MAX_FONT_SIZE = 16;// 验证码最大字体
-	private static final String RANDOM_WORD = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";// 随机字符
-	private static final String IMAGE_PATH = "./com/fantasy/framework/jcaptcha/background/";// 随机背景图片路径
+    private static final Integer MIN_WORD_LENGTH = 4;// 验证码最小长度
+    private static final Integer MAX_WORD_LENGTH = 4;// 验证码最大长度
+    private static final Integer IMAGE_HEIGHT = 28;// 验证码图片高度
+    private static final Integer IMAGE_WIDTH = 80;// 验证码图片宽度
+    private static final Integer MIN_FONT_SIZE = 16;// 验证码最小字体
+    private static final Integer MAX_FONT_SIZE = 16;// 验证码最大字体
+    private static final String RANDOM_WORD = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";// 随机字符
+    private static final String IMAGE_PATH = "./com/fantasy/framework/jcaptcha/background/";// 随机背景图片路径
 
-	// 验证码随机字体
-	private static final Font[] RANDOM_FONT = new Font[] { new Font("nyala", Font.BOLD, MIN_FONT_SIZE), new Font("Arial", Font.BOLD, MIN_FONT_SIZE), new Font("Bell MT", Font.BOLD, MIN_FONT_SIZE), new Font("Credit valley", Font.BOLD, MIN_FONT_SIZE), new Font("Impact", Font.BOLD, MIN_FONT_SIZE) };
+    // 验证码随机字体
+    private static final Font[] RANDOM_FONT = new Font[]{new Font("nyala", Font.BOLD, MIN_FONT_SIZE), new Font("Arial", Font.BOLD, MIN_FONT_SIZE), new Font("Bell MT", Font.BOLD, MIN_FONT_SIZE), new Font("Credit valley", Font.BOLD, MIN_FONT_SIZE), new Font("Impact", Font.BOLD, MIN_FONT_SIZE)};
 
-	// 验证码随机颜色
-	private static final Color[] RANDOM_COLOR = new Color[] { new Color(255, 255, 255), new Color(255, 220, 220), new Color(220, 255, 255), new Color(220, 220, 255), new Color(255, 255, 220), new Color(220, 255, 220) };
+    // 验证码随机颜色
+    private static final Color[] RANDOM_COLOR = new Color[]{new Color(255, 255, 255), new Color(255, 220, 220), new Color(220, 255, 255), new Color(220, 220, 255), new Color(255, 255, 220), new Color(220, 255, 220)};
 
-	// 生成验证码
-	@Override
-	protected void buildInitialFactories() {
+    // 生成验证码
+    @Override
+    protected void buildInitialFactories() {
 
-		RandomListColorGenerator randomListColorGenerator = new RandomListColorGenerator(RANDOM_COLOR);
+        RandomListColorGenerator randomListColorGenerator = new RandomListColorGenerator(RANDOM_COLOR);
 
-		BackgroundGenerator backgroundGenerator = null;
-		URI uri = PathUtil.getClassLocationURI(DefaultEngine.class);
-		if (uri.isOpaque()) {
-			backgroundGenerator = new JarReaderRandomBackgroundGenerator(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_PATH, PathUtil.getPathFromClass(DefaultEngine.class));
-		} else {
-			backgroundGenerator = new FileReaderRandomBackgroundGenerator(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_PATH);
-		}
+        BackgroundGenerator backgroundGenerator = null;
+        URI uri = PathUtil.getClassLocationURI(DefaultEngine.class);
+        if (uri.isOpaque()) {
+            backgroundGenerator = new JarReaderRandomBackgroundGenerator(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_PATH, PathUtil.getPathFromClass(DefaultEngine.class));
+        } else {
+            backgroundGenerator = new FileReaderRandomBackgroundGenerator(IMAGE_WIDTH, IMAGE_HEIGHT, IMAGE_PATH);
+        }
 
-		WordGenerator wordGenerator = new RandomWordGenerator(RANDOM_WORD);
+        WordGenerator wordGenerator = new RandomWordGenerator(RANDOM_WORD);
 
-		FontGenerator fontGenerator = new RandomFontGenerator(MIN_FONT_SIZE, MAX_FONT_SIZE, RANDOM_FONT);
+        FontGenerator fontGenerator = new RandomFontGenerator(MIN_FONT_SIZE, MAX_FONT_SIZE, RANDOM_FONT);
 
-		TextDecorator[] textDecorator = new TextDecorator[] {};
+        TextDecorator[] textDecorator = new TextDecorator[]{};
 
-		TextPaster textPaster = new DecoratedRandomTextPaster(MIN_WORD_LENGTH, MAX_WORD_LENGTH, randomListColorGenerator, textDecorator);
+        TextPaster textPaster = new DecoratedRandomTextPaster(MIN_WORD_LENGTH, MAX_WORD_LENGTH, randomListColorGenerator, textDecorator);
 
-		WordToImage wordToImage = new ComposedWordToImage(fontGenerator, backgroundGenerator, textPaster);
+        WordToImage wordToImage = new ComposedWordToImage(fontGenerator, backgroundGenerator, textPaster);
 
-		addFactory(new GimpyFactory(wordGenerator, wordToImage));
-	}
+        addFactory(new GimpyFactory(wordGenerator, wordToImage));
+    }
 }
