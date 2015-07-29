@@ -83,7 +83,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         try {
             getSession().saveOrUpdate(entity = clean(entity));
         } catch (NonUniqueObjectException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             getSession().merge(entity);
         }
         this.LOGGER.debug("save entity: {}", entity);
@@ -100,7 +100,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         try {
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage(), e);
             getSession().merge(entity);
         }
         this.LOGGER.debug("update entity: {}", entity);
@@ -167,105 +167,127 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         }
         if (ObjectUtil.isNotNull(oldEntity)) {// 主键对应的数据存在
             // 为普通字段做值转换操作
-            Field[] fields = ClassUtil.getDeclaredFields(this.entityClass, Column.class);
-            for (Field field : fields) {
-                String getterMethodName = (boolean.class.equals(field.getType()) ? "is" : "get") + StringUtils.capitalize(field.getName()) + "()";
-                Object value = ognlUtil.getValue(getterMethodName, entity);
-                if (value != null) {
-                    ClassUtil.setValue(oldEntity, field.getName(), value);
-                }
-            }
+            this.cleanColumn(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, Column.class), ognlUtil);
             // 一对一关联关系的表
-            fields = ClassUtil.getDeclaredFields(this.entityClass, OneToOne.class);
-            for (Field field : fields) {
-                OneToOne oneToOne = field.getAnnotation(OneToOne.class);
-                if (!(ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.MERGE) > -1)) {
-                    continue;
-                }
-                Object value = ClassUtil.getValue(entity, field.getName());
-                if (value != null) {
-                    Object oldValue = ClassUtil.getValue(oldEntity, field.getName());
-                    if (oldValue == null) {
-                        ClassUtil.setValue(oldEntity, field.getName(), value);
-                    } else {
-                        for (Field fkField : ClassUtil.getDeclaredFields(field.getType(), Column.class)) {
-                            if (!fkField.isAnnotationPresent(Id.class)) {
-                                Object fkValue = ClassUtil.getValue(value, fkField.getName());
-                                if (fkValue != null) {
-                                    if (fkValue instanceof Blob) {
-                                        ClassUtil.setValue(oldValue, fkField.getName(), fkValue);
-                                    } else {
-                                        ognlUtil.setValue(field.getName() + "." + fkField.getName(), oldEntity, fkValue);
-                                    }
+            this.cleanOneToOne(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, OneToOne.class), ognlUtil);
+            // 多对一关联关系的表
+            this.cleanManyToOne(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class), ognlUtil);
+            // 多对多关联关系的表
+            this.cleanManyToMany(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
+            // 一对多关联关系的表
+            this.cleanOneToMany(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
+            return oldEntity;
+        } else {
+            this.cleanManyToOne(entity, null, ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class), ognlUtil);
+            // 多对多关联关系的表
+            this.cleanManyToMany(entity, null, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
+            // 一对多关联关系的表
+            this.cleanOneToMany(entity, null, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
+            return entity;
+        }
+    }
+
+    private void cleanColumn(T entity, T oldEntity, Field[] fields, OgnlUtil ognlUtil){
+        for (Field field : fields) {
+            String getterMethodName = (boolean.class.equals(field.getType()) ? "is" : "get") + StringUtils.capitalize(field.getName()) + "()";
+            Object value = ognlUtil.getValue(getterMethodName, entity);
+            if (value != null) {
+                ClassUtil.setValue(oldEntity, field.getName(), value);
+            }
+        }
+    }
+
+    private void cleanOneToOne(T entity, T oldEntity, Field[] fields, OgnlUtil ognlUtil){
+        for (Field field : fields) {
+            OneToOne oneToOne = field.getAnnotation(OneToOne.class);
+            if (!(ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.MERGE) > -1)) {
+                continue;
+            }
+            Object value = ClassUtil.getValue(entity, field.getName());
+            if (value != null) {
+                Object oldValue = ClassUtil.getValue(oldEntity, field.getName());
+                if (oldValue == null) {
+                    ClassUtil.setValue(oldEntity, field.getName(), value);
+                } else {
+                    for (Field fkField : ClassUtil.getDeclaredFields(field.getType(), Column.class)) {
+                        if (!fkField.isAnnotationPresent(Id.class)) {
+                            Object fkValue = ClassUtil.getValue(value, fkField.getName());
+                            if (fkValue != null) {
+                                if (fkValue instanceof Blob) {
+                                    ClassUtil.setValue(oldValue, fkField.getName(), fkValue);
+                                } else {
+                                    ognlUtil.setValue(field.getName() + "." + fkField.getName(), oldEntity, fkValue);
                                 }
                             }
                         }
                     }
                 }
             }
-            // 多对一关联关系的表
-            Field[] manyToOneFields = ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class);
-            for (Field field : manyToOneFields) {
-                Object fk = ognlUtil.getValue(field.getName(), entity);
-                if (fk == null) {
-                    ognlUtil.setValue(field.getName(), entity, null);
-                    continue;
-                }
-                Serializable fkId = getIdValue(field.getType(), fk);
-                Object fkObj = fkId != null ? getSession().get(field.getType(), fkId) : null;
-                ognlUtil.setValue(field.getName(), oldEntity, fkObj);
+        }
+    }
+
+    private void cleanManyToOne(T entity, T oldEntity, Field[] manyToOneFields, OgnlUtil ognlUtil) {
+        for (Field field : manyToOneFields) {
+            Object fk = ognlUtil.getValue(field.getName(), entity);
+            if (fk == null) {
+                ognlUtil.setValue(field.getName(), entity, null);
+                continue;
             }
-            // 多对多关联关系的表
-            Field[] manyToManyFields = ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class);
-            for (Field field : manyToManyFields) {
-                ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
-                Class targetEntityClass = manyToMany.targetEntity();
-                if (void.class == targetEntityClass) {
-                    targetEntityClass = ClassUtil.getFieldGenericType(field);
-                }
-                if (manyToMany.cascade().length != 0 && !(ObjectUtil.indexOf(manyToMany.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(manyToMany.cascade(), CascadeType.MERGE) > -1)) {
-                    continue;
-                }
-                Object fks = ognlUtil.getValue(field.getName(), entity);
-                if (ClassUtil.isList(fks)) {
-                    List<Object> objects = (List<Object>) fks;
-                    List<Object> addObjects = new ArrayList<Object>();
-                    for (Object fk : objects) {
-                        Serializable fkId = getIdValue(targetEntityClass, fk);
-                        Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
-                        if (fkObj != null) {
-                            addObjects.add(fkObj);
-                        }
-                    }
-                    ognlUtil.setValue(field.getName(), oldEntity, addObjects);
-                }
+            Serializable fkId = getIdValue(field.getType(), fk);
+            Object fkObj = fkId != null ? getSession().get(field.getType(), fkId) : null;
+            ognlUtil.setValue(field.getName(), oldEntity == null ? entity : oldEntity, fkObj);
+        }
+    }
+
+    private void cleanManyToMany(T entity, T oldEntity, Field[] manyToManyFields, OgnlUtil ognlUtil) {
+        for (Field field : manyToManyFields) {
+            ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
+            Class targetEntityClass = manyToMany.targetEntity();
+            if (void.class == targetEntityClass) {
+                targetEntityClass = ClassUtil.getFieldGenericType(field);
             }
-            // 一对多关联关系的表
-            Field[] oneToManyFields = ClassUtil.getDeclaredFields(this.entityClass, OneToMany.class);
-            for (Field field : oneToManyFields) {
-                OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-                Class targetEntityClass = oneToMany.targetEntity();
-                if (void.class == targetEntityClass) {
-                    targetEntityClass = ClassUtil.getFieldGenericType(field);
-                }
-                if (oneToMany.cascade().length != 0 && !(ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.MERGE) > -1)) {
-                    continue;
-                }
-                Object fks = ognlUtil.getValue(field.getName(), entity);
-                if (ClassUtil.isList(fks)) {
-                    List<Object> objects = (List<Object>) fks;
-                    List<Object> addObjects = new ArrayList<Object>();
-                    for (Object fk : objects) {
-                        Serializable fkId = getIdValue(targetEntityClass, fk);
-                        Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
-                        if (fkObj != null) {
-                            addObjects.add(BeanUtil.copyProperties(fkObj, fk));
-                        } else {
-                            addObjects.add(fk);
-                        }
+            Object fks = ognlUtil.getValue(field.getName(), entity);
+            if (ClassUtil.isList(fks)) {
+                List<Object> objects = (List<Object>) fks;
+                List<Object> addObjects = new ArrayList<Object>();
+                for (Object fk : objects) {
+                    Serializable fkId = getIdValue(targetEntityClass, fk);
+                    Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
+                    if (fkObj != null) {
+                        addObjects.add(fkObj);
                     }
-                    List<Object> oldFks = (List<Object>) ognlUtil.getValue(field.getName(), oldEntity);
-                    ognlUtil.setValue(field.getName(), oldEntity, addObjects);
+                }
+                ognlUtil.setValue(field.getName(), oldEntity == null ? entity : oldEntity, addObjects);
+            }
+        }
+    }
+
+    private void cleanOneToMany(T entity, T oldEntity, Field[] oneToManyFields, OgnlUtil ognlUtil) {
+        for (Field field : oneToManyFields) {
+            OneToMany oneToMany = field.getAnnotation(OneToMany.class);
+            Class targetEntityClass = oneToMany.targetEntity();
+            if (void.class == targetEntityClass) {
+                targetEntityClass = ClassUtil.getFieldGenericType(field);
+            }
+            if (oneToMany.cascade().length != 0 && !(ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.MERGE) > -1)) {
+                continue;
+            }
+            Object fks = ognlUtil.getValue(field.getName(), entity);
+            if (ClassUtil.isList(fks)) {
+                List<Object> objects = (List<Object>) fks;
+                List<Object> addObjects = new ArrayList<Object>();
+                for (Object fk : objects) {
+                    Serializable fkId = getIdValue(targetEntityClass, fk);
+                    Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
+                    if (fkObj != null) {
+                        addObjects.add(BeanUtil.copyProperties(fkObj, fk));
+                    } else {
+                        addObjects.add(fk);
+                    }
+                }
+                ognlUtil.setValue(field.getName(), oldEntity == null ? entity : oldEntity, addObjects);
+                if (oldEntity != null) {
+                    List<Object> oldFks = ognlUtil.getValue(field.getName(), oldEntity);
                     //删除原有数据
                     for (Object odl : oldFks) {
                         if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), getIdValue(targetEntityClass, odl)) == null) {
@@ -275,69 +297,6 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
                     }
                 }
             }
-            return oldEntity;
-        } else {
-            // 为外键对象提供查询功能
-            Field[] manyToOneFields = ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class);
-            for (Field field : manyToOneFields) {
-                Object fk = ognlUtil.getValue(field.getName(), entity);
-                if (fk == null) {
-                    continue;
-                }
-                Serializable fkId = getIdValue(field.getType(), fk);
-                Object fkObj = fkId != null ? getSession().get(field.getType(), fkId) : null;
-                ognlUtil.setValue(field.getName(), entity, fkObj);
-            }
-            // 多对多关联关系的表
-            Field[] manyToManyFields = ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class);
-            for (Field field : manyToManyFields) {
-                ManyToMany manyToMany = field.getAnnotation(ManyToMany.class);
-                Class targetEntityClass = manyToMany.targetEntity();
-                if (void.class == targetEntityClass) {
-                    targetEntityClass = ClassUtil.getFieldGenericType(field);
-                }
-                Object fks = ognlUtil.getValue(field.getName(), entity);
-                if (ClassUtil.isList(fks)) {
-                    List<Object> objects = (List<Object>) fks;
-                    List<Object> addObjects = new ArrayList<Object>();
-                    for (Object fk : objects) {
-                        Serializable fkId = getIdValue(targetEntityClass, fk);
-                        Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
-                        if (fkObj != null) {
-                            addObjects.add(fkObj);
-                        }
-                    }
-                    ognlUtil.setValue(field.getName(), entity, addObjects);
-                }
-            }
-            // 一对多关联关系的表
-            Field[] oneToManyFields = ClassUtil.getDeclaredFields(this.entityClass, OneToMany.class);
-            for (Field field : oneToManyFields) {
-                OneToMany oneToMany = field.getAnnotation(OneToMany.class);
-                Class targetEntityClass = oneToMany.targetEntity();
-                if (void.class == targetEntityClass) {
-                    targetEntityClass = ClassUtil.getFieldGenericType(field);
-                }
-                if (oneToMany.cascade().length != 0 && !(ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToMany.cascade(), CascadeType.MERGE) > -1)) {
-                    continue;
-                }
-                Object fks = ognlUtil.getValue(field.getName(), entity);
-                if (ClassUtil.isList(fks)) {
-                    List<Object> objects = (List<Object>) fks;
-                    List<Object> addObjects = new ArrayList<Object>();
-                    for (Object fk : objects) {
-                        Serializable fkId = getIdValue(targetEntityClass, fk);
-                        Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
-                        if (fkObj != null) {
-                            addObjects.add(BeanUtil.copyProperties(fkObj, fk));
-                        } else {
-                            addObjects.add(fk);
-                        }
-                    }
-                    ognlUtil.setValue(field.getName(), entity, addObjects);
-                }
-            }
-            return entity;
         }
     }
 
@@ -386,9 +345,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      */
     public void delete(T entity) {
         Assert.notNull(entity, "entity不能为空");
-        if(DynaBean.class.isAssignableFrom(entityClass)){
+        if (DynaBean.class.isAssignableFrom(entityClass)) {
             getSession().delete(get(getIdValue(entity)));
-        }else {
+        } else {
             getSession().delete(entity);
         }
         this.LOGGER.debug("delete entity: {}", entity);
@@ -852,7 +811,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage(),e);
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage(), e);
         }
     }
 
@@ -865,7 +824,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
         } catch (Exception e) {
-            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage(),e);
+            throw new IgnoreException("hql can't be auto count, hql is:" + countHql + "" + e.getMessage(), e);
         }
     }
 
@@ -879,7 +838,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
             orderEntries = (List<OrderEntry>) ReflectionUtils.getFieldValue(impl, "orderEntries");
             ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList<OrderEntry>());
         } catch (Exception e) {
-            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(),e);
+            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(), e);
         }
         int totalCount = Integer.valueOf(c.setProjection(Projections.rowCount()).uniqueResult().toString());
         c.setProjection(projection);
@@ -892,7 +851,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         try {
             ReflectionUtils.setFieldValue(impl, "orderEntries", orderEntries);
         } catch (Exception e) {
-            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(),e);
+            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(), e);
         }
         return totalCount;
     }
