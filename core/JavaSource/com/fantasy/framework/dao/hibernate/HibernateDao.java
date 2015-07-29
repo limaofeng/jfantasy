@@ -13,6 +13,8 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.*;
 import org.hibernate.Query;
 import org.hibernate.criterion.*;
@@ -23,11 +25,8 @@ import org.hibernate.sql.JoinType;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.Type;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.Assert;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -47,7 +46,8 @@ import java.util.regex.Matcher;
  * @since 2013-9-11 下午4:17:39
  */
 public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
-    protected Logger LOGGER = LoggerFactory.getLogger(getClass());
+    protected final static Log LOGGER = LogFactory.getLog(HibernateDao.class);
+    protected Log LOG = LogFactory.getLog(getClass());
     protected SessionFactory sessionFactory;
     protected Class<T> entityClass;
 
@@ -83,10 +83,10 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         try {
             getSession().saveOrUpdate(entity = clean(entity));
         } catch (NonUniqueObjectException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             getSession().merge(entity);
         }
-        this.LOGGER.debug("save entity: {}", entity);
+        this.LOG.debug("save entity: " + entity);
         return entity;
     }
 
@@ -100,10 +100,10 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         try {
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
-            LOGGER.error(e.getMessage(), e);
+            LOG.error(e.getMessage(), e);
             getSession().merge(entity);
         }
-        this.LOGGER.debug("update entity: {}", entity);
+        this.LOG.debug("update entity: " + entity);
     }
 
     /**
@@ -114,7 +114,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     public void merge(T entity) {
         Assert.notNull(entity, "entity不能为空");
         getSession().merge(entity);
-        this.LOGGER.debug("update entity: {}", entity);
+        this.LOG.debug("update entity: " + entity);
     }
 
     /**
@@ -127,7 +127,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     public void merge(String m, T entity) {
         Assert.notNull(entity, "entity不能为空");
         getSession().merge(m, entity);
-        this.LOGGER.debug("update entity: {}", entity);
+        this.LOG.debug("update entity:" + entity);
     }
 
     /**
@@ -296,7 +296,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
                 for (Object odl : oldFks) {
                     if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), getIdValue(targetEntityClass, odl)) == null) {
                         this.getSession().delete(odl);
-                        LOGGER.debug("删除数据" + getIdValue(targetEntityClass, odl));
+                        LOG.debug("删除数据" + getIdValue(targetEntityClass, odl));
                     }
                 }
             }
@@ -353,7 +353,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         } else {
             getSession().delete(entity);
         }
-        this.LOGGER.debug("delete entity: {}", entity);
+        this.LOG.debug("delete entity:" + entity);
     }
 
     /**
@@ -367,7 +367,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         if (t != null) {
             delete(t);
         }
-        this.LOGGER.debug("delete entity {},id is {}", this.entityClass.getSimpleName(), id);
+        this.LOG.debug("delete entity " + this.entityClass.getSimpleName() + ",id is " + id);
     }
 
     /**
@@ -647,7 +647,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
                 changePropertyName(criteria, alias, criterion);
             }
         } else if (c instanceof SQLCriterion) {
-            LOGGER.debug("未处理：" + c.toString());
+            LOG.debug("未处理：" + c.toString());
         } else if (c instanceof LogicalExpression) {
             changePropertyName(criteria, alias, (Criterion) ReflectionUtils.getFieldValue(c, "lhs"));
             changePropertyName(criteria, alias, (Criterion) ReflectionUtils.getFieldValue(c, "rhs"));
@@ -773,7 +773,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         return c;
     }
 
-    private String orderByAlias(String orderBy) {
+    private static String orderByAlias(String orderBy) {
         if (!orderBy.contains(".")) {
             return orderBy;
         }
@@ -791,7 +791,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         return newOrderBy;
     }
 
-    protected Criteria setPageParameter(Criteria c, String orderBy, String order) {
+    protected static Criteria setPageParameter(Criteria c, String orderBy, String order) {
         String[] orderByArray = StringUtil.tokenizeToStringArray(orderBy);
         String[] orderArray = StringUtil.tokenizeToStringArray(order);
         Assert.isTrue(orderByArray.length == orderArray.length, "分页多重排序参数中,排序字段与排序方向的个数不相等");
@@ -838,10 +838,10 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         ResultTransformer transformer = impl.getResultTransformer();
         List<OrderEntry> orderEntries = null;
         try {
-            orderEntries = (List<OrderEntry>) ReflectionUtils.getFieldValue(impl, "orderEntries");
+            orderEntries = ReflectionUtils.getFieldValue(impl, "orderEntries");
             ReflectionUtils.setFieldValue(impl, "orderEntries", new ArrayList<OrderEntry>());
         } catch (Exception e) {
-            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(), e);
+            throw new IgnoreException("不可能抛出的异常:" + e.getMessage(), e);
         }
         int totalCount = Integer.valueOf(c.setProjection(Projections.rowCount()).uniqueResult().toString());
         c.setProjection(projection);
@@ -854,7 +854,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         try {
             ReflectionUtils.setFieldValue(impl, "orderEntries", orderEntries);
         } catch (Exception e) {
-            this.LOGGER.error("不可能抛出的异常:{}", e.getMessage(), e);
+            throw new IgnoreException("不可能抛出的异常:" + e.getMessage(), e);
         }
         return totalCount;
     }
@@ -993,14 +993,14 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
                 aliasName = "_" + objeactName.replaceAll("\\.", "_");
                 if (alias.add(aliasName)) {
                     criteria.createAlias(objeactName, aliasName);
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("为查询建立别名:createAlias(" + objeactName + "," + aliasName + ")");
+                    if (LOG.isDebugEnabled()) {
+                        LOG.debug("为查询建立别名:createAlias(" + objeactName + "," + aliasName + ")");
                     }
                 }
             }
             String newProperty = aliasName + property.substring(property.lastIndexOf("."));
-            if (LOGGER.isDebugEnabled()) {
-                LOGGER.debug("使用别名时使用的属性名称:" + newProperty);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("使用别名时使用的属性名称:" + newProperty);
             }
             return newProperty;
         } else {
