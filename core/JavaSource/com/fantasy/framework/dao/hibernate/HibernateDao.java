@@ -187,7 +187,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         }
     }
 
-    private void cleanColumn(T entity, T oldEntity, Field[] fields, OgnlUtil ognlUtil){
+    private void cleanColumn(T entity, T oldEntity, Field[] fields, OgnlUtil ognlUtil) {
         for (Field field : fields) {
             String getterMethodName = (boolean.class.equals(field.getType()) ? "is" : "get") + StringUtils.capitalize(field.getName()) + "()";
             Object value = ognlUtil.getValue(getterMethodName, entity);
@@ -197,27 +197,28 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         }
     }
 
-    private void cleanOneToOne(T entity, T oldEntity, Field[] fields, OgnlUtil ognlUtil){
+    private void cleanOneToOne(T entity, T oldEntity, Field[] fields, OgnlUtil ognlUtil) {
         for (Field field : fields) {
             OneToOne oneToOne = field.getAnnotation(OneToOne.class);
             if (!(ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.ALL) > -1 || ObjectUtil.indexOf(oneToOne.cascade(), CascadeType.MERGE) > -1)) {
                 continue;
             }
             Object value = ClassUtil.getValue(entity, field.getName());
-            if (value != null) {
-                Object oldValue = ClassUtil.getValue(oldEntity, field.getName());
-                if (oldValue == null) {
-                    ClassUtil.setValue(oldEntity, field.getName(), value);
-                } else {
-                    for (Field fkField : ClassUtil.getDeclaredFields(field.getType(), Column.class)) {
-                        if (!fkField.isAnnotationPresent(Id.class)) {
-                            Object fkValue = ClassUtil.getValue(value, fkField.getName());
-                            if (fkValue != null) {
-                                if (fkValue instanceof Blob) {
-                                    ClassUtil.setValue(oldValue, fkField.getName(), fkValue);
-                                } else {
-                                    ognlUtil.setValue(field.getName() + "." + fkField.getName(), oldEntity, fkValue);
-                                }
+            if (value == null) {
+                continue;
+            }
+            Object oldValue = ClassUtil.getValue(oldEntity, field.getName());
+            if (oldValue == null) {
+                ClassUtil.setValue(oldEntity, field.getName(), value);
+            } else {
+                for (Field fkField : ClassUtil.getDeclaredFields(field.getType(), Column.class)) {
+                    if (!fkField.isAnnotationPresent(Id.class)) {
+                        Object fkValue = ClassUtil.getValue(value, fkField.getName());
+                        if (fkValue != null) {
+                            if (fkValue instanceof Blob) {
+                                ClassUtil.setValue(oldValue, fkField.getName(), fkValue);
+                            } else {
+                                ognlUtil.setValue(field.getName() + "." + fkField.getName(), oldEntity, fkValue);
                             }
                         }
                     }
@@ -247,18 +248,19 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
                 targetEntityClass = ClassUtil.getFieldGenericType(field);
             }
             Object fks = ognlUtil.getValue(field.getName(), entity);
-            if (ClassUtil.isList(fks)) {
-                List<Object> objects = (List<Object>) fks;
-                List<Object> addObjects = new ArrayList<Object>();
-                for (Object fk : objects) {
-                    Serializable fkId = getIdValue(targetEntityClass, fk);
-                    Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
-                    if (fkObj != null) {
-                        addObjects.add(fkObj);
-                    }
-                }
-                ognlUtil.setValue(field.getName(), oldEntity == null ? entity : oldEntity, addObjects);
+            if (!ClassUtil.isList(fks)) {
+                continue;
             }
+            List<Object> objects = (List<Object>) fks;
+            List<Object> addObjects = new ArrayList<Object>();
+            for (Object fk : objects) {
+                Serializable fkId = getIdValue(targetEntityClass, fk);
+                Object fkObj = fkId != null ? getSession().get(targetEntityClass, fkId) : null;
+                if (fkObj != null) {
+                    addObjects.add(fkObj);
+                }
+            }
+            ognlUtil.setValue(field.getName(), oldEntity == null ? entity : oldEntity, addObjects);
         }
     }
 
@@ -286,14 +288,15 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
                     }
                 }
                 ognlUtil.setValue(field.getName(), oldEntity == null ? entity : oldEntity, addObjects);
-                if (oldEntity != null) {
-                    List<Object> oldFks = ognlUtil.getValue(field.getName(), oldEntity);
-                    //删除原有数据
-                    for (Object odl : oldFks) {
-                        if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), getIdValue(targetEntityClass, odl)) == null) {
-                            this.getSession().delete(odl);
-                            LOGGER.debug("删除数据" + getIdValue(targetEntityClass, odl));
-                        }
+                if (oldEntity == null) {
+                    continue;
+                }
+                List<Object> oldFks = ognlUtil.getValue(field.getName(), oldEntity);
+                //删除原有数据
+                for (Object odl : oldFks) {
+                    if (ObjectUtil.find(addObjects, this.getIdName(targetEntityClass), getIdValue(targetEntityClass, odl)) == null) {
+                        this.getSession().delete(odl);
+                        LOGGER.debug("删除数据" + getIdValue(targetEntityClass, odl));
                     }
                 }
             }
@@ -582,15 +585,15 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         Map<String, DetachedCriteria> cascadeCriterions = new HashMap<String, DetachedCriteria>();
         for (Criterion c : criterions) {
             if (c instanceof NotExpression) {
-                Criterion criterion = (Criterion) ReflectionUtils.getFieldValue(c, "criterion");
+                Criterion criterion = ReflectionUtils.getFieldValue(c, "criterion");
                 if (criterion instanceof InExpression) {
-                    String propertyName = (String) ReflectionUtils.getFieldValue(criterion, "propertyName");
+                    String propertyName = ReflectionUtils.getFieldValue(criterion, "propertyName");
                     if (propertyName.lastIndexOf('.') > 0) {
                         addCriterion(dc, cascadeCriterions, c, propertyName);
                     }
                 }
             } else {
-                String propertyName = (String) ReflectionUtils.getFieldValue(c, "propertyName");
+                String propertyName = ReflectionUtils.getFieldValue(c, "propertyName");
                 if (propertyName.lastIndexOf('.') > 0) {
                     addCriterion(dc, cascadeCriterions, c, propertyName);
                 } else {
