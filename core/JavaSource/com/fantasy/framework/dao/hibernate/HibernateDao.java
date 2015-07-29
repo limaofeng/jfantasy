@@ -642,7 +642,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     @SuppressWarnings("unchecked")
     protected void changePropertyName(Criteria criteria, Set<String> alias, Criterion c) {
         if (c instanceof Disjunction) {
-            List<Criterion> criterions = (List<Criterion>) ReflectionUtils.getFieldValue(c, "conditions");
+            List<Criterion> criterions = ReflectionUtils.getFieldValue(c, "conditions");
             for (Criterion criterion : criterions) {
                 changePropertyName(criteria, alias, criterion);
             }
@@ -652,12 +652,12 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
             changePropertyName(criteria, alias, (Criterion) ReflectionUtils.getFieldValue(c, "lhs"));
             changePropertyName(criteria, alias, (Criterion) ReflectionUtils.getFieldValue(c, "rhs"));
         } else if (c instanceof NotExpression) {
-            Criterion criterion = (Criterion) ReflectionUtils.getFieldValue(c, "criterion");
+            Criterion criterion = ReflectionUtils.getFieldValue(c, "criterion");
             if (criterion instanceof InExpression) {
                 changePropertyName(criteria, alias, criterion);
             }
         } else {
-            String propertyName = (String) ReflectionUtils.getFieldValue(c, "propertyName");
+            String propertyName = ReflectionUtils.getFieldValue(c, "propertyName");
             String newPropertyName = createAlias(criteria, alias, propertyName);
             ReflectionUtils.setFieldValue(c, "propertyName", newPropertyName);
         }
