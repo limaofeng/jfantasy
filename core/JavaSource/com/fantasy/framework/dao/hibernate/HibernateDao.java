@@ -833,7 +833,10 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
 
     @SuppressWarnings("unchecked")
     protected int countCriteriaResult(Criteria c) {
-        CriteriaImpl impl = (CriteriaImpl) c;
+        if(c instanceof CriteriaImpl){
+            throw new IgnoreException(" Criteria 不能 cast CriteriaImpl");
+        }
+        CriteriaImpl impl = CriteriaImpl.class.cast(c);
         Projection projection = impl.getProjection();
         ResultTransformer transformer = impl.getResultTransformer();
         List<OrderEntry> orderEntries = null;
