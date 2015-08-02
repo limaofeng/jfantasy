@@ -51,6 +51,8 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     protected SessionFactory sessionFactory;
     protected Class<T> entityClass;
 
+    private final static String LOG_MESSAGE_NULL = "entity不能为空";
+
     public HibernateDao() {
         this.entityClass = ReflectionUtils.getSuperClassGenricType(getClass());
     }
@@ -79,9 +81,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * @param entity 保存的对象
      */
     public T save(T entity) {
-        Assert.notNull(entity, "entity不能为空");
+        Assert.notNull(entity, LOG_MESSAGE_NULL);
         try {
-            getSession().saveOrUpdate(entity = clean(entity));
+            getSession().saveOrUpdate(entity = clean(entity));//NOSONAR
         } catch (NonUniqueObjectException e) {
             LOG.error(e.getMessage(), e);
             getSession().merge(entity);
@@ -96,7 +98,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * @param entity 要更新的对象
      */
     public void update(T entity) {
-        Assert.notNull(entity, "entity不能为空");
+        Assert.notNull(entity, LOG_MESSAGE_NULL);
         try {
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
@@ -112,7 +114,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * @param entity 要合并的对象
      */
     public void merge(T entity) {
-        Assert.notNull(entity, "entity不能为空");
+        Assert.notNull(entity, LOG_MESSAGE_NULL);
         getSession().merge(entity);
         this.LOG.debug("update entity: " + entity);
     }
@@ -125,7 +127,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      */
     @Deprecated
     public void merge(String m, T entity) {
-        Assert.notNull(entity, "entity不能为空");
+        Assert.notNull(entity, LOG_MESSAGE_NULL);
         getSession().merge(m, entity);
         this.LOG.debug("update entity:" + entity);
     }
@@ -140,7 +142,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * @param entity 需要持久化的对象
      */
     public void persist(T entity) {
-        Assert.notNull(entity, "entity不能为空");
+        Assert.notNull(entity, LOG_MESSAGE_NULL);
         getSession().persist(clean(entity));
     }
 
@@ -347,7 +349,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * @param entity 删除的实体
      */
     public void delete(T entity) {
-        Assert.notNull(entity, "entity不能为空");
+        Assert.notNull(entity, LOG_MESSAGE_NULL);
         if (DynaBean.class.isAssignableFrom(entityClass)) {
             getSession().delete(get(getIdValue(entity)));
         } else {
@@ -833,7 +835,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
 
     @SuppressWarnings("unchecked")
     protected int countCriteriaResult(Criteria c) {
-        if(c instanceof CriteriaImpl){
+        if (c instanceof CriteriaImpl) {
             throw new IgnoreException(" Criteria 不能 cast CriteriaImpl");
         }
         CriteriaImpl impl = CriteriaImpl.class.cast(c);
