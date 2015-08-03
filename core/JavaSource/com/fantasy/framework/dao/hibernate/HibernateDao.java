@@ -177,14 +177,14 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
             // 多对多关联关系的表
             this.cleanManyToMany(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
             // 一对多关联关系的表
-            this.cleanOneToMany(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
+            this.cleanOneToMany(entity, oldEntity, ClassUtil.getDeclaredFields(this.entityClass, OneToMany.class), ognlUtil);
             return oldEntity;
         } else {
             this.cleanManyToOne(entity, null, ClassUtil.getDeclaredFields(this.entityClass, ManyToOne.class), ognlUtil);
             // 多对多关联关系的表
             this.cleanManyToMany(entity, null, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
             // 一对多关联关系的表
-            this.cleanOneToMany(entity, null, ClassUtil.getDeclaredFields(this.entityClass, ManyToMany.class), ognlUtil);
+            this.cleanOneToMany(entity, null, ClassUtil.getDeclaredFields(this.entityClass, OneToMany.class), ognlUtil);
             return entity;
         }
     }
