@@ -835,7 +835,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
 
     @SuppressWarnings("unchecked")
     protected int countCriteriaResult(Criteria c) {
-        if (c instanceof CriteriaImpl) {
+        if (!(c instanceof CriteriaImpl)) {
             throw new IgnoreException(" Criteria 不能 cast CriteriaImpl");
         }
         CriteriaImpl impl = CriteriaImpl.class.cast(c);
