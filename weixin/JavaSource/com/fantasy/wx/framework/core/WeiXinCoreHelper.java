@@ -169,6 +169,16 @@ public interface WeiXinCoreHelper {
     void sendTextMessage(WeiXinSession session, String content, long toGroup) throws WeiXinException;
 
     /**
+     * 发送模板消息
+     *
+     * @param session 微信号session对象
+     * @param content 模板消息
+     * @param toUser  接收人
+     * @throws WeiXinException
+     */
+    void sendTemplateMessage(WeiXinSession session, Template content, String toUser) throws WeiXinException;
+
+    /**
      * 获取分组信息
      *
      * @param session 微信号session对象
@@ -270,7 +280,7 @@ public interface WeiXinCoreHelper {
     /**
      * 通过 oauth2 的 code 换取用户信息
      *
-     * @param session     微信号session对象
+     * @param session 微信号session对象
      * @param code    安全连接返回的code
      * @return User
      * @throws WeiXinException

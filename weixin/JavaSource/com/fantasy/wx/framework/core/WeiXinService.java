@@ -47,13 +47,15 @@ public interface WeiXinService {
 
     void sendNewsMessage(List<Article> articles, long toGroup) throws WeiXinException;
 
-    String oauth2buildAuthorizationUrl(String redirectUri, Scope scope, String state) throws WeiXinException;
-
-    User getOauth2User(String code) throws WeiXinException;
+    void sendTemplateMessage(Template content, String toUser) throws WeiXinException;
 
     void sendTextMessage(String content, String... toUsers) throws WeiXinException;
 
     void sendTextMessage(String content, long toGroup) throws WeiXinException;
+
+    String oauth2buildAuthorizationUrl(String redirectUri, Scope scope, String state) throws WeiXinException;
+
+    User getOauth2User(String code) throws WeiXinException;
 
     List<Group> getGroups() throws WeiXinException;
 

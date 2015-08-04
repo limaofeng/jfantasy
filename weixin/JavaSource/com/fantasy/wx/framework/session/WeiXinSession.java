@@ -119,6 +119,14 @@ public interface WeiXinSession {
     void sendTextMessage(String content, long toGroup);
 
     /**
+     * 发送模板消息
+     *
+     * @param content 模板消息
+     * @param toUser  接收人
+     */
+    void sendTemplateMessage(Template content, String toUser);
+
+    /**
      * 获取安全链接
      *
      * @param redirectUri 授权后重定向的回调链接地址，请使用urlencode对链接进行处理
