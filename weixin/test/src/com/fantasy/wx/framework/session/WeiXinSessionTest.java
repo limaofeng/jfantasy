@@ -170,6 +170,6 @@ public class WeiXinSessionTest {
 
     @Test
     public void testSendTemplateMessage() throws Exception {
-        this.session.sendTemplateMessage(new Template("1", "url", "#0000").add("1", "value").add("1", "value", "#0000"), testOpenId);
+        factory.openSession("wxcbc2c9fb9d585cd3").sendTemplateMessage(new Template("mqHz7yLRVLdm9bg2UUZ2jYCTcRzMrumBsUYKIFMMzrg", "http://hbao.hoolue.com/14", "#0000").add("pay", "28.00").add("address", "合川大厦2号楼3号门103室").add("time", "2014年9月30日 15:49").add("remark", "如有疑问，请咨询139xxxx45678。"), testOpenId);
     }
 }
