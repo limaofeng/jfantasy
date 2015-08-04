@@ -14,7 +14,7 @@ import java.util.List;
  * @apiParam {int} pageSize  每页显示数据条数
  * @apiParam {String} orderBy  排序字段
  * @apiParam {String} order  排序方向
- * @apiVersion 3.3.5
+ * @apiVersion 3.3.6
  */
 
 /**
@@ -26,7 +26,7 @@ import java.util.List;
  * @apiSuccess {String} orderBy  排序字段
  * @apiSuccess {String} order  排序方向
  * @apiSuccess {List} pageItems 当页数据集合
- * @apiVersion 3.3.5
+ * @apiVersion 3.3.6
  */
 public class Pager<T> implements Serializable {
 
