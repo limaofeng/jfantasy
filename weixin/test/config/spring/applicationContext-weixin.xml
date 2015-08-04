@@ -35,6 +35,15 @@
                             <property name="aesKey" value="tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6"/>
                             <property name="primitiveId" value="gh_5983ccfebc6b"/>
                         </bean>
+                        <!-- 公司微信号 -->
+                        <bean class="com.fantasy.wx.bean.Account">
+                            <property name="appId" value="wxcbc2c9fb9d585cd3"/>
+                            <property name="type" value="service"/>
+                            <property name="secret" value="4b224fb5b08f2380572e45baecda63ba"/>
+                            <property name="token" value="haolue_token"/>
+                            <property name="aesKey" value="tUQwZUkxaiRFF14lLqjjIV53JaVaPtyoe0NEn8otai6"/>
+                            <property name="primitiveId" value=""/>
+                        </bean>
                     </list>
                 </property>
             </bean>

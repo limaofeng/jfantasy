@@ -313,6 +313,11 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
+    public void sendTemplateMessage(Template content, String toUser) throws WeiXinException {
+        throw new WeiXinException("企业号不支持该接口");
+    }
+
+    @Override
     public String oauth2buildAuthorizationUrl( String redirectUri, Scope scope, String state) throws WeiXinException {
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?";
         url += "appid=" + wxCpConfigStorage.getCorpId();
