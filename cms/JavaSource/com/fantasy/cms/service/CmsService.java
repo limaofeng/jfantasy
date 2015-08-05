@@ -164,12 +164,12 @@ public class CmsService extends BuguSearcher<Article> {
                 }
             }
         }
-        category = this.articleCategoryDao.save(category);
+        ArticleCategory categoryTemp = this.articleCategoryDao.save(category);
         if (root) {
             category.setParent(null);
-            this.articleCategoryDao.update(category);
+            this.articleCategoryDao.update(categoryTemp);
         }
-        return category;
+        return categoryTemp;
     }
 
     /**

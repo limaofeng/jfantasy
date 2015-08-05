@@ -38,15 +38,15 @@ public class Article extends BaseDynaBean {
         /**
          * 原创
          */
-        original,
+        original,//NOSONAR
         /**
          * 转载
          */
-        transfer,
+        transfer,//NOSONAR
         /**
          * 链接
          */
-        link
+        link//NOSONAR
     }
 
     @Id
