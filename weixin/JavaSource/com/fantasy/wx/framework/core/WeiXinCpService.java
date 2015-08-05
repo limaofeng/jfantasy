@@ -49,7 +49,7 @@ public class WeiXinCpService implements WeiXinService {
         this.wxCpConfigStorage = wxCpConfigStorage;
         this.jsapi = new DefaultJsapi(this);
     }
-    
+
     @Override
     public String getJsapiTicket() throws WeiXinException {
         try {
@@ -79,7 +79,7 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public WeiXinMessage parseInMessage( HttpServletRequest request) throws WeiXinException {
+    public WeiXinMessage parseInMessage(HttpServletRequest request) throws WeiXinException {
         String signature = request.getParameter("signature");
         String nonce = request.getParameter("nonce");
         String timestamp = request.getParameter("timestamp");
@@ -148,7 +148,7 @@ public class WeiXinCpService implements WeiXinService {
                     .build();
         } else if (message instanceof VoiceMessage) {
             Media media = ((VoiceMessage) message).getContent().getMedia();
-            media.setId(this.mediaUpload( media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
             outMessage = WxCpXmlOutMessage.VOICE().mediaId(media.getId()).fromUser(message.getFromUserName())
                     .toUser(message.getToUserName())
                     .build();
@@ -158,7 +158,7 @@ public class WeiXinCpService implements WeiXinService {
             outMessage = WxCpXmlOutMessage.VIDEO().mediaId(media.getId()).fromUser(message.getFromUserName())
                     .toUser(message.getToUserName())
                     .build();
-        }else if (message instanceof NewsMessage) {
+        } else if (message instanceof NewsMessage) {
             List<News> newses = ((NewsMessage) message).getContent();
             NewsBuilder newsBuilder = WxCpXmlOutMessage.NEWS();
             for (News news : newses) {
@@ -185,20 +185,20 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public void sendImageMessage( Image content, String... toUsers) throws WeiXinException {
+    public void sendImageMessage(Image content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                this.sendImageMessage( content, -1);
+                this.sendImageMessage(content, -1);
                 return;
             }
             //上传图片文件
             Media media = content.getMedia();
-            media.setId(this.mediaUpload( media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
             if (toUsers.length == 1) {
                 wxCpService.messageSend(WxCpMessage.IMAGE().toUser(toUsers[0]).mediaId(media.getId()).build());
             } else {
                 for (String toUser : toUsers) {
-                    this.sendImageMessage( content, toUser);
+                    this.sendImageMessage(content, toUser);
                 }
             }
         } catch (WxErrorException e) {
@@ -207,25 +207,25 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public void sendImageMessage( Image content, long toGroup) throws WeiXinException {
+    public void sendImageMessage(Image content, long toGroup) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public void sendVoiceMessage( Voice content, String... toUsers) throws WeiXinException {
+    public void sendVoiceMessage(Voice content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                this.sendVoiceMessage( content, -1);
+                this.sendVoiceMessage(content, -1);
                 return;
             }
             //上传语言文件
             Media media = content.getMedia();
-            media.setId(this.mediaUpload( media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
             if (toUsers.length == 1) {
                 wxCpService.messageSend(WxCpMessage.VOICE().toUser(toUsers[0]).mediaId(media.getId()).build());
             } else {
                 for (String toUser : toUsers) {
-                    this.sendVoiceMessage( content, toUser);
+                    this.sendVoiceMessage(content, toUser);
                 }
             }
         } catch (WxErrorException e) {
@@ -236,25 +236,25 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public void sendVoiceMessage( Voice content, long toGroup) throws WeiXinException {
+    public void sendVoiceMessage(Voice content, long toGroup) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public void sendVideoMessage( Video content, String... toUsers) throws WeiXinException {
+    public void sendVideoMessage(Video content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                this.sendVideoMessage( content, -1);
+                this.sendVideoMessage(content, -1);
                 return;
             }
             //上传视频
             Media media = content.getMedia();
-            media.setId(this.mediaUpload( media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
             //发送消息
             if (toUsers.length == 1) {
                 //上传缩略图
                 Media thumb = content.getThumb();
-                thumb.setId(this.mediaUpload( thumb.getType(), thumb.getFileItem()));
+                thumb.setId(this.mediaUpload(thumb.getType(), thumb.getFileItem()));
                 VideoBuilder videoBuilder = WxCpMessage.VIDEO().toUser(toUsers[0]).mediaId(media.getId()).thumbMediaId(thumb.getId());
                 if (StringUtil.isNotBlank(content.getTitle())) {
                     videoBuilder.title(content.getTitle());
@@ -265,7 +265,7 @@ public class WeiXinCpService implements WeiXinService {
                 wxCpService.messageSend(videoBuilder.build());
             } else {
                 for (String toUser : toUsers) {
-                    this.sendVideoMessage( content, toUser);
+                    this.sendVideoMessage(content, toUser);
                 }
             }
         } catch (WxErrorException e) {
@@ -276,17 +276,17 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public void sendVideoMessage( Video content, long toGroup) throws WeiXinException {
+    public void sendVideoMessage(Video content, long toGroup) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public void sendMusicMessage( Music content, String toUser) throws WeiXinException {
+    public void sendMusicMessage(Music content, String toUser) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public void sendNewsMessage( List<News> content, String toUser) throws WeiXinException {
+    public void sendNewsMessage(List<News> content, String toUser) throws WeiXinException {
         try {
             me.chanjar.weixin.cp.bean.messagebuilder.NewsBuilder newsBuilder = WxCpMessage.NEWS().toUser(toUser);
             for (News news : content) {
@@ -303,12 +303,12 @@ public class WeiXinCpService implements WeiXinService {
         }
     }
 
-    public void sendNewsMessage( List<Article> articles, String... toUsers) throws WeiXinException {
+    public void sendNewsMessage(List<Article> articles, String... toUsers) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public void sendNewsMessage( List<Article> articles, long toGroup) throws WeiXinException {
+    public void sendNewsMessage(List<Article> articles, long toGroup) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
@@ -318,7 +318,7 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public String oauth2buildAuthorizationUrl( String redirectUri, Scope scope, String state) throws WeiXinException {
+    public String oauth2buildAuthorizationUrl(String redirectUri, Scope scope, String state) throws WeiXinException {
         String url = "https://open.weixin.qq.com/connect/oauth2/authorize?";
         url += "appid=" + wxCpConfigStorage.getCorpId();
         url += "&redirect_uri=" + URIUtil.encodeURIComponent(redirectUri);
@@ -331,7 +331,7 @@ public class WeiXinCpService implements WeiXinService {
         return url;
     }
 
-    public User getOauth2User( String code) throws WeiXinException {
+    public User getOauth2User(String code) throws WeiXinException {
         try {
             String[] user = wxCpService.oauth2getUserInfo(code);
             return null;
@@ -341,15 +341,15 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public void sendTextMessage( String content, String... toUsers) throws WeiXinException {
+    public void sendTextMessage(String content, String... toUsers) throws WeiXinException {
         try {
             if (toUsers.length == 0) {
-                sendTextMessage( content, -1);
+                sendTextMessage(content, -1);
             } else if (toUsers.length == 1) {
                 wxCpService.messageSend(WxCpMessage.TEXT().toUser(toUsers[0]).content(content).build());
             } else {
                 for (String toUser : toUsers) {
-                    this.sendTextMessage( content, toUser);
+                    this.sendTextMessage(content, toUser);
                 }
             }
         } catch (WxErrorException e) {
@@ -360,7 +360,7 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public void sendTextMessage( String content, long toGroup) throws WeiXinException {
+    public void sendTextMessage(String content, long toGroup) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
@@ -370,17 +370,17 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public Group groupCreate( String groupName) throws WeiXinException {
+    public Group groupCreate(String groupName) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public void groupUpdate( long groupId, String groupName) throws WeiXinException {
+    public void groupUpdate(long groupId, String groupName) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public void userUpdateGroup( String userId, long groupId) throws WeiXinException {
+    public void userUpdateGroup(String userId, long groupId) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
@@ -395,7 +395,7 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public OpenIdList getOpenIds( String nextOpenId) {
+    public OpenIdList getOpenIds(String nextOpenId) {
         return null;
     }
 
@@ -418,12 +418,12 @@ public class WeiXinCpService implements WeiXinService {
 //    }
 
     @Override
-    public Long getGroupIdByUserId( String openId) throws WeiXinException {
+    public Long getGroupIdByUserId(String openId) throws WeiXinException {
         throw new WeiXinException("企业号不支持该接口");
     }
 
     @Override
-    public User getUser( String userId) throws WeiXinException {
+    public User getUser(String userId) throws WeiXinException {
         try {
             return toUser(wxCpService.userGet(userId));
         } catch (WxErrorException e) {
@@ -466,7 +466,7 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public String mediaUpload( Media.Type mediaType, FileItem fileItem) throws WeiXinException {
+    public String mediaUpload(Media.Type mediaType, FileItem fileItem) throws WeiXinException {
         try {
             WxMediaUploadResult uploadMediaRes = wxCpService.mediaUpload(mediaType.name(), WebUtil.getExtension(fileItem.getName()), fileItem.getInputStream());
             return mediaType == Media.Type.thumb ? uploadMediaRes.getThumbMediaId() : uploadMediaRes.getMediaId();
@@ -479,7 +479,7 @@ public class WeiXinCpService implements WeiXinService {
 
     private LocalFileManager fileManager = new LocalFileManager(System.getProperty("java.io.tmpdir"));
 
-    public FileItem mediaDownload( String mediaId) throws WeiXinException {
+    public FileItem mediaDownload(String mediaId) throws WeiXinException {
         try {
             File file = wxCpService.mediaDownload(mediaId);
             if (file == null) {
@@ -492,7 +492,7 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public void refreshMenu( Menu... menus) throws WeiXinException {
+    public void refreshMenu(Menu... menus) throws WeiXinException {
         WxMenu wxMenu = new WxMenu();
         for (Menu menu : menus) {
             WxMenu.WxMenuButton wxMenuButton = new WxMenu.WxMenuButton();
