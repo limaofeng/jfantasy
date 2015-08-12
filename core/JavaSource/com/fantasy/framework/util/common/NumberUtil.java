@@ -253,14 +253,5 @@ public class NumberUtil {
         }
         return chinese.replaceAll("^" + numberChinese[0], "");// 以零打头的去掉
     }
-/*
-    public static void main(String[] args) {
 
-		System.out.println(percent(23d,123d));
-
-		System.out.println(toChinese("11"));
-		System.out.println(toRMB("11"));
-
-		System.out.println(toRMB("11010001000.11"));
-	}*/
 }

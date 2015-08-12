@@ -33,10 +33,6 @@ public class I18nUtil {
         });
     }
 
-	/*public static void main(String[] args) throws UnsupportedEncodingException {
-        String unicode = unicode("：“成功导入{0}条,新的资源!");
-		System.out.println(unicode);
-		System.out.print(decodeUnicode(unicode));
-	}*/
+
 
 }

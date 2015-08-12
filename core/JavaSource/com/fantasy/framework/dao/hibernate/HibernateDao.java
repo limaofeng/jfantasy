@@ -731,11 +731,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         return pager;
     }
 
-//    public <C> Pager<C> findPager(Pager<C> pager,Query q, Class<C> resultClass) {
-//        setPageParameter(q, pager);
-//        pager.setPageItems(distinct(q,resultClass).list());
-//        return pager;
-//    }
+
 
     /**
      * @param pager      翻页对象

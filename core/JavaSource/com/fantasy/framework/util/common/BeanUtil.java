@@ -59,10 +59,6 @@ public class BeanUtil {
 
     /*
     @Deprecated
-	public static <T> T copy(T dest, Object orig, String... excludeProperties) {
-		return copy(dest, orig, "", excludeProperties);
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
     @Deprecated
 	private static <T> T copy(T dest, Object orig, String superName, String[] excludeProperties) {

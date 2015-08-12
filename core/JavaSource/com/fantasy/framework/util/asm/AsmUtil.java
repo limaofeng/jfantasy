@@ -265,7 +265,7 @@ public class AsmUtil implements Opcodes {
                         public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                             final Type[] args = Type.getArgumentTypes(desc);
                             if (!name.equals(m.getName()) || !sameType(args, m.getParameterTypes())) {// 方法名相同并且参数个数相同
-                                return null;// visitMethod(access, name, desc, signature, exceptions);
+                                return null;
                             }
                             return new MethodVisitor() {
                                 public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {

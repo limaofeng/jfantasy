@@ -55,9 +55,7 @@ public class LogAspectSupport implements InitializingBean {
     }
 
     public void afterPropertiesSet() {
-//        if (this.logManager == null) {
-//            throw new IllegalStateException("'logManager' is required");
-//        }
+
         this.initialized = true;
     }
 

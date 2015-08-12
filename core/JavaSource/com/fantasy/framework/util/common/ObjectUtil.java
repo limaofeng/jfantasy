@@ -555,11 +555,6 @@ public final class ObjectUtil {
         dest.addAll(news);
     }
 
-    /*
-    @Deprecated
-    public static <T> T copy(T dest, Object orig, String... excludeProperties) {
-        return BeanUtil.copy(dest, orig, excludeProperties);
-    }*/
 
     /**
      * 判断对象是否存在于集合中
