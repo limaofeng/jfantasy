@@ -142,7 +142,7 @@ public class WeiXinSessionTest {
                 , Menu.view("个人中心", "http://121.40.16.197:3005/users/center?id=228"),
                 Menu.view("我申请的工程", "http://121.40.16.197:3005/users/resume_list?id=228"));
 
-        Menu m2 = new Menu("我是企业", Menu.view("我的工程", "http://121.40.16.197:3005/projects/my_projects?id=3"),Menu.view("收到的简历", "http://121.40.16.197:3005/companys/resume_list?id=3"));
+        Menu m2 = new Menu("我是企业", Menu.view("我的工程", "http://121.40.16.197:3005/projects/my_projects?id=3"), Menu.view("收到的简历", "http://121.40.16.197:3005/companys/resume_list?id=3"));
         Menu m3 = Menu.view("注册", "http://121.40.16.197:3005/register");
         menus.add(m1);
         menus.add(m2);
@@ -153,7 +153,7 @@ public class WeiXinSessionTest {
     @Test
     public void testGetMenus() throws Exception {
         List<Menu> menus = session.getMenus();
-        for(Menu menu : menus){
+        for (Menu menu : menus) {
             LOG.debug(menu);
         }
     }
@@ -161,10 +161,15 @@ public class WeiXinSessionTest {
     @Test
     public void testClearMenu() throws Exception {
         List<Menu> menus = session.getMenus();
-        for(Menu menu : menus){
+        for (Menu menu : menus) {
             LOG.debug(menu);
         }
         session.clearMenu();
         this.session.refreshMenu(menus.toArray(new Menu[menus.size()]));
+    }
+
+    @Test
+    public void testSendTemplateMessage() throws Exception {
+        factory.openSession("wxcbc2c9fb9d585cd3").sendTemplateMessage(new Template("mqHz7yLRVLdm9bg2UUZ2jYCTcRzMrumBsUYKIFMMzrg", "http://hbao.hoolue.com/14", "#0000").add("pay", "28.00").add("address", "合川大厦2号楼3号门103室").add("time", "2014年9月30日 15:49").add("remark", "如有疑问，请咨询139xxxx45678。"), testOpenId);
     }
 }

@@ -17,7 +17,7 @@ public class JsapiController {
 
     /**
      * @api {get} /weixin/jsapi/ticket  获取 ticket
-     * @apiVersion 3.3.5
+     * @apiVersion 3.3.6
      * @apiName ticket
      * @apiGroup 微信 JSAPI
      * @apiPermission admin
@@ -43,7 +43,7 @@ public class JsapiController {
 
     /**
      * @api {get} /weixin/jsapi/signature   获取 url 签名
-     * @apiVersion 3.3.5
+     * @apiVersion 3.3.6
      * @apiName signature
      * @apiGroup 微信 JSAPI
      * @apiPermission admin

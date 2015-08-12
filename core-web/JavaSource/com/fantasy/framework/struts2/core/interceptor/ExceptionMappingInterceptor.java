@@ -1,7 +1,5 @@
 package com.fantasy.framework.struts2.core.interceptor;
 
-import java.util.List;
-
 import com.fantasy.framework.struts2.core.context.ActionConstants;
 import com.fantasy.framework.util.web.WebUtil;
 import com.opensymphony.xwork2.ActionInvocation;
@@ -11,6 +9,9 @@ import com.opensymphony.xwork2.interceptor.AbstractInterceptor;
 import com.opensymphony.xwork2.interceptor.ExceptionHolder;
 import com.opensymphony.xwork2.util.logging.Logger;
 import com.opensymphony.xwork2.util.logging.LoggerFactory;
+import org.apache.struts2.ServletActionContext;
+
+import java.util.List;
 
 public class ExceptionMappingInterceptor extends AbstractInterceptor {
 
@@ -56,7 +57,7 @@ public class ExceptionMappingInterceptor extends AbstractInterceptor {
 			if (isLogEnabled()) {
 				handleLogging(e);
 			}
-			if (WebUtil.isAjax()) {
+            if (WebUtil.isAjax(ServletActionContext.getRequest())) {
 				Object action = invocation.getAction();
 				if (action instanceof ValidationAware) {
 					ValidationAware aware = (ValidationAware) action;

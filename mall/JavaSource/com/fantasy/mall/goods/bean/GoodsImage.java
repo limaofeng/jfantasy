@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import org.apache.commons.lang.builder.EqualsBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -24,13 +25,6 @@ public class GoodsImage extends FileDetail implements Comparable<GoodsImage> {
      */
     private Integer sort;
 
-    public int compareTo(GoodsImage goodsImage) {
-        if (goodsImage == null || goodsImage.getSort() == null || this.getSort() == null) {
-            return -1;
-        }
-        return this.getSort().compareTo(goodsImage.getSort());
-    }
-
     public Integer getSort() {
         return sort;
     }
@@ -42,7 +36,7 @@ public class GoodsImage extends FileDetail implements Comparable<GoodsImage> {
     /**
      * 获得商品图片（原）路径
      *
-     * @return
+     * @return String
      */
     public String getSourceImagePath() {
         return this.getAbsolutePath();
@@ -51,7 +45,7 @@ public class GoodsImage extends FileDetail implements Comparable<GoodsImage> {
     /**
      * 获得商品图片（大）路径
      *
-     * @return
+     * @return String
      */
     public String getBigImagePath() {
         return RegexpUtil.replace(this.getAbsolutePath(), "[.][a-zA-Z]{1,}$", "_438x248$0");
@@ -60,7 +54,7 @@ public class GoodsImage extends FileDetail implements Comparable<GoodsImage> {
     /**
      * 获得商品图片（小）路径
      *
-     * @return
+     * @return String
      */
     public String getSmallImagePath() {
         return RegexpUtil.replace(this.getAbsolutePath(), "[.][a-zA-Z]{1,}$", "_250x153$0");
@@ -69,10 +63,26 @@ public class GoodsImage extends FileDetail implements Comparable<GoodsImage> {
     /**
      * 获得商品图片（缩略）路径
      *
-     * @return
+     * @return String
      */
     public String getThumbnailImagePath() {
         return RegexpUtil.replace(this.getAbsolutePath(), "[.][a-zA-Z]{1,}$", "_94x53$0");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof GoodsImage) {
+            GoodsImage goodsImage = (GoodsImage) o;
+            return new EqualsBuilder().appendSuper(super.equals(o)).append(this.getFileManagerId(), goodsImage.getFileManagerId()).append(this.getAbsolutePath(), goodsImage.getAbsolutePath()).isEquals();
+        }
+        return false;
+    }
+
+    public int compareTo(GoodsImage goodsImage) {
+        if (goodsImage == null || goodsImage.getSort() == null || this.getSort() == null) {
+            return -1;
+        }
+        return this.getSort().compareTo(goodsImage.getSort());
     }
 
 }

@@ -26,7 +26,7 @@ import java.io.IOException;
  * @apiSuccess {String}     avatar              头像，最后一个数值代表正方形头像大小（有0、46、64、96、132数值可选，0代表640*640正方形头像），没有头像时该项为空
  * @apiSuccess {String}     subscribeTime       关注时间，为时间戳。如果曾多次关注，则取最后关注时间
  * @apiSuccess {String}     subscribe           是否订阅该公众号标识，值为0时，代表此没有关注该公众号，拉取不到其余信息。
- * @apiVersion 3.3.5
+ * @apiVersion 3.3.6
  */
 @RestController("weixin.UserController")
 @RequestMapping("/weixin/user")
@@ -37,7 +37,7 @@ public class UserController {
 
     /**
      * @api {get} /weixin/user/:openid  获取粉丝
-     * @apiVersion 3.3.5
+     * @apiVersion 3.3.6
      * @apiName getUser
      * @apiGroup 微信粉丝
      * @apiPermission admin
@@ -60,7 +60,7 @@ public class UserController {
 
     /**
      * @api {get} /weixin/user/oauth2/:code  通过安全code获取粉丝
-     * @apiVersion 3.3.5
+     * @apiVersion 3.3.6
      * @apiName getUserByOauth2Code
      * @apiGroup 微信粉丝
      * @apiPermission admin

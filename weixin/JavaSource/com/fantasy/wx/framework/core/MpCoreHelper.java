@@ -112,6 +112,11 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
+    public void sendTemplateMessage(WeiXinSession session, Template content, String toUser) throws WeiXinException {
+        getWeiXinDetails(session.getId()).getWeiXinService().sendTemplateMessage(content, toUser);
+    }
+
+    @Override
     public List<Group> getGroups(WeiXinSession session) throws WeiXinException {
         return getWeiXinDetails(session.getId()).getWeiXinService().getGroups();
     }

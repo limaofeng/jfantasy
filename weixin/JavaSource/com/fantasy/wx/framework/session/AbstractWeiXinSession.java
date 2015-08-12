@@ -215,6 +215,20 @@ public abstract class AbstractWeiXinSession implements WeiXinSession {
     }
 
     @Override
+    public void sendTemplateMessage(final Template content, final String toUser) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    AbstractWeiXinSession.this.weiXinCoreHelper.sendTemplateMessage(AbstractWeiXinSession.this, content, toUser);
+                } catch (WeiXinException e) {
+                    LOG.error(e.getMessage(), e);
+                }
+            }
+        });
+    }
+
+    @Override
     public String getAuthorizationUrl(String redirectUri, Scope scope) {
         try {
             return this.weiXinCoreHelper.oauth2buildAuthorizationUrl(this, redirectUri, scope, "");

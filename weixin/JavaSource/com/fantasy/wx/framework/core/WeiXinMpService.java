@@ -42,6 +42,7 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class WeiXinMpService implements WeiXinService {
 
@@ -531,6 +532,28 @@ public class WeiXinMpService implements WeiXinService {
             }
         } else {
             return getUser(accessToken.getOpenId());
+        }
+    }
+
+    public void sendTemplateMessage(Template content, String toUser) throws WeiXinException {
+        WxMpTemplateMessage wxMpTemplateMessage = new WxMpTemplateMessage();
+        List<WxMpTemplateData> wxMpTemplateDatas = new ArrayList<WxMpTemplateData>();
+        for (Map.Entry<String, Template.Data> entry : content.getDatas().entrySet()) {
+            WxMpTemplateData wxMpTemplateData = new WxMpTemplateData();
+            wxMpTemplateData.setName(entry.getKey());
+            wxMpTemplateData.setValue(entry.getValue().getValue());
+            wxMpTemplateData.setColor(entry.getValue().getColor());
+            wxMpTemplateDatas.add(wxMpTemplateData);
+        }
+        try {
+            wxMpTemplateMessage.setTemplateId(content.getTemplateId());
+            wxMpTemplateMessage.setDatas(wxMpTemplateDatas);
+            wxMpTemplateMessage.setTopColor(content.getTopColor());
+            wxMpTemplateMessage.setUrl(content.getUrl());
+            wxMpTemplateMessage.setToUser(toUser);
+            wxMpService.templateSend(wxMpTemplateMessage);
+        } catch (WxErrorException e) {
+            throw new WeiXinException(e.getMessage(), e);
         }
     }
 
