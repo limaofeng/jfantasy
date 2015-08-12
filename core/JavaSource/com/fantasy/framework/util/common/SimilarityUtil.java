@@ -1,7 +1,10 @@
 package com.fantasy.framework.util.common;
 
 public class SimilarityUtil {
-	
+
+	private SimilarityUtil(){
+
+	}
 	private static int min(int one, int two, int three) {
 		int min = one;
 		if (two < min) {

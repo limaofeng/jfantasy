@@ -11,6 +11,8 @@ import java.util.Random;
  * 数字处理集合类 主要功能：四舍五入，随机数，数字类型转换等方法
  */
 public class NumberUtil {
+    private NumberUtil() {
+    }
 
     static String[] numberSimplifiedChinese = new String[]{"", "一", "二", "三", "四", "五", "六", "七", "八", "九"};
     static String[] unitSimplifiedChinese = new String[]{"", "十", "百", "千", "万", "亿", "", "", ""};

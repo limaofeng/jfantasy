@@ -9,6 +9,9 @@ import java.util.List;
 
 public class ScriptHelp {
 
+    private ScriptHelp() {
+    }
+
     private final static Log LOG = LogFactory.getLog(ScriptHelp.class);
 
     private static final String ENCODE = "UTF-8";
@@ -51,9 +54,9 @@ public class ScriptHelp {
         for (String fromFile : fileList) {
             content.append(readFile(fromFile));
         }
-        if (isCompress){
+        if (isCompress) {
             writeFile(compressJS(content.toString()), toFile);
-        } else{
+        } else {
             writeFile(content.toString(), toFile);
         }
     }
@@ -61,7 +64,7 @@ public class ScriptHelp {
     public static String compressJS(String content) {
         content = content.replaceAll("([^\"])\\/\\*([^\\*^\\/]*|[\\*^\\/*]*[^\\**\\/]*)*\\*\\/", "$1").replaceAll("\\/\\/[^\\n]*", "");
 
-        if (content.indexOf("/*") == 0){
+        if (content.indexOf("/*") == 0) {
             content = content.substring(content.indexOf("*/") + 2, content.length());
         }
         content = content.replaceAll("\\s{2,}", " ").replaceAll("\r\n", "").replaceAll("\n", "");
@@ -109,7 +112,7 @@ public class ScriptHelp {
         String temp = path.replaceAll("/", "\\\\");
         if (((f.isDirectory()) && (isdepth)) || (temp.equals(f.getAbsolutePath()))) {
             File[] ts = f.listFiles();
-            for (File aT : ts != null ? ts : new File[0]){
+            for (File aT : ts != null ? ts : new File[0]) {
                 listFile(path, aT, suffix, isdepth);
             }
         } else {
@@ -126,7 +129,7 @@ public class ScriptHelp {
             if (begIndex != -1) {
                 tempsuffix = filePath.substring(begIndex + 1, filePath.length());
             }
-            if (tempsuffix.equals(suffix)){
+            if (tempsuffix.equals(suffix)) {
                 FILE_LIST.add(filePath);
             }
         } else {

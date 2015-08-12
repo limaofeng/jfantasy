@@ -6,6 +6,7 @@ import java.io.*;
 
 public abstract class StreamUtil {
 
+    private StreamUtil(){}
     private static final Logger LOGGER = Logger.getLogger(StreamUtil.class);
 
     public static final int DEFAULT_BUFFER_SIZE = 2048;

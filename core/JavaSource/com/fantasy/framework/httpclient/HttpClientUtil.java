@@ -27,6 +27,9 @@ import java.util.Map;
  */
 public class HttpClientUtil {
 
+    private HttpClientUtil() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(HttpClientUtil.class);
 
     static {
@@ -48,7 +51,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带参数的get请求
      *
-     * @param url webUrl         webUrl
+     * @param url         webUrl         webUrl
      * @param queryString 请求参数字符串
      * @return {Response}
      * @throws IOException
@@ -60,7 +63,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带参数的get请求
      *
-     * @param url webUrl webUrl
+     * @param url    webUrl webUrl
      * @param params 请求参数 请求参数
      * @return {Response}
      * @throws IOException
@@ -72,7 +75,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带请求信息的get请求
      *
-     * @param url webUrl webUrl
+     * @param url     webUrl webUrl
      * @param request 请求对象 请求对象
      * @return {Response}
      * @throws IOException
@@ -108,7 +111,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带参数的post请求
      *
-     * @param url webUrl
+     * @param url    webUrl
      * @param params 请求参数
      * @return {Response}
      */
@@ -119,7 +122,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带请求信息的post请求
      *
-     * @param url webUrl
+     * @param url     webUrl
      * @param request 请求对象
      * @return {Response}
      * @throws IOException
@@ -142,7 +145,7 @@ public class HttpClientUtil {
         if (request.getRequestBody().length > 0) {
             method.setRequestBody(request.getRequestBody());
         }
-        if (request.getRequestEntity() != null){
+        if (request.getRequestEntity() != null) {
             method.setRequestEntity(request.getRequestEntity());
         }
         client.getState().addCookies(request.getCookies());

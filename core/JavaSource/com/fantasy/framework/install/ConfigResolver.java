@@ -20,6 +20,9 @@ import java.io.IOException;
 
 public class ConfigResolver {
 
+    private ConfigResolver() {
+    }
+
     private final static Log LOG = LogFactory.getLog(ConfigResolver.class);
 
     private static Configuration configuration;
@@ -44,14 +47,14 @@ public class ConfigResolver {
         configuration = new Configuration();
         Resource[] resources = resourcePatternResolver.getResources("classpath*:/install.xml");
         for (Resource resource : resources) {
-            LOG.debug("加载:"+resource);
+            LOG.debug("加载:" + resource);
             try {
                 Document document = builder.parse(resource.getInputStream());
                 // 生成XPath对象
                 XPath xpath = XPathFactory.newInstance().newXPath();
                 //解析 hibernate packagesToScan
-                NodeList packagesToScanNodes = (NodeList)xpath.evaluate("//fantasy//hibernate//sessionFactory//packagesToScan//list//value", document, XPathConstants.NODESET);
-                for(int i=0;i<packagesToScanNodes.getLength();i++){
+                NodeList packagesToScanNodes = (NodeList) xpath.evaluate("//fantasy//hibernate//sessionFactory//packagesToScan//list//value", document, XPathConstants.NODESET);
+                for (int i = 0; i < packagesToScanNodes.getLength(); i++) {
                     configuration.addPackagesToScan(packagesToScanNodes.item(i).getTextContent());
                 }
             } catch (SAXException e) {

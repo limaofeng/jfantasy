@@ -6,6 +6,8 @@ import com.fantasy.framework.util.regexp.RegexpUtil.AbstractReplaceCallBack;
 import java.util.regex.Matcher;
 
 public class I18nUtil {
+    private I18nUtil() {
+    }
 
     public static String unicode(String text) {
         char[] utfBytes = text.toCharArray();

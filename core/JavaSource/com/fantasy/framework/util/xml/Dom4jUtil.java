@@ -12,6 +12,9 @@ import java.util.List;
 
 public final class Dom4jUtil {
 
+    private Dom4jUtil() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(Dom4jUtil.class);
 
     public static Document reader(InputStream inputStream) {

@@ -7,7 +7,7 @@ import java.lang.reflect.Array;
 import java.util.List;
 
 public class BeanUtil {
-
+    private BeanUtil(){}
     public static void setValue(Object target, String fieldName, Object value) {
         ClassUtil.setValue(target, fieldName, value);
     }

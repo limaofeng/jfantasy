@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class SpringSecurityUtils {
+	private SpringSecurityUtils(){}
 	public static UserDetails getCurrentUser() {
 		Authentication authentication = getAuthentication();
 		if (authentication != null) {

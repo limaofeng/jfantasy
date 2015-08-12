@@ -11,6 +11,9 @@ import com.fantasy.framework.lucene.annotations.IndexRef;
 import com.fantasy.framework.lucene.annotations.IndexRefList;
 
 public class FieldHandlerFactory {
+    private FieldHandlerFactory() {
+    }
+
     private static final String DOT = ".";
 
     public static FieldHandler create(Object obj, Field f, String prefix) {

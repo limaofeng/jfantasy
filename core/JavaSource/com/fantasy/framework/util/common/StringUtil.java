@@ -12,6 +12,9 @@ import java.net.URLEncoder;
 import java.util.*;
 
 public abstract class StringUtil {
+    private StringUtil() {
+
+    }
 
     private static final Log LOG = LogFactory.getLog(StringUtil.class);
 
@@ -31,7 +34,7 @@ public abstract class StringUtil {
         if (value.length() > len) {
             value = value.substring(0, len);
         }
-        while (length(value) > len){
+        while (length(value) > len) {
             value = value.substring(0, value.length() - 1);
         }
         return value + word;
@@ -81,7 +84,7 @@ public abstract class StringUtil {
         List<String> list = new ArrayList<String>();
         s = trim(s);
         String[] rs = s.split(delim);
-        for (String str : rs){
+        for (String str : rs) {
             if (str.trim().length() > 0) {
                 list.add(str);
             }
@@ -231,7 +234,7 @@ public abstract class StringUtil {
      */
     public static String append(String ori, int length, String... fillChar) {
         int absLength = Math.abs(length);
-        if (ori == null){
+        if (ori == null) {
             return "";
         }
         StringBuilder result = new StringBuilder(ori);
@@ -242,7 +245,7 @@ public abstract class StringUtil {
                 } else {
                     result.append(fillChar[NumberUtil.randomInt(fillChar.length)]);
                 }
-                if (result.length() == absLength){
+                if (result.length() == absLength) {
                     break;
                 }
             }
@@ -324,7 +327,7 @@ public abstract class StringUtil {
 
 
     private static char[] lowercases = {'\000', '\001', '\002', '\003', '\004', '\005', '\006', '\007', '\b', '\t', '\n', '\013', '\f', '\r', '\016', '\017', '\020', '\021', '\022', '\023', '\024', '\025', '\026', '\027', '\030', '\031', '\032', '\033', '\034', '\035', '\036', '\037', ' ', '!', '"', '#', '$', '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?', '@', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '[', '\\', ']', '^', '_', '`', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '{', '|', '}', '~', ''};
-    
+
     public static String asciiToLowerCase(String s) {
         char[] c = null;
         int i = s.length();
@@ -359,13 +362,13 @@ public abstract class StringUtil {
         for (int i = 0; i < w.length(); i++) {
             char c1 = s.charAt(i);
             char c2 = w.charAt(i);
-            if (c1 == c2){
+            if (c1 == c2) {
                 continue;
             }
-            if (c1 <= ''){
+            if (c1 <= '') {
                 c1 = lowercases[c1];
             }
-            if (c2 <= ''){
+            if (c2 <= '') {
                 c2 = lowercases[c2];
             }
             if (c1 != c2) {
@@ -393,13 +396,13 @@ public abstract class StringUtil {
             char c1 = s.charAt(sl);
             char c2 = w.charAt(i);
             if (c1 != c2) {
-                if (c1 <= ''){
+                if (c1 <= '') {
                     c1 = lowercases[c1];
                 }
-                if (c2 <= ''){
+                if (c2 <= '') {
                     c2 = lowercases[c2];
                 }
-                if (c1 != c2){
+                if (c1 != c2) {
                     return false;
                 }
             }
@@ -408,8 +411,8 @@ public abstract class StringUtil {
     }
 
     public static int indexFrom(String s, String chars) {
-        for (int i = 0; i < s.length(); i++){
-            if (chars.indexOf(s.charAt(i)) >= 0){
+        for (int i = 0; i < s.length(); i++) {
+            if (chars.indexOf(s.charAt(i)) >= 0) {
                 return i;
             }
         }
@@ -438,7 +441,7 @@ public abstract class StringUtil {
     public synchronized static void append(StringBuilder buf, String s, int offset, int length) {
         int end = offset + length;
         for (int i = offset; i < end; i++) {
-            if (i >= s.length()){
+            if (i >= s.length()) {
                 break;
             }
             buf.append(s.charAt(i));
@@ -448,12 +451,12 @@ public abstract class StringUtil {
     public static void append(StringBuilder buf, byte b, int base) {
         int bi = 0xFF & b;
         int c = 48 + bi / base % base;
-        if (c > 57){
+        if (c > 57) {
             c = 97 + (c - 48 - 10);
         }
         buf.append((char) c);
         c = 48 + bi % base;
-        if (c > 57){
+        if (c > 57) {
             c = 97 + (c - 48 - 10);
         }
         buf.append((char) c);
@@ -473,16 +476,16 @@ public abstract class StringUtil {
         }
     }
 
-    public static String join(String[] array){
-        return join(array,"");
+    public static String join(String[] array) {
+        return join(array, "");
     }
 
-    public static String join(String[] array,String str){
+    public static String join(String[] array, String str) {
         StringBuilder buf = new StringBuilder();
-        for(String s : array){
+        for (String s : array) {
             buf.append(s).append(str);
         }
-        return buf.toString().replaceAll(str+"$","");
+        return buf.toString().replaceAll(str + "$", "");
     }
 
     public static String[] add(String[] array, String... strs) {
@@ -492,7 +495,7 @@ public abstract class StringUtil {
     }
 
     public static String nonNull(String s) {
-        if (s == null){
+        if (s == null) {
             return "";
         }
         return s;
@@ -517,13 +520,13 @@ public abstract class StringUtil {
     }
 
     public static String printable(String name) {
-        if (name == null){
+        if (name == null) {
             return null;
         }
         StringBuilder buf = new StringBuilder(name.length());
         for (int i = 0; i < name.length(); i++) {
             char c = name.charAt(i);
-            if (!Character.isISOControl(c)){
+            if (!Character.isISOControl(c)) {
                 buf.append(c);
             }
         }

@@ -27,6 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class AsmUtil implements Opcodes {
 
+    private AsmUtil() {
+    }
+
     private static final Log LOG = LogFactory.getLog(AsmUtil.class);
 
     /**
@@ -122,7 +125,7 @@ public class AsmUtil implements Opcodes {
                 return FantasyClassLoader.getClassLoader().loadClass(bytes, className);
             } catch (ClassNotFoundException ex) {
                 LOG.error(e.getMessage(), ex);
-                throw new IgnoreException(e.getMessage(),ex);
+                throw new IgnoreException(e.getMessage(), ex);
             }
         } catch (ClassNotFoundException e) {
             LOG.error(e.getMessage(), e);

@@ -7,6 +7,8 @@ import java.util.List;
 @Deprecated
 @SuppressWarnings("unchecked")
 public class Algorithm {
+    private Algorithm() {
+    }
 
     public static int binarySearch(List<?> items, Object val, Comparator comparator) {
         int startIndex = 0;

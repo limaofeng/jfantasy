@@ -10,6 +10,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 public class HostAddressUtil {
+    private HostAddressUtil() {
+    }
 
     private static final Logger LOGGER = Logger.getLogger(HostAddressUtil.class);
 

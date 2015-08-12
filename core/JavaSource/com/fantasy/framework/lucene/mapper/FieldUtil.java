@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 
 public class FieldUtil {
 
+    private FieldUtil(){}
     private static final Logger LOGGER = Logger.getLogger(FieldUtil.class);
 
     public static Object get(Object obj, Field f) {

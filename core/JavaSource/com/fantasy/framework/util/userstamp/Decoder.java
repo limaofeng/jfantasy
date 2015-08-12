@@ -7,6 +7,9 @@ import java.security.MessageDigest;
 
 public class Decoder {
 
+    private Decoder() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(Decoder.class);
 
     public static UserResult decode(String userStamp) {
