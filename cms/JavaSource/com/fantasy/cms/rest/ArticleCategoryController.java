@@ -21,7 +21,7 @@ import java.util.List;
  * @apiParam {String} description  描述
  * @apiParam {Date} sort  排序字段
  * @apiParam {String} parent_code  上级栏目编码
- * @apiVersion 3.3.7
+ * @apiVersion 3.3.6
  */
 
 /**
@@ -33,7 +33,7 @@ import java.util.List;
  * @apiParam {String} description  描述
  * @apiParam {Date} sort  排序字段
  * @apiParam {String} parent  上级栏目编码
- * @apiVersion 3.3.7
+ * @apiVersion 3.3.6
  */
 @RestController
 @RequestMapping("/cms/categorys")
@@ -44,27 +44,30 @@ public class ArticleCategoryController {
     private CmsService cmsService;
 
     /**
-     * @api {post} /cms/categorys   查询分类
-     * @apiVersion 3.3.7
+     * @api {get} /cms/categorys   分页条件查询分类
+     * @apiVersion 3.3.6
      * @apiName searchArticleCategory
      * @apiGroup 内容管理
-     * @apiDescription 通过该接口, 筛选分类
+     * @apiDescription 通过该接口, 筛选文章分类
      * @apiPermission admin
      * @apiExample Example usage:
-     * curl -i http://localhost/cms/categorys?currentPage=1&LIKES_title=上海
+     * curl -i http://localhost/cms/categorys?currentPage=1&EQS_code=article
      * @apiUse paramPager
      * @apiUse paramPropertyFilter
      * @apiUse returnPager
      * @apiUse returnArticleCategory
      * @apiUse GeneralError
+     * @param pager 分页对象
+     * @param filters 过滤条件对象
      */
+    @RequestMapping(method = RequestMethod.GET)
     public Pager<ArticleCategory> search(Pager<ArticleCategory> pager, List<PropertyFilter> filters) {
         return this.cmsService.findCategoryPager(pager, filters);
     }
 
     /**
-     * @api {post} /cms/categorys/:code   获取分类
-     * @apiVersion 3.3.7
+     * @api {get} /cms/categorys/:code   根据code获取分类
+     * @apiVersion 3.3.6
      * @apiName getArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 获取单篇分类
@@ -73,6 +76,7 @@ public class ArticleCategoryController {
      * curl -i http://localhost/cms/categorys/root
      * @apiUse returnArticleCategory
      * @apiUse GeneralError
+     * @param code 分类code
      */
     @RequestMapping("/{code}")
     public ArticleCategory view(@PathVariable("code") String code) {
@@ -81,13 +85,13 @@ public class ArticleCategoryController {
 
     /**
      * @api {post} /cms/categorys   添加分类
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.6
      * @apiName createArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 添加分类
      * @apiPermission admin
      * @apiExample Example usage:
-     * curl -i -X POST -d "title=测试&summary=测试..." http://localhost/cms/categorys
+     * curl -i -X POST -d "code=test&name=测试&parent.code=root" http://localhost/cms/categorys
      * @apiUse paramArticleCategory
      * @apiUse returnArticleCategory
      * @apiUse GeneralError
@@ -99,7 +103,7 @@ public class ArticleCategoryController {
 
     /**
      * @api {delete} /cms/categorys/:code   删除分类
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.6
      * @apiName deleteArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 删除分类
@@ -108,15 +112,36 @@ public class ArticleCategoryController {
      * curl -i -X DELETE http://localhost/cms/categorys/root
      * @apiUse paramArticleCategory
      * @apiUse GeneralError
+     * @param code  分类code
+     *
+     */
+    @RequestMapping(value="/{code}",method = {RequestMethod.DELETE})
+    public void delete(@PathVariable("code") String code) {
+        this.cmsService.delete(code);
+    }
+
+    /**
+     * @api {batchDelete} /cms/categorys/:code   批量删除分类
+     * @apiVersion 3.3.5
+     * @apiName batchDeleteArticleCategory
+     * @apiGroup 内容管理
+     * @apiDescription 通过该接口, 批量删除分类
+     * @apiPermission admin
+     * @apiExample Example usage:
+     * curl -i -X DELETE -d "code=a&code=b" http://localhost/cms/categorys
+     * @apiUse paramArticleCategory
+     * @apiUse GeneralError
+     * @param code:a
+     * @param code:b
      */
     @RequestMapping(method = {RequestMethod.DELETE})
-    public void delete(String... id) {
-        this.cmsService.delete(id);
+    public void batchDelete(String... code) {
+        this.cmsService.delete(code);
     }
 
     /**
      * @api {put} /cms/categorys/:code   更新分类
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.6
      * @apiName updateArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 更新分类
@@ -127,8 +152,9 @@ public class ArticleCategoryController {
      * @apiUse returnArticleCategory
      * @apiUse GeneralError
      */
-    @RequestMapping(method = {RequestMethod.PUT})
-    public ArticleCategory update(ArticleCategory category) {
+    @RequestMapping(value="/{code}",method = {RequestMethod.PUT})
+    public ArticleCategory update(@PathVariable("code") String code,ArticleCategory category) {
+        category.setCode(code);
         return this.cmsService.save(category);
     }
 
