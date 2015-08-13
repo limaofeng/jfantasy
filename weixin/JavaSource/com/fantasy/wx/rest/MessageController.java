@@ -24,7 +24,7 @@ import java.io.IOException;
  * @apiSuccess (Success 200)    {Date}      createTime      消息创建时间
  * @apiSuccess (Success 200)    {Content}   content         消息内容(参考：WeiXinMessage 接口与其实现类)
  * @apiSuccess (Success 200)    {String}    toUserName      消息的接收方(OpenID或者微信公众号的原始ID)
- * @apiVersion 3.3.6
+ * @apiVersion 3.3.7
  */
 @RestController
 @RequestMapping("/weixin/message")
@@ -37,7 +37,7 @@ public class MessageController {
 
     /**
      * @api {get} /weixin/message/:appid/push   微信消息接口
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName push
      * @apiGroup 微信消息
      * @apiDescription 该接口为微信公众平台中的接口配置地址。

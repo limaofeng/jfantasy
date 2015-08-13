@@ -3111,7 +3111,7 @@
 /**
      * 执行一个带参数的get请求
      *
-     * @param url webUrl         webUrl
+     * @param url         webUrl         webUrl
      * @param queryString 请求参数字符串
      * @return {Response}
      * @throws IOException
@@ -3119,7 +3119,7 @@
 /**
      * 执行一个带参数的get请求
      *
-     * @param url webUrl webUrl
+     * @param url    webUrl webUrl
      * @param params 请求参数 请求参数
      * @return {Response}
      * @throws IOException
@@ -3127,7 +3127,7 @@
 /**
      * 执行一个带请求信息的get请求
      *
-     * @param url webUrl webUrl
+     * @param url     webUrl webUrl
      * @param request 请求对象 请求对象
      * @return {Response}
      * @throws IOException
@@ -3135,14 +3135,14 @@
 /**
      * 执行一个带参数的post请求
      *
-     * @param url webUrl
+     * @param url    webUrl
      * @param params 请求参数
      * @return {Response}
      */
 /**
      * 执行一个带请求信息的post请求
      *
-     * @param url webUrl
+     * @param url     webUrl
      * @param request 请求对象
      * @return {Response}
      * @throws IOException
@@ -3605,19 +3605,19 @@
  */
 ///core/JavaSource/com/fantasy/framework/lucene/backend/IndexChecker.java
 /**
-	 * 判断Class是否标注了 @Indexed 注解
-	 * 
-	 * @功能描述
-	 * @param clazz
-	 * @return
-	 */
+     * 判断Class是否标注了 @Indexed 注解
+     *
+     * @param clazz
+     * @return
+     * @功能描述
+     */
 /**
-	 * 判断Class是否标注@indexed注解或者属性是否标注了@IndexRefBy注解
-	 * 
-	 * @功能描述
-	 * @param clazz
-	 * @return
-	 */
+     * 判断Class是否标注@indexed注解或者属性是否标注了@IndexRefBy注解
+     *
+     * @param clazz
+     * @return
+     * @功能描述
+     */
 ///core/JavaSource/com/fantasy/framework/lucene/backend/IndexCreator.java
 /**
  * 索引文件 生成器
@@ -3959,154 +3959,142 @@
  * <li>说明：
  * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
  * <li>创建日期：2011-9-21
- * <li>修改人： 
+ * <li>修改人：
  * <li>修改日期：
  */
 /**
-	 * 
-	 * <li>方法名：encode
-	 * <li>@param str
-	 * <li>@return
-	 * <li>返回类型：ByteBuffer
-	 * <li>说明：
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2011-5-3
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：encode
+     * <li>@param str
+     * <li>@return
+     * <li>返回类型：ByteBuffer
+     * <li>说明：
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2011-5-3
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：toByte
-	 * <li>@param str
-	 * <li>@return
-	 * <li>返回类型：byte[]
-	 * <li>说明：获取字符串的utf-8编码
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2011-11-12
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：toByte
+     * <li>@param str
+     * <li>@return
+     * <li>返回类型：byte[]
+     * <li>说明：获取字符串的utf-8编码
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2011-11-12
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：toNormalByte
-	 * <li>@param str
-	 * <li>@return
-	 * <li>返回类型：byte[]
-	 * <li>说明：获取平台相关的字节编码
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-19
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：toNormalByte
+     * <li>@param str
+     * <li>@return
+     * <li>返回类型：byte[]
+     * <li>说明：获取平台相关的字节编码
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-19
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：decode
-	 * <li>@param bb
-	 * <li>@return
-	 * <li>返回类型：String
-	 * <li>说明：
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2011-5-3
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：decode
+     * <li>@param bb
+     * <li>@return
+     * <li>返回类型：String
+     * <li>说明：
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2011-5-3
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：toLong
-	 * <li>@param b
-	 * <li>@return
-	 * <li>返回类型：long
-	 * <li>说明：将字节数组转换为Long型数据，高字节在前，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-18
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：toLong
+     * <li>@param b
+     * <li>@return
+     * <li>返回类型：long
+     * <li>说明：将字节数组转换为Long型数据，高字节在前，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-18
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：toInt
-	 * <li>@param b
-	 * <li>@return
-	 * <li>返回类型：int
-	 * <li>说明：将字节数组转换为整数，高字节在前，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-18
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：toInt
+     * <li>@param b
+     * <li>@return
+     * <li>返回类型：int
+     * <li>说明：将字节数组转换为整数，高字节在前，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-18
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：toShort
-	 * <li>@param b
-	 * <li>@return
-	 * <li>返回类型：short
-	 * <li>说明：将字节转换为短整数，高字节在前，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-18
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：toShort
+     * <li>@param b
+     * <li>@return
+     * <li>返回类型：short
+     * <li>说明：将字节转换为短整数，高字节在前，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-18
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：numberToByte
-	 * <li>@param l
-	 * <li>@param length
-	 * <li>@return
-	 * <li>返回类型：byte[]
-	 * <li>说明：将数字转换为字节数组；从高位向低位取值，高位在前，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-19
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：numberToByte
+     * <li>@param l
+     * <li>@param length
+     * <li>@return
+     * <li>返回类型：byte[]
+     * <li>说明：将数字转换为字节数组；从高位向低位取值，高位在前，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-19
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：shortToByte
-	 * <li>@param i
-	 * <li>@return
-	 * <li>返回类型：byte[]
-	 * <li>说明：短整形转换为字节数组，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-19
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：shortToByte
+     * <li>@param i
+     * <li>@return
+     * <li>返回类型：byte[]
+     * <li>说明：短整形转换为字节数组，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-19
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：intToByte
-	 * <li>@param i
-	 * <li>@return
-	 * <li>返回类型：byte[]
-	 * <li>说明：将整数转换为字节数组，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-19
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：intToByte
+     * <li>@param i
+     * <li>@return
+     * <li>返回类型：byte[]
+     * <li>说明：将整数转换为字节数组，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-19
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：longToByte
-	 * <li>@param i
-	 * <li>@return
-	 * <li>返回类型：byte[]
-	 * <li>说明：将长整形转换为字节数组，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-19
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：longToByte
+     * <li>@param i
+     * <li>@return
+     * <li>返回类型：byte[]
+     * <li>说明：将长整形转换为字节数组，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-19
+     * <li>修改人：
+     * <li>修改日期：
+     */
 /**
-	 * 
-	 * <li>方法名：formatBytes
-	 * <li>@param bytes
-	 * <li>@return
-	 * <li>返回类型：String
-	 * <li>说明：将字节数组转换为字符串，主要用于日志的输出，该方法来自网络
-	 * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
-	 * <li>创建日期：2012-9-19
-	 * <li>修改人： 
-	 * <li>修改日期：
-	 */
+     * <li>方法名：formatBytes
+     * <li>@param bytes
+     * <li>@return
+     * <li>返回类型：String
+     * <li>说明：将字节数组转换为字符串，主要用于日志的输出，该方法来自网络
+     * <li>创建人：CshBBrain;技术博客：http://cshbbrain.iteye.com/
+     * <li>创建日期：2012-9-19
+     * <li>修改人：
+     * <li>修改日期：
+     */
 ///core/JavaSource/com/fantasy/framework/service/FTPService.java
 /**
  * FTP工具类
@@ -4689,10 +4677,6 @@
 ///core/JavaSource/com/fantasy/framework/util/common/BeanUtil.java
 /*
     @Deprecated
-	public static <T> T copy(T dest, Object orig, String... excludeProperties) {
-		return copy(dest, orig, "", excludeProperties);
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
     @Deprecated
 	private static <T> T copy(T dest, Object orig, String superName, String[] excludeProperties) {
@@ -4986,12 +4970,6 @@
      * @version 1.0
      * @since 2013-3-27 上午10:08:07
      */
-///core/JavaSource/com/fantasy/framework/util/common/I18nUtil.java
-/*public static void main(String[] args) throws UnsupportedEncodingException {
-        String unicode = unicode("：“成功导入{0}条,新的资源!");
-		System.out.println(unicode);
-		System.out.print(decodeUnicode(unicode));
-	}*/
 ///core/JavaSource/com/fantasy/framework/util/common/ImageUtil.java
 /**
  * 图片处理工具类
@@ -5084,9 +5062,6 @@
      * @param alpha  水印图片透明度
      * @return {BufferedImage}
      */
-/*} else if (PNG_FORMAT_NAME.equalsIgnoreCase(picextendname)) {
-            imageOriginal = toBufferedImage((ToolkitImage) pngReader(target, os));
-        */
 /**
      * 缩放图片
      *
@@ -5245,16 +5220,6 @@
      * @param ins 整数数组
      * @return {boolean}
      */
-/*
-    public static void main(String[] args) {
-
-		System.out.println(percent(23d,123d));
-
-		System.out.println(toChinese("11"));
-		System.out.println(toRMB("11"));
-
-		System.out.println(toRMB("11010001000.11"));
-	}*/
 ///core/JavaSource/com/fantasy/framework/util/common/ObjectUtil.java
 /**
      * 克隆对象,调用org.apache.commons.beanutils.BeanUtils.cloneBean(object);方法实现克隆
@@ -5342,11 +5307,6 @@
      * @param dest 源集合
      * @param orig 要合并的集合
      */
-/*
-    @Deprecated
-    public static <T> T copy(T dest, Object orig, String... excludeProperties) {
-        return BeanUtil.copy(dest, orig, excludeProperties);
-    }*/
 /**
      * 判断对象是否存在于集合中
      *
@@ -5417,7 +5377,7 @@
 ///core/JavaSource/com/fantasy/framework/util/common/ScriptHelp.java
 /*]*[^\\**\\/]*)*\\*\\/", "$1").replaceAll("\\/\\/[^\\n]*", "");
 
-        if (content.indexOf("/*") == 0){
+        if (content.indexOf("/*") == 0) {
             content = content.substring(content.indexOf("*/
 ///core/JavaSource/com/fantasy/framework/util/common/StringUtil.java
 /**
@@ -6029,20 +5989,6 @@
  * 该类逻辑有待验证
  * @param <V>
  */
-///core/JavaSource/com/fantasy/framework/util/userstamp/Decoder.java
-/*public static void main(String[] args) {
-
-		UserStamp key = Encoder.encode(1, 50124, "123456", 5);
-		System.out.println(key);
-
-		UserResult userResult = decode(key.toString());// "HzRnCQagkhfcQdst"
-		System.out.println("cssStyle : " + userResult.getCssStyle());
-		System.out.println("passwordHash : " + userResult.getPasswordHash());
-		System.out.println("userId : " + userResult.getUserId());
-		System.out.println("checkPassword : " + userResult.checkPassword("91919191"));
-		System.out.println("userType : " + userResult.getUserType());
-		System.out.println(userResult.getMemKey());
-	}*/
 ///core/JavaSource/com/fantasy/framework/util/web/context/ActionContext.java
 /**
  * 应用的上下文 提供给Action使用
@@ -6085,55 +6031,50 @@
  */
 ///core/JavaSource/com/fantasy/framework/util/web/PagerUtil.java
 /**
-     *
-     * @param curPage
-     *            当前页数
-     * @param totalPage
-     *            总页数
-     * @param pageNumber
-     *            当前面前面显示几个，后面显示几个
+     * @param curPage    当前页数
+     * @param totalPage  总页数
+     * @param pageNumber 当前面前面显示几个，后面显示几个
      * @return {List<String>}
      */
 ///core/JavaSource/com/fantasy/framework/util/web/ServletUtils.java
 /**
-	 * 设置 页面过期时间
-	 * 
-	 * @功能描述
-	 * @param response
-	 * @param expiresSeconds
-	 */
+     * 设置 页面过期时间
+     *
+     * @param response
+     * @param expiresSeconds
+     * @功能描述
+     */
 /**
-	 * 设置 页面不缓存
-	 * 
-	 * @功能描述
-	 * @param response
-	 */
+     * 设置 页面不缓存
+     *
+     * @param response
+     * @功能描述
+     */
 /**
-	 * 
-	 * @功能描述
-	 * @param response
-	 */
+     * @param response
+     * @功能描述
+     */
 /**
-	 * 设置 页面的最后修改时间
-	 * 
-	 * @功能描述
-	 * @param response
-	 * @param lastModifiedDate
-	 */
+     * 设置 页面的最后修改时间
+     *
+     * @param response
+     * @param lastModifiedDate
+     * @功能描述
+     */
 /**
-	 * 
-	 * @功能描述 
-	 * @param request
-	 * @param response
-	 * @param lastModified
-	 * @return
-	 */
+     * @param request
+     * @param response
+     * @param lastModified
+     * @return
+     * @功能描述
+     */
 /**
-	 * 方法待优化
-	 * @功能描述 
-	 * @param response
-	 * @param fileName
-	 */
+     * 方法待优化
+     *
+     * @param response
+     * @param fileName
+     * @功能描述
+     */
 ///core/JavaSource/com/fantasy/framework/util/web/WebUtil.java
 /**
  * web 工具类<br/>

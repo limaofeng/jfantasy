@@ -18,7 +18,7 @@ import java.util.List;
  * @apiParam {String} author  作者
  * @apiParam {Date} releaseDate  发布日期
  * @apiParam {String} category_code  栏目编码
- * @apiVersion 3.3.6
+ * @apiVersion 3.3.7
  */
 
 /**
@@ -32,7 +32,7 @@ import java.util.List;
  * @apiSuccess {Date} releaseDate  发布日期
  * @apiSuccess {ArticleCategory} category  栏目
  * @apiSuccess {Boolean} issue  发布标示
- * @apiVersion 3.3.6
+ * @apiVersion 3.3.7
  */
 @RestController
 @RequestMapping("/cms/articles")
@@ -43,7 +43,7 @@ public class ArticleController {
 
     /**
      * @api {post} /cms/articles   查询文章
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName searchArticle
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 筛选文章
@@ -63,7 +63,7 @@ public class ArticleController {
 
     /**
      * @api {post} /cms/articles/:id   获取文章
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName getArticle
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 获取单篇文章
@@ -80,7 +80,7 @@ public class ArticleController {
 
     /**
      * @api {post} /cms/articles   添加文章
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName createArticle
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 添加文章
@@ -98,7 +98,7 @@ public class ArticleController {
 
     /**
      * @api {delete} /cms/articles/43   删除文章
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName deleteArticle
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 删除文章
@@ -115,7 +115,7 @@ public class ArticleController {
 
     /**
      * @api {put} /cms/articles/43   更新文章
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName updateArticle
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 更新文章
