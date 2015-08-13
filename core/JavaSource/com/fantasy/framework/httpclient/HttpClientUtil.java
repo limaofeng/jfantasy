@@ -1,5 +1,6 @@
 package com.fantasy.framework.httpclient;
 
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -128,7 +129,7 @@ public class HttpClientUtil {
      * @throws IOException
      */
     public static Response doPost(String url, Request request) throws IOException {
-        request = request == null ? new Request() : request;
+        request = ObjectUtil.defaultValue(request,new Request());
         HttpClient client = new HttpClient();
         PostMethod method = new PostMethod(url);
         for (Header header : request.getRequestHeaders()) {
