@@ -29,7 +29,7 @@ public class FileUploadService {
 
     private static final Log LOG = LogFactory.getLog(FileUploadService.class);
 
-    private final static String separator = "/";
+    private final static String separator = "/";//NOSONAR
     @Autowired
     private transient FileService fileService;
     @Autowired
