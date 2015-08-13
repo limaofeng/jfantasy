@@ -35,41 +35,43 @@ public class PathUtil {
             String webAppRootKey = PropertiesHelper.load("props/application.properties").getProperty("webAppRootKey", "webapp.root");
             PathUtil.WEBROOT_PATH = System.getProperty(webAppRootKey);
             if (StringUtil.isNull(PathUtil.WEBROOT_PATH)) {
-                throw new IgnoreException("根据webAppRootKey[" + webAppRootKey + "]获取WebRoot路径失败");
-            }
-            PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "WEB-INF" + File.separator;
-            PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "classes" + File.separator;
-            PathUtil.WEBLIB_PATH = PathUtil.webinf() + "lib" + File.separator;
-        } catch (Exception e) {// TODO 待完善
-            LOGGER.error(e.getMessage(), e);
-            LOGGER.debug("改用 Thread.currentThread().getContextClassLoader().getResource(\"/\") 方式获取WebRoot路径");
-            URL url = Thread.currentThread().getContextClassLoader().getResource("");
-            LOGGER.debug("Thread.currentThread().getContextClassLoader().getResource(\"/\") 获取的 url = " + url);
-            if (url == null) {
-                url = PathUtil.class.getResource("");
-                LOGGER.debug("PathUtil.class.getResource(\"\") 获取的 url = " + url);
-            }
-            PathUtil.WEBCLASSES_PATH = new File(RegexpUtil.replace(url.getPath(), "[\\/]$", "")).getAbsolutePath();
-            if (WEBCLASSES_PATH.indexOf("WEB-INF") > 0) {
-                File classFile = new File(PathUtil.WEBCLASSES_PATH);
-                PathUtil.WEBINF_PATH = RegexpUtil.replace(classFile.getParentFile().getPath(), "[\\/]$", "");
-                PathUtil.WEBROOT_PATH = RegexpUtil.replace(classFile.getParentFile().getParentFile().getPath(), "[\\/]$", "");
-            }
-            if (StringUtil.isBlank(WEBROOT_PATH) || StringUtil.isBlank(WEBINF_PATH) || "/".equals(WEBCLASSES_PATH)) {
-                LOGGER.debug("改用  PathUtil.getClassLocationURL(PathUtil.class) 方式获取WebRoot路径");
-                url = PathUtil.getClassLocationURL(PathUtil.class);
-                if ("jar".equalsIgnoreCase(url.getProtocol())) {
-                    String path = PathUtil.getPathFromClass(PathUtil.class);
-                    if (path.contains("WEB-INF")) {
-                        PathUtil.WEBROOT_PATH = RegexpUtil.replace(path.substring(0, path.lastIndexOf("WEB-INF")), "[\\/]$", "");
-                        PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "/WEB-INF";
-                        PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "/classes";
+                LOGGER.debug("根据webAppRootKey[" + webAppRootKey + "]获取WebRoot路径失败");
+                LOGGER.debug("改用 Thread.currentThread().getContextClassLoader().getResource(\"/\") 方式获取WebRoot路径");
+                URL url = Thread.currentThread().getContextClassLoader().getResource("");
+                LOGGER.debug("Thread.currentThread().getContextClassLoader().getResource(\"/\") 获取的 url = " + url);
+                if (url == null) {
+                    url = PathUtil.class.getResource("");
+                    LOGGER.debug("PathUtil.class.getResource(\"\") 获取的 url = " + url);
+                }
+                PathUtil.WEBCLASSES_PATH = new File(RegexpUtil.replace(url.getPath(), "[\\/]$", "")).getAbsolutePath();
+                if (WEBCLASSES_PATH.indexOf("WEB-INF") > 0) {
+                    File classFile = new File(PathUtil.WEBCLASSES_PATH);
+                    PathUtil.WEBINF_PATH = RegexpUtil.replace(classFile.getParentFile().getPath(), "[\\/]$", "");
+                    PathUtil.WEBROOT_PATH = RegexpUtil.replace(classFile.getParentFile().getParentFile().getPath(), "[\\/]$", "");
+                }
+                if (StringUtil.isBlank(WEBROOT_PATH) || StringUtil.isBlank(WEBINF_PATH) || "/".equals(WEBCLASSES_PATH)) {
+                    LOGGER.debug("改用  PathUtil.getClassLocationURL(PathUtil.class) 方式获取WebRoot路径");
+                    url = PathUtil.getClassLocationURL(PathUtil.class);
+                    if ("jar".equalsIgnoreCase(url.getProtocol())) {
+                        String path = PathUtil.getPathFromClass(PathUtil.class);
+                        if (path.contains("WEB-INF")) {
+                            PathUtil.WEBROOT_PATH = RegexpUtil.replace(path.substring(0, path.lastIndexOf("WEB-INF")), "[\\/]$", "");
+                            PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "/WEB-INF";
+                            PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "/classes";
+                        }
                     }
                 }
+                PathUtil.WEBROOT_PATH = StringUtil.defaultValue(PathUtil.WEBROOT_PATH, "").replaceAll("\\" + File.separator, "/");
+                PathUtil.WEBINF_PATH = StringUtil.defaultValue(PathUtil.WEBINF_PATH, "").replaceAll("\\" + File.separator, "/");
+                PathUtil.WEBCLASSES_PATH = PathUtil.WEBCLASSES_PATH.replaceAll("\\" + File.separator, "/");
+
+            } else {
+                PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "WEB-INF" + File.separator;
+                PathUtil.WEBCLASSES_PATH = PathUtil.WEBINF_PATH + "classes" + File.separator;
+                PathUtil.WEBLIB_PATH = PathUtil.webinf() + "lib" + File.separator;
             }
-            PathUtil.WEBROOT_PATH = StringUtil.defaultValue(PathUtil.WEBROOT_PATH, "").replaceAll("\\" + File.separator, "/");
-            PathUtil.WEBINF_PATH = StringUtil.defaultValue(PathUtil.WEBINF_PATH, "").replaceAll("\\" + File.separator, "/");
-            PathUtil.WEBCLASSES_PATH = PathUtil.WEBCLASSES_PATH.replaceAll("\\" + File.separator, "/");
+        } catch (Exception e) {
+            LOGGER.error(e.getMessage(), e);
         }
         if (LOGGER.isDebugEnabled()) {
             StringBuffer debug = new StringBuffer("\r\nPathUtil获取的路径信息如下:");
