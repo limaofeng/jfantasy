@@ -16,9 +16,6 @@ import com.fantasy.framework.log.interceptor.LogInterceptor;
 
 public class AnnotationDrivenLogBeanDefinitionParser implements BeanDefinitionParser {
 
-    private AnnotationDrivenLogBeanDefinitionParser() {
-    }
-
     public static final String LOG_ADVISOR_BEAN_NAME = "org.springframework.log.config.internalLogAdvisor";
     public static final String LOG_ASPECT_BEAN_NAME = "org.springframework.log.config.internalLogAspect";
 
