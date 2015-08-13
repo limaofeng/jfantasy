@@ -37,12 +37,25 @@ public class FileUploadService {
     @Autowired
     private transient FileManagerFactory fileManagerFactory;
 
+    private static boolean isPart(String entireFileHash, String partFileHash, String entireFileName, String entireFileDir, Integer total, Integer index) {
+        if (StringUtil.isBlank(entireFileHash) || StringUtil.isBlank(partFileHash)) {
+            return false;
+        }
+        if (StringUtil.isBlank(entireFileName) || StringUtil.isBlank(entireFileDir)) {
+            return false;
+        }
+        if (ObjectUtil.isNull(total) || StringUtil.isNull(index)) {
+            return false;
+        }
+        return true;
+    }
+
     public FileDetail upload(MultipartFile file, String dir, String entireFileName, String entireFileDir, String entireFileHash, String partFileHash, Integer total, Integer index) throws IOException {
         String fileName = file.getOriginalFilename();
         String contentType = file.getContentType();
         try {
             //判断是否为分段上传
-            boolean isPart = StringUtil.isNotBlank(entireFileHash) && StringUtil.isNotBlank(partFileHash) && StringUtil.isNotBlank(entireFileName) && StringUtil.isNotBlank(entireFileDir) && ObjectUtil.isNotNull(total) && StringUtil.isNotNull(index);
+            boolean isPart = isPart(entireFileHash, partFileHash, entireFileName, entireFileDir, total, index);
             //生成分段上传的文件名
             if (isPart && "blob".equalsIgnoreCase(fileName)) {
                 fileName = entireFileName + ".part" + StringUtil.addZeroLeft(index.toString(), total.toString().length());
