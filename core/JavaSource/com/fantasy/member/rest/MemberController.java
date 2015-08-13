@@ -34,26 +34,26 @@ import java.util.List;
 
 /**
  * @apiDefine returnMember
- * @apiParam {String} username  用户登录名称
- * @apiParam {String} password  登录密码
- * @apiParam {String} nickName  用户显示昵称
- * @apiParam {boolean} enabled  是否启用
- * @apiParam {boolean} accountNonExpired  未过期
- * @apiParam {boolean} accountNonLocked  未锁定
- * @apiParam {boolean} credentialsNonExpired  未失效
- * @apiParam {Date} lockTime  锁定时间
- * @apiParam {Date} lastLoginTime  最后登录时间
- * @apiParam {String} details.name  姓名
- * @apiParam {Enum} details.sex  性别
- * @apiParam {Date} details.birthday  生日
- * @apiParam {String} details.mobile  移动电话
- * @apiParam {String} details.tel  固定电话
- * @apiParam {String} details.email  邮箱
- * @apiParam {String} details.website  网址
- * @apiParam {String} details.description  描述信息
- * @apiParam {Boolean} details.vip  是否为vip用户
- * @apiParam {Integer} details.score  用户积分
- * @apiParam {FileDetail} details.avatar  用户头像存储
+ * @apiSuccess {String} username  用户登录名称
+ * @apiSuccess {String} password  登录密码
+ * @apiSuccess {String} nickName  用户显示昵称
+ * @apiSuccess {boolean} enabled  是否启用
+ * @apiSuccess {boolean} accountNonExpired  未过期
+ * @apiSuccess {boolean} accountNonLocked  未锁定
+ * @apiSuccess {boolean} credentialsNonExpired  未失效
+ * @apiSuccess {Date} lockTime  锁定时间
+ * @apiSuccess {Date} lastLoginTime  最后登录时间
+ * @apiSuccess {String} details.name  姓名
+ * @apiSuccess {Enum} details.sex  性别
+ * @apiSuccess {Date} details.birthday  生日
+ * @apiSuccess {String} details.mobile  移动电话
+ * @apiSuccess {String} details.tel  固定电话
+ * @apiSuccess {String} details.email  邮箱
+ * @apiSuccess {String} details.website  网址
+ * @apiSuccess {String} details.description  描述信息
+ * @apiSuccess {Boolean} details.vip  是否为vip用户
+ * @apiSuccess {Integer} details.score  用户积分
+ * @apiSuccess {FileDetail} details.avatar  用户头像存储
  * @apiVersion 3.3.4
  */
 @RestController
@@ -65,7 +65,7 @@ public class MemberController {
 
 
     /**
-     * @api {get} /members   查询用户
+     * @api {get} /members   查询会员
      * @apiVersion 3.3.7
      * @apiName searchMember
      * @apiGroup 会员管理
@@ -94,7 +94,7 @@ public class MemberController {
      * @apiPermission admin
      * @apiExample Example usage:
      * curl -i http://localhost/members/43
-     * @apiUse returnArticle
+     * @apiUse returnMember
      * @apiUse GeneralError
      */
     @RequestMapping(value="/{id}",method = RequestMethod.GET)
@@ -103,8 +103,6 @@ public class MemberController {
     }
 
     /**
-     * @param member member
-     * @return member
      * @api {post} /members  添加会员
      * @apiVersion 3.3.7
      * @apiName createMember
@@ -124,9 +122,6 @@ public class MemberController {
 
 
     /**
-     * @param member member
-     * @param id memberId
-     * @return member
      * @api {put} /members/:id  更新会员
      * @apiVersion 3.3.7
      * @apiName updateMember
@@ -156,9 +151,7 @@ public class MemberController {
      * @apiPermission admin
      * @apiExample Example usage:
      * curl -i -X DELETE http://localhost/members/43
-     * @apiUse paramArticle
      * @apiUse GeneralError
-     * @param id memberID
      */
     @RequestMapping(value="/{id}",method = {RequestMethod.DELETE})
     public void delete(@PathVariable("id") Long id) {

@@ -42,7 +42,7 @@ public class ArticleController {
     private CmsService cmsService;
 
     /**
-     * @api {get} /cms/articles   分页条件查询文章
+     * @api {get} /cms/articles   查询文章
      * @apiVersion 3.3.7
      * @apiName searchArticle
      * @apiGroup 内容管理
@@ -53,10 +53,7 @@ public class ArticleController {
      * @apiUse paramPager
      * @apiUse paramPropertyFilter
      * @apiUse returnPager
-     * @apiUse returnArticle
      * @apiUse GeneralError
-     * @param pager 分页对象
-     * @param filters 过滤条件对象
      */
     @RequestMapping(method = RequestMethod.GET)
     public Pager<Article> search(Pager<Article> pager, List<PropertyFilter> filters) {
@@ -64,7 +61,7 @@ public class ArticleController {
     }
 
     /**
-     * @api {get} /cms/articles/:id   获取ID文章
+     * @api {get} /cms/articles/:id   获取文章
      * @apiVersion 3.3.7
      * @apiName getArticle
      * @apiGroup 内容管理
@@ -93,7 +90,6 @@ public class ArticleController {
      * @apiUse paramArticle
      * @apiUse returnArticle
      * @apiUse GeneralError
-     * @param article 文章对象
      */
     @RequestMapping(method = {RequestMethod.POST})
     public Article create(Article article) {
@@ -101,17 +97,15 @@ public class ArticleController {
     }
 
     /**
-     * @api {delete} /cms/articles/43   删除文章
+     * @api {delete} /cms/articles/:id   删除文章
      * @apiVersion 3.3.7
      * @apiName deleteArticle
      * @apiGroup 内容管理
-     * @apiDescription 通过该接口, 删除一篇文章
+     * @apiDescription 通过该接口, 删除文章
      * @apiPermission admin
      * @apiExample Example usage:
      * curl -i -X DELETE http://localhost/cms/articles/43
-     * @apiUse paramArticle
      * @apiUse GeneralError
-     * @param id  文章ID
      */
     @RequestMapping(value="/{id}",method = {RequestMethod.DELETE})
     public void delete(@PathVariable("id") Long id) {
@@ -119,7 +113,7 @@ public class ArticleController {
     }
 
     /**
-     * @api {batchDelete} /cms/articles   删除文章
+     * @api {batchDelete} /cms/articles   批量删除文章
      * @apiVersion 3.3.7
      * @apiName batchDeleteArticle
      * @apiGroup 内容管理
@@ -127,7 +121,6 @@ public class ArticleController {
      * @apiPermission admin
      * @apiExample Example usage:
      * curl -i -X DELETE http://localhost/cms/articles
-     * @apiUse paramArticle
      * @apiUse GeneralError
      * @param id 文章ID-1
      * @param id 文章ID-2
@@ -138,7 +131,7 @@ public class ArticleController {
     }
 
     /**
-     * @api {put} /cms/articles/43   更新文章
+     * @api {put} /cms/articles/:id   更新文章
      * @apiVersion 3.3.7
      * @apiName updateArticle
      * @apiGroup 内容管理

@@ -18,7 +18,7 @@ import java.util.List;
  * @apiParam {String} name  名称
  * @apiParam {String} size  图片尺寸
  * @apiParam {String} description  描述
- * @apiParam {List<BannerItem>}  bannerItems  图片明细
+ * @apiParam {List}  bannerItems  图片明细
  * @apiParam {String}  BannerItem.title  标题
  * @apiParam {String}  BannerItem.summary  摘要
  * @apiParam {String}  BannerItem.url  跳转地址
@@ -29,18 +29,18 @@ import java.util.List;
 
 /**
  * @apiDefine returnBanner
- * @apiParam {String} key  编码
- * @apiParam {String} name  名称
- * @apiParam {String} size  图片尺寸
- * @apiParam {String} description  描述
- * @apiParam {List<BannerItem>}  bannerItems  图片明细
- * @apiParam {String}  BannerItem.id  明细ID
- * @apiParam {String}  BannerItem.title  标题
- * @apiParam {String}  BannerItem.summary  摘要
- * @apiParam {String}  BannerItem.url  跳转地址
- * @apiParam {String}  BannerItem.sort  排序字段
- * @apiParam {String}  BannerItem.bannerImage 图片对象
- * @apiParam {Banner}  BannerItem.banner Banner对象
+ * @apiSuccess {String} key  编码
+ * @apiSuccess {String} name  名称
+ * @apiSuccess {String} size  图片尺寸
+ * @apiSuccess {String} description  描述
+ * @apiSuccess {List}  bannerItems  图片明细
+ * @apiSuccess {String}  BannerItem.id  明细ID
+ * @apiSuccess {String}  BannerItem.title  标题
+ * @apiSuccess {String}  BannerItem.summary  摘要
+ * @apiSuccess {String}  BannerItem.url  跳转地址
+ * @apiSuccess {String}  BannerItem.sort  排序字段
+ * @apiSuccess {String}  BannerItem.bannerImage 图片对象
+ * @apiSuccess {Banner}  BannerItem.banner Banner对象
  * @apiVersion 3.3.7
  */
 @RestController
@@ -51,8 +51,6 @@ public class BannerController {
     private BannerService bannerService;
 
     /**
-     * @param banner 轮播图对象
-     * @return banner
      * @api {post} /cms/banners  添加轮播图
      * @apiVersion 3.3.7
      * @apiName createBanner
@@ -71,9 +69,6 @@ public class BannerController {
     }
 
     /**
-     * @param key    bannerId
-     * @param banner banner
-     * @return banner
      * @api {put} /cms/banners/:key  更新轮播图
      * @apiVersion 3.3.7
      * @apiName updateBanner
@@ -82,6 +77,8 @@ public class BannerController {
      * @apiPermission admin
      * @apiExample Example usage:
      * curl -i -X PUT http://localhost/cms/banners/root
+     * @apiUse paramBanner
+     * @apiUse returnBanner
      * @apiUse GeneralError
      */
     @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
@@ -91,8 +88,6 @@ public class BannerController {
     }
 
     /**
-     * @param key bannerId
-     * @return Banner
      * @api {get} /cms/banners/:key  获取轮播图
      * @apiVersion 3.3.7
      * @apiName getBanner
@@ -101,6 +96,7 @@ public class BannerController {
      * @apiPermission admin
      * @apiExample Example usage:
      * curl -i http://localhost/cms/banners/root
+     * @apiUse returnBanner
      * @apiUse GeneralError
      */
     @RequestMapping("/{key}")
@@ -109,7 +105,6 @@ public class BannerController {
     }
 
     /**
-     * @param key bannerId
      * @api {delete} /cms/banners/:key 删除轮播图
      * @apiVersion 3.3.7
      * @apiName deleteBanner
@@ -144,9 +139,7 @@ public class BannerController {
     }
 
     /**
-     * @param pager   翻页对象
-     * @param filters 筛选条件
-     * @api {get} /cms/banners   分页查询轮播图
+     * @api {get} /cms/banners   查询轮播图
      * @apiVersion 3.3.7
      * @apiName getBanners
      * @apiGroup 内容管理
@@ -156,6 +149,7 @@ public class BannerController {
      * curl -i http://localhost/cms/banners?currentPage=1&EQS_key=test
      * @apiUse paramPager
      * @apiUse paramPropertyFilter
+     * @apiUse returnPager
      * @apiUse GeneralError
      */
     @RequestMapping(method = RequestMethod.GET)

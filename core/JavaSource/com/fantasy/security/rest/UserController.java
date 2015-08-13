@@ -21,7 +21,7 @@ import java.util.List;
  * @apiParam {String} nickName  显示昵称
  * @apiParam {boolean} enabled  是否启用
  * @apiParam {Website} website.id  网站对象
- * @apiParam {List<Role>} roles  用户对应的角色
+ * @apiParam {List} roles  用户对应的角色
  * @apiParam {String} details.name  姓名
  * @apiParam {Sex} details.sex  性别
  * @apiParam {Date} details.birthday  生日
@@ -36,27 +36,27 @@ import java.util.List;
 
 /**
  * @apiDefine returnUser
- * @apiParam {Long} id  用户ID
- * @apiParam {String} username  登录名称
- * @apiParam {String} password  登录密码
- * @apiParam {String} nickName  显示昵称
- * @apiParam {boolean} enabled  是否启用
- * @apiParam {boolean} accountNonExpired  未过期
- * @apiParam {boolean} accountNonLocked  未锁定
- * @apiParam {boolean} credentialsNonExpired  未失效
- * @apiParam {Date} lockTime  锁定时间
- * @apiParam {Date} lastLoginTime 最后登录时间
- * @apiParam {List<Role>} roles  用户对应的角色
- * @apiParam {Website} website  网站对象
- * @apiParam {String} details.name  姓名
- * @apiParam {Sex} details.sex  性别
- * @apiParam {Date} details.birthday  生日
- * @apiParam {String} details.mobile  移动电话
- * @apiParam {String} details.tel  固定电话
- * @apiParam {String} details.email  邮箱
- * @apiParam {String} details.website  网址
- * @apiParam {String} details.description  描述信息
- * @apiParam {FileDetail} details.Avatar  用户头像图片对象
+ * @apiSuccess {Long} id  用户ID
+ * @apiSuccess {String} username  登录名称
+ * @apiSuccess {String} password  登录密码
+ * @apiSuccess {String} nickName  显示昵称
+ * @apiSuccess {boolean} enabled  是否启用
+ * @apiSuccess {boolean} accountNonExpired  未过期
+ * @apiSuccess {boolean} accountNonLocked  未锁定
+ * @apiSuccess {boolean} credentialsNonExpired  未失效
+ * @apiSuccess {Date} lockTime  锁定时间
+ * @apiSuccess {Date} lastLoginTime 最后登录时间
+ * @apiSuccess {List} roles  用户对应的角色
+ * @apiSuccess {Website} website  网站对象
+ * @apiSuccess {String} details.name  姓名
+ * @apiSuccess {Sex} details.sex  性别
+ * @apiSuccess {Date} details.birthday  生日
+ * @apiSuccess {String} details.mobile  移动电话
+ * @apiSuccess {String} details.tel  固定电话
+ * @apiSuccess {String} details.email  邮箱
+ * @apiSuccess {String} details.website  网址
+ * @apiSuccess {String} details.description  描述信息
+ * @apiSuccess {FileDetail} details.Avatar  用户头像图片对象
  * @apiVersion 3.3.7
  */
 @RestController
@@ -67,7 +67,7 @@ public class UserController {
     private UserService userService;
 
     /**
-     * @api {get} /users   分页条件查询用户
+     * @api {get} /users   查询用户
      * @apiVersion 3.3.7
      * @apiName searchUser
      * @apiGroup 用户管理
@@ -95,10 +95,8 @@ public class UserController {
      * @apiPermission admin
      * @apiExample Example usage:
      * curl -i http://localhost/users/hebo
-     * @apiUse returnArticle
+     * @apiUse returnUser
      * @apiUse GeneralError
-     * @param username 用户名
-     * @return User
      */
     @RequestMapping(value="/{username}",method = RequestMethod.GET)
     public User view(@PathVariable("username") String username) {
@@ -117,7 +115,6 @@ public class UserController {
      * @apiUse paramUser
      * @apiUse returnUser
      * @apiUse GeneralError
-     * @param user 用户对象paramUser
      */
     @RequestMapping(method = {RequestMethod.POST})
     public User create(User user){
@@ -134,7 +131,6 @@ public class UserController {
      * @apiExample Example usage:
      * curl -i -X DELETE http://localhost/users/43
      * @apiUse GeneralError
-     * @param id  用户ID
      */
     @RequestMapping(value="/{id}",method = {RequestMethod.DELETE})
     public void delete(@PathVariable("id") Long id) {
@@ -172,8 +168,6 @@ public class UserController {
      * @apiUse paramUser
      * @apiUse returnUser
      * @apiUse GeneralError
-     * @param id 用户ID
-     * @param user user对象要修改的值
      */
     @RequestMapping(value="/{id}",method = {RequestMethod.PUT})
     public User update(@PathVariable("id") Long id,User user) {
