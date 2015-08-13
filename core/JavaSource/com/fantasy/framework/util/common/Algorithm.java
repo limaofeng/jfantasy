@@ -1,5 +1,8 @@
 package com.fantasy.framework.util.common;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -7,7 +10,9 @@ import java.util.List;
 @Deprecated
 @SuppressWarnings("unchecked")
 public class Algorithm {
-
+    private Algorithm() {
+    }
+    private final static Log LOGGER = LogFactory.getLog(Algorithm.class);
     public static int binarySearch(List<?> items, Object val, Comparator comparator) {
         int startIndex = 0;
         int stopIndex = items.size() - 1;
@@ -91,7 +96,7 @@ public class Algorithm {
     }
 
     private static void printResult(int i, Object[] src) {
-        System.out.println(i + "|" + Arrays.toString(src));
+        LOGGER.debug(i + "|" + Arrays.toString(src));
     }
 
 }

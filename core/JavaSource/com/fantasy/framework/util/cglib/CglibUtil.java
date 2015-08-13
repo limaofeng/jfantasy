@@ -8,6 +8,8 @@ import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 
 public class CglibUtil {
+    private CglibUtil() {
+    }
 
     private final static ConcurrentHashMap<String, MethodInterceptor> defaultInterceptors = new ConcurrentHashMap<String, MethodInterceptor>();
 

@@ -46,7 +46,7 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         String price = String.format("%.2f", orderDetails.getPayableFee());// 总金额（单位：元）
         String quantity = "1";// 商品数量
         String returnUrl = PaymentContext.getContext().getReturnUrl(payment.getSn());// 回调处理URL
-        String sellerId = paymentConfig.getSellerEmail();// 商家ID 如："shenzhenying@haoluesoft.com";
+        String sellerId = paymentConfig.getSellerEmail();
         String service = "create_partner_trade_by_buyer";// 接口类型（create_partner_trade_by_buyer：担保交易）
         String showUrl = PaymentContext.getContext().getShowUrl(orderDetails.getSN());// 支付结果显示URL
         String signType = "MD5";//签名加密方式（MD5）

@@ -56,7 +56,6 @@ public class KeywordsInterceptor {
         List<String> list = new ArrayList<String>();
         list.add(keywords);
         Dictionary.loadExtendWords(list);
-//		Dictionary.loadExtendStopWords(extStopWords);
     }
 
     public void removeExtendWords(JoinPoint point) {

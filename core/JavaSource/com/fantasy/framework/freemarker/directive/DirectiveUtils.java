@@ -12,6 +12,8 @@ import java.util.Map;
 
 @SuppressWarnings("rawtypes")
 public class DirectiveUtils {
+    private DirectiveUtils() {
+    }
 
     public static final String BLOCK = "__ftl_override__";
     public static final String OVERRIDE_CURRENT_NODE = "__ftl_override_current_node";

@@ -7,6 +7,8 @@ import ognl.TypeConverter;
 import org.hibernate.criterion.Restrictions;
 
 public class TypeConverterUtils {
+    private TypeConverterUtils() {
+    }
 
     private static ConverterService converterService;
 

@@ -11,9 +11,11 @@ import java.net.URLEncoder;
 
 public class EncodeUtil {
 
+    private EncodeUtil() {
+    }
+
     private static final String DEFAULT_URL_ENCODING = "UTF-8";
 
-    // private static final Log logger = LogFactory.getLog(EncodeUtil.class);
 
     public static String hexEncode(byte[] input) {
         return Hex.encodeHexString(input);

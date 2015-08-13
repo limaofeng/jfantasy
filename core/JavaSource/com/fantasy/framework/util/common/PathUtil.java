@@ -19,6 +19,9 @@ import java.util.StringTokenizer;
 
 public class PathUtil {
 
+    private PathUtil() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(PathUtil.class);
 
     private static String WEBCLASSES_PATH = null;
@@ -31,7 +34,7 @@ public class PathUtil {
             // TODO 此处与DateUtil获取资源文件的地方需要修改
             String webAppRootKey = PropertiesHelper.load("props/application.properties").getProperty("webAppRootKey", "webapp.root");
             PathUtil.WEBROOT_PATH = System.getProperty(webAppRootKey);
-            if (StringUtil.isNull(PathUtil.WEBROOT_PATH)){
+            if (StringUtil.isNull(PathUtil.WEBROOT_PATH)) {
                 throw new IgnoreException("根据webAppRootKey[" + webAppRootKey + "]获取WebRoot路径失败");
             }
             PathUtil.WEBINF_PATH = PathUtil.WEBROOT_PATH + "WEB-INF" + File.separator;
@@ -166,7 +169,7 @@ public class PathUtil {
     }
 
     public static URL getClassLocationURL(Class<?> cls) {
-        if (cls == null){
+        if (cls == null) {
             throw new IllegalArgumentException("null input: cls");
         }
         URL result = null;
@@ -174,14 +177,14 @@ public class PathUtil {
         ProtectionDomain pd = cls.getProtectionDomain();
         if (pd != null) {
             CodeSource cs = pd.getCodeSource();
-            if (cs != null){
+            if (cs != null) {
                 result = cs.getLocation();
             }
-            if ((result != null) && ("file".equals(result.getProtocol()))){
+            if ((result != null) && ("file".equals(result.getProtocol()))) {
                 try {
-                    if ((result.toExternalForm().endsWith(".jar")) || (result.toExternalForm().endsWith(".zip"))){
+                    if ((result.toExternalForm().endsWith(".jar")) || (result.toExternalForm().endsWith(".zip"))) {
                         result = new URL("jar:".concat(result.toExternalForm()).concat("!/").concat(clsAsResource));
-                    } else if (new File(result.getFile()).isDirectory()){
+                    } else if (new File(result.getFile()).isDirectory()) {
                         result = new URL(result, clsAsResource);
                     }
                 } catch (MalformedURLException ignored) {
@@ -209,11 +212,11 @@ public class PathUtil {
     @Deprecated
     public static String getFilePath(String path) {
         StringBuilder result = new StringBuilder();
-        if (path.endsWith(".xml")){
+        if (path.endsWith(".xml")) {
             result.append(classes()).append("/").append(path.replace(".xml", "").replace('.', '/').concat(".xml"));
-        }else if (path.endsWith(".class")){
+        } else if (path.endsWith(".class")) {
             result.append(classes()).append("/").append(path.replace(".class", "").replace('.', '/').concat(".class"));
-        } else{
+        } else {
             result.append(root()).append("/").append(path);
         }
         return result.toString();
@@ -225,14 +228,14 @@ public class PathUtil {
     }
 
     public static String[] getPackagePath(String packages) {
-        if (packages == null){
+        if (packages == null) {
             return null;
         }
         List<String> pathPrefixes = new ArrayList<String>();
         String pathPrefix;
         for (StringTokenizer st = new StringTokenizer(packages, ", \n\t"); st.hasMoreTokens(); pathPrefixes.add(pathPrefix)) {
             pathPrefix = st.nextToken().replace('.', '/');
-            if (!pathPrefix.endsWith("/")){
+            if (!pathPrefix.endsWith("/")) {
                 pathPrefix = pathPrefix + "/";
             }
         }

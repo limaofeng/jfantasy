@@ -3,10 +3,13 @@ package com.fantasy.framework.comet;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class ABQApp {
-	public static void main(String[] args) {
-		LinkedBlockingQueue drop = new LinkedBlockingQueue();
+    private ABQApp() {
+    }
 
-		new Thread(new Producer(drop)).start();
-		new Thread(new Consumer(drop)).start();
-	}
+    public static void main(String[] args) {
+        LinkedBlockingQueue drop = new LinkedBlockingQueue();
+
+        new Thread(new Producer(drop)).start();
+        new Thread(new Consumer(drop)).start();
+    }
 }

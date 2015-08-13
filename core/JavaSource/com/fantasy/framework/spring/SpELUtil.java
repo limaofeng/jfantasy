@@ -12,6 +12,9 @@ import java.util.Map;
 
 public class SpELUtil {
 
+    private SpELUtil() {
+    }
+
     public static EvaluationContext createEvaluationContext() {
         StandardEvaluationContext context = new StandardEvaluationContext();
         context.setVariable("DateUtil", DateUtil.class);
@@ -22,7 +25,7 @@ public class SpELUtil {
 
     public static EvaluationContext createEvaluationContext(Map<String, Object> data) {
         EvaluationContext context = createEvaluationContext();
-        for (Map.Entry<String, Object> entry : data.entrySet()){
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
             context.setVariable(entry.getKey(), entry.getValue());
         }
         return context;
@@ -38,7 +41,7 @@ public class SpELUtil {
 
     public static EvaluationContext createEvaluationContext(Object object, Map<String, Object> data) {
         EvaluationContext context = createEvaluationContext(object);
-        for (Map.Entry<String, Object> entry : data.entrySet()){
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
             context.setVariable(entry.getKey(), entry.getValue());
         }
         return context;

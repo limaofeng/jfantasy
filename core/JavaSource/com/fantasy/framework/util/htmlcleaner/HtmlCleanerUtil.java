@@ -20,6 +20,9 @@ import java.net.URL;
  */
 public class HtmlCleanerUtil {
 
+    private HtmlCleanerUtil() {
+    }
+
     private static HtmlCleaner hc = new HtmlCleaner();
 
     static {
@@ -183,7 +186,7 @@ public class HtmlCleanerUtil {
             TagNode tagNode = node.findElementByAttValue(att, value, true, true);
             return getAsString(getBrowserCompactXmlSerializer(hc), tagNode);
         } catch (Exception e) {
-            throw new IgnoreException(e.getMessage(),e);
+            throw new IgnoreException(e.getMessage(), e);
         }
     }
 

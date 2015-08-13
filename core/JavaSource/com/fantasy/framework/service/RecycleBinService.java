@@ -3,11 +3,13 @@ package com.fantasy.framework.service;
 import java.util.List;
 
 import com.fantasy.framework.util.jackson.JSON;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 public final class RecycleBinService {
-
+    private final static Log LOGGER = LogFactory.getLog(RecycleBinService.class);
     public <T> void recycle(T object) {
-        System.out.println(JSON.serialize(object));
+        LOGGER.debug(JSON.serialize(object));
     }
 
     public <T> T recover(String filePath, Class<T> clazz) {

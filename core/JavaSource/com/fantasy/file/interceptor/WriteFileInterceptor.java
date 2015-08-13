@@ -25,8 +25,7 @@ public class WriteFileInterceptor {
         FileContext fileContext = FileContext.getContext();
         FileDetail fileDetail = fileContext.peek();
         if (fileDetail == null) {
-            //File file = ((File) pjp.getArgs()[1]);
-//			Object fm = point.getTarget();
+
             LOGGER.debug("拼装临时 FileDetail 对象");
         }
     }

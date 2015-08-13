@@ -45,7 +45,7 @@ public class FileFilter extends GenericFilterBean {
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
 
-        //TODO 通过 referer 判断访问来源，并通过配置 文件管理器 与 host 关联。 String host = RegexpUtil.parseFirst(referer, "(http://|https://)[^/]+");
+
         final String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
         FileManager webrootFileManager = FileManagerFactory.getInstance().getFileManager("WEBROOT");
         if (RegexpUtil.find(url, ".do$")) {

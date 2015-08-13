@@ -3,6 +3,8 @@ package com.fantasy.payment.product.sign;
 import org.apache.log4j.Logger;
 
 public final class Base64 {
+    private Base64() {
+    }
 
     static private final int BASELENGTH = 128;
     static private final int LOOKUPLENGTH = 64;
@@ -174,7 +176,7 @@ public final class Base64 {
             return null;//should be divisible by four
         }
 
-        int numberQuadruple = len / FOURBYTE    ;
+        int numberQuadruple = len / FOURBYTE;
 
         if (numberQuadruple == 0) {
             return new byte[0];

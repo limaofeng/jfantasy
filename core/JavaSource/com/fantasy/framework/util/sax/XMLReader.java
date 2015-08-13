@@ -18,6 +18,9 @@ import org.apache.commons.logging.LogFactory;
 import org.xml.sax.SAXException;
 
 public class XMLReader {
+    private XMLReader() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(XMLReader.class);
 
     public static XmlElement reader(String path) {

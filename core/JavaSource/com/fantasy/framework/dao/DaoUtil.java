@@ -12,6 +12,9 @@ import java.util.Map;
 
 public class DaoUtil {
 
+    private DaoUtil() {
+    }
+
     public static Connection getConnection(String dataSourceName) throws SQLException {
         DataSource dataSource = (DataSource) SpringContextUtil.getBean(dataSourceName);
         if (ObjectUtil.isNotNull(dataSource)) {

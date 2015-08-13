@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
  */
 public class RegexpCst {
     // 匹配空行的正则表达式：\n[\s| ]*\r
+    private RegexpCst() {
+    }
 
     private final static String ATTR_STR = "\\s+(\\w+)\\s*=\\s*(\"[^\"]*\"|\'[^\']*\'|[^\\s>]+)";
 
@@ -129,8 +131,6 @@ public class RegexpCst {
      */
     public final static String htmlTag = "<HtmlTag [^>]*id=fontzoom[^>]*>(<HtmlTag[^>]*>(<HtmlTag[^>]*>(<HtmlTag[^>]*>.*?</HtmlTag>|.)*?</HtmlTag>|.)*?</HtmlTag>|.)*?</HtmlTag>";
 
-    public RegexpCst() {
-    }
 
     /**
      * @param patternString 验证规则
