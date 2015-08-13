@@ -5,6 +5,8 @@ import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.dao.AttributeDao;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.event.spi.DeleteEvent;
 import org.hibernate.event.spi.DeleteEventListener;
@@ -15,7 +17,7 @@ import java.util.Set;
 
 @Component
 public class AttributeVersionEventListener implements DeleteEventListener {
-
+    private final static Log LOGGER = LogFactory.getLog(AttributeVersionEventListener.class);
     @Autowired
     private AttributeDao attributeDao;
 
@@ -24,7 +26,7 @@ public class AttributeVersionEventListener implements DeleteEventListener {
         Class<?> clazz = ClassUtil.forName(event.getEntityName());
         clazz = ObjectUtil.defaultValue(clazz, event.getObject().getClass());
         if (AttributeVersion.class.isAssignableFrom(clazz)) {
-            System.out.println(">>>>>>>");
+            LOGGER.debug(">>>>>>>");
         }
     }
 
