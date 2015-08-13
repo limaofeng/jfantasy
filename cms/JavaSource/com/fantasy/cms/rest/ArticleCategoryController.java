@@ -21,7 +21,7 @@ import java.util.List;
  * @apiParam {String} description  描述
  * @apiParam {Date} sort  排序字段
  * @apiParam {String} parent_code  上级栏目编码
- * @apiVersion 3.3.6
+ * @apiVersion 3.3.7
  */
 
 /**
@@ -33,7 +33,7 @@ import java.util.List;
  * @apiParam {String} description  描述
  * @apiParam {Date} sort  排序字段
  * @apiParam {String} parent  上级栏目编码
- * @apiVersion 3.3.6
+ * @apiVersion 3.3.7
  */
 @RestController
 @RequestMapping("/cms/categorys")
@@ -45,7 +45,7 @@ public class ArticleCategoryController {
 
     /**
      * @api {get} /cms/categorys   分页条件查询分类
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName searchArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 筛选文章分类
@@ -67,7 +67,7 @@ public class ArticleCategoryController {
 
     /**
      * @api {get} /cms/categorys/:code   根据code获取分类
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName getArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 获取单篇分类
@@ -85,7 +85,7 @@ public class ArticleCategoryController {
 
     /**
      * @api {post} /cms/categorys   添加分类
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName createArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 添加分类
@@ -103,7 +103,7 @@ public class ArticleCategoryController {
 
     /**
      * @api {delete} /cms/categorys/:code   删除分类
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName deleteArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 删除分类
@@ -141,7 +141,7 @@ public class ArticleCategoryController {
 
     /**
      * @api {put} /cms/categorys/:code   更新分类
-     * @apiVersion 3.3.6
+     * @apiVersion 3.3.7
      * @apiName updateArticleCategory
      * @apiGroup 内容管理
      * @apiDescription 通过该接口, 更新分类
