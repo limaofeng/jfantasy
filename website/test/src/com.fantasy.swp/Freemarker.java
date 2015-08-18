@@ -1,4 +1,4 @@
-package com.fantasy.swp;
+package com.fantasy.website;
 
 import com.fantasy.file.FileManager;
 import com.fantasy.file.manager.LocalFileManager;

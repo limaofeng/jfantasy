@@ -1,4 +1,4 @@
-package com.fantasy.swp;
+package com.fantasy.website;
 
 import org.junit.After;
 import org.junit.Before;

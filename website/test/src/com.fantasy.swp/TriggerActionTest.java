@@ -1,9 +1,9 @@
-package com.fantasy.swp;
+package com.fantasy.website;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.swp.bean.Trigger;
-import com.fantasy.swp.service.TriggerService;
+import com.fantasy.website.bean.Trigger;
+import com.fantasy.website.service.TriggerService;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

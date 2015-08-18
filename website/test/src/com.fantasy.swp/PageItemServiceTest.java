@@ -1,14 +1,14 @@
-package com.fantasy.swp;
+package com.fantasy.website;
 
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
-import com.fantasy.swp.bean.Page;
-import com.fantasy.swp.bean.PageItem;
-import com.fantasy.swp.bean.PageItemData;
-import com.fantasy.swp.service.PageItemDataService;
-import com.fantasy.swp.service.PageItemService;
-import com.fantasy.swp.service._PageService;
+import com.fantasy.website.bean.Page;
+import com.fantasy.website.bean.PageItem;
+import com.fantasy.website.bean.PageItemData;
+import com.fantasy.website.service.PageItemDataService;
+import com.fantasy.website.service.PageItemService;
+import com.fantasy.website.service._PageService;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Before;

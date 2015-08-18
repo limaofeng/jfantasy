@@ -1,11 +1,11 @@
-package com.fantasy.swp;
+package com.fantasy.website;
 
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.swp.bean.Template;
-import com.fantasy.swp.service.GeneratePageService;
-import com.fantasy.swp.service.TemplateService;
+import com.fantasy.website.bean.Template;
+import com.fantasy.website.service.GeneratePageService;
+import com.fantasy.website.service.TemplateService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
 import com.opensymphony.xwork2.ActionProxy;

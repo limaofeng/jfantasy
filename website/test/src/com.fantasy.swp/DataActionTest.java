@@ -1,11 +1,11 @@
-package com.fantasy.swp;
+package com.fantasy.website;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
-import com.fantasy.swp.bean.Data;
-import com.fantasy.swp.bean.DataInferface;
-import com.fantasy.swp.service.DataInferfaceService;
-import com.fantasy.swp.service.DataService;
+import com.fantasy.website.bean.Data;
+import com.fantasy.website.bean.DataInferface;
+import com.fantasy.website.service.DataInferfaceService;
+import com.fantasy.website.service.DataService;
 import com.opensymphony.xwork2.ActionProxy;
 import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
