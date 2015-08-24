@@ -13,4 +13,8 @@ public class VoiceMessage extends AbstractWeiXinMessage<Voice> {
         super(id, fromUserName, createTime);
     }
 
+    public VoiceMessage(Voice content) {
+        super(content);
+    }
+
 }
