@@ -8,10 +8,7 @@ import com.fantasy.website.service.PageBeanService;
 
 import java.util.List;
 
-/**
- *
- */
-public class PageBean implements IPage{
+public class PageBean implements IPage {
 
     private PageBeanService pageBeanService = SpringContextUtil.getBeanByType(PageBeanService.class);
 
@@ -37,6 +34,6 @@ public class PageBean implements IPage{
 
     @Override
     public IPageItem getPageItem(String path) {
-        return this.pageBeanService.getPageItem(path,this.page.getId());
+        return this.pageBeanService.getPageItem(path, this.page.getId());
     }
 }

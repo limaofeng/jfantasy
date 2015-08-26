@@ -19,8 +19,8 @@ import java.util.List;
  * @since 2013-12-25 上午9:21:05
  */
 @Entity
-@Table(name = "SWP_TEMPLATE",uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_TEMPLATE",columnNames = {"PATH","WEBSITE_ID"})})
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "dataInferfaces","webSite"})
+@Table(name = "SWP_TEMPLATE", uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_TEMPLATE", columnNames = {"PATH", "WEBSITE_ID"})})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "dataInferfaces", "webSite"})
 public class Template extends BaseBusEntity {
 
     private static final long serialVersionUID = 6516821318292532274L;
@@ -56,7 +56,7 @@ public class Template extends BaseBusEntity {
      * 数据接口定义
      */
     @OneToMany(mappedBy = "template", fetch = FetchType.LAZY)
-    @OrderBy(value="id desc")
+    @OrderBy(value = "id desc")
     private List<DataInferface> dataInferfaces;
     /**
      * 模版路径

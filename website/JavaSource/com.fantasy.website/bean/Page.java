@@ -12,12 +12,11 @@ import java.util.List;
  * 页面静态化时，对某个页面的配置
  */
 @Entity
-@Table(name = "SWP_PAGE",uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_PAGE",columnNames = {"PATH","WEBSITE_ID"})})
+@Table(name = "SWP_PAGE", uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_PAGE", columnNames = {"PATH", "WEBSITE_ID"})})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "datas"})
 public class Page extends BaseBusEntity {
 
     private static final long serialVersionUID = 8032849785819496211L;
-
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
@@ -40,7 +39,7 @@ public class Page extends BaseBusEntity {
      */
     @ManyToMany(targetEntity = Data.class, fetch = FetchType.LAZY)
     @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "PAGE_ID"), inverseJoinColumns = @JoinColumn(name = "DATA_ID"), foreignKey = @ForeignKey(name = "FK_PAGE_DATA"))
-    @OrderBy(value="id desc")
+    @OrderBy(value = "id desc")
     private List<Data> datas;
     /**
      * 站点
@@ -56,11 +55,11 @@ public class Page extends BaseBusEntity {
     /**
      * list类型的页面,pageSize默认15条
      */
-    @Column(name = "PAGE_SIZE",columnDefinition="INT default 15")
+    @Column(name = "PAGE_SIZE", columnDefinition = "INT default 15")
     private int pageSize;
 
-    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
-    @OrderBy(value="id desc")
+    @OneToMany(mappedBy = "page", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OrderBy(value = "id desc")
     private List<PageItem> pageItems;
 
     /**

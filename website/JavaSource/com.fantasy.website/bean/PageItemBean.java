@@ -3,18 +3,14 @@ package com.fantasy.website.bean;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.website.IPageItem;
 import com.fantasy.website.exception.SwpException;
-import com.fantasy.website.service.PageBeanService;
 import com.fantasy.website.service.PageItemBeanService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.List;
 
-/**
- *
- */
 @Component
-public class PageItemBean implements IPageItem{
+public class PageItemBean implements IPageItem {
 
     PageItemBeanService pageItemBeanService = SpringContextUtil.getBeanByType(PageItemBeanService.class);
 

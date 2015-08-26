@@ -22,7 +22,7 @@ public class Data extends BaseBusEntity {
     public enum Scope {
         global("global"), page("page");
 
-        private Scope(String value) {
+        Scope(String value) {
             this.value = value;
         }
 
@@ -36,14 +36,14 @@ public class Data extends BaseBusEntity {
     /**
      * 数据源
      */
-    public enum DataSource{
+    public enum DataSource {
         db("数据库"),
         func("方法"),
         stat("静态");
 
         private String value;
 
-        private DataSource (String value) {
+        DataSource(String value) {
             this.value = value;
         }
 
@@ -77,7 +77,7 @@ public class Data extends BaseBusEntity {
      * 关联的page对象
      */
     @ManyToMany(targetEntity = Page.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "DATA_ID"), inverseJoinColumns = @JoinColumn(name = "PAGE_ID"),foreignKey =  @ForeignKey(name = "FK_DATA_PAGE"))
+    @JoinTable(name = "SWP_PAGE_DATA", joinColumns = @JoinColumn(name = "DATA_ID"), inverseJoinColumns = @JoinColumn(name = "PAGE_ID"), foreignKey = @ForeignKey(name = "FK_DATA_PAGE"))
     private List<Page> pages;
 
     /**
@@ -100,7 +100,7 @@ public class Data extends BaseBusEntity {
      * 数据源
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "DATA_SOURCE",nullable = false)
+    @Column(name = "DATA_SOURCE", nullable = false)
     private DataSource dataSource;
 
     public Long getId() {

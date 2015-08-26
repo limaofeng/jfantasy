@@ -1,20 +1,20 @@
 package com.fantasy.website.web;
 
-import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import javax.servlet.http.HttpServletRequest;
-
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.swp.bean.DataInferface;
-import com.fantasy.swp.bean.Template;
-import com.fantasy.swp.service.DataInferfaceService;
-import com.fantasy.swp.service.TemplateService;
+import com.fantasy.website.bean.DataInferface;
+import com.fantasy.website.bean.Template;
+import com.fantasy.website.service.DataInferfaceService;
+import com.fantasy.website.service.TemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *@Author lsz
@@ -29,6 +29,7 @@ public class TemplateAction extends ActionSupport {
 	private TemplateService templateService;
 	@Autowired
     private DataInferfaceService dataInferfaceService;
+
 	/**
 	 * 首页
 	 * @return

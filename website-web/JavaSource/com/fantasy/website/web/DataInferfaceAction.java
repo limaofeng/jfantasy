@@ -1,14 +1,13 @@
 package com.fantasy.website.web;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.swp.bean.DataInferface;
-import com.fantasy.swp.service.DataInferfaceService;
+import com.fantasy.website.bean.DataInferface;
+import com.fantasy.website.service.DataInferfaceService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 /**
  *@Author lsz

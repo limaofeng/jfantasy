@@ -1,14 +1,14 @@
 package com.fantasy.website.web;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.swp.bean.Page;
-import com.fantasy.swp.service._PageService;
+import com.fantasy.website.bean.Page;
+import com.fantasy.website.service._PageService;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *@Author lsz
@@ -53,5 +53,6 @@ public class PageAction extends ActionSupport {
         this.pageService.create(ids);
         return JSONDATA;
     }
+
 }
 

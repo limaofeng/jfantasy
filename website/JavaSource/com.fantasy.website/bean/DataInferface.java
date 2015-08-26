@@ -14,7 +14,7 @@ public class DataInferface {
     /**
      * 数据类型
      */
-    public enum DataType{
+    public enum DataType {
         /**
          * 普通类型
          */
@@ -30,7 +30,7 @@ public class DataInferface {
 
         private String value;
 
-        private DataType (String value) {
+        private DataType(String value) {
             this.value = value;
         }
 
@@ -48,7 +48,7 @@ public class DataInferface {
      * 数据接口对应的模板
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEMPLATE_ID",foreignKey = @ForeignKey(name = "FK_DATA_INFERFACE_TEMPLATE"))
+    @JoinColumn(name = "TEMPLATE_ID", foreignKey = @ForeignKey(name = "FK_DATA_INFERFACE_TEMPLATE"))
     private Template template;
     /**
      * 数据在模板文件中的key
@@ -65,13 +65,13 @@ public class DataInferface {
      */
 //    @Column(name = "is_Array")
 //    private DataType type;//pager|array|object|string|number
-    @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY,cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "dataInferface", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Data> datas;
     /**
      * 数据类型
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "DATA_TYPE",nullable = false)
+    @Column(name = "DATA_TYPE", nullable = false)
     private DataType dataType;
 
     public Template getTemplate() {

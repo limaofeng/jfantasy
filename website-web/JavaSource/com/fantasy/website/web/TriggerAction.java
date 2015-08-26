@@ -3,8 +3,8 @@ package com.fantasy.website.web;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.struts2.ActionSupport;
-import com.fantasy.swp.bean.Trigger;
-import com.fantasy.swp.service.TriggerService;
+import com.fantasy.website.bean.Trigger;
+import com.fantasy.website.service.TriggerService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;

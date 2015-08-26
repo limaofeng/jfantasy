@@ -26,6 +26,7 @@ public class PageItemData extends BaseBusEntity {
 
     @Column(name = "CLASS_NAME", length = 1000)
     private String className;
+
     @Column(name = "BEAN_ID")
     private String beanId;
 
@@ -60,4 +61,5 @@ public class PageItemData extends BaseBusEntity {
     public void setBeanId(String beanId) {
         this.beanId = beanId;
     }
+
 }
