@@ -1,6 +1,14 @@
 package com.fantasy.system.rest;
 
 import com.fantasy.security.bean.Menu;
+import com.fantasy.security.service.MenuService;
+import com.fantasy.system.bean.Website;
+import com.fantasy.system.service.WebsiteService;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -8,12 +16,18 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/website")
+@RequestMapping("/websites")
 public class WebsiteController {
 
-    @RequestMapping(value = "/{xx}/pp", method = RequestMethod.GET)
-    public List<Menu> menus() {
-        return null;
+    @Autowired
+    private WebsiteService websiteService;
+    @Autowired
+    private MenuService menuService;
+
+    @RequestMapping(value = "/{key}/menus", method = RequestMethod.GET)
+    public List<Menu> menus(@PathVariable("key") String key) {
+        Website website = this.websiteService.findUniqueByKey(key);
+        return MenuService.tree(menuService.list(new Criterion[]{Restrictions.like("path", website.getId() + Menu.PATH_SEPARATOR, MatchMode.START), Restrictions.ne("id", website.getId())}, "sort", "asc"));
     }
 
 }
