@@ -7,7 +7,6 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -144,9 +143,9 @@ public class ArticleController {
      * @apiUse GeneralError
      */
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
-    public Article update(@PathVariable("id") Long id, @RequestBody Article article, HttpServletRequest request) {
+    public Article update(@PathVariable("id") Long id, @RequestBody Article article) {
         article.setId(id);
-        return article;//this.cmsService.save(article);
+        return this.cmsService.save(article);
     }
 
 }
