@@ -28,7 +28,7 @@ public class WebsiteController {
     public List<Menu> menus(@PathVariable("key") String key) {
         Website website = this.websiteService.findUniqueByKey(key);
         Long rootMenuId = website.getRootMenu().getId();
-        return MenuService.tree(menuService.list(new Criterion[]{Restrictions.like("path", rootMenuId + Menu.PATH_SEPARATOR, MatchMode.START), Restrictions.ne("id", rootMenuId)}, "sort", "asc"));
+        return menuService.list(new Criterion[]{Restrictions.like("path", rootMenuId + Menu.PATH_SEPARATOR, MatchMode.START), Restrictions.ne("id", rootMenuId)}, "sort", "asc");
     }
 
 }
