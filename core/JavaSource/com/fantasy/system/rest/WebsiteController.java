@@ -27,7 +27,8 @@ public class WebsiteController {
     @RequestMapping(value = "/{key}/menus", method = RequestMethod.GET)
     public List<Menu> menus(@PathVariable("key") String key) {
         Website website = this.websiteService.findUniqueByKey(key);
-        return MenuService.tree(menuService.list(new Criterion[]{Restrictions.like("path", website.getId() + Menu.PATH_SEPARATOR, MatchMode.START), Restrictions.ne("id", website.getId())}, "sort", "asc"));
+        Long rootMenuId = website.getRootMenu().getId();
+        return MenuService.tree(menuService.list(new Criterion[]{Restrictions.like("path", rootMenuId + Menu.PATH_SEPARATOR, MatchMode.START), Restrictions.ne("id", rootMenuId)}, "sort", "asc"));
     }
 
 }

@@ -7,6 +7,7 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -61,6 +62,7 @@ public class ArticleController {
     }
 
     /**
+     * @param id 文章ID
      * @api {get} /cms/articles/:id   获取文章
      * @apiVersion 3.3.7
      * @apiName getArticle
@@ -71,7 +73,6 @@ public class ArticleController {
      * curl -i http://localhost/cms/articles/43
      * @apiUse returnArticle
      * @apiUse GeneralError
-     * @param id 文章ID
      */
     @RequestMapping("/{id}")
     public Article view(@PathVariable("id") Long id) {
@@ -107,13 +108,14 @@ public class ArticleController {
      * curl -i -X DELETE http://localhost/cms/articles/43
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{id}",method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     public void delete(@PathVariable("id") Long id) {
         this.cmsService.delete(id);
     }
 
     /**
-     * @api {batchDelete} /cms/articles   批量删除文章
+     * @param id 文章ID
+     * @api {delete} /cms/articles   批量删除文章
      * @apiVersion 3.3.7
      * @apiName batchDeleteArticle
      * @apiGroup 内容管理
@@ -122,11 +124,9 @@ public class ArticleController {
      * @apiExample Example usage:
      * curl -i -X DELETE http://localhost/cms/articles
      * @apiUse GeneralError
-     * @param id 文章ID-1
-     * @param id 文章ID-2
      */
     @RequestMapping(method = {RequestMethod.DELETE})
-    public void batchDelete(Long... id) {
+    public void batchDelete(@RequestBody Long... id) {
         this.cmsService.delete(id);
     }
 
@@ -143,10 +143,10 @@ public class ArticleController {
      * @apiUse returnArticle
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{id}",method = {RequestMethod.PUT})
-    public Article update(@PathVariable("id") Long id,Article article) {
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    public Article update(@PathVariable("id") Long id, @RequestBody Article article, HttpServletRequest request) {
         article.setId(id);
-        return this.cmsService.save(article);
+        return article;//this.cmsService.save(article);
     }
 
 }
