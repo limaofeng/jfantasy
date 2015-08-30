@@ -50,7 +50,7 @@ public class ArticleControllerTest {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         //创建分类
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/categorys").param("code","admintest").param("name","接口测试")).andDo(MockMvcResultHandlers.print()).andReturn();
-        Assert.assertEquals(200, result.getResponse().getStatus());
+        Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
         //创建文章
         this.testSave();
     }
