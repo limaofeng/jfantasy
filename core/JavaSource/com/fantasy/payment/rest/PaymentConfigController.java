@@ -38,7 +38,7 @@ public class PaymentConfigController {
     @ResponseBody
     public PaymentConfig update(@PathVariable("id") Long id, @RequestBody PaymentConfig config) {
         config.setId(id);
-        return config;//this.configService.save(config);
+        return this.configService.save(config);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
