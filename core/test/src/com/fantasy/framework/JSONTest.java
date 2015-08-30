@@ -3,6 +3,7 @@ package com.fantasy.framework;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
+import com.fantasy.payment.bean.PaymentConfig;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -30,6 +31,13 @@ public class JSONTest {
 //        Class clazz = AsmUtil.makeClass(Article.class.getName() + "$json", Article.class.getName(), new Property("test", String.class));
 //        Object object = ClassUtil.newInstance(clazz);
 //        LOG.debug(JSON.serialize(object));
+    }
+
+    @Test
+    public void deser(){
+        String json = "{\"createTime\":'2010-10-09 12:00:00',\"modifier\":null,\"modifyTime\":null,\"id\":3,\"paymentConfigType\":null,\"name\":\"支付宝担保支付\",\"paymentProductId\":null,\"bargainorId\":\"2088411497772985\",\"bargainorKey\":\"kbipmxl17g7biw3isdhcttlqsf5gjyur\",\"sellerEmail\":\"shenzhenying@haoluesoft.com\",\"paymentFeeType\":\"fixed\",\"paymentFee\":0,\"sort\":null}";
+        PaymentConfig paymentConfig = JSON.deserialize(json, PaymentConfig.class);
+        LOG.debug(paymentConfig);
     }
 
     @Test

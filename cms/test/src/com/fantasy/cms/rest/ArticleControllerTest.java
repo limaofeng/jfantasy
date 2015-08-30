@@ -15,6 +15,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -92,7 +93,7 @@ public class ArticleControllerTest {
 
     public void testSave() throws Exception{
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/articles").param("title","测试文章保存").param("summary","保存").param("category.code","admintest").param("content.text","测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存")).andDo(MockMvcResultHandlers.print()).andReturn();
-        Assert.assertEquals(200, result.getResponse().getStatus());
+        Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
     @Test

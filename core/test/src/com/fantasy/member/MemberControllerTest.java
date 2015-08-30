@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -62,7 +63,7 @@ public class MemberControllerTest {
 
     public void testSave() throws Exception{
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/members").param("username","membertest").param("password","123456").param("enabled","true")).andDo(MockMvcResultHandlers.print()).andReturn();
-        Assert.assertEquals(200, result.getResponse().getStatus());
+        Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
 
