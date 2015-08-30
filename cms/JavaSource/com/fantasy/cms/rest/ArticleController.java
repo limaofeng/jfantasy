@@ -148,7 +148,7 @@ public class ArticleController {
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     public Article update(@PathVariable("id") Long id, @RequestBody Article article) {
         article.setId(id);
-        return article;//this.cmsService.save(article);
+        return this.cmsService.save(article);
     }
 
 }
