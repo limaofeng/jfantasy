@@ -30,11 +30,10 @@ public class PaymentConfigController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public PaymentConfig create(@RequestBody PaymentConfig config) {
-        return config;//this.configService.save(config);
+        return this.configService.save(config);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public PaymentConfig update(@PathVariable("id") Long id, @RequestBody PaymentConfig config) {
         config.setId(id);
@@ -48,6 +47,7 @@ public class PaymentConfigController {
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.configService.delete(id);
     }
