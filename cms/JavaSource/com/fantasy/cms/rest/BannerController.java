@@ -22,7 +22,7 @@ import java.util.List;
  * @apiParam {String}  BannerItem.url  跳转地址
  * @apiParam {String}  BannerItem.sort  排序字段
  * @apiParam {String}  BannerItem.bannerImage 图片对象
- * @apiVersion 3.3.7
+ * @apiVersion 3.3.8
  */
 
 /**
@@ -39,7 +39,7 @@ import java.util.List;
  * @apiSuccess {String}  BannerItem.sort  排序字段
  * @apiSuccess {String}  BannerItem.bannerImage 图片对象
  * @apiSuccess {Banner}  BannerItem.banner Banner对象
- * @apiVersion 3.3.7
+ * @apiVersion 3.3.8
  */
 @RestController
 @RequestMapping("/cms/banners")
@@ -50,7 +50,7 @@ public class BannerController {
 
     /**
      * @api {post} /cms/banners  添加轮播图
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName createBanner
      * @apiGroup 内容管理
      * @apiDescription 添加轮播图
@@ -69,7 +69,7 @@ public class BannerController {
 
     /**
      * @api {put} /cms/banners/:key  更新轮播图
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName updateBanner
      * @apiGroup 内容管理
      * @apiDescription 更新轮播图信息
@@ -88,7 +88,7 @@ public class BannerController {
 
     /**
      * @api {get} /cms/banners/:key  获取轮播图
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName getBanner
      * @apiGroup 内容管理
      * @apiDescription 获取轮播图
@@ -105,7 +105,7 @@ public class BannerController {
 
     /**
      * @api {delete} /cms/banners/:key 删除轮播图
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName deleteBanner
      * @apiGroup 内容管理
      * @apiDescription 删除轮播图
@@ -123,7 +123,7 @@ public class BannerController {
      * @param key bannerId-1
      * @param key bannerId-2
      * @api {batchDelete} /cms/banners/:key 批量删除轮播图
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName deleteBanner
      * @apiGroup 内容管理
      * @apiDescription 批量删除轮播图
@@ -139,7 +139,7 @@ public class BannerController {
 
     /**
      * @api {get} /cms/banners   查询轮播图
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName getBanners
      * @apiGroup 内容管理
      * @apiDescription 查询轮播图

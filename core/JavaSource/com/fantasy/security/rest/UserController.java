@@ -29,7 +29,7 @@ import java.util.List;
  * @apiParam {String} details.website  网址
  * @apiParam {String} details.description  描述信息
  * @apiParam {FileDetail} details.Avatar  用户头像图片对象
- * @apiVersion 3.3.7
+ * @apiVersion 3.3.8
  */
 
 /**
@@ -55,7 +55,7 @@ import java.util.List;
  * @apiSuccess {String} details.website  网址
  * @apiSuccess {String} details.description  描述信息
  * @apiSuccess {FileDetail} details.Avatar  用户头像图片对象
- * @apiVersion 3.3.7
+ * @apiVersion 3.3.8
  */
 @RestController
 @RequestMapping("/users")
@@ -66,7 +66,7 @@ public class UserController {
 
     /**
      * @api {get} /users   查询用户
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName searchUser
      * @apiGroup 用户管理
      * @apiDescription 通过该接口, 筛选后台用户
@@ -86,7 +86,7 @@ public class UserController {
 
     /**
      * @api {get} /users/:username   获取用户
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName getUser
      * @apiGroup 用户管理
      * @apiDescription 通过该接口, 获取用户
@@ -103,7 +103,7 @@ public class UserController {
 
     /**
      * @api {post} /users   添加用户
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName createUser
      * @apiGroup 用户管理
      * @apiDescription 通过该接口, 添加用户
@@ -122,7 +122,7 @@ public class UserController {
 
     /**
      * @api {delete} /users/:id   删除用户
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName deleteUser
      * @apiGroup 用户管理
      * @apiDescription 通过该接口, 删除用户
@@ -139,7 +139,7 @@ public class UserController {
 
     /**
      * @api {batchDelete} /users   批量删除用户
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName batchDeleteUser
      * @apiGroup 用户管理
      * @apiDescription 通过该接口, 批量删除用户
@@ -157,7 +157,7 @@ public class UserController {
 
     /**
      * @api {put} /users/:id   更新用户
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName updateUser
      * @apiGroup 用户管理
      * @apiDescription 通过该接口, 更新用户

@@ -64,7 +64,7 @@ public class MemberController {
 
     /**
      * @api {get} /members   查询会员
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName searchMember
      * @apiGroup 会员管理
      * @apiDescription 通过该接口, 筛选会员
@@ -85,7 +85,7 @@ public class MemberController {
 
     /**
      * @api {get} /members/:id   获取会员
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName getMember
      * @apiGroup 会员管理
      * @apiDescription 通过该接口, 获取会员
@@ -102,7 +102,7 @@ public class MemberController {
 
     /**
      * @api {post} /members  添加会员
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName createMember
      * @apiGroup 会员管理
      * @apiDescription 添加会员
@@ -122,7 +122,7 @@ public class MemberController {
 
     /**
      * @api {put} /members/:id  更新会员
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName updateMember
      * @apiGroup 会员管理
      * @apiDescription 更新会员
@@ -143,7 +143,7 @@ public class MemberController {
 
     /**
      * @api {delete} /members/:id   删除会员
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName deleteMember
      * @apiGroup 会员管理
      * @apiDescription 通过该接口, 删除会员
@@ -160,7 +160,7 @@ public class MemberController {
 
     /**
      * @api {batchDelete} /members   批量删除会员
-     * @apiVersion 3.3.7
+     * @apiVersion 3.3.8
      * @apiName batchDeleteMember
      * @apiGroup 会员管理
      * @apiDescription 通过该接口, 批量删除会员
