@@ -29,7 +29,7 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
     public static final String SHOW_URL = "/payment.do";// 支付单回显url
     */
 
-    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#.00");
+    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
     public static final Map<String, String> CREDIT_BANKCODES = new LinkedHashMap<String, String>();
     public static final Map<String, String> DEBIT_BANKCODES = new LinkedHashMap<String, String>();

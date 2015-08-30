@@ -20,28 +20,28 @@ public interface OrderDetailsService {
      *
      * @return url
      */
-    public String getNotifyUrl(String paymentSn);
+    String getNotifyUrl(String paymentSn);
 
     /**
      * 获取支付成功后的回调处理URL
      *
      * @return url
      */
-    public String getReturnUrl(String paymentSn);
+    String getReturnUrl(String paymentSn);
 
     /**
      * 支付失败
      *
      * @param payment 支付信息
      */
-    public void payFailure(Payment payment);
+    void payFailure(Payment payment);
 
     /**
      * 支付成功
      *
      * @param payment 支付信息
      */
-    public void paySuccess(Payment payment);
+    void paySuccess(Payment payment);
 
     /**
      * 订单访问地址
@@ -50,12 +50,13 @@ public interface OrderDetailsService {
      * @param orderSn 订单编码
      * @return {String} 例如 : /order.do?sn=SN_000123
      */
-    public String getShowUrl(String orderSn);
+    String getShowUrl(String orderSn);
 
     /**
      * 支付完成后，跳转的地址
+     *
      * @param paymentSn 支付SN
      * @return {String}
      */
-    public String getShowPaymentUrl(String paymentSn);
+    String getShowPaymentUrl(String paymentSn);
 }
