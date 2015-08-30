@@ -102,7 +102,7 @@ public class JSON {
                 //使Jackson JSON支持Unicode编码非ASCII字符
                 SimpleModule module = new SimpleModule();
                 module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
-                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
+                module.addDeserializer(Date.class, new DateDeserializer());
                 objectMapper.registerModule(module);
                 objectMapper.setFilters(new SimpleFilterProvider().addFilter("ignore", new SimpleBeanPropertyFilter() {
                     @Override
@@ -134,7 +134,7 @@ public class JSON {
                 SimpleModule module = new SimpleModule();
                 module.addSerializer(String.class, new StringUnicodeSerializer());
                 module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
-                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
+                module.addDeserializer(Date.class, new DateDeserializer());
                 objectMapper.registerModule(module);
                 objectMapper.setFilters(new SimpleFilterProvider().addFilter("ignoreProperties", new SimpleBeanPropertyFilter() {
                     @Override

@@ -63,7 +63,7 @@ public class MenuService{
         return loadMenus(menuId);
     }
 
-    public void save(Menu menu) {
+    public Menu save(Menu menu) {
         List<Menu> menus;
         boolean root = false;
         if (menu.getParent() == null || StringUtil.isBlank(menu.getParent().getId())) {
@@ -117,6 +117,7 @@ public class MenuService{
             menu.setPath(menu.getParent().getPath() + menu.getId() + Menu.PATH_SEPARATOR);
         }
         this.menuDao.update(menu);
+        return menu;
     }
 
     public void delete(Long id) {

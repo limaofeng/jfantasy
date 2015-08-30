@@ -5,6 +5,7 @@ import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -92,7 +93,9 @@ public class ArticleController {
      * @apiUse GeneralError
      */
     @RequestMapping(method = {RequestMethod.POST})
-    public Article create(Article article) {
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseBody
+    public Article create(@RequestBody Article article) {
         return this.cmsService.save(article);
     }
 
@@ -145,7 +148,7 @@ public class ArticleController {
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     public Article update(@PathVariable("id") Long id, @RequestBody Article article) {
         article.setId(id);
-        return this.cmsService.save(article);
+        return article;//this.cmsService.save(article);
     }
 
 }

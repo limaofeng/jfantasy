@@ -57,7 +57,7 @@ public class PaymentConfigService {
      *
      * @param ids 支付配置ids
      */
-    public void delete(Long[] ids) {
+    public void delete(Long... ids) {
         for (Long id : ids) {
             this.paymentConfigDao.delete(id);
         }

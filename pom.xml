@@ -1122,8 +1122,10 @@
         <module>weixin</module>
         <module>weixin-web</module>
         <module>aliyun-oss</module>
+        <!--
         <module>website</module>
         <module>website-web</module>
+        -->
         <module>javaweb</module>
         <module>test</module>
     </modules>

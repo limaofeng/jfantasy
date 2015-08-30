@@ -67,6 +67,7 @@
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-weixin</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-core-web</artifactId>
@@ -79,6 +80,7 @@
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cms-web</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>

@@ -16,7 +16,6 @@ import java.util.*;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-9-12 下午5:03:33
  */
 public class ReflectionUtils {
@@ -191,9 +190,9 @@ public class ReflectionUtils {
         return StringUtils.join(list, separator);
     }
 
-    public static Object convertStringToObject(String value, Class<?> toType) {
+    public static <T> T convertStringToObject(String value, Class<T> toType) {
         try {
-            return ConvertUtils.convert(value, toType);
+            return toType.cast(ConvertUtils.convert(value, toType));
         } catch (Exception e) {
             throw convertReflectionExceptionToUnchecked(e);
         }

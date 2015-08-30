@@ -5,10 +5,8 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -116,6 +114,7 @@ public class MemberController {
      * @apiUse GeneralError
      */
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public Member create(Member member) {
         return memberService.save(member);
     }

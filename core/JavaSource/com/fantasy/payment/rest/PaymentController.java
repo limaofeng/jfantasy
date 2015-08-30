@@ -5,6 +5,7 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,7 @@ public class PaymentController {
      * @return {string}
      */
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.CREATED)
     public String submit(@RequestParam String ordertype, @RequestParam String ordersn, Long paymentConfigId, HttpServletRequest request) throws IOException, PaymentException {
         return paymentService.buildRequest(ordertype, ordersn, paymentConfigId, WebUtil.getParameterMap(request));
     }

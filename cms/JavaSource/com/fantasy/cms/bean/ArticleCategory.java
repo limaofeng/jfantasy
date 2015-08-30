@@ -4,10 +4,7 @@ import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
@@ -28,7 +25,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CMS_ARTICLE_CATEGORY")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "articles", "articleVersion"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "articles", "children", "articleVersion"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class ArticleCategory extends BaseBusEntity {
 
@@ -69,15 +66,12 @@ public class ArticleCategory extends BaseBusEntity {
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PCODE", foreignKey = @ForeignKey(name = "FK_CMS_CATEGORY_PARENT"))
-    @JsonManagedReference
     private ArticleCategory parent;
     /**
      * 下级栏目
      */
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
-    @JsonBackReference
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<ArticleCategory> children;
     /**
@@ -132,7 +126,7 @@ public class ArticleCategory extends BaseBusEntity {
         this.sort = sort;
     }
 
-    @JsonProperty("parentCode")
+    //    @JsonProperty("parentCode")
     @JsonSerialize(using = ArticleCategoryParentSerialize.class)
     public ArticleCategory getParent() {
         return parent;

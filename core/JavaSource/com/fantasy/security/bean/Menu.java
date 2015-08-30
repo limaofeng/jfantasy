@@ -5,8 +5,12 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.bean.enums.MenuType;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -100,9 +104,8 @@ public class Menu extends BaseBusEntity {
     public Menu() {
     }
 
-    public Menu(Long parentId) {
-        this.parent = new Menu();
-        this.parent.id = parentId;
+    public Menu(Long id) {
+        this.id = id;
     }
 
     public Long getId() {
@@ -190,6 +193,7 @@ public class Menu extends BaseBusEntity {
 
     @JsonProperty("parentId")
     @JsonSerialize(using = MenuParentSerialize.class)
+    @JsonDeserialize(using = MenuParentDeserialize.class)
     public Menu getParent() {
         return this.parent;
     }
@@ -211,6 +215,13 @@ public class Menu extends BaseBusEntity {
         @Override
         public void serialize(Menu menu, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeString(menu.getId() != null ? menu.getId().toString() : "");
+        }
+    }
+
+    public static class MenuParentDeserialize extends JsonDeserializer<Menu> {
+        @Override
+        public Menu deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+            return new Menu(jp.getValueAsLong());
         }
     }
 
