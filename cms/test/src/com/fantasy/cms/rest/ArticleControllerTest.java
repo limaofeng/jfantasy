@@ -108,7 +108,7 @@ public class ArticleControllerTest {
                 @Override
                 public MvcResult run() {
                     try {
-                        return mockMvc.perform(MockMvcRequestBuilders.put("/cms/articles/"+id).param("summary","保存222")).andDo(MockMvcResultHandlers.print()).andReturn();
+                        return mockMvc.perform(MockMvcRequestBuilders.put("/cms/articles/"+id).contentType(MediaType.APPLICATION_JSON).content("{\"summary\":\"保存222\"}")).andDo(MockMvcResultHandlers.print()).andReturn();
                     } catch (Exception e) {
                         throw new IgnoreException(e.getMessage(), e);
                     }
