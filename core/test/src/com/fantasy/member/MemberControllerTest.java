@@ -81,7 +81,7 @@ public class MemberControllerTest {
         Member member = this.memberService.findUniqueByUsername("membertest");
         if(member!=null){
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/members/"+member.getId())).andDo(MockMvcResultHandlers.print()).andReturn();
-            Assert.assertEquals(200, result.getResponse().getStatus());
+            Assert.assertEquals(HttpStatus.NO_CONTENT.value(), result.getResponse().getStatus());
         }
     }
 }
