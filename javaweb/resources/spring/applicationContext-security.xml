@@ -9,26 +9,10 @@
         <property name="basename" value="classpath:props/messages_zh_CN"/>
     </bean>
 
-    <!-- 不需要权限验证的地址 -->
-    <!-- 前台静态资源 -->
-    <s:http pattern="/" security="none"/>
-    <s:http pattern="/js/**" security="none"/>
-    <s:http pattern="/css/**" security="none"/>
-    <s:http pattern="/images/**" security="none"/>
-    <!-- 后台静态资源 -->
-    <s:http pattern="/static/**" security="none"/>
-    <s:http pattern="/assets/**" security="none"/>
-    <s:http pattern="/html/**" security="none"/>
-    <!-- webservice地址 -->
-    <s:http pattern="/services/**" security="none"/>
     <!-- 支付相关接口 -->
     <s:http pattern="/payment/**" security="none"/>
-    <!-- 错误页面 -->
-    <s:http pattern="/error/**" security="none"/>
     <!-- 不需验证的资源 -->
-    <s:http pattern="/users/login" security="none"/>
-    <!-- 忘记密码-->
-    <s:http pattern="/findpwd/retrievePassword.do" security="none"/>
+    <s:http pattern="/files/**" security="none"/>
     <!--微信请求项目地址过滤-->
     <s:http pattern="/weixin/message/*/push" security="none"/>
 
