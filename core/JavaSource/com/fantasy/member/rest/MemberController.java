@@ -82,7 +82,6 @@ public class MemberController {
     }
 
 
-
     /**
      * @api {get} /members/:id   获取会员
      * @apiVersion 3.3.8
@@ -95,7 +94,7 @@ public class MemberController {
      * @apiUse returnMember
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Member view(@PathVariable("id") Long id) {
         return this.memberService.get(id);
     }
@@ -133,12 +132,11 @@ public class MemberController {
      * @apiUse returnMember
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{id}",method = {RequestMethod.PUT})
-    public Member update(@PathVariable("id") Long id,Member member) {
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    public Member update(@PathVariable("id") Long id, Member member) {
         member.setId(id);
         return memberService.save(member);
     }
-
 
 
     /**
@@ -152,13 +150,15 @@ public class MemberController {
      * curl -i -X DELETE http://localhost/members/43
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{id}",method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.memberService.delete(id);
     }
 
 
     /**
+     * @param id 会员ID-1
      * @api {batchDelete} /members   批量删除会员
      * @apiVersion 3.3.8
      * @apiName batchDeleteMember
@@ -168,14 +168,12 @@ public class MemberController {
      * @apiExample Example usage:
      * curl -i -X DELETE http://localhost/members
      * @apiUse GeneralError
-     * @param id  会员ID-1
-     * @param id  会员ID-2
      */
     @RequestMapping(method = {RequestMethod.DELETE})
-    public void batchDelete(Long... id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestBody Long... id) {
         this.memberService.delete(id);
     }
-
 
 
 }

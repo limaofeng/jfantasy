@@ -128,7 +128,7 @@ public class ArticleController {
      * @apiUse GeneralError
      */
     @RequestMapping(method = {RequestMethod.DELETE})
-    public void batchDelete(@RequestBody Long... id) {
+    public void delete(@RequestBody Long... id) {
         this.cmsService.delete(id);
     }
 

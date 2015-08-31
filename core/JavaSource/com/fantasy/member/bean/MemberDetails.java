@@ -64,14 +64,16 @@ public class MemberDetails implements Serializable {
      */
     @Column(name = "EMAIL", length = 50)
     private String email;
-
-
+    /**
+     * 邮箱是否验证
+     */
     @Column(name = "MAIL_VALID", nullable = false)
     private Boolean mailValid;
-
+    /**
+     * 手机号是否验证
+     */
     @Column(name = "MOBILE_VALID", nullable = false)
     private Boolean mobileValid;
-
     /**
      * 网址
      */
@@ -82,7 +84,6 @@ public class MemberDetails implements Serializable {
      */
     @Column(name = "DESCRIPTION")
     private String description;
-
     /**
      * 是否为vip用户
      */
