@@ -12,10 +12,7 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.framework.util.web.context.ActionContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -25,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/file")
+@RequestMapping("/files")
 public class FileController {
 
     @Autowired
@@ -47,7 +44,7 @@ public class FileController {
      * @return {String} 返回文件信息
      * @throws IOException
      */
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(method = RequestMethod.POST)
     public FileDetail upload(@RequestParam(value = "attach", required = false) MultipartFile file, String dir, String entireFileName, String entireFileDir, String entireFileHash, String partFileHash, Integer total, Integer index) throws IOException {
         FileDetail fileDetail = fileUploadService.upload(file, dir, entireFileName, entireFileDir, entireFileHash, partFileHash, total, index);
         if (WebUtil.browser(ActionContext.getContext().getHttpRequest()) == WebUtil.Browser.msie) {
@@ -58,8 +55,8 @@ public class FileController {
         return fileDetail;
     }
 
-    @RequestMapping(value = "/upload/pass", method = RequestMethod.GET)
-    public Map<String, Object> pass(String hash) {
+    @RequestMapping(value = "/{hash}/pass", method = RequestMethod.GET)
+    public Map<String, Object> pass(@PathVariable("hash") String hash) {
         List<FilePart> parts = filePartService.find(hash);
         Map<String, Object> data = new HashMap<String, Object>();
         FilePart part = ObjectUtil.remove(parts, "index", 0);
@@ -69,7 +66,6 @@ public class FileController {
         data.put("parts", parts);
         return data;
     }
-
 
 
 }
