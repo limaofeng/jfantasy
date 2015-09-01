@@ -46,7 +46,7 @@
         </init-param>
         <init-param>
             <param-name>cors.supportedMethods</param-name>
-            <param-value>GET, POST, HEAD, PUT, DELETE</param-value>
+            <param-value>GET, POST, HEAD, PUT, DELETE, OPTIONS</param-value>
         </init-param>
         <init-param>
             <param-name>cors.supportedHeaders</param-name>
@@ -86,7 +86,7 @@
     </jsp-config>
 
     <welcome-file-list>
-        <welcome-file>index.jsp</welcome-file>
+        <welcome-file>index.html</welcome-file>
     </welcome-file-list>
 
 </web-app>
