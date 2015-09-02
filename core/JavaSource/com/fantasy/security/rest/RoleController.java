@@ -6,6 +6,9 @@ import com.fantasy.security.bean.Permission;
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.service.PermissionService;
 import com.fantasy.security.service.RoleService;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(value = "security-roles", description = "用户角色")
 @RestController
 @RequestMapping("/security/roles")
 public class RoleController {
@@ -22,9 +26,10 @@ public class RoleController {
     @Autowired
     private transient PermissionService permissionService;
 
+    @ApiOperation(value = "按条件角色", notes = "筛选角色，返回通用分页对象", response = Pager.class)
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<Role> search(Pager<Role> pager, List<PropertyFilter> filters) {
+    public Pager<Role> search(@ApiParam(value = "分页对象", name = "pager") Pager<Role> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
         return this.roleService.findPager(pager, filters);
     }
 
@@ -34,6 +39,7 @@ public class RoleController {
         return roleService.get(code);
     }
 
+    @ApiOperation(value = "返回角色权限", notes = "返回角色对应的操作权限", response = Permission[].class)
     @RequestMapping(value = "/{code}/permissions", method = {RequestMethod.GET})
     @ResponseBody
     public List<Permission> permissions(@PathVariable("code") String code) {
