@@ -7,6 +7,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.JdbcUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -50,7 +51,10 @@ public class ArticleControllerTest {
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
         //创建分类
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/categorys").param("code","admintest").param("name","接口测试")).andDo(MockMvcResultHandlers.print()).andReturn();
+        ArticleCategory category = new ArticleCategory();
+        category.setCode("admintest");
+        category.setName("接口测试");
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/categorys").content(JSON.serialize(category)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
         //创建文章
         this.testSave();

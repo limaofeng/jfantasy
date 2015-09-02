@@ -97,7 +97,7 @@ public class BannerControllerTest {
         Banner banner = this.bannerService.get("bannertest");
         if(banner!=null){
             MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/cms/banners/"+banner.getKey())).andDo(MockMvcResultHandlers.print()).andReturn();
-            Assert.assertEquals(200, result.getResponse().getStatus());
+            Assert.assertEquals(204, result.getResponse().getStatus());
         }
     }
 }
