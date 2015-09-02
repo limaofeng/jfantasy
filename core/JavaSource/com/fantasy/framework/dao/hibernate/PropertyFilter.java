@@ -74,6 +74,8 @@ public class PropertyFilter {
                 Array.set(array, i, ReflectionUtils.convertStringToObject(tempArray[i], this.propertyType));
             }
             this.propertyValue = array;
+        } else if (this.propertyType == Enum.class) {
+            this.propertyValue = value;
         } else {
             this.propertyValue = ReflectionUtils.convertStringToObject(value, this.propertyType);
         }
@@ -102,7 +104,7 @@ public class PropertyFilter {
             throw new IllegalArgumentException("filter名称" + filterName + "没有按规则编写,无法得到属性比较类型.", e);
         }
         try {
-            this.propertyType = ((PropertyType) Enum.valueOf(PropertyType.class, propertyTypeCode)).getValue();
+            this.propertyType = (Enum.valueOf(PropertyType.class, propertyTypeCode)).getValue();
         } catch (IgnoreException e) {
             throw new IllegalArgumentException("filter名称" + filterName + "没有按规则编写,无法得到属性值类型.", e);
         }
@@ -148,7 +150,7 @@ public class PropertyFilter {
     }
 
     public <T> Class<T> getPropertyType() {
-        return (Class<T>)this.propertyType;
+        return (Class<T>) this.propertyType;
     }
 
     public MatchType getMatchType() {
