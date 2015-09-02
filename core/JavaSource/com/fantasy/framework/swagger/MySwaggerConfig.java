@@ -1,5 +1,6 @@
 package com.fantasy.framework.swagger;
 
+import com.fantasy.framework.util.common.PropertiesHelper;
 import com.mangofactory.swagger.configuration.SpringSwaggerConfig;
 import com.mangofactory.swagger.models.dto.ApiInfo;
 import com.mangofactory.swagger.plugin.EnableSwagger;
@@ -14,6 +15,19 @@ public class MySwaggerConfig {
 
     private SpringSwaggerConfig springSwaggerConfig;
 
+    private ApiInfo apiInfo;
+
+    public MySwaggerConfig() {
+        PropertiesHelper propertiesHelper = PropertiesHelper.load("props/application.properties");
+        apiInfo = new ApiInfo(
+                propertiesHelper.getProperty("swagger.api.title", "My Apps API Title"),
+                propertiesHelper.getProperty("swagger.api.description", "My Apps API Description"),
+                propertiesHelper.getProperty("swagger.api.service", "My Apps API terms of service"),
+                propertiesHelper.getProperty("swagger.api.contact.email", "My Apps API Contact Email"),
+                propertiesHelper.getProperty("swagger.api.licence.type", "My Apps API Licence Type"),
+                propertiesHelper.getProperty("swagger.api.licence.url", "My Apps API License URL"));
+    }
+
     @Autowired
     public void setSpringSwaggerConfig(SpringSwaggerConfig springSwaggerConfig) {
         this.springSwaggerConfig = springSwaggerConfig;
@@ -21,17 +35,11 @@ public class MySwaggerConfig {
 
     @Bean
     public SwaggerSpringMvcPlugin customImplementation() {
-        return new SwaggerSpringMvcPlugin(this.springSwaggerConfig).apiInfo(apiInfo()).includePatterns(".*").apiVersion("0.0.1");
+        return new SwaggerSpringMvcPlugin(this.springSwaggerConfig).apiInfo(getApiInfo()).includePatterns(".*").apiVersion("0.0.1");
     }
 
-    private ApiInfo apiInfo() {
-        return new ApiInfo(
-                " 公共框架 REST API ",
-                " 框架公用部分的 API 文档",
-                " http://doc.hoolue.com ",
-                " limaofeng@msn.com ",
-                " My License ",
-                " My Apps API License URL ");
+    private ApiInfo getApiInfo() {
+        return this.apiInfo;
     }
 
 }

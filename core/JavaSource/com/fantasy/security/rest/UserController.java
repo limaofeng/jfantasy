@@ -60,7 +60,7 @@ import java.util.List;
  */
 @Api(value = "security-users", description = " user api ")
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/security/users")
 public class UserController {
 
     @Autowired

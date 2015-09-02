@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api(value = "system-ddts", description = "数据字典分类")
 @RestController
-@RequestMapping("/ddts")
+@RequestMapping("/system/ddts")
 public class DataDictionaryTypeController {
 
     @Autowired
