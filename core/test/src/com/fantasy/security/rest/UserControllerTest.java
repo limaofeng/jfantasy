@@ -61,7 +61,7 @@ public class UserControllerTest {
             @Override
             public MvcResult run() {
                 try {
-                    return mockMvc.perform(MockMvcRequestBuilders.get("/users?pageSize=15&LIKES_username=usertest")).andDo(MockMvcResultHandlers.print()).andReturn();
+                    return mockMvc.perform(MockMvcRequestBuilders.get("/security/users?pageSize=15&LIKES_username=usertest")).andDo(MockMvcResultHandlers.print()).andReturn();
                 } catch (Exception e) {
                     throw new IgnoreException(e.getMessage(), e);
                 }
@@ -72,7 +72,7 @@ public class UserControllerTest {
 
     @Test
     public void testView() throws Exception{
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/users/usertest")).andDo(MockMvcResultHandlers.print()).andReturn();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/security/users/usertest")).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(200, result.getResponse().getStatus());
     }
 
@@ -85,7 +85,7 @@ public class UserControllerTest {
         Role role = new Role();
         role.setCode("SYSTEM");
         user.getRoles().add(role);
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/users").content(JSON.serialize(user)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/security/users").content(JSON.serialize(user)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
@@ -99,7 +99,7 @@ public class UserControllerTest {
                 @Override
                 public MvcResult run() {
                     try {
-                        return mockMvc.perform(MockMvcRequestBuilders.put("/users/"+user.getId()).content(JSON.serialize(user)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
+                        return mockMvc.perform(MockMvcRequestBuilders.put("/security/users/"+user.getId()).content(JSON.serialize(user)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
                     } catch (Exception e) {
                         throw new IgnoreException(e.getMessage(), e);
                     }
@@ -113,8 +113,8 @@ public class UserControllerTest {
     public void testDelete() throws Exception{
         User user = this.userService.findUniqueByUsername("usertest");
         if(user!=null){
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/users/"+user.getId())).andDo(MockMvcResultHandlers.print()).andReturn();
-            Assert.assertEquals(200, result.getResponse().getStatus());
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.delete("/security/users/"+user.getId())).andDo(MockMvcResultHandlers.print()).andReturn();
+            Assert.assertEquals(204, result.getResponse().getStatus());
         }
     }
 }

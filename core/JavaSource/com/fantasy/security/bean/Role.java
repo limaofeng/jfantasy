@@ -16,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "AUTH_ROLE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "permissions", "users", "members"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "permissions", "users", "members","roleAuthorities"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Role extends BaseBusEntity {
 

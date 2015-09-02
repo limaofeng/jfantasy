@@ -122,7 +122,8 @@ public class UserController {
      */
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
-    public User create(User user) {
+    @ResponseBody
+    public User create(@RequestBody User user) {
         return this.userService.save(user);
     }
 
@@ -138,6 +139,7 @@ public class UserController {
      * @apiUse GeneralError
      */
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.userService.delete(id);
     }
@@ -157,7 +159,8 @@ public class UserController {
      * @apiUse GeneralError
      */
     @RequestMapping(method = {RequestMethod.DELETE})
-    public void batchDelete(Long... id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestBody Long... id) {
         this.userService.delete(id);
     }
 

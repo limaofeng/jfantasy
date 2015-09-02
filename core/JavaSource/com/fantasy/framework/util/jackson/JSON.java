@@ -6,6 +6,7 @@ import com.fantasy.framework.util.jackson.deserializer.DateDeserializer;
 import com.fantasy.framework.util.jackson.serializer.DateSerializer;
 import com.fantasy.framework.util.jackson.serializer.StringUnicodeSerializer;
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -91,6 +92,7 @@ public class JSON {
         register(DEFAULT_KEY, new ObjectMapperRegister() {
             @Override
             public void callback(ObjectMapper objectMapper) {
+                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
                 // 当找不到对应的序列化器时 忽略此字段
                 objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 // 允许非空字段
