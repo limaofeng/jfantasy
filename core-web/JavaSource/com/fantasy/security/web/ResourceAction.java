@@ -25,7 +25,7 @@ public class ResourceAction extends ActionSupport {
 	}
 	public String search(Pager<Resource> pager,List<PropertyFilter> filters){
 		filters.add(new PropertyFilter("EQE_type","url"));
-		this.attrs.put(ROOT,this.resourceService.search(pager, filters));
+		this.attrs.put(ROOT,this.resourceService.findPager(pager, filters));
 		return  JSONDATA;
 	}
 	public String save(Resource resource) {
