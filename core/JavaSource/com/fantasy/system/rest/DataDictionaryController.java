@@ -5,19 +5,23 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.system.bean.DataDictionary;
 import com.fantasy.system.bean.DataDictionaryKey;
 import com.fantasy.system.service.DataDictionaryService;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(value = "system-dds", description = "数据字典")
 @RestController
-@RequestMapping("/dds")
+@RequestMapping("/system/dds")
 public class DataDictionaryController {
 
     @Autowired
     private DataDictionaryService dataDictionaryService;
 
+    @ApiOperation(value = "删除数据字典", notes = "删除数据字典")
     @RequestMapping(value = "/{type}:{code}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("type") String type, @PathVariable("code") String code) {
@@ -42,9 +46,11 @@ public class DataDictionaryController {
      * curl -i -X POST -d "code=sex&type=usersex..." http://localhost/dds
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "添加数据项", notes = "通过该接口, 可以添加新的数据项。",response = DataDictionary.class)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public DataDictionary save(DataDictionary dd) {
+    @ResponseBody
+    public DataDictionary save(@RequestBody DataDictionary dd) {
         return this.dataDictionaryService.save(dd);
     }
 
@@ -59,6 +65,7 @@ public class DataDictionaryController {
      * curl -i http://localhost/dds/usersex:female
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "获取数据项", notes = "通过该接口, 可以添加新的数据项。",response = DataDictionary.class)
     @RequestMapping(value = "/{type}:{code}", method = RequestMethod.GET)
     public DataDictionary view(@PathVariable("type") String type, @PathVariable("code") String code) {
         return this.dataDictionaryService.get(DataDictionaryKey.newInstance(code, type));
@@ -75,6 +82,7 @@ public class DataDictionaryController {
      * curl -i http://localhost/dds?currentPage=1&EQS_code=usersex
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "查询数据字典", notes = "通过该接口, 可以筛选需要的数据字典项。",response = Pager.class)
     @RequestMapping(method = RequestMethod.GET)
     public Pager<DataDictionary> search(Pager<DataDictionary> pager, List<PropertyFilter> filters) {
         return this.dataDictionaryService.findPager(pager, filters);

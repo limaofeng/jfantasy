@@ -18,7 +18,7 @@ public class ResourceAction extends ActionSupport {
 	private transient ResourceService resourceService;
 	
 	public String index(){
-		this.attrs.put("resources",this.resourceService.getTreeResource());
+//		this.attrs.put("resources",this.resourceService.getTreeResource());
 		this.search(new Pager<Resource>(),new ArrayList<PropertyFilter>());
 		this.attrs.put("pager", this.attrs.get(ROOT));
 		return SUCCESS;

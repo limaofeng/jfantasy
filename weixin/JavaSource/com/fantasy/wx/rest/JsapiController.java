@@ -4,9 +4,7 @@ import com.fantasy.wx.framework.core.Jsapi;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/weixin/jsapi")
@@ -33,6 +31,7 @@ public class JsapiController {
      * }
      */
     @RequestMapping(value = "/ticket", method = RequestMethod.GET)
+    @ResponseBody
     public String getTicket() throws WeiXinException {
         Jsapi jsapi = weiXinSessionFactory.getCurrentSession().getJsapi();
         if (jsapi == null) {
@@ -65,7 +64,8 @@ public class JsapiController {
      * }
      */
     @RequestMapping(value = "/signature", method = RequestMethod.GET)
-    public Jsapi.Signature signature(String url) throws WeiXinException {
+    @ResponseBody
+    public Jsapi.Signature signature(@RequestParam(value = "url") String url) throws WeiXinException {
         Jsapi jsapi = weiXinSessionFactory.getCurrentSession().getJsapi();
         if (jsapi == null) {
             throw new WeiXinException(" jsapi is null ");

@@ -2,8 +2,6 @@ package com.fantasy.security.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.dao.RoleDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,19 +33,10 @@ public class RoleService {
         return this.roleDao.get(id);
     }
 
-    public void delete(String[] ids) {
+    public void delete(String... ids) {
         for (String code : ids) {
             this.roleDao.delete(code);
         }
-    }
-
-    public static List<Role> list() {
-        RoleService roleService = SpringContextUtil.getBeanByType(RoleService.class);
-        return roleService.getAll();
-    }
-
-    public static String[] getRoleCodes(List<Role> roles) {
-        return ObjectUtil.toFieldArray(roles, "code", String.class);
     }
 
 }

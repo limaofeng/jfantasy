@@ -4,6 +4,9 @@ import com.fantasy.cms.bean.Banner;
 import com.fantasy.cms.service.BannerService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,6 +44,7 @@ import java.util.List;
  * @apiSuccess {Banner}  BannerItem.banner Banner对象
  * @apiVersion 3.3.8
  */
+@Api(value = "cms-banners", description = "轮播图接口")
 @RestController
 @RequestMapping("/cms/banners")
 public class BannerController {
@@ -61,9 +65,10 @@ public class BannerController {
      * @apiUse returnBanner
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "添加轮播图", notes = "添加轮播图", response = Banner.class)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Banner create(Banner banner) {
+    public Banner create(@RequestBody Banner banner) {
         return bannerService.save(banner);
     }
 
@@ -80,8 +85,10 @@ public class BannerController {
      * @apiUse returnBanner
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "更新轮播图", notes = "更新轮播图信息", response = Banner.class)
     @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
-    public Banner update(@PathVariable("key") String key, Banner banner) {
+    @ResponseBody
+    public Banner update(@PathVariable("key") String key,@RequestBody Banner banner) {
         banner.setKey(key);
         return bannerService.save(banner);
     }
@@ -98,7 +105,9 @@ public class BannerController {
      * @apiUse returnBanner
      * @apiUse GeneralError
      */
-    @RequestMapping("/{key}")
+    @ApiOperation(value = "获取轮播图", notes = "获取轮播图", response = Banner.class)
+    @RequestMapping(value = "/{key}", method = RequestMethod.GET)
+    @ResponseBody
     public Banner view(@PathVariable("key") String key) {
         return bannerService.get(key);
     }
@@ -114,7 +123,9 @@ public class BannerController {
      * curl -i -X DELETE http://localhost/cms/banners/root
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{key}",method = {RequestMethod.DELETE})
+    @ApiOperation(value = "删除轮播图", notes = "删除轮播图")
+    @RequestMapping(value = "/{key}", method = {RequestMethod.DELETE})
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("key") String key) {
         bannerService.delete(key);
     }
@@ -132,8 +143,10 @@ public class BannerController {
      * curl -i -X DELETE http://localhost/cms/banners/root
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "批量删除轮播图", notes = "批量删除轮播图")
     @RequestMapping(method = {RequestMethod.DELETE})
-    public void batchDelete(String... key) {
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
+    public void delete(@RequestBody String... key) {
         bannerService.delete(key);
     }
 
@@ -151,8 +164,9 @@ public class BannerController {
      * @apiUse returnPager
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "查询轮播图", notes = "查询轮播图", response = Pager.class)
     @RequestMapping(method = RequestMethod.GET)
-    public Pager<Banner> search(Pager<Banner> pager, List<PropertyFilter> filters) {
+    public Pager<Banner> search(@ApiParam(value = "分页对象", name = "pager") Pager<Banner> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
         return this.bannerService.findPager(pager, filters);
     }
 }

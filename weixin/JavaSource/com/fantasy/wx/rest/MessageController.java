@@ -12,6 +12,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
@@ -45,7 +46,7 @@ public class MessageController {
      * curl -i http://localhost/weixin/message/wx0e7cef7ad73417eb/push
      * @apiUse WeiXinMessage
      */
-    @RequestMapping(value = "/{appid}/push")
+    @RequestMapping(value = "/{appid}/push", method = {RequestMethod.GET, RequestMethod.POST})
     public String push(@PathVariable String appid, HttpServletRequest request) throws IOException {
         String echostr = request.getParameter("echostr");
         if (StringUtils.isNotBlank(echostr)) {

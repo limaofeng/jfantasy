@@ -2,21 +2,13 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.security.bean.enums.ResourceType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 访问规则
@@ -38,7 +30,6 @@ public class Resource extends BaseBusEntity implements Cloneable {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
     /**
      * 资源名称
      */
@@ -65,23 +56,6 @@ public class Resource extends BaseBusEntity implements Cloneable {
      */
     @Column(name = "DESCRIPTION")
     private String description;
-
-    @JsonIgnore
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_RELATION_RESOURCE", joinColumns = @JoinColumn(name = "SUB_RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "RESOURCE_ID"))
-    private List<Resource> parentResources;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_RELATION_RESOURCE", joinColumns = @JoinColumn(name = "RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "SUB_RESOURCE_ID"))
-    private List<Resource> subResources;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_USERGROUP_RESOURCE", joinColumns = @JoinColumn(name = "RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"))
-    public List<UserGroup> userGroups;
-
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_ROLE_RESOURCE", joinColumns = @JoinColumn(name = "RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"))
-    private List<Role> roles;
 
     public Long getId() {
         return id;
@@ -136,99 +110,21 @@ public class Resource extends BaseBusEntity implements Cloneable {
         return ObjectUtil.defaultValue(this.enabled, Boolean.FALSE);
     }
 
-    @JsonIgnore
-    public List<Role> getRoles() {
-        return this.roles;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof Resource)) return false;
+        Resource resource = (Resource) o;
+        return id.equals(resource.id);
     }
 
-    @JsonIgnore
-    public List<UserGroup> getUserGroups() {
-        return userGroups;
-    }
-
-    public void setUserGroups(List<UserGroup> userGroups) {
-        this.userGroups = userGroups;
-    }
-
-    public List<Resource> getParentResources() {
-        return parentResources;
-    }
-
-    public void setParentResources(List<Resource> parentResources) {
-        this.parentResources = parentResources;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
-    @JsonProperty("children")
-    public List<Resource> getSubResources() {
-        return subResources;
-    }
-
-    public void setSubResources(List<Resource> subResources) {
-        this.subResources = subResources;
-    }
-
-    public void addResource(Resource resource) {
-        if (ObjectUtil.isNull(getSubResources())) {
-            setSubResources(new ArrayList<Resource>());
-        }
-        getSubResources().add(resource);
-    }
-
-	@JsonIgnore
-	public String getRoleAuthorities() {
-		AtomicReference<StringBuffer> roleAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
-		for (Role role : getRoles() == null ? new ArrayList<Role>() : getRoles()) {
-			if (!role.isEnabled()){
-                continue;
-            }
-            List<GrantedAuthority> authorities = role.getRoleAuthorities();
-            for (GrantedAuthority authority : authorities) {
-                roleAuthorities.get().append(authority.getAuthority()).append(",");
-            }
-        }
-        return RegexpUtil.replace(roleAuthorities.get().toString(), ",$", "");
-    }
-
-    @JsonIgnore
-    public String getAuthorities() {
-        AtomicReference<StringBuffer> authorities = new AtomicReference<StringBuffer>(new StringBuffer());
-        String roleAuthorities = getRoleAuthorities();
-        if (StringUtil.isNotBlank(roleAuthorities)) {
-            authorities.get().append(roleAuthorities).append(",");
-        }
-        String userGroupAuthorities = getUserGroupAuthorities();
-        if (StringUtil.isNotBlank(userGroupAuthorities)) {
-            authorities.get().append(userGroupAuthorities).append(",");
-        }
-        return RegexpUtil.replace(authorities.get().toString(), ",$", "");
-    }
-
-	@JsonIgnore
-	public String getUserGroupAuthorities() {
-		AtomicReference<StringBuffer> userGroupAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
-		for (UserGroup userGroup : getUserGroups() == null ? new ArrayList<UserGroup>() : getUserGroups()) {
-			if (userGroup.isEnabled()) {
-				List<GrantedAuthority> authorities = userGroup.getGroupAuthorities();
-				for (GrantedAuthority authority : authorities) {
-					userGroupAuthorities.get().append(authority.getAuthority()).append(",");
-				}
-			}
-		}
-		return RegexpUtil.replace(userGroupAuthorities.get().toString(), ",$", "");
-	}
-
-    @JsonIgnore
-    public GrantedAuthority getUrlAuthoritie() {
-        return new SimpleGrantedAuthority("URL_" + getValue());
+    @Override
+    public int hashCode() {
+        return getId() == null ? super.hashCode() : getId().hashCode();
     }
 
     @Override
     public Object clone() throws CloneNotSupportedException {
         return ObjectUtil.clone(this);
     }
-
 }

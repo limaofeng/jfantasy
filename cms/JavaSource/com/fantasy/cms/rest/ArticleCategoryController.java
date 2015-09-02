@@ -4,6 +4,8 @@ import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +35,7 @@ import java.util.List;
  * @apiSuccess {String} parent  上级栏目编码
  * @apiVersion 3.3.8
  */
+@Api(value = "cms-articles-categorys", description = "文章分类接口")
 @RestController
 @RequestMapping("/cms/categorys")
 public class ArticleCategoryController {
@@ -42,6 +45,8 @@ public class ArticleCategoryController {
     private CmsService cmsService;
 
     /**
+     * @param pager   分页对象
+     * @param filters 过滤条件对象
      * @api {get} /cms/categorys   查询文章分类
      * @apiVersion 3.3.8
      * @apiName searchArticleCategory
@@ -54,10 +59,10 @@ public class ArticleCategoryController {
      * @apiUse paramPropertyFilter
      * @apiUse returnPager
      * @apiUse GeneralError
-     * @param pager 分页对象
-     * @param filters 过滤条件对象
      */
+    @ApiOperation(value = "查询文章分类", notes = "通过该接口, 筛选文章分类", response = Pager.class)
     @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public Pager<ArticleCategory> search(Pager<ArticleCategory> pager, List<PropertyFilter> filters) {
         return this.cmsService.findCategoryPager(pager, filters);
     }
@@ -74,7 +79,9 @@ public class ArticleCategoryController {
      * @apiUse returnArticleCategory
      * @apiUse GeneralError
      */
-    @RequestMapping("/{code}")
+    @ApiOperation(value = "获取文章分类", notes = "通过该接口, 获取文章分类", response = ArticleCategory.class)
+    @RequestMapping(value = "/{code}", method = RequestMethod.GET)
+    @ResponseBody
     public ArticleCategory view(@PathVariable("code") String code) {
         return this.cmsService.get(code);
     }
@@ -92,9 +99,11 @@ public class ArticleCategoryController {
      * @apiUse returnArticleCategory
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "添加文章分类", notes = "通过该接口, 添加文章分类", response = ArticleCategory.class)
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ArticleCategory create(ArticleCategory category) {
+    @ResponseBody
+    public ArticleCategory create(@RequestBody ArticleCategory category) {
         return this.cmsService.save(category);
     }
 
@@ -109,12 +118,15 @@ public class ArticleCategoryController {
      * curl -i -X DELETE http://localhost/cms/categorys/root
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{code}",method = {RequestMethod.DELETE})
+    @ApiOperation(value = "删除文章分类", notes = "通过该接口, 删除文章分类")
+    @RequestMapping(value = "/{code}", method = {RequestMethod.DELETE})
     public void delete(@PathVariable("code") String code) {
         this.cmsService.delete(code);
     }
 
     /**
+     * @param code:a
+     * @param code:b
      * @api {batchDelete} /cms/categorys/:code   批量删除分类
      * @apiVersion 3.3.5
      * @apiName batchDeleteArticleCategory
@@ -124,11 +136,11 @@ public class ArticleCategoryController {
      * @apiExample Example usage:
      * curl -i -X DELETE -d "code=a&code=b" http://localhost/cms/categorys
      * @apiUse GeneralError
-     * @param code:a
-     * @param code:b
      */
+    @ApiOperation(value = "批量删除分类", notes = "通过该接口, 批量删除分类")
     @RequestMapping(method = {RequestMethod.DELETE})
-    public void batchDelete(String... code) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@RequestBody String... code) {
         this.cmsService.delete(code);
     }
 
@@ -145,8 +157,10 @@ public class ArticleCategoryController {
      * @apiUse returnArticleCategory
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{code}",method = {RequestMethod.PUT})
-    public ArticleCategory update(@PathVariable("code") String code,ArticleCategory category) {
+    @ApiOperation(value = "更新文章分类", notes = "通过该接口, 更新文章分类", response = ArticleCategory.class)
+    @RequestMapping(value = "/{code}", method = {RequestMethod.PUT})
+    @ResponseBody
+    public ArticleCategory update(@PathVariable("code") String code, @RequestBody ArticleCategory category) {
         category.setCode(code);
         return this.cmsService.save(category);
     }

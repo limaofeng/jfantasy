@@ -4,6 +4,9 @@ import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -35,6 +38,7 @@ import java.util.List;
  * @apiSuccess {Boolean} issue  发布标示
  * @apiVersion 3.3.8
  */
+@Api(value = "cms-articles", description = "文章接口")
 @RestController
 @RequestMapping("/cms/articles")
 public class ArticleController {
@@ -56,8 +60,10 @@ public class ArticleController {
      * @apiUse returnPager
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "按条件检索文章", notes = "筛选文章，返回通用分页对象", response = Pager.class)
     @RequestMapping(method = RequestMethod.GET)
-    public Pager<Article> search(Pager<Article> pager, List<PropertyFilter> filters) {
+    @ResponseBody
+    public Pager<Article> search(@ApiParam(value = "分页对象", name = "pager") Pager<Article> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
         return this.cmsService.findPager(pager, filters);
     }
 
@@ -74,7 +80,8 @@ public class ArticleController {
      * @apiUse returnArticle
      * @apiUse GeneralError
      */
-    @RequestMapping("/{id}")
+    @ApiOperation(value = "获取文章", notes = "通过该接口, 获取单篇文章", response = Article.class)
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Article view(@PathVariable("id") Long id) {
         return this.cmsService.get(id);
     }
@@ -92,10 +99,31 @@ public class ArticleController {
      * @apiUse returnArticle
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "添加文章", notes = "通过该接口, 添加文章", response = Article.class)
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public Article create(@RequestBody Article article) {
+        return this.cmsService.save(article);
+    }
+
+    /**
+     * @api {put} /cms/articles/:id   更新文章
+     * @apiVersion 3.3.8
+     * @apiName updateArticle
+     * @apiGroup 内容管理
+     * @apiDescription 通过该接口, 更新文章
+     * @apiPermission admin
+     * @apiExample Example usage:
+     * curl -i -X PUT http://localhost/cms/articles/43
+     * @apiUse paramArticle
+     * @apiUse returnArticle
+     * @apiUse GeneralError
+     */
+    @ApiOperation(value = "更新文章", notes = "通过该接口, 更新文章")
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    public Article update(@PathVariable("id") Long id, @RequestBody Article article) {
+        article.setId(id);
         return this.cmsService.save(article);
     }
 
@@ -110,6 +138,7 @@ public class ArticleController {
      * curl -i -X DELETE http://localhost/cms/articles/43
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "删除文章", notes = "通过该接口, 删除文章")
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     public void delete(@PathVariable("id") Long id) {
         this.cmsService.delete(id);
@@ -127,28 +156,10 @@ public class ArticleController {
      * curl -i -X DELETE http://localhost/cms/articles
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "批量删除文章", notes = "通过该接口, 批量删除文章")
     @RequestMapping(method = {RequestMethod.DELETE})
     public void delete(@RequestBody Long... id) {
         this.cmsService.delete(id);
-    }
-
-    /**
-     * @api {put} /cms/articles/:id   更新文章
-     * @apiVersion 3.3.8
-     * @apiName updateArticle
-     * @apiGroup 内容管理
-     * @apiDescription 通过该接口, 更新文章
-     * @apiPermission admin
-     * @apiExample Example usage:
-     * curl -i -X PUT http://localhost/cms/articles/43
-     * @apiUse paramArticle
-     * @apiUse returnArticle
-     * @apiUse GeneralError
-     */
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
-    public Article update(@PathVariable("id") Long id, @RequestBody Article article) {
-        article.setId(id);
-        return this.cmsService.save(article);
     }
 
 }

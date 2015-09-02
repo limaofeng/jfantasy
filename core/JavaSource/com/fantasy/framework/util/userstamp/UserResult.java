@@ -11,7 +11,7 @@ public class UserResult {
     private int randomType;
 
     public String getMemKey() {
-        return new StringBuilder().append(isCompany() ? "com" : isGuest() ? "guest" : "").append(this.userId).toString();
+        return (isCompany() ? "com" : isGuest() ? "guest" : "") + this.userId;
     }
 
     public boolean isGuest() {

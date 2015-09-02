@@ -4,6 +4,8 @@ import com.fantasy.security.bean.Menu;
 import com.fantasy.security.service.MenuService;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
@@ -15,8 +17,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Api(value = "system-websites", description = "站点信息")
 @RestController
-@RequestMapping("/websites")
+@RequestMapping("/system/websites")
 public class WebsiteController {
 
     @Autowired
@@ -24,6 +27,7 @@ public class WebsiteController {
     @Autowired
     private MenuService menuService;
 
+    @ApiOperation(value = "获取网站对应的菜单信息", notes = "通过该接口, 可以获取网站配置的菜单信息。", response = Menu[].class)
     @RequestMapping(value = "/{key}/menus", method = RequestMethod.GET)
     public List<Menu> menus(@PathVariable("key") String key) {
         Website website = this.websiteService.findUniqueByKey(key);

@@ -16,7 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "AUTH_ROLE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "resources", "users", "members"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "permissions", "users", "members"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Role extends BaseBusEntity {
 
@@ -59,9 +59,9 @@ public class Role extends BaseBusEntity {
     /**
      * 角色对应的资源
      */
-    @ManyToMany(targetEntity = Resource.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_ROLE_RESOURCE", joinColumns = @JoinColumn(name = "ROLE_CODE"), inverseJoinColumns = @JoinColumn(name = "RESOURCE_ID"))
-    private List<Resource> resources;
+    @ManyToMany(targetEntity = Permission.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "AUTH_ROLE_PERMISSION", joinColumns = @JoinColumn(name = "ROLE_CODE"), inverseJoinColumns = @JoinColumn(name = "PERMISSION_ID"))
+    private List<Permission> permissions;
 
     @ManyToMany(targetEntity = User.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_ROLE_USER", joinColumns = @JoinColumn(name = "ROLE_CODE"), inverseJoinColumns = @JoinColumn(name = "USER_ID"),foreignKey = @ForeignKey(name = "FK_ROLE_USER_RCODE") )
@@ -109,8 +109,12 @@ public class Role extends BaseBusEntity {
     }
 
     @JsonIgnore
-    public List<Resource> getResources() {
-        return this.resources;
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     public List<Menu> getMenus() {
@@ -129,9 +133,6 @@ public class Role extends BaseBusEntity {
         this.menus = menus;
     }
 
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
-    }
 
     public List<Member> getMembers() {
         return members;
@@ -147,18 +148,6 @@ public class Role extends BaseBusEntity {
 
     public void setType(String type) {
         this.type = type;
-    }
-
-    @JsonIgnore
-    public List<GrantedAuthority> getUrlAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>(getResources().size());
-        for (Resource resource : getResources()) {
-            if (!resource.isEnabled()){
-                continue;
-            }
-            grantedAuthorities.add(resource.getUrlAuthoritie());
-        }
-        return grantedAuthorities;
     }
 
     public List<GrantedAuthority> getRoleAuthorities() {

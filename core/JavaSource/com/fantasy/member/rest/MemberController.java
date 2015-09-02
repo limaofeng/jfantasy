@@ -133,7 +133,7 @@ public class MemberController {
      * @apiUse GeneralError
      */
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
-    public Member update(@PathVariable("id") Long id, Member member) {
+    public Member update(@PathVariable("id") Long id,@RequestBody Member member) {
         member.setId(id);
         return memberService.save(member);
     }

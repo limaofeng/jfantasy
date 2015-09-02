@@ -49,7 +49,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**", "/assets/**").addResourceLocations("/static/", "/assets/");
+        registry.addResourceHandler("*.html").addResourceLocations("/");
     }
 
     @Bean

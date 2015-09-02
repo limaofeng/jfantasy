@@ -5,6 +5,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.bean.User;
 import com.fantasy.security.service.UserService;
+import com.wordnik.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -57,6 +58,7 @@ import java.util.List;
  * @apiSuccess {FileDetail} details.Avatar  用户头像图片对象
  * @apiVersion 3.3.8
  */
+@Api(value = "security-users", description = " user api ")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -96,7 +98,7 @@ public class UserController {
      * @apiUse returnUser
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{username}",method = RequestMethod.GET)
+    @RequestMapping(value = "/{username}", method = RequestMethod.GET)
     public User view(@PathVariable("username") String username) {
         return this.userService.findUniqueByUsername(username);
     }
@@ -116,7 +118,7 @@ public class UserController {
      */
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
-    public User create(User user){
+    public User create(User user) {
         return this.userService.save(user);
     }
 
@@ -131,13 +133,15 @@ public class UserController {
      * curl -i -X DELETE http://localhost/users/43
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{id}",method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     public void delete(@PathVariable("id") Long id) {
         this.userService.delete(id);
     }
 
 
     /**
+     * @param id 用户ID-1
+     * @param id 用户ID-2
      * @api {batchDelete} /users   批量删除用户
      * @apiVersion 3.3.8
      * @apiName batchDeleteUser
@@ -147,8 +151,6 @@ public class UserController {
      * @apiExample Example usage:
      * curl -i -X DELETE http://localhost/users
      * @apiUse GeneralError
-     * @param id  用户ID-1
-     * @param id  用户ID-2
      */
     @RequestMapping(method = {RequestMethod.DELETE})
     public void batchDelete(Long... id) {
@@ -168,8 +170,8 @@ public class UserController {
      * @apiUse returnUser
      * @apiUse GeneralError
      */
-    @RequestMapping(value="/{id}",method = {RequestMethod.PUT})
-    public User update(@PathVariable("id") Long id,User user) {
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    public User update(@PathVariable("id") Long id, User user) {
         user.setId(id);
         return this.userService.save(user);
     }

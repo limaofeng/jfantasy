@@ -35,6 +35,7 @@
         <freemarker-version>2.3.19</freemarker-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
         <org.mybatis-version>3.2.7</org.mybatis-version>
+        <com.fantasy-version>3.3.8</com.fantasy-version>
         <commons-codec-version>1.8</commons-codec-version>
         <spymemcached-version>2.11.6</spymemcached-version>
         <commons-lang3-version>3.3.2</commons-lang3-version>
@@ -43,7 +44,6 @@
         <aliyun-sdk-oss-version>2.0.3</aliyun-sdk-oss-version>
         <mybatis-spring-version>1.2.2</mybatis-spring-version>
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
-        <com.fantasy-version>3.3.8</com.fantasy-version>
         <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
         <org.hibernate-version>4.3.8.Final</org.hibernate-version>
@@ -60,6 +60,7 @@
         <javax.servlet.jsp-api-version>2.2.1</javax.servlet.jsp-api-version>
         <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
         <com.thoughtworks.xstream-version>1.4.8</com.thoughtworks.xstream-version>
+        <com.mangofactory-swagger-version>1.0.2</com.mangofactory-swagger-version>
         <com.fasterxml.jackson.core-version>2.3.0</com.fasterxml.jackson.core-version>
         <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
     </properties>

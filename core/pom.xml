@@ -299,15 +299,19 @@
         </dependency>
         -->
         <dependency>
+            <groupId>com.thoughtworks.xstream</groupId>
+            <artifactId>xstream</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.mangofactory</groupId>
+            <artifactId>swagger-springmvc</artifactId>
+            <version>${com.mangofactory-swagger-version}</version>
+        </dependency>
+        <dependency>
             <groupId>javax.resource</groupId>
             <artifactId>javax.resource-api</artifactId>
             <version>1.7</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.thoughtworks.xstream</groupId>
-            <artifactId>xstream</artifactId>
-            <version>1.4.4</version>
         </dependency>
     </dependencies>
 

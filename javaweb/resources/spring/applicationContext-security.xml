@@ -1,25 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:s="http://www.springframework.org/schema/security" xmlns:c="http://www.springframework.org/schema/c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:s="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/security.properties"/>
 
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:props/messages_zh_CN"/>
-    </bean>
-
     <!-- 支付相关接口 -->
     <s:http pattern="/payment/**" security="none"/>
     <!-- 不需验证的资源 -->
+    <s:http pattern="/members/**" security="none"/>
     <s:http pattern="/files/**" security="none"/>
     <!--微信请求项目地址过滤-->
     <s:http pattern="/weixin/message/*/push" security="none"/>
 
     <!-- 管理端登陆配置 -->
     <s:http pattern="/**" auto-config="true" use-expressions="true" entry-point-ref="authenticationEntryPoint">
-        <!-- -->
+        <!--
         <s:intercept-url pattern="/**" access="hasAnyRole('ROLE_SYSTEM')"/>
+        -->
         <!-- 如果需要验证验证码,在配置该行 -->
         <!-- 在EXCEPTION_TRANSLATION_FILTER之后添加一个过滤器  -->
         <s:custom-filter ref="customExceptionTranslationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
@@ -49,7 +47,6 @@
     <!-- 未登陆时的请求缓存 -->
     <bean id="requestCache" class="com.fantasy.security.web.savedrequest.FantasyHttpSessionRequestCache"/>
     <!-- 验证管理器 -->
-
 
     <bean id="defaultAuthEventPublisher" class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
 
@@ -100,9 +97,7 @@
     </bean>
 
     <!-- 自定义权限加载接口 -->
-    <bean id="securityMetadataSource" class="com.fantasy.security.web.intercept.SecurityMetadataSource">
-        <property name="cache" ref="defaultCache"/>
-    </bean>
+    <bean id="securityMetadataSource" class="com.fantasy.security.web.intercept.SecurityMetadataSource"/>
 
     <!--JCaptcha验证码服务 -->
     <bean id="captchaService" class="com.fantasy.framework.jcaptcha.FantasyCaptchaService">
