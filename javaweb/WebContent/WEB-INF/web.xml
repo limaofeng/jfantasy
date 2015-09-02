@@ -66,25 +66,6 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <jsp-config>
-        <taglib id="TagLibRef_struts">
-            <taglib-uri>http://www.fantasy.com/tags/struts-tags</taglib-uri>
-            <taglib-location>/WEB-INF/tlds/struts-tags.tld</taglib-location>
-        </taglib>
-        <taglib id="TagLibRef_fantasy">
-            <taglib-uri>http://www.fantasy.com.cn/tags/fantasy</taglib-uri>
-            <taglib-location>/WEB-INF/tlds/fantasy.tld</taglib-location>
-        </taglib>
-        <taglib id="TagLibRef_fantasy_util">
-            <taglib-uri>http://www.fantasy.com.cn/util</taglib-uri>
-            <taglib-location>/WEB-INF/tlds/util.tld</taglib-location>
-        </taglib>
-        <taglib id="TagLibRef_fantasy_config">
-            <taglib-uri>http://www.fantasy.com.cn/tags/config</taglib-uri>
-            <taglib-location>/WEB-INF/tlds/config.tld</taglib-location>
-        </taglib>
-    </jsp-config>
-
     <welcome-file-list>
         <welcome-file>index.html</welcome-file>
     </welcome-file-list>
