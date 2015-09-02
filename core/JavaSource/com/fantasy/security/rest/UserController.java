@@ -58,7 +58,7 @@ import java.util.List;
  * @apiSuccess {FileDetail} details.Avatar  用户头像图片对象
  * @apiVersion 3.3.8
  */
-@Api(value = "security-users", description = " user api ")
+@Api(value = "security-users", description = " 用户管理 ")
 @RestController
 @RequestMapping("/security/users")
 public class UserController {
