@@ -11,6 +11,7 @@ import com.fantasy.framework.lucene.dao.LuceneDao;
 import com.fantasy.framework.spring.ClassPathScanner;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
@@ -28,10 +29,7 @@ import org.springframework.util.StringUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -98,7 +96,7 @@ public class BuguIndex implements InitializingBean {
         for (String basePackage : packagesToScan) {
             for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, LuceneDao.class)) {
                 Class entityClass = ClassUtil.getSuperClassGenricType(clazz);
-                if(entityClass.getAnnotation(Indexed.class) == null){
+                if (entityClass.getAnnotation(Indexed.class) == null) {
                     continue;
                 }
                 LuceneDao dao = (LuceneDao) SpringContextUtil.getBeanByType(clazz);
@@ -116,12 +114,12 @@ public class BuguIndex implements InitializingBean {
             BuguIndex.instance = this;
         }
         if (this.rebuild) {
-            executor.execute(new Runnable() {
-
+            new Timer().schedule(new TimerTask() {
+                @Override
                 public void run() {
+                    System.out.println(">" + DateUtil.format("yyyy-MM-dd HH:mm:ss"));
                     BuguIndex.this.rebuild();
                 }
-
             }, 1000 * 60);
         }
     }
