@@ -74,7 +74,6 @@ public class RoleAction extends ActionSupport {
      */
     public String resourceEdit(String id) {
         this.attrs.put("role", this.roleService.get(id));
-        this.attrs.put("allResources", this.resourceService.loadResourcesByUrl());
         return SUCCESS;
     }
 }
