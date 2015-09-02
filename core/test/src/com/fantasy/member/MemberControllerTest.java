@@ -1,5 +1,6 @@
 package com.fantasy.member;
 
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
 import junit.framework.Assert;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -62,7 +64,11 @@ public class MemberControllerTest {
     }
 
     public void testSave() throws Exception{
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/members").param("username","membertest").param("password","123456").param("enabled","true")).andDo(MockMvcResultHandlers.print()).andReturn();
+        Member member = new Member();
+        member.setUsername("membertest");
+        member.setPassword("123456");
+        member.setEnabled(true);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/members").content(JSON.serialize(member)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
@@ -71,7 +77,8 @@ public class MemberControllerTest {
     public void testUpdate() throws Exception{
         Member member = this.memberService.findUniqueByUsername("membertest");
         if(member!=null){
-            MvcResult result =mockMvc.perform(MockMvcRequestBuilders.put("/members/"+member.getId()).param("password","666666")).andDo(MockMvcResultHandlers.print()).andReturn();
+            member.setPassword("666666");
+            MvcResult result =mockMvc.perform(MockMvcRequestBuilders.put("/members/"+member.getId()).content(JSON.serialize(member)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
             Assert.assertEquals(200, result.getResponse().getStatus());
         }
     }

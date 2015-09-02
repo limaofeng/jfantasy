@@ -2,6 +2,7 @@ package com.fantasy.cms.rest;
 
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.service.CmsService;
+import com.fantasy.framework.util.jackson.JSON;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;
@@ -9,6 +10,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -63,16 +65,20 @@ public class ArticleCategoryControllerTest {
     }
 
     public void testSave() throws Exception{
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/categorys").param("code","admintest").param("name","接口测试")).andDo(MockMvcResultHandlers.print()).andReturn();
+        ArticleCategory category = new ArticleCategory();
+        category.setCode("admintest");
+        category.setName("接口测试");
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/categorys").contentType(MediaType.APPLICATION_JSON).content(JSON.serialize(category))).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
 
     @Test
     public void testUpdate() throws Exception{
-        ArticleCategory articleCategory = this.cmsService.get("admintest");
-        if(articleCategory!=null){
-            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/cms/categorys/"+articleCategory.getCode()).param("name","接口测试更新")).andDo(MockMvcResultHandlers.print()).andReturn();
+        ArticleCategory category = this.cmsService.get("admintest");
+        if(category!=null){
+            category.setName("接口测试更新");
+            MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put("/cms/categorys/" + category.getCode()).contentType(MediaType.APPLICATION_JSON).content(JSON.serialize(category))).andDo(MockMvcResultHandlers.print()).andReturn();
             Assert.assertEquals(200, result.getResponse().getStatus());
         }
     }

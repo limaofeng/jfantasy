@@ -60,7 +60,7 @@ public class ArticleController {
      * @apiUse returnPager
      * @apiUse GeneralError
      */
-    @ApiOperation(value = "按条件检索文章", notes = "筛选文章，返回通用分页对象", response = Pager.class)
+    @ApiOperation(value = "按条件检索文章", notes = "筛选文章，返回通用分页对象")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<Article> search(@ApiParam(value = "分页对象", name = "pager") Pager<Article> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {

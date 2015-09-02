@@ -164,8 +164,9 @@ public class BannerController {
      * @apiUse returnPager
      * @apiUse GeneralError
      */
-    @ApiOperation(value = "查询轮播图", notes = "查询轮播图", response = Pager.class)
+    @ApiOperation(value = "查询轮播图", notes = "查询轮播图")
     @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public Pager<Banner> search(@ApiParam(value = "分页对象", name = "pager") Pager<Banner> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
         return this.bannerService.findPager(pager, filters);
     }

@@ -10,10 +10,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,8 +24,9 @@ public class WebsiteController {
     @Autowired
     private MenuService menuService;
 
-    @ApiOperation(value = "获取网站对应的菜单信息", notes = "通过该接口, 可以获取网站配置的菜单信息。", response = Menu[].class)
+    @ApiOperation(value = "获取网站对应的菜单信息", notes = "通过该接口, 可以获取网站配置的菜单信息。")
     @RequestMapping(value = "/{key}/menus", method = RequestMethod.GET)
+    @ResponseBody
     public List<Menu> menus(@PathVariable("key") String key) {
         Website website = this.websiteService.findUniqueByKey(key);
         Long rootMenuId = website.getRootMenu().getId();

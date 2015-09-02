@@ -2,6 +2,8 @@ package com.fantasy.security.rest;
 
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.JdbcUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.User;
 import com.fantasy.security.service.UserService;
 import junit.framework.Assert;
@@ -11,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
@@ -21,6 +24,8 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.util.ArrayList;
 
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -72,21 +77,29 @@ public class UserControllerTest {
     }
 
     public void testSave() throws Exception{
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/users").param("username","usertest").param("password","123456").param("roles[0].code","SYSTEM").param("enabled","true")).andDo(MockMvcResultHandlers.print()).andReturn();
+        User user = new User();
+        user.setUsername("usertest");
+        user.setPassword("123456");
+        user.setEnabled(true);
+        user.setRoles(new ArrayList<Role>());
+        Role role = new Role();
+        role.setCode("SYSTEM");
+        user.getRoles().add(role);
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/users").content(JSON.serialize(user)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
 
     @Test
     public void testUpdate() throws Exception{
-        User user = this.userService.findUniqueByUsername("usertest");
+        final User user = this.userService.findUniqueByUsername("usertest");
         if(user!=null){
-            final Long id  = user.getId();
+            user.setPassword("666666");
             MvcResult result = JdbcUtil.transaction(new JdbcUtil.Callback<MvcResult>() {
                 @Override
                 public MvcResult run() {
                     try {
-                        return mockMvc.perform(MockMvcRequestBuilders.put("/users/"+id).param("password","666666")).andDo(MockMvcResultHandlers.print()).andReturn();
+                        return mockMvc.perform(MockMvcRequestBuilders.put("/users/"+user.getId()).content(JSON.serialize(user)).contentType(MediaType.APPLICATION_JSON)).andDo(MockMvcResultHandlers.print()).andReturn();
                     } catch (Exception e) {
                         throw new IgnoreException(e.getMessage(), e);
                     }

@@ -54,7 +54,7 @@ public class RequestMatcherTest {
 
     @Test
     public void testOrRequestMatcher(){
-        OrRequestMatcher matcher = new OrRequestMatcher();
+        OrRequestMatcher matcher = new OrRequestMatcher(AnyRequestMatcher.INSTANCE);
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://192.168.1.24:8080");
         request.setServletPath("/memberes/123");
         LOG.debug(matcher.matches(request));
@@ -62,7 +62,7 @@ public class RequestMatcherTest {
 
     @Test
     public void testAndRequestMatcher(){
-        AndRequestMatcher matcher = new AndRequestMatcher();
+        AndRequestMatcher matcher = new AndRequestMatcher(AnyRequestMatcher.INSTANCE);
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://192.168.1.24:8080");
         request.setServletPath("/memberes/123");
         LOG.debug(matcher.matches(request));
@@ -70,7 +70,7 @@ public class RequestMatcherTest {
 
     @Test
     public void testELRequestMatcher(){
-        ELRequestMatcher matcher = new ELRequestMatcher(" getServletPath() == '/memberes/123' ");
+        ELRequestMatcher matcher = new ELRequestMatcher(" true ");
         MockHttpServletRequest request = new MockHttpServletRequest("GET","http://192.168.1.24:8080");
         request.setServletPath("/memberes/123");
         LOG.debug(matcher.matches(request));

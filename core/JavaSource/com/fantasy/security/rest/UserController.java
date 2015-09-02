@@ -6,6 +6,8 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.bean.User;
 import com.fantasy.security.service.UserService;
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -80,8 +82,10 @@ public class UserController {
      * @apiUse returnPager
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "查询用户", notes = "通过该接口, 筛选后台用户")
     @RequestMapping(method = RequestMethod.GET)
-    public Pager<User> search(Pager<User> pager, List<PropertyFilter> filters) {
+    @ResponseBody
+    public Pager<User> search(@ApiParam(value = "分页对象", name = "pager") Pager<User> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
         return this.userService.findPager(pager, filters);
     }
 
