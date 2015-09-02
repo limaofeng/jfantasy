@@ -114,7 +114,8 @@ public class MemberController {
      */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Member create(Member member) {
+    @ResponseBody
+    public Member create(@RequestBody Member member) {
         return memberService.save(member);
     }
 
@@ -133,6 +134,7 @@ public class MemberController {
      * @apiUse GeneralError
      */
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @ResponseBody
     public Member update(@PathVariable("id") Long id,@RequestBody Member member) {
         member.setId(id);
         return memberService.save(member);
