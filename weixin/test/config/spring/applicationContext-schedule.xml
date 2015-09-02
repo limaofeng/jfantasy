@@ -5,7 +5,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
        default-lazy-init="true">
 
-    <task:executor id="executor" pool-size="5" />
+    <task:executor id="executor" pool-size="10" />
 
     <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" init-method="start" destroy-method="destroy">
         <property name="autoStartup" value="false"/>
