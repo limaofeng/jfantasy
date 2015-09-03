@@ -5,18 +5,21 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.security.bean.enums.ResourceType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
 /**
- * 访问规则
+ * 资源
  *
  * @author 李茂峰
  * @version 1.0
  * @since 2014年4月23日 下午5:53:06
  */
+@ApiModel(value = "资源", description = "每个访问链接、方法、类，都可以抽象为一个资源")
 @Entity
 @Table(name = "AUTH_RESOURCE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parentResources", "userGroups", "roles"})
@@ -25,6 +28,7 @@ public class Resource extends BaseBusEntity implements Cloneable {
 
     private static final long serialVersionUID = -4031735792597359821L;
 
+    @ApiModelProperty("资源ID")
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -33,27 +37,32 @@ public class Resource extends BaseBusEntity implements Cloneable {
     /**
      * 资源名称
      */
+    @ApiModelProperty("资源名称")
     @Column(name = "NAME")
     private String name;
     /**
      * 资源值
      */
+    @ApiModelProperty("资源值")
     @Column(name = "VALUE")
     private String value;
     /**
      * 资源类型
      */
+    @ApiModelProperty("资源类型")
     @Column(name = "TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     private ResourceType type;
     /**
      * 是否启用
      */
+    @ApiModelProperty("是否启用")
     @Column(name = "ENABLED")
     private Boolean enabled;
     /**
      * 资源描述
      */
+    @ApiModelProperty("资源描述")
     @Column(name = "DESCRIPTION")
     private String description;
 

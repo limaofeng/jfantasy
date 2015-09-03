@@ -120,8 +120,10 @@ public class MenuService{
         return menu;
     }
 
-    public void delete(Long id) {
-        this.menuDao.delete(id);
+    public void delete(Long... ids) {
+        for (Long id : ids) {
+            this.menuDao.delete(id);
+        }
     }
 
     public Menu get(Long id) {
