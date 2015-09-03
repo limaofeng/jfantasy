@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class AccountWeiXinService implements AccountDetailsService {
+public class AccountService implements AccountDetailsService {
 
     @Autowired
     private AccountDao accountDao;

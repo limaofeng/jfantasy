@@ -3,9 +3,13 @@ package com.fantasy.wx.rest;
 import com.fantasy.wx.framework.core.Jsapi;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@Api(value = "weixin-jsapi", description = "微信 JS API")
 @RestController
 @RequestMapping("/weixin/jsapi")
 public class JsapiController {
@@ -30,8 +34,10 @@ public class JsapiController {
      * "error": "NoAccessRight"
      * }
      */
+    @ApiOperation(value = "获取 jsticket", notes = "获取微信的 jsticket", response = String.class)
     @RequestMapping(value = "/ticket", method = RequestMethod.GET)
     @ResponseBody
+    @ApiResponse(code = 200, message = "jsticket", response = String.class)
     public String getTicket() throws WeiXinException {
         Jsapi jsapi = weiXinSessionFactory.getCurrentSession().getJsapi();
         if (jsapi == null) {
@@ -63,6 +69,7 @@ public class JsapiController {
      * "error": "NoAccessRight"
      * }
      */
+    @ApiOperation(value = "获取 url 签名", notes = "获取 url 微信的 JSAPI 签名")
     @RequestMapping(value = "/signature", method = RequestMethod.GET)
     @ResponseBody
     public Jsapi.Signature signature(@RequestParam(value = "url") String url) throws WeiXinException {

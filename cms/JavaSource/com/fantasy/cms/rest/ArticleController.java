@@ -100,7 +100,7 @@ public class ArticleController {
      * @apiUse GeneralError
      */
     @ApiOperation(value = "添加文章", notes = "通过该接口, 添加文章", response = Article.class)
-    @RequestMapping(method = {RequestMethod.POST})
+    @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
     public Article create(@RequestBody Article article) {
@@ -121,7 +121,7 @@ public class ArticleController {
      * @apiUse GeneralError
      */
     @ApiOperation(value = "更新文章", notes = "通过该接口, 更新文章")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public Article update(@PathVariable("id") Long id, @RequestBody Article article) {
         article.setId(id);
         return this.cmsService.save(article);
@@ -139,7 +139,7 @@ public class ArticleController {
      * @apiUse GeneralError
      */
     @ApiOperation(value = "删除文章", notes = "通过该接口, 删除文章")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable("id") Long id) {
         this.cmsService.delete(id);
     }
@@ -157,7 +157,7 @@ public class ArticleController {
      * @apiUse GeneralError
      */
     @ApiOperation(value = "批量删除文章", notes = "通过该接口, 批量删除文章")
-    @RequestMapping(method = {RequestMethod.DELETE})
+    @RequestMapping(method = RequestMethod.DELETE)
     public void delete(@RequestBody Long... id) {
         this.cmsService.delete(id);
     }
