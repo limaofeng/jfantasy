@@ -7,6 +7,8 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ import java.util.List;
 /**
  * 数据字典分类表
  */
+@ApiModel(value = "数据字典分类")
 @Entity
 @Table(name = "SYS_DD_TYPE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "dataDictionaries"})
@@ -27,44 +30,51 @@ public class DataDictionaryType extends BaseBusEntity {
     /**
      * 代码
      */
+    @ApiModelProperty("代码")
     @Id
     @Column(name = "CODE", length = 20)
     private String code;
     /**
      * 名称
      */
+    @ApiModelProperty("名称")
     @Column(name = "NAME", length = 200)
     private String name;
-    @Column(name = "LAYER", nullable = false)
     /**
      * 层级
      */
+    @ApiModelProperty("层级")
+    @Column(name = "LAYER", nullable = false)
     private Integer layer;
     /**
      *
      */
+    @ApiModelProperty("路径")
     @Column(name = "PATH", nullable = false, length = 200)
     private String path;
     /**
      * 排序字段
      */
+    @ApiModelProperty("排序字段")
     @Column(name = "SORT")
     private Integer sort;
     /**
      * 描述
      */
+    @ApiModelProperty("描述")
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
-
+    @ApiModelProperty(hidden = true)
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime desc")
     @JoinColumn(name = "TYPE", foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE"))
     private List<DataDictionary> dataDictionaries;
-
     /**
      * 上级数据字典
      */
-    @JsonIgnore
+    @ApiModelProperty("上级数据字典分类")
+    @JsonProperty("parentCode")
+    @JsonSerialize(using = DataDictionaryTypeParentSerialize.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "PCODE", foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE_PID"))
     @JsonManagedReference
@@ -72,6 +82,7 @@ public class DataDictionaryType extends BaseBusEntity {
     /**
      * 下级数据字典
      */
+    @ApiModelProperty(hidden = true)
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
@@ -102,8 +113,6 @@ public class DataDictionaryType extends BaseBusEntity {
         this.description = description;
     }
 
-    @JsonProperty("parentCode")
-    @JsonSerialize(using = DataDictionaryTypeParentSerialize.class)
     public DataDictionaryType getParent() {
         return parent;
     }

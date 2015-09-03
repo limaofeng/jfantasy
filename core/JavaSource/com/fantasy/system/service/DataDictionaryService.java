@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -207,6 +208,14 @@ public class DataDictionaryService implements InitializingBean {
         for (DataDictionaryKey key : keys) {
             this.dataDictionaryDao.delete(this.get(key));
         }
+    }
+
+    public void delete(String... keys) {
+        List<DataDictionaryKey> dataDictionaryKeys = new ArrayList<DataDictionaryKey>();
+        for (String key : keys) {
+            dataDictionaryKeys.add(new DataDictionaryKey(key));
+        }
+        this.delete(dataDictionaryKeys.toArray(new DataDictionaryKey[dataDictionaryKeys.size()]));
     }
 
     public void deleteType(String... codes) {
