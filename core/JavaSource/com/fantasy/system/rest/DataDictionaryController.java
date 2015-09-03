@@ -7,6 +7,7 @@ import com.fantasy.system.bean.DataDictionaryKey;
 import com.fantasy.system.service.DataDictionaryService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -46,7 +47,7 @@ public class DataDictionaryController {
      * curl -i -X POST -d "code=sex&type=usersex..." http://localhost/dds
      * @apiUse GeneralError
      */
-    @ApiOperation(value = "添加数据项", notes = "通过该接口, 可以添加新的数据项。",response = DataDictionary.class)
+    @ApiOperation(value = "添加数据项", notes = "通过该接口, 可以添加新的数据项。", response = DataDictionary.class)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -65,8 +66,9 @@ public class DataDictionaryController {
      * curl -i http://localhost/dds/usersex:female
      * @apiUse GeneralError
      */
-    @ApiOperation(value = "获取数据项", notes = "通过该接口, 可以添加新的数据项。",response = DataDictionary.class)
+    @ApiOperation(value = "获取数据项", notes = "通过该接口, 可以添加新的数据项。", response = DataDictionary.class)
     @RequestMapping(value = "/{type}:{code}", method = RequestMethod.GET)
+    @ResponseBody
     public DataDictionary view(@PathVariable("type") String type, @PathVariable("code") String code) {
         return this.dataDictionaryService.get(DataDictionaryKey.newInstance(code, type));
     }
@@ -82,9 +84,10 @@ public class DataDictionaryController {
      * curl -i http://localhost/dds?currentPage=1&EQS_code=usersex
      * @apiUse GeneralError
      */
-    @ApiOperation(value = "查询数据字典", notes = "通过该接口, 可以筛选需要的数据字典项。",response = Pager.class)
+    @ApiOperation(value = "查询数据字典", notes = "通过该接口, 可以筛选需要的数据字典项。")
     @RequestMapping(method = RequestMethod.GET)
-    public Pager<DataDictionary> search(Pager<DataDictionary> pager, List<PropertyFilter> filters) {
+    @ResponseBody
+    public Pager<DataDictionary> search(@ApiParam(value = "分页对象", name = "pager") Pager<DataDictionary> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
         return this.dataDictionaryService.findPager(pager, filters);
     }
 
