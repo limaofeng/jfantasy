@@ -1,5 +1,7 @@
 package com.fantasy.framework.dao;
 
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Temporal;
@@ -13,22 +15,26 @@ public abstract class BaseBusEntity implements Serializable {
     /**
      * 创建人
      */
+    @ApiModelProperty(hidden = true)
     @Column(updatable = false, name = "CREATOR", length = 20)
     private String creator;
     /**
      * 创建时间
      */
+    @ApiModelProperty(hidden = true)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false, name = "CREATE_TIME")
     private Date createTime;
     /**
      * 最后修改人
      */
+    @ApiModelProperty(hidden = true)
     @Column(name = "MODIFIER", length = 20)
     private String modifier;
     /**
      * 最后修改时间
      */
+    @ApiModelProperty(hidden = true)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFY_TIME")
     private Date modifyTime;

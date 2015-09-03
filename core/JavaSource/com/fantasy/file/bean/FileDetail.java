@@ -3,6 +3,8 @@ package com.fantasy.file.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -12,6 +14,7 @@ import javax.persistence.*;
  *
  * @author 软件
  */
+@ApiModel(value = "文件信息", description = "上传文件的详细信息")
 @Entity
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEDETAIL")
@@ -24,48 +27,58 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
     /**
      * 虚拟文件路径
      */
+    @ApiModelProperty(value = "文件访问路径")
     @Id
     private String absolutePath;
+    @ApiModelProperty(hidden = true)
     @Id
     private String fileManagerId;
     /**
      * 文件名称
      */
+    @ApiModelProperty(value = "文件名")
     @Column(name = "FILE_NAME", length = 150)
     private String fileName;
     /**
      * 文件后缀名
      */
+    @ApiModelProperty(value = "文件后缀名")
     @Column(name = "EXT", length = 20)
     private String ext;
     /**
      * 文件类型
      */
+    @ApiModelProperty(value = "文件类型")
     @Column(name = "CONTENT_TYPE", length = 50)
     private String contentType;
     /**
      * 描述
      */
+    @ApiModelProperty(value = "描述")
     @Column(name = "DESCRIPTION", length = 250)
     private String description;
     /**
      * 文件长度
      */
+    @ApiModelProperty(value = "文件长度")
     @Column(name = "LENGTH")
     private Long size;
     /**
      * 文件MD5码
      */
+    @ApiModelProperty(value = "文件MD5码")
     @Column(name = "MD5", length = 50)
     private String md5;
     /**
      * 文件真实路径
      */
+    @ApiModelProperty(hidden = true)
     @Column(name = "REAL_PATH", length = 250)
     private String realPath;
     /**
      * 文件夹
      */
+    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = {@JoinColumn(name = "FOLDER_PATH", referencedColumnName = "ABSOLUTE_PATH"), @JoinColumn(name = "FOLDER_MANAGER_CONFIG_ID", referencedColumnName = "FILE_MANAGER_CONFIG_ID")})
     private Folder folder;

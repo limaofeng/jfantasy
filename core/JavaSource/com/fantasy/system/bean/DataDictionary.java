@@ -54,7 +54,7 @@ public class DataDictionary extends BaseBusEntity {
      * 上级数据字典
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {javax.persistence.CascadeType.REFRESH})
-    @JoinColumns(value = {@JoinColumn(name = "PCODE", referencedColumnName = "CODE"), @JoinColumn(name = "PTYPE", referencedColumnName = "TYPE")},foreignKey = @ForeignKey(name = "FK_SYS_DD_PARENT"))
+    @JoinColumns(value = {@JoinColumn(name = "PCODE", referencedColumnName = "CODE"), @JoinColumn(name = "PTYPE", referencedColumnName = "TYPE")}, foreignKey = @ForeignKey(name = "FK_SYS_DD_PARENT"))
     private DataDictionary parent;
     /**
      * 下级数据字典
@@ -146,7 +146,7 @@ public class DataDictionary extends BaseBusEntity {
                 }
             } catch (Exception e) {
                 jgen.writeString("");
-                throw new IgnoreException(e.getMessage(),e);
+                throw new IgnoreException(e.getMessage(), e);
             }
         }
 

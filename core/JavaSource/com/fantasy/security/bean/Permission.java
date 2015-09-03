@@ -2,11 +2,13 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.security.bean.enums.PermissionType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -17,13 +19,14 @@ import org.springframework.security.web.util.matcher.RequestMatcher;
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicReference;
 
+@ApiModel(value = "权限配置", description = "权限配置信息")
 @Entity
 @Table(name = "AUTH_PERMISSION")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "roles"})
 public class Permission extends BaseBusEntity implements Cloneable {
 
+    @ApiModelProperty("权限ID")
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -32,44 +35,52 @@ public class Permission extends BaseBusEntity implements Cloneable {
     /**
      * 权限名称
      */
+    @ApiModelProperty("权限名称")
     @Column(name = "NAME")
     private String name;
     /**
-     * 资源类型
+     * 权限类型
      */
+    @ApiModelProperty("权限规则类型")
     @Column(name = "TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     private PermissionType type;
     /**
      * 配置规则
      */
+    @ApiModelProperty(hidden = true)
     @Column(name = "VALUE")
     private String value;
     /**
      * 是否启用
      */
+    @ApiModelProperty("是否启用")
     @Column(name = "ENABLED")
     private Boolean enabled;
     /**
      * 资源描述
      */
+    @ApiModelProperty("资源描述")
     @Column(name = "DESCRIPTION")
     private String description;
     /**
      * 对应的资源
      */
+    @ApiModelProperty(value = "对应的资源")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESOURCE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_MENU_PID"))
     private Resource resource;
     /**
      * 用户组
      */
+    @ApiModelProperty(hidden = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_USERGROUP_RESOURCE", joinColumns = @JoinColumn(name = "RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"))
     public List<UserGroup> userGroups;
     /**
      * 角色
      */
+    @ApiModelProperty(hidden = true)
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_ROLE_RESOURCE", joinColumns = @JoinColumn(name = "RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"))
     private List<Role> roles;
@@ -153,24 +164,26 @@ public class Permission extends BaseBusEntity implements Cloneable {
         return ObjectUtil.defaultValue(this.enabled, Boolean.FALSE);
     }
 
-    @JsonIgnore
-    public String getRoleAuthorities() {
-        AtomicReference<StringBuffer> roleAuthorities = new AtomicReference<StringBuffer>(new StringBuffer());
-
-        return RegexpUtil.replace(roleAuthorities.get().toString(), ",$", "");
+    @ApiModelProperty("权限规则类型")
+    public PermissionRule[] getPermissionRules() {
+        if (StringUtil.isBlank(this.getValue())) {
+            return new PermissionRule[0];
+        }
+        return JSON.deserialize(this.getValue(), PermissionRule[].class);
     }
 
     @JsonIgnore
     @Transient
+    @ApiModelProperty(hidden = true)
     public RequestMatcher getRequestMatcher() {
+        PermissionRule[] permissionRules = getPermissionRules();
         if (this.getType() == PermissionType.and || this.getType() == PermissionType.or) {
-            PermissionRule[] permissionRules = JSON.deserialize(this.getValue(), PermissionRule[].class);
             if (permissionRules == null || permissionRules.length == 0) {
                 return null;
             }
             return new AndRequestMatcher(getRequestMatcher());
         } else {
-            PermissionRule permissionRule = JSON.deserialize(this.getValue(), PermissionRule.class);
+            PermissionRule permissionRule = permissionRules[0];
             if (permissionRule == null) {
                 return null;
             }
@@ -178,11 +191,13 @@ public class Permission extends BaseBusEntity implements Cloneable {
         }
     }
 
+    @ApiModelProperty(hidden = true)
     public static List<RequestMatcher> getRequestMatcher(PermissionRule[] permissionRules) {
         List<RequestMatcher> requestMatchers = new ArrayList<RequestMatcher>();
         return null;
     }
 
+    @ApiModelProperty(hidden = true)
     @JsonIgnore
     @Transient
     public List<ConfigAttribute> getAuthorities() {
@@ -203,7 +218,6 @@ public class Permission extends BaseBusEntity implements Cloneable {
         }
         return configAttributes;
     }
-
 
     @Override
     public Object clone() throws CloneNotSupportedException {
