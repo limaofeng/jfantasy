@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -24,6 +25,7 @@ import java.util.List;
  * @version 1.0
  * @since 2012-11-4 下午05:46:57
  */
+@ApiModel("文章分类")
 @Entity
 @Table(name = "CMS_ARTICLE_CATEGORY")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "articles", "children", "articleVersion"})
@@ -40,31 +42,37 @@ public class ArticleCategory extends BaseBusEntity {
     /**
      * 栏目名称
      */
+    @ApiModelProperty("名称")
     @Column(name = "NAME", length = 200)
     @IndexProperty(analyze = true)
     private String name;
     /**
      * 层级
      */
+    @ApiModelProperty("层级")
     @Column(name = "LAYER", nullable = false)
     private Integer layer;
     // 树路径
+    @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
     @IndexEmbedBy(value = Article.class)
     @Column(name = "PATH", nullable = false, length = 3000)
     private String path;
     /**
      * 描述
      */
+    @ApiModelProperty("描述")
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
     /**
      * 排序字段
      */
+    @ApiModelProperty("排序字段")
     @Column(name = "SORT")
     private Integer sort;
     /**
      * 上级栏目
      */
+    @ApiModelProperty("上级分类")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PCODE", foreignKey = @ForeignKey(name = "FK_CMS_CATEGORY_PARENT"))
     private ArticleCategory parent;
@@ -87,6 +95,7 @@ public class ArticleCategory extends BaseBusEntity {
     /**
      * 文章
      */
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "category", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Article> articles;
 

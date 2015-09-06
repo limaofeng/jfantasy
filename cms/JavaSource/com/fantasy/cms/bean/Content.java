@@ -5,6 +5,7 @@ import com.fantasy.system.util.SettingUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.wordnik.swagger.annotations.ApiModel;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
@@ -17,6 +18,7 @@ import java.io.IOException;
  * @version 1.0
  * @since 2012-11-4 下午05:47:36
  */
+@ApiModel(value = "内容表", description = "用于分离大的文本对象,例如文章的正文")
 @Entity
 @Table(name = "CMS_CONTENT")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

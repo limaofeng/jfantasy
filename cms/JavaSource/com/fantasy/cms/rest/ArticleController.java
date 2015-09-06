@@ -86,6 +86,13 @@ public class ArticleController {
         return this.cmsService.get(id);
     }
 
+    @ApiOperation(value = "获取文章正文", notes = "通过文章ID, 获取文章正文,由于正文可能比较大，所以单独写了一个接口", response = String.class)
+    @RequestMapping(value = "/{id}/content", method = RequestMethod.GET)
+    @ResponseBody
+    public String viewContent(@PathVariable("id") Long id) {
+        return this.cmsService.get(id).getContent().getText();
+    }
+
     /**
      * @api {post} /cms/articles   添加文章
      * @apiVersion 3.3.8
