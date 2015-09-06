@@ -104,6 +104,13 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     @PrimaryKeyJoinColumn
     private MemberDetails details;
 
+    public Member() {
+    }
+
+    public Member(Long id) {
+        this.id = id;
+    }
+
     /**
      * 收藏
      *
