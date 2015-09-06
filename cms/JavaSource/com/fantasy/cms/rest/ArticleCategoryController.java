@@ -1,5 +1,6 @@
 package com.fantasy.cms.rest;
 
+import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
@@ -163,6 +164,14 @@ public class ArticleCategoryController {
     public ArticleCategory update(@PathVariable("code") String code, @RequestBody ArticleCategory category) {
         category.setCode(code);
         return this.cmsService.save(category);
+    }
+
+    @ApiOperation(value = "查询文章分类下的文章", notes = "通过该接口, 获取分类下的文章")
+    @RequestMapping(value = "/{code}/articles", method = RequestMethod.GET)
+    @ResponseBody
+    public Pager<Article> articles(@PathVariable("code") String code, Pager<Article> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQS_category.code", code));
+        return this.cmsService.findPager(pager, filters);
     }
 
 }

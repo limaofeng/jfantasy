@@ -39,13 +39,6 @@ public class RoleController {
         return roleService.get(code);
     }
 
-    @ApiOperation(value = "返回角色权限", notes = "返回角色对应的操作权限", response = Permission[].class)
-    @RequestMapping(value = "/{code}/permissions", method = {RequestMethod.GET})
-    @ResponseBody
-    public List<Permission> permissions(@PathVariable("code") String code) {
-        return permissionService.find(Restrictions.eq("roles.code", code));
-    }
-
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -70,6 +63,20 @@ public class RoleController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody String... codes) {
         this.roleService.delete(codes);
+    }
+
+    @ApiOperation(value = "返回角色权限", notes = "返回角色对应的操作权限", response = Permission[].class)
+    @RequestMapping(value = "/{code}/permissions", method = {RequestMethod.GET})
+    @ResponseBody
+    public List<Permission> permissions(@PathVariable("code") String code) {
+        return permissionService.find(Restrictions.eq("roles.code", code));
+    }
+
+    @ApiOperation(value = "为角色添加权限", notes = "为角色添加操作权限,返回权限详细信息")
+    @RequestMapping(value = "/{code}/permissions", method = {RequestMethod.POST})
+    @ResponseBody
+    public List<Permission> permissions(@PathVariable("code") String code,@RequestBody Long... permissionId) {
+        throw new RuntimeException("该方法未实现!");
     }
 
 }

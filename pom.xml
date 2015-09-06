@@ -1111,20 +1111,20 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
-        <module>core-web</module>
+        <!--<module>core-web</module>-->
         <module>cache</module>
         <module>mall</module>
-        <module>mall-web</module>
+        <!--<module>mall-web</module>-->
         <module>cms</module>
-        <module>cms-web</module>
+        <!--<module>cms-web</module>-->
         <module>question</module>
-        <module>question-web</module>
+        <!--<module>question-web</module>-->
         <module>websocket</module>
         <module>weixin</module>
-        <module>weixin-web</module>
+        <!--<module>weixin-web</module>-->
         <module>aliyun-oss</module>
-        <!--
         <module>website</module>
+        <!--
         <module>website-web</module>
         -->
         <module>javaweb</module>

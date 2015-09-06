@@ -5,6 +5,7 @@ import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.user.User;
 import com.fantasy.wx.service.UserInfoWeiXinService;
+import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +30,7 @@ import java.io.IOException;
  * @apiSuccess {String}     subscribe           是否订阅该公众号标识，值为0时，代表此没有关注该公众号，拉取不到其余信息。
  * @apiVersion 3.3.8
  */
+@Api(value = "微信用户(粉丝)接口", description = "微信用户(粉丝)接口")
 @RestController("weixin.UserController")
 @RequestMapping("/weixin/user")
 public class UserController {

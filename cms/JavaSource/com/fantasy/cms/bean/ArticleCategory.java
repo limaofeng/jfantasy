@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -70,6 +71,7 @@ public class ArticleCategory extends BaseBusEntity {
     /**
      * 下级栏目
      */
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -77,6 +79,7 @@ public class ArticleCategory extends BaseBusEntity {
     /**
      * 属性版本表
      */
+    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ARTICLE_VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY_VERSION"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

@@ -1,11 +1,14 @@
 package com.fantasy.mall.member.bean;
 
 import com.fantasy.common.bean.Area;
+import com.fantasy.common.bean.databind.AreaDeserialize;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,7 +18,6 @@ import javax.persistence.*;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-9-16 下午4:16:02
  */
 @Entity
@@ -41,6 +43,9 @@ public class Receiver extends BaseBusEntity {
      */
     @Column(name = "AREA_STORE", length = 300, nullable = false)
     private String areaStore;
+    @JsonDeserialize(using = AreaDeserialize.class)
+    @Transient
+    private Area area;
     /**
      * 收货地址
      */
@@ -70,7 +75,7 @@ public class Receiver extends BaseBusEntity {
      * 地址对应的用户信息
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "MEMBER_ID", nullable = false,foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
+    @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
 
     private Member member;
 
@@ -150,29 +155,25 @@ public class Receiver extends BaseBusEntity {
     /**
      * 获取地区
      *
-     * @return
-     * @功能描述
+     * @return 地区信息
      */
-    @Transient
     public Area getArea() {
-        if (StringUtil.isBlank(this.areaStore)) {
+        if (StringUtil.isBlank(this.areaStore) && area == null) {
             return null;
         }
-        return JSON.deserialize(this.areaStore, Area.class);
+        return ObjectUtil.defaultValue(area, area = JSON.deserialize(this.areaStore, Area.class));
     }
 
     /**
      * 设置地区
      *
-     * @param area
-     * @功能描述
+     * @param area 地区
      */
-    @Transient
     public void setArea(Area area) {
         if (area == null) {
             this.areaStore = null;
             return;
         }
-        this.areaStore = JSON.serialize(area);
+        this.areaStore = JSON.serialize(this.area = area);
     }
 }
