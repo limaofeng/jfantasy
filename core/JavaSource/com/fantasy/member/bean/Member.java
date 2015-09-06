@@ -27,7 +27,7 @@ import java.util.List;
 @ApiModel("会员信息")
 @Entity
 @Table(name = "MEM_MEMBER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "orders", "userGroups", "roles"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "orders", "userGroups", "roles", "authorities"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity implements FantasyUserDetails {
 
