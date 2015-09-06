@@ -8,6 +8,7 @@ import com.fantasy.wx.framework.message.WeiXinMessage;
 import com.fantasy.wx.framework.session.WeiXinSession;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
+import com.wordnik.swagger.annotations.ApiResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -47,6 +48,7 @@ public class MessageController {
      * @apiUse WeiXinMessage
      */
     @ApiOperation(value = "微信消息接口", notes = "接口接收微信公众平台推送的微信消息及事件,直接调用无效")
+    @ApiResponse(code = 200, message = "OK", response = WeiXinMessage.class)
     @RequestMapping(value = "/{appid}/push", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String push(@PathVariable String appid, HttpServletRequest request) throws IOException {

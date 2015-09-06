@@ -1,10 +1,14 @@
 package com.fantasy.wx.framework.message;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 
 /**
  * 微信消息接口
  */
+@ApiModel(value = "微信消息接口")
 public interface WeiXinMessage<T> {
 
     /**
@@ -12,6 +16,7 @@ public interface WeiXinMessage<T> {
      *
      * @return id
      */
+    @ApiModelProperty("消息id，64位整型")
     Long getId();
 
     /**
@@ -19,6 +24,7 @@ public interface WeiXinMessage<T> {
      *
      * @return String
      */
+    @ApiModelProperty("发送方帐号（一个OpenID/微信原始ID）")
     String getFromUserName();
 
     /**
@@ -26,6 +32,7 @@ public interface WeiXinMessage<T> {
      *
      * @return date
      */
+    @ApiModelProperty("消息创建时间")
     Date getCreateTime();
 
     /**
@@ -33,6 +40,7 @@ public interface WeiXinMessage<T> {
      *
      * @return T
      */
+    @ApiModelProperty(value = "微信内容", dataType = "具体类型参考其实现类")
     T getContent();
 
     /**
@@ -40,6 +48,7 @@ public interface WeiXinMessage<T> {
      *
      * @return String
      */
+    @ApiModelProperty("接收方帐号（一个OpenID/微信原始ID）")
     String getToUserName();
 
 }
