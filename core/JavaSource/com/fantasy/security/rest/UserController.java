@@ -102,9 +102,9 @@ public class UserController {
      * @apiUse returnUser
      * @apiUse GeneralError
      */
-    @RequestMapping(value = "/{username}", method = RequestMethod.GET)
-    public User view(@PathVariable("username") String username) {
-        return this.userService.findUniqueByUsername(username);
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public User view(@PathVariable("id") Long id) {
+        return this.userService.get(id);
     }
 
     /**
