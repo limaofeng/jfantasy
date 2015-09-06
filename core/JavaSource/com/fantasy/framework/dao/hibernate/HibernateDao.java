@@ -644,8 +644,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     @SuppressWarnings("unchecked")
     protected void changePropertyName(Criteria criteria, Set<String> alias, Criterion c) {
         if (c instanceof Disjunction) {
-            List<Criterion> criterions = ReflectionUtils.getFieldValue(c, "conditions");
-            for (Criterion criterion : criterions) {
+            for (Criterion criterion : ((Disjunction) c).conditions()) {
                 changePropertyName(criteria, alias, criterion);
             }
         } else if (c instanceof SQLCriterion) {
@@ -730,7 +729,6 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         pager.setPageItems(distinct(q).list());
         return pager;
     }
-
 
 
     /**

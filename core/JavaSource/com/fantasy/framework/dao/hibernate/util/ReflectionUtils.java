@@ -95,7 +95,7 @@ public class ReflectionUtils {
             try {
                 return superClass.getDeclaredField(fieldName);
             } catch (NoSuchFieldException localNoSuchFieldException) {
-                LOGGER.error(localNoSuchFieldException.getMessage(), localNoSuchFieldException);
+                LOGGER.debug(localNoSuchFieldException.getMessage());
                 superClass = superClass.getSuperclass();
             }
         }
