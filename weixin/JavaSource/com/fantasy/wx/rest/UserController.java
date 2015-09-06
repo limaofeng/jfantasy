@@ -5,6 +5,7 @@ import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.user.User;
 import com.fantasy.wx.service.UserInfoWeiXinService;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -48,6 +49,7 @@ public class UserController {
      * @apiUse UserInfo
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "获取微信粉丝", notes = "通过粉丝ID获取关注的用户信息")
     @RequestMapping(value = "/{openid}", method = RequestMethod.GET)
     public UserInfo getUser(@PathVariable String openid, HttpServletResponse response) throws WeiXinException, IOException {
         UserInfo userInfo = userInfoWeiXinService.checkCreateMember(openid);
@@ -71,6 +73,7 @@ public class UserController {
      * @apiError WeiXinError    微信端抛出异常,对应 response status <code>403</code>
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "通过 oauth2 code 获取微信粉丝", notes = "通过 oauth2 code 获取关注的用户信息")
     @RequestMapping(value = "/oauth2/{code}", method = RequestMethod.GET)
     public UserInfo getUserByAuthorizedCode(@PathVariable String code, HttpServletResponse response) throws WeiXinException, IOException {
         User user = WeiXinSessionUtils.getCurrentSession().getOauth2User(code);
