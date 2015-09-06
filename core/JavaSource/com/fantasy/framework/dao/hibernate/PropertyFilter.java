@@ -5,6 +5,8 @@ import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
@@ -20,13 +22,19 @@ import java.util.concurrent.atomic.AtomicReference;
  * @apiParam {PropertyFilter} filters  参数格式为:EQS_title=测试
  * @apiVersion 3.3.8
  */
+@ApiModel("通用过滤器")
 public class PropertyFilter {
     public static final String OR_SEPARATOR = "_OR_";
-    private String[] propertyNames = null;
-    private Class<?> propertyType = null;
-    private Object propertyValue = null;
-    private MatchType matchType = null;
-    private String filterName = null;
+    @ApiModelProperty("名称")
+    private String[] propertyNames;
+    @ApiModelProperty("类型")
+    private Class<?> propertyType;
+    @ApiModelProperty("值")
+    private Object propertyValue;
+    @ApiModelProperty("过滤类型")
+    private MatchType matchType;
+    @ApiModelProperty("完整表达式")
+    private String filterName;
 
     public PropertyFilter(String filterName) {
         this.filterName = filterName;

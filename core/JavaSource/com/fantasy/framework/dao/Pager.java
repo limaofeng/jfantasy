@@ -2,6 +2,8 @@ package com.fantasy.framework.dao;
 
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -28,35 +30,43 @@ import java.util.List;
  * @apiSuccess {List} pageItems 当页数据集合
  * @apiVersion 3.3.8
  */
+@ApiModel("通用分页对象")
 public class Pager<T> implements Serializable {
 
     private static final long serialVersionUID = -2343309063338998483L;
     /**
      * 最大数据条数
      */
+    @ApiModelProperty("最大数据条数")
     private int totalCount = 0;
     /**
      * 每页显示的数据条数
      */
+    @ApiModelProperty("每页显示的数据条数")
     private int pageSize = 0;
     /**
      * 总页数
      */
+    @ApiModelProperty("总页数")
     private int totalPage = 1;
     /**
      * 当前页码
      */
+    @ApiModelProperty("当前页码")
     private int currentPage = 1;
     /**
      * 开始数据索引
      */
+    @ApiModelProperty(hidden = true)
     private int first = 0;
     /**
      * 排序字段
      */
+    @ApiModelProperty("排序字段")
     private String orderBy;
+    @ApiModelProperty("排序方向")
     private Order[] orders = new Order[]{Order.asc};
-
+    @ApiModelProperty("返回的数据集")
     private List<T> pageItems;
 
     public Pager() {
@@ -215,6 +225,7 @@ public class Pager<T> implements Serializable {
         this.setOrders(order);
     }
 
+    @ApiModelProperty("是否启用排序")
     public boolean isOrderBySetted() {
         return (StringUtils.isNotBlank(this.orderBy)) && (ObjectUtil.isNotNull(orders));
     }

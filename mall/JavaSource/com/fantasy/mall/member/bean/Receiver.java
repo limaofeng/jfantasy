@@ -1,14 +1,15 @@
 package com.fantasy.mall.member.bean;
 
 import com.fantasy.common.bean.Area;
-import com.fantasy.common.bean.databind.AreaDeserialize;
+import com.fantasy.common.bean.databind.AreaDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -20,6 +21,7 @@ import javax.persistence.*;
  * @version 1.0
  * @since 2013-9-16 下午4:16:02
  */
+@ApiModel("收货地址信息")
 @Entity
 @Table(name = "MALL_MEM_RECEIVER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "areaStore", "member"})
@@ -36,47 +38,51 @@ public class Receiver extends BaseBusEntity {
     /**
      * 收货人姓名
      */
+    @ApiModelProperty("收货人姓名")
     @Column(name = "NAME", length = 20, nullable = false)
     private String name;
     /**
      * 地区存储
      */
+    @ApiModelProperty(hidden = true)
     @Column(name = "AREA_STORE", length = 300, nullable = false)
     private String areaStore;
-    @JsonDeserialize(using = AreaDeserialize.class)
-    @Transient
-    private Area area;
     /**
      * 收货地址
      */
+    @ApiModelProperty("收货地址")
     @Column(name = "ADDRESS", length = 200, nullable = false)
     private String address;
     /**
      * 邮政编码
      */
+    @ApiModelProperty("邮政编码")
     @Column(name = "ZIP_CODE", length = 200, nullable = false)
     private String zipCode;
     /**
      * 电话
      */
+    @ApiModelProperty("电话")
     @Column(name = "PHONE", length = 200, nullable = false)
     private String phone;
     /**
      * 手机
      */
+    @ApiModelProperty("手机")
     @Column(name = "MOBILE", length = 200, nullable = false)
     private String mobile;
     /**
      * 是否为默认地址
      */
+    @ApiModelProperty("是否为默认地址")
     @Column(name = "IS_DEFAULT", nullable = false)
     private Boolean isDefault = false;// 是否默认
     /**
      * 地址对应的用户信息
      */
+    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
-
     private Member member;
 
     public Long getId() {
@@ -157,11 +163,12 @@ public class Receiver extends BaseBusEntity {
      *
      * @return 地区信息
      */
+    @ApiModelProperty("地区存储")
     public Area getArea() {
-        if (StringUtil.isBlank(this.areaStore) && area == null) {
+        if (StringUtil.isBlank(this.areaStore)) {
             return null;
         }
-        return ObjectUtil.defaultValue(area, area = JSON.deserialize(this.areaStore, Area.class));
+        return JSON.deserialize(this.areaStore, Area.class);
     }
 
     /**
@@ -169,11 +176,12 @@ public class Receiver extends BaseBusEntity {
      *
      * @param area 地区
      */
+    @JsonDeserialize(using = AreaDeserializer.class)
     public void setArea(Area area) {
         if (area == null) {
             this.areaStore = null;
             return;
         }
-        this.areaStore = JSON.serialize(this.area = area);
+        this.areaStore = JSON.serialize(area);
     }
 }

@@ -6,6 +6,8 @@ import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.UserGroup;
 import com.fantasy.security.userdetails.FantasyUserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,9 +24,10 @@ import java.util.List;
  * @version 1.0
  * @since 2013-9-22 上午11:25:14
  */
+@ApiModel("会员信息")
 @Entity
 @Table(name = "MEM_MEMBER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "orders", "userGroups", "roles", "authorities", "favoriteGoods", "receivers"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "orders", "userGroups", "roles"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity implements FantasyUserDetails {
 
@@ -38,68 +41,75 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     /**
      * 用户登录名称
      */
+    @ApiModelProperty("登录名称")
     @Column(name = "USERNAME", length = 20, nullable = false, unique = true)
     private String username;
     /**
      * 登录密码
      */
+    @ApiModelProperty("登录密码")
     @Column(name = "PASSWORD", length = 20, nullable = false)
     private String password;
     /**
      * 用户显示昵称
      */
+    @ApiModelProperty("显示昵称")
     @Column(name = "NICK_NAME", length = 50)
     private String nickName;
-
     /**
      * 是否启用
      */
+    @ApiModelProperty("是否启用")
     @Column(name = "ENABLED")
     private boolean enabled;
-
     /**
      * 未过期
      */
+    @ApiModelProperty("未过期")
     @Column(name = "NON_EXPIRED")
     private boolean accountNonExpired;
     /**
      * 未锁定
      */
+    @ApiModelProperty("未锁定")
     @Column(name = "NON_LOCKED")
     private boolean accountNonLocked;
     /**
      * 未失效
      */
+    @ApiModelProperty("未失效")
     @Column(name = "CREDENTIALS_NON_EXPIRED")
     private boolean credentialsNonExpired;
     /**
      * 锁定时间
      */
+    @ApiModelProperty("锁定时间")
     @Column(name = "LOCK_TIME")
     private Date lockTime;
     /**
      * 最后登录时间
      */
+    @ApiModelProperty("最后登录时间")
     @Column(name = "LAST_LOGIN_TIME")
     private Date lastLoginTime;
-
     /**
      * 关联用户组
      */
+    @ApiModelProperty(hidden = true)
     @ManyToMany(targetEntity = UserGroup.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_USERGROUP_MEMBER", joinColumns = @JoinColumn(name = "MEMBER_ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"), foreignKey = @ForeignKey(name = "FK_USERGROUP_MEMBER_MEM"))
     private List<UserGroup> userGroups;
-
     /**
      * 关联角色
      */
+    @ApiModelProperty(hidden = true)
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_ROLE_MEMBER", joinColumns = @JoinColumn(name = "MEMBER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_MEMBER_MID"))
     private List<Role> roles;
-
     /**
      * 会员其他信息
      */
+    @ApiModelProperty("会员详细信息")
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     private MemberDetails details;
@@ -110,17 +120,6 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     public Member(Long id) {
         this.id = id;
     }
-
-    /**
-     * 收藏
-     *
-     * @ManyToMany(fetch = FetchType.LAZY)
-     * @ForeignKey(name = "FK_GOODS_FAVORITE_MEMBER")
-     * @JoinTable(name = "MALL_FAVORITE_MEMBER", joinColumns = @JoinColumn(name = "MEMBER_ID"), inverseJoinColumns = @JoinColumn(name = "GOODS_ID"))
-     * private List<Goods> favoriteGoods;
-     * @OneToMany(mappedBy = "member", fetch = FetchType.LAZY, cascade = { CascadeType.REMOVE })
-     * private List<Receiver> receivers;
-     */
 
     public Long getId() {
         return id;

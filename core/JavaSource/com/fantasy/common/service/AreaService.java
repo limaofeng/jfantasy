@@ -83,7 +83,7 @@ public class AreaService{
     }
 
     @CacheEvict(value = {"fantasy.common.AreaService"}, allEntries = true)
-    public void delete(String[] ids) {
+    public void delete(String... ids) {
         for (String id : ids) {
             this.areaDao.delete(id);
         }

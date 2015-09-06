@@ -10,9 +10,9 @@ import com.fasterxml.jackson.databind.JsonDeserializer;
 
 import java.io.IOException;
 
-public class AreaDeserialize extends JsonDeserializer<Area> {
+public class AreaDeserializer extends JsonDeserializer<Area> {
 
-    public static AreaService areaService;
+    private static AreaService areaService;
 
     @Override
     public Area deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
@@ -21,7 +21,7 @@ public class AreaDeserialize extends JsonDeserializer<Area> {
     }
 
     public AreaService getAreaService() {
-        return areaService == null ? SpringContextUtil.getBeanByType(AreaService.class) : areaService;
+        return areaService == null ? areaService = SpringContextUtil.getBeanByType(AreaService.class) : areaService;
     }
 
 }
