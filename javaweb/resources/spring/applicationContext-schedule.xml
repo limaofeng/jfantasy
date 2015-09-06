@@ -72,11 +72,4 @@
         </property>
     </bean>
 
-    <!--
-    <bean id="taskExecutor" class="org.springframework.scheduling.commonj.WorkManagerTaskExecutor">
-        <property name="workManagerName" value="wm/default"/>
-        <property name="resourceRef" value="false"/>
-    </bean>
-    -->
-
 </beans>
