@@ -70,13 +70,6 @@
                 </prop>
             </props>
         </property>
-        <!--
-        <property name="globalJobListeners">
-            <array>
-                <bean />
-            </array>
-        </property>
-        -->
     </bean>
 
     <!--
