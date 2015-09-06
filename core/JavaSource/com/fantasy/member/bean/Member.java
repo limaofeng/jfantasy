@@ -229,6 +229,7 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     }
 
     @Transient
+    @ApiModelProperty(hidden = true)
     public Collection<GrantedAuthority> getAuthorities() {
         return SpringSecurityUtils.getAuthorities(this);
     }
