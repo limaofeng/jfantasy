@@ -30,9 +30,9 @@ import java.io.IOException;
  * @apiSuccess {String}     subscribe           是否订阅该公众号标识，值为0时，代表此没有关注该公众号，拉取不到其余信息。
  * @apiVersion 3.3.8
  */
-@Api(value = "微信用户(粉丝)接口", description = "微信用户(粉丝)接口")
+@Api(value = "weixin-users", description = "微信用户(粉丝)接口")
 @RestController("weixin.UserController")
-@RequestMapping("/weixin/user")
+@RequestMapping("/weixin/users")
 public class UserController {
 
     @Autowired

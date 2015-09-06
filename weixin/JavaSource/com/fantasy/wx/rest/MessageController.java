@@ -6,14 +6,13 @@ import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.WeiXinMessage;
 import com.fantasy.wx.framework.session.WeiXinSession;
+import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
@@ -27,8 +26,9 @@ import java.io.IOException;
  * @apiSuccess (Success 200)    {String}    toUserName      消息的接收方(OpenID或者微信公众号的原始ID)
  * @apiVersion 3.3.8
  */
+@Api(value = "weixin-messages", description = "微信消息推送接口")
 @RestController
-@RequestMapping("/weixin/message")
+@RequestMapping("/weixin/messages")
 public class MessageController {
 
     private final static Log LOG = LogFactory.getLog(MessageController.class);
@@ -46,7 +46,9 @@ public class MessageController {
      * curl -i http://localhost/weixin/message/wx0e7cef7ad73417eb/push
      * @apiUse WeiXinMessage
      */
+    @ApiOperation(value = "微信消息接口", notes = "接口接收微信公众平台推送的微信消息及事件,直接调用无效")
     @RequestMapping(value = "/{appid}/push", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
     public String push(@PathVariable String appid, HttpServletRequest request) throws IOException {
         String echostr = request.getParameter("echostr");
         if (StringUtils.isNotBlank(echostr)) {
