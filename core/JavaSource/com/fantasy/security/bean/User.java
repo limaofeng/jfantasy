@@ -26,6 +26,21 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 
     private static final long serialVersionUID = 5507435998232223911L;
 
+    public enum Type {
+        backstage("后台"),
+        guide("导诊"),
+        pharmacy("药房"),
+        doctor("医生");
+        private String value;
+        public String getValue() {
+            return this.value;
+        }
+        private Type(String value) {
+            this.value = value;
+        }
+    }
+
+
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -42,8 +57,16 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
      */
     @Column(name = "PASSWORD", length = 20, nullable = false)
     private String password;
+
+    /**
+     * 用户类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "USER_TYPE", length = 20, nullable = false)
+    private Type userType;
     /**
      * 用户显示昵称
+     *
      */
     @Column(name = "NICK_NAME", length = 50)
     private String nickName;
@@ -261,5 +284,13 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 
     public void setOrganization(Organization organization) {
         this.organization = organization;
+    }
+
+    public Type getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Type userType) {
+        this.userType = userType;
     }
 }
