@@ -2,7 +2,7 @@ package com.fantasy.payment.product;
 
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.payment.order.OrderDetails;
+import com.fantasy.common.order.Order;
 import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -33,7 +33,7 @@ public class Pay99bill extends AbstractPaymentProduct {
     public Map<String, String> getParameterMap(Map<String, String> parameters) {
         PaymentContext context = PaymentContext.getContext();
         PaymentConfig paymentConfig = context.getPaymentConfig();
-        OrderDetails orderDetails = context.getOrderDetails();
+        Order orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");

@@ -8,7 +8,7 @@ import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentConfiguration;
-import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.common.order.OrderDetailsService;
 import com.fantasy.payment.service.PaymentService;
 
 import org.springframework.beans.factory.annotation.Autowired;

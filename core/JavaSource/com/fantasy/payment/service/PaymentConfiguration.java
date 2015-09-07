@@ -3,8 +3,8 @@ package com.fantasy.payment.service;
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.payment.order.OrderDetailsService;
-import com.fantasy.payment.order.TestOrderDetailsService;
+import com.fantasy.common.order.OrderService;
+import com.fantasy.common.order.TestOrderDetailsService;
 import com.fantasy.payment.product.*;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -22,7 +22,7 @@ public class PaymentConfiguration implements InitializingBean {
      * 所有支持的支付产品
      */
     private List<PaymentProduct> paymentProducts = new ArrayList<PaymentProduct>();
-    private Map<String,OrderDetailsService> paymentOrderServices = new HashMap<String, OrderDetailsService>();
+    private Map<String,OrderService> paymentOrderServices = new HashMap<String, OrderService>();
 
     public void setPaymentProducts(List<PaymentProduct> paymentProducts) {
         this.paymentProducts = paymentProducts;
@@ -32,7 +32,7 @@ public class PaymentConfiguration implements InitializingBean {
         return ObjectUtil.find(this.paymentProducts, "id", paymentProductId);
     }
 
-    public void setPaymentOrderServices(Map<String, OrderDetailsService> paymentOrderServices) {
+    public void setPaymentOrderServices(Map<String, OrderService> paymentOrderServices) {
         this.paymentOrderServices = paymentOrderServices;
     }
 
@@ -146,7 +146,7 @@ public class PaymentConfiguration implements InitializingBean {
 
     }
 
-    public OrderDetailsService getPaymentOrderService(String orderType) {
+    public OrderService getPaymentOrderService(String orderType) {
         if(!this.paymentOrderServices.containsKey(orderType)){
             //TODO 添加自定义异常
             throw new IgnoreException("orderType["+orderType+"] 对应的 PaymentOrderService 未配置！");

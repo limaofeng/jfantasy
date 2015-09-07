@@ -1,11 +1,11 @@
-package com.fantasy.payment.order;
+package com.fantasy.common.order;
 
 import com.fantasy.payment.bean.Payment;
 
 /**
  * 支付订单接口
  */
-public interface OrderDetailsService {
+public interface OrderService {
 
     /**
      * 查询订单信息
@@ -13,7 +13,7 @@ public interface OrderDetailsService {
      * @param orderSn 编号
      * @return OrderDetails
      */
-    OrderDetails loadOrderBySn(String orderSn);
+    Order loadOrderBySn(String orderSn);
 
     /**
      * 获取支付成功后的异步通知接口地址

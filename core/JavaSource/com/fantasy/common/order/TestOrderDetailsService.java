@@ -1,14 +1,15 @@
-package com.fantasy.payment.order;
+package com.fantasy.common.order;
 
 import com.fantasy.payment.bean.Payment;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-public class TestOrderDetailsService extends AbstractOrderDetailsService {
+public class TestOrderDetailsService extends AbstractOrderService {
 
     @Override
-    public OrderDetails loadOrderBySn(final String sn) {
-        return new OrderDetails() {
+    public Order loadOrderBySn(final String sn) {
+        return new Order() {
 
             @Override
             public String getSN() {
@@ -38,6 +39,16 @@ public class TestOrderDetailsService extends AbstractOrderDetailsService {
             @Override
             public boolean isPayment() {
                 return true;
+            }
+
+            @Override
+            public List<OrderItem> getOrderItems() {
+                return null;
+            }
+
+            @Override
+            public ShipAddress getShipAddress() {
+                return null;
             }
 
         };

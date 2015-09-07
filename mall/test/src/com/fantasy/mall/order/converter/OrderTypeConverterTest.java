@@ -17,7 +17,8 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.mall.delivery.bean.DeliveryCorp;
 import com.fantasy.mall.delivery.bean.DeliveryType;
-import com.fantasy.mall.delivery.service.DeliveryService;
+import com.fantasy.mall.delivery.service.DeliveryCorpService;
+import com.fantasy.mall.delivery.service.DeliveryTypeService;
 import com.fantasy.mall.order.bean.Order;
 import com.fantasy.mall.order.service.OrderService;
 import junit.framework.Assert;
@@ -54,7 +55,9 @@ public class OrderTypeConverterTest {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private DeliveryService deliveryService;
+    private DeliveryCorpService deliveryCorpService;
+    @Autowired
+    private DeliveryTypeService deliveryTypeService;
     @Autowired
     private AreaService areaService;
     @Autowired
@@ -101,14 +104,14 @@ public class OrderTypeConverterTest {
         corp.setName("测试物流公司");
         corp.setUrl("http://test.jfantasy.org");
         corp.setDescription("test");
-        deliveryService.save(corp);
+        deliveryCorpService.save(corp);
 
         DeliveryType deliveryType = new DeliveryType();
         deliveryType.setMethod(DeliveryType.DeliveryMethod.cashOnDelivery);
         deliveryType.setName("测试配送方式");
         deliveryType.setDefaultDeliveryCorp(corp);
         deliveryType.setDescription("test");
-        deliveryService.save(deliveryType);
+        deliveryTypeService.save(deliveryType);
     }
 
     @After
@@ -120,12 +123,12 @@ public class OrderTypeConverterTest {
         this.orderService.delete(ObjectUtil.toFieldArray(orders, "id", Long.class));
 
         //删除配送信息
-        this.deliveryService.deleteDeliveryType(ObjectUtil.toFieldArray(deliveryService.findDeliveryTypePager(new Pager<DeliveryType>(), new ArrayList<PropertyFilter>() {
+        this.deliveryTypeService.delete(ObjectUtil.toFieldArray(deliveryTypeService.findPager(new Pager<DeliveryType>(), new ArrayList<PropertyFilter>() {
             {
                 add(new PropertyFilter("EQS_description", "test"));
             }
-        }).getPageItems(),"id",Long.class));
-        this.deliveryService.deleteDeliveryCorp(ObjectUtil.toFieldArray(deliveryService.findDeliveryCorpPager(new Pager<DeliveryCorp>(),new ArrayList<PropertyFilter>(){
+        }).getPageItems(), "id", Long.class));
+        this.deliveryCorpService.delete(ObjectUtil.toFieldArray(deliveryCorpService.findPager(new Pager<DeliveryCorp>(),new ArrayList<PropertyFilter>(){
             {
                 add(new PropertyFilter("EQS_description","test"));
             }
@@ -151,7 +154,7 @@ public class OrderTypeConverterTest {
         Order subOrder = new Order();
         subOrder.setOrderType("TEST");
 
-        List<DeliveryType> deliveryTypes = deliveryService.findDeliveryTypePager(new Pager<DeliveryType>(), new ArrayList<PropertyFilter>() {
+        List<DeliveryType> deliveryTypes = deliveryTypeService.findPager(new Pager<DeliveryType>(), new ArrayList<PropertyFilter>() {
             {
                 add(new PropertyFilter("EQS_description", "test"));
             }

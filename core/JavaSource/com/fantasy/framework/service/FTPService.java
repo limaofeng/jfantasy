@@ -174,7 +174,7 @@ public class FTPService {
      *
      * @param ftpClient FTPClient
      */
-    private void closeConnection(FTPClient ftpClient) {
+    protected void closeConnection(FTPClient ftpClient) {
         try {
             if (ftpClient.isConnected()) {
                 if (LOG.isDebugEnabled()) {

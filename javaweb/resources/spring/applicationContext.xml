@@ -21,7 +21,8 @@
     <context:component-scan base-package="com.fantasy.modules"/>
 
     <!-- 加载 properties文件 -->
-    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
+    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true"
+                                  ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
     <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
     <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
@@ -36,7 +37,7 @@
             </props>
         </property>
         <property name="defaultEncoding" value="utf-8"/>
-        <property name="templateLoaderPath" value="${freemarker.templatePath}" />
+        <property name="templateLoaderPath" value="${freemarker.templatePath}"/>
     </bean>
 
     <!-- 开发中的功能
@@ -51,7 +52,8 @@
     -->
 
     <!-- lucene 配置 -->
-    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open"
+          destroy-method="close">
         <property name="analyzer">
             <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
         </property>
@@ -81,6 +83,9 @@
 
     <!-- 支付配置 -->
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+
+    <!-- 订单服务工厂 -->
+    <bean id="orderServiceFactory" class="com.fantasy.common.order.OrderServiceFactory"/>
 
     <!-- 其他需要加载的spring模块 -->
     <import resource="classpath:spring/applicationContext-cache.xml"/>

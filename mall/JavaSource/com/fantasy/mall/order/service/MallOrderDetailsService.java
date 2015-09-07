@@ -1,26 +1,28 @@
 package com.fantasy.mall.order.service;
 
-import com.fantasy.mall.order.bean.Order;
+import com.fantasy.common.order.OrderItem;
+import com.fantasy.common.order.ShipAddress;
 import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.order.AbstractOrderDetailsService;
-import com.fantasy.payment.order.OrderDetails;
+import com.fantasy.common.order.AbstractOrderService;
+import com.fantasy.common.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
+import java.util.List;
 
-public class MallOrderDetailsService extends AbstractOrderDetailsService {
+public class MallOrderDetailsService extends AbstractOrderService {
 
     @Autowired
     private OrderService orderService;
 
     @Override
-    public OrderDetails loadOrderBySn(String sn) {
-        final Order order = orderService.get(sn);
+    public Order loadOrderBySn(String sn) {
+        final com.fantasy.mall.order.bean.Order order = orderService.get(sn);
         if (order == null) {
             return null;
         }
         final String subject = order.getOrderItems().get(0).getName();
-        return new OrderDetails() {
+        return new Order() {
             @Override
             public String getSN() {
                 return order.getSn();
@@ -48,7 +50,17 @@ public class MallOrderDetailsService extends AbstractOrderDetailsService {
 
             @Override
             public boolean isPayment() {
-                return Order.OrderStatus.unprocessed.equals(order.getOrderStatus()) && (Order.PaymentStatus.unpaid.equals(order.getPaymentStatus()) || Order.PaymentStatus.partPayment.equals(order.getPaymentStatus()));
+                return com.fantasy.mall.order.bean.Order.OrderStatus.unprocessed.equals(order.getOrderStatus()) && (com.fantasy.mall.order.bean.Order.PaymentStatus.unpaid.equals(order.getPaymentStatus()) || com.fantasy.mall.order.bean.Order.PaymentStatus.partPayment.equals(order.getPaymentStatus()));
+            }
+
+            @Override
+            public List<OrderItem> getOrderItems() {
+                return null;
+            }
+
+            @Override
+            public ShipAddress getShipAddress() {
+                return null;
             }
 
         };
@@ -61,15 +73,15 @@ public class MallOrderDetailsService extends AbstractOrderDetailsService {
 
     @Override
     public void paySuccess(Payment payment) {
-        Order order = orderService.get(payment.getOrderSn());
+        com.fantasy.mall.order.bean.Order order = orderService.get(payment.getOrderSn());
         order.setPaidAmount(order.getTotalAmount());
-        order.setPaymentStatus(Order.PaymentStatus.paid);
+        order.setPaymentStatus(com.fantasy.mall.order.bean.Order.PaymentStatus.paid);
         // 更新支付金额
         order.setPaidAmount(order.getPaidAmount().add(payment.getTotalAmount()));
-        order.setPaymentStatus(Order.PaymentStatus.partPayment);
+        order.setPaymentStatus(com.fantasy.mall.order.bean.Order.PaymentStatus.partPayment);
         // 如果已付金额与支付金额相等更新订单状态为已支付
         if (order.getPaidAmount().equals(order.getPaymentFee())) {
-            order.setPaymentStatus(Order.PaymentStatus.paid);
+            order.setPaymentStatus(com.fantasy.mall.order.bean.Order.PaymentStatus.paid);
         }
         orderService.save(order);
     }

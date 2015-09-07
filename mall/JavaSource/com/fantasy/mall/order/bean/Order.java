@@ -6,8 +6,6 @@ import com.fantasy.common.bean.Area;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.mall.delivery.bean.DeliveryType;
-import com.fantasy.mall.delivery.bean.Shipping;
 import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -132,15 +130,10 @@ public class Order extends BaseDynaBean {
 
     @Column(name = "DELIVERY_TYPE_NAME", nullable = true, length = 100)
     private String deliveryTypeName;// 配送方式名称
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DELIVERY_TYPE_ID", foreignKey = @ForeignKey(name = "FK_ORDER_DELIVERY_TYPE"))
-    private DeliveryType deliveryType;// 配送方式
+    @Column(name = "DELIVERY_TYPE_ID")
+    private Long deliveryTypeId;// 配送方式
     @Column(name = "DELIVERY_FEE", nullable = false, precision = 15, scale = 5)
     private BigDecimal deliveryFee;// 配送费用
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    @OrderBy("createTime asc")
-    private List<Shipping> shippings;// 配送信息
-
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false)
     private String paymentConfigName;// 支付方式名称
     @OneToOne(fetch = FetchType.LAZY)
@@ -304,22 +297,6 @@ public class Order extends BaseDynaBean {
         this.deliveryTypeName = deliveryTypeName;
     }
 
-    public List<Shipping> getShippings() {
-        return shippings;
-    }
-
-    public void setShippings(List<Shipping> shippings) {
-        this.shippings = shippings;
-    }
-
-    public DeliveryType getDeliveryType() {
-        return deliveryType;
-    }
-
-    public void setDeliveryType(DeliveryType deliveryType) {
-        this.deliveryType = deliveryType;
-    }
-
     public String getShipName() {
         return shipName;
     }
@@ -387,6 +364,14 @@ public class Order extends BaseDynaBean {
 
     public String getPaymentConfigName() {
         return paymentConfigName;
+    }
+
+    public Long getDeliveryTypeId() {
+        return deliveryTypeId;
+    }
+
+    public void setDeliveryTypeId(Long deliveryTypeId) {
+        this.deliveryTypeId = deliveryTypeId;
     }
 
     public void setPaymentConfigName(String paymentConfigName) {

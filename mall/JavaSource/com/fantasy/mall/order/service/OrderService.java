@@ -7,7 +7,7 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.mall.delivery.bean.DeliveryItem;
 import com.fantasy.mall.delivery.bean.DeliveryType;
 import com.fantasy.mall.delivery.bean.Shipping;
-import com.fantasy.mall.delivery.service.DeliveryService;
+import com.fantasy.mall.delivery.service.DeliveryTypeService;
 import com.fantasy.mall.goods.service.ProductService;
 import com.fantasy.mall.member.bean.Receiver;
 import com.fantasy.mall.member.service.ReceiverService;
@@ -48,7 +48,7 @@ public class OrderService {
     @Autowired
     private ProductService productService;
     @Autowired
-    private DeliveryService deliveryService;
+    private DeliveryTypeService deliveryTypeService;
 
     private static final String defaultCashOnDeliveryName = "货到付款";
 
@@ -129,9 +129,9 @@ public class OrderService {
         order.setTotalProductQuantity(totalProductQuantity);// 订单商品数量
         order.setTotalProductPrice(totalProductPrice);// 订单商品总价
         // 初始化配置信息
-        DeliveryType deliveryType = deliveryService.getDeliveryType(order.getDeliveryType().getId());
+        DeliveryType deliveryType = deliveryTypeService.get(order.getDeliveryTypeId());
         order.setDeliveryTypeName(deliveryType.getName());
-        order.setDeliveryType(deliveryType);
+        order.setDeliveryTypeId(deliveryType.getId());
         if (deliveryType.getMethod() == DeliveryType.DeliveryMethod.deliveryAgainstPayment) {
             BigDecimal deliveryFee = deliveryType.getFirstWeightPrice();
             if (order.getTotalProductWeight() > deliveryType.getFirstWeight() && deliveryType.getContinueWeightPrice().intValue() > 0) {// 如果订单重量大于配送首重量且配送方式续重方式价格大于0时,计算快递费
@@ -211,9 +211,6 @@ public class OrderService {
         for (OrderItem item : order.getOrderItems()) {
             Hibernate.initialize(item);
         }
-        for (Shipping item : order.getShippings()) {
-            Hibernate.initialize(item);
-        }
         return order;
     }
 
@@ -237,9 +234,6 @@ public class OrderService {
         Order order = this.orderDao.get(id);
         Hibernate.initialize(order);
         for (OrderItem item : order.getOrderItems()) {
-            Hibernate.initialize(item);
-        }
-        for (Shipping item : order.getShippings()) {
             Hibernate.initialize(item);
         }
         return order;

@@ -1,4 +1,4 @@
-package com.fantasy.payment.order;
+package com.fantasy.common.order;
 
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.logging.Log;
@@ -9,7 +9,7 @@ import java.util.regex.Matcher;
 /**
  * 实现一个简单的  OrderDetailsService 封装实现
  */
-public abstract class AbstractOrderDetailsService implements OrderDetailsService {
+public abstract class AbstractOrderService implements OrderService {
 
     protected final Log LOG = LogFactory.getLog(this.getClass());
 

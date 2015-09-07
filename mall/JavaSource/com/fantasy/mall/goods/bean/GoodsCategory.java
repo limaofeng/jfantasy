@@ -8,10 +8,16 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
@@ -84,6 +90,9 @@ public class GoodsCategory extends BaseDynaBean {
     /**
      * 上级分类
      */
+    @JsonProperty("parentId")
+    @JsonSerialize(using = CategorySerializer.class)
+    @JsonDeserialize(using = CategoryDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "P_ID", foreignKey = @ForeignKey(name = "FK_GOODS_CATEGORY_PARENT"))
     @JsonManagedReference
@@ -91,6 +100,7 @@ public class GoodsCategory extends BaseDynaBean {
     /**
      * 下级分类
      */
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     @JsonBackReference
@@ -124,6 +134,13 @@ public class GoodsCategory extends BaseDynaBean {
     @Column(name = "GOODS_PARAMETER_STORE", length = 3000)
     private String goodsParameterStore;
 
+    public GoodsCategory() {
+    }
+
+    public GoodsCategory(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }
@@ -156,8 +173,6 @@ public class GoodsCategory extends BaseDynaBean {
         this.layer = layer;
     }
 
-    @JsonProperty("parentId")
-    @JsonSerialize(using = CategoryParentSerialize.class)
     public GoodsCategory getParent() {
         return parent;
     }
@@ -271,10 +286,19 @@ public class GoodsCategory extends BaseDynaBean {
         return this.goodsParameters;
     }
 
-    public static class CategoryParentSerialize extends JsonSerializer<GoodsCategory> {
+    public static class CategorySerializer extends JsonSerializer<GoodsCategory> {
         @Override
         public void serialize(GoodsCategory category, JsonGenerator jgen, SerializerProvider provider) throws IOException {
             jgen.writeString(category.getId() != null ? category.getId().toString() : "");
+        }
+    }
+
+    public static class CategoryDeserializer extends JsonDeserializer<GoodsCategory> {
+
+        @Override
+        public GoodsCategory deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException, JsonProcessingException {
+            Long id = jp.getValueAsLong();
+            return id != null ? new GoodsCategory(id) : null;
         }
     }
 

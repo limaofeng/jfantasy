@@ -2,8 +2,8 @@ package com.fantasy.payment.service;
 
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.payment.order.OrderDetails;
-import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.common.order.Order;
+import com.fantasy.common.order.OrderService;
 import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
 
@@ -16,7 +16,7 @@ public class PaymentContext {
     /**
      * 支付订单对象
      */
-    private OrderDetails orderDetails;
+    private Order orderDetails;
     /**
      * 支付对象
      */
@@ -32,7 +32,7 @@ public class PaymentContext {
     /**
      * 支付订单 Service
      */
-    private OrderDetailsService orderDetailsService;
+    private OrderService orderDetailsService;
     /**
      * 支付结果
      */
@@ -63,15 +63,15 @@ public class PaymentContext {
         this.paymentConfig = payment.getPaymentConfig();
     }
 
-    public OrderDetails getOrderDetails() {
+    public Order getOrderDetails() {
         return orderDetails;
     }
 
-    public void setOrderDetails(OrderDetails orderDetails) {
+    public void setOrderDetails(Order orderDetails) {
         this.orderDetails = orderDetails;
     }
 
-    public void setOrderDetailsService(OrderDetailsService orderDetailsService) {
+    public void setOrderDetailsService(OrderService orderDetailsService) {
         this.orderDetailsService = orderDetailsService;
     }
 

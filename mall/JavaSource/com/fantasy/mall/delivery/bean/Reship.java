@@ -1,7 +1,6 @@
 package com.fantasy.mall.delivery.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.mall.order.bean.Order;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -43,10 +42,10 @@ public class Reship extends BaseBusEntity {
     private String reshipMobile;// 退货手机
     @Column(name = "memo", length = 150, updatable = false)
     private String memo;// 备注
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ORDER_ID",foreignKey =  @ForeignKey(name = "FK_RESHIP_ORDER"))
-
-    private Order order;// 订单
+    @Column(name = "ORDER_TYPE", length = 20)
+    private String orderType;
+    @Column(name = "ORDER_SN")
+    private String orderSn;// 订单
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "DELIVERY_TYPE_ID",foreignKey = @ForeignKey(name = "FK_RESHIP_DELIVERY_TYPE") )
 
@@ -148,12 +147,20 @@ public class Reship extends BaseBusEntity {
         this.memo = memo;
     }
 
-    public Order getOrder() {
-        return order;
+    public String getOrderType() {
+        return orderType;
     }
 
-    public void setOrder(Order order) {
-        this.order = order;
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
+
+    public String getOrderSn() {
+        return orderSn;
+    }
+
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
     }
 
     public DeliveryType getDeliveryType() {

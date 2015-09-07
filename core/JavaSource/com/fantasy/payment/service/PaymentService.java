@@ -12,8 +12,8 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.dao.PaymentDao;
 import com.fantasy.payment.error.PaymentException;
-import com.fantasy.payment.order.OrderDetails;
-import com.fantasy.payment.order.OrderDetailsService;
+import com.fantasy.common.order.Order;
+import com.fantasy.common.order.OrderService;
 import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
 import com.fantasy.security.SpringSecurityUtils;
@@ -64,9 +64,9 @@ public class PaymentService {
         if (PaymentConfig.PaymentConfigType.online != paymentConfig.getPaymentConfigType()) {
             throw new PaymentException("暂时只支持在线支付");
         }
-        OrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        OrderService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
         //检查订单支付状态等信息
-        OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
+        Order orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
 
         //支付配置类型（线下支付、在线支付）
         Payment.PaymentType paymentType = Payment.PaymentType.online;
@@ -198,12 +198,12 @@ public class PaymentService {
         context.setPayment(payment);
 
         PaymentProduct paymentProduct = this.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
-        OrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        OrderService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
         context.setPaymentProduct(paymentProduct);
         context.setOrderDetailsService(paymentOrderDetailsService);
 
         //检查订单支付状态等信息
-        OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
+        Order orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
         context.setOrderDetails(orderDetails);
 
         // 支付参数
@@ -275,10 +275,10 @@ public class PaymentService {
         }
         context.setPaymentProduct(paymentProduct);
 
-        OrderDetailsService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(payment.getOrderType());
+        OrderService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(payment.getOrderType());
         context.setOrderDetailsService(paymentOrderDetailsService);
 
-        OrderDetails orderDetails = paymentOrderDetailsService.loadOrderBySn(payment.getOrderSn());
+        Order orderDetails = paymentOrderDetailsService.loadOrderBySn(payment.getOrderSn());
         context.setOrderDetails(orderDetails);
         return context;
     }

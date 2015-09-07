@@ -1,52 +1,62 @@
-package com.fantasy.payment.order;
+package com.fantasy.common.order;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
- * 订单支付接口类
+ * 订单接口类
  */
-public interface OrderDetails {
+public interface Order {
 
     /**
      * 订单编号
      *
      * @return String
      */
-    public String getSN();
+    String getSN();
 
     /**
      * 获取订单类型
      *
      * @return String
      */
-    public String getType();
+    String getType();
 
     /**
      * 订单摘要
      *
      * @return String
      */
-    public String getSubject();
+    String getSubject();
 
     /**
      * 订单总金额
      *
      * @return BigDecimal
      */
-    public BigDecimal getTotalFee();
+    BigDecimal getTotalFee();
 
     /**
      * 订单应付金额
      *
      * @return BigDecimal
      */
-    public BigDecimal getPayableFee();
+    BigDecimal getPayableFee();
 
     /**
      * 订单是否可以进行支付
      *
      * @return boolean
      */
-    public boolean isPayment();
+    boolean isPayment();
+
+    /**
+     * 获取订单项
+     *
+     * @return List<OrderItem>
+     */
+    List<OrderItem> getOrderItems();
+
+    ShipAddress getShipAddress();
 
 }
