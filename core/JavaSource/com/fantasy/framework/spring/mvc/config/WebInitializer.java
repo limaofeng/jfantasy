@@ -73,6 +73,7 @@ public class WebInitializer implements WebApplicationInitializer {
         //4、CharacterEncodingFilter
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("utf-8");
+        characterEncodingFilter.setForceEncoding(true);
         filterRegistration = servletContext.addFilter("characterEncodingFilter", characterEncodingFilter);
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
 
