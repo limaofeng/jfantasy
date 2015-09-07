@@ -10,9 +10,11 @@ import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,8 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     /**
      * 用户登录名称
      */
+    @NotNull(message = "登录名称不能为空")
+    @Length(max = 20, message = "登录名称长度不合法")
     @ApiModelProperty("登录名称")
     @Column(name = "USERNAME", length = 20, nullable = false, unique = true)
     private String username;

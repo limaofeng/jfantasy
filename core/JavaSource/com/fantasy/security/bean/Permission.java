@@ -68,7 +68,7 @@ public class Permission extends BaseBusEntity implements Cloneable {
      */
     @ApiModelProperty(value = "对应的资源")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "RESOURCE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_MENU_PID"))
+    @JoinColumn(name = "RESOURCE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_PERMISSION_RESOURCE_PID"))
     private Resource resource;
     /**
      * 用户组

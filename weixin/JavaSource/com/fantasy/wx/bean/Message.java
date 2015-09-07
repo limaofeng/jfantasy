@@ -1,7 +1,6 @@
 package com.fantasy.wx.bean;
 
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 
 /**
@@ -27,7 +26,7 @@ public class Message {
     private String fromUserName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OPENID")
+    @JoinColumn(name = "OPENID",foreignKey = @ForeignKey(name = "FK_WX_MESSAGE_USERID"))
     private UserInfo userInfo;
 
     public String getFromUserName() {

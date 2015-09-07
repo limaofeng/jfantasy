@@ -13,12 +13,14 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
-
+import org.hibernate.validator.HibernateValidator;
 import java.nio.charset.Charset;
 import java.util.HashSet;
 import java.util.List;
@@ -74,6 +76,13 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new RequestJsonParamMethodArgumentResolver());
         argumentResolvers.add(new PropertyFilterModelAttributeMethodProcessor());
         super.addArgumentResolvers(argumentResolvers);
+    }
+
+    @Override
+    public Validator getValidator() {
+        LocalValidatorFactoryBean localValidatorFactoryBean = new LocalValidatorFactoryBean();
+        localValidatorFactoryBean.setProviderClass(HibernateValidator.class);
+        return localValidatorFactoryBean;
     }
 
 }

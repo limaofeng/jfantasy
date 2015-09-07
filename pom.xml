@@ -46,7 +46,7 @@
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
         <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
-        <org.hibernate-version>4.3.8.Final</org.hibernate-version>
+        <org.hibernate-version>4.3.11.Final</org.hibernate-version>
         <commons-beanutils-version>1.8.3</commons-beanutils-version>
         <commons-httpclient-version>3.1</commons-httpclient-version>
         <org.apache.struts-version>2.3.8</org.apache.struts-version>
@@ -58,7 +58,7 @@
         <org.quartz-scheduler-version>2.2.1</org.quartz-scheduler-version>
         <spring.data.redis-version>1.5.0.RELEASE</spring.data.redis-version>
         <javax.servlet.jsp-api-version>2.2.1</javax.servlet.jsp-api-version>
-        <org.springframework-version>4.1.0.RELEASE</org.springframework-version>
+        <org.springframework-version>4.2.1.RELEASE</org.springframework-version>
         <com.thoughtworks.xstream-version>1.4.8</com.thoughtworks.xstream-version>
         <com.mangofactory-swagger-version>1.0.2</com.mangofactory-swagger-version>
         <com.fasterxml.jackson.core-version>2.3.0</com.fasterxml.jackson.core-version>
@@ -1077,22 +1077,7 @@
             </dependency>
             <dependency>
                 <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-core-web</artifactId>
-                <version>${com.fantasy-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-mall-web</artifactId>
-                <version>${com.fantasy-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fantasy</groupId>
                 <artifactId>fantasy-cms</artifactId>
-                <version>${com.fantasy-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-cms-web</artifactId>
                 <version>${com.fantasy-version}</version>
             </dependency>
             <dependency>
@@ -1111,17 +1096,12 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
-        <!--<module>core-web</module>-->
         <module>cache</module>
         <module>mall</module>
-        <!--<module>mall-web</module>-->
         <module>cms</module>
-        <!--<module>cms-web</module>-->
         <module>question</module>
-        <!--<module>question-web</module>-->
         <module>websocket</module>
         <module>weixin</module>
-        <!--<module>weixin-web</module>-->
         <module>aliyun-oss</module>
         <!--
         <module>website</module>

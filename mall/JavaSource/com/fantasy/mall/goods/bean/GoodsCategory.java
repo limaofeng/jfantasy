@@ -109,7 +109,7 @@ public class GoodsCategory extends BaseDynaBean {
      * 属性版本表
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ARTICLE_VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY_VERSION"))
+    @JoinColumn(name = "GOODS_VERSION_ID", foreignKey = @ForeignKey(name = "FK_MALL_GOODS_CATEGORY_VERSION"))
     private AttributeVersion goodsVersion;
     /**
      * 商品

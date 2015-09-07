@@ -6,9 +6,9 @@ import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -116,7 +116,7 @@ public class MemberController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public Member create(@RequestBody Member member) {
+    public Member create(@RequestBody @Valid Member member) {
         return memberService.save(member);
     }
 
