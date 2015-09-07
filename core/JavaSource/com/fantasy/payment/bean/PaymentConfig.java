@@ -2,6 +2,8 @@ package com.fantasy.payment.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,6 +18,7 @@ import java.util.List;
  * @version 1.0
  * @since 2013-12-5 上午9:22:49
  */
+@ApiModel("支付配置")
 @Entity
 @Table(name = "MALL_PAYMENT_CONFIG")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "orders", "payments", "refunds"})
@@ -41,58 +44,69 @@ public class PaymentConfig extends BaseBusEntity {
     /**
      * 支付配置类型
      */
+    @ApiModelProperty("支付配置类型")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAYMENT_CONFIG_TYPE", nullable = false, updatable = false)
     private PaymentConfigType paymentConfigType;
     /**
      * 支付方式名称
      */
+    @ApiModelProperty("支付方式名称")
     @Column(name = "NAME", nullable = false)
     private String name;
     /**
      * 支付产品标识
      */
+    @ApiModelProperty("支付产品标识")
     @Column(name = "PAYMENT_PRODUCT_ID", updatable = false)
     private String paymentProductId;
     /**
      * 商家ID
      */
+    @ApiModelProperty("商家ID")
     @Column(name = "BARGAINOR_ID")
     private String bargainorId;
     /**
      * 商户私钥
      */
+    @ApiModelProperty("商户私钥")
     @Column(name = "BARGAINOR_KEY")
     private String bargainorKey;
     /**
      * 担保支付的卖家 email
      */
+    @ApiModelProperty("担保支付的卖家 email")
     @Column(name = "SELLER_EMAIL")
     private String sellerEmail;
     /**
      * 支付手续费类型
      */
+    @ApiModelProperty("支付手续费类型")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAYMENT_FEE_TYPE", nullable = false)
     private PaymentFeeType paymentFeeType;
     /**
      * 支付费用
      */
+    @ApiModelProperty("支付费用")
     @Column(name = "PAYMENT_FEE", nullable = false, precision = 15, scale = 5)
     private BigDecimal paymentFee;
     /**
      * 介绍
      */
+    @ApiModelProperty("介绍")
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;
     /**
      * 排序
      */
+    @ApiModelProperty("排序")
     @Column(name = "SORT")
     private Integer sort;
-
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "paymentConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<Payment>();// 支付
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "paymentConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<Refund>();// 退款
 
