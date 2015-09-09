@@ -1,8 +1,11 @@
 package com.fantasy.common.order;
 
+import com.fantasy.common.service.AreaService;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.payment.bean.Payment;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 public class TestOrderDetailsService extends AbstractOrderService {
@@ -43,12 +46,38 @@ public class TestOrderDetailsService extends AbstractOrderService {
 
             @Override
             public List<OrderItem> getOrderItems() {
-                return null;
+                return new ArrayList<OrderItem>(){
+                    {
+                        this.add(new OrderItem() {
+                            @Override
+                            public String getSn() {
+                                return "SN000001";
+                            }
+
+                            @Override
+                            public String getName() {
+                                return "这个是测试订单项";
+                            }
+
+                            @Override
+                            public Integer getQuantity() {
+                                return 1;
+                            }
+                        });
+                    }
+                };
             }
 
             @Override
             public ShipAddress getShipAddress() {
-                return null;
+                ShipAddress address = new ShipAddress();
+                address.setArea(SpringContextUtil.getBeanByType(AreaService.class).get("430103"));
+                address.setName("王五");
+                address.setAddress("天心区308号");
+                address.setMobile("159218471");
+                address.setPhone("021-123456");
+                address.setZipCode("415000");
+                return address;
             }
 
         };

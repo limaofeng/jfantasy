@@ -29,7 +29,7 @@ public class DeliveryTypeController {
     }
 
     @ApiOperation(value = "按配送类型检索配送方式", notes = "按配送类型检索配送方式")
-    @RequestMapping(value = "{method}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{method}", method = RequestMethod.GET)
     @ResponseBody
     public List<DeliveryType> searchByMethod(@PathVariable("method") DeliveryType.DeliveryMethod method) {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();

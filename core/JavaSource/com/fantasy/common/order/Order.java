@@ -1,11 +1,15 @@
 package com.fantasy.common.order;
 
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * 订单接口类
  */
+@ApiModel("订单接口")
 public interface Order {
 
     /**
@@ -13,6 +17,7 @@ public interface Order {
      *
      * @return String
      */
+    @ApiModelProperty("编号")
     String getSN();
 
     /**
@@ -20,6 +25,7 @@ public interface Order {
      *
      * @return String
      */
+    @ApiModelProperty("订单类型")
     String getType();
 
     /**
@@ -27,6 +33,7 @@ public interface Order {
      *
      * @return String
      */
+    @ApiModelProperty("订单摘要")
     String getSubject();
 
     /**
@@ -34,6 +41,7 @@ public interface Order {
      *
      * @return BigDecimal
      */
+    @ApiModelProperty("订单总金额")
     BigDecimal getTotalFee();
 
     /**
@@ -41,6 +49,7 @@ public interface Order {
      *
      * @return BigDecimal
      */
+    @ApiModelProperty("订单应付金额")
     BigDecimal getPayableFee();
 
     /**
@@ -48,6 +57,7 @@ public interface Order {
      *
      * @return boolean
      */
+    @ApiModelProperty("订单是否可以进行支付")
     boolean isPayment();
 
     /**
@@ -55,8 +65,10 @@ public interface Order {
      *
      * @return List<OrderItem>
      */
+    @ApiModelProperty("订单项")
     List<OrderItem> getOrderItems();
 
+    @ApiModelProperty("订单的配送地址")
     ShipAddress getShipAddress();
 
 }

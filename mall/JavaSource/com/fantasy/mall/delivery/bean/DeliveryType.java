@@ -1,7 +1,13 @@
 package com.fantasy.mall.delivery.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.mall.delivery.bean.databind.DeliveryCorpDeserializer;
+import com.fantasy.mall.delivery.bean.databind.DeliveryCorpSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,12 +21,20 @@ import java.util.List;
  * @version 1.0
  * @since 2013-9-16 下午3:45:17
  */
+@ApiModel("配送方式")
 @Entity
 @Table(name = "MALL_DELIVERY_TYPE")
-@JsonIgnoreProperties({"orders", "shippings", "reships"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "shippings", "reships"})
 public class DeliveryType extends BaseBusEntity {
 
     private static final long serialVersionUID = 5873163245980853245L;
+
+    public DeliveryType() {
+    }
+
+    public DeliveryType(Long id) {
+        this.id = id;
+    }
 
     // 配送类型：先付款后发货、货到付款
     public enum DeliveryMethod {
@@ -39,31 +53,40 @@ public class DeliveryType extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
+    @ApiModelProperty("配送方式名称")
     @Column(name = "NAME", nullable = false)
-    private String name;// 配送方式名称
+    private String name;
+    @ApiModelProperty("配送类型")
     @Enumerated(EnumType.STRING)
     @Column(name = "DELIVERY_METHOD", length = 50, nullable = false)
-    private DeliveryMethod method;// 配送类型
+    private DeliveryMethod method;
+    @ApiModelProperty("首重量(单位: 克)")
     @Column(name = "first_Weight", nullable = false)
-    private Integer firstWeight;// 首重量(单位: 克)
+    private Integer firstWeight;
+    @ApiModelProperty("续重量(单位: 克)")
     @Column(name = "CONTINUE_WEIGHT", nullable = false)
-    private Integer continueWeight;// 续重量(单位: 克)
+    private Integer continueWeight;
+    @ApiModelProperty("首重价格")
     @Column(name = "FIRST_WEIGHT_PRICE", precision = 15, scale = 5, nullable = false)
-    private BigDecimal firstWeightPrice;// 首重价格
+    private BigDecimal firstWeightPrice;
+    @ApiModelProperty("续重价格")
     @Column(name = "CONTINUE_WEIGHT_PRICE", precision = 15, scale = 5, nullable = false)
-    private BigDecimal continueWeightPrice;// 续重价格
+    private BigDecimal continueWeightPrice;
+    @ApiModelProperty("介绍")
     @Column(name = "DESCRIPTION", length = 3000)
-    private String description;// 介绍
-
+    private String description;
+    @ApiModelProperty(value = "默认物流公司", hidden = true)
+    @JsonDeserialize(using = DeliveryCorpDeserializer.class)
+    @JsonSerialize(using = DeliveryCorpSerializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "DELIVERY_CORP_ID", foreignKey = @ForeignKey(name = "MALL_DELIVERY_TYPE_CORP"))
-    private DeliveryCorp defaultDeliveryCorp; // 默认物流公司
-
+    private DeliveryCorp defaultDeliveryCorp;
+    @ApiModelProperty(value = "发货", hidden = true)
     @OneToMany(mappedBy = "deliveryType", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Shipping> shippings;// 发货
+    private List<Shipping> shippings;
+    @ApiModelProperty(value = "退货", hidden = true)
     @OneToMany(mappedBy = "deliveryType", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<Reship> reships;// 退货
+    private List<Reship> reships;
 
     public String getName() {
         return name;

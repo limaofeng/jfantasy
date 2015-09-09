@@ -110,6 +110,13 @@ public class PaymentConfig extends BaseBusEntity {
     @OneToMany(mappedBy = "paymentConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<Refund>();// 退款
 
+    public PaymentConfig() {
+    }
+
+    public PaymentConfig(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

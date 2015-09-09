@@ -9,6 +9,7 @@ public class OrderServiceFactory {
 
     public OrderServiceFactory() {
         orderDetailsServices = new HashMap<String, OrderService>();
+        orderDetailsServices.put("TEST",new TestOrderDetailsService());
     }
 
     public OrderServiceFactory(Map<String, OrderService> orderDetailsServices) {

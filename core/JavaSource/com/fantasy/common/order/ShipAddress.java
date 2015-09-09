@@ -4,10 +4,10 @@ import com.fantasy.common.bean.Area;
 import com.fantasy.common.bean.databind.AreaDeserializer;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-
-import javax.persistence.Column;
 
 /**
  * 用户地址信息
@@ -16,32 +16,38 @@ import javax.persistence.Column;
  * @version 1.0
  * @since 2013-9-16 下午4:16:02
  */
+@ApiModel("订单配送地址")
+@JsonIgnoreProperties({"areaStore"})
 public class ShipAddress {
     /**
      * 姓名
      */
+    @ApiModelProperty("姓名")
     private String name;
     /**
      * 地区存储
      */
     @ApiModelProperty(hidden = true)
-    @Column(name = "AREA_STORE", length = 300, nullable = false)
     private String areaStore;
     /**
      * 街道
      */
+    @ApiModelProperty("街道详细地址")
     private String address;
     /**
      * 邮政编码
      */
+    @ApiModelProperty("邮政编码")
     private String zipCode;
     /**
      * 电话
      */
+    @ApiModelProperty("电话")
     private String phone;
     /**
      * 手机
      */
+    @ApiModelProperty("手机")
     private String mobile;
 
     public String getName() {

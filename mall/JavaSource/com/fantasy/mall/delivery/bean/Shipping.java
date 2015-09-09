@@ -1,7 +1,18 @@
 package com.fantasy.mall.delivery.bean;
 
+import com.fantasy.common.bean.Area;
+import com.fantasy.common.bean.databind.AreaDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.mall.delivery.bean.databind.DeliveryTypeDeserializer;
+import com.fantasy.mall.delivery.bean.databind.DeliveryTypeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -17,9 +28,10 @@ import java.util.List;
  * @version 1.0
  * @since 2013-10-15 下午3:37:40
  */
+@ApiModel("送货信息")
 @Entity
 @Table(name = "MALL_DELIVERY_SHIPPING")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "order", "deliveryItems", "shipAreaStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "deliveryItems", "deliveryType", "shipAreaStore"})
 public class Shipping extends BaseBusEntity {
 
     private static final long serialVersionUID = 4315245804828793329L;
@@ -28,44 +40,68 @@ public class Shipping extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
+    @ApiModelProperty("发货编号")
     @Column(name = "SN", nullable = false, unique = true)
     @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'SN_' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('SHIPPING-SN'), 5)")})
-    private String sn;// 发货编号
+    private String sn;
+    @ApiModelProperty("配送方式名称")
     @Column(name = "DELIVERY_TYPE_NAME", length = 50)
-    private String deliveryTypeName;// 配送方式名称
+    private String deliveryTypeName;
+    @ApiModelProperty("物流公司名称")
     @Column(name = "DELIVERY_CORP_NAME", length = 50)
-    private String deliveryCorpName; // 物流公司名称
+    private String deliveryCorpName;
+    @ApiModelProperty("物流公司网址")
     @Column(name = "DELIVERY_CORP_URL", length = 50)
-    private String deliveryCorpUrl;// 物流公司网址
+    private String deliveryCorpUrl;
+    @ApiModelProperty("物流单号")
     @Column(name = "DELIVERY_SN", length = 50)
-    private String deliverySn;// 物流单号
+    private String deliverySn;
+    @ApiModelProperty("物流费用")
     @Column(name = "DELIVERY_FEE", precision = 10, scale = 2)
-    private BigDecimal deliveryFee;// 物流费用
+    private BigDecimal deliveryFee;
+    @ApiModelProperty("收货人姓名")
     @Column(name = "SHIP_NAME", length = 50)
-    private String shipName;// 收货人姓名
+    private String shipName;
+    @ApiModelProperty(hidden = true)
     @Column(name = "SHIP_AREA_STORE", length = 300)
-    private String shipAreaStore;// 收货地区存储
+    private String shipAreaStore;
+    @ApiModelProperty("收货地址")
     @Column(name = "SHIP_ADDRESS", length = 150)
-    private String shipAddress;// 收货地址
+    private String shipAddress;
+    @ApiModelProperty("收货邮编")
     @Column(name = "SHIP_ZIP_CODE", length = 10)
-    private String shipZipCode;// 收货邮编
+    private String shipZipCode;
+    @ApiModelProperty("收货电话")
     @Column(name = "SHIP_PHONE", length = 12)
-    private String shipPhone;// 收货电话
+    private String shipPhone;
+    @ApiModelProperty("收货手机")
     @Column(name = "SHIP_MOBILE", length = 12)
-    private String shipMobile;// 收货手机
+    private String shipMobile;
+    @ApiModelProperty("备注")
     @Column(name = "MEMO", length = 150)
-    private String memo;// 备注
+    private String memo;
+    @ApiModelProperty("订单类型")
     @Column(name = "ORDER_TYPE", length = 20)
     private String orderType;
+    @ApiModelProperty("订单编号")
     @Column(name = "ORDER_SN")
-    private String orderSn;// 订单
-
+    private String orderSn;
+    /**
+     * 配送方式
+     */
+    @ApiModelProperty(hidden = true)
+    @JsonProperty("deliveryTypeId")
+    @JsonSerialize(using = DeliveryTypeSerializer.class)
+    @JsonDeserialize(using = DeliveryTypeDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "DELIVERY_TYPE_ID", foreignKey = @ForeignKey(name = "FK_SHIPPING_DELIVERY_TYPE"))
-    private DeliveryType deliveryType;// 配送方式
-
+    private DeliveryType deliveryType;
+    /**
+     * 物流项
+     */
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "shipping", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-    private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>(); // 物流项
+    private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>();
 
     public String getDeliveryTypeName() {
         return deliveryTypeName;
@@ -209,5 +245,22 @@ public class Shipping extends BaseBusEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    @ApiModelProperty("收货地区存储")
+    public Area getShipArea() {
+        if (StringUtil.isBlank(this.shipAreaStore)) {
+            return null;
+        }
+        return JSON.deserialize(this.shipAreaStore, Area.class);
+    }
+
+    @JsonDeserialize(using = AreaDeserializer.class)
+    public void setShipArea(Area shipArea) {
+        if (shipArea == null) {
+            this.shipAreaStore = null;
+            return;
+        }
+        this.shipAreaStore = JSON.serialize(shipArea);
     }
 }

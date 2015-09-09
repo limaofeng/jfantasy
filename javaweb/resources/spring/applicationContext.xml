@@ -21,8 +21,7 @@
     <context:component-scan base-package="com.fantasy.modules"/>
 
     <!-- 加载 properties文件 -->
-    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true"
-                                  ignore-unresolvable="true" location="classpath:props/application.properties"/>
+    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
     <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
     <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">

@@ -17,7 +17,11 @@ public class ErrorHandler {
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
     public ErrorResponse errorResponse(Exception exception) {
-        HttpServletResponse response = ActionContext.getContext().getHttpResponse();
+        ActionContext context = ActionContext.getContext();
+        if (context == null) {
+            return new ErrorResponse(exception.getMessage());
+        }
+        HttpServletResponse response = context.getHttpResponse();
         if (exception instanceof RestException) {
             response.setStatus(((RestException) exception).getStatusCode());
         } else if (exception instanceof MethodArgumentNotValidException) {

@@ -4,6 +4,7 @@ package com.fantasy.security.rest;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.bean.User;
+import com.fantasy.security.bean.UserDetails;
 import com.fantasy.security.service.UserService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -102,9 +103,16 @@ public class UserController {
      * @apiUse returnUser
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "获取用户", notes = "通过该接口, 获取用户")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public User view(@PathVariable("id") Long id) {
         return this.userService.get(id);
+    }
+
+    @ApiOperation(value = "获取用户的详细信息", notes = "通过该接口, 获取详细信息")
+    @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET)
+    public UserDetails profile(@PathVariable("id") Long id) {
+        return this.userService.get(id).getDetails();
     }
 
     /**
@@ -120,6 +128,7 @@ public class UserController {
      * @apiUse returnUser
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "添加用户", notes = "通过该接口, 添加用户")
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -138,6 +147,7 @@ public class UserController {
      * curl -i -X DELETE http://localhost/users/43
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "删除用户", notes = "通过该接口, 删除用户")
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
@@ -158,6 +168,7 @@ public class UserController {
      * curl -i -X DELETE http://localhost/users
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "批量删除用户", notes = "通过该接口, 批量删除用户")
     @RequestMapping(method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody Long... id) {
@@ -177,6 +188,7 @@ public class UserController {
      * @apiUse returnUser
      * @apiUse GeneralError
      */
+    @ApiOperation(value = "更新用户", notes = "通过该接口, 更新用户")
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
     public User update(@PathVariable("id") Long id, User user) {
         user.setId(id);

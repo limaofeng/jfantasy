@@ -88,6 +88,9 @@
 		<property name="configuration" ref="freemarkerService" />
 	</bean>
 
+	<!-- 订单服务工厂 -->
+	<bean id="orderServiceFactory" class="com.fantasy.common.order.OrderServiceFactory"/>
+
 	<!-- 自定义序列生成器 -->
 	<bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">
 		<property name="poolSize" value="${dataBaseKey.poolSize}" />

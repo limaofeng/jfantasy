@@ -29,10 +29,16 @@ public class ShippingService {
     @Autowired
     private DeliveryItemDao deliveryItemDao;
     @Autowired
-    private OrderServiceFactory orderDetailsFactory;
+    private OrderServiceFactory orderServiceFactory;
 
     public Pager<Shipping> findPager(Pager<Shipping> pager, List<PropertyFilter> filters) {
         return this.shippingDao.findPager(pager, filters);
+    }
+
+    public Order getOrder(Long id) {
+        Shipping shipping = this.shippingDao.get(id);
+        OrderService orderDetailsService = orderServiceFactory.get(shipping.getOrderType());
+        return orderDetailsService.loadOrderBySn(shipping.getOrderSn());
     }
 
     /**
@@ -40,8 +46,8 @@ public class ShippingService {
      *
      * @param shipping 必输项: order.id,deliveryType.id,deliverySn，deliveryFee，deliveryItems 可选输入项：memo
      */
-    public void save(Shipping shipping) {
-        OrderService orderDetailsService = orderDetailsFactory.get(shipping.getOrderType());
+    public Shipping save(Shipping shipping) {
+        OrderService orderDetailsService = orderServiceFactory.get(shipping.getOrderType());
         Order order = orderDetailsService.loadOrderBySn(shipping.getOrderSn());
         DeliveryType deliveryType = deliveryTypeDao.get(shipping.getDeliveryType().getId());
         shipping.setDeliveryType(deliveryType);
@@ -65,6 +71,7 @@ public class ShippingService {
         for (DeliveryItem item : shipping.getDeliveryItems()) {
             this.deliveryItemDao.save(item);
         }
+        return shipping;
     }
 
     public Shipping get(Long id) {
@@ -76,4 +83,5 @@ public class ShippingService {
             this.shippingDao.delete(id);
         }
     }
+
 }

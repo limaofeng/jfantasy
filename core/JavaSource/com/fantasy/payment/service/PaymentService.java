@@ -1,7 +1,9 @@
 package com.fantasy.payment.service;
 
+import com.fantasy.common.order.OrderServiceFactory;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.spring.mvc.error.NotFoundException;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
@@ -25,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
@@ -47,6 +50,8 @@ public class PaymentService {
     private PaymentConfiguration paymentConfiguration;
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private OrderServiceFactory orderServiceFactory;
 
     /**
      * 支付准备
@@ -174,7 +179,11 @@ public class PaymentService {
     }
 
     public Payment get(Long id) {
-        return this.paymentDao.get(id);
+        Payment payment = this.paymentDao.get(id);
+        if (payment == null) {
+            throw new NotFoundException("[id=" + id + "]对应的支付记录未找到");
+        }
+        return payment;
     }
 
     public void delete(Long... ids) {
@@ -297,4 +306,9 @@ public class PaymentService {
         return context.getPaymentProduct().getPaynotifyMessage(sn);
     }
 
+    public Order getOrderByPaymentId(Long id) {
+        Payment payment = this.get(id);
+        OrderService orderService = orderServiceFactory.get(payment.getOrderType());
+        return orderService.loadOrderBySn(payment.getOrderSn());
+    }
 }
