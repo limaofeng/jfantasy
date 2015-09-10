@@ -1,7 +1,12 @@
 package com.fantasy.framework.util.reflect;
 
+import com.fantasy.framework.util.common.ClassUtil;
+
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Property {
     private String name;
@@ -10,6 +15,7 @@ public class Property {
     private Class<?> propertyType;
     private boolean write;
     private boolean read;
+    private Map<Class<Annotation>, Annotation> annotationCache = new HashMap<Class<Annotation>, Annotation>();
 
     Property(String name, MethodProxy readMethodProxy, MethodProxy writeMethodProxy, Class<?> propertyType) {
         this.read = (readMethodProxy != null);
@@ -45,12 +51,21 @@ public class Property {
     }
 
     public <T extends Annotation> T getAnnotation(Class<T> tClass) {
+        if (annotationCache.containsKey(tClass)) {
+            return (T) annotationCache.get(tClass);
+        }
         T annotation = null;
         if (this.isRead()) {
-            annotation = this.getReadMethod().getAnnotation(tClass);
+            annotationCache.put((Class<Annotation>) tClass, annotation = this.getReadMethod().getAnnotation(tClass));
         }
         if (annotation == null && this.isWrite()) {
-            annotation = this.getWriteMethod().getAnnotation(tClass);
+            annotationCache.put((Class<Annotation>) tClass, annotation = this.getWriteMethod().getAnnotation(tClass));
+        }
+        if (annotation == null) {
+            Field field = ClassUtil.getDeclaredField(this.getReadMethod().getDeclaringClass(), this.name);
+            if (field != null) {
+                annotationCache.put((Class<Annotation>) tClass, annotation = field.getAnnotation(tClass));
+            }
         }
         return annotation;
     }
@@ -64,6 +79,6 @@ public class Property {
     }
 
     public ParameterizedType getGenericType() {
-        return (ParameterizedType)this.getReadMethod().getMethod().getGenericReturnType();
+        return (ParameterizedType) this.getReadMethod().getMethod().getGenericReturnType();
     }
 }

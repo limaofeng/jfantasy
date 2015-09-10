@@ -17,15 +17,18 @@ public class MethodProxy {
     private Object method;
     private Class<?>[] parameterTypes;
     private Class<?> returnType;
+    private Class<?> declaringClass;
 
     public MethodProxy(Object method) {
         this.method = method;
         if (method instanceof FastMethod) {
             this.parameterTypes = ((FastMethod) method).getParameterTypes();
             this.returnType = ((FastMethod) method).getReturnType();
+            this.declaringClass = ((FastMethod) method).getDeclaringClass();
         } else {
             this.parameterTypes = ((Method) method).getParameterTypes();
             this.returnType = ((Method) method).getReturnType();
+            this.declaringClass = ((Method) method).getDeclaringClass();
         }
     }
 
@@ -96,7 +99,7 @@ public class MethodProxy {
         return getMethod().getAnnotations();
     }
 
-    public  <T extends Annotation> T getAnnotation(Class<T> tClass) {
+    public <T extends Annotation> T getAnnotation(Class<T> tClass) {
         return getMethod().getAnnotation(tClass);
     }
 
@@ -115,4 +118,9 @@ public class MethodProxy {
         }
         return null;
     }
+
+    public Class getDeclaringClass() {
+        return this.declaringClass;
+    }
+
 }
