@@ -178,7 +178,7 @@ public class OrderTypeConverterTest {
         order.setOrderType("TEST");
 
         if(!deliveryTypes.isEmpty()) {
-            OgnlUtil.getInstance().setValue("deliveryType.id", order, deliveryTypes.get(0).getId());
+            order.setDeliveryTypeId(deliveryTypes.get(0).getId());
         }
 
         order.setShipName("林暮春");
