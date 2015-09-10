@@ -161,7 +161,7 @@ public class OrderTypeConverterTest {
         }).getPageItems();
 
         if(!deliveryTypes.isEmpty()) {
-            OgnlUtil.getInstance().setValue("deliveryType.id", subOrder, deliveryTypes.get(0).getId());
+            subOrder.setDeliveryTypeId(deliveryTypes.get(0).getId());
         }
 
         subOrder.setShipName("林暮春");
