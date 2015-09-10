@@ -1,7 +1,5 @@
 package com.fantasy.framework.service;
 
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,11 +11,11 @@ public class FTPServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        ftpService = new FTPService();
-        ftpService.setSystemKey(FTPClientConfig.SYST_MACOS_PETER);
-        ftpService.setHostname("115.29.185.235");
-        ftpService.setUsername("root");
-        ftpService.setPassword("Li19881002");
+//        ftpService = new FTPService();
+//        ftpService.setSystemKey(FTPClientConfig.SYST_MACOS_PETER);
+//        ftpService.setHostname("115.29.185.235");
+//        ftpService.setUsername("root");
+//        ftpService.setPassword("Li19881002");
     }
 
     @After
@@ -27,8 +25,8 @@ public class FTPServiceTest {
 
     @Test
     public void testListFiles() throws Exception {
-        FTPClient ftpClient = ftpService.login();
-        ftpService.closeConnection(ftpClient);
+//        FTPClient ftpClient = ftpService.login();
+//        ftpService.closeConnection(ftpClient);
     }
 
     @Test
