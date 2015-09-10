@@ -523,4 +523,15 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return (Class<T>) Object.class;
     }
 
+    public static Class getRealType(Property property) {
+        return getRealType(property.getPropertyType());
+    }
+
+    public static Class getRealType(Class clazz) {
+        if (clazz.isInterface()) {
+            LOGGER.error("The implementation of interface " + clazz.toString() + " is not specified.");
+        }
+        return clazz;
+    }
+
 }

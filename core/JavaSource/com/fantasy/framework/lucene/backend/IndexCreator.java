@@ -1,13 +1,11 @@
 package com.fantasy.framework.lucene.backend;
 
 import com.fantasy.framework.lucene.annotations.BoostSwitch;
-import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.cache.PropertysCache;
 import com.fantasy.framework.lucene.handler.FieldHandler;
 import com.fantasy.framework.lucene.handler.FieldHandlerFactory;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
-
-import java.lang.reflect.Field;
 
 /**
  * 索引文件 生成器
@@ -27,21 +25,20 @@ public class IndexCreator {
     }
 
     public void create(Document doc) {
-        Field[] fields = FieldsCache.getInstance().get(this.obj.getClass());
-        for (Field f : fields) {
-            BoostSwitch bs = f.getAnnotation(BoostSwitch.class);
+        for (Property p : PropertysCache.getInstance().get(this.obj.getClass())) {
+            BoostSwitch bs = p.getAnnotation(BoostSwitch.class);
             if (bs != null) {
                 CompareChecker checker = new CompareChecker(this.obj);
-                boolean fit = checker.isFit(f, bs.compare(), bs.value());
+                boolean fit = checker.isFit(p, bs.compare(), bs.value());
                 if (fit) {
                     doc.setBoost(bs.fit());
                 } else {
                     doc.setBoost(bs.unfit());
                 }
             }
-            Object objValue = FieldUtil.get(this.obj, f);
+            Object objValue = p.getValue(this.obj);
             if (objValue != null) {
-                FieldHandler handler = FieldHandlerFactory.create(this.obj, f, this.prefix);
+                FieldHandler handler = FieldHandlerFactory.create(this.obj, p, this.prefix);
                 if (handler != null) {
                     handler.handle(doc);
                 }

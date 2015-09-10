@@ -43,7 +43,7 @@ public abstract class HibernateLuceneDao<T, PK extends Serializable> extends Hib
     }
 
     @Override
-    public T get(final String id) {
+    public T getById(final String id) {
         return JdbcUtil.transaction(new JdbcUtil.Callback<T>() {
             @Override
             public T run() {

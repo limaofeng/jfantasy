@@ -1,20 +1,10 @@
 package com.fantasy.framework.lucene.backend;
 
-import java.lang.reflect.Field;
-
+import com.fantasy.framework.lucene.annotations.*;
+import com.fantasy.framework.lucene.cache.PropertysCache;
+import com.fantasy.framework.lucene.exception.PropertyException;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.log4j.Logger;
-
-import com.fantasy.framework.lucene.annotations.BoostSwitch;
-import com.fantasy.framework.lucene.annotations.IndexEmbed;
-import com.fantasy.framework.lucene.annotations.IndexEmbedList;
-import com.fantasy.framework.lucene.annotations.IndexFilter;
-import com.fantasy.framework.lucene.annotations.IndexProperty;
-import com.fantasy.framework.lucene.annotations.IndexRef;
-import com.fantasy.framework.lucene.annotations.IndexRefBy;
-import com.fantasy.framework.lucene.annotations.IndexRefList;
-import com.fantasy.framework.lucene.annotations.Indexed;
-import com.fantasy.framework.lucene.cache.FieldsCache;
-import com.fantasy.framework.lucene.exception.FieldException;
 
 public class IndexChecker {
     private IndexChecker() {
@@ -27,7 +17,6 @@ public class IndexChecker {
      *
      * @param clazz
      * @return
-     * @功能描述
      */
     public static boolean hasIndexed(Class<?> clazz) {
         return clazz.getAnnotation(Indexed.class) != null;
@@ -39,13 +28,13 @@ public class IndexChecker {
         if (index != -1) {
             key = key.substring(0, index);
         }
-        Field field = null;
+        Property property = null;
         try {
-            field = FieldsCache.getInstance().getField(clazz, key);
-        } catch (FieldException ex) {
+            property = PropertysCache.getInstance().getProperty(clazz, key);
+        } catch (PropertyException ex) {
             LOGGER.error(ex.getMessage(), ex);
         }
-        if ((field.getAnnotation(IndexProperty.class) != null) || (field.getAnnotation(IndexEmbed.class) != null) || (field.getAnnotation(IndexEmbedList.class) != null) || (field.getAnnotation(IndexRef.class) != null) || (field.getAnnotation(IndexRefList.class) != null) || (field.getAnnotation(IndexRefBy.class) != null) || (field.getAnnotation(BoostSwitch.class) != null) || (field.getAnnotation(IndexFilter.class) != null)) {
+        if ((property.getAnnotation(IndexProperty.class) != null) || (property.getAnnotation(IndexEmbed.class) != null) || (property.getAnnotation(IndexEmbedList.class) != null) || (property.getAnnotation(IndexRef.class) != null) || (property.getAnnotation(IndexRefList.class) != null) || (property.getAnnotation(IndexRefBy.class) != null) || (property.getAnnotation(BoostSwitch.class) != null) || (property.getAnnotation(IndexFilter.class) != null)) {
             result = true;
         }
         return result;
@@ -56,16 +45,15 @@ public class IndexChecker {
      *
      * @param clazz
      * @return
-     * @功能描述
      */
     public static boolean needListener(Class<?> clazz) {
         boolean result = false;
         if (clazz.getAnnotation(Indexed.class) != null) {
             result = true;
         } else {
-            Field[] fields = FieldsCache.getInstance().get(clazz);
-            for (Field f : fields) {
-                IndexRefBy irb = (IndexRefBy) f.getAnnotation(IndexRefBy.class);
+            Property[] properties = PropertysCache.getInstance().get(clazz);
+            for (Property p : properties) {
+                IndexRefBy irb = p.getAnnotation(IndexRefBy.class);
                 if (irb != null) {
                     result = true;
                     break;

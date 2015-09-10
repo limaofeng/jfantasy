@@ -6,6 +6,7 @@ import net.sf.cglib.reflect.FastMethod;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
@@ -35,7 +36,7 @@ public class MethodProxy {
 
     public MethodProxy(Object method, Class<?> parameterType) {
         this(method);
-        if (parameterType != null){
+        if (parameterType != null) {
             this.parameterTypes = new Class[]{parameterType};
         }
     }
@@ -69,7 +70,7 @@ public class MethodProxy {
     }
 
     public static MethodProxy create(Object method) {
-        if (method == null){
+        if (method == null) {
             return null;
         }
         return new MethodProxy(method);
@@ -91,14 +92,22 @@ public class MethodProxy {
         return (this.method instanceof FastMethod) ? ((FastMethod) this.method).getJavaMethod() : (Method) this.method;
     }
 
+    public Annotation[] getAnnotations() {
+        return getMethod().getAnnotations();
+    }
+
+    public  <T extends Annotation> T getAnnotation(Class<T> tClass) {
+        return getMethod().getAnnotation(tClass);
+    }
+
     public String[] getParamNames() {
         try {
             if (this.method instanceof FastMethod) {
                 Class<?> declaringClass = ((FastMethod) this.method).getDeclaringClass();
-                return JavassistUtil.getParamNames(declaringClass.getName(), ((FastMethod)this.method).getName(), this.parameterTypes);
+                return JavassistUtil.getParamNames(declaringClass.getName(), ((FastMethod) this.method).getName(), this.parameterTypes);
             }
             Class<?> declaringClass = ((Method) this.method).getDeclaringClass();
-            return JavassistUtil.getParamNames(declaringClass.getName(), ((FastMethod)this.method).getName(), this.parameterTypes);
+            return JavassistUtil.getParamNames(declaringClass.getName(), ((FastMethod) this.method).getName(), this.parameterTypes);
         } catch (NotFoundException e) {
             LOG.error(e.getMessage(), e);
         } catch (JavassistUtil.MissingLVException e) {

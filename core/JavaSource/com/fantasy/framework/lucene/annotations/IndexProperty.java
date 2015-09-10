@@ -1,5 +1,6 @@
 package com.fantasy.framework.lucene.annotations;
 
+import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
@@ -13,7 +14,7 @@ import java.lang.annotation.Target;
  * @version 1.0
  * @since 2013-1-23 下午03:01:02
  */
-@Target({java.lang.annotation.ElementType.FIELD})
+@Target({ElementType.FIELD, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface IndexProperty {
     /**

@@ -1,30 +1,26 @@
 package com.fantasy.framework.lucene.handler;
 
 import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
-import com.fantasy.framework.lucene.cache.FieldsCache;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import com.fantasy.framework.lucene.cache.PropertysCache;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
 
-import java.lang.reflect.Field;
-
 public class EmbedFieldHandler extends AbstractFieldHandler {
-	public EmbedFieldHandler(Object obj, Field field, String prefix) {
-		super(obj, field, prefix);
-	}
 
-	public void handle(Document doc) {
-		Object embedObj = FieldUtil.get(this.obj, this.field);
-		if (embedObj == null) {
-			return;
-		}
-		Class<?> clazz = FieldUtil.getRealType(this.field);
-		Field[] fields = FieldsCache.getInstance().get(clazz);
-		for (Field f : fields) {
-			IndexEmbedBy ieb = f.getAnnotation(IndexEmbedBy.class);
-			if (ieb != null) {
-				FieldHandler handler = new EmbedByFieldHandler(this.obj.getClass(), embedObj, f, this.prefix);
-				handler.handle(doc);
-			}
-		}
-	}
+    public EmbedFieldHandler(Object obj, Property property, String prefix) {
+        super(obj, property, prefix);
+    }
+
+    public void handle(Document doc) {
+        Object embedObj = this.property.getValue(this.obj);
+        if (embedObj == null) {
+            return;
+        }
+        Class<?> clazz = ClassUtil.getRealType(this.property);
+        for (Property p : PropertysCache.getInstance().filter(clazz, IndexEmbedBy.class)) {
+            FieldHandler handler = new EmbedByFieldHandler(this.obj.getClass(), embedObj, p, this.prefix);
+            handler.handle(doc);
+        }
+    }
 }

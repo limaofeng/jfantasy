@@ -2,7 +2,7 @@ package com.fantasy.framework.lucene.handler;
 
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fantasy.framework.lucene.mapper.DataType;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Fieldable;
@@ -14,17 +14,17 @@ import java.util.Date;
 import java.util.Map;
 
 public class PropertyFieldHandler extends AbstractFieldHandler {
-    public PropertyFieldHandler(Object obj, java.lang.reflect.Field field, String prefix) {
-        super(obj, field, prefix);
+    public PropertyFieldHandler(Object obj, Property property, String prefix) {
+        super(obj, property, prefix);
     }
 
     public void handle(Document doc) {
-        IndexProperty ip = this.field.getAnnotation(IndexProperty.class);
+        IndexProperty ip = this.property.getAnnotation(IndexProperty.class);
         process(doc, ip.analyze(), ip.store(), ip.boost());
     }
 
     protected void process(Document doc, boolean analyze, boolean store, float boost) {
-        Class<?> type = this.field.getType();
+        Class<?> type = this.property.getPropertyType();
         if (type.isArray()) {
             processArray(doc, analyze, store, boost);
         } else {
@@ -33,12 +33,12 @@ public class PropertyFieldHandler extends AbstractFieldHandler {
     }
 
     private void processArray(Document doc, boolean analyze, boolean store, float boost) {
-        Object objValue = FieldUtil.get(this.obj, this.field);
+        Object objValue = this.property.getValue(this.obj);
         if (objValue == null) {
             return;
         }
-        Class<?> type = this.field.getType();
-        String fieldName = this.prefix + this.field.getName();
+        Class<?> type = this.property.getPropertyType();
+        String fieldName = this.prefix + this.property.getName();
         org.apache.lucene.document.Field f = new org.apache.lucene.document.Field(fieldName, getArrayString(objValue, type.getComponentType()), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);
 
         f.setBoost(boost);
@@ -46,12 +46,12 @@ public class PropertyFieldHandler extends AbstractFieldHandler {
     }
 
     private void processPrimitive(Document doc, boolean analyze, boolean store, float boost) {
-        Object objValue = FieldUtil.get(this.obj, this.field);
+        Object objValue = this.property.getValue(this.obj);
         if (objValue == null) {
             return;
         }
-        Class<?> type = this.field.getType();
-        String fieldName = this.prefix + this.field.getName();
+        Class<?> type = this.property.getPropertyType();
+        String fieldName = this.prefix + this.property.getName();
         Fieldable f = null;
         if (DataType.isString(type)) {
             f = new org.apache.lucene.document.Field(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);

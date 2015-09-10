@@ -1,12 +1,12 @@
 package com.fantasy.framework.lucene.handler;
 
 import com.fantasy.framework.lucene.annotations.IndexRefBy;
-import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.cache.PropertysCache;
 import com.fantasy.framework.lucene.mapper.DataType;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -15,22 +15,23 @@ import java.util.Map;
 import java.util.Set;
 
 public class RefListFieldHandler extends AbstractFieldHandler {
-    public RefListFieldHandler(Object obj, Field field, String prefix) {
-        super(obj, field, prefix);
+
+    public RefListFieldHandler(Object obj, Property property, String prefix) {
+        super(obj, property, prefix);
     }
 
     public void handle(Document doc) {
-        Object value = FieldUtil.get(this.obj, this.field);
+        Object value = this.property.getValue(this.obj);
         if (value == null) {
             return;
         }
         Class<?> clazz;
-        Class<?> type = this.field.getType();
+        Class<?> type = this.property.getPropertyType();
         List<Object> list = new ArrayList<Object>();
         if (type.isArray()) {
             clazz = type.getComponentType();
         } else {
-            ParameterizedType paramType = (ParameterizedType) this.field.getGenericType();
+            ParameterizedType paramType = this.property.getGenericType();
             Type[] types = paramType.getActualTypeArguments();
             if (types.length == 1) {
                 clazz = (Class<?>) types[0];
@@ -62,15 +63,11 @@ public class RefListFieldHandler extends AbstractFieldHandler {
                 return;
             }
         }
-        clazz = FieldUtil.getRealType(clazz);
+        clazz = ClassUtil.getRealType(clazz);
         if (!list.isEmpty()) {
-            Field[] fields = FieldsCache.getInstance().get(clazz);
-            for (Field f : fields) {
-                IndexRefBy irb = (IndexRefBy) f.getAnnotation(IndexRefBy.class);
-                if (irb != null) {
-                    FieldHandler handler = new RefByFieldHandler(this.obj.getClass(), list, f, this.prefix);
-                    handler.handle(doc);
-                }
+            for (Property p : PropertysCache.getInstance().filter(clazz, IndexRefBy.class)) {
+                FieldHandler handler = new RefByFieldHandler(this.obj.getClass(), list, p, this.prefix);
+                handler.handle(doc);
             }
         }
     }

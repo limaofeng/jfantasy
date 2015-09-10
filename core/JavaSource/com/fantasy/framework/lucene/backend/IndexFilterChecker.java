@@ -1,10 +1,9 @@
 package com.fantasy.framework.lucene.backend;
 
-import java.lang.reflect.Field;
-
 import com.fantasy.framework.lucene.annotations.Compare;
 import com.fantasy.framework.lucene.annotations.IndexFilter;
-import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.cache.PropertysCache;
+import com.fantasy.framework.util.reflect.Property;
 
 public class IndexFilterChecker {
 
@@ -16,16 +15,13 @@ public class IndexFilterChecker {
 
     public boolean needIndex() {
         Class<?> clazz = this.entity.getClass();
-        Field[] fields = FieldsCache.getInstance().get(clazz);
-        for (Field f : fields) {
-            IndexFilter filter = (IndexFilter) f.getAnnotation(IndexFilter.class);
-            if (filter != null) {
-                Compare compare = filter.compare();
-                String value = filter.value();
-                CompareChecker checker = new CompareChecker(this.entity);
-                if (!checker.isFit(f, compare, value)) {
-                    return false;
-                }
+        for (Property p : PropertysCache.getInstance().filter(clazz, IndexFilter.class)) {
+            IndexFilter filter = p.getAnnotation(IndexFilter.class);
+            Compare compare = filter.compare();
+            String value = filter.value();
+            CompareChecker checker = new CompareChecker(this.entity);
+            if (!checker.isFit(p, compare, value)) {
+                return false;
             }
         }
         return true;

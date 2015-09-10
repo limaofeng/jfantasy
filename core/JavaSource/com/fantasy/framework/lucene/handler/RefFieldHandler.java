@@ -1,44 +1,41 @@
 package com.fantasy.framework.lucene.handler;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.lucene.annotations.IndexRefBy;
-import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.cache.PropertysCache;
 import com.fantasy.framework.lucene.exception.IdException;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import com.fantasy.framework.util.common.ClassUtil;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
-
-import java.lang.reflect.Field;
 
 public class RefFieldHandler extends AbstractFieldHandler {
 
-    public RefFieldHandler(Object obj, Field field, String prefix) {
-        super(obj, field, prefix);
+    public RefFieldHandler(Object obj, Property property, String prefix) {
+        super(obj, property, prefix);
     }
 
     public void handle(Document doc) {
-        Object entity = FieldUtil.get(this.obj, this.field);
+        Object entity = this.property.getValue(this.obj);
         if (entity == null) {
             return;
         }
-        Class<?> clazz = FieldUtil.getRealType(this.field);
-        if (entity != null) {
-            Field[] fields = FieldsCache.getInstance().get(clazz);
-            for (Field f : fields) {
-                IndexRefBy irb = (IndexRefBy) f.getAnnotation(IndexRefBy.class);
-                if (irb != null) {
-                    FieldHandler handler = new RefByFieldHandler(this.obj.getClass(), entity, f, this.prefix);
-                    handler.handle(doc);
-                }
+        Class<?> clazz = ClassUtil.getRealType(this.property);
+        Property[] properties = PropertysCache.getInstance().get(clazz);
+        for (Property p : properties) {
+            IndexRefBy irb = p.getAnnotation(IndexRefBy.class);
+            if (irb != null) {
+                FieldHandler handler = new RefByFieldHandler(this.obj.getClass(), entity, p, this.prefix);
+                handler.handle(doc);
             }
         }
     }
 
-    @SuppressWarnings("unused")
     private String getEntityId(Object obj) {
         try {
-            Field field = FieldsCache.getInstance().getIdField(obj.getClass());
-            return String.valueOf(FieldUtil.get(obj, field));
+            Property property = PropertysCache.getInstance().getIdProperty(obj.getClass());
+            return String.valueOf(property.getValue(obj));
         } catch (IdException e) {
-            throw new RuntimeException("要索引的对象@Id字段不能为空", e);
+            throw new IgnoreException("要索引的对象@Id字段不能为空", e);
         }
     }
 }
