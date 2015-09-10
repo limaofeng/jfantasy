@@ -1,10 +1,10 @@
-package com.fantasy.mall.member.rest;
+package com.fantasy.member.rest;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.mvc.error.ForbiddenException;
 import com.fantasy.framework.spring.mvc.error.NotFoundException;
-import com.fantasy.mall.member.bean.Receiver;
-import com.fantasy.mall.member.service.ReceiverService;
+import com.fantasy.member.bean.Receiver;
+import com.fantasy.member.service.ReceiverService;
 import com.fantasy.member.bean.Member;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;

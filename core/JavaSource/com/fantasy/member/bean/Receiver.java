@@ -1,11 +1,10 @@
-package com.fantasy.mall.member.bean;
+package com.fantasy.member.bean;
 
 import com.fantasy.common.bean.Area;
 import com.fantasy.common.bean.databind.AreaDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.member.bean.Member;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wordnik.swagger.annotations.ApiModel;
@@ -23,7 +22,7 @@ import javax.persistence.*;
  */
 @ApiModel("收货地址信息")
 @Entity
-@Table(name = "MALL_MEM_RECEIVER")
+@Table(name = "MEM_RECEIVER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "areaStore", "member"})
 public class Receiver extends BaseBusEntity {
 

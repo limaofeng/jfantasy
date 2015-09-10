@@ -8,7 +8,6 @@ import com.fantasy.framework.lucene.annotations.Indexed;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.mall.member.bean.Comment;
 import com.fantasy.mall.shop.bean.Shop;
 import com.fantasy.member.bean.Member;
 import com.fantasy.system.util.SettingUtil;
@@ -145,11 +144,6 @@ public class Goods extends BaseDynaBean {
      */
     @Column(name = "SPECIFICATION_ENABLED", nullable = false)
     private Boolean specificationEnabled;
-    /**
-     * 评论
-     */
-    @OneToMany(mappedBy = "goods", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<Comment> comments;
     /**
      * 品牌
      */
@@ -344,20 +338,6 @@ public class Goods extends BaseDynaBean {
      */
     public void setScore(Integer score) {
         this.score = score;
-    }
-
-    /**
-     * 获取评论集合
-     */
-    public List<Comment> getComments() {
-        return comments;
-    }
-
-    /**
-     * 修改评论集合
-     */
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
     }
 
     /**

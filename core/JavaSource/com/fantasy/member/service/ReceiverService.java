@@ -1,9 +1,9 @@
-package com.fantasy.mall.member.service;
+package com.fantasy.member.service;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.mall.member.bean.Receiver;
-import com.fantasy.mall.member.dao.ReceiverDao;
+import com.fantasy.member.bean.Receiver;
+import com.fantasy.member.dao.ReceiverDao;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.userdetails.MemberUser;
 import com.fantasy.security.SpringSecurityUtils;

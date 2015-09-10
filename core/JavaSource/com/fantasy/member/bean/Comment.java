@@ -1,22 +1,24 @@
-package com.fantasy.mall.member.bean;
+package com.fantasy.member.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.mall.goods.bean.Goods;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.*;
 import java.util.List;
 
 /**
- * 商品评论表
+ * 评论表
  *
  * @author 李茂峰
  * @version 1.0
  * @since 2013-9-21 下午4:36:07
  */
+@ApiModel("评论表")
 @Entity
-@Table(name = "MALL_MEM_COMMENT")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@Table(name = "MEM_COMMENT")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "forComment", "replyComments", "member"})
 public class Comment extends BaseBusEntity {
 
     private static final long serialVersionUID = 8413023474799399082L;
@@ -26,30 +28,46 @@ public class Comment extends BaseBusEntity {
     @Id
     @Column(name = "ID", insertable = true, updatable = false)
     private Long id;
+    @ApiModelProperty("用户名")
     @Column(name = "USERNAME")
-    private String username;// 用户名
+    private String username;
+    @ApiModelProperty("内容")
     @Lob
     @Column(name = "CONTENT", nullable = false)
-    private String content;// 内容
+    private String content;
+    @ApiModelProperty("联系方式")
     @Column(name = "CONTACT", nullable = false)
-    private String contact;// 联系方式
+    private String contact;
+    @ApiModelProperty("IP")
     @Column(name = "IP", nullable = false, length = 15)
-    private String ip;// IP
+    private String ip;
+    @ApiModelProperty("是否显示")
     @Column(name = "IS_SHOW", nullable = false)
-    private boolean show;// 是否显示
+    private boolean show;
+    @ApiModelProperty("是否为管理员回复")
     @Column(name = "ADMIN_REPLY", nullable = false)
-    private boolean adminReply;// 是否为管理员回复
+    private boolean adminReply;
+    @ApiModelProperty(value = "评论目标类型", notes = "评论目标类型,(如商品、医生等)")
+    @Column(name = "TARGET_TYPE", nullable = false)
+    private String targetType;
+    @ApiModelProperty(value = "评论目标ID", notes = "评论目标ID,(如商品、医生等)")
+    @Column(name = "TARGET_ID", nullable = false)
+    private Long targetId;
+    @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
+    @Column(name = "PATH", nullable = false, length = 1000)
+    private String path;
+    @ApiModelProperty(value = "上个评论")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GOODS_ID", nullable = false, updatable = false,foreignKey =  @ForeignKey(name = "FK_COMMENT_GOODS"))
-
-    private Goods goods;// 商品
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FOR_COMMENT_ID",foreignKey =  @ForeignKey(name = "FK_COMMENT_FOR_COMMENT"))
-
-    private Comment forComment;// 评论
+    @JoinColumn(name = "FOR_COMMENT_ID", foreignKey = @ForeignKey(name = "FK_COMMENT_FOR_COMMENT"))
+    private Comment forComment;
+    @ApiModelProperty(hidden = true, value = "回复")
     @OneToMany(mappedBy = "forComment", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime asc")
-    private List<Comment> replyComments;// 回复
+    private List<Comment> replyComments;
+    @ApiModelProperty(hidden = true)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
+    private Member member;
 
     public Long getId() {
         return id;
@@ -107,12 +125,28 @@ public class Comment extends BaseBusEntity {
         this.adminReply = adminReply;
     }
 
-    public Goods getGoods() {
-        return goods;
+    public String getTargetType() {
+        return targetType;
     }
 
-    public void setGoods(Goods goods) {
-        this.goods = goods;
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public Long getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(Long targetId) {
+        this.targetId = targetId;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public Comment getForComment() {
@@ -131,4 +165,11 @@ public class Comment extends BaseBusEntity {
         this.replyComments = replyComments;
     }
 
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
 }

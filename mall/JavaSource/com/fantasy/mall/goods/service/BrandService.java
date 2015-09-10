@@ -2,7 +2,6 @@ package com.fantasy.mall.goods.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.mall.goods.bean.Brand;
 import com.fantasy.mall.goods.dao.BrandDao;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class BrandService {
 	 * 
 	 * @param ids
 	 */
-	public void deleteBrand(Long[] ids) {
+	public void delete(Long... ids) {
 		for (Long id : ids) {
 			this.brandDao.delete(id);
 		}
@@ -50,7 +49,7 @@ public class BrandService {
 	 * @param id
 	 * @return
 	 */
-	public Brand getBrand(Long id) {
+	public Brand get(Long id) {
 		return brandDao.get(id);
 	}
 
@@ -71,27 +70,6 @@ public class BrandService {
 	 */
 	public List<Brand> getBrands() {
 		return this.brandDao.find();
-	}
-
-	/**
-	 * 静态获取品牌列表
-	 * 
-	 * @return
-	 */
-	public static List<Brand> listBrands() {
-		BrandService brandService = SpringContextUtil.getBeanByType(BrandService.class);
-		return brandService.getBrands();
-	}
-
-	/**
-	 * 获取品牌
-	 * 
-	 * @param brandId
-	 * @return
-	 */
-	public static Brand brand(Long brandId) {
-		BrandService brandService = SpringContextUtil.getBeanByType(BrandService.class);
-		return brandService.getBrand(brandId);
 	}
 
 }
