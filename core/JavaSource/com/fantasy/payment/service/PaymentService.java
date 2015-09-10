@@ -69,7 +69,7 @@ public class PaymentService {
         if (PaymentConfig.PaymentConfigType.online != paymentConfig.getPaymentConfigType()) {
             throw new PaymentException("暂时只支持在线支付");
         }
-        OrderService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        OrderService paymentOrderDetailsService = this.orderServiceFactory.getOrderService(orderType);
         //检查订单支付状态等信息
         Order orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
 
@@ -207,7 +207,7 @@ public class PaymentService {
         context.setPayment(payment);
 
         PaymentProduct paymentProduct = this.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
-        OrderService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(orderType);
+        OrderService paymentOrderDetailsService = this.orderServiceFactory.getOrderService(orderType);
         context.setPaymentProduct(paymentProduct);
         context.setOrderDetailsService(paymentOrderDetailsService);
 
@@ -284,7 +284,7 @@ public class PaymentService {
         }
         context.setPaymentProduct(paymentProduct);
 
-        OrderService paymentOrderDetailsService = this.paymentConfiguration.getPaymentOrderService(payment.getOrderType());
+        OrderService paymentOrderDetailsService = this.orderServiceFactory.getOrderService(payment.getOrderType());
         context.setOrderDetailsService(paymentOrderDetailsService);
 
         Order orderDetails = paymentOrderDetailsService.loadOrderBySn(payment.getOrderSn());
@@ -308,7 +308,7 @@ public class PaymentService {
 
     public Order getOrderByPaymentId(Long id) {
         Payment payment = this.get(id);
-        OrderService orderService = orderServiceFactory.get(payment.getOrderType());
+        OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
         return orderService.loadOrderBySn(payment.getOrderSn());
     }
 }

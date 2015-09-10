@@ -26,15 +26,24 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 
     private static final long serialVersionUID = 5507435998232223911L;
 
+    public User() {
+    }
+
+    public User(Long id) {
+        this.id = id;
+    }
+
     public enum Type {
         backstage("后台"),
         guide("导诊"),
         pharmacy("药房"),
         doctor("医生");
         private String value;
+
         public String getValue() {
             return this.value;
         }
+
         private Type(String value) {
             this.value = value;
         }
@@ -66,7 +75,6 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     private Type userType;
     /**
      * 用户显示昵称
-     *
      */
     @Column(name = "NICK_NAME", length = 50)
     private String nickName;

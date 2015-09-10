@@ -22,7 +22,6 @@ public class PaymentConfiguration implements InitializingBean {
      * 所有支持的支付产品
      */
     private List<PaymentProduct> paymentProducts = new ArrayList<PaymentProduct>();
-    private Map<String,OrderService> paymentOrderServices = new HashMap<String, OrderService>();
 
     public void setPaymentProducts(List<PaymentProduct> paymentProducts) {
         this.paymentProducts = paymentProducts;
@@ -30,10 +29,6 @@ public class PaymentConfiguration implements InitializingBean {
 
     public PaymentProduct getPaymentProduct(String paymentProductId) {
         return ObjectUtil.find(this.paymentProducts, "id", paymentProductId);
-    }
-
-    public void setPaymentOrderServices(Map<String, OrderService> paymentOrderServices) {
-        this.paymentOrderServices = paymentOrderServices;
     }
 
     // 获取所有支付产品集合
@@ -134,24 +129,6 @@ public class PaymentConfiguration implements InitializingBean {
             pay99bill.setDescription("快钱是国内领先的独立第三方支付企业，旨在为各类企业及个人 提供安全、便捷和保密的综合电子支付服务。");
             this.paymentProducts.add(pay99bill);
         }
-
-        //支付订单service
-        if(!this.paymentOrderServices.containsKey("test")){
-            TestOrderDetailsService orderDetailsService = SpringContextUtil.createBean(TestOrderDetailsService.class,SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
-            orderDetailsService.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
-            orderDetailsService.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
-            orderDetailsService.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
-            this.paymentOrderServices.put("test", orderDetailsService);
-        }
-
-    }
-
-    public OrderService getPaymentOrderService(String orderType) {
-        if(!this.paymentOrderServices.containsKey(orderType)){
-            //TODO 添加自定义异常
-            throw new IgnoreException("orderType["+orderType+"] 对应的 PaymentOrderService 未配置！");
-        }
-        return this.paymentOrderServices.get(orderType);
     }
 
     public static List<PaymentProduct> paymentProducts(){

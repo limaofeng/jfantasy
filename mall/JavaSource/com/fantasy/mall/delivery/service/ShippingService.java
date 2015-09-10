@@ -37,7 +37,7 @@ public class ShippingService {
 
     public Order getOrder(Long id) {
         Shipping shipping = this.shippingDao.get(id);
-        OrderService orderDetailsService = orderServiceFactory.get(shipping.getOrderType());
+        OrderService orderDetailsService = orderServiceFactory.getOrderService(shipping.getOrderType());
         return orderDetailsService.loadOrderBySn(shipping.getOrderSn());
     }
 
@@ -47,7 +47,7 @@ public class ShippingService {
      * @param shipping 必输项: order.id,deliveryType.id,deliverySn，deliveryFee，deliveryItems 可选输入项：memo
      */
     public Shipping save(Shipping shipping) {
-        OrderService orderDetailsService = orderServiceFactory.get(shipping.getOrderType());
+        OrderService orderDetailsService = orderServiceFactory.getOrderService(shipping.getOrderType());
         Order order = orderDetailsService.loadOrderBySn(shipping.getOrderSn());
         DeliveryType deliveryType = deliveryTypeDao.get(shipping.getDeliveryType().getId());
         shipping.setDeliveryType(deliveryType);

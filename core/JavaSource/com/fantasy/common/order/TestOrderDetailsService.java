@@ -3,12 +3,27 @@ package com.fantasy.common.order;
 import com.fantasy.common.service.AreaService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.payment.bean.Payment;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TestOrderDetailsService extends AbstractOrderService {
+@Component
+public class TestOrderDetailsService extends AbstractOrderService implements InitializingBean {
+
+    @Autowired
+    private OrderServiceFactory orderServiceFactory;
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        this.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
+        this.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
+        this.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
+        orderServiceFactory.register("TEST", this);
+    }
 
     @Override
     public Order loadOrderBySn(final String sn) {
@@ -46,7 +61,7 @@ public class TestOrderDetailsService extends AbstractOrderService {
 
             @Override
             public List<OrderItem> getOrderItems() {
-                return new ArrayList<OrderItem>(){
+                return new ArrayList<OrderItem>() {
                     {
                         this.add(new OrderItem() {
                             @Override
