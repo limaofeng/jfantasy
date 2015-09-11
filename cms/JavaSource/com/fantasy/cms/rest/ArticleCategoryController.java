@@ -46,8 +46,6 @@ public class ArticleCategoryController {
     private CmsService cmsService;
 
     /**
-     * @param pager   分页对象
-     * @param filters 过滤条件对象
      * @api {get} /cms/categorys   查询文章分类
      * @apiVersion 3.3.8
      * @apiName searchArticleCategory
@@ -64,8 +62,8 @@ public class ArticleCategoryController {
     @ApiOperation(value = "查询文章分类", notes = "通过该接口, 筛选文章分类")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<ArticleCategory> search(Pager<ArticleCategory> pager, List<PropertyFilter> filters) {
-        return this.cmsService.findCategoryPager(pager, filters);
+    public List<ArticleCategory> search() {
+        return cmsService.getCategorys();
     }
 
     /**
@@ -126,8 +124,6 @@ public class ArticleCategoryController {
     }
 
     /**
-     * @param code:a
-     * @param code:b
      * @api {batchDelete} /cms/categorys/:code   批量删除分类
      * @apiVersion 3.3.5
      * @apiName batchDeleteArticleCategory

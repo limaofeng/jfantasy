@@ -2,10 +2,14 @@ package com.fantasy.cms.bean;
 
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
+import com.fantasy.cms.bean.databind.ArticleCategoryDeserializer;
+import com.fantasy.cms.bean.databind.ArticleCategorySerializer;
 import com.fantasy.cms.bean.databind.ContentDeserializer;
 import com.fantasy.framework.lucene.annotations.*;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
@@ -101,6 +105,9 @@ public class Article extends BaseDynaBean {
      */
     @ApiModelProperty("对应的分类")
     @IndexEmbed
+    @JsonProperty("categoryCode")
+    @JsonSerialize(using = ArticleCategorySerializer.class)
+    @JsonDeserialize(using = ArticleCategoryDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_CODE", nullable = false, foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY"))
     private ArticleCategory category;

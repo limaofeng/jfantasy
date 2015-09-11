@@ -1,13 +1,14 @@
 package com.fantasy.cms.bean;
 
 import com.fantasy.attr.storage.bean.AttributeVersion;
+import com.fantasy.cms.bean.databind.ArticleCategoryDeserializer;
+import com.fantasy.cms.bean.databind.ArticleCategorySerializer;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -15,7 +16,6 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -73,6 +73,9 @@ public class ArticleCategory extends BaseBusEntity {
      * 上级栏目
      */
     @ApiModelProperty("上级分类")
+    @JsonProperty("parentCode")
+    @JsonSerialize(using = ArticleCategorySerializer.class)
+    @JsonDeserialize(using = ArticleCategoryDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PCODE", foreignKey = @ForeignKey(name = "FK_CMS_CATEGORY_PARENT"))
     private ArticleCategory parent;
@@ -138,8 +141,6 @@ public class ArticleCategory extends BaseBusEntity {
         this.sort = sort;
     }
 
-    //    @JsonProperty("parentCode")
-    @JsonSerialize(using = ArticleCategoryParentSerialize.class)
     public ArticleCategory getParent() {
         return parent;
     }
@@ -188,12 +189,4 @@ public class ArticleCategory extends BaseBusEntity {
         this.articleVersion = articleVersion;
     }
 
-    public static class ArticleCategoryParentSerialize extends JsonSerializer<ArticleCategory> {
-
-        @Override
-        public void serialize(ArticleCategory category, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            jgen.writeString(category.getCode());
-        }
-
-    }
 }
