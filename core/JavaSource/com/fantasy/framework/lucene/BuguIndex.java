@@ -11,7 +11,6 @@ import com.fantasy.framework.lucene.dao.LuceneDao;
 import com.fantasy.framework.spring.ClassPathScanner;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.common.file.FileUtil;
@@ -99,7 +98,7 @@ public class BuguIndex implements InitializingBean {
                 if (entityClass.getAnnotation(Indexed.class) == null) {
                     continue;
                 }
-                if(!SpringContextUtil.startup()){
+                if (!SpringContextUtil.startup()) {
                     continue;
                 }
                 LuceneDao dao = (LuceneDao) SpringContextUtil.getBeanByType(clazz);
@@ -120,10 +119,9 @@ public class BuguIndex implements InitializingBean {
             new Timer().schedule(new TimerTask() {
                 @Override
                 public void run() {
-                    System.out.println(">" + DateUtil.format("yyyy-MM-dd HH:mm:ss"));
                     BuguIndex.this.rebuild();
                 }
-            }, 1000 * 60);
+            }, 1000 * 10);
         }
     }
 
