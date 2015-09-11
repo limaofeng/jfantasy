@@ -53,7 +53,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     /**
      * 用户类型
      */
-    @Column(name = "USER_TYPE", length = 20)
+    @Column(name = "USER_TYPE", length = 20, nullable = false)
     private String userType;
     /**
      * 用户显示昵称
@@ -276,4 +276,11 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
         this.organization = organization;
     }
 
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
+    }
 }

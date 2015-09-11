@@ -78,6 +78,7 @@ public class UserControllerTest {
 
     public void testSave() throws Exception{
         User user = new User();
+        user.setUserType("TEST");
         user.setUsername("usertest");
         user.setPassword("123456");
         user.setEnabled(true);
