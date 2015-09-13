@@ -35,10 +35,16 @@ public class Property {
     }
 
     public Object getValue(Object target) {
+        if (!this.read) {
+            return null;
+        }
         return this.readMethodProxy.invoke(target);
     }
 
     public void setValue(Object target, Object value) {
+        if (!this.write) {
+            return;
+        }
         this.writeMethodProxy.invoke(target, value);
     }
 
