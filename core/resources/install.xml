@@ -1,40 +1,41 @@
 <fantasy>
 
-	<hibernate>
-		<sessionFactory>
-			<packagesToScan>
-				<list>
-					<value>com.fantasy.common.bean</value>
-					<value>com.fantasy.attr.storage.bean</value>
-					<value>com.fantasy.file.bean</value>
-					<value>com.fantasy.security.bean</value>
-					<value>com.fantasy.framework.dao.mybatis.keygen.bean</value>
-					<value>com.fantasy.contacts.bean</value>
-					<value>com.fantasy.system.bean</value>
-					<value>com.fantasy.member.bean</value>
-					<value>com.fantasy.payment.bean</value>
-					<value>com.fantasy.swp.bean</value>
-				</list>
-			</packagesToScan>
-		</sessionFactory>
-	</hibernate>
+    <hibernate>
+        <sessionFactory>
+            <packagesToScan>
+                <list>
+                    <value>com.fantasy.common.bean</value>
+                    <value>com.fantasy.attr.storage.bean</value>
+                    <value>com.fantasy.file.bean</value>
+                    <value>com.fantasy.security.bean</value>
+                    <value>com.fantasy.framework.dao.mybatis.keygen.bean</value>
+                    <value>com.fantasy.contacts.bean</value>
+                    <value>com.fantasy.system.bean</value>
+                    <value>com.fantasy.member.bean</value>
+                    <value>com.fantasy.payment.bean</value>
+                    <value>com.fantasy.swp.bean</value>
+                    <value>com.fantasy.sms.bean</value>
+                </list>
+            </packagesToScan>
+        </sessionFactory>
+    </hibernate>
 
-	<mybatis>
-		<sqlSessionFactoryBean>
-			<plugins>
-			
-			</plugins>
-			<typeAliasesPackage>com.fantasy.framework;com.fantasy.website;</typeAliasesPackage>
-			<mapperLocations>
-				<list>
-					<value>classpath:com/fantasy/framework/**/*-Mapper.xml</value>
-					<value>classpath:com/fantasy/website/**/*-Mapper.xml</value>
-				</list>
-			</mapperLocations>
-		</sqlSessionFactoryBean>
-		<mapperScannerConfigurer>
-			<basePackage>com.fantasy.framework;com.fantasy.website;</basePackage>
-		</mapperScannerConfigurer>
-	</mybatis>
+    <mybatis>
+        <sqlSessionFactoryBean>
+            <plugins>
+
+            </plugins>
+            <typeAliasesPackage>com.fantasy.framework;com.fantasy.website;</typeAliasesPackage>
+            <mapperLocations>
+                <list>
+                    <value>classpath:com/fantasy/framework/**/*-Mapper.xml</value>
+                    <value>classpath:com/fantasy/website/**/*-Mapper.xml</value>
+                </list>
+            </mapperLocations>
+        </sqlSessionFactoryBean>
+        <mapperScannerConfigurer>
+            <basePackage>com.fantasy.framework;com.fantasy.website;</basePackage>
+        </mapperScannerConfigurer>
+    </mybatis>
 
 </fantasy>

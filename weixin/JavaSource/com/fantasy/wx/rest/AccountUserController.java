@@ -1,5 +1,6 @@
 package com.fantasy.wx.rest;
 
+import com.fantasy.framework.spring.mvc.error.NotFoundException;
 import com.fantasy.wx.bean.UserInfo;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
@@ -33,8 +34,7 @@ public class AccountUserController {
 
             UserInfo userInfo = userInfoWeiXinService.checkCreateMember(openid);
             if (userInfo == null) {
-                response.sendError(404);
-                return null;
+                throw new NotFoundException("未找到对应的粉丝信息");
             }
             return userInfo;
 
@@ -44,15 +44,14 @@ public class AccountUserController {
     }
 
     @ApiOperation(value = "通过 oauth2 code 获取微信粉丝", notes = "通过 oauth2 code 获取关注的用户信息")
-    @RequestMapping(value = "/{appid}/users/oauth2/{code}", method = RequestMethod.GET)
-    public UserInfo getUserByAuthorizedCode(@PathVariable("appid") String appid, @PathVariable String code, HttpServletResponse response) throws WeiXinException, IOException {
+    @RequestMapping(value = "/{appid}/users/{code}/oauth2", method = RequestMethod.GET)
+    public UserInfo getUserByAuthorizedCode(@PathVariable("appid") String appid, @PathVariable("code") String code, HttpServletResponse response) throws WeiXinException, IOException {
         try {
             WeiXinSessionUtils.saveSession(weiXinSessionFactory.openSession(appid));
 
             User user = WeiXinSessionUtils.getCurrentSession().getOauth2User(code);
             if (user == null) {
-                response.sendError(404);
-                return null;
+                throw new NotFoundException("未找到对应的粉丝信息");
             }
             return view(appid, user.getOpenId(), response);
 

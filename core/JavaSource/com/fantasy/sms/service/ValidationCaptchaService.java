@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -38,6 +39,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * @version 1.0
  * @since 2013-7-4 上午10:27:34
  */
+@Transactional
 public class ValidationCaptchaService {
 
     /**
@@ -65,7 +67,7 @@ public class ValidationCaptchaService {
     public boolean validateResponseForID(String configId, String id, String code) {
         CaptchaConfig config = this.captchaConfigService.get(configId);
         // 配置信息不存在
-        if (configId == null) {
+        if (config == null) {
             if (logger.isDebugEnabled()) {
                 logger.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
             }
@@ -77,7 +79,7 @@ public class ValidationCaptchaService {
             return false;
         }
         // 验证码已经过期
-        if (DateUtil.interval(DateUtil.now(), captcha.getModifyTime(), Calendar.MILLISECOND) > config.getExpires()) {
+        if (DateUtil.interval(DateUtil.now(), captcha.getModifyTime(), Calendar.SECOND) > config.getExpires()) {
             return false;
         }
         // 验证码匹配错误
@@ -105,7 +107,7 @@ public class ValidationCaptchaService {
             throw new IgnoreException("发送的手机号码格式不对:" + phone);
         }
         CaptchaConfig config = this.captchaConfigService.get(configId);
-        if (configId == null) {
+        if (config == null) {
             if (logger.isDebugEnabled()) {
                 logger.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
             }
@@ -118,7 +120,7 @@ public class ValidationCaptchaService {
             captcha.setSessionId(id);
             captcha.setCaptchaConfig(captchaConfig);
             captcha.setValue(captchaConfigService.getWordGenerator(config.getRandomWord()).getWord(config.getWordLength()));
-        } else if (DateUtil.interval(DateUtil.now(), captcha.getModifyTime(), Calendar.MILLISECOND) > config.getActive()) {// 如果验证码超过有效期限，重新生成新的验证码
+        } else if (DateUtil.interval(DateUtil.now(), captcha.getModifyTime(), Calendar.SECOND) > config.getActive()) {// 如果验证码超过有效期限，重新生成新的验证码
             captcha.setValue(captchaConfigService.getWordGenerator(config.getRandomWord()).getWord(config.getWordLength()));
             captcha.setRetry(0);
         } else if (captcha.getRetry() >= config.getRetry()) {  // 如果验证码尝试次数已经超过允许次数，重新生成新的验证码

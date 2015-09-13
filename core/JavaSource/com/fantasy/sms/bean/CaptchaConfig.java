@@ -40,12 +40,12 @@ public class CaptchaConfig extends BaseBusEntity {
 	 * 验证码验证失效时间
 	 */
 	@Column(name = "EXPIRES", length = 8)
-	private int expires = 24 * 60 * 60 * 60;
+	private int expires = 5 * 60;
 	/**
 	 * 验证码重复生成时间
 	 */
 	@Column(name = "ACTIVE", length = 8)
-	private int active = 5 * 60;
+	private int active = 60;
 	/**
 	 * 验证码验证重试次数
 	 */

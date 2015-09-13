@@ -17,7 +17,7 @@ public class DefaultSMSService implements SMSService {
 	// -42 短信内容为空
 	// 大于0 短信发送数量
 	public boolean send(String phone, String value) {
-        LOGGER.debug(phone + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + value);
+        System.out.println(phone + ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + value);
 //		try {
 //			Request request = new Request();
 //			request.addRequestHeader("Content-Type", "application/x-www-form-urlencoded;charset=gbk");

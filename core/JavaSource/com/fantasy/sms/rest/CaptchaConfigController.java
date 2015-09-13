@@ -2,7 +2,6 @@ package com.fantasy.sms.rest;
 
 import com.fantasy.sms.bean.CaptchaConfig;
 import com.fantasy.sms.service.CaptchaConfigService;
-import com.fantasy.sms.service.ValidationCaptchaService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,8 +15,6 @@ import java.util.List;
 @RequestMapping("/sms/configs")
 public class CaptchaConfigController {
 
-    @Autowired(required = false)
-    private ValidationCaptchaService validationCaptchaService;
     @Autowired
     private CaptchaConfigService captchaConfigService;
 

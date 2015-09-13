@@ -11,6 +11,10 @@ public class RestException extends RuntimeException {
         this.statusCode = statusCode;
     }
 
+    public RestException(String message) {
+        super(message);
+    }
+
     public int getStatusCode() {
         return statusCode;
     }
