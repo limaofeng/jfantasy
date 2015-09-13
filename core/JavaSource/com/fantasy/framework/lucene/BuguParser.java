@@ -47,6 +47,7 @@ public final class BuguParser {
      * @return Query
      */
     public static Query parseWildcard(String[] fields, String value) {
+        Assert.isTrue(fields.length != 0, "param fields length must be greater than 1 ");
         WildcardQuery[] wildcardQueries = new WildcardQuery[fields.length];
         for (int i = 0; i < fields.length; i++) {
             wildcardQueries[i] = new WildcardQuery(new Term(fields[i], value));
@@ -63,6 +64,7 @@ public final class BuguParser {
      * @return Query
      */
     public static Query parseWildcard(String[] fields, String value, BooleanClause.Occur occur) {
+        Assert.isTrue(fields.length != 0, "param fields length must be greater than 1 ");
         WildcardQuery[] wildcardQueries = new WildcardQuery[fields.length];
         for (int i = 0; i < fields.length; i++) {
             wildcardQueries[i] = new WildcardQuery(new Term(fields[i], value));
