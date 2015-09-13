@@ -2,6 +2,7 @@ package com.fantasy.cms.rest;
 
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
+import com.fantasy.cms.bean.Content;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -97,7 +98,12 @@ public class ArticleControllerTest {
     }
 
     public void testSave() throws Exception{
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/articles").contentType(MediaType.APPLICATION_JSON).content("{\"title\":\"测试文章保存\",\"summary\":\"保存\",\"category\":{\"code\":\"admintest\"},\"content\":\"测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存\"}")).andDo(MockMvcResultHandlers.print()).andReturn();
+        Article article = new Article();
+        article.setTitle("测试文章保存");
+        article.setSummary("保存");
+        article.setContent(new Content("测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存"));
+        article.setCategory(new ArticleCategory("admintest"));
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/articles").contentType(MediaType.APPLICATION_JSON).content(JSON.serialize(article))).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
