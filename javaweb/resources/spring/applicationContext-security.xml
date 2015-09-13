@@ -99,13 +99,4 @@
     <!-- 自定义权限加载接口 -->
     <bean id="securityMetadataSource" class="com.fantasy.security.web.intercept.SecurityMetadataSource"/>
 
-    <!--JCaptcha验证码服务 -->
-    <bean id="captchaService" class="com.fantasy.framework.jcaptcha.FantasyCaptchaService">
-        <property name="captchaEngine">
-            <bean class="com.fantasy.framework.jcaptcha.DefaultEngine"/>
-        </property>
-        <!-- 默认生成的图片180秒过期 , 可另行设置 -->
-        <property name="minGuarantedStorageDelayInSeconds" value="180"/>
-    </bean>
-
 </beans>

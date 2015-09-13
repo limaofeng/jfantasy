@@ -5,6 +5,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 public class DefaultSMSService implements SMSService {
+
     private final static Log LOGGER = LogFactory.getLog(DefaultSMSService.class);
 	// 短信发送后返回值 说　明
 	// -1 没有该用户账户

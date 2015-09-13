@@ -204,4 +204,7 @@ public class UserInfoWeiXinService implements InitializingBean {
         */
     }
 
+    public UserInfo get(Long id) {
+        return this.userInfoDao.get(id);
+    }
 }
