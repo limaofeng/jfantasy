@@ -2,8 +2,13 @@ package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.member.bean.Member;
+import com.fantasy.member.bean.databind.MemberDeserializer;
+import com.fantasy.member.bean.databind.MemberSerializer;
 import com.fantasy.security.bean.enums.Sex;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -71,11 +76,12 @@ public class UserInfo extends BaseBusEntity {
     //未读消息条数
     @Column(name = "UN_READ_SIZE")
     private Integer unReadSize;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "GROUP_ID")
     private Group group;
-
+    @JsonProperty("memberId")
+    @JsonDeserialize(using = MemberDeserializer.class)
+    @JsonSerialize(using = MemberSerializer.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
