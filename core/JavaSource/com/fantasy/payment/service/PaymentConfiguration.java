@@ -1,17 +1,12 @@
 package com.fantasy.payment.service;
 
-import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.common.order.OrderService;
-import com.fantasy.common.order.TestOrderDetailsService;
 import com.fantasy.payment.product.*;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 支付配置
@@ -131,11 +126,11 @@ public class PaymentConfiguration implements InitializingBean {
         }
     }
 
-    public static List<PaymentProduct> paymentProducts(){
+    public static List<PaymentProduct> paymentProducts() {
         return SpringContextUtil.getBeanByType(PaymentConfiguration.class).getPaymentProducts();
     }
 
-    public static PaymentProduct paymentProduct(String paymentProductId){
+    public static PaymentProduct paymentProduct(String paymentProductId) {
         return SpringContextUtil.getBeanByType(PaymentConfiguration.class).getPaymentProduct(paymentProductId);
     }
 
