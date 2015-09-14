@@ -1,17 +1,18 @@
 package com.fantasy.framework.lucene;
 
+import com.fantasy.attr.framework.CustomBeanFactory;
 import com.fantasy.attr.framework.util.AttributeUtils;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.httpclient.HttpClientUtil;
 import com.fantasy.framework.lucene.bean.News;
 import com.fantasy.framework.lucene.service.NewsService;
-import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.I18nUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.search.Query;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class BuguSearcherTest {
     private NewsService newsService;
     @Autowired
     private AttributeVersionService versionService;
-
+    @Autowired
+    private CustomBeanFactory customBeanFactory;
     private static final Log LOG = LogFactory.getLog(BuguSearcherTest.class);
 
     //    @Before
@@ -42,7 +44,7 @@ public class BuguSearcherTest {
         List<Map<String, String>> list = OgnlUtil.getInstance().getValue("result.data.list", JSON.deserialize(json));
 
         for (Map<String, String> article : list) {
-            News news = ClassUtil.newInstance(News.class.getName() + ClassUtil.CGLIB_CLASS_SEPARATOR + "vt");
+            News news = customBeanFactory.makeDynaBean(News.class, "vt");
             assert news != null;
             news.setTitle(OgnlUtil.getInstance().getValue("title", article).toString());
             news.setSummary(OgnlUtil.getInstance().getValue("summary", article).toString());
@@ -58,12 +60,15 @@ public class BuguSearcherTest {
 
     @Test
     public void testSearch() throws Exception {
-        Pager<News> pager = newsService.search(new Pager<News>(), BuguParser.parse(new String[]{"title", "summary"}, "上海救援"), new BuguHighlighter(new String[]{"title"}, "上海救援"));
+        Thread.sleep(6 * 1000);
+        String value = "scxmgyz";
+        Query query = BuguParser.parseWildcard(new String[]{"title", "pinyin", "qpin"}, "*" + value + "*");
+        Pager<News> pager = newsService.search(new Pager<News>(), query);
 
         LOG.debug("匹配的数据条数:" + pager.getTotalCount());
 
         for (News news : pager.getPageItems()) {
-            LOG.debug(news.getTitle() + " >> " + OgnlUtil.getInstance().getValue("test", news));
+            LOG.debug(news.getTitle() + " >> ");// OgnlUtil.getInstance().getValue("test", news)
         }
 
     }
