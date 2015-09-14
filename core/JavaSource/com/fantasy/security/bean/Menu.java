@@ -1,14 +1,10 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.security.bean.databind.MenuDeserializer;
+import com.fantasy.security.bean.databind.MenuSerializer;
 import com.fantasy.security.bean.enums.MenuType;
 import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
@@ -19,13 +15,12 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.util.List;
 
 @ApiModel(value = "菜单")
 @Entity
 @Table(name = "AUTH_MENU")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parent"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Menu extends BaseBusEntity {
 
@@ -95,18 +90,16 @@ public class Menu extends BaseBusEntity {
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
-    @JsonBackReference
     private List<Menu> children;
     /**
      * 上级菜单
      */
     @ApiModelProperty("上级菜单")
     @JsonProperty("parentId")
-    @JsonSerialize(using = MenuParentSerialize.class)
-    @JsonDeserialize(using = MenuParentDeserialize.class)
+    @JsonSerialize(using = MenuSerializer.class)
+    @JsonDeserialize(using = MenuDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "PID", foreignKey = @ForeignKey(name = "FK_AUTH_MENU_PID"))
-    @JsonManagedReference
     private Menu parent;
 
     public Menu() {
@@ -199,20 +192,6 @@ public class Menu extends BaseBusEntity {
 
     public void setIcon(String icon) {
         this.icon = icon;
-    }
-
-    public static class MenuParentSerialize extends JsonSerializer<Menu> {
-        @Override
-        public void serialize(Menu menu, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            jgen.writeString(menu.getId() != null ? menu.getId().toString() : "");
-        }
-    }
-
-    public static class MenuParentDeserialize extends JsonDeserializer<Menu> {
-        @Override
-        public Menu deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-            return new Menu(jp.getValueAsLong());
-        }
     }
 
     public String getPath() {
