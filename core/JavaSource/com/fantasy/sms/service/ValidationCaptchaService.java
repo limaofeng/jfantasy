@@ -1,22 +1,24 @@
 package com.fantasy.sms.service;
 
 import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.sms.SMSService;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.regexp.RegexpCst;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import com.fantasy.sms.SMSService;
 import com.fantasy.sms.bean.Captcha;
 import com.fantasy.sms.bean.CaptchaConfig;
 import com.fantasy.sms.bean.LogMobile;
 import com.fantasy.sms.dao.CaptchaDao;
 import com.fantasy.sms.dao.LogMobileDao;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
@@ -47,7 +49,9 @@ public class ValidationCaptchaService {
      */
     private SMSService smsService;
 
-    private static final Log logger = LogFactory.getLog(ValidationCaptchaService.class);
+    private Handlebars handlebars = new Handlebars();
+
+    private static final Log LOG = LogFactory.getLog(ValidationCaptchaService.class);
 
     @Autowired
     private CaptchaDao captchaDao;
@@ -68,8 +72,8 @@ public class ValidationCaptchaService {
         CaptchaConfig config = this.captchaConfigService.get(configId);
         // 配置信息不存在
         if (config == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
             }
             return false;
         }
@@ -101,15 +105,15 @@ public class ValidationCaptchaService {
      */
     public String getChallengeForID(String configId, String id, String phone) {
         if (!RegexpUtil.isMatch(phone, RegexpCst.VALIDATOR_MOBILE)) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("发送的手机号码格式不对:" + phone);
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("发送的手机号码格式不对:" + phone);
             }
             throw new IgnoreException("发送的手机号码格式不对:" + phone);
         }
         CaptchaConfig config = this.captchaConfigService.get(configId);
         if (config == null) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
+            if (LOG.isDebugEnabled()) {
+                LOG.debug("configId:" + configId + "\t 对应的配置信息没有找到!");
             }
             throw new IgnoreException("短信验证设置[id=" + configId + "]不存在!");
         }
@@ -134,8 +138,10 @@ public class ValidationCaptchaService {
         boolean status = false;
         String content = "";
         try {
-            content = RegexpUtil.replace(captchaConfig.getTemplate(), "\\{captcha\\}", captcha.getValue());
-            status = smsService.send(phone, content);
+            Template template = handlebars.compileInline(captchaConfig.getTemplate());
+            status = smsService.send(phone, template.apply(data.get()));
+        } catch (IOException e) {
+            LOG.debug(e.getMessage());
         } finally {
             LogMobile logMobile = new LogMobile();
             logMobile.setCaptchaConfig(captchaConfig);

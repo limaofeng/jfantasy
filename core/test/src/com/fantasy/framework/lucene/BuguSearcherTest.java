@@ -13,6 +13,8 @@ import com.fantasy.framework.util.ognl.OgnlUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.search.Query;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +38,7 @@ public class BuguSearcherTest {
     private CustomBeanFactory customBeanFactory;
     private static final Log LOG = LogFactory.getLog(BuguSearcherTest.class);
 
-    //    @Before
+    @Before
     public void setUp() throws Exception {
         versionService.save(News.class.getName(), "vt", AttributeUtils.string("test", "测试字段", "测试字段"));
 
@@ -53,7 +55,7 @@ public class BuguSearcherTest {
         }
     }
 
-    //    @After
+    @After
     public void tearDown() throws Exception {
         newsService.deleteAll();
     }

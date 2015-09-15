@@ -1,18 +1,14 @@
 package com.fantasy.system.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.error.IgnoreException;
+import com.fantasy.system.bean.databind.DataDictionaryKeySerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -75,14 +71,14 @@ public class DataDictionary extends BaseBusEntity {
 
     @ApiModelProperty("KEY")
     @Transient
-    @JsonSerialize(using = DataDictionaryKeySerialize.class)
+    @JsonSerialize(using = DataDictionaryKeySerializer.class)
     public DataDictionaryKey getKey() {
         return DataDictionaryKey.newInstance(this.code, this.type);
     }
 
     @ApiModelProperty("上级数据KEY")
     @Transient
-    @JsonSerialize(using = DataDictionaryKeySerialize.class)
+    @JsonSerialize(using = DataDictionaryKeySerializer.class)
     public DataDictionaryKey getParentKey() {
         if (this.getParent() == null) {
             return null;
@@ -146,21 +142,4 @@ public class DataDictionary extends BaseBusEntity {
         this.children = children;
     }
 
-    public static class DataDictionaryKeySerialize extends JsonSerializer<DataDictionaryKey> {
-
-        @Override
-        public void serialize(DataDictionaryKey dataDictionaryKey, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            try {
-                if (dataDictionaryKey == null) {
-                    jgen.writeString("");
-                } else {
-                    jgen.writeString(dataDictionaryKey.getType() + ":" + dataDictionaryKey.getCode());
-                }
-            } catch (Exception e) {
-                jgen.writeString("");
-                throw new IgnoreException(e.getMessage(), e);
-            }
-        }
-
-    }
 }
