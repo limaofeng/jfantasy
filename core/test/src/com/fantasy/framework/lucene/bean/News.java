@@ -2,7 +2,6 @@ package com.fantasy.framework.lucene.bean;
 
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
-import com.fantasy.framework.dao.hibernate.converter.DESConverter;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fantasy.framework.lucene.annotations.Indexed;
 import com.fantasy.framework.util.common.StringUtil;
@@ -29,8 +28,7 @@ public class News extends BaseDynaBean {
      * 文章标题
      */
     @IndexProperty(analyze = true, store = true)
-    @Column(name = "TITLE")
-    @Convert(converter = DESConverter.class)
+    @Column(name = "TITLE")//@Convert(converter = DESConverter.class)
     private String title;
     /**
      * 摘要
