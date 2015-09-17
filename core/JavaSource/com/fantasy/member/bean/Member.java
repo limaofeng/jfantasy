@@ -6,6 +6,8 @@ import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.UserGroup;
 import com.fantasy.security.userdetails.FantasyUserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.NullSerializer;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -52,6 +54,7 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
      * 登录密码
      */
     @ApiModelProperty("登录密码")
+    @JsonSerialize(using = NullSerializer.class)
     @Column(name = "PASSWORD", length = 20, nullable = false)
     private String password;
     /**
@@ -243,7 +246,6 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
         return "Member{" +
                 "id=" + id +
                 ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
                 ", nickName='" + nickName + '\'' +
                 ", enabled=" + enabled +
                 ", accountNonExpired=" + accountNonExpired +
