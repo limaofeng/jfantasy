@@ -21,7 +21,6 @@ import com.fantasy.security.service.RoleService;
 import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -128,7 +127,7 @@ public class MemberService {
      * 验证邮箱是否已被验证使用
      *
      * @param criterions
-     * @return
+     * @return Member
      */
     public Member findUnique(Criterion... criterions) {
         return this.memberDao.findUnique(criterions);
@@ -137,8 +136,8 @@ public class MemberService {
     /**
      * 保存对象
      *
-     * @param member
-     * @return
+     * @param member member
+     * @return Member
      */
     @CacheEvict(key = "'findUniqueByUsername' + #member.username ", value = "fantasy.security.memberService")
     public Member save(Member member) {
@@ -160,10 +159,9 @@ public class MemberService {
     /**
      * 获取对象
      *
-     * @param id
-     * @return
+     * @param id id
+     * @return Member
      */
-    // @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Member get(Long id) {
         return this.memberDao.get(id);
     }
@@ -171,7 +169,7 @@ public class MemberService {
     /**
      * 根据id 批量删除
      *
-     * @param ids
+     * @param ids ids
      */
     public void delete(Long... ids) {
         for (Long id : ids) {
@@ -188,7 +186,12 @@ public class MemberService {
         this.applicationContext.publishEvent(new LogoutEvent(findUniqueByUsername(username)));
     }
 
-    @Cacheable(value = "fantasy.security.memberService", key = "'findUniqueByUsername' + #username ")
+    /**
+     * 根据用户名查询用户
+     *
+     * @param username 用户名
+     * @return Member
+     */
     public Member findUniqueByUsername(String username) {
         Member member = this.memberDao.findUniqueBy("username", username);
         if (member == null) {
