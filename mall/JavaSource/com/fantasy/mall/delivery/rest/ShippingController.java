@@ -7,6 +7,7 @@ import com.fantasy.mall.delivery.bean.DeliveryCorp;
 import com.fantasy.mall.delivery.bean.DeliveryItem;
 import com.fantasy.mall.delivery.bean.DeliveryType;
 import com.fantasy.mall.delivery.bean.Shipping;
+import com.fantasy.mall.delivery.rest.form.ShippingForm;
 import com.fantasy.mall.delivery.service.ShippingService;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
@@ -71,8 +72,8 @@ public class ShippingController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public Shipping create(@RequestBody Shipping shipping) {
-        return this.shippingService.save(shipping);
+    public Shipping create(@RequestBody ShippingForm shippingForm) {
+        return this.shippingService.save(shippingForm.getDeliveryTypeId(), shippingForm.getOrderSn(), shippingForm.getOrderType(), shippingForm.getDeliveryItems());
     }
 
     @ApiOperation(value = "删除送货信息", notes = "通过该接口, 删除送货信息")

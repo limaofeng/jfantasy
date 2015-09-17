@@ -1,3 +1,4 @@
+
 package com.fantasy.mall.delivery.bean;
 
 import com.fantasy.common.order.OrderItem;
