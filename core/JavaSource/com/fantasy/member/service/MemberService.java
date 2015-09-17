@@ -3,6 +3,7 @@ package com.fantasy.member.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.service.MailSendService;
+import com.fantasy.framework.spring.mvc.error.PasswordException;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpCst;
@@ -10,19 +11,22 @@ import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.bean.MemberDetails;
 import com.fantasy.member.dao.MemberDao;
+import com.fantasy.member.event.context.LoginEvent;
+import com.fantasy.member.event.context.LogoutEvent;
+import com.fantasy.member.event.context.RegisterEvent;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.UserGroup;
 import com.fantasy.security.service.RoleService;
 import com.fantasy.system.util.SettingUtil;
 import org.hibernate.criterion.Criterion;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,24 +47,43 @@ public class MemberService {
     @Autowired
     private RoleService roleService;
     @Autowired
-    private MailSendService mailSendService;
+    private ApplicationContext applicationContext;
 
     /**
      * 列表查询
      *
      * @param pager   分页
      * @param filters 查询条件
-     * @return
+     * @return Pager<Member>
      */
     public Pager<Member> findPager(Pager<Member> pager, List<PropertyFilter> filters) {
         return this.memberDao.findPager(pager, filters);
     }
 
     /**
+     * 会员登录接口
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return Member
+     */
+    public Member login(String username, String password) {
+        Member member = this.memberDao.findUniqueBy("username", username);
+        PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
+        if (encoder.isPasswordValid(member.getPassword(), password, null)) {
+            throw new PasswordException("用户名和密码错误");
+        }
+        member.setLastLoginTime(DateUtil.now());
+        this.memberDao.save(member);
+        this.applicationContext.publishEvent(new LoginEvent(member));
+        return member;
+    }
+
+    /**
      * 前台注册页面保存
      *
-     * @param member
-     * @return
+     * @param member 注册信息
+     * @return Member
      */
     public Member register(Member member) {
         if (member.getDetails() == null) {// 初始化用户信息对象
@@ -90,14 +113,16 @@ public class MemberService {
         member.setRoles(roles);
         member.setUserGroups(new ArrayList<UserGroup>());
         // 保存用户
-        return this.memberDao.save(member);
+        applicationContext.publishEvent(new RegisterEvent(member = this.memberDao.save(member)));
+        return member;
     }
 
     /**
-     * 普通用户注册，要填写邮箱
-     *
-     * @param member
-     */
+      普通用户注册，要填写邮箱
+      @param member
+      @param url
+      @param title
+      @param ftl
     public void sendemail(Member member, String url, String title, String ftl) {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("member", member);
@@ -105,7 +130,7 @@ public class MemberService {
         map.put("url", requestUrl + url);
         map.put("path", requestUrl);
         this.mailSendService.sendHtmlEmail(title, ftl, map, member.getDetails().getEmail());
-    }
+    }*/
 
     public List<Member> find(Criterion... criterions) {
         return this.memberDao.find(criterions);
@@ -167,30 +192,19 @@ public class MemberService {
     }
 
     /**
-     * customer登录
+     * 退出
      *
-     * @param user
+     * @param username 用户名
      */
-    public void login(Member user) {
-        user.setLastLoginTime(DateUtil.now());
-        this.memberDao.update(user);
-    }
-
-    /**
-     * customer登出
-     *
-     * @param user
-     * @功能描述
-     */
-    public void logout(Member user) {
-
+    public void logout(String username) {
+        this.applicationContext.publishEvent(new LogoutEvent(findUniqueByUsername(username)));
     }
 
     @Cacheable(value = "fantasy.security.memberService", key = "'findUniqueByUsername' + #username ")
     public Member findUniqueByUsername(String username) {
         Member member = this.memberDao.findUniqueBy("username", username);
         if (member == null) {
-            return member;
+            return null;
         }
         SpringSecurityUtils.getAuthorities(member);
         return member;
