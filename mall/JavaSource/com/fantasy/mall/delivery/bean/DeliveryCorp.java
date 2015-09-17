@@ -3,6 +3,7 @@ package com.fantasy.mall.delivery.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModel;
+import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -36,7 +37,7 @@ public class DeliveryCorp extends BaseBusEntity {
     private Integer sort;// 排序
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;// 介绍
-
+    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "defaultDeliveryCorp", fetch = FetchType.LAZY)
     private List<DeliveryType> deliveryTypes;// 配送方式
 

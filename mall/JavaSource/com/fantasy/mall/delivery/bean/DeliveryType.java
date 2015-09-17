@@ -76,7 +76,7 @@ public class DeliveryType extends BaseBusEntity {
     @ApiModelProperty("介绍")
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;
-    @ApiModelProperty(value = "默认物流公司", hidden = true)
+    @ApiModelProperty(value = "默认物流公司")
     @JsonProperty("corpId")
     @JsonDeserialize(using = DeliveryCorpDeserializer.class)
     @JsonSerialize(using = DeliveryCorpSerializer.class)
