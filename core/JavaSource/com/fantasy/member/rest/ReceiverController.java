@@ -26,7 +26,7 @@ public class ReceiverController {
     @RequestMapping(value = "/{memid}/receivers", method = RequestMethod.GET)
     @ResponseBody
     public List<Receiver> search(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQS_member.id", memberId.toString()));
+        filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
         return this.receiverService.find(filters, "isDefault", "asc");
     }
 
