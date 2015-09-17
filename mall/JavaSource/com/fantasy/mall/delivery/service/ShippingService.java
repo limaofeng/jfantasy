@@ -15,7 +15,6 @@ import com.fantasy.mall.delivery.dao.ShippingDao;
 import com.fantasy.mall.delivery.event.context.ShippingEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationEvent;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -61,6 +60,7 @@ public class ShippingService {
         shipping.setOrderSn(orderSn);
         shipping.setOrderType(orderType);
         shipping.setDeliveryType(new DeliveryType(deliveryTypeId));
+        shipping.setDeliveryItems(items);
         //获取订单信息
         OrderService orderDetailsService = orderServiceFactory.getOrderService(orderType);
         Order order = orderDetailsService.loadOrderBySn(orderSn);
@@ -77,16 +77,15 @@ public class ShippingService {
         shipping.setShipZipCode(order.getShipAddress().getZipCode());
         shipping.setShipPhone(order.getShipAddress().getPhone());
         shipping.setShipMobile(order.getShipAddress().getMobile());
+
+        shipping = this.shippingDao.save(shipping);
+
         // 初始化物流项
         for (DeliveryItem item : shipping.getDeliveryItems()) {
             item.initialize(ObjectUtil.find(order.getOrderItems(), "sn", item.getSn()));
             item.setShipping(shipping);
-        }
-        shipping = this.shippingDao.save(shipping);
-        for (DeliveryItem item : shipping.getDeliveryItems()) {
             this.deliveryItemDao.save(item);
         }
-        shipping.setDeliveryItems(shipping.getDeliveryItems());
         applicationContext.publishEvent(new ShippingEvent(shipping, order));
         return shipping;
     }

@@ -10,6 +10,7 @@ import com.fantasy.mall.delivery.bean.Shipping;
 import com.fantasy.mall.delivery.dao.DeliveryTypeDao;
 import com.fantasy.mall.delivery.dao.ShippingDao;
 import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -104,6 +105,10 @@ public class DeliveryTypeService {
             Hibernate.initialize(deliveryItem);
         }
         return shipping;
+    }
+
+    public DeliveryType findUnique(Criterion... criterions) {
+        return this.deliveryTypeDao.findUnique(criterions);
     }
 
 }

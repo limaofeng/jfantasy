@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.mall.delivery.bean.DeliveryCorp;
 import com.fantasy.mall.delivery.dao.DeliveryCorpDao;
+import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -58,6 +59,10 @@ public class DeliveryCorpService {
 
     public Pager<DeliveryCorp> findPager(Pager<DeliveryCorp> pager, ArrayList<PropertyFilter> filters) {
         return this.deliveryCorpDao.findPager(pager, filters);
+    }
+
+    public DeliveryCorp findUnique(Criterion... criterions) {
+        return this.deliveryCorpDao.findUnique(criterions);
     }
 
 }
