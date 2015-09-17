@@ -2,10 +2,14 @@ package com.fantasy.mall.delivery.rest;
 
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
-import com.fantasy.mall.delivery.bean.DeliveryItem;
-import com.fantasy.mall.delivery.bean.Shipping;
+import com.fantasy.mall.delivery.bean.DeliveryCorp;
+import com.fantasy.mall.delivery.bean.DeliveryType;
+import com.fantasy.mall.delivery.rest.form.DeliveryItemForm;
+import com.fantasy.mall.delivery.rest.form.ShippingForm;
+import com.fantasy.mall.delivery.service.DeliveryCorpService;
 import com.fantasy.mall.delivery.service.DeliveryTypeService;
 import junit.framework.Assert;
+import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,6 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 
@@ -38,38 +43,62 @@ public class ShippingControllerTest {
 
     @Autowired
     private DeliveryTypeService deliveryTypeService;
-
+    @Autowired
+    private DeliveryCorpService deliveryCorpService;
     @Before
     public void setUp() throws Exception {
         mockMvc = MockMvcBuilders.webAppContextSetup(context).build();
+        DeliveryCorp corp = deliveryCorpService.findUnique(Restrictions.eq("name", "测试物流公司"));
+        if(corp == null) {
+            corp = new DeliveryCorp();
+            corp.setName("测试物流公司");
+            corp.setDescription("测试物流公司");
+            corp.setUrl("http://test.corp.com");
+            corp = deliveryCorpService.save(corp);
+        }
+
+        DeliveryType deliveryType = deliveryTypeService.findUnique(Restrictions.eq("name", "TEST"));
+        if(deliveryType == null) {
+            deliveryType = new DeliveryType();
+            deliveryType.setName("TEST");
+            deliveryType.setMethod(DeliveryType.DeliveryMethod.deliveryAgainstPayment);
+            deliveryType.setFirstWeight(50);
+            deliveryType.setFirstWeightPrice(BigDecimal.ONE);
+            deliveryType.setContinueWeight(10);
+            deliveryType.setContinueWeightPrice(BigDecimal.ONE);
+            deliveryType.setDefaultDeliveryCorp(corp);
+            deliveryTypeService.save(deliveryType);
+        }
     }
 
     @After
     public void tearDown() throws Exception {
-
+        DeliveryType deliveryType = deliveryTypeService.findUnique(Restrictions.eq("name", "TEST"));
+        if (deliveryType != null) {
+            this.deliveryTypeService.delete(deliveryType.getId());
+        }
     }
 
-    @Test
     public void testSearch() throws Exception {
 
     }
 
-    @Test
     public void testView() throws Exception {
 
     }
 
     @Test
     public void testCreate() throws Exception {
-        Shipping shipping = new Shipping();
-        OgnlUtil.getInstance().setValue("deliveryType.id", shipping, deliveryTypeService.get(1L).getId());
+        DeliveryType deliveryType = deliveryTypeService.findUnique(Restrictions.eq("name", "TEST"));
+
+        ShippingForm shipping = new ShippingForm();
+        OgnlUtil.getInstance().setValue("deliveryTypeId", shipping, deliveryType.getId());
         shipping.setOrderSn("SN000001");
         shipping.setOrderType("TEST");
-        shipping.setMemo("测试数据");
 
-        shipping.setDeliveryItems(new ArrayList<DeliveryItem>() {
+        shipping.setItems(new ArrayList<DeliveryItemForm>() {
             {
-                DeliveryItem deliveryItem = new DeliveryItem();
+                DeliveryItemForm deliveryItem = new DeliveryItemForm();
                 deliveryItem.setSn("SN000001");
                 deliveryItem.setQuantity(1);
                 this.add(deliveryItem);
@@ -80,7 +109,6 @@ public class ShippingControllerTest {
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }
 
-    @Test
     public void testDelete() throws Exception {
 
     }

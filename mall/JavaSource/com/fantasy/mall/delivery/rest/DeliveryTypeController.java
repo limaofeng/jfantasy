@@ -60,6 +60,8 @@ public class DeliveryTypeController {
 
     @ApiOperation(value = "删除配送方式", notes = "通过该接口, 删除配送方式")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseBody
     public void delete(@PathVariable("id") Long id) {
         this.deliveryTypeService.delete(id);
     }
