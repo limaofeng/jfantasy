@@ -4,6 +4,7 @@ import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.system.bean.DataDictionaryType;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,13 +12,10 @@ import com.fasterxml.jackson.databind.ser.FilterProvider;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import junit.framework.Assert;
-import ognl.Ognl;
 import ognl.OgnlException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
-
-import java.util.HashMap;
 
 /**
  * json 测试类
@@ -28,6 +26,14 @@ public class JSONTest {
 
     @Test
     public void serializeDynaBean(){
+        Member member = new Member();
+        member.setUsername("limaofeng");
+        member.setPassword("123456");
+        LOG.debug(JSON.serialize(member));
+
+        String json = "{\"username\":\"limaofeng\",\"enabled\":false,\"password\":\"123456\",\"accountNonLocked\":false,\"credentialsNonExpired\":false}";
+        member = JSON.deserialize(json,Member.class);
+        LOG.debug(member);
 //        Class clazz = AsmUtil.makeClass(Article.class.getName() + "$json", Article.class.getName(), new Property("test", String.class));
 //        Object object = ClassUtil.newInstance(clazz);
 //        LOG.debug(JSON.serialize(object));
@@ -42,10 +48,19 @@ public class JSONTest {
 
     @Test
     public void serialize() throws OgnlException {
-        Member member= new Member();
-        member.setUsername("limaofeng");
-        member.setPassword("123456");
-        member.setNickName("张三");
+
+        DataDictionaryType ddt = new DataDictionaryType();
+        ddt.setCode("junit-test");
+        ddt.setName("junit-测试");
+        
+        System.out.println(JSON.serialize(ddt));
+
+        System.out.println(JSON.deserialize(JSON.serialize(ddt)));
+
+//        Member member= new Member();
+//        member.setUsername("limaofeng");
+//        member.setPassword("123456");
+//        member.setNickName("张三");
 
         //测试普通json转换
         //Assert.assertEquals(JSON.unicode().serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"\\u5F20\\u4E09\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":null,\"details\":null}");
@@ -54,15 +69,15 @@ public class JSONTest {
         //测试set json 转换
         //Assert.assertEquals(JSON.serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"张三\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":null,\"details\":null}");
         //测试 date
-        member.setLastLoginTime(DateUtil.parse("2014-10-20 10:29:34"));
+//        member.setLastLoginTime(DateUtil.parse("2014-10-20 10:29:34"));
         //Assert.assertEquals(JSON.serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"张三\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":\"2014-10-20 10:29:34\",\"details\":null}");
 
-        Ognl.getValue("@com.fantasy.framework.util.jackson.JSON@serialize(pager)",new HashMap(){
-            {
-                this.put("pager",new Object());
-                this.put("array",new String[0]);
-            }
-        });
+//        Ognl.getValue("@com.fantasy.framework.util.jackson.JSON@serialize(pager)",new HashMap(){
+//            {
+//                this.put("pager",new Object());
+//                this.put("array",new String[0]);
+//            }
+//        });
     }
 
     @Test

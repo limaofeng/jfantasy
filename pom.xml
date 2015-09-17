@@ -7,7 +7,7 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.3.14</version>
+    <version>3.3.15</version>
 
     <distributionManagement>
         <repository>
@@ -35,7 +35,7 @@
         <freemarker-version>2.3.19</freemarker-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
         <org.mybatis-version>3.2.7</org.mybatis-version>
-        <com.fantasy-version>3.3.14</com.fantasy-version>
+        <com.fantasy-version>3.3.15</com.fantasy-version>
         <commons-codec-version>1.8</commons-codec-version>
         <spymemcached-version>2.11.6</spymemcached-version>
         <commons-lang3-version>3.3.2</commons-lang3-version>

@@ -38,4 +38,8 @@
     </bean>
     -->
 
+    <task:scheduler id="taskScheduler" pool-size="10"/>
+
+    <task:annotation-driven executor="executor" scheduler="taskScheduler" proxy-target-class="true"/>
+
 </beans>

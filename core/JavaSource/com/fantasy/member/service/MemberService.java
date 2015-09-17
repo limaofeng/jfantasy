@@ -2,7 +2,7 @@ package com.fantasy.member.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.service.MailSendService;
+import com.fantasy.framework.spring.mvc.error.LoginException;
 import com.fantasy.framework.spring.mvc.error.PasswordException;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -18,7 +18,6 @@ import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.Role;
 import com.fantasy.security.bean.UserGroup;
 import com.fantasy.security.service.RoleService;
-import com.fantasy.system.util.SettingUtil;
 import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -29,9 +28,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 会员管理
@@ -70,8 +67,14 @@ public class MemberService {
     public Member login(String username, String password) {
         Member member = this.memberDao.findUniqueBy("username", username);
         PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
-        if (encoder.isPasswordValid(member.getPassword(), password, null)) {
+        if (member == null || encoder.isPasswordValid(member.getPassword(), password, null)) {
             throw new PasswordException("用户名和密码错误");
+        }
+        if (!member.isEnabled()) {
+            throw new LoginException("用户被禁用");
+        }
+        if (!member.isAccountNonLocked()) {
+            throw new LoginException("用户被锁定");
         }
         member.setLastLoginTime(DateUtil.now());
         this.memberDao.save(member);
@@ -116,21 +119,6 @@ public class MemberService {
         applicationContext.publishEvent(new RegisterEvent(member = this.memberDao.save(member)));
         return member;
     }
-
-    /**
-      普通用户注册，要填写邮箱
-      @param member
-      @param url
-      @param title
-      @param ftl
-    public void sendemail(Member member, String url, String title, String ftl) {
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("member", member);
-        String requestUrl = SettingUtil.getServerUrl();
-        map.put("url", requestUrl + url);
-        map.put("path", requestUrl);
-        this.mailSendService.sendHtmlEmail(title, ftl, map, member.getDetails().getEmail());
-    }*/
 
     public List<Member> find(Criterion... criterions) {
         return this.memberDao.find(criterions);
