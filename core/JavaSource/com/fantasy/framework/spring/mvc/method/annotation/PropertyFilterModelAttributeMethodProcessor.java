@@ -1,7 +1,6 @@
 package com.fantasy.framework.spring.mvc.method.annotation;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -28,7 +27,10 @@ import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
 
 public class PropertyFilterModelAttributeMethodProcessor implements HandlerMethodArgumentResolver {
 
@@ -138,9 +140,7 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
         List<Object> target = (List<Object>) binder.getTarget();
         for (String paramName : servletRequest.getParameterMap().keySet()) {
             String[] values = request.getParameterValues(paramName);
-            if (values.length == 0 || StringUtil.isBlank(values[0])) {
-                target.add(new PropertyFilter(paramName));
-            } else if (values.length == 1) {
+            if (values.length == 1) {
                 target.add(new PropertyFilter(paramName, values[0]));
             } else {
                 target.add(new PropertyFilter(paramName, values));
