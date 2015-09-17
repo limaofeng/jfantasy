@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.mall.delivery.bean.databind.DeliveryCorpDeserializer;
 import com.fantasy.mall.delivery.bean.databind.DeliveryCorpSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.wordnik.swagger.annotations.ApiModel;
@@ -76,6 +77,7 @@ public class DeliveryType extends BaseBusEntity {
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;
     @ApiModelProperty(value = "默认物流公司", hidden = true)
+    @JsonProperty("corpId")
     @JsonDeserialize(using = DeliveryCorpDeserializer.class)
     @JsonSerialize(using = DeliveryCorpSerializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
