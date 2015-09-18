@@ -5,7 +5,6 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
 import com.fantasy.wx.bean.User;
-import com.fantasy.wx.service.UserInfoWeiXinService;
 import junit.framework.Assert;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.util.xml.XStreamTransformer;
@@ -92,7 +91,7 @@ public class UserWeiXinServiceTest {
 
     @Test
     public void testRefreshMessage() throws Exception {
-        User ui = iUserInfoService.getUserInfo("test");
+        User ui = iUserInfoService.get("test");
         Assert.assertNotNull(ui);
         logger.debug(JSON.serialize(ui));
         iUserInfoService.refreshMessage(ui);

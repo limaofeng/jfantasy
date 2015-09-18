@@ -6,7 +6,6 @@ import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.message.content.Menu;
 import com.fantasy.wx.framework.oauth2.Scope;
 import com.fantasy.wx.service.MenuWeiXinService;
-import com.fantasy.wx.service.UserInfoWeiXinService;
 import junit.framework.Assert;
 import me.chanjar.weixin.common.api.WxConsts;
 import org.apache.commons.logging.Log;
