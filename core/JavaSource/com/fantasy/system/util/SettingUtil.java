@@ -165,9 +165,6 @@ public class SettingUtil {
         return html;
     }
 
-    public static Long getWebsiteId() {
-        return current().getId();
-    }
 
     private static Website current() {
         Website website = threadLocal.get();
