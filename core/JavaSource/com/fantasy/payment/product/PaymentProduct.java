@@ -14,12 +14,6 @@ public interface PaymentProduct {
      */
     String getPaymentUrl();
 
-    /**
-     * 支付产品名称
-     *
-     * @return String
-     */
-    String getName();
 
     /**
      * 支付请求参数
@@ -57,7 +51,7 @@ public interface PaymentProduct {
      * @param sParaTemp 请求参数数组
      * @return 提交表单HTML文本
      */
-    public String buildRequest(Map<String, String> sParaTemp);
+    String buildRequest(Map<String, String> sParaTemp);
 
     /**
      * 解析支付结果
@@ -65,5 +59,62 @@ public interface PaymentProduct {
      * @param parameters 支付结果
      * @return PayResult
      */
-    public PayResult parsePayResult(Map<String, String> parameters);
+    PayResult parsePayResult(Map<String, String> parameters);
+
+
+    /**
+     * 支付产品标示
+     *
+     * @return String
+     */
+    String getId();
+
+    /**
+     * 支付产品名称
+     *
+     * @return String
+     */
+    String getName();
+
+    /**
+     * 收款方账号
+     *
+     * @return String
+     */
+    String getShroffAccountName();
+
+    /**
+     * 商户ID参数名称
+     *
+     * @return String
+     */
+    String getBargainorIdName();
+
+    /**
+     * 密钥参数名称
+     *
+     * @return String
+     */
+    String getBargainorKeyName();
+
+    /**
+     * 支付产品描述
+     *
+     * @return String
+     */
+    String getDescription();
+
+    /**
+     * 支付产品LOGO路径
+     *
+     * @return String
+     */
+    String getLogoPath();
+
+    /**
+     * 支持货币类型
+     *
+     * @return CurrencyType[]
+     */
+    CurrencyType[] getCurrencyTypes();
 }

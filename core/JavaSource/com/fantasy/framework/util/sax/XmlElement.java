@@ -7,11 +7,17 @@ import java.util.Map;
 import java.util.Observable;
 
 public class XmlElement extends Observable implements Cloneable {
+
+    public static XmlElement Empty = new XmlElement();
+
     private String tagName;
     private String content;
     private Map<String, String> attribute;
     private List<XmlElement> childNodes;
     private XmlElement parent;
+
+    public XmlElement() {
+    }
 
     public XmlElement(String qName) {
         this.tagName = qName;
@@ -99,12 +105,11 @@ public class XmlElement extends Observable implements Cloneable {
 
     public XmlElement getChildNodeByTagName(String tagName) {
         List<XmlElement> childNodes = getChildNodes();
-        for (int i = 0; i < childNodes.size(); i++) {
-            XmlElement element = childNodes.get(i);
+        for (XmlElement element : childNodes) {
             if (element.getTagName().equalsIgnoreCase(tagName)) {
                 return element;
             }
         }
-        return null;
+        return XmlElement.Empty;
     }
 }

@@ -7,8 +7,7 @@ import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.EventMessage;
 import com.fantasy.wx.framework.message.content.Event;
 import com.fantasy.wx.framework.session.WeiXinSession;
-import com.fantasy.wx.service.UserInfoWeiXinService;
-
+import com.fantasy.wx.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +19,7 @@ public class SubscribeListener implements SubscribeEventListener {
     private final static Log LOG = LogFactory.getLog(SubscribeListener.class);
 
     @Autowired
-    private UserInfoWeiXinService userInfoWeiXinService;
+    private UserService userService;
 
     @Override
     public void onSubscribe(final WeiXinSession session, Event event, final EventMessage message) {
@@ -31,7 +30,7 @@ public class SubscribeListener implements SubscribeEventListener {
             public void run() {
                 try {
                     WeiXinSessionUtils.saveSession(session);
-                    userInfoWeiXinService.checkCreateMember(message.getFromUserName());
+                    userService.checkCreateMember(message.getFromUserName());
                 } catch (WeiXinException e) {
                     LOG.error(e.getMessage(), e);
                 } finally {

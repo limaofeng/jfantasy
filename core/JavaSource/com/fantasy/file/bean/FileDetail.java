@@ -226,6 +226,11 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
         this.ext = ext;
     }
 
+    @Transient
+    public String getFileDetailKey() {
+        return FileDetailKey.newInstance(this.absolutePath, this.fileManagerId).toString();
+    }
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         return ObjectUtil.clone(this);

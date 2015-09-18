@@ -4,13 +4,14 @@ import com.fantasy.file.service.FileUploadService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.member.service.MemberService;
-import com.fantasy.wx.bean.UserInfo;
-import com.fantasy.wx.dao.UserInfoDao;
+import com.fantasy.wx.bean.User;
+import com.fantasy.wx.bean.UserKey;
+import com.fantasy.wx.dao.UserDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
-import com.fantasy.wx.framework.message.user.User;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,14 +21,14 @@ import javax.annotation.Resource;
 import java.util.List;
 
 
-@Service
+@Service("wx.userService")
 @Transactional
-public class UserInfoWeiXinService implements InitializingBean {
+public class UserService implements InitializingBean {
 
-    private final static Log LOG = LogFactory.getLog(UserInfoWeiXinService.class);
+    private final static Log LOG = LogFactory.getLog(UserService.class);
 
     @Autowired
-    private UserInfoDao userInfoDao;
+    private UserDao userDao;
     @Resource
     private MemberService memberService;
     @Resource
@@ -37,27 +38,26 @@ public class UserInfoWeiXinService implements InitializingBean {
     public void afterPropertiesSet() throws Exception {
     }
 
-    public UserInfo getUserInfo(String openId) {
-        return userInfoDao.findUniqueBy("openId", openId);
+    public User get(UserKey key) {
+        return userDao.get(key);
     }
 
-    public UserInfo save(UserInfo ui) {
-        return userInfoDao.save(ui);
+    public User save(User ui) {
+        return userDao.save(ui);
     }
 
-    public void delete(Long... ids) {
-        for (Long id : ids) {
-            userInfoDao.delete(id);
+    public void delete(UserKey... keys) {
+        for (UserKey key : keys) {
+            userDao.delete(key);
         }
     }
 
-    public void deleteByOpenId(String openId) {
-        UserInfo ui = this.getUserInfo(openId);
-        this.delete(ui.getId());
+    public void delete(UserKey key) {
+        this.userDao.delete(key);
     }
 
-    public Pager<UserInfo> findPager(Pager<UserInfo> pager, List<PropertyFilter> filters) {
-        return this.userInfoDao.findPager(pager, filters);
+    public Pager<User> findPager(Pager<User> pager, List<PropertyFilter> filters) {
+        return this.userDao.findPager(pager, filters);
     }
 
     /**
@@ -66,30 +66,31 @@ public class UserInfoWeiXinService implements InitializingBean {
      * @throws WeiXinException
      */
     public void refresh() throws WeiXinException {
-        List<User> list = WeiXinSessionUtils.getCurrentSession().getUsers();
-        for (User u : list) {
-            UserInfo ui = this.getUserInfo(u.getOpenId());
-            UserInfo unew = transfiguration(u);
-            if (ui != null) unew.setId(ui.getId());
-            this.userInfoDao.save(unew);
+        List<com.fantasy.wx.framework.message.user.User> list = WeiXinSessionUtils.getCurrentSession().getUsers();
+        for (com.fantasy.wx.framework.message.user.User u : list) {
+//            User ui = this.get(u.getOpenId());
+//            User unew = transfiguration(u);
+//            if (ui != null) unew.setId(ui.getId());
+//            this.userInfoDao.save(unew);
         }
     }
 
     /**
      * 通过openId刷新用户信息
      */
-    private UserInfo refresh(String openId) throws WeiXinException {
-        UserInfo ui = getUserInfo(openId);
-        if (ui != null) {
-            return ui;
-        }
-        User user = WeiXinSessionUtils.getCurrentSession().getUser(openId);
-        if (user == null) {
-            return null;
-        }
-        ui = transfiguration(user);
-        this.userInfoDao.save(ui);
-        return ui;
+    private User refresh(String openId) throws WeiXinException {
+//        User ui = get(openId);
+//        if (ui != null) {
+//            return ui;
+//        }
+//        com.fantasy.wx.framework.message.user.User user = WeiXinSessionUtils.getCurrentSession().getUser(openId);
+//        if (user == null) {
+//            return null;
+//        }
+//        ui = transfiguration(user);
+//        this.userInfoDao.save(ui);
+//        return ui;
+        return null;
     }
 
 
@@ -98,8 +99,8 @@ public class UserInfoWeiXinService implements InitializingBean {
      *
      * @param list
      */
-    public void countUnReadSize(List<UserInfo> list) {
-        for (UserInfo u : list) {
+    public void countUnReadSize(List<User> list) {
+        for (User u : list) {
             setUnReadSize(u);
         }
     }
@@ -109,8 +110,8 @@ public class UserInfoWeiXinService implements InitializingBean {
      *
      * @param u
      */
-    public void setUnReadSize(UserInfo u) {
-        List query = userInfoDao.createSQLQuery("SELECT COUNT(*) c FROM wx_message WHERE create_time>? and openid=?", u.getLastLookTime(), u.getOpenId()).list();
+    public void setUnReadSize(User u) {
+        List query = userDao.createSQLQuery("SELECT COUNT(*) c FROM wx_message WHERE create_time>? and openid=?", u.getLastLookTime(), u.getOpenId()).list();
         if (query.size() != 0) {
             u.setUnReadSize(Integer.parseInt(query.get(0).toString()));
         }
@@ -121,8 +122,8 @@ public class UserInfoWeiXinService implements InitializingBean {
      *
      * @param ui
      */
-    public void refreshMessage(UserInfo ui) {
-        userInfoDao.batchSQLExecute("update wx_user_info set last_look_time=last_message_time  where openid=?", ui.getOpenId());
+    public void refreshMessage(User ui) {
+        userDao.batchSQLExecute("update wx_user_info set last_look_time=last_message_time  where openid=?", ui.getOpenId());
         ui.setLastLookTime(ui.getLastMessageTime());
     }
 
@@ -132,11 +133,11 @@ public class UserInfoWeiXinService implements InitializingBean {
      * @param u
      * @return
      */
-    public UserInfo transfiguration(User u) {
+    public User transfiguration(com.fantasy.wx.framework.message.user.User u) {
         if (u == null) {
             return null;
         }
-        UserInfo user = new UserInfo();
+        User user = new User();
         user.setOpenId(u.getOpenId());
         user.setAvatar(u.getAvatar());
         user.setCity(u.getCity());
@@ -153,7 +154,11 @@ public class UserInfoWeiXinService implements InitializingBean {
         return user;
     }
 
-    public UserInfo checkCreateMember(String openId) throws WeiXinException {
+    public User findUnique(Criterion... criterions) {
+        return this.userDao.findUnique(criterions);
+    }
+
+    public User checkCreateMember(String openId) throws WeiXinException {
         return refresh(openId);
         /* TODO 关注微信号时,是否自动创建会员记录
         if (ui != null) {
@@ -204,7 +209,4 @@ public class UserInfoWeiXinService implements InitializingBean {
         */
     }
 
-    public UserInfo get(Long id) {
-        return this.userInfoDao.get(id);
-    }
 }

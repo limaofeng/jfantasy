@@ -3,9 +3,9 @@ package com.fantasy.wx.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.wx.bean.Group;
-import com.fantasy.wx.bean.UserInfo;
+import com.fantasy.wx.bean.User;
 import com.fantasy.wx.dao.GroupDao;
-import com.fantasy.wx.dao.UserInfoDao;
+import com.fantasy.wx.dao.UserDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +25,7 @@ public class GroupWeiXinService {
     @Autowired
     private GroupDao groupDao;
     @Autowired
-    private UserInfoDao userInfoDao;
+    private UserDao userDao;
 
     public Group save(Group group) {
         groupDao.save(group);
@@ -46,7 +46,7 @@ public class GroupWeiXinService {
 
     public void delete(Long... ids) {
         for (Long id : ids) {
-            userInfoDao.batchSQLExecute("update wx_user_info set GROUP_ID=null where GROUP_ID=?", id);
+            userDao.batchSQLExecute("update wx_user_info set GROUP_ID=null where GROUP_ID=?", id);
             groupDao.delete(id);
         }
     }
@@ -79,10 +79,10 @@ public class GroupWeiXinService {
 
     public int moveGroup(String openId, Long groupId) throws WeiXinException {
         WeiXinSessionUtils.getCurrentSession().moveUser(openId, groupId);
-        UserInfo ui = new UserInfo();
+        User ui = new User();
         ui.setOpenId(openId);
         ui.setGroup(new Group(groupId, null));
-        userInfoDao.save(ui);
+        userDao.save(ui);
         return 0;
     }
 }

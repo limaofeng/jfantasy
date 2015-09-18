@@ -24,6 +24,25 @@ public class WebsiteController {
     @Autowired
     private MenuService menuService;
 
+    @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
+    public List<Website> websites() {
+        return this.websiteService.getAll();
+    }
+
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public Website create(@RequestBody Website website) {
+        return this.websiteService.save(website);
+    }
+
+    @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
+    @ResponseBody
+    public Website create(@PathVariable("key") String key, @RequestBody Website website) {
+        website.setKey(key);
+        return this.websiteService.save(website);
+    }
+
     @ApiOperation(value = "获取网站对应的菜单信息", notes = "通过该接口, 可以获取网站配置的菜单信息。")
     @RequestMapping(value = "/{key}/menus", method = RequestMethod.GET)
     @ResponseBody

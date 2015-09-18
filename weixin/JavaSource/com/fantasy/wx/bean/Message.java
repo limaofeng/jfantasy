@@ -27,16 +27,16 @@ public class Message {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OPENID",foreignKey = @ForeignKey(name = "FK_WX_MESSAGE_USERID"))
-    private UserInfo userInfo;
+    private User user;
 
     public String getFromUserName() {
         return fromUserName;
     }
 
     public void setFromUserName(String fromUserName) {
-        if (userInfo == null)
-            userInfo = new UserInfo();
-        userInfo.setOpenId(fromUserName);
+        if (user == null)
+            user = new User();
+        user.setOpenId(fromUserName);
         this.fromUserName = fromUserName;
     }
 
@@ -166,12 +166,12 @@ public class Message {
         this.toUserName = toUserName;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getCreateTime() {

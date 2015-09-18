@@ -9,7 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
 
@@ -18,25 +17,26 @@ import javax.persistence.*;
  * Created by zzzhong on 2014/6/19.
  */
 @Entity(name = "wxUserInfo")
+@IdClass(UserKey.class)
 @Table(name = "WX_USER_INFO")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class UserInfo extends BaseBusEntity {
+public class User extends BaseBusEntity {
 
-    public UserInfo() {
+    public User() {
     }
 
-    public UserInfo(String openid) {
-        this.openId = openid;
+    public User(UserKey userKey) {
+        this.openId = userKey.getOpenId();
+        this.appId = userKey.getAppId();
     }
 
+    //APPID
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-    private Long id;
+    private String appId;
     //用户的标识，对当前公众号唯一
-    @Column(name = "OPENID", unique = true, updatable = false)
+    @Id
     private String openId;
+
     //用户的昵称
     @Column(name = "NICKNAME", length = 100)
     private String nickname;
@@ -85,22 +85,6 @@ public class UserInfo extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID")
     private Member member;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getOpenId() {
-        return openId;
-    }
-
-    public void setOpenId(String openId) {
-        this.openId = openId;
-    }
 
     public String getNickname() {
         return nickname;
@@ -210,6 +194,22 @@ public class UserInfo extends BaseBusEntity {
         return group;
     }
 
+    public String getAppId() {
+        return appId;
+    }
+
+    public void setAppId(String appId) {
+        this.appId = appId;
+    }
+
+    public String getOpenId() {
+        return openId;
+    }
+
+    public void setOpenId(String openId) {
+        this.openId = openId;
+    }
+
     public void setGroup(Group group) {
         this.group = group;
     }
@@ -221,4 +221,5 @@ public class UserInfo extends BaseBusEntity {
     public void setMember(Member member) {
         this.member = member;
     }
+
 }

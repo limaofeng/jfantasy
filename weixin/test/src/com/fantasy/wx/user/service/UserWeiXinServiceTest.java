@@ -4,7 +4,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
-import com.fantasy.wx.bean.UserInfo;
+import com.fantasy.wx.bean.User;
 import com.fantasy.wx.service.UserInfoWeiXinService;
 import junit.framework.Assert;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
@@ -29,9 +29,9 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-public class UserInfoWeiXinServiceTest {
+public class UserWeiXinServiceTest {
 
-    private static final Log logger = LogFactory.getLog(UserInfo.class);
+    private static final Log logger = LogFactory.getLog(User.class);
     @Autowired
     private UserInfoWeiXinService iUserInfoService;
 
@@ -47,7 +47,7 @@ public class UserInfoWeiXinServiceTest {
 
 
     public void testSave() throws Exception {
-        UserInfo ui = new UserInfo();
+        User ui = new User();
         ui.setOpenId("test");
         ui.setSex(Sex.female);
         ui.setLastMessageTime(1L);
@@ -61,8 +61,8 @@ public class UserInfoWeiXinServiceTest {
         //iUserInfoService.deleteByOpenId("test");
     }
 
-    public Pager<UserInfo> testFindPager(String... openid) {
-        Pager<UserInfo> pager = new Pager<UserInfo>();
+    public Pager<User> testFindPager(String... openid) {
+        Pager<User> pager = new Pager<User>();
         List<PropertyFilter> list = new ArrayList<PropertyFilter>();
         if (openid.length > 0) list.add(new PropertyFilter("NES_openId", openid[0]));
         return iUserInfoService.findPager(pager, list);
@@ -75,16 +75,16 @@ public class UserInfoWeiXinServiceTest {
         InputStream is = new FileInputStream("");
         XStreamTransformer.fromXml(WxMpXmlMessage.class, is);
         iUserInfoService.refresh();
-        Pager<UserInfo> p = testFindPager("test");
+        Pager<User> p = testFindPager("test");
         Assert.assertNotNull(p.getPageItems());
         logger.debug(JSON.serialize(p));
     }
 
     @Test
     public void testCountUnReadSize() throws Exception {
-        Pager<UserInfo> p = testFindPager();
+        Pager<User> p = testFindPager();
         iUserInfoService.countUnReadSize(p.getPageItems());
-        for (UserInfo u : p.getPageItems()) {
+        for (User u : p.getPageItems()) {
             Assert.assertNotNull(u.getUnReadSize());
             logger.debug(u.getUnReadSize());
         }
@@ -92,7 +92,7 @@ public class UserInfoWeiXinServiceTest {
 
     @Test
     public void testRefreshMessage() throws Exception {
-        UserInfo ui = iUserInfoService.getUserInfo("test");
+        User ui = iUserInfoService.getUserInfo("test");
         Assert.assertNotNull(ui);
         logger.debug(JSON.serialize(ui));
         iUserInfoService.refreshMessage(ui);

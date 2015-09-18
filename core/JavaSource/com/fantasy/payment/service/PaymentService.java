@@ -1,5 +1,7 @@
 package com.fantasy.payment.service;
 
+import com.fantasy.common.order.Order;
+import com.fantasy.common.order.OrderService;
 import com.fantasy.common.order.OrderServiceFactory;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -9,13 +11,10 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
-import com.fantasy.member.userdetails.MemberUser;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.dao.PaymentDao;
 import com.fantasy.payment.error.PaymentException;
-import com.fantasy.common.order.Order;
-import com.fantasy.common.order.OrderService;
 import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
 import com.fantasy.security.SpringSecurityUtils;
@@ -23,10 +22,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
 import org.htmlcleaner.TagNode;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -110,7 +108,7 @@ public class PaymentService {
         if (StringUtil.isNotBlank(membername)) {
             Member member = memberService.findUniqueByUsername(membername);
             if (member != null) {
-                payment.setMember(SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser());
+                payment.setMember(member);
             }
         }
         return this.paymentDao.save(payment);
@@ -127,6 +125,13 @@ public class PaymentService {
         this.paymentDao.save(payment);
     }
 
+    public void close(String sn, String tradeNo) {
+        Payment payment = get(sn);
+        payment.setPaymentStatus(Payment.PaymentStatus.invalid);
+        payment.setTradeNo(tradeNo);
+        this.paymentDao.save(payment);
+    }
+
     /**
      * 支付失败
      *
@@ -140,16 +145,21 @@ public class PaymentService {
         PaymentContext.getContext().payFailure(PaymentContext.getContext().getPayment());
     }
 
+    public void failure(String sn, String tradeNo, String desc) {
+
+    }
+
     /**
      * 付款成功
      *
      * @param sn 支付编号
      */
-    public void success(String sn) {
+    public void success(String sn, String tradeNo) {
         Payment payment = get(sn);
         payment.setPaymentStatus(Payment.PaymentStatus.success);
-        payment.setTradeNo(PaymentContext.getContext().getPayResult().getTradeNo());
-        payment = this.paymentDao.save(payment);
+        payment.setTradeNo(tradeNo);
+        this.paymentDao.save(payment);
+        //TODO 订单事件触发方式
         PaymentContext.getContext().paySuccess(PaymentContext.getContext().getPayment());
     }
 
@@ -172,7 +182,6 @@ public class PaymentService {
     public void paynotify() {
 
     }
-
 
     public Pager<Payment> findPager(Pager<Payment> pager, List<PropertyFilter> filters) {
         return paymentDao.findPager(pager, filters);
@@ -295,14 +304,14 @@ public class PaymentService {
     public String payreturn(String sn, Map<String, String> parameterMap) throws PaymentException {
         PaymentContext context = createPaymentContext(sn);
         verify(parameterMap);
-        this.success(sn);
+        this.success(sn, PaymentContext.getContext().getPayResult().getTradeNo());
         return context.getPaymentProduct().getPayreturnMessage(sn);
     }
 
     public String paynotify(String sn, Map<String, String> parameterMap) throws PaymentException {
         PaymentContext context = createPaymentContext(sn);
         verify(parameterMap);
-        this.success(sn);
+        this.success(sn, PaymentContext.getContext().getPayResult().getTradeNo());
         return context.getPaymentProduct().getPaynotifyMessage(sn);
     }
 
@@ -311,4 +320,5 @@ public class PaymentService {
         OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
         return orderService.loadOrderBySn(payment.getOrderSn());
     }
+
 }
