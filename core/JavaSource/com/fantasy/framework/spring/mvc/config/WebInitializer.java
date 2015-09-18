@@ -14,6 +14,7 @@ import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 import org.springframework.web.filter.DelegatingFilterProxy;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.DispatcherServlet;
 import org.springframework.web.util.IntrospectorCleanupListener;
 import org.springframework.web.util.Log4jConfigListener;
@@ -64,6 +65,10 @@ public class WebInitializer implements WebApplicationInitializer {
         filterRegistration = servletContext.addFilter("jcaptchaFilter", jcaptchaFilter);
         filterRegistration.setInitParameter("targetFilterLifecycle", "true");
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/jcaptcha.jpg");
+
+        HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
+        filterRegistration = servletContext.addFilter("httpMethodFilter", httpMethodFilter);
+        filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
 
         //5、为 request, response 提供上下文访问对象
         ActionContextFilter actionContextFilter = new ActionContextFilter();

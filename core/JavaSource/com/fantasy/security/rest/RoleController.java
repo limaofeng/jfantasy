@@ -53,13 +53,13 @@ public class RoleController {
         return roleService.save(role);
     }
 
-    @RequestMapping(value = "/{code}", method = {RequestMethod.DELETE})
+    @RequestMapping(value = "/{code}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("code") String code) {
         this.roleService.delete(code);
     }
 
-    @RequestMapping(method = {RequestMethod.DELETE})
+    @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody String... codes) {
         this.roleService.delete(codes);
@@ -75,7 +75,7 @@ public class RoleController {
     @ApiOperation(value = "为角色添加权限", notes = "为角色添加操作权限,返回权限详细信息")
     @RequestMapping(value = "/{code}/permissions", method = {RequestMethod.POST})
     @ResponseBody
-    public List<Permission> permissions(@PathVariable("code") String code,@RequestBody Long... permissionId) {
+    public List<Permission> permissions(@PathVariable("code") String code, @RequestBody Long... permissionId) {
         throw new RuntimeException("该方法未实现!");
     }
 

@@ -26,7 +26,7 @@ public class Message {
     private String fromUserName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OPENID",foreignKey = @ForeignKey(name = "FK_WX_MESSAGE_USERID"))
+    @JoinColumns(value = {@JoinColumn(name = "OPENID", referencedColumnName = "OPENID",foreignKey = @ForeignKey(name = "FK_WX_MESSAGE_USERID")), @JoinColumn(name = "APPID", referencedColumnName = "APPID",foreignKey = @ForeignKey(name = "FK_WX_MESSAGE_APPID"))})
     private User user;
 
     public String getFromUserName() {
