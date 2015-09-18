@@ -5,6 +5,8 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
 import com.fantasy.wx.bean.User;
+import com.fantasy.wx.bean.UserKey;
+import com.fantasy.wx.service.UserService;
 import junit.framework.Assert;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.util.xml.XStreamTransformer;
@@ -32,7 +34,7 @@ public class UserWeiXinServiceTest {
 
     private static final Log logger = LogFactory.getLog(User.class);
     @Autowired
-    private UserInfoWeiXinService iUserInfoService;
+    private UserService userService;
 
     @Before
     public void setUp() throws Exception {
@@ -64,7 +66,7 @@ public class UserWeiXinServiceTest {
         Pager<User> pager = new Pager<User>();
         List<PropertyFilter> list = new ArrayList<PropertyFilter>();
         if (openid.length > 0) list.add(new PropertyFilter("NES_openId", openid[0]));
-        return iUserInfoService.findPager(pager, list);
+        return userService.findPager(pager, list);
 
     }
 
@@ -73,7 +75,7 @@ public class UserWeiXinServiceTest {
         XStreamTransformer xStreamTransformer = new XStreamTransformer();
         InputStream is = new FileInputStream("");
         XStreamTransformer.fromXml(WxMpXmlMessage.class, is);
-        iUserInfoService.refresh();
+        userService.refresh();
         Pager<User> p = testFindPager("test");
         Assert.assertNotNull(p.getPageItems());
         logger.debug(JSON.serialize(p));
@@ -82,7 +84,7 @@ public class UserWeiXinServiceTest {
     @Test
     public void testCountUnReadSize() throws Exception {
         Pager<User> p = testFindPager();
-        iUserInfoService.countUnReadSize(p.getPageItems());
+        userService.countUnReadSize(p.getPageItems());
         for (User u : p.getPageItems()) {
             Assert.assertNotNull(u.getUnReadSize());
             logger.debug(u.getUnReadSize());
@@ -91,10 +93,10 @@ public class UserWeiXinServiceTest {
 
     @Test
     public void testRefreshMessage() throws Exception {
-        User ui = iUserInfoService.get("test");
+        User ui = userService.get(new UserKey("","test"));
         Assert.assertNotNull(ui);
         logger.debug(JSON.serialize(ui));
-        iUserInfoService.refreshMessage(ui);
+        userService.refreshMessage(ui);
         Assert.assertEquals(ui.getLastLookTime(), ui.getLastMessageTime());
         logger.debug(JSON.serialize(ui));
     }

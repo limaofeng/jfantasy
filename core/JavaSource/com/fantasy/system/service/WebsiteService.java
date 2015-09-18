@@ -70,7 +70,7 @@ public class WebsiteService {
     /**
      * 获取列表
      *
-     * @return
+     * @return List<Website>
      */
     public List<Website> listWebsite() {
         return this.websiteDao.find(new Criterion[0], "id", "asc");

@@ -28,8 +28,6 @@ public class IZIMenuWeixinWeiXinServiceTest {
 
     @Autowired
     private MenuWeiXinService iMenuWeiXinService;
-    @Autowired
-    private UserInfoWeiXinService userInfoWeiXinService;
 
     public void setUp() throws Exception {
         List<MenuWeixin> menuWeixinList = new ArrayList<MenuWeixin>();
