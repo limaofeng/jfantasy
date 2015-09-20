@@ -35,7 +35,7 @@ public class OrgDimension extends BaseBusEntity {
      * 维度对应的站点
      */
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "WEBSITE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_RELATION_WEBSITE"))
+    @JoinColumn(name = "WEBSITE_KEY", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_RELATION_WEBSITE"))
     private Website website;
 
     public String getId() {

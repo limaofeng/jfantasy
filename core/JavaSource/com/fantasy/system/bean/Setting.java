@@ -53,7 +53,7 @@ public class Setting extends BaseBusEntity {
      * 对应的站点
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "WEBSITE_ID")
+    @JoinColumn(name = "WEBSITE_KEY")
     private Website website;
     /**
      * 键

@@ -119,7 +119,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
      */
     @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "WEBSITE_ID", foreignKey = @ForeignKey(name = "FK_WEBSITE_USER"))
+    @JoinColumn(name = "WEBSITE_KEY", foreignKey = @ForeignKey(name = "FK_WEBSITE_USER"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Website website;
 
