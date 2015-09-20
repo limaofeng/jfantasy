@@ -134,6 +134,13 @@ public class PayService implements InitializingBean {
         }
     }
 
+    /**
+     * 创建微信支付预订单
+     *
+     * @param appid      微信公众号
+     * @param prePayment 预支付单
+     * @return PrePayment
+     */
     public PrePayment preOrder(String appid, PrePayment prePayment) {
         PaymentConfig paymentConfig = this.paymentConfigService.findUnique(Restrictions.eq("paymentProductId", "weixinPay"), Restrictions.eq("sellerEmail", appid));
         if (paymentConfig == null) {
@@ -233,4 +240,46 @@ public class PayService implements InitializingBean {
         return noceStr;
     }
 
+    public String notify(String appid, String xml) {
+        try {
+            Map<String, String> data = new TreeMap<String, String>();
+            //解析数据
+            XmlElement xmlElement = XMLReader.reader(new ByteArrayInputStream(xml.getBytes()));
+            assert xmlElement != null;
+            data.clear();
+            for (XmlElement node : xmlElement.getChildNodes()) {
+                data.put(node.getTagName(), node.getContent());
+            }
+            //判断业务处理是否成功
+            if (!"SUCCESS".equalsIgnoreCase(data.get("result_code"))) {
+                throw new RestException(data.get("return_msg"));
+            }
+            PaymentConfig paymentConfig = this.paymentConfigService.findUnique(Restrictions.eq("paymentProductId", "weixinPay"), Restrictions.eq("sellerEmail", appid));
+            if (paymentConfig == null) {
+                throw new RestException("[appid=" + appid + "]的支付配置未找到!");
+            }
+            //验证签名
+            if (!sign(data, paymentConfig.getBargainorKey()).equalsIgnoreCase(data.get("sign"))) {
+                throw new RestException("微信签名错误");
+            }
+            //判断业务处理是否成功
+            if (!"SUCCESS".equalsIgnoreCase(data.get("result_code"))) {
+                throw new RestException(data.get("return_msg"));
+            }
+            String paysn = data.get("out_trade_no");
+            String tradeNo = data.get("transaction_id");
+            String state = data.get("trade_state");
+            if ("SUCCESS".equalsIgnoreCase(state)) {//支付成功
+                this.paymentService.success(paysn, tradeNo);
+            } else if ("CLOSED".equalsIgnoreCase(state)) {//已关闭
+                this.paymentService.close(paysn, tradeNo);
+            } else if ("PAYERROR".equalsIgnoreCase(state) || "REFUND".equalsIgnoreCase(state) || "REVOKED".equalsIgnoreCase(state)) {
+                //支付失败 and 转入退款 and 已撤销
+                this.paymentService.failure(paysn, tradeNo, data.get("trade_state_desc"));
+            }
+            return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
+        } catch (RestException ex) {
+            return "<xml><return_code><![CDATA[FAIL]]></return_code><return_msg><![CDATA[" + ex.getMessage() + "]]></return_msg></xml>";
+        }
+    }
 }

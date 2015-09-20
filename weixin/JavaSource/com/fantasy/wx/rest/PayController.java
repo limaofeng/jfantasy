@@ -8,8 +8,6 @@ import com.fantasy.wx.service.PayService;
 import com.fantasy.wx.service.vo.PrePayment;
 import com.wordnik.swagger.annotations.Api;
 import com.wordnik.swagger.annotations.ApiOperation;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,8 +18,6 @@ import java.io.IOException;
 @RequestMapping("/weixin/accounts/{appid}/pay")
 public class PayController {
 
-    private final static Log LOG = LogFactory.getLog(PayController.class);
-
     @Autowired
     private PayService payService;
     @Autowired
@@ -31,7 +27,7 @@ public class PayController {
     @RequestMapping(value = "/notify", method = RequestMethod.POST)
     @ResponseBody
     public String notify(@PathVariable String appid, @RequestBody String body) throws IOException {
-        return "";
+        return payService.notify(appid, body);
     }
 
     @ApiOperation(value = "创建微信预支付订单", notes = "创建微信预支付订单")
