@@ -14,7 +14,7 @@ import javax.persistence.*;
  * @since 2014-2-17 上午11:16:22
  */
 @Entity
-@Table(name = "SYS_SETTING", uniqueConstraints = {@UniqueConstraint(columnNames = {"WEBSITE_ID", "CODE"})})
+@Table(name = "SYS_SETTING", uniqueConstraints = {@UniqueConstraint(columnNames = {"WEBSITE_KEY", "CODE"})})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Setting extends BaseBusEntity {
 
