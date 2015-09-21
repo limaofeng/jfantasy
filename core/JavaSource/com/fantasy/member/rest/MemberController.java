@@ -20,6 +20,7 @@ public class MemberController {
     private MemberService memberService;
 
     @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public Pager<Member> search(Pager<Member> pager, List<PropertyFilter> filters) {
         return this.memberService.findPager(pager, filters);
     }

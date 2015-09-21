@@ -2,6 +2,7 @@ package com.fantasy.framework.dao;
 
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
@@ -10,26 +11,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * @apiDefine paramPager
- * @apiParam {int} currentPage  要显示的页码
- * @apiParam {int} pageSize  每页显示数据条数
- * @apiParam {String} orderBy  排序字段
- * @apiParam {String} order  排序方向
- * @apiVersion 3.3.8
- */
-
-/**
- * @apiDefine returnPager
- * @apiSuccess {int} currentPage  当前页码
- * @apiSuccess {int} pageSize  每页显示的数据条数
- * @apiSuccess {int} totalCount  最大数据条数
- * @apiSuccess {int} totalPage  总页数
- * @apiSuccess {String} orderBy  排序字段
- * @apiSuccess {String} order  排序方向
- * @apiSuccess {List} pageItems 当页数据集合
- * @apiVersion 3.3.8
- */
 @ApiModel("通用分页对象")
 public class Pager<T> implements Serializable {
 
@@ -67,6 +48,7 @@ public class Pager<T> implements Serializable {
     @ApiModelProperty("排序方向")
     private Order[] orders = new Order[]{Order.asc};
     @ApiModelProperty("返回的数据集")
+//    @JsonProperty("items")
     private List<T> pageItems;
 
     public Pager() {
@@ -226,6 +208,7 @@ public class Pager<T> implements Serializable {
     }
 
     @ApiModelProperty("是否启用排序")
+    @JsonIgnore
     public boolean isOrderBySetted() {
         return (StringUtils.isNotBlank(this.orderBy)) && (ObjectUtil.isNotNull(orders));
     }

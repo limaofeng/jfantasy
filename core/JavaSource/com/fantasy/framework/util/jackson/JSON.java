@@ -99,7 +99,7 @@ public class JSON {
                 objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
                 // 允许单引号
                 objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-                // 失败在未知属性
+                // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
                 objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 //使Jackson JSON支持Unicode编码非ASCII字符
                 SimpleModule module = new SimpleModule();

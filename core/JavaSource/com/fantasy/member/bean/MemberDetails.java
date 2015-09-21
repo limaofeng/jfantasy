@@ -1,14 +1,13 @@
 package com.fantasy.member.bean;
 
 import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.bean.converter.FileDetailConverter;
 import com.fantasy.file.bean.databind.FileDetailDeserializer;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -110,7 +109,8 @@ public class MemberDetails implements Serializable {
      */
     @ApiModelProperty(hidden = true)
     @Column(name = "AVATAR", length = 500)
-    private String avatarStore;
+    @Convert(converter = FileDetailConverter.class)
+    private FileDetail avatar;
 
     @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
@@ -220,27 +220,13 @@ public class MemberDetails implements Serializable {
         this.mobileValid = mobileValid;
     }
 
-    public String getAvatarStore() {
-        return this.avatarStore;
-    }
-
-    public void setAvatarStore(String avatarStore) {
-        this.avatarStore = avatarStore;
-    }
-
-    @Transient
-    @ApiModelProperty("头像")
-    public void setAvatar(FileDetail fileDetail) {
-        this.setAvatarStore(JSON.serialize(fileDetail));
-    }
-
-    @Transient
     @JsonDeserialize(using = FileDetailDeserializer.class)
+    public void setAvatar(FileDetail fileDetail) {
+        this.avatar = fileDetail;
+    }
+
     public FileDetail getAvatar() {
-        if (StringUtils.isEmpty(this.avatarStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.avatarStore, FileDetail.class);
+        return this.avatar;
     }
 
 }

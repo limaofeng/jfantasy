@@ -103,7 +103,6 @@ public class Role extends BaseBusEntity {
         return this.description;
     }
 
-    @JsonIgnore
     public Boolean isEnabled() {
         return this.enabled;
     }
