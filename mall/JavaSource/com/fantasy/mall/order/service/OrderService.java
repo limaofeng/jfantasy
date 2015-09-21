@@ -109,10 +109,9 @@ public class OrderService {
         if (ObjectUtil.isNotNull(order.getReceiverId())) {
             Receiver receiver = receiverService.get(order.getReceiverId());
             order.setShipName(receiver.getName());// 收货人姓名
-            order.setShipAreaStore(receiver.getAreaStore());// 收货地区存储
+            order.setShipArea(receiver.getArea());// 收货地区存储
             order.setShipAddress(receiver.getAddress());// 收货地址
             order.setShipZipCode(receiver.getZipCode());// 收货邮编
-            order.setShipPhone(receiver.getPhone());// 收货电话
             order.setShipMobile(receiver.getMobile());// 收货手机
         }
         // 初始化订单项信息

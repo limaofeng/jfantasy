@@ -1,10 +1,9 @@
 package com.fantasy.member.bean;
 
 import com.fantasy.common.bean.Area;
+import com.fantasy.common.bean.converter.AreaConverter;
 import com.fantasy.common.bean.databind.AreaDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.wordnik.swagger.annotations.ApiModel;
@@ -45,7 +44,8 @@ public class Receiver extends BaseBusEntity {
      */
     @ApiModelProperty(hidden = true)
     @Column(name = "AREA_STORE", length = 300, nullable = false)
-    private String areaStore;
+    @Convert(converter = AreaConverter.class)
+    private Area area;
     /**
      * 收货地址
      */
@@ -58,12 +58,6 @@ public class Receiver extends BaseBusEntity {
     @ApiModelProperty("邮政编码")
     @Column(name = "ZIP_CODE", length = 200, nullable = false)
     private String zipCode;
-    /**
-     * 电话
-     */
-    @ApiModelProperty("电话")
-    @Column(name = "PHONE", length = 200, nullable = false)
-    private String phone;
     /**
      * 手机
      */
@@ -100,15 +94,6 @@ public class Receiver extends BaseBusEntity {
         this.name = name;
     }
 
-    public String getAreaStore() {
-        return areaStore;
-    }
-
-    //@TypeConversion(key = "areaStore", converter = "com.fantasy.common.bean.converter.AreaStoreConverter")
-    public void setAreaStore(String areaStore) {
-        this.areaStore = areaStore;
-    }
-
     public String getAddress() {
         return address;
     }
@@ -123,14 +108,6 @@ public class Receiver extends BaseBusEntity {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getMobile() {
@@ -164,10 +141,7 @@ public class Receiver extends BaseBusEntity {
      */
     @ApiModelProperty("地区存储")
     public Area getArea() {
-        if (StringUtil.isBlank(this.areaStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.areaStore, Area.class);
+        return this.area;
     }
 
     /**
@@ -177,10 +151,6 @@ public class Receiver extends BaseBusEntity {
      */
     @JsonDeserialize(using = AreaDeserializer.class)
     public void setArea(Area area) {
-        if (area == null) {
-            this.areaStore = null;
-            return;
-        }
-        this.areaStore = JSON.serialize(area);
+        this.area = area;
     }
 }

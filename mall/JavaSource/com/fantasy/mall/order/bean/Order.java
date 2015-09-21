@@ -3,9 +3,8 @@ package com.fantasy.mall.order.bean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.common.bean.Area;
+import com.fantasy.common.bean.converter.AreaConverter;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -116,13 +115,12 @@ public class Order extends BaseDynaBean {
     @Column(name = "SHIP_NAME", nullable = false)
     private String shipName;// 收货人姓名
     @Column(name = "SHIP_AREA_STORE", nullable = false)
-    private String shipAreaStore;// 收货地区存储
+    @Convert(converter = AreaConverter.class)
+    private Area shipArea;// 收货地区存储
     @Column(name = "SHIP_ADDRESS", nullable = false)
     private String shipAddress;// 收货地址
     @Column(name = "SHIP_ZIP_CODE", nullable = false)
     private String shipZipCode;// 收货邮编
-    @Column(name = "SHIP_PHONE", nullable = false)
-    private String shipPhone;// 收货电话
     @Column(name = "SHIP_MOBILE", nullable = false)
     private String shipMobile;// 收货手机
     @Column(name = "MEMO", nullable = false)
@@ -305,13 +303,12 @@ public class Order extends BaseDynaBean {
         this.shipName = shipName;
     }
 
-    public String getShipAreaStore() {
-        return shipAreaStore;
+    public Area getShipArea() {
+        return shipArea;
     }
 
-    //@TypeConversion(key = "shipAreaStore", converter = "com.fantasy.common.bean.converter.AreaStoreConverter")
-    public void setShipAreaStore(String shipAreaStore) {
-        this.shipAreaStore = shipAreaStore;
+    public void setShipArea(Area shipArea) {
+        this.shipArea = shipArea;
     }
 
     public String getShipAddress() {
@@ -328,14 +325,6 @@ public class Order extends BaseDynaBean {
 
     public void setShipZipCode(String shipZipCode) {
         this.shipZipCode = shipZipCode;
-    }
-
-    public String getShipPhone() {
-        return shipPhone;
-    }
-
-    public void setShipPhone(String shipPhone) {
-        this.shipPhone = shipPhone;
     }
 
     public String getShipMobile() {
@@ -386,11 +375,4 @@ public class Order extends BaseDynaBean {
         this.paymentConfig = paymentConfig;
     }
 
-    @Transient
-    public Area getShipArea() {
-        if (StringUtil.isBlank(this.shipAreaStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.shipAreaStore, Area.class);
-    }
 }
