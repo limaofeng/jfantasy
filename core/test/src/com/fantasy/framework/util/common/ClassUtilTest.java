@@ -3,6 +3,7 @@ package com.fantasy.framework.util.common;
 import com.fantasy.framework.util.asm.Article;
 import com.fantasy.framework.util.reflect.Property;
 import com.fantasy.security.bean.User;
+import com.fantasy.security.bean.enums.Sex;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -123,4 +124,10 @@ public class ClassUtilTest {
     public void testGetSuperClassGenricType() throws Exception {
 
     }
+
+    @Test
+    public void testIsBeanType() throws Exception {
+        LOG.debug(ClassUtil.isBeanType(Sex.female.getClass()));
+    }
+
 }

@@ -2,6 +2,8 @@ package com.fantasy.file.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.wordnik.swagger.annotations.ApiModel;
 import com.wordnik.swagger.annotations.ApiModelProperty;
@@ -16,6 +18,7 @@ import javax.persistence.*;
  */
 @ApiModel(value = "文件信息", description = "上传文件的详细信息")
 @Entity
+@JsonFilter(JSON.CUSTOM_FILTER)
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEDETAIL")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "folder", "realPath"})
