@@ -5,9 +5,9 @@ import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.session.WeiXinSession;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
-import com.wordnik.swagger.annotations.ApiResponse;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

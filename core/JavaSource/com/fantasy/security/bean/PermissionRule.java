@@ -1,8 +1,8 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.security.bean.enums.PermissionType;
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 

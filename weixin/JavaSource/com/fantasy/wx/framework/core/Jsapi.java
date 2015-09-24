@@ -2,8 +2,8 @@ package com.fantasy.wx.framework.core;
 
 
 import com.fantasy.wx.framework.exception.WeiXinException;
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 

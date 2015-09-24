@@ -1,7 +1,7 @@
 package com.fantasy.common.order;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("订单明细项")
 public interface OrderItem {

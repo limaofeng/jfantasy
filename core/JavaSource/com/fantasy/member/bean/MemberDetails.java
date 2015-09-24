@@ -3,11 +3,13 @@ package com.fantasy.member.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.bean.converter.FileDetailConverter;
 import com.fantasy.file.bean.databind.FileDetailDeserializer;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -25,8 +27,9 @@ import java.util.Date;
  */
 @ApiModel("会员详细信息")
 @Entity
+@JsonFilter(JSON.CUSTOM_FILTER)
 @Table(name = "MEM_MEMBER_DETAILS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member", "avatarStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member", "avatarStore","avatar"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MemberDetails implements Serializable {
 

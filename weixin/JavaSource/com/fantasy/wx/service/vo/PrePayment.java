@@ -1,7 +1,7 @@
 package com.fantasy.wx.service.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 微信预支付订单

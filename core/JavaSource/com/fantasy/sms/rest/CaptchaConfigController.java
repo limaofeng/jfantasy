@@ -2,8 +2,8 @@ package com.fantasy.sms.rest;
 
 import com.fantasy.sms.bean.CaptchaConfig;
 import com.fantasy.sms.service.CaptchaConfigService;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

@@ -60,7 +60,7 @@
         <javax.servlet.jsp-api-version>2.2.1</javax.servlet.jsp-api-version>
         <org.springframework-version>4.2.1.RELEASE</org.springframework-version>
         <com.thoughtworks.xstream-version>1.4.8</com.thoughtworks.xstream-version>
-        <com.mangofactory-swagger-version>1.0.2</com.mangofactory-swagger-version>
+        <io.springfox-swagger-version>2.2.2</io.springfox-swagger-version>
         <com.fasterxml.jackson.core-version>2.3.0</com.fasterxml.jackson.core-version>
         <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
     </properties>

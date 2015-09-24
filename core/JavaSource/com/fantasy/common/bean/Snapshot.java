@@ -2,7 +2,7 @@ package com.fantasy.common.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.wordnik.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 

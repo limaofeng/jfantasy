@@ -2,6 +2,7 @@ package com.fantasy.framework.spring.mvc.config.annotation;
 
 
 import com.fantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver;
+import com.fantasy.framework.spring.mvc.method.annotation.PagerModelAttributeMethodProcessor;
 import com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor;
 import com.fantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver;
 import com.fantasy.framework.util.jackson.JSON;
@@ -82,6 +83,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new FormModelMethodArgumentResolver());
         argumentResolvers.add(new RequestJsonParamMethodArgumentResolver());
         argumentResolvers.add(new PropertyFilterModelAttributeMethodProcessor());
+        argumentResolvers.add(new PagerModelAttributeMethodProcessor());
         super.addArgumentResolvers(argumentResolvers);
     }
 
