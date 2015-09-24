@@ -5,7 +5,9 @@ import com.fantasy.framework.util.json.bean.User;
 import java.util.Date;
 
 public class Test {
-	public static void main(String args[]) {
+
+	@org.junit.Test
+	public void run() {
 		
 		User user = new User();
 		user.setName("chris");
