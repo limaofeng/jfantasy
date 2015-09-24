@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
-@Api(value = "/members", description = "会员接口")
+@Api(value = "members", description = "会员接口")
 @RestController
 @RequestMapping("/members")
 public class MemberController {

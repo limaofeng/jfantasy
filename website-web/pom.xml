@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>3.3.17</version>
+        <version>3.3.18</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>fantasy-website-web</artifactId>

@@ -70,7 +70,7 @@ public class Article extends BaseDynaBean {
      */
     @ApiModelProperty("摘要")
     @IndexProperty(analyze = true, store = true)
-    @Column(name = "SUMMARY")
+    @Column(name = "SUMMARY", length = 500)
     private String summary;
     /**
      * 关键词

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "/members/{memid}/comments", description = "会员评论")
+@Api(value = "members-comments", description = "会员评论")
 @RestController
 @RequestMapping("/members")
 public class CommentController {
