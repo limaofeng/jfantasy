@@ -1,5 +1,6 @@
 package com.fantasy.framework.util.jackson;
 
+import com.fantasy.framework.spring.mvc.http.jsonfilter.NoneFieldsBeanPropertyFilter;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.jackson.deserializer.DateDeserializer;
 import com.fantasy.framework.util.jackson.serializer.DateSerializer;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.introspect.Annotated;
 import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -120,6 +122,8 @@ public class JSON {
                         return super.findPropertiesToIgnore(ac);
                     }
                 });
+
+                objectMapper.setFilters(new SimpleFilterProvider().addFilter(JSON.CUSTOM_FILTER, new NoneFieldsBeanPropertyFilter()));
             }
         });
         //将中文转为 Unicode 编码

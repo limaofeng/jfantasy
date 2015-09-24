@@ -1,10 +1,9 @@
 package com.fantasy.cms.bean;
 
 import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.bean.converter.FileDetailConverter;
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -49,7 +48,8 @@ public class BannerItem extends BaseBusEntity {
      * 图片存储位置
      */
     @Column(name = "BANNER_IMAGE_STORE", length = 500)
-    private String bannerImageStore;
+    @Convert(converter = FileDetailConverter.class)
+    private FileDetail bannerImage;
     /**
      * 排序字段
      */
@@ -92,25 +92,14 @@ public class BannerItem extends BaseBusEntity {
         this.url = url;
     }
 
-    public String getBannerImageStore() {
-        return bannerImageStore;
-    }
-
-    public void setBannerImageStore(String bannerImageStore) {
-        this.bannerImageStore = bannerImageStore;
-    }
-
     @Transient
-    public void setBannerImage(FileDetail fileDetail) {
-        this.setBannerImageStore(JSON.serialize(fileDetail));
+    public void setBannerImage(FileDetail bannerImage) {
+        this.bannerImage = bannerImage;
     }
 
     @Transient
     public FileDetail getBannerImage() {
-        if (StringUtils.isEmpty(this.bannerImageStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.bannerImageStore, FileDetail.class);
+        return this.bannerImage;
     }
 
     public Banner getBanner() {
@@ -136,7 +125,7 @@ public class BannerItem extends BaseBusEntity {
                 ", title='" + title + '\'' +
                 ", summary='" + summary + '\'' +
                 ", url='" + url + '\'' +
-                ", bannerImageStore='" + bannerImageStore + '\'' +
+                ", bannerImage='" + bannerImage + '\'' +
                 '}';
     }
 }
