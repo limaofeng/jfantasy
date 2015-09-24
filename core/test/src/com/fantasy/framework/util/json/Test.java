@@ -1,13 +1,8 @@
 package com.fantasy.framework.util.json;
 
+import com.fantasy.framework.util.json.bean.User;
+
 import java.util.Date;
-import java.util.Set;
-
-import org.dc.bean.Article;
-import org.dc.bean.User;
-import org.dc.mixin.MixInUser;
-
-import com.google.common.collect.Sets;
 
 public class Test {
 	public static void main(String args[]) {
@@ -15,7 +10,8 @@ public class Test {
 		User user = new User();
 		user.setName("chris");
 		user.setCreateDate(new Date());
-		
+
+		/*
 		Article article = new Article();
 		article.setTitle("title");
 		article.setUser(user);
@@ -36,5 +32,6 @@ public class Test {
 		// 要不然上面的代码会报没有给"myFilter"提供filterProvider 错误
 		String filterUser = Jacksons.me().filter("myFilter", "name").readAsString(user);
 		System.out.println(filterUser);
+		*/
 	}
 }

@@ -101,8 +101,14 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
                 }
                 target.setFirst(Integer.valueOf(limits[0]));
                 target.setPageSize(Integer.valueOf(limits[1]));
-            } else {
-                System.err.println("功能未实现");
+            } else if ("page".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+                target.setCurrentPage(Integer.valueOf(value));
+            } else if ("per_page".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+                target.setPageSize(Integer.valueOf(value));
+            } else if ("sort".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+                target.setOrderBy(value);
+            } else if ("order".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+                target.setOrder(Pager.Order.valueOf(value));
             }
         }
     }
@@ -136,7 +142,7 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
     }
 
     private String[] getModelNames(boolean page) {
-        return page ? new String[]{"page", "size"} : new String[]{"limit"};
+        return page ? new String[]{"page", "size", "per_page", "sort", "order"} : new String[]{"limit"};
     }
 
     private boolean isPagerModelAttribute(String parameterName, String[] modelNames) {

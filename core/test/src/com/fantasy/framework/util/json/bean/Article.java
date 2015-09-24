@@ -1,8 +1,7 @@
 package com.fantasy.framework.util.json.bean;
 
-import org.codehaus.jackson.annotate.JsonBackReference;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 public class Article {
 	private String title;

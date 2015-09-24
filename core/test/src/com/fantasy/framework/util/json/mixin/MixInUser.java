@@ -1,6 +1,6 @@
 package com.fantasy.framework.util.json.mixin;
 
-import org.codehaus.jackson.annotate.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties("name")
 public interface MixInUser {

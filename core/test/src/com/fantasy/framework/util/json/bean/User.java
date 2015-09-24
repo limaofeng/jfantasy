@@ -1,13 +1,11 @@
 package com.fantasy.framework.util.json.bean;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.google.common.collect.Sets;
+
 import java.util.Date;
 import java.util.Set;
-
-import org.codehaus.jackson.annotate.JsonIgnore;
-import org.codehaus.jackson.annotate.JsonManagedReference;
-import org.codehaus.jackson.map.annotate.JsonFilter;
-
-import com.google.common.collect.Sets;
 
 @JsonFilter("myFilter")
 public class User {

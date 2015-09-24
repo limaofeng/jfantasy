@@ -29,7 +29,7 @@ import java.util.Date;
 @Entity
 @JsonFilter(JSON.CUSTOM_FILTER)
 @Table(name = "MEM_MEMBER_DETAILS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member", "avatarStore","avatar"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member", "avatar"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MemberDetails implements Serializable {
 
