@@ -7,11 +7,11 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.system.bean.DataDictionaryType;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import junit.framework.Assert;
 import ognl.OgnlException;
@@ -176,7 +176,7 @@ public class JSONTest {
 
         LOG.debug(Arrays.toString(propertyNames));
 
-//        filter.addFilter("testPOJOFilter", SimpleBeanPropertyFilter.serializeAllExcept("b", "c"));
+        filter.addFilter("testPOJOFilter", SimpleBeanPropertyFilter.serializeAllExcept("b", "c"));
         objectMapper.configure(MapperFeature.DEFAULT_VIEW_INCLUSION, false);
         objectMapper.writerWithView(FilterView.OutputB.class).writeValueAsString(testPOJO);
 
@@ -191,7 +191,7 @@ public class JSONTest {
 //        Assert.assertEquals("{\"b\":\"2\"}", jsonStr1);
     }
 
-    @JsonFilter("testPOJOFilter")
+//    @JsonFilter("testPOJOFilter")
 //    @JsonIgnoreProperties("b")
     //http://blog.csdn.net/sdyy321/article/details/40298081
     public static class TestPOJO {
