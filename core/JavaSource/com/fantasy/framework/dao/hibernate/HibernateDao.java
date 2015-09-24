@@ -740,7 +740,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     public Pager<T> findPager(Pager<T> pager, Criterion... criterions) {
         pager = pager == null ? new Pager<T>() : pager;
         Criteria c = distinct(createCriteria(criterions, StringUtil.tokenizeToStringArray(pager.getOrderBy())));
-        pager.setTotalCount(countCriteriaResult(c));
+        if(pager.getFirst() == 0) {
+            pager.setTotalCount(countCriteriaResult(c));
+        }
         setPageParameter(c, pager);
         pager.setPageItems(c.list());
         return pager;

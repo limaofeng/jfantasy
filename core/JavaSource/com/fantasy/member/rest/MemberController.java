@@ -4,7 +4,9 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.service.MemberService;
-import com.wordnik.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.List;
 
+@Api(value = "/members", description = "会员接口")
 @RestController
 @RequestMapping("/members")
 public class MemberController {
@@ -19,9 +22,10 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @ApiOperation(value = "查询会员信息", notes = "通过 filters 可以过滤数据<br/>本接口支持 <br/> X-Page-Fields、X-Result-Fields、X-Expend-Fields 功能", response = Member[].class)
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<Member> search(Pager<Member> pager, List<PropertyFilter> filters) {
+    public Pager<Member> search(@ApiParam(hidden = true) Pager<Member> pager, @ApiParam(value = "筛选条件", name = "filters") List<PropertyFilter> filters) {
         return this.memberService.findPager(pager, filters);
     }
 

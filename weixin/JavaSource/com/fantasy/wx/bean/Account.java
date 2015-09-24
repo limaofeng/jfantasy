@@ -3,8 +3,8 @@ package com.fantasy.wx.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.wx.framework.session.AccountDetails;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;

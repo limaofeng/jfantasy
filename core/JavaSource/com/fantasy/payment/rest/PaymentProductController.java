@@ -3,8 +3,8 @@ package com.fantasy.payment.rest;
 
 import com.fantasy.payment.product.PaymentProduct;
 import com.fantasy.payment.service.PaymentConfiguration;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

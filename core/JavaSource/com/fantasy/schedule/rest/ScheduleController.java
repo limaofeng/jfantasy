@@ -1,8 +1,8 @@
 package com.fantasy.schedule.rest;
 
 import com.fantasy.schedule.service.ScheduleService;
-import com.wordnik.swagger.annotations.Api;
-import com.wordnik.swagger.annotations.ApiOperation;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
 import org.quartz.Trigger;

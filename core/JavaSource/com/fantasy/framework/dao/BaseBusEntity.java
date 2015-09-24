@@ -1,6 +1,6 @@
 package com.fantasy.framework.dao;
 
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;

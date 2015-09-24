@@ -3,8 +3,9 @@ package com.fantasy.framework.dao;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.Serializable;
@@ -48,7 +49,7 @@ public class Pager<T> implements Serializable {
     @ApiModelProperty("排序方向")
     private Order[] orders = new Order[]{Order.asc};
     @ApiModelProperty("返回的数据集")
-//    @JsonProperty("items")
+    @JsonProperty("items")
     private List<T> pageItems;
 
     public Pager() {

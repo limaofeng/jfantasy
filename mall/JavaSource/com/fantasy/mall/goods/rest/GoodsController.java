@@ -6,7 +6,7 @@ import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.bean.Product;
 import com.fantasy.mall.goods.service.GoodsService;
-import com.wordnik.swagger.annotations.Api;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

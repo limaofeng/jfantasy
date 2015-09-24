@@ -208,6 +208,10 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return isPrimitiveOrWrapper(type);
     }
 
+    public static boolean isBeanType(Class<?> clazz) {
+        return !isBasicType(clazz) && !String.class.isAssignableFrom(clazz) && !Date.class.isAssignableFrom(clazz) && !BigDecimal.class.isAssignableFrom(clazz) && !Enum.class.isAssignableFrom(clazz);
+    }
+
     public static Object newInstance(Class<?> componentType, int length) {
         return Array.newInstance(componentType, length);
     }
@@ -285,7 +289,6 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
      * @param method 反射方法
      * @param index  参数下标
      * @return 泛型类型集合
-     * @功能描述
      */
     public static List<Class> getMethodGenericParameterTypes(Method method, int index) {
         List<Class> results = new ArrayList<Class>();
@@ -434,6 +437,10 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         }
         LOGGER.error("未找到耗时：" + (System.currentTimeMillis() - start) + "ms");
         return null;
+    }
+
+    public static <T extends Annotation> T getAnnotation(Class clazz, Class<T> annotClass) {
+        return (T) clazz.getAnnotation(annotClass);
     }
 
     public static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotClass) {
