@@ -13,7 +13,6 @@ import com.fantasy.common.service.AreaService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.mall.delivery.bean.DeliveryCorp;
 import com.fantasy.mall.delivery.bean.DeliveryType;
@@ -166,8 +165,7 @@ public class OrderTypeConverterTest {
 
         subOrder.setShipName("林暮春");
         subOrder.setShipMobile("15921884771");
-        subOrder.setShipPhone("021-xxxxxxx");
-        subOrder.setShipAreaStore(JSON.serialize(areaService.get("310104")));
+        subOrder.setShipArea(areaService.get("310104"));
         subOrder.setShipAddress("田林路140号28好楼G09室");
         subOrder.setShipZipCode("200000");
 
@@ -183,8 +181,7 @@ public class OrderTypeConverterTest {
 
         order.setShipName("林暮春");
         order.setShipMobile("15921884771");
-        order.setShipPhone("021-xxxxxxx");
-        order.setShipAreaStore(JSON.serialize(areaService.get("310104")));
+        order.setShipArea(areaService.get("310104"));
         order.setShipAddress("田林路140号28好楼G09室");
         order.setShipZipCode("200000");
 
