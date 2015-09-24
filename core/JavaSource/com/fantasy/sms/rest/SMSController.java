@@ -1,7 +1,7 @@
 package com.fantasy.sms.rest;
 
 import com.fantasy.sms.SMSService;
-import com.wordnik.swagger.annotations.Api;
+import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

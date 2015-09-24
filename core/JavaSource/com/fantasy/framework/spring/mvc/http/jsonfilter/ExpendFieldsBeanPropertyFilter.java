@@ -33,7 +33,6 @@ public class ExpendFieldsBeanPropertyFilter extends CustomFieldsBeanPropertyFilt
             display = isResultFields(_name, expendFields);
         }
         try {
-            System.out.println(entityClass + " => " + name + "\t" + display);
             return display;
         } finally {
             if (display && ClassUtil.isBeanType(propertyType) && (capsule == null || capsule.getClazz() != propertyType)) {

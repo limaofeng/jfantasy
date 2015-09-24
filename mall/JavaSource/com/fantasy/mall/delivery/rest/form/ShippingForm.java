@@ -2,8 +2,8 @@ package com.fantasy.mall.delivery.rest.form;
 
 import com.fantasy.mall.delivery.bean.DeliveryItem;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.ArrayList;
 import java.util.List;

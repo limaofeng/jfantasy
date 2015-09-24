@@ -1,7 +1,7 @@
 package com.fantasy.mall.delivery.rest.form;
 
-import com.wordnik.swagger.annotations.ApiModel;
-import com.wordnik.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 @ApiModel("物流项")
 public class DeliveryItemForm {

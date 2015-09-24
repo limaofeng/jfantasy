@@ -1,5 +1,6 @@
 package com.fantasy.framework.spring.mvc.http;
 
+import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.spring.mvc.error.RestException;
 import com.fantasy.framework.spring.mvc.http.jsonfilter.ExpendFieldsBeanPropertyFilter;
 import com.fantasy.framework.spring.mvc.http.jsonfilter.NoneFieldsBeanPropertyFilter;
@@ -35,6 +36,11 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     private final static Log LOGGER = LogFactory.getLog(JacksonResponseBodyAdvice.class);
 
+    public final static String X_Expansion_Fields = "X-Expansion-Fields";
+    public final static String X_Page_Fields = "X-Page-Fields";
+    public final static String X_Result_Fields = "X-Result-Fields";
+    public final static String X_Expend_Fields = "X-Expend-Fields";
+
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
         Class returnType = methodParameter.getMethod().getReturnType();
@@ -43,35 +49,42 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public Object beforeBodyWrite(Object obj, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> converterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
-        LOGGER.debug(obj);
+        Object returnValue = obj;
         HttpServletRequest request = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest();
-        final String xExpansionFields = request.getHeader("X-Expansion-Fields");//如果需要返回
+        final String xExpansionFields = request.getHeader(X_Expansion_Fields);//如果需要返回
         if (mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
+            Class returnType = methodParameter.getMethod().getReturnType();
+
+            if (Pager.class.isAssignableFrom(returnType) && !"true".equalsIgnoreCase(request.getHeader(X_Page_Fields))) {
+                returnValue = ((Pager) returnValue).getPageItems();
+            }
+
             if (isCustomFilter(request)) {
-                MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(obj);
+                MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
                 SimpleFilterProvider filter = new SimpleFilterProvider().setFailOnUnknownId(false);
                 filter.addFilter(JSON.CUSTOM_FILTER, getPropertyFilter(request));
                 mappingJacksonValue.setFilters(filter);
                 return mappingJacksonValue;
             } else {
-                MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(obj);
+                MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
                 SimpleFilterProvider filter = new SimpleFilterProvider().setFailOnUnknownId(false);
                 mappingJacksonValue.setFilters(filter);
                 filter.addFilter(JSON.CUSTOM_FILTER, new NoneFieldsBeanPropertyFilter());
                 return mappingJacksonValue;
             }
+
         }
         return obj;
     }
 
 
     public static boolean isCustomFilter(HttpServletRequest request) {
-        return StringUtil.isNotBlank(request.getHeader("X-Result-Fields")) || StringUtil.isNotBlank(request.getHeader("X-Expend-Fields"));
+        return StringUtil.isNotBlank(request.getHeader(X_Result_Fields)) || StringUtil.isNotBlank(request.getHeader(X_Expend_Fields));
     }
 
     public static PropertyFilter getPropertyFilter(HttpServletRequest request) {
-        String xResultFields = request.getHeader("X-Result-Fields");//完全由请求方限定返回的字段
-        String xExpendFields = request.getHeader("X-Expend-Fields");//如果需要返回
+        String xResultFields = request.getHeader(X_Result_Fields);
+        String xExpendFields = request.getHeader(X_Expend_Fields);
         if (StringUtil.isNotBlank(xResultFields)) {
             return new ResultFieldsBeanPropertyFilter(StringUtil.tokenizeToStringArray(xResultFields));
         }
@@ -80,9 +93,6 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         }
         throw new RestException("不能初始化 BeanPropertyFilter 对象");
     }
-
-
-
 
 
 }
