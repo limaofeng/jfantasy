@@ -1,11 +1,14 @@
 package com.fantasy.payment.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.bean.databind.MemberDeserializer;
 import com.fantasy.member.bean.databind.MemberSerializer;
 import com.fantasy.payment.bean.databind.PaymentConfigDeserializer;
 import com.fantasy.payment.bean.databind.PaymentConfigSerializer;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -27,6 +30,8 @@ import java.math.BigDecimal;
 @ApiModel(value = "支付记录")
 @Entity
 @Table(name = "MALL_PAYMENT")
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Payment extends BaseBusEntity {
 
     private static final long serialVersionUID = 6404772131152718534L;

@@ -2,6 +2,9 @@ package com.fantasy.common.bean;
 
 import com.fantasy.common.bean.enums.TimeUnit;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,6 +16,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "HOT_KEYWORDS", uniqueConstraints = {@UniqueConstraint(columnNames = {"TARGET_KEY", "KEYWORDS", "TIME_UNIT", "TIME"})})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class HotKeywords extends BaseBusEntity {
 
     private static final long serialVersionUID = 1060015917650774536L;

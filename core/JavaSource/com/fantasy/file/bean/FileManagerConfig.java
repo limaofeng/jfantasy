@@ -4,6 +4,8 @@ import com.fantasy.file.bean.converter.ConfigParamsConverter;
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -19,6 +21,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "FILE_MANAGER_CONFIG")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "folders", "fileDetails"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileManagerConfig extends BaseBusEntity {

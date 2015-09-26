@@ -1,6 +1,9 @@
 package com.fantasy.payment.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -15,6 +18,8 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "MALL_PAYMENT_REFUND")
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Refund extends BaseBusEntity {
 
     private static final long serialVersionUID = -2533117666249761057L;

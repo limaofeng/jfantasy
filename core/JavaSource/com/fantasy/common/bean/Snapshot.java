@@ -1,6 +1,8 @@
 package com.fantasy.common.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -16,8 +18,9 @@ import javax.persistence.*;
 @ApiModel(value = "快照信息", description = "用于描述商品及文章的历史信息")
 @Entity
 @Table(name = "SNAPSHOT")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
 public class Snapshot extends BaseBusEntity {
 
     @Id

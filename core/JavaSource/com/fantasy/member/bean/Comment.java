@@ -1,6 +1,8 @@
 package com.fantasy.member.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -18,6 +20,7 @@ import java.util.List;
 @ApiModel("评论表")
 @Entity
 @Table(name = "MEM_COMMENT")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "forComment", "replyComments", "member"})
 public class Comment extends BaseBusEntity {
 

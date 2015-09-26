@@ -1,6 +1,8 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.attr.storage.BaseDynaBean;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,6 +17,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "AUTH_JOB")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Job extends BaseDynaBean {
 

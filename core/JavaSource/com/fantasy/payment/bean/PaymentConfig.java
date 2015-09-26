@@ -1,6 +1,8 @@
 package com.fantasy.payment.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,6 +23,7 @@ import java.util.List;
 @ApiModel("支付配置")
 @Entity
 @Table(name = "MALL_PAYMENT_CONFIG")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "orders", "payments", "refunds"})
 public class PaymentConfig extends BaseBusEntity {
 

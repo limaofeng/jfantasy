@@ -3,6 +3,8 @@ package com.fantasy.file.bean;
 import com.fantasy.file.service.FileService;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -18,8 +20,9 @@ import java.util.List;
 @Entity
 @Table(name = "FILE_FOLDER")
 @IdClass(FolderKey.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Folder extends BaseBusEntity {
 
     private static final long serialVersionUID = -1415999483740197039L;

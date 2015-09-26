@@ -5,6 +5,7 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.PermissionType;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
@@ -23,6 +24,7 @@ import java.util.List;
 @ApiModel(value = "权限配置", description = "权限配置信息")
 @Entity
 @Table(name = "AUTH_PERMISSION")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "roles"})
 public class Permission extends BaseBusEntity implements Cloneable {
 

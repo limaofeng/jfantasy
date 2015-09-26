@@ -1,6 +1,7 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.databind.MenuDeserializer;
 import com.fantasy.security.bean.databind.MenuSerializer;
 import com.fantasy.security.bean.enums.MenuType;
@@ -20,6 +21,7 @@ import java.util.List;
 @ApiModel(value = "菜单")
 @Entity
 @Table(name = "AUTH_MENU")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Menu extends BaseBusEntity {
