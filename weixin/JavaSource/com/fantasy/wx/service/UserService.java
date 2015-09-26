@@ -78,19 +78,19 @@ public class UserService implements InitializingBean {
     /**
      * 通过openId刷新用户信息
      */
-    private User refresh(String openId) throws WeiXinException {
-//        User ui = get(openId);
-//        if (ui != null) {
-//            return ui;
-//        }
-//        com.fantasy.wx.framework.message.user.User user = WeiXinSessionUtils.getCurrentSession().getUser(openId);
-//        if (user == null) {
-//            return null;
-//        }
-//        ui = transfiguration(user);
-//        this.userInfoDao.save(ui);
-//        return ui;
-        return null;
+    private User refresh(String appid,String openId) throws WeiXinException {
+        User ui = get(UserKey.newInstance(appid,openId));
+        if (ui != null) {
+            return ui;
+        }
+        com.fantasy.wx.framework.message.user.User user = WeiXinSessionUtils.getCurrentSession().getUser(openId);
+        if (user == null) {
+            return null;
+        }
+        ui = transfiguration(user);
+        ui.setAppId(appid);
+        this.userDao.save(ui);
+        return ui;
     }
 
 
@@ -158,8 +158,8 @@ public class UserService implements InitializingBean {
         return this.userDao.findUnique(criterions);
     }
 
-    public User checkCreateMember(String openId) throws WeiXinException {
-        return refresh(openId);
+    public User checkCreateMember(String appid,String openId) throws WeiXinException {
+        return refresh(appid,openId);
         /* TODO 关注微信号时,是否自动创建会员记录
         if (ui != null) {
             String bex64OpenId = StringUtil.hexTo64(MessageDigestUtil.getInstance().get(ui.getOpenId()));

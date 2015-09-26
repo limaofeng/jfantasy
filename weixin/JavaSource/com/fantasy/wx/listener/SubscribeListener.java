@@ -30,7 +30,7 @@ public class SubscribeListener implements SubscribeEventListener {
             public void run() {
                 try {
                     WeiXinSessionUtils.saveSession(session);
-                    userService.checkCreateMember(message.getFromUserName());
+                    userService.checkCreateMember(session.getAccountDetails().getAppId(),message.getFromUserName());
                 } catch (WeiXinException e) {
                     LOG.error(e.getMessage(), e);
                 } finally {

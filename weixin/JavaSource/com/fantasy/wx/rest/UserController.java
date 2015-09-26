@@ -31,7 +31,7 @@ public class UserController {
         try {
             WeiXinSessionUtils.saveSession(weiXinSessionFactory.openSession(appid));
 
-            User user = userService.checkCreateMember(openid);
+            User user = userService.checkCreateMember(appid,openid);
             if (user == null) {
                 throw new NotFoundException("未找到对应的粉丝信息");
             }

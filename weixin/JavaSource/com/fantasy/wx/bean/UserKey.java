@@ -9,8 +9,8 @@ import java.io.Serializable;
 
 public class UserKey implements Serializable {
 
-    public static UserKey newInstance(String absolutePath, String fileManagerId) {
-        return new UserKey(absolutePath, fileManagerId);
+    public static UserKey newInstance(String appId, String openId) {
+        return new UserKey(appId, openId);
     }
 
     //APPID

@@ -24,13 +24,11 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${redis.clients-version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
             <version>${spring.data.redis-version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.spy</groupId>

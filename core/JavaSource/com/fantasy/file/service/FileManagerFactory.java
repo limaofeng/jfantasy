@@ -9,6 +9,7 @@ import com.fantasy.file.builders.LocalFileManagerBuilder;
 import com.fantasy.file.manager.UploadFileManager;
 import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.spring.SpringContextUtil;
+import com.fantasy.framework.util.common.JdbcUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -16,11 +17,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
 import java.util.HashMap;
 import java.util.List;
@@ -61,38 +59,35 @@ public class FileManagerFactory implements InitializingBean {
 
 
     public void afterPropertiesSet() throws Exception {
-        PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
-        assert transactionManager != null;
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            // 创建默认目录
-            final String webrootPath = StringUtil.defaultValue(PathUtil.root(), PathUtil.classes());
-            FileManagerConfig fileManagerConfig = fileManagerService.get(WEBROOT_FILEMANAGER_ID);
-            if (fileManagerConfig == null) {
-                fileManagerService.save(local, WEBROOT_FILEMANAGER_ID, "项目WEB根目录", "应用启动是检查并修改该目录", new HashMap<String, String>() {
-                    {
-                        this.put("defaultDir", webrootPath);
+        JdbcUtil.transaction(new JdbcUtil.Callback<Void>() {
+            @Override
+            public Void run() {
+                // 创建默认目录
+                final String webrootPath = StringUtil.defaultValue(PathUtil.root(), PathUtil.classes());
+                FileManagerConfig fileManagerConfig = fileManagerService.get(WEBROOT_FILEMANAGER_ID);
+                if (fileManagerConfig == null) {
+                    fileManagerService.save(local, WEBROOT_FILEMANAGER_ID, "项目WEB根目录", "应用启动是检查并修改该目录", new HashMap<String, String>() {
+                        {
+                            this.put("defaultDir", webrootPath);
+                        }
+                    });
+                } else {
+                    ConfigParam defaultDir = ObjectUtil.find(fileManagerConfig.getConfigParams(), "name", "defaultDir");
+                    if (defaultDir == null || !webrootPath.equals(defaultDir.getValue())) {
+                        fileManagerConfig.addConfigParam("defaultDir", webrootPath);
+                        fileManagerService.save(fileManagerConfig);
                     }
-                });
-            } else {
-                ConfigParam defaultDir = ObjectUtil.find(fileManagerConfig.getConfigParams(), "name", "defaultDir");
-                if (defaultDir == null || !webrootPath.equals(defaultDir.getValue())) {
-                    fileManagerConfig.addConfigParam("defaultDir", webrootPath);
-                    fileManagerService.save(fileManagerConfig);
                 }
+                return null;
             }
-            // 初始化文件管理器
-            for (FileManagerConfig config : fileManagerService.getAll()) {
-                try {
-                    this.registerFileManager(config.getId(), config.getType(), config.getConfigParams());
-                } catch (Exception ex) {
-                    LOG.error("注册 FileManager id = [" + config.getId() + "] 失败!", ex);
-                }
+        }, TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        // 初始化文件管理器
+        for (FileManagerConfig config : fileManagerService.getAll()) {
+            try {
+                FileManagerFactory.this.registerFileManager(config.getId(), config.getType(), config.getConfigParams());
+            } catch (Exception ex) {
+                LOG.error("注册 FileManager id = [" + config.getId() + "] 失败!", ex);
             }
-        } finally {
-            transactionManager.commit(status);
         }
     }
 
