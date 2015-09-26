@@ -5,8 +5,10 @@ import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.common.bean.Area;
 import com.fantasy.common.bean.converter.AreaConverter;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -31,6 +33,7 @@ import java.util.List;
 @Table(name = "MALL_ORDER")
 @Persister(impl = DynaBeanEntityPersister.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "shipAreaStore", "memeo", "shippings", "orderItems", "payments"})
 public class Order extends BaseDynaBean {
 

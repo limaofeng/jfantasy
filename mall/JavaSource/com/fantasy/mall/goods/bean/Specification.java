@@ -1,6 +1,8 @@
 package com.fantasy.mall.goods.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.*;
 
@@ -20,6 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = "MALL_SPECIFICATION")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "handler"})
 public class Specification extends BaseBusEntity {
 

@@ -2,8 +2,8 @@ package com.fantasy.file.service;
 
 import com.fantasy.file.FileManager;
 import com.fantasy.file.FileManagerBuilder;
+import com.fantasy.file.bean.ConfigParam;
 import com.fantasy.file.bean.FileManagerConfig;
-import com.fantasy.file.bean.FileManagerConfig.ConfigParam;
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.file.builders.LocalFileManagerBuilder;
 import com.fantasy.file.manager.UploadFileManager;
@@ -80,7 +80,7 @@ public class FileManagerFactory implements InitializingBean {
                 }
                 return null;
             }
-        }, TransactionDefinition.PROPAGATION_REQUIRES_NEW);
+        }, TransactionDefinition.PROPAGATION_REQUIRED);
         // 初始化文件管理器
         for (FileManagerConfig config : fileManagerService.getAll()) {
             try {
@@ -91,13 +91,13 @@ public class FileManagerFactory implements InitializingBean {
         }
     }
 
-    public void registerFileManager(String id, FileManagerType type, final List<FileManagerConfig.ConfigParam> configParams) {
+    public void registerFileManager(String id, FileManagerType type, final List<ConfigParam> configParams) {
         if (!fileManagerBuilders.containsKey(type)) {
             LOG.error(" 未找到 [" + type + "] 对应的构建程序!请参考 FileManagerBuilder 实现,并添加到 FileManagerFactory 的配置中");
             return;
         }
         Map<String, String> params = new HashMap<String, String>();
-        for (FileManagerConfig.ConfigParam configParam : configParams) {
+        for (ConfigParam configParam : configParams) {
             params.put(configParam.getName(), configParam.getValue());
         }
         fileManagerCache.put(id, fileManagerBuilders.get(type).register(params));

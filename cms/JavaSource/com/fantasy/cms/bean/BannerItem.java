@@ -3,6 +3,8 @@ package com.fantasy.cms.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.bean.converter.FileDetailConverter;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -18,8 +20,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "CMS_BANNER_ITEM")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "banner", "bannerImageStore"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "banner", "bannerImage"})
 public class BannerItem extends BaseBusEntity {
 
     private static final long serialVersionUID = 3179187068898470124L;
@@ -92,12 +95,10 @@ public class BannerItem extends BaseBusEntity {
         this.url = url;
     }
 
-    @Transient
     public void setBannerImage(FileDetail bannerImage) {
         this.bannerImage = bannerImage;
     }
 
-    @Transient
     public FileDetail getBannerImage() {
         return this.bannerImage;
     }

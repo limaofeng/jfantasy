@@ -3,6 +3,7 @@ package com.fantasy.mall.goods.bean;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -20,8 +21,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MALL_BRAND")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "logoImageStore", "goods", "goodsCategories"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "logoImageStore", "goods", "goodsCategories"})
 public class Brand extends BaseBusEntity {
 
     private static final long serialVersionUID = -6109590619136943215L;

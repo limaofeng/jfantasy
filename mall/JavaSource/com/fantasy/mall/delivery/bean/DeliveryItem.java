@@ -3,6 +3,10 @@ package com.fantasy.mall.delivery.bean;
 
 import com.fantasy.common.order.OrderItem;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -16,6 +20,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "MALL_DELIVERY_ITEM")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DeliveryItem extends BaseBusEntity {
 
     private static final long serialVersionUID = -6783787752984851646L;

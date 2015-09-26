@@ -37,6 +37,7 @@ import java.util.List;
 @Table(name = "MALL_GOODS_CATEGORY")
 @Persister(impl = DynaBeanEntityPersister.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "metaKeywords", "metaDescription", "goodsParameterStore", "brandCustomSort", "goods"})
 public class GoodsCategory extends BaseDynaBean {
 

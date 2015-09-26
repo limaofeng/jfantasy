@@ -6,6 +6,8 @@ import com.fantasy.cms.bean.databind.ArticleCategoryDeserializer;
 import com.fantasy.cms.bean.databind.ArticleCategorySerializer;
 import com.fantasy.cms.bean.databind.ContentDeserializer;
 import com.fantasy.framework.lucene.annotations.*;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -32,8 +34,9 @@ import javax.persistence.Entity;
 @Entity
 @Table(name = "CMS_ARTICLE")
 @Persister(impl = DynaBeanEntityPersister.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "content"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "content"})
 public class Article extends BaseDynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;

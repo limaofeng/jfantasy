@@ -1,10 +1,12 @@
 package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
 import com.fantasy.member.bean.databind.MemberDeserializer;
 import com.fantasy.member.bean.databind.MemberSerializer;
 import com.fantasy.security.bean.enums.Sex;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -19,6 +21,7 @@ import javax.persistence.*;
 @Entity(name = "wxUserInfo")
 @IdClass(UserKey.class)
 @Table(name = "WX_USER_INFO")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User extends BaseBusEntity {
 

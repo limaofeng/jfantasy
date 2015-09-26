@@ -11,6 +11,7 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.shop.bean.Shop;
 import com.fantasy.member.bean.Member;
 import com.fantasy.system.util.SettingUtil;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -41,6 +42,7 @@ import java.util.List;
 @Table(name = "MALL_GOODS")
 @Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore"})
 public class Goods extends BaseDynaBean {
 

@@ -6,6 +6,8 @@ import com.fantasy.cms.bean.databind.ArticleCategorySerializer;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -28,8 +30,9 @@ import java.util.List;
 @ApiModel("文章分类")
 @Entity
 @Table(name = "CMS_ARTICLE_CATEGORY")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "articles", "children", "articleVersion"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "articles", "children", "articleVersion"})
 public class ArticleCategory extends BaseBusEntity {
 
     private static final long serialVersionUID = -2207100604803274789L;
