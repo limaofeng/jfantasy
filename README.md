@@ -2,13 +2,25 @@
 -------------
 >fantasy-core 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架。
 
-fantasy-core 的功能
--------------
->待续
+### 快速开始
 
-意见和建议
+ 通过 maven 私服地址: http://maven.hoolue.com ，配置该框架
+
+```xml
+<dependency>
+  <groupId>com.fantasy</groupId>
+  <artifactId>fantasy-core</artifactId>
+  <version>3.3.17</version>
+</dependency>
+```
+
+主要功能及使用技术介绍
 -------------
->待续
+>RESTful
+>支付接口
+>微信接口
+>Hibernate
+>Mybatis
 
 帮助
 -------------
@@ -30,18 +42,9 @@ fantasy-core 的功能
  }
 ```
 * 升级 spring-swagger 到 springfox
-* RESTful 接口功能添加
-```{html}
-    X-Page-Fields
-        条件查询返回多条数据时，默认返回list。如果需要分页支持需要在请求头中添加 X-Page-Fields：true。
-    后端java实现全部返回Pager对象。
-```
-```{html}
-    X-Result-Fields
-        当调用端想控制返回字段时，在请求头中添加:X-Result-Fields:username,sex. 这样就只会返回两个字段
-```
-
-```{html}
-    X-Expend-Fields
-        子对象、及关联对象被服务端屏蔽时，前端可以通过设置该字段返回其关联对象的信息:如:X-Expend-Fields:member,orders
-```
+* RESTful 添加 X-Page-Fields 请求头
+  ```条件查询返回多条数据时，默认返回list。如果需要分页支持需要在请求头中添加 X-Page-Fields：true。注：后端java实现全部返回Pager对象。```
+* RESTful 添加 X-Result-Fields  请求头
+  ```当调用端想控制返回字段时，在请求头中添加:X-Result-Fields:username,sex. 这样就只会返回两个字段```
+* RESTful 添加 X-Expend-Fields  请求头
+  ```当子对象、及关联对象被服务端屏蔽时，前端可以通过设置该字段返回其关联对象的信息:如:X-Expend-Fields:member,orders```
