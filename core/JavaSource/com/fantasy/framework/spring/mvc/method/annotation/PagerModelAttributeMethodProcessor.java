@@ -101,13 +101,13 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
                 }
                 target.setFirst(Integer.valueOf(limits[0]));
                 target.setPageSize(Integer.valueOf(limits[1]));
-            } else if ("page".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+            } else if ("page".equalsIgnoreCase(paramName)) {
                 target.setCurrentPage(Integer.valueOf(value));
-            } else if ("per_page".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+            } else if ("per_page".equalsIgnoreCase(paramName)) {
                 target.setPageSize(Integer.valueOf(value));
-            } else if ("sort".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+            } else if ("sort".equalsIgnoreCase(paramName)) {
                 target.setOrderBy(value);
-            } else if ("order".equalsIgnoreCase(paramName) || StringUtil.isNotBlank(value)) {
+            } else if ("order".equalsIgnoreCase(paramName)) {
                 target.setOrder(Pager.Order.valueOf(value));
             }
         }
