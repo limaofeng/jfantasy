@@ -10,6 +10,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -134,6 +135,9 @@ public class FileManagerConfig extends BaseBusEntity {
     }
 
     public void addConfigParam(String name, String value) {
+        if (this.configParams == null) {
+            this.configParams = new ArrayList<ConfigParam>();
+        }
         ConfigParam configParam = ObjectUtil.find(this.configParams, "name", name);
         if (configParam == null) {
             this.configParams.add(new ConfigParam(name, value));

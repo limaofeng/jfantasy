@@ -6,7 +6,6 @@ import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.core.type.TypeReference;
 
 import javax.persistence.AttributeConverter;
-import java.util.Collections;
 import java.util.List;
 
 public class ConfigParamsConverter implements AttributeConverter<List<ConfigParam>, String> {
@@ -21,10 +20,11 @@ public class ConfigParamsConverter implements AttributeConverter<List<ConfigPara
 
     @Override
     public List<ConfigParam> convertToEntityAttribute(String dbData) {
-        if(StringUtil.isBlank(dbData)){
-            return Collections.emptyList();
+        if (StringUtil.isBlank(dbData)) {
+            return null;
         }
-        return JSON.deserialize(dbData, new TypeReference<List<ConfigParam>>() {});
+        return JSON.deserialize(dbData, new TypeReference<List<ConfigParam>>() {
+        });
     }
 
 }
