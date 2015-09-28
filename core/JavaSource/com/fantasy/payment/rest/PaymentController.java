@@ -10,6 +10,7 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.service.PaymentService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
+@Api(value = "system-payments", description = "支付记录")
 @RestController
 @RequestMapping("/system/payments")
 public class PaymentController {

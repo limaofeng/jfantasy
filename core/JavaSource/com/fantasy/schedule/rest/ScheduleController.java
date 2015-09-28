@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "schedule-users", description = " 用户管理 ")
+@Api(value = "schedule-users", description = " 任务计划 ")
 @RestController
 @RequestMapping("/schedule")
 public class ScheduleController {

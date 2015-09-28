@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "delivery-shippings", description = "送货信息")
+@Api(value = "delivery-shippings", description = "配送的送货信息")
 @RestController
 @RequestMapping("/delivery/shippings")
 public class ShippingController {

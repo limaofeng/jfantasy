@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "delivery-corps", description = "物流公司")
+@Api(value = "delivery-corps", description = "配送的物流公司")
 @RestController
 @RequestMapping("/delivery/corps")
 public class DeliveryCorpController {

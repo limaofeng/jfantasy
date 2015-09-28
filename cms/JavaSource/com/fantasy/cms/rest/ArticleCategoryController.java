@@ -36,7 +36,7 @@ import java.util.List;
  * @apiSuccess {String} parent  上级栏目编码
  * @apiVersion 3.3.8
  */
-@Api(value = "cms-articles-categorys", description = "文章分类接口")
+@Api(value = "cms-categorys", description = "文章分类接口")
 @RestController
 @RequestMapping("/cms/categorys")
 public class ArticleCategoryController {
