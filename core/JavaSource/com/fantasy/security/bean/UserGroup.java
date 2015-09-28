@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_USERGROUP")
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "permissions"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "permissions", "roles", "permissions"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserGroup extends BaseBusEntity {
 
@@ -105,12 +105,10 @@ public class UserGroup extends BaseBusEntity {
         return this.description;
     }
 
-    @JsonIgnore
     public List<Role> getRoles() {
         return new ArrayList<Role>();
     }
 
-    @JsonIgnore
     public Boolean isEnabled() {
         return this.enabled;
     }
@@ -123,7 +121,6 @@ public class UserGroup extends BaseBusEntity {
         this.menus = menus;
     }
 
-    @JsonIgnore
     public List<Permission> getPermissions() {
         return permissions;
     }
@@ -151,39 +148,12 @@ public class UserGroup extends BaseBusEntity {
         return grantedAuthorities;
     }
 
-    /*
-    @JsonIgnore
-    public List<GrantedAuthority> getUrlAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        if (ObjectUtil.isNotNull(getRoles())) {
-            for (Role role : getRoles()) {
-                if (!role.isEnabled()) {
-                    continue;
-                }
-                grantedAuthorities.addAll(role.getUrlAuthorities());
-            }
-        }
-        return grantedAuthorities;
-    }
-
-    @JsonIgnore
-    public List<GrantedAuthority> getMenuAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        if (ObjectUtil.isNull(getMenus())) {
-            return grantedAuthorities;
-        }
-        for (Menu menu : getMenus()) {
-            grantedAuthorities.add(menu.getMenuAuthoritie());
-        }
-        return grantedAuthorities;
-    }
-
     public boolean equals(Object obj) {
         if (obj instanceof UserGroup) {
             return getId().equals(((UserGroup) obj).getId());
         }
         return super.equals(obj);
-    }*/
+    }
 
     @Override
     public int hashCode() {
