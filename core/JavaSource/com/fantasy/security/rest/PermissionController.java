@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "security-permissions", description = "网站权限")
+@Api(value = "security-permissions", description = "权限")
 @RestController
 @RequestMapping("/security/permissions")
 public class PermissionController {

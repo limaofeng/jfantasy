@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "security-roles", description = "用户角色")
+@Api(value = "security-roles", description = "角色")
 @RestController
 @RequestMapping("/security/roles")
 public class RoleController {

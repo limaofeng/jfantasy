@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "security-resources", description = "资源管理,一个可以访问的功能为一个资源")
+@Api(value = "security-resources", description = "资源")
 @RestController
 @RequestMapping("/security/resources")
 public class ResourceController {

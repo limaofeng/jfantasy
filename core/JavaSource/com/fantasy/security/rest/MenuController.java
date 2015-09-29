@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "security-menus", description = "菜单相关接口")
+@Api(value = "security-menus", description = "菜单")
 @RestController
 @RequestMapping("/security/menus")
 public class MenuController {
