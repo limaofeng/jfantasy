@@ -18,7 +18,7 @@
             <bean class="com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor"/>
         </mvc:argument-resolvers>
         <mvc:message-converters>
-            <bean class="com.fantasy.framework.spring.mvc.http.converter.FantasyMappingJackson2HttpMessageConverter"/>
+            <bean class="com.fantasy.framework.spring.mvc.http.converter.SecurityMappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
 

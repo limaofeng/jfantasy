@@ -126,11 +126,12 @@ public class RSAUtil {
         byte[] orgData = "提供了一组函数，这些函数允许应用程序在对用户的敏感私钥数据提供保护时以灵活的方式对数据进行加".getBytes();
 
         KeyPair keyPair = generateKeyPair();
-
+        //公钥
         RSAPublicKey pubKey = (RSAPublicKey) keyPair.getPublic();
-
+        //私钥
         RSAPrivateKey priKey = (RSAPrivateKey) keyPair.getPrivate();
 
+        /*
         byte[] pubModBytes = pubKey.getModulus().toByteArray();
 
         byte[] pubPubExpBytes = pubKey.getPublicExponent().toByteArray();
@@ -142,14 +143,15 @@ public class RSAUtil {
         RSAPublicKey recoveryPubKey = generateRSAPublicKey(pubModBytes, pubPubExpBytes);
 
         RSAPrivateKey recoveryPriKey = generateRSAPrivateKey(priModBytes, priPriExpBytes);
+        */
 
-        byte[] raw = encrypt(recoveryPriKey, orgData);
+        byte[] raw = encrypt(priKey, orgData);
 
         System.out.println(raw.length);
 
         System.out.println(new String(raw));
 
-        byte[] data = decrypt(recoveryPubKey, raw);
+        byte[] data = decrypt(pubKey, raw);
 
         System.out.println(new String(data));
     }
