@@ -192,10 +192,10 @@ public class PayService implements InitializingBean {
                 throw new RestException("微信返回的响应签名错误");
             }
             //返回用用JSPAPI使用的字段
-            prePayment.setTradeNo(payment.getTradeNo());
+            prePayment.setSn(payment.getSn());
             prePayment.setTimeStamp(DateUtil.now().getTime());
             prePayment.setNonceStr(generateNonceString(16));
-            prePayment.setPackage("prepay_id=" + payment.getTradeNo());
+            prePayment.setPackage("prepay_id=" + data.get("prepay_id"));
             prePayment.setSignType("MD5");
             //签名
             data.clear();

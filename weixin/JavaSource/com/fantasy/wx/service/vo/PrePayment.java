@@ -22,8 +22,6 @@ public class PrePayment {
      */
     @ApiModelProperty("支付流水")
     private String sn;
-    @ApiModelProperty("微信支付流水号")
-    private String tradeNo;
     /**
      * 交易类型
      */
@@ -119,14 +117,6 @@ public class PrePayment {
 
     public String getTradeType() {
         return tradeType;
-    }
-
-    public String getTradeNo() {
-        return tradeNo;
-    }
-
-    public void setTradeNo(String tradeNo) {
-        this.tradeNo = tradeNo;
     }
 
     public void setTradeType(String tradeType) {

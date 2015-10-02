@@ -22,7 +22,7 @@ import javax.persistence.*;
 @Table(name = "CMS_BANNER_ITEM")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "banner", "bannerImage"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "banner"})
 public class BannerItem extends BaseBusEntity {
 
     private static final long serialVersionUID = 3179187068898470124L;

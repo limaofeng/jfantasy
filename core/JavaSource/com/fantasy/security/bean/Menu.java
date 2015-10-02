@@ -22,7 +22,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_MENU")
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "children"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menuAuthoritie", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Menu extends BaseBusEntity {
 
@@ -183,7 +183,6 @@ public class Menu extends BaseBusEntity {
         return this.parent;
     }
 
-    @JsonIgnore
     public GrantedAuthority getMenuAuthoritie() {
         return new SimpleGrantedAuthority("MENU_" + getId());
     }

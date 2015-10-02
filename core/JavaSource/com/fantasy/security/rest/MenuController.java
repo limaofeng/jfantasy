@@ -1,10 +1,11 @@
 package com.fantasy.security.rest;
 
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.security.bean.Menu;
 import com.fantasy.security.service.MenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -19,11 +20,15 @@ public class MenuController {
     @Autowired
     private transient MenuService menuService;
 
-    @ApiOperation(value = "查询菜单", notes = "筛选文章，返回菜单数组")
+    @ApiOperation(value = "查询菜单", notes = "筛选文章，返回菜单数组", response = Menu[].class)
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<Menu> search() {
-        return this.menuService.list(new Criterion[]{}, "sort", "asc");
+    public Pager<Menu> search(Pager<Menu> pager, List<PropertyFilter> filters) {
+        if (!pager.isOrderBySetted()) {
+            pager.setOrder(Pager.Order.asc);
+            pager.setOrderBy("sort");
+        }
+        return this.menuService.findPager(pager, filters);
     }
 
     @ApiOperation(value = "获取菜单")
