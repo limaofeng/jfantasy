@@ -16,11 +16,11 @@ public class ExpendFieldsBeanPropertyFilter extends CustomFieldsBeanPropertyFilt
     @Override
     protected boolean include(PropertyWriter writer) {
         String name = writer.getName();
-        Class entityClass = ((BeanPropertyWriter) writer).getMember().getDeclaringClass();
+        Class entityClass = ClassUtil.getRealClass(((BeanPropertyWriter) writer).getMember().getDeclaringClass());
         Capsule capsule = stack.peek();
         Class propertyType = ((BeanPropertyWriter) writer).getPropertyType();
 
-        if (BaseBusEntity.class == entityClass) {
+        if (ClassUtil.getDeclaredField(BaseBusEntity.class, name) != null) {
             return isResultFields(name, expendFields);
         }
 

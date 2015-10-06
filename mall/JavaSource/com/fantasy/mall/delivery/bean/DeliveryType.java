@@ -3,12 +3,10 @@ package com.fantasy.mall.delivery.bean;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.delivery.bean.databind.DeliveryCorpDeserializer;
-import com.fantasy.mall.delivery.bean.databind.DeliveryCorpSerializer;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -30,7 +28,7 @@ import java.util.List;
 @Table(name = "MALL_DELIVERY_TYPE")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "shippings", "reships"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "shippings", "reships", "corp"})
 public class DeliveryType extends BaseBusEntity {
 
     private static final long serialVersionUID = 5873163245980853245L;
@@ -82,9 +80,8 @@ public class DeliveryType extends BaseBusEntity {
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;
     @ApiModelProperty(value = "默认物流公司")
-    @JsonProperty("corpId")
+    @JsonProperty("corp")
     @JsonDeserialize(using = DeliveryCorpDeserializer.class)
-    @JsonSerialize(using = DeliveryCorpSerializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "DELIVERY_CORP_ID", foreignKey = @ForeignKey(name = "MALL_DELIVERY_TYPE_CORP"))
     private DeliveryCorp defaultDeliveryCorp;

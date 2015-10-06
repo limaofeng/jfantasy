@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -57,7 +56,7 @@ public class DeliveryCorpService {
         }
     }
 
-    public Pager<DeliveryCorp> findPager(Pager<DeliveryCorp> pager, ArrayList<PropertyFilter> filters) {
+    public Pager<DeliveryCorp> findPager(Pager<DeliveryCorp> pager, List<PropertyFilter> filters) {
         return this.deliveryCorpDao.findPager(pager, filters);
     }
 

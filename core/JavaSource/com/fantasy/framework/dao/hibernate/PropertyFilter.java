@@ -17,11 +17,6 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * @apiDefine paramPropertyFilter
- * @apiParam {PropertyFilter} filters  参数格式为:EQS_title=测试
- * @apiVersion 3.3.8
- */
 @ApiModel("通用过滤器")
 public class PropertyFilter {
     public static final String OR_SEPARATOR = "_OR_";
@@ -181,43 +176,43 @@ public class PropertyFilter {
         this.matchType = matchType;
     }
 
-    public static enum MatchType {
+    public enum MatchType {
         /**
          * 等于
          */
-        EQ,
+        EQ(false),
         /**
          * 模糊查询
          */
-        LIKE,
+        LIKE(false),
         /**
          * 小于
          */
-        LT,
+        LT(false),
         /**
          * 大于
          */
-        GT,
+        GT(false),
         /**
          * 小于等于
          */
-        LE,
+        LE(false),
         /**
          * 大于等于
          */
-        GE,
+        GE(false),
         /**
          * in
          */
-        IN,
+        IN(true),
         /**
          * not in
          */
-        NOTIN,
+        NOTIN(true),
         /**
          * 不等于
          */
-        NE,
+        NE(false),
         /**
          * is null
          */
@@ -233,20 +228,53 @@ public class PropertyFilter {
         /**
          *
          */
-        NOTEMPTY, BETWEEN, SQL;
+        NOTEMPTY, BETWEEN(false), SQL(false);
 
-        public static boolean is(String str) {
-            for (MatchType matchType : MatchType.values()) {
-                if (RegexpUtil.find(str, "^" + matchType.toString())) {
-                    return true;
-                }
-            }
-            return false;
+        /**
+         * 是否存在参数
+         */
+        private boolean none;
+        /**
+         * 是否有多个参数
+         */
+        private boolean multi;
+
+        MatchType() {
+            this(true, false);
         }
 
+        MatchType(boolean multi) {
+            this(false, multi);
+        }
+
+        MatchType(boolean none, boolean multi) {
+            this.none = none;
+            this.multi = multi;
+        }
+
+        public static MatchType get(String str) {
+            for (MatchType matchType : MatchType.values()) {
+                if (RegexpUtil.find(str, "^" + matchType.toString())) {
+                    return matchType;
+                }
+            }
+            return null;
+        }
+
+        public static boolean is(String str) {
+            return get(str) != null;
+        }
+
+        public boolean isMulti() {
+            return multi;
+        }
+
+        public boolean isNone() {
+            return none;
+        }
     }
 
-    public static enum PropertyType {
+    public enum PropertyType {
         S(String.class), I(Integer.class), L(Long.class), N(Double.class), D(Date.class), B(Boolean.class), M(BigDecimal.class), E(Enum.class);
 
         private Class clazz;

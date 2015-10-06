@@ -90,7 +90,6 @@ public class TestOrderDetailsService extends AbstractOrderService implements Ini
                 address.setName("王五");
                 address.setAddress("天心区308号");
                 address.setMobile("159218471");
-                address.setPhone("021-123456");
                 address.setZipCode("415000");
                 return address;
             }

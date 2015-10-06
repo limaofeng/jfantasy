@@ -1,13 +1,15 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.bean.converter.FileDetailConverter;
+import com.fantasy.file.bean.databind.FileDetailDeserializer;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -27,7 +29,7 @@ import java.util.Date;
 @Entity
 @Table(name = "AUTH_USER_DETAILS")
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user", "avatarStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user", "avatar"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserDetails implements Serializable {
 
@@ -94,7 +96,8 @@ public class UserDetails implements Serializable {
      */
     @ApiModelProperty(hidden = true)
     @Column(name = "AVATAR", length = 500)
-    private String avatarStore;
+    @Convert(converter = FileDetailConverter.class)
+    private FileDetail avatar;
 
     @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, mappedBy = "details")
@@ -180,26 +183,13 @@ public class UserDetails implements Serializable {
         this.user = user;
     }
 
-    public String getAvatarStore() {
-        return avatarStore;
-    }
-
-    public void setAvatarStore(String avatarStore) {
-        this.avatarStore = avatarStore;
-    }
-
-    @Transient
+    @JsonDeserialize(using = FileDetailDeserializer.class)
     public void setAvatar(FileDetail fileDetail) {
-        this.setAvatarStore(JSON.serialize(fileDetail));
+        this.avatar = fileDetail;
     }
 
-    @ApiModelProperty(value = "用户头像")
-    @Transient
     public FileDetail getAvatar() {
-        if (StringUtils.isEmpty(this.avatarStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.avatarStore, FileDetail.class);
+        return this.avatar;
     }
 
 }

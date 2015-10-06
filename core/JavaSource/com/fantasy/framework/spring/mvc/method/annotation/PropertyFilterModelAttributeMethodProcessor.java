@@ -1,6 +1,7 @@
 package com.fantasy.framework.spring.mvc.method.annotation;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -140,10 +141,14 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
         List<Object> target = (List<Object>) binder.getTarget();
         for (String paramName : servletRequest.getParameterMap().keySet()) {
             String[] values = request.getParameterValues(paramName);
-            if (values.length == 1) {
-                target.add(new PropertyFilter(paramName, values[0]));
-            } else {
+            PropertyFilter.MatchType matchType = PropertyFilter.MatchType.get(paramName);
+            assert matchType != null;
+            if (matchType.isNone()) {
+                target.add(new PropertyFilter(paramName));
+            } else if (matchType.isMulti()) {
                 target.add(new PropertyFilter(paramName, values));
+            } else if (values.length != 0 && StringUtil.isNotBlank(values[0])) {
+                target.add(new PropertyFilter(paramName, values[0]));
             }
         }
     }
@@ -177,15 +182,7 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
     }
 
     private boolean isPropertyFilterModelAttribute(String parameterName, String[] modelPrefixNames) {
-        for (String modelPrefixName : modelPrefixNames) {
-            if (parameterName.length() == modelPrefixName.length() + 1) {
-                return false;
-            }
-            if (parameterName.startsWith(modelPrefixName + "_")) {
-                return true;
-            }
-        }
-        return false;
+        return PropertyFilter.MatchType.is(parameterName);
     }
 
     protected void validateIfApplicable(WebDataBinder binder, MethodParameter parameter) {

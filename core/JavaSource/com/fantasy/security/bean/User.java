@@ -23,7 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "AUTH_USER")
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "roles", "userGroups", "website", "menus", "authorities", "logoImageStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "roles", "userGroups", "website", "menus", "authorities"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements FantasyUserDetails {
 

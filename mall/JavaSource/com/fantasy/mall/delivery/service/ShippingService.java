@@ -75,7 +75,6 @@ public class ShippingService {
         shipping.setShipAreaStore(order.getShipAddress().getAreaStore());
         shipping.setShipAddress(order.getShipAddress().getAddress());
         shipping.setShipZipCode(order.getShipAddress().getZipCode());
-        shipping.setShipPhone(order.getShipAddress().getPhone());
         shipping.setShipMobile(order.getShipAddress().getMobile());
 
         shipping = this.shippingDao.save(shipping);

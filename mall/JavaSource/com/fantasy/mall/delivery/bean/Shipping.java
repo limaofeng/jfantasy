@@ -75,9 +75,6 @@ public class Shipping extends BaseBusEntity {
     @ApiModelProperty("收货邮编")
     @Column(name = "SHIP_ZIP_CODE", length = 10)
     private String shipZipCode;
-    @ApiModelProperty("收货电话")
-    @Column(name = "SHIP_PHONE", length = 12)
-    private String shipPhone;
     @ApiModelProperty("收货手机")
     @Column(name = "SHIP_MOBILE", length = 12)
     private String shipMobile;
@@ -185,14 +182,6 @@ public class Shipping extends BaseBusEntity {
 
     public void setShipZipCode(String shipZipCode) {
         this.shipZipCode = shipZipCode;
-    }
-
-    public String getShipPhone() {
-        return shipPhone;
-    }
-
-    public void setShipPhone(String shipPhone) {
-        this.shipPhone = shipPhone;
     }
 
     public String getShipMobile() {

@@ -1,5 +1,6 @@
 package com.fantasy.mall.delivery.rest;
 
+import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.mall.delivery.bean.DeliveryCorp;
 import com.fantasy.mall.delivery.service.DeliveryCorpService;
@@ -20,11 +21,11 @@ public class DeliveryCorpController {
     @Autowired
     private DeliveryCorpService deliveryCorpService;
 
-    @ApiOperation(value = "按条件检索物流公司", notes = "筛选物流公司，返回通用分页对象")
+    @ApiOperation(value = "按条件检索物流公司", notes = "筛选物流公司，返回通用分页对象",response = DeliveryCorp[].class)
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<DeliveryCorp> search(@ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
-        return this.deliveryCorpService.find(filters);
+    public Pager<DeliveryCorp> search(Pager<DeliveryCorp> pager,@ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
+        return this.deliveryCorpService.findPager(pager, filters);
     }
 
     @ApiOperation(value = "获取物流公司", notes = "通过该接口, 获取单篇物流公司", response = DeliveryCorp.class)

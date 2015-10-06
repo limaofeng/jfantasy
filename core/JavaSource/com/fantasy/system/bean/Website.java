@@ -2,8 +2,10 @@ package com.fantasy.system.bean;
 
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.Menu;
 import com.fantasy.security.bean.User;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -21,7 +23,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SYS_WEBSITE")
-@JsonIgnoreProperties(value = {"defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Website extends BaseBusEntity {
 

@@ -283,6 +283,12 @@ public class JSON {
     }
 
     public static String[] getIgnoreProperties(Class clazz) {
+        if(!IGNORE_PROPERTIES_CACHE.containsKey(clazz)){
+            JSON.serialize(ClassUtil.newInstance(clazz));
+            if(!IGNORE_PROPERTIES_CACHE.containsKey(clazz)){
+                IGNORE_PROPERTIES_CACHE.put(clazz,new String[0]);
+            }
+        }
         return IGNORE_PROPERTIES_CACHE.get(clazz);
     }
 

@@ -19,7 +19,7 @@ public class ResultFieldsBeanPropertyFilter extends CustomFieldsBeanPropertyFilt
         Capsule capsule = stack.peek();
         Class propertyType = ((BeanPropertyWriter) writer).getPropertyType();
 
-        if (BaseBusEntity.class == entityClass) {
+        if (ClassUtil.getDeclaredField(BaseBusEntity.class, name) != null) {
             return isResultFields(name, resultFields);
         }
 

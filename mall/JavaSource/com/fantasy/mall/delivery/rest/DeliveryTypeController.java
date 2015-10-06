@@ -1,5 +1,6 @@
 package com.fantasy.mall.delivery.rest;
 
+import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.mall.delivery.bean.DeliveryType;
 import com.fantasy.mall.delivery.service.DeliveryTypeService;
@@ -10,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Api(value = "delivery-types", description = "配送方式")
@@ -24,17 +24,8 @@ public class DeliveryTypeController {
     @ApiOperation(value = "按条件检索配送方式", notes = "筛选配送方式，返回结果集")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<DeliveryType> search(@ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
-        return this.deliveryTypeService.find(filters);
-    }
-
-    @ApiOperation(value = "按配送类型检索配送方式", notes = "按配送类型检索配送方式")
-    @RequestMapping(value = "/{method}", method = RequestMethod.GET)
-    @ResponseBody
-    public List<DeliveryType> searchByMethod(@PathVariable("method") DeliveryType.DeliveryMethod method) {
-        List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQE_method", method));
-        return this.deliveryTypeService.find(filters);
+    public Pager<DeliveryType> search(Pager<DeliveryType> pager,@ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
+        return this.deliveryTypeService.findPager(pager,filters);
     }
 
     @ApiOperation(value = "获取配送方式", notes = "通过该接口, 获取单篇配送方式", response = DeliveryType.class)

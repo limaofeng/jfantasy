@@ -40,11 +40,6 @@ public class ShipAddress {
     @ApiModelProperty("邮政编码")
     private String zipCode;
     /**
-     * 电话
-     */
-    @ApiModelProperty("电话")
-    private String phone;
-    /**
      * 手机
      */
     @ApiModelProperty("手机")
@@ -72,14 +67,6 @@ public class ShipAddress {
 
     public void setZipCode(String zipCode) {
         this.zipCode = zipCode;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
     }
 
     public String getMobile() {
