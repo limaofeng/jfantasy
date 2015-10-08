@@ -98,7 +98,7 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
             if ("limit".equalsIgnoreCase(paramName)) {
                 Integer[] limits = new Integer[0];
                 for (String s : StringUtil.tokenizeToStringArray(value)) {
-                    ObjectUtil.join(limits, Integer.valueOf(s));
+                    limits = ObjectUtil.join(limits, Integer.valueOf(s));
                 }
                 if (limits.length > 2) {
                     throw new RestException(" limit 参数格式不正确,格式为: limit=0,5 or limit=5");
