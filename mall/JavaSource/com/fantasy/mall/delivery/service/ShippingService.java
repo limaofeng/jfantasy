@@ -72,7 +72,7 @@ public class ShippingService {
         shipping.setDeliveryCorpUrl(deliveryType.getDefaultDeliveryCorp().getUrl());
         // 添加收货地址信息
         shipping.setShipName(order.getShipAddress().getName());
-        shipping.setShipAreaStore(order.getShipAddress().getAreaStore());
+        shipping.setShipArea(order.getShipAddress().getArea());
         shipping.setShipAddress(order.getShipAddress().getAddress());
         shipping.setShipZipCode(order.getShipAddress().getZipCode());
         shipping.setShipMobile(order.getShipAddress().getMobile());

@@ -1,9 +1,9 @@
 package com.fantasy.mall.delivery.bean;
 
 import com.fantasy.common.bean.Area;
+import com.fantasy.common.bean.converter.AreaConverter;
 import com.fantasy.common.bean.databind.AreaDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.delivery.bean.databind.DeliveryTypeDeserializer;
 import com.fantasy.mall.delivery.bean.databind.DeliveryTypeSerializer;
@@ -35,7 +35,7 @@ import java.util.List;
 @Table(name = "MALL_DELIVERY_SHIPPING")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "deliveryItems", "deliveryType", "shipAreaStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "items", "type"})
 public class Shipping extends BaseBusEntity {
 
     private static final long serialVersionUID = 4315245804828793329L;
@@ -49,12 +49,15 @@ public class Shipping extends BaseBusEntity {
     @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'SN_' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('SHIPPING-SN'), 5)")})
     private String sn;
     @ApiModelProperty("配送方式名称")
+    @JsonProperty("typeName")
     @Column(name = "DELIVERY_TYPE_NAME", length = 50)
     private String deliveryTypeName;
     @ApiModelProperty("物流公司名称")
+    @JsonProperty("corpName")
     @Column(name = "DELIVERY_CORP_NAME", length = 50)
     private String deliveryCorpName;
     @ApiModelProperty("物流公司网址")
+    @JsonProperty("corpURL")
     @Column(name = "DELIVERY_CORP_URL", length = 50)
     private String deliveryCorpUrl;
     @ApiModelProperty("物流单号")
@@ -66,9 +69,10 @@ public class Shipping extends BaseBusEntity {
     @ApiModelProperty("收货人姓名")
     @Column(name = "SHIP_NAME", length = 50)
     private String shipName;
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty("收货地区信息")
     @Column(name = "SHIP_AREA_STORE", length = 300)
-    private String shipAreaStore;
+    @Convert(converter = AreaConverter.class)
+    private Area shipArea;
     @ApiModelProperty("收货地址")
     @Column(name = "SHIP_ADDRESS", length = 150)
     private String shipAddress;
@@ -91,7 +95,7 @@ public class Shipping extends BaseBusEntity {
      * 配送方式
      */
     @ApiModelProperty(hidden = true)
-    @JsonProperty("deliveryTypeId")
+    @JsonProperty("type")
     @JsonSerialize(using = DeliveryTypeSerializer.class)
     @JsonDeserialize(using = DeliveryTypeDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
@@ -100,7 +104,8 @@ public class Shipping extends BaseBusEntity {
     /**
      * 物流项
      */
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(name = "items", hidden = true)
+    @JsonProperty("items")
     @OneToMany(mappedBy = "shipping", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>();
 
@@ -158,14 +163,6 @@ public class Shipping extends BaseBusEntity {
 
     public void setShipName(String shipName) {
         this.shipName = shipName;
-    }
-
-    public String getShipAreaStore() {
-        return shipAreaStore;
-    }
-
-    public void setShipAreaStore(String shipAreaStore) {
-        this.shipAreaStore = shipAreaStore;
     }
 
     public String getShipAddress() {
@@ -242,18 +239,11 @@ public class Shipping extends BaseBusEntity {
 
     @ApiModelProperty("收货地区存储")
     public Area getShipArea() {
-        if (StringUtil.isBlank(this.shipAreaStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.shipAreaStore, Area.class);
+        return this.shipArea;
     }
 
     @JsonDeserialize(using = AreaDeserializer.class)
     public void setShipArea(Area shipArea) {
-        if (shipArea == null) {
-            this.shipAreaStore = null;
-            return;
-        }
-        this.shipAreaStore = JSON.serialize(shipArea);
+        this.shipArea = shipArea;
     }
 }

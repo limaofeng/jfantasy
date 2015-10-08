@@ -3,6 +3,7 @@ package com.fantasy.framework.spring.mvc.method.annotation;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.spring.mvc.error.RestException;
 import com.fantasy.framework.spring.mvc.http.JacksonResponseBodyAdvice;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
@@ -95,12 +96,18 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
                 continue;
             }
             if ("limit".equalsIgnoreCase(paramName)) {
-                String[] limits = StringUtil.tokenizeToStringArray(value);
-                if (limits.length != 2) {
-                    throw new RestException(" limit 参数格式不正确,格式为: limit=2,5 ");
+                Integer[] limits = new Integer[0];
+                for (String s : StringUtil.tokenizeToStringArray(value)) {
+                    ObjectUtil.join(limits, Integer.valueOf(s));
                 }
-                target.setFirst(Integer.valueOf(limits[0]));
-                target.setPageSize(Integer.valueOf(limits[1]));
+                if (limits.length > 2) {
+                    throw new RestException(" limit 参数格式不正确,格式为: limit=0,5 or limit=5");
+                }
+                if (limits.length == 1) {
+                    limits = new Integer[]{0, limits[0]};
+                }
+                target.setFirst(limits[0]);
+                target.setPageSize(limits[1]);
             } else if ("page".equalsIgnoreCase(paramName)) {
                 target.setCurrentPage(Integer.valueOf(value));
             } else if ("per_page".equalsIgnoreCase(paramName)) {
