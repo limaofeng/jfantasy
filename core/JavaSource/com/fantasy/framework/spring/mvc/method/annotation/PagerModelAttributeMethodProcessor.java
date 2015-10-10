@@ -29,6 +29,7 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.lang.annotation.Annotation;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -115,7 +116,13 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
             } else if ("sort".equalsIgnoreCase(paramName)) {
                 target.setOrderBy(value);
             } else if ("order".equalsIgnoreCase(paramName)) {
-                target.setOrder(Pager.Order.valueOf(value));
+                List<Pager.Order> orders = new ArrayList<Pager.Order>();
+                for(String order : StringUtil.tokenizeToStringArray(value,",")){
+                    orders.add(Pager.Order.valueOf(order));
+                }
+                if(!orders.isEmpty()) {
+                    target.setOrder(orders.toArray(new Pager.Order[orders.size()]));
+                }
             }
         }
     }
