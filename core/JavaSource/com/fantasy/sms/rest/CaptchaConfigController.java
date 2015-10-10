@@ -1,5 +1,7 @@
 package com.fantasy.sms.rest;
 
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.sms.bean.CaptchaConfig;
 import com.fantasy.sms.service.CaptchaConfigService;
 import io.swagger.annotations.Api;
@@ -18,11 +20,11 @@ public class CaptchaConfigController {
     @Autowired
     private CaptchaConfigService captchaConfigService;
 
-    @ApiOperation(value = "手机验证码配置", notes = "筛选文章，返回全部的手机验证码配置")
+    @ApiOperation(value = "手机验证码配置", notes = "筛选文章，返回全部的手机验证码配置",response = CaptchaConfig[].class)
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public List<CaptchaConfig> search() {
-        return this.captchaConfigService.getAll();
+    public Pager<CaptchaConfig> search(Pager<CaptchaConfig> pager, List<PropertyFilter> filters) {
+        return this.captchaConfigService.findPager(pager, filters);
     }
 
     @ApiOperation(value = "获取手机验证码配置", notes = "通过该接口, 获取单篇手机验证码配置", response = CaptchaConfig.class)

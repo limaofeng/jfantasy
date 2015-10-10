@@ -25,7 +25,7 @@ public class MenuController {
     @ResponseBody
     public Pager<Menu> search(Pager<Menu> pager, List<PropertyFilter> filters) {
         if (!pager.isOrderBySetted()) {
-            pager.setOrder(Pager.Order.asc);
+            pager.setOrders(Pager.Order.asc);
             pager.setOrderBy("sort");
         }
         return this.menuService.findPager(pager, filters);

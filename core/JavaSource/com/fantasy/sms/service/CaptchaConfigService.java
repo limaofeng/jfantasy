@@ -1,5 +1,7 @@
 package com.fantasy.sms.service;
 
+import com.fantasy.framework.dao.Pager;
+import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.sms.bean.CaptchaConfig;
 import com.fantasy.sms.dao.CaptchaConfigDao;
 import com.octo.captcha.component.word.wordgenerator.RandomWordGenerator;
@@ -47,10 +49,10 @@ public class CaptchaConfigService {
     /**
      * 获取所有短信配置
      *
-     * @return
+     * @return pager
      */
-    public List<CaptchaConfig> getAll() {
-        return this.captchaConfigDao.find();
+    public Pager<CaptchaConfig> findPager(Pager<CaptchaConfig> pager, List<PropertyFilter> filters) {
+        return this.captchaConfigDao.findPager(pager,filters);
     }
 
     /**

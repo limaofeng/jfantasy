@@ -1,16 +1,22 @@
 package com.fantasy.framework.dao;
 
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 @ApiModel("通用分页对象")
+@JsonIgnoreProperties(value = {"orders","first","orderBySetted"})
 public class Pager<T> implements Serializable {
 
     private static final long serialVersionUID = -2343309063338998483L;
@@ -42,7 +48,6 @@ public class Pager<T> implements Serializable {
      * 开始数据索引
      */
     @ApiModelProperty(hidden = true)
-    @JsonIgnore
     private int first = 0;
     /**
      * 排序字段
@@ -52,6 +57,7 @@ public class Pager<T> implements Serializable {
     private String orderBy;
     @ApiModelProperty(value = "排序方向", name = "order")
     @JsonProperty("order")
+    @JsonSerialize(using = OrderSerializer.class)
     private Order[] orders = new Order[]{Order.asc};
     @ApiModelProperty(value = "返回的数据集", name = "items")
     @JsonProperty("items")
@@ -185,13 +191,7 @@ public class Pager<T> implements Serializable {
         this.orders = order;
     }
 
-    @JsonIgnore
-    public void setOrder(Order... order) {
-        this.setOrders(order);
-    }
-
     @ApiModelProperty("是否启用排序")
-    @JsonIgnore
     public boolean isOrderBySetted() {
         return (StringUtils.isNotBlank(this.orderBy)) && (ObjectUtil.isNotNull(orders));
     }
@@ -203,6 +203,19 @@ public class Pager<T> implements Serializable {
     @Override
     public String toString() {
         return "Pager [totalCount=" + totalCount + ", first=" + first + ", pageSize=" + pageSize + ", totalPage=" + totalPage + ", currentPage=" + currentPage + ", orderBy=" + orderBy + ", order=" + orders + "]";
+    }
+
+    public static class OrderSerializer extends JsonSerializer<Order[]> {
+
+        @Override
+        public void serialize(Order[] orders, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+            if (orders.length == 0) {
+                jgen.writeNull();
+            } else {
+                jgen.writeString(ObjectUtil.toString(orders,","));
+            }
+        }
+
     }
 
 }

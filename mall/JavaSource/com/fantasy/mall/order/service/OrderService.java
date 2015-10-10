@@ -55,7 +55,7 @@ public class OrderService {
     public Pager<Order> findPager(Pager<Order> pager, List<PropertyFilter> filters) {
         if (StringUtil.isBlank(pager.getOrderBy())) {
             pager.setOrderBy("createTime");
-            pager.setOrder(Pager.Order.desc);
+            pager.setOrders(Pager.Order.desc);
         }
         return orderDao.findPager(pager, filters);
     }

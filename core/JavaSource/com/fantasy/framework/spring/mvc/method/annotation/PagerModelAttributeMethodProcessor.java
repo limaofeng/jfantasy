@@ -121,7 +121,7 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
                     orders.add(Pager.Order.valueOf(order));
                 }
                 if(!orders.isEmpty()) {
-                    target.setOrder(orders.toArray(new Pager.Order[orders.size()]));
+                    target.setOrders(orders.toArray(new Pager.Order[orders.size()]));
                 }
             }
         }

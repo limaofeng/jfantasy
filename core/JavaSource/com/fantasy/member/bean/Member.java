@@ -1,6 +1,7 @@
 package com.fantasy.member.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.spring.validation.RESTful.*;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.Role;
@@ -19,6 +20,7 @@ import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -38,6 +40,7 @@ import java.util.List;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity implements FantasyUserDetails {
 
+    @Null(message = "创建用户时,请不要传入ID", groups = {POST.class})
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -46,8 +49,8 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     /**
      * 用户登录名称
      */
-    @NotNull(message = "登录名称不能为空")
-    @Length(max = 20, message = "登录名称长度不合法")
+    @NotNull(message = "登录名称不能为空", groups = {POST.class, PUT.class})
+    @Length(min = 8, max = 20, message = "登录名称长度不合法,限制长度为 8-20 个字符", groups = {POST.class, PUT.class})
     @ApiModelProperty("登录名称")
     @Column(name = "USERNAME", length = 20, nullable = false, unique = true)
     private String username;

@@ -20,11 +20,11 @@ public class CaptchaConfig extends BaseBusEntity {
 	@Id
 	@Column(name = "ID", nullable = false,updatable = false, length = 32)
 	private String id;
-    /**
-     * 服务器名称
-     */
-    @Column(name = "SERVER_NAME", length = 50)
-    private String serverName;
+	/**
+	 * 服务器名称
+	 */
+	@Column(name = "SERVER_NAME", length = 50)
+	private String serverName;
 
 	/**
 	 * 生成验证码的长度

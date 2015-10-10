@@ -9,9 +9,10 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import com.fantasy.framework.spring.validation.RESTful.*;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Api(value = "members", description = "会员接口")
@@ -60,7 +61,7 @@ public class MemberController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public Member create(@RequestBody @Valid Member member) {
+    public Member create(@RequestBody @Validated(POST.class) Member member) {
         return memberService.save(member);
     }
 

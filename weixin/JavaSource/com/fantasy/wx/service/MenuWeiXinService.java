@@ -109,7 +109,7 @@ public class MenuWeiXinService {
         list.add(new PropertyFilter("EQI_layer", "0"));
         Pager<MenuWeixin> pager = new Pager<MenuWeixin>();
         pager.setOrderBy("sort");
-        pager.setOrder(Pager.Order.asc);
+        pager.setOrders(Pager.Order.asc);
         Pager<MenuWeixin> p = menuDao.findPager(pager, list);
         for (int i = 0; i < (p.getPageItems().size() > 3 ? 3 : p.getPageItems().size()); i++) {
             MenuWeixin m = p.getPageItems().get(i);
