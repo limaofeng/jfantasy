@@ -8,6 +8,10 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
 public abstract class CustomFieldsBeanPropertyFilter extends SimpleBeanPropertyFilter {
     protected Stack<Capsule> stack = new Stack<Capsule>();
 
@@ -29,21 +33,42 @@ public abstract class CustomFieldsBeanPropertyFilter extends SimpleBeanPropertyF
         return ObjectUtil.indexOf(ignoreProperties, name) == -1;
     }
 
-    public static class Capsule {
-        private Class<?> clazz;
+    public void addCapsule(String name, Class entityClass, Class propertyType) {
+        if(ClassUtil.isBeanType(propertyType)) {
+            Capsule capsule = stack.peek();
+            if (capsule != null && capsule.getPropertyType() != entityClass) {
+                while (stack.peek()!=null&&stack.peek().getPropertyType() != entityClass){
+                    stack.pop();
+                }
+            }
+            stack.push(new Capsule(name, entityClass, propertyType));
+        }
+    }
+
+    public Capsule clearCapsule(Class entityClass, Class propertyType) {
+        Capsule capsule = stack.peek();
+        if(capsule == null){
+            return null;
+        }
+        if (capsule.getPropertyType() != entityClass) {
+            while (stack.peek()!=null&&stack.peek().getPropertyType() != entityClass){
+                stack.pop();
+            }
+        }
+        return stack.peek();
+    }
+
+    public class Capsule {
         private String name;
+        private Class<?> entityClass;
+        private Class<?> propertyType;
+        private boolean basicType;
 
-        public Capsule(Class<?> clazz, String name) {
-            this.clazz = clazz;
+        public Capsule(String name, Class<?> entityClass, Class<?> propertyType) {
             this.name = name;
-        }
-
-        public Class<?> getClazz() {
-            return clazz;
-        }
-
-        public void setClazz(Class<?> clazz) {
-            this.clazz = clazz;
+            this.entityClass = entityClass;
+            this.propertyType = propertyType;
+            this.basicType = ClassUtil.isBasicType(propertyType);
         }
 
         public String getName() {
@@ -52,6 +77,35 @@ public abstract class CustomFieldsBeanPropertyFilter extends SimpleBeanPropertyF
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public Class<?> getPropertyType() {
+            return propertyType;
+        }
+
+        public void setPropertyType(Class<?> propertyType) {
+            this.propertyType = propertyType;
+        }
+
+        public Class<?> getEntityClass() {
+            return entityClass;
+        }
+
+        public void setEntityClass(Class<?> entityClass) {
+            this.entityClass = entityClass;
+        }
+
+        public String getPrefix() {
+            String prefix = "";
+            List<Capsule> capsules = new ArrayList<Capsule>(stack.toList());
+            Collections.reverse(capsules);
+            for (Capsule capsule : capsules) {
+                if(capsule.basicType){
+                    continue;
+                }
+                prefix += (capsule.getName() + ".");
+            }
+            return prefix;
         }
     }
 }

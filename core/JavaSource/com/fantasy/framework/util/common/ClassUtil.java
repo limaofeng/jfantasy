@@ -205,11 +205,11 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     }
 
     public static boolean isBasicType(Class<?> type) {
-        return isPrimitiveOrWrapper(type);
+        return isPrimitiveOrWrapper(type) || String.class.isAssignableFrom(type) || Date.class.isAssignableFrom(type) || BigDecimal.class.isAssignableFrom(type) || Enum.class.isAssignableFrom(type);
     }
 
     public static boolean isBeanType(Class<?> clazz) {
-        return !isBasicType(clazz) && !String.class.isAssignableFrom(clazz) && !Date.class.isAssignableFrom(clazz) && !BigDecimal.class.isAssignableFrom(clazz) && !Enum.class.isAssignableFrom(clazz);
+        return !isBasicType(clazz);
     }
 
     public static Object newInstance(Class<?> componentType, int length) {

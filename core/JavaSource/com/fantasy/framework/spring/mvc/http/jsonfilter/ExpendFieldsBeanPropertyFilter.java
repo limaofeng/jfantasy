@@ -17,27 +17,25 @@ public class ExpendFieldsBeanPropertyFilter extends CustomFieldsBeanPropertyFilt
     protected boolean include(PropertyWriter writer) {
         String name = writer.getName();
         Class entityClass = ClassUtil.getRealClass(((BeanPropertyWriter) writer).getMember().getDeclaringClass());
-        Capsule capsule = stack.peek();
         Class propertyType = ((BeanPropertyWriter) writer).getPropertyType();
 
         if (ClassUtil.getDeclaredField(BaseBusEntity.class, name) != null) {
             return isResultFields(name, expendFields);
         }
 
-        boolean display = isDisplay(name, entityClass) || isResultFields(name, expendFields);
-        while (stack.peek() != null && stack.peek().getClazz() != entityClass) {
-            stack.pop();
+        Capsule capsule = this.clearCapsule(entityClass, propertyType);
+
+        boolean display = isDisplay(name, entityClass);
+        if (!display) {
+            String prefix = capsule != null ? capsule.getPrefix() : "";
+            display = isResultFields(prefix + name, expendFields);
         }
-        if (!display && capsule != null && entityClass.equals(capsule.getClazz())) {
-            String _name = capsule.getName() + "." + name;
-            display = isResultFields(_name, expendFields);
-        }
+
         try {
             return display;
         } finally {
-            if (display && ClassUtil.isBeanType(propertyType) && (capsule == null || capsule.getClazz() != propertyType)) {
-                String prefix = capsule == null ? "" : (capsule.getName() + ".");
-                stack.push(new Capsule(propertyType, prefix + name));
+            if (display) {
+                this.addCapsule(name, entityClass, propertyType);
             }
         }
     }
