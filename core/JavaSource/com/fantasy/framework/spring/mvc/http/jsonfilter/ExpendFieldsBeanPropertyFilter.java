@@ -23,9 +23,9 @@ public class ExpendFieldsBeanPropertyFilter extends CustomFieldsBeanPropertyFilt
             return isResultFields(name, expendFields);
         }
 
-        Capsule capsule = this.clearCapsule(entityClass, propertyType);
-
         boolean display = isDisplay(name, entityClass);
+
+        Capsule capsule = this.clearCapsule(entityClass, propertyType);
         if (!display) {
             String prefix = capsule != null ? capsule.getPrefix() : "";
             display = isResultFields(prefix + name, expendFields);
