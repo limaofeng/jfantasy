@@ -12,4 +12,8 @@ install:
 before_install:
   - mysql -e "create database IF NOT EXISTS website;" -uroot
 
+notifications:
+  email:
+    - limaofeng@msn.com
+
 sudo: false
