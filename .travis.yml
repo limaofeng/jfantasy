@@ -1,1 +1,9 @@
 language: java
+
+services:
+  - redis-server
+
+before_script:
+  - mysql -e 'create database website;'
+
+sudo: false
