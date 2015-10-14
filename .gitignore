@@ -4,13 +4,8 @@
 *.jar
 *.war
 *.ear
-jslib
 *.iml
 target
 
-atlassian-ide-plugin.xml
-
 rebel.xml
 rebel-remote.xml
-# 生成的 restapi
-doc/out
