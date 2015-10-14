@@ -7,7 +7,7 @@
     <groupId>com.fantasy</groupId>
     <artifactId>fantasy-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.3.22</version>
+    <version>3.3.23</version>
 
     <distributionManagement>
         <repository>
@@ -20,7 +20,7 @@
     <repositories>
         <repository>
             <releases />
-            <id>hoolue-public</id>
+            <id>hoolue</id>
             <url>http://maven.hoolue.com/content/groups/public/</url>
         </repository>
     </repositories>
@@ -43,7 +43,7 @@
         <freemarker-version>2.3.19</freemarker-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
         <org.mybatis-version>3.2.7</org.mybatis-version>
-        <com.fantasy-version>3.3.22</com.fantasy-version>
+        <com.fantasy-version>3.3.23</com.fantasy-version>
         <commons-codec-version>1.8</commons-codec-version>
         <spymemcached-version>2.11.6</spymemcached-version>
         <commons-lang3-version>3.3.2</commons-lang3-version>
@@ -97,7 +97,6 @@
         </profile>
     </profiles>
 
-    <!-- 构建过程的设置 -->
     <build>
         <filters>
             <filter>filters/filter-${env}-env.properties</filter>
@@ -295,6 +294,80 @@
                 <groupId>org.codehaus.sonar</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>4.3</version>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>mysql</groupId>
+                        <artifactId>mysql-connector-java</artifactId>
+                        <version>${mysql-version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <driver>com.mysql.jdbc.Driver</driver>
+                    <url>jdbc:mysql://localhost:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=UTF-8</url>
+                    <username>root</username>
+                    <password>root</password>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>drop-db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:mysql://localhost:3306</url>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>drop database website</sqlCommand>
+                            <onError>continue</onError>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-db</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <url>jdbc:mysql://localhost:3306</url>
+                            <autocommit>true</autocommit>
+                            <sqlCommand>create database website</sqlCommand>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-schema</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <autocommit>true</autocommit>
+                            <srcFiles>
+                                <srcFile>database/tables.sql</srcFile>
+                            </srcFiles>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>create-data</id>
+                        <phase>process-test-resources</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <orderFile>ascending</orderFile>
+                            <fileset>
+                                <basedir>${basedir}</basedir>
+                                <includes>
+                                    <include>database/data.sql</include>
+                                </includes>
+                            </fileset>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -1104,19 +1177,17 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
-        <module>cache</module>
-        <module>mall</module>
+        <!--
         <module>cms</module>
+        <module>mall</module>
+        <module>cache</module>
         <module>question</module>
         <module>websocket</module>
         <module>weixin</module>
         <module>aliyun-oss</module>
-        <!--
-        <module>website</module>
-        <module>website-web</module>
-        -->
         <module>javaweb</module>
         <module>test</module>
+        -->
     </modules>
 
     <!-- 项目信息设置 -->

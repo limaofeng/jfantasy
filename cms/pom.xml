@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>3.3.22</version>
+        <version>3.3.23</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>fantasy-cms</artifactId>
@@ -13,6 +13,16 @@
     <build>
         <sourceDirectory>JavaSource</sourceDirectory>
         <testSourceDirectory>test/src</testSourceDirectory>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 
     <dependencies>

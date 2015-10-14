@@ -3,6 +3,12 @@ language: java
 services:
   - redis-server
 
+env:
+  - DB=mysql
+
+install:
+  - mvn install -Dmaven.test.skip=true
+
 before_install:
   - mysql -e "create database IF NOT EXISTS website;" -uroot
 
