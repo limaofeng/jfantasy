@@ -21,6 +21,10 @@
             <artifactId>tk-filters</artifactId>
         </dependency>
         <dependency>
+            <groupId>com.ckfinder</groupId>
+            <artifactId>apache-ant-zip</artifactId>
+        </dependency>
+        <dependency>
             <groupId>com.cloudhopper.proxool</groupId>
             <artifactId>proxool</artifactId>
             <exclusions>
