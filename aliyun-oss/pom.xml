@@ -12,7 +12,7 @@
 
     <build>
         <sourceDirectory>JavaSource</sourceDirectory>
-        <testSourceDirectory>test/ignore</testSourceDirectory>
+        <testSourceDirectory>test/src</testSourceDirectory>
     </build>
 
     <dependencies>
