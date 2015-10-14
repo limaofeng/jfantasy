@@ -9,14 +9,6 @@
     <packaging>pom</packaging>
     <version>3.3.23</version>
 
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>local private nexus releases</name>
-            <url>http://maven.hoolue.com/content/repositories/releases/</url>
-        </repository>
-    </distributionManagement>
-
     <repositories>
         <repository>
             <releases />
@@ -1198,6 +1190,7 @@
     <organization>
         <name>上海昊略信息技术有限公司</name>
     </organization>
+
     <developers>
         <developer>
             <name>李茂峰</name>
@@ -1210,5 +1203,45 @@
             <name>钟振振</name>
         </developer>
     </developers>
+
+    <!-- 持续集成信息 -->
+    <ciManagement>
+        <system>continuum</system>
+        <url>https://travis-ci.org/limaofeng/jfantasy</url>
+        <notifiers>
+            <notifier>
+                <type>mail</type>
+                <sendOnError>true</sendOnError>
+                <sendOnFailure>true</sendOnFailure>
+                <sendOnSuccess>true</sendOnSuccess>
+                <sendOnWarning>false</sendOnWarning>
+                <configuration>
+                    <address>limaofeng@msn.com</address>
+                </configuration>
+            </notifier>
+        </notifiers>
+    </ciManagement>
+
+    <!-- 问题反馈信息 -->
+    <issueManagement>
+        <system>Github</system>
+        <url>https://github.com/limaofeng/jfantasy/issues</url>
+    </issueManagement>
+
+    <!-- 分发管理 -->
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>local private nexus releases</name>
+            <url>http://maven.hoolue.com/content/repositories/releases/</url>
+        </repository>
+    </distributionManagement>
+
+    <!-- 版本控制信息 -->
+    <scm>
+        <url>https://github.com/limaofeng/jfantasy/</url>
+        <connection>scm:git:git://github.com/limaofeng/jfantasy.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com:limaofeng/jfantasy.git</developerConnection>
+    </scm>
 
 </project>
