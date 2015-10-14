@@ -16,7 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "YR_QUESTION")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler","answers"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "answers"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Question extends BaseBusEntity {
 
@@ -36,6 +36,7 @@ public class Question extends BaseBusEntity {
             this.value = value;
         }
     }
+
     @Id
     @Column(name = "ID", insertable = true, updatable = false)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -65,17 +66,16 @@ public class Question extends BaseBusEntity {
 
     /**
      * 问题分类
-     *
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "QUESTION_CATEGORY_ID", nullable = false,foreignKey = @ForeignKey(name = "FK_QUESTION_CATEGORY"))
+    @JoinColumn(name = "QUESTION_CATEGORY_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_QUESTION_CATEGORY"))
     private Category category;
 
 
     /**
      * 问题回答
      */
-    @OneToMany(mappedBy = "question",fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "question", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime desc")
     private List<Answer> answers;
 
@@ -83,13 +83,13 @@ public class Question extends BaseBusEntity {
      * 问题对应的会员
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID",foreignKey = @ForeignKey(name = "FK_QUESTION_MEMBER"))
+    @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_QUESTION_MEMBER"))
     private Member member;
 
     /**
      * 回答问题的数量
      */
-    @Column(name = "ANSWER_SIZE",nullable=false,columnDefinition = "int default 0")
+    @Column(name = "ANSWER_SIZE", nullable = false, columnDefinition = "int default 0")
     private int size;
 
     /**
@@ -102,22 +102,19 @@ public class Question extends BaseBusEntity {
     /**
      * 最后一条回答的答案
      */
-    @Column(name="ASKQUESTION")
+    @Column(name = "ASKQUESTION")
     private String askQuestion;
-
-
-    ////////////////////////////////////////////////----------------新增字段------------------------\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 
     /**
      * 悬赏金额
      */
-    @Column(name="OFFERMONEY")
+    @Column(name = "OFFERMONEY")
     private Double offerMoney;
 
     /**
      * 是否为热门问题
      */
-    @Column(name="ISSUE")
+    @Column(name = "ISSUE")
     private Boolean issue;
 
     public int getSize() {

@@ -75,12 +75,12 @@ public class Answer extends BaseBusEntity {
     /**
      * 好评，赞数量
      */
-    @Column(name = "PRAISE",nullable = false,columnDefinition = "int default 0")
+    @Column(name = "PRAISE",nullable = false)
     private int praise;
     /**
      * 差评数量
      */
-    @Column(name = "UNPRAISE",nullable = false,columnDefinition = "int default 0")
+    @Column(name = "UNPRAISE",nullable = false)
     private int unpraise;
 
     public Long getId() {

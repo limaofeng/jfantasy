@@ -4,17 +4,14 @@ import com.fantasy.mall.goods.service.GoodsService;
 import com.fantasy.mall.goods.service.ProductService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
-import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * 修改货品的库存数时
  */
-@Component
-@Aspect
+//@Component
+//@Aspect
 public class ProductReplenishInterceptor {
 
     @Autowired

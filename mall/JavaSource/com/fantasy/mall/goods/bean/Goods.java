@@ -5,17 +5,15 @@ import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.Compare;
 import com.fantasy.framework.lucene.annotations.IndexFilter;
 import com.fantasy.framework.lucene.annotations.Indexed;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.mall.goods.bean.converter.GoodsImageConverter;
+import com.fantasy.mall.goods.bean.converter.GoodsParameterValueConverter;
 import com.fantasy.mall.shop.bean.Shop;
 import com.fantasy.member.bean.Member;
 import com.fantasy.system.util.SettingUtil;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.type.TypeReference;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.Parameter;
@@ -27,7 +25,6 @@ import javax.persistence.ForeignKey;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,7 +40,7 @@ import java.util.List;
 @Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImageStore", "goodsParameterValueStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImages", "goodsParameterValues"})
 public class Goods extends BaseDynaBean {
 
     private static final long serialVersionUID = 7710250000511514557L;
@@ -140,7 +137,8 @@ public class Goods extends BaseDynaBean {
      * 商品图片存储
      */
     @Column(name = "GOODS_IMAGE_STORE", length = 3000)
-    private String goodsImageStore;
+    @Convert(converter = GoodsImageConverter.class)
+    private GoodsImage[] goodsImages;
     /**
      * 是否启用商品规格
      */
@@ -180,7 +178,15 @@ public class Goods extends BaseDynaBean {
      * 商品参数存储
      */
     @Column(name = "GOODS_PARAM_VALUE_STORE", length = 3000)
-    private String goodsParameterValueStore;// 商品参数存储
+    @Convert(converter = GoodsParameterValueConverter.class)
+    private GoodsParameterValue[] goodsParameterValues;
+    /**
+     * 自定义商品参数
+     */
+    @Column(name = "CUSTOM_GOODS_PARAM_VALUE_STORE", length = 3000)
+    @Convert(converter = GoodsParameterValueConverter.class)
+    private GoodsParameterValue[] customGoodsParameterValues;
+
     /**
      * 所属店铺信息
      */
@@ -452,25 +458,6 @@ public class Goods extends BaseDynaBean {
         this.metaDescription = metaDescription;
     }
 
-
-    @JsonIgnore
-    public String getGoodsImageStore() {
-        return goodsImageStore;
-    }
-
-    public void setGoodsImageStore(String goodsImageStore) {
-        this.goodsImageStore = goodsImageStore;
-    }
-
-    @JsonIgnore
-    public String getGoodsParameterValueStore() {
-        return goodsParameterValueStore;
-    }
-
-    public void setGoodsParameterValueStore(String goodsParameterValueStore) {
-        this.goodsParameterValueStore = goodsParameterValueStore;
-    }
-
     // 获取默认货品
     @Transient
     @JsonIgnore
@@ -498,42 +485,19 @@ public class Goods extends BaseDynaBean {
         this.specifications = specifications;
     }
 
-    @Transient
-    private List<GoodsParameterValue> goodsParameterValues;
-    @Transient
-    private List<GoodsParameterValue> customGoodsParameterValues;
-
-    public void setGoodsParameterValues(List<GoodsParameterValue> goodsParameterValues) {
-        this.goodsParameterValues = goodsParameterValues;
-    }
-
-    /**
-     * 获取商品参数
-     */
-    public List<GoodsParameterValue> getGoodsParameterValues() {
-        if (this.goodsParameterValues == null && StringUtil.isNotBlank(this.goodsParameterValueStore)) {
-            this.goodsParameterValues = JSON.deserialize(this.goodsParameterValueStore, new TypeReference<List<GoodsParameterValue>>() {
-            });
-        }
+    public GoodsParameterValue[] getGoodsParameterValues() {
         return this.goodsParameterValues;
     }
 
-    public List<GoodsParameterValue> getCustomGoodsParameterValues() {
-        if (this.customGoodsParameterValues == null && StringUtil.isNotBlank(this.goodsParameterValueStore)) {
-            this.customGoodsParameterValues = new ArrayList<GoodsParameterValue>();
-            for (GoodsParameterValue goodsParameterValue : getGoodsParameterValues()) {
-                if (ObjectUtil.find(this.getCategory().getGoodsParameters(), "id", goodsParameterValue.getId()) == null) {
-                    this.customGoodsParameterValues.add(goodsParameterValue);
-                }
-            }
-            for (GoodsParameterValue goodsParameterValue : this.customGoodsParameterValues) {
-                this.goodsParameterValues.remove(goodsParameterValue);
-            }
-        }
-        return customGoodsParameterValues;
+    public void setGoodsParameterValues(GoodsParameterValue[] goodsParameterValues) {
+        this.goodsParameterValues = goodsParameterValues;
     }
 
-    public void setCustomGoodsParameterValues(List<GoodsParameterValue> customGoodsParameterValues) {
+    public GoodsParameterValue[] getCustomGoodsParameterValues() {
+        return this.customGoodsParameterValues;
+    }
+
+    public void setCustomGoodsParameterValues(GoodsParameterValue[] customGoodsParameterValues) {
         this.customGoodsParameterValues = customGoodsParameterValues;
     }
 
@@ -545,9 +509,8 @@ public class Goods extends BaseDynaBean {
         this.shop = shop;
     }
 
-    @Transient
     public void setGoodsImages(GoodsImage[] goodsImages) {
-        this.setGoodsImageStore(JSON.serialize(goodsImages));
+        this.goodsImages = goodsImages;
     }
 
     /**
@@ -555,10 +518,7 @@ public class Goods extends BaseDynaBean {
      */
     @Transient
     public GoodsImage[] getGoodsImages() {
-        if (StringUtils.isEmpty(this.goodsImageStore)) {
-            return new GoodsImage[0];
-        }
-        return JSON.deserialize(this.goodsImageStore, GoodsImage[].class);
+        return this.goodsImages;
     }
 
     @Transient

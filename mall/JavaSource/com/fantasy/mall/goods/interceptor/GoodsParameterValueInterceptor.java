@@ -1,26 +1,21 @@
 package com.fantasy.mall.goods.interceptor;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
-import org.springframework.stereotype.Component;
-
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.bean.GoodsParameter;
 import com.fantasy.mall.goods.bean.GoodsParameterValue;
 import com.fantasy.mall.goods.service.GoodsService;
+import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Component
-@Aspect
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+//@Component
+//@Aspect
 public class GoodsParameterValueInterceptor {
 	
 	@Autowired
@@ -45,7 +40,7 @@ public class GoodsParameterValueInterceptor {
 			allGoodsParameterValues.add(goodsParameterValue);
 			goodsParameterValue.setSort(allGoodsParameterValues.size());
 		}
-		goods.setGoodsParameterValueStore(JSON.serialize(allGoodsParameterValues));
+//		goods.setGoodsParameterValueStore(JSON.serialize(allGoodsParameterValues));
 	}
 	
 }
