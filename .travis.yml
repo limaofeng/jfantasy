@@ -3,7 +3,7 @@ language: java
 services:
   - redis-server
 
-before_script:
-  - mysql -e 'create database website;'
+before_install:
+  - mysql -e "create database IF NOT EXISTS website;" -uroot
 
 sudo: false

@@ -17,6 +17,14 @@
         </repository>
     </distributionManagement>
 
+    <repositories>
+        <repository>
+            <releases />
+            <id>hoolue-public</id>
+            <url>http://maven.hoolue.com/content/groups/public/</url>
+        </repository>
+    </repositories>
+
     <properties>
         <argLine>-Dfile.encoding=UTF-8</argLine>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
