@@ -1,21 +1,5 @@
 package com.fantasy.framework.jcaptcha;
 
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-
-import javax.imageio.ImageIO;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
-
 import com.fantasy.framework.httpclient.HttpClientUtil;
 import com.fantasy.framework.httpclient.Response;
 import com.fantasy.framework.util.common.ClassUtil;
@@ -24,6 +8,16 @@ import com.octo.captcha.Captcha;
 import com.octo.captcha.service.CaptchaService;
 import com.octo.captcha.service.CaptchaServiceException;
 import com.octo.captcha.service.captchastore.CaptchaStore;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.GenericFilterBean;
+
+import javax.imageio.ImageIO;
+import javax.servlet.*;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 
 /**
  * 验证码生成类
@@ -36,7 +30,7 @@ import com.octo.captcha.service.captchastore.CaptchaStore;
 @Component("jcaptchaFilter")
 public class JCaptchaFilter extends GenericFilterBean {
 
-    @Autowired
+    @Autowired(required = false)
     private CaptchaService captchaService;
 
     @Override

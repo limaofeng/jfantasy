@@ -8,10 +8,10 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.cart.bean.CartItem;
-import com.fantasy.mall.delivery.bean.DeliveryItem;
 import com.fantasy.mall.order.bean.OrderItem;
 import com.fantasy.mall.stock.bean.Stock;
 import com.fantasy.mall.stock.bean.WarningSettings;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -33,7 +33,8 @@ import java.util.List;
 @Table(name = "MALL_PRODUCT")
 @Persister(impl = DynaBeanEntityPersister.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "specificationValueStore", "goodsNotifys", "goodsImage", "goodsImageStore", "cartItems", "orderItems", "deliveryItems", "warningSettings"})
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "specificationValueStore", "goodsNotifys", "goodsImage", "goodsImageStore", "cartItems", "orderItems", "warningSettings"})
 public class Product extends BaseDynaBean {
 
     private static final long serialVersionUID = -4663151563624172169L;
@@ -119,8 +120,6 @@ public class Product extends BaseDynaBean {
     private List<CartItem> cartItems;// 购物车项
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<OrderItem> orderItems;// 订单项
-    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<DeliveryItem> deliveryItems;// 物流项
     @Column(name = "GOODS_IMAGE_STORE", length = 3000)
     private String goodsImageStore;
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
@@ -279,20 +278,12 @@ public class Product extends BaseDynaBean {
         this.orderItems = orderItems;
     }
 
-    public List<DeliveryItem> getDeliveryItems() {
-        return deliveryItems;
-    }
-
     public WarningSettings getWarningSettings() {
         return warningSettings;
     }
 
     public void setWarningSettings(WarningSettings warningSettings) {
         this.warningSettings = warningSettings;
-    }
-
-    public void setDeliveryItems(List<DeliveryItem> deliveryItems) {
-        this.deliveryItems = deliveryItems;
     }
 
     @Transient

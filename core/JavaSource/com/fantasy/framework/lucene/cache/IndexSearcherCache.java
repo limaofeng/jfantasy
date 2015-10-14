@@ -12,27 +12,27 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class IndexSearcherCache {
 
-	private static final Logger LOGGER = Logger.getLogger(IndexSearcherCache.class);
+    private static final Logger LOGGER = Logger.getLogger(IndexSearcherCache.class);
 
-	private static IndexSearcherCache instance = new IndexSearcherCache();
-	private Map<String, IndexSearcher> cache;
+    private static IndexSearcherCache instance = new IndexSearcherCache();
+    private Map<String, IndexSearcher> cache;
 
-	private IndexSearcherCache() {
-		this.cache = new ConcurrentHashMap<String, IndexSearcher>();
-	}
+    private IndexSearcherCache() {
+        this.cache = new ConcurrentHashMap<String, IndexSearcher>();
+    }
 
-	public static IndexSearcherCache getInstance() {
-		return instance;
-	}
+    public static IndexSearcherCache getInstance() {
+        return instance;
+    }
 
-	public IndexSearcher get(String name) {
-		IndexSearcher searcher = null;
-		if (this.cache.containsKey(name)){
-            searcher = (IndexSearcher) this.cache.get(name);
-        }else {
+    public IndexSearcher get(String name) {
+        IndexSearcher searcher = null;
+        if (this.cache.containsKey(name)) {
+            searcher = this.cache.get(name);
+        } else {
             synchronized (this) {
                 if (this.cache.containsKey(name)) {
-                    searcher = (IndexSearcher) this.cache.get(name);
+                    searcher = this.cache.get(name);
                 } else {
                     IndexWriter writer = IndexWriterCache.getInstance().get(name);
                     IndexReader reader = null;
@@ -48,14 +48,14 @@ public class IndexSearcherCache {
                 }
             }
         }
-		return searcher;
-	}
+        return searcher;
+    }
 
-	public Map<String, IndexSearcher> getAll() {
-		return this.cache;
-	}
+    public Map<String, IndexSearcher> getAll() {
+        return this.cache;
+    }
 
-	public void put(String name, IndexSearcher searcher) {
-		this.cache.put(name, searcher);
-	}
+    public void put(String name, IndexSearcher searcher) {
+        this.cache.put(name, searcher);
+    }
 }

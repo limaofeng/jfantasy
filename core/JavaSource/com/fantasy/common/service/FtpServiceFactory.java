@@ -21,7 +21,6 @@ import java.util.concurrent.ConcurrentMap;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-12-5 下午4:57:11
  */
 @Service

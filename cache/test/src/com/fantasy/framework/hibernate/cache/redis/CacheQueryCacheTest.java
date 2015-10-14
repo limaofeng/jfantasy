@@ -33,7 +33,7 @@ public class CacheQueryCacheTest {
     private WebsiteService websiteService;
 
     @Test
-    public void testGet(){
+    public void testGet() {
         LOG.debug(articleService.get(1801L));
 
         LOG.debug(articleService.find(Restrictions.eq("title", "测试缓存文章")));
@@ -42,7 +42,7 @@ public class CacheQueryCacheTest {
 
         Cache cache = redisCacheManager.getCache(Article.class.getName());
 
-        CacheKey cacheKey = new CacheKey(1801L, LongType.INSTANCE,Article.class.getName(),null,null);
+        CacheKey cacheKey = new CacheKey(1801L, LongType.INSTANCE, Article.class.getName(), null, null);
 
         Object object = cache.get(cacheKey);
 
@@ -50,7 +50,7 @@ public class CacheQueryCacheTest {
     }
 
     @Test
-    public void testGetWebSite(){
+    public void testGetWebSite() {
         Website website = websiteService.findUniqueByKey("haolue");
         LOG.debug(website);
         website = websiteService.findUniqueByKey("haolue");

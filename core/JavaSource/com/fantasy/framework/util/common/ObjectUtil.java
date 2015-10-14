@@ -27,6 +27,9 @@ import java.util.concurrent.atomic.AtomicReference;
 @SuppressWarnings("unchecked")
 public final class ObjectUtil {
 
+    private ObjectUtil() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(ObjectUtil.class);
 
     private static final ConcurrentMap<String, Comparator<?>> comparatorMap = new ConcurrentHashMap<String, Comparator<?>>();
@@ -377,7 +380,7 @@ public final class ObjectUtil {
         try {
             BeanUtil.setValue(obj, fieldName, value);
         } catch (Exception e) {
-            throw new IgnoreException(e.getMessage(),e);
+            throw new IgnoreException(e.getMessage(), e);
         }
     }
 
@@ -552,11 +555,6 @@ public final class ObjectUtil {
         dest.addAll(news);
     }
 
-    /*
-    @Deprecated
-    public static <T> T copy(T dest, Object orig, String... excludeProperties) {
-        return BeanUtil.copy(dest, orig, excludeProperties);
-    }*/
 
     /**
      * 判断对象是否存在于集合中

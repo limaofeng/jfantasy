@@ -5,6 +5,8 @@ import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.system.bean.DataDictionary;
 import com.fantasy.system.bean.DataDictionaryType;
 import com.fantasy.system.service.DataDictionaryService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,91 +14,56 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Api(value = "system-ddts", description = "数据字典分类")
 @RestController
-@RequestMapping("/ddts")
+@RequestMapping("/system/ddts")
 public class DataDictionaryTypeController {
 
     @Autowired
     private DataDictionaryService dataDictionaryService;
 
-    /**
-     * @api {post} /ddts   添加分类
-     * @apiVersion 3.3.6
-     * @apiName createDDT
-     * @apiGroup 数据字典
-     * @apiDescription 通过该接口, 可以添加新的数据字典分类。
-     * @apiPermission admin
-     * @apiExample Example usage:
-     * curl -i -X POST -d "param1=value1&param2=value2..." http://localhost/ddts
-     * @apiUse GeneralError
-     */
+    @ApiOperation(value = "添加数据字典分类", notes = "通过该接口, 可以添加新的数据字典分类。", response = DataDictionaryType.class)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
-    public DataDictionaryType save(DataDictionaryType ddt) {
+    @ResponseBody
+    public DataDictionaryType save(@RequestBody DataDictionaryType ddt) {
         return this.dataDictionaryService.save(ddt);
     }
 
-    /**
-     * @api {get} /ddts/:code   获取分类
-     * @apiVersion 3.3.6
-     * @apiName getDDT
-     * @apiGroup 数据字典
-     * @apiDescription 通过该接口, 可以获取<code>code</code>对应的字典分类信息。
-     * @apiPermission admin
-     * @apiExample Example usage:
-     * curl -i http://localhost/ddts/usersex
-     * @apiUse GeneralError
-     */
+    @ApiOperation(value = "获取数据字典分类", notes = "通过该接口, 可以获取 code 对应的字典分类信息。", response = DataDictionaryType.class)
     @RequestMapping(value = "/{code}", method = RequestMethod.GET)
+    @ResponseBody
     public DataDictionaryType view(@PathVariable("code") String code) {
         return this.dataDictionaryService.getDataDictionaryType(code);
     }
 
-    /**
-     * @api {get} /ddts/:code/dds  获取分类下的字典项
-     * @apiVersion 3.3.6
-     * @apiName getDDSBYDDTS
-     * @apiGroup 数据字典
-     * @apiDescription 通过该接口, 可以获取<code>code</code>对应的所有字典信息。
-     * @apiPermission admin
-     * @apiExample Example usage:
-     * curl -i http://localhost/ddts/usersex/dds
-     * @apiExample Response (example):
-     * HTTP/1.1 200
-     * {
-     * "message": "删除成功"
-     * }
-     * @apiUse GeneralError
-     */
-    @RequestMapping(value = "/{code}/dds", method = RequestMethod.GET)
-    public List<DataDictionary> dds(@PathVariable("code") String code) {
-        return this.dataDictionaryService.find(Restrictions.eq("type", code));
-    }
-
+    @ApiOperation(value = "查询数据字典分类", notes = "通过该接口, 可以筛选需要的数据字典分类信息。", response = Pager.class)
     @RequestMapping(method = RequestMethod.GET)
+    @ResponseBody
     public Pager<DataDictionaryType> search(Pager<DataDictionaryType> pager, List<PropertyFilter> filters) {
         return this.dataDictionaryService.findDataDictionaryTypePager(pager, filters);
     }
 
-    /**
-     * @api {delete} /ddts/:code   删除分类
-     * @apiVersion 3.3.6
-     * @apiName deleteDdt
-     * @apiGroup 数据字典
-     * @apiDescription 通过该接口删除数据字典分类。
-     * @apiPermission admin
-     * @apiExample Example usage:
-     * curl -i -X DELETE http://localhost/ddts/usersex
-     * @apiExample Response (example):
-     * HTTP/1.1 200
-     * {
-     * "message": "删除成功"
-     * }
-     * @apiUse GeneralError
-     */
+    @ApiOperation(value = "删除数据字典分类", notes = "通过该接口删除数据字典分类")
     @RequestMapping(value = "/{code}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("code") String code) {
         this.dataDictionaryService.deleteType(code);
     }
 
+    @ApiOperation(value = "获取数据字典分类下的字典项", notes = "通过该接口, 可以获取 code 对应的所有字典信息。", response = DataDictionaryType.class)
+    @RequestMapping(value = "/{code}/dds", method = RequestMethod.GET)
+    @ResponseBody
+    public List<DataDictionary> dds(@PathVariable("code") String code) {
+        return this.dataDictionaryService.find(Restrictions.eq("type", code));
+    }
+
+    @ApiOperation(value = "在数据字典分类下添加数据字典项", notes = "通过该接口, 可以添加新的数据项。", response = DataDictionary.class)
+    @RequestMapping(value = "/{code}/dds", method = RequestMethod.POST)
+    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseBody
+    public DataDictionary dds(@PathVariable("code") String code, @RequestBody DataDictionary dd) {
+        dd.setType(code);
+        return this.dataDictionaryService.save(dd);
+    }
 }

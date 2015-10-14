@@ -1,7 +1,9 @@
 package com.fantasy.mall.stock.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.goods.bean.Product;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,6 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "MALL_STOCK")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({ "hibernateLazyInitializer"})
 public class Stock extends BaseBusEntity{
 

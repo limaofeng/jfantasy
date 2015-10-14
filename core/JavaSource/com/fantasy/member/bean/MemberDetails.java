@@ -1,10 +1,15 @@
 package com.fantasy.member.bean;
 
 import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.bean.converter.FileDetailConverter;
+import com.fantasy.file.bean.databind.FileDetailDeserializer;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.commons.lang.StringUtils;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -20,9 +25,11 @@ import java.util.Date;
  * @version 1.0
  * @since 2013-3-25 下午03:43:54
  */
+@ApiModel("会员详细信息")
 @Entity
+@JsonFilter(JSON.CUSTOM_FILTER)
 @Table(name = "MEM_MEMBER_DETAILS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member", "avatarStore"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member", "avatar"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MemberDetails implements Serializable {
 
@@ -36,68 +43,81 @@ public class MemberDetails implements Serializable {
     /**
      * 姓名
      */
+    @ApiModelProperty("姓名")
     @Column(name = "NAME", length = 20)
     private String name;
     /**
      * 性别
      */
+    @ApiModelProperty("性别")
     @Enumerated(EnumType.STRING)
     @Column(name = "SEX", length = 20)
     private Sex sex;
     /**
      * 生日
      */
+    @ApiModelProperty("生日")
     @Column(name = "BIRTHDAY")
     private Date birthday;
     /**
      * 移动电话
      */
+    @ApiModelProperty("移动电话")
     @Column(name = "MOBILE", length = 20)
     private String mobile;
     /**
      * 固定电话
      */
+    @ApiModelProperty("固定电话")
     @Column(name = "TEL", length = 20)
     private String tel;
     /**
      * E-mail
      */
+    @ApiModelProperty("E-mail")
     @Column(name = "EMAIL", length = 50)
     private String email;
-
-
+    /**
+     * 邮箱是否验证
+     */
+    @ApiModelProperty("邮箱是否验证")
     @Column(name = "MAIL_VALID", nullable = false)
     private Boolean mailValid;
-
+    /**
+     * 手机号是否验证
+     */
+    @ApiModelProperty("手机号是否验证")
     @Column(name = "MOBILE_VALID", nullable = false)
     private Boolean mobileValid;
-
     /**
      * 网址
      */
+    @ApiModelProperty("网址")
     @Column(name = "WEBSITE", length = 50)
     private String website;
     /**
      * 描述信息
      */
+    @ApiModelProperty("描述信息")
     @Column(name = "DESCRIPTION")
     private String description;
-
-    /**
-     * 是否为vip用户
-     */
-    @Column(name = "VIP")
-    private Boolean vip;
     /**
      * 用户积分
      */
+    @ApiModelProperty("积分")
     @Column(name = "score", length = 10)
     private Integer score;
     /**
      * 用户头像存储
      */
+    @ApiModelProperty(hidden = true)
     @Column(name = "AVATAR", length = 500)
-    private String avatarStore;
+    @Convert(converter = FileDetailConverter.class)
+    private FileDetail avatar;
+
+    @ApiModelProperty(hidden = true)
+    @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
+    private Member member;
 
     public Integer getScore() {
         return score;
@@ -106,17 +126,6 @@ public class MemberDetails implements Serializable {
     public void setScore(Integer score) {
         this.score = score;
     }
-
-    public Boolean getVip() {
-        return vip;
-    }
-
-    public void setVip(Boolean vip) {
-        this.vip = vip;
-    }
-
-    @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
-    private Member member;
 
     public String getName() {
         return name;
@@ -214,25 +223,13 @@ public class MemberDetails implements Serializable {
         this.mobileValid = mobileValid;
     }
 
-    public String getAvatarStore() {
-        return this.avatarStore;
-    }
-
-    public void setAvatarStore(String avatarStore) {
-        this.avatarStore = avatarStore;
-    }
-
-    @Transient
+    @JsonDeserialize(using = FileDetailDeserializer.class)
     public void setAvatar(FileDetail fileDetail) {
-        this.setAvatarStore(JSON.serialize(fileDetail));
+        this.avatar = fileDetail;
     }
 
-    @Transient
     public FileDetail getAvatar() {
-        if (StringUtils.isEmpty(this.avatarStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.avatarStore, FileDetail.class);
+        return this.avatar;
     }
 
 }

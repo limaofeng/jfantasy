@@ -13,4 +13,8 @@ public class VideoMessage extends AbstractWeiXinMessage<Video> {
         super(id, fromUserName, createTime);
     }
 
+    public VideoMessage(Video content) {
+        super(content);
+    }
+
 }

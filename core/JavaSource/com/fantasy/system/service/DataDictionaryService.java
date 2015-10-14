@@ -22,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,7 +48,7 @@ public class DataDictionaryService implements InitializingBean {
             LOGGER.error(" scheduler 定时任务未启动！");
             return;
         }
-        if (this.scheduleService.checkExists(jobKey)) {
+        if (!this.scheduleService.checkExists(jobKey)) {
             LOGGER.debug("添加用于生成 json 文件的 Job ");
             this.scheduleService.addJob(jobKey, DataDictJob.class);
         }
@@ -207,6 +208,14 @@ public class DataDictionaryService implements InitializingBean {
         for (DataDictionaryKey key : keys) {
             this.dataDictionaryDao.delete(this.get(key));
         }
+    }
+
+    public void delete(String... keys) {
+        List<DataDictionaryKey> dataDictionaryKeys = new ArrayList<DataDictionaryKey>();
+        for (String key : keys) {
+            dataDictionaryKeys.add(new DataDictionaryKey(key));
+        }
+        this.delete(dataDictionaryKeys.toArray(new DataDictionaryKey[dataDictionaryKeys.size()]));
     }
 
     public void deleteType(String... codes) {

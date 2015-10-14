@@ -1,6 +1,8 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -14,6 +16,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_ORG_RELATION", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORG_DIMENSION_ID", "ORG_ID"})})
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parent","children"})
 public class OrgRelation extends BaseBusEntity {
 

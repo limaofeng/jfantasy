@@ -4,10 +4,12 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.dao.PaymentConfigDao;
+import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import java.util.List;
 
 
@@ -17,10 +19,11 @@ public class PaymentConfigService {
 
     @Autowired
     private PaymentConfigDao paymentConfigDao;
+
     /**
      * findPager
      *
-     * @param pager 分页对象
+     * @param pager   分页对象
      * @param filters 筛选条件
      * @return {pager}
      */
@@ -30,6 +33,10 @@ public class PaymentConfigService {
 
     public List<PaymentConfig> find(List<PropertyFilter> filters) {
         return this.paymentConfigDao.find(filters);
+    }
+
+    public PaymentConfig findUnique(Criterion... criterions) {
+        return this.paymentConfigDao.findUnique(criterions);
     }
 
     /**
@@ -57,7 +64,7 @@ public class PaymentConfigService {
      *
      * @param ids 支付配置ids
      */
-    public void delete(Long[] ids) {
+    public void delete(Long... ids) {
         for (Long id : ids) {
             this.paymentConfigDao.delete(id);
         }

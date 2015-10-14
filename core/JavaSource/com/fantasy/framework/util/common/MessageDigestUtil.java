@@ -74,7 +74,7 @@ public class MessageDigestUtil implements InitializingBean {
         return messagedigest.digest();
     }
 
-    private String bufferToHex(byte bytes[]) {
+    public String bufferToHex(byte bytes[]) {
         return bufferToHex(bytes, 0, bytes.length);
     }
 

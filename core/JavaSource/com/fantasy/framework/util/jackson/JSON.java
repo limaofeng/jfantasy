@@ -1,20 +1,20 @@
 package com.fantasy.framework.util.jackson;
 
+import com.fantasy.framework.spring.mvc.http.jsonfilter.NoneFieldsBeanPropertyFilter;
 import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.jackson.deserializer.DateDeserializer;
 import com.fantasy.framework.util.jackson.serializer.DateSerializer;
 import com.fantasy.framework.util.jackson.serializer.StringUnicodeSerializer;
 import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.introspect.Annotated;
+import com.fasterxml.jackson.databind.introspect.JacksonAnnotationIntrospector;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
-import com.fasterxml.jackson.databind.ser.PropertyWriter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -32,7 +32,11 @@ public class JSON {
     public static final String UNICODE_KEY = "unicode";
     private static final ConcurrentHashMap<String, ObjectMapper> OBJECT_MAPPER_CACHE = new ConcurrentHashMap<String, ObjectMapper>();
 
+    private static final ConcurrentHashMap<Class, String[]> IGNORE_PROPERTIES_CACHE = new ConcurrentHashMap<Class, String[]>();
+
     private static final Mirror MIRROR = new Mirror();
+
+    public static final String CUSTOM_FILTER = "customFilter";
 
     public static class Mirror {
 
@@ -91,31 +95,35 @@ public class JSON {
         register(DEFAULT_KEY, new ObjectMapperRegister() {
             @Override
             public void callback(ObjectMapper objectMapper) {
+                objectMapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
                 // 当找不到对应的序列化器时 忽略此字段
                 objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
                 // 允许非空字段
                 objectMapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
                 // 允许单引号
                 objectMapper.configure(JsonParser.Feature.ALLOW_SINGLE_QUOTES, true);
-                // 失败在未知属性
+                // 设置输入时忽略在JSON字符串中存在但Java对象实际没有的属性
                 objectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
                 //使Jackson JSON支持Unicode编码非ASCII字符
                 SimpleModule module = new SimpleModule();
                 module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
-                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
+                module.addDeserializer(Date.class, new DateDeserializer());
                 objectMapper.registerModule(module);
-                objectMapper.setFilters(new SimpleFilterProvider().addFilter("ignore", new SimpleBeanPropertyFilter() {
-                    @Override
-                    protected boolean include(BeanPropertyWriter writer) {
-                        return false;
-                    }
+
+                objectMapper.setAnnotationIntrospector(new JacksonAnnotationIntrospector() {
 
                     @Override
-                    protected boolean include(PropertyWriter writer) {
-                        return ObjectUtil.indexOf(threadLocal.get().getIgnoreProperties(), writer.getName()) == -1;
+                    public String[] findPropertiesToIgnore(Annotated ac) {
+                        JsonFilter jsonFilter = ac.getAnnotation(JsonFilter.class);
+                        if (jsonFilter != null && CUSTOM_FILTER.equals(jsonFilter.value())) {
+                            IGNORE_PROPERTIES_CACHE.put(ac.getRawType(), super.findPropertiesToIgnore(ac));
+                            return new String[0];
+                        }
+                        return super.findPropertiesToIgnore(ac);
                     }
-                }));
+                });
 
+                objectMapper.setFilters(new SimpleFilterProvider().addFilter(JSON.CUSTOM_FILTER, new NoneFieldsBeanPropertyFilter()));
             }
         });
         //将中文转为 Unicode 编码
@@ -134,19 +142,8 @@ public class JSON {
                 SimpleModule module = new SimpleModule();
                 module.addSerializer(String.class, new StringUnicodeSerializer());
                 module.addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"));
-                module.addDeserializer(Date.class, new DateDeserializer("yyyy-MM-dd HH:mm:ss"));
+                module.addDeserializer(Date.class, new DateDeserializer());
                 objectMapper.registerModule(module);
-                objectMapper.setFilters(new SimpleFilterProvider().addFilter("ignoreProperties", new SimpleBeanPropertyFilter() {
-                    @Override
-                    protected boolean include(BeanPropertyWriter writer) {
-                        return false;
-                    }
-
-                    @Override
-                    protected boolean include(PropertyWriter writer) {
-                        return threadLocal.get().getIgnoreProperties() == null || threadLocal.get().getIgnoreProperties().length == 0 || ObjectUtil.indexOf(threadLocal.get().getIgnoreProperties(), writer.getName()) == -1;
-                    }
-                }));
             }
         });
     }
@@ -285,5 +282,14 @@ public class JSON {
         return null;
     }
 
+    public static String[] getIgnoreProperties(Class clazz) {
+        if(!IGNORE_PROPERTIES_CACHE.containsKey(clazz)){
+            JSON.serialize(ClassUtil.newInstance(clazz));
+            if(!IGNORE_PROPERTIES_CACHE.containsKey(clazz)){
+                IGNORE_PROPERTIES_CACHE.put(clazz,new String[0]);
+            }
+        }
+        return IGNORE_PROPERTIES_CACHE.get(clazz);
+    }
 
 }

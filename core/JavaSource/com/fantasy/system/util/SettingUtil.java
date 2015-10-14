@@ -25,6 +25,9 @@ import java.util.regex.Matcher;
 
 public class SettingUtil {
 
+    private SettingUtil() {
+    }
+
     private static final Map<String, String> constants = new ConcurrentHashMap<String, String>();
 
     private static ThreadLocal<Website> threadLocal = new ThreadLocal<Website>();
@@ -100,7 +103,7 @@ public class SettingUtil {
         });
     }
 
-    public static String getValue(String key,String defaultValue) {
+    public static String getValue(String key, String defaultValue) {
         Setting setting = ObjectUtil.find(current().getSettings(), "key", key);
         return setting == null ? defaultValue : setting.getValue();
     }
@@ -141,7 +144,7 @@ public class SettingUtil {
     }
 
     public static String cleanFileManagerPath(String html, String configType) {
-        if (StringUtil.isBlank(html)){
+        if (StringUtil.isBlank(html)) {
             return html;
         }
         html = SettingUtil.getText(html, configType);
@@ -162,13 +165,10 @@ public class SettingUtil {
         return html;
     }
 
-    public static Long getWebsiteId(){
-        return current().getId();
-    }
 
     private static Website current() {
         Website website = threadLocal.get();
-        if(website == null){
+        if (website == null) {
             User user = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser();
             threadLocal.set(website = SpringContextUtil.getBeanByType(WebsiteService.class).findUniqueByKey(user.getWebsite().getKey()));
         }

@@ -16,7 +16,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-//import com.sun.image.codec.jpeg.JPEGCodec;
+
 
 /**
  * 与FileReaderRandomBackgroundGenerator类似,但是从jar中加载背景图片

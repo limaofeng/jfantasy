@@ -1,6 +1,9 @@
 package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,6 +14,8 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "WX_QRCode")
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class QRCode  extends BaseBusEntity {
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)

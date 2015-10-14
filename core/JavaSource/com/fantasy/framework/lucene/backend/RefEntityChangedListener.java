@@ -4,11 +4,11 @@ import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.lucene.annotations.IndexRef;
 import com.fantasy.framework.lucene.annotations.IndexRefList;
 import com.fantasy.framework.lucene.cache.DaoCache;
-import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.cache.PropertysCache;
 import com.fantasy.framework.lucene.dao.LuceneDao;
 import com.fantasy.framework.util.common.JdbcUtil;
+import com.fantasy.framework.util.reflect.Property;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
@@ -23,26 +23,25 @@ public class RefEntityChangedListener {
 
     public void entityChange(Class<?> refClass, String id) {
         for (Class<?> cls : this.refBySet) {
-            Field[] fields = FieldsCache.getInstance().get(cls);
-            for (Field f : fields) {
-                processField(refClass, id, cls, f);
+            for (Property p : PropertysCache.getInstance().get(cls)) {
+                processField(refClass, id, cls, p);
             }
         }
     }
 
-    private void processField(Class<?> refClass, String id, Class<?> cls, Field f) {
+    private void processField(Class<?> refClass, String id, Class<?> cls, Property p) {
         boolean match = false;
-        String fieldName = f.getName();
-        if (f.getType().equals(refClass) && (f.getAnnotation(IndexRef.class) != null)) {
+        String fieldName = p.getName();
+        if (p.getPropertyType().equals(refClass) && (p.getAnnotation(IndexRef.class) != null)) {
             match = true;
         } else {
-            if (f.getAnnotation(IndexRefList.class) != null) {
+            if (p.getAnnotation(IndexRefList.class) != null) {
                 Class<?> c;
-                Class<?> type = f.getType();
+                Class<?> type = p.getPropertyType();
                 if (type.isArray()) {
                     c = type.getComponentType();
                 } else {
-                    ParameterizedType paramType = (ParameterizedType) f.getGenericType();
+                    ParameterizedType paramType = p.getGenericType();
                     Type[] types = paramType.getActualTypeArguments();
                     if (types.length == 1) {
                         c = (Class<?>) types[0];

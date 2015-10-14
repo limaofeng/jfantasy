@@ -1,6 +1,9 @@
 package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,6 +16,8 @@ import javax.persistence.Table;
  */
 @Entity(name= "WxGroup")
 @Table(name = "WX_GROUP")
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Group  extends BaseBusEntity {
     public Group() {
     }

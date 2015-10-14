@@ -3,13 +3,12 @@ package com.fantasy.mall.order.bean;
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.common.bean.Area;
+import com.fantasy.common.bean.converter.AreaConverter;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.mall.delivery.bean.DeliveryType;
-import com.fantasy.mall.delivery.bean.Shipping;
 import com.fantasy.member.bean.Member;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -34,6 +33,7 @@ import java.util.List;
 @Table(name = "MALL_ORDER")
 @Persister(impl = DynaBeanEntityPersister.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "shipAreaStore", "memeo", "shippings", "orderItems", "payments"})
 public class Order extends BaseDynaBean {
 
@@ -118,13 +118,12 @@ public class Order extends BaseDynaBean {
     @Column(name = "SHIP_NAME", nullable = false)
     private String shipName;// 收货人姓名
     @Column(name = "SHIP_AREA_STORE", nullable = false)
-    private String shipAreaStore;// 收货地区存储
+    @Convert(converter = AreaConverter.class)
+    private Area shipArea;// 收货地区存储
     @Column(name = "SHIP_ADDRESS", nullable = false)
     private String shipAddress;// 收货地址
     @Column(name = "SHIP_ZIP_CODE", nullable = false)
     private String shipZipCode;// 收货邮编
-    @Column(name = "SHIP_PHONE", nullable = false)
-    private String shipPhone;// 收货电话
     @Column(name = "SHIP_MOBILE", nullable = false)
     private String shipMobile;// 收货手机
     @Column(name = "MEMO", nullable = false)
@@ -132,15 +131,10 @@ public class Order extends BaseDynaBean {
 
     @Column(name = "DELIVERY_TYPE_NAME", nullable = true, length = 100)
     private String deliveryTypeName;// 配送方式名称
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DELIVERY_TYPE_ID", foreignKey = @ForeignKey(name = "FK_ORDER_DELIVERY_TYPE"))
-    private DeliveryType deliveryType;// 配送方式
+    @Column(name = "DELIVERY_TYPE_ID")
+    private Long deliveryTypeId;// 配送方式
     @Column(name = "DELIVERY_FEE", nullable = false, precision = 15, scale = 5)
     private BigDecimal deliveryFee;// 配送费用
-    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    @OrderBy("createTime asc")
-    private List<Shipping> shippings;// 配送信息
-
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false)
     private String paymentConfigName;// 支付方式名称
     @OneToOne(fetch = FetchType.LAZY)
@@ -304,22 +298,6 @@ public class Order extends BaseDynaBean {
         this.deliveryTypeName = deliveryTypeName;
     }
 
-    public List<Shipping> getShippings() {
-        return shippings;
-    }
-
-    public void setShippings(List<Shipping> shippings) {
-        this.shippings = shippings;
-    }
-
-    public DeliveryType getDeliveryType() {
-        return deliveryType;
-    }
-
-    public void setDeliveryType(DeliveryType deliveryType) {
-        this.deliveryType = deliveryType;
-    }
-
     public String getShipName() {
         return shipName;
     }
@@ -328,13 +306,12 @@ public class Order extends BaseDynaBean {
         this.shipName = shipName;
     }
 
-    public String getShipAreaStore() {
-        return shipAreaStore;
+    public Area getShipArea() {
+        return shipArea;
     }
 
-    //@TypeConversion(key = "shipAreaStore", converter = "com.fantasy.common.bean.converter.AreaStoreConverter")
-    public void setShipAreaStore(String shipAreaStore) {
-        this.shipAreaStore = shipAreaStore;
+    public void setShipArea(Area shipArea) {
+        this.shipArea = shipArea;
     }
 
     public String getShipAddress() {
@@ -351,14 +328,6 @@ public class Order extends BaseDynaBean {
 
     public void setShipZipCode(String shipZipCode) {
         this.shipZipCode = shipZipCode;
-    }
-
-    public String getShipPhone() {
-        return shipPhone;
-    }
-
-    public void setShipPhone(String shipPhone) {
-        this.shipPhone = shipPhone;
     }
 
     public String getShipMobile() {
@@ -389,6 +358,14 @@ public class Order extends BaseDynaBean {
         return paymentConfigName;
     }
 
+    public Long getDeliveryTypeId() {
+        return deliveryTypeId;
+    }
+
+    public void setDeliveryTypeId(Long deliveryTypeId) {
+        this.deliveryTypeId = deliveryTypeId;
+    }
+
     public void setPaymentConfigName(String paymentConfigName) {
         this.paymentConfigName = paymentConfigName;
     }
@@ -401,11 +378,4 @@ public class Order extends BaseDynaBean {
         this.paymentConfig = paymentConfig;
     }
 
-    @Transient
-    public Area getShipArea() {
-        if (StringUtil.isBlank(this.shipAreaStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.shipAreaStore, Area.class);
-    }
 }

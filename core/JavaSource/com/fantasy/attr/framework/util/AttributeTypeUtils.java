@@ -8,6 +8,9 @@ import com.fantasy.framework.spring.SpringContextUtil;
 
 public class AttributeTypeUtils {
 
+    private AttributeTypeUtils() {
+    }
+
     private static AttributeTypeService attributeTypeService;
 
     private static AttributeTypeService getAttributeTypeService() {

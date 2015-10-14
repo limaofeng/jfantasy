@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>3.3.6.Alphal</version>
+        <version>3.3.22</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.haolue</groupId>
@@ -29,18 +29,6 @@
                 <configuration>
                     <warSourceDirectory>WebContent</warSourceDirectory>
                     <webXml>WebContent/WEB-INF/web.xml</webXml>
-                    <webResources>
-                        <resource>
-                            <directory>${basedir}/../jslib/static</directory>
-                            <filtering>false</filtering>
-                            <targetPath>static</targetPath>
-                        </resource>
-                        <resource>
-                            <directory>${basedir}/../jslib/fides</directory>
-                            <filtering>false</filtering>
-                            <targetPath>assets</targetPath>
-                        </resource>
-                    </webResources>
                 </configuration>
             </plugin>
         </plugins>
@@ -68,18 +56,6 @@
             <artifactId>fantasy-weixin</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-core-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-mall-web</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-cms-web</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>
         </dependency>
@@ -102,6 +78,16 @@
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.thetransactioncompany</groupId>
+            <artifactId>cors-filter</artifactId>
+            <version>1.9.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.thetransactioncompany</groupId>
+            <artifactId>java-property-utils</artifactId>
+            <version>1.9.1</version>
         </dependency>
     </dependencies>
 

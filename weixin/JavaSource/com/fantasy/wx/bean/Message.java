@@ -1,7 +1,9 @@
 package com.fantasy.wx.bean;
 
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
-
 import javax.persistence.*;
 
 /**
@@ -10,6 +12,8 @@ import javax.persistence.*;
  */
 @Entity(name="wxMessage")
 @Table(name = "WX_MESSAGE")
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Message {
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
@@ -27,17 +31,17 @@ public class Message {
     private String fromUserName;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "OPENID")
-    private UserInfo userInfo;
+    @JoinColumns(value = {@JoinColumn(name = "OPENID", referencedColumnName = "OPENID",foreignKey = @ForeignKey(name = "FK_WX_MESSAGE_USERID")), @JoinColumn(name = "APPID", referencedColumnName = "APPID",foreignKey = @ForeignKey(name = "FK_WX_MESSAGE_APPID"))})
+    private User user;
 
     public String getFromUserName() {
         return fromUserName;
     }
 
     public void setFromUserName(String fromUserName) {
-        if (userInfo == null)
-            userInfo = new UserInfo();
-        userInfo.setOpenId(fromUserName);
+        if (user == null)
+            user = new User();
+        user.setOpenId(fromUserName);
         this.fromUserName = fromUserName;
     }
 
@@ -167,12 +171,12 @@ public class Message {
         this.toUserName = toUserName;
     }
 
-    public UserInfo getUserInfo() {
-        return userInfo;
+    public User getUser() {
+        return user;
     }
 
-    public void setUserInfo(UserInfo userInfo) {
-        this.userInfo = userInfo;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public Long getCreateTime() {

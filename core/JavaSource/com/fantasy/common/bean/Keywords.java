@@ -1,6 +1,9 @@
 package com.fantasy.common.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,6 +19,8 @@ import javax.persistence.*;
 @Entity
 @Table(name = "KEYWORDS")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Keywords extends BaseBusEntity {
 
     public enum Type {

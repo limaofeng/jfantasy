@@ -6,7 +6,6 @@ import com.fantasy.wx.framework.exception.WeiXinException;
 import com.fantasy.wx.framework.message.content.Menu;
 import com.fantasy.wx.framework.oauth2.Scope;
 import com.fantasy.wx.service.MenuWeiXinService;
-import com.fantasy.wx.service.UserInfoWeiXinService;
 import junit.framework.Assert;
 import me.chanjar.weixin.common.api.WxConsts;
 import org.apache.commons.logging.Log;
@@ -29,8 +28,6 @@ public class IZIMenuWeixinWeiXinServiceTest {
 
     @Autowired
     private MenuWeiXinService iMenuWeiXinService;
-    @Autowired
-    private UserInfoWeiXinService userInfoWeiXinService;
 
     public void setUp() throws Exception {
         List<MenuWeixin> menuWeixinList = new ArrayList<MenuWeixin>();

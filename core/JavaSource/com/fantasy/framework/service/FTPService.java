@@ -164,8 +164,6 @@ public class FTPService {
 
         if (this.timeout > 0) {
             ftpClient.setConnectTimeout(this.timeout);
-//			ftpClient.setDefaultTimeout(this.);
-//			ftpClient.setDataTimeout(this.timeout);
         }
         ftpClient.enterLocalPassiveMode();
         return ftpClient;
@@ -176,7 +174,7 @@ public class FTPService {
      *
      * @param ftpClient FTPClient
      */
-    private void closeConnection(FTPClient ftpClient) {
+    protected void closeConnection(FTPClient ftpClient) {
         try {
             if (ftpClient.isConnected()) {
                 if (LOG.isDebugEnabled()) {

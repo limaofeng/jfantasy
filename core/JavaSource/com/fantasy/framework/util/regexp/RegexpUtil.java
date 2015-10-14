@@ -21,11 +21,12 @@ import java.util.regex.Pattern;
  */
 public class RegexpUtil {
 
+
     private static final Log LOGGER = LogFactory.getLog(RegexpUtil.class);
 
     private static ConcurrentHashMap<String, Pattern> patternCache = new ConcurrentHashMap<String, Pattern>();
 
-    public RegexpUtil() {
+    private RegexpUtil() {
     }
 
     /**

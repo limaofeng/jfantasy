@@ -29,6 +29,8 @@ import java.util.Set;
  * @since 2013-9-10 上午9:16:01
  */
 public class WebUtil {
+    private WebUtil() {
+    }
 
     private static final Logger LOG = Logger.getLogger(WebUtil.class);
 
@@ -317,7 +319,7 @@ public class WebUtil {
                     val = URLDecoder.decode(val, "utf-8");
                 } catch (UnsupportedEncodingException e) {
                     val = pair.split("=")[1];
-                    throw new IgnoreException(e.getMessage(),e);
+                    throw new IgnoreException(e.getMessage(), e);
                 }
             }
             if (!params.containsKey(key)) {

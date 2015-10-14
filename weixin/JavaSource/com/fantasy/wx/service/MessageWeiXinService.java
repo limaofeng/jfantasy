@@ -6,7 +6,7 @@ import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.wx.bean.Message;
-import com.fantasy.wx.bean.UserInfo;
+import com.fantasy.wx.bean.User;
 import com.fantasy.wx.dao.MessageDao;
 import com.fantasy.wx.framework.exception.WeiXinException;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class MessageWeiXinService {
     @Autowired
     private MessageDao messageDao;
     @Autowired
-    private UserInfoWeiXinService userInfoWeiXinService;
+    private UserService userService;
     @Autowired
     private FileUploadService fileUploadService;
 
@@ -39,7 +39,7 @@ public class MessageWeiXinService {
         for (PropertyFilter pf : filters) {
             if (pf.getFilterName().equals("EQS_userInfo.openid")) {
                 for (Message m : p.getPageItems()) {
-                    userInfoWeiXinService.refreshMessage(m.getUserInfo());
+                    userService.refreshMessage(m.getUser());
                 }
                 break;
             }
@@ -76,7 +76,7 @@ public class MessageWeiXinService {
      */
     public Message save(Message message) {
         int result = 0;
-        UserInfo ui = userInfoWeiXinService.getUserInfo(message.getUserInfo().getOpenId());
+        User ui = null;//userService.get(message.getUser().getOpenId());
         long createTime = new Date().getTime();
         message.setCreateTime(createTime);
         if (ui != null) {

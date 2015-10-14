@@ -5,6 +5,8 @@ import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
@@ -15,18 +17,19 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-/**
- * @apiDefine paramPropertyFilter
- * @apiParam {PropertyFilter} filters  参数格式为:EQS_title=测试
- * @apiVersion 3.3.6
- */
+@ApiModel("通用过滤器")
 public class PropertyFilter {
     public static final String OR_SEPARATOR = "_OR_";
-    private String[] propertyNames = null;
-    private Class<?> propertyType = null;
-    private Object propertyValue = null;
-    private MatchType matchType = null;
-    private String filterName = null;
+    @ApiModelProperty("名称")
+    private String[] propertyNames;
+    @ApiModelProperty("类型")
+    private Class<?> propertyType;
+    @ApiModelProperty("值")
+    private Object propertyValue;
+    @ApiModelProperty("过滤类型")
+    private MatchType matchType;
+    @ApiModelProperty("完整表达式")
+    private String filterName;
 
     public PropertyFilter(String filterName) {
         this.filterName = filterName;
@@ -74,6 +77,8 @@ public class PropertyFilter {
                 Array.set(array, i, ReflectionUtils.convertStringToObject(tempArray[i], this.propertyType));
             }
             this.propertyValue = array;
+        } else if (this.propertyType == Enum.class) {
+            this.propertyValue = value;
         } else {
             this.propertyValue = ReflectionUtils.convertStringToObject(value, this.propertyType);
         }
@@ -102,7 +107,7 @@ public class PropertyFilter {
             throw new IllegalArgumentException("filter名称" + filterName + "没有按规则编写,无法得到属性比较类型.", e);
         }
         try {
-            this.propertyType = ((PropertyType) Enum.valueOf(PropertyType.class, propertyTypeCode)).getValue();
+            this.propertyType = (Enum.valueOf(PropertyType.class, propertyTypeCode)).getValue();
         } catch (IgnoreException e) {
             throw new IllegalArgumentException("filter名称" + filterName + "没有按规则编写,无法得到属性值类型.", e);
         }
@@ -148,7 +153,7 @@ public class PropertyFilter {
     }
 
     public <T> Class<T> getPropertyType() {
-        return (Class<T>)this.propertyType;
+        return (Class<T>) this.propertyType;
     }
 
     public MatchType getMatchType() {
@@ -171,43 +176,43 @@ public class PropertyFilter {
         this.matchType = matchType;
     }
 
-    public static enum MatchType {
+    public enum MatchType {
         /**
          * 等于
          */
-        EQ,
+        EQ(false),
         /**
          * 模糊查询
          */
-        LIKE,
+        LIKE(false),
         /**
          * 小于
          */
-        LT,
+        LT(false),
         /**
          * 大于
          */
-        GT,
+        GT(false),
         /**
          * 小于等于
          */
-        LE,
+        LE(false),
         /**
          * 大于等于
          */
-        GE,
+        GE(false),
         /**
          * in
          */
-        IN,
+        IN(true),
         /**
          * not in
          */
-        NOTIN,
+        NOTIN(true),
         /**
          * 不等于
          */
-        NE,
+        NE(false),
         /**
          * is null
          */
@@ -223,20 +228,53 @@ public class PropertyFilter {
         /**
          *
          */
-        NOTEMPTY, BETWEEN, SQL;
+        NOTEMPTY, BETWEEN(false), SQL(false);
 
-        public static boolean is(String str) {
-            for (MatchType matchType : MatchType.values()) {
-                if (RegexpUtil.find(str, "^" + matchType.toString())) {
-                    return true;
-                }
-            }
-            return false;
+        /**
+         * 是否存在参数
+         */
+        private boolean none;
+        /**
+         * 是否有多个参数
+         */
+        private boolean multi;
+
+        MatchType() {
+            this(true, false);
         }
 
+        MatchType(boolean multi) {
+            this(false, multi);
+        }
+
+        MatchType(boolean none, boolean multi) {
+            this.none = none;
+            this.multi = multi;
+        }
+
+        public static MatchType get(String str) {
+            for (MatchType matchType : MatchType.values()) {
+                if (RegexpUtil.find(str, "^" + matchType.toString())) {
+                    return matchType;
+                }
+            }
+            return null;
+        }
+
+        public static boolean is(String str) {
+            return get(str) != null;
+        }
+
+        public boolean isMulti() {
+            return multi;
+        }
+
+        public boolean isNone() {
+            return none;
+        }
     }
 
-    public static enum PropertyType {
+    public enum PropertyType {
         S(String.class), I(Integer.class), L(Long.class), N(Double.class), D(Date.class), B(Boolean.class), M(BigDecimal.class), E(Enum.class);
 
         private Class clazz;

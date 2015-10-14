@@ -644,8 +644,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     @SuppressWarnings("unchecked")
     protected void changePropertyName(Criteria criteria, Set<String> alias, Criterion c) {
         if (c instanceof Disjunction) {
-            List<Criterion> criterions = ReflectionUtils.getFieldValue(c, "conditions");
-            for (Criterion criterion : criterions) {
+            for (Criterion criterion : ((Disjunction) c).conditions()) {
                 changePropertyName(criteria, alias, criterion);
             }
         } else if (c instanceof SQLCriterion) {
@@ -731,11 +730,6 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         return pager;
     }
 
-//    public <C> Pager<C> findPager(Pager<C> pager,Query q, Class<C> resultClass) {
-//        setPageParameter(q, pager);
-//        pager.setPageItems(distinct(q,resultClass).list());
-//        return pager;
-//    }
 
     /**
      * @param pager      翻页对象
@@ -746,7 +740,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     public Pager<T> findPager(Pager<T> pager, Criterion... criterions) {
         pager = pager == null ? new Pager<T>() : pager;
         Criteria c = distinct(createCriteria(criterions, StringUtil.tokenizeToStringArray(pager.getOrderBy())));
-        pager.setTotalCount(countCriteriaResult(c));
+        if(pager.getFirst() == 0) {
+            pager.setTotalCount(countCriteriaResult(c));
+        }
         setPageParameter(c, pager);
         pager.setPageItems(c.list());
         return pager;

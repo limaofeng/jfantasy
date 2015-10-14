@@ -2,6 +2,8 @@ package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -15,6 +17,8 @@ import java.util.List;
  */
 @Entity
 @Table(name = "WX_GROUP_MESSAGE")
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GroupMessage   extends BaseBusEntity {
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)

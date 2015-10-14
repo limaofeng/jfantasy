@@ -20,6 +20,7 @@ import java.util.*;
  * @since 2013-9-8 下午4:49:25
  */
 public interface FileItem {
+
     /**
      * 获取文件名
      *
@@ -122,7 +123,7 @@ public interface FileItem {
     }
 
     final class Util {
-
+        private Util(){}
         public static List<FileItem> flat(List<FileItem> items, FileItemSelector selector) {
             List<FileItem> fileItems = new ArrayList<FileItem>();
             for (FileItem item : items) {

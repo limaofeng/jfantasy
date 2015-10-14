@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 
 public class DialectUtil {
 
+    private DialectUtil(){}
     /**
      * 关键字数组
      */

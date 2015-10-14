@@ -17,6 +17,9 @@
             <bean class="com.fantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver"/>
             <bean class="com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor"/>
         </mvc:argument-resolvers>
+        <mvc:message-converters>
+            <bean class="com.fantasy.framework.spring.mvc.http.converter.SecurityMappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
     </mvc:annotation-driven>
 
     <!-- 使用 annotation -->

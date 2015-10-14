@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class SpringSecurityUtils {
+	private SpringSecurityUtils(){}
 	public static UserDetails getCurrentUser() {
 		Authentication authentication = getAuthentication();
 		if (authentication != null) {
@@ -115,13 +116,10 @@ public class SpringSecurityUtils {
                 continue;
             }
 			ObjectUtil.join(grantedAuthorities, userGroup.getGroupAuthorities(), "authority");
-			ObjectUtil.join(grantedAuthorities, userGroup.getUrlAuthorities(), "authority");
-			ObjectUtil.join(grantedAuthorities, userGroup.getMenuAuthorities(), "authority");
 			ObjectUtil.join(grantedAuthorities, userGroup.getRoleAuthorities(), "authority");
 		}
 		// 添加角色权限
 		for (Role role : fantasyUserDetails.getRoles()) {
-			ObjectUtil.join(grantedAuthorities, role.getUrlAuthorities(), "authority");
 			ObjectUtil.join(grantedAuthorities, role.getRoleAuthorities(), "authority");
 			ObjectUtil.join(grantedAuthorities, role.getMenuAuthorities(), "authority");
 		}

@@ -8,6 +8,9 @@ import java.util.Date;
 
 public class AttributeUtils {
 
+    private AttributeUtils() {
+    }
+
     public static Attribute string(String code, String name, String description) {
         Attribute attribute = new Attribute();
         attribute.setCode(code);

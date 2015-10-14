@@ -410,10 +410,7 @@ public class DateUtil {
         GregorianCalendar calendar = new GregorianCalendar();
         calendar.setTime(small);
 
-        // calendar.clear(Calendar.MILLISECOND);
-        // calendar.clear(Calendar.SECOND);
-        // calendar.clear(Calendar.MINUTE);
-        // calendar.clear(Calendar.HOUR_OF_DAY);
+
 
         do {
             num++;

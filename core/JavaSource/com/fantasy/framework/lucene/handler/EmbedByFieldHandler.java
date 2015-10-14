@@ -1,21 +1,21 @@
 package com.fantasy.framework.lucene.handler;
 
 import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public class EmbedByFieldHandler extends ByFieldHandler {
     private Class<?> embedBy;
 
-    public EmbedByFieldHandler(Class<?> embedBy, Object obj, Field field, String prefix) {
-        super(obj, field, prefix);
+    public EmbedByFieldHandler(Class<?> embedBy, Object obj, Property property, String prefix) {
+        super(obj, property, prefix);
         this.embedBy = embedBy;
     }
 
     public void handle(Document doc) {
-        IndexEmbedBy ieb = (IndexEmbedBy) this.field.getAnnotation(IndexEmbedBy.class);
+        IndexEmbedBy ieb = this.property.getAnnotation(IndexEmbedBy.class);
         Class<?>[] cls = ieb.value();
         int len = cls.length;
         for (int i = 0; i < len; i++) {

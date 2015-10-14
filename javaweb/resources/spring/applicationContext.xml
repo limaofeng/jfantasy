@@ -36,7 +36,7 @@
             </props>
         </property>
         <property name="defaultEncoding" value="utf-8"/>
-        <property name="templateLoaderPath" value="${freemarker.templatePath}" />
+        <property name="templateLoaderPath" value="${freemarker.templatePath}"/>
     </bean>
 
     <!-- 开发中的功能
@@ -51,7 +51,8 @@
     -->
 
     <!-- lucene 配置 -->
-    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open"
+          destroy-method="close">
         <property name="analyzer">
             <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
         </property>
@@ -81,6 +82,12 @@
 
     <!-- 支付配置 -->
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+
+    <bean id="defaultSMSService" class="com.fantasy.sms.service.DefaultSMSService"/>
+
+    <bean id="validationCaptchaService" class="com.fantasy.sms.service.ValidationCaptchaService">
+        <property name="smsService" ref="defaultSMSService"/>
+    </bean>
 
     <!-- 其他需要加载的spring模块 -->
     <import resource="classpath:spring/applicationContext-cache.xml"/>

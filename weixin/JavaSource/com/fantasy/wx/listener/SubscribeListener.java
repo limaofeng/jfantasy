@@ -3,11 +3,11 @@ package com.fantasy.wx.listener;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.wx.framework.event.SubscribeEventListener;
 import com.fantasy.wx.framework.exception.WeiXinException;
+import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.EventMessage;
 import com.fantasy.wx.framework.message.content.Event;
 import com.fantasy.wx.framework.session.WeiXinSession;
-import com.fantasy.wx.service.UserInfoWeiXinService;
-
+import com.fantasy.wx.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,7 @@ public class SubscribeListener implements SubscribeEventListener {
     private final static Log LOG = LogFactory.getLog(SubscribeListener.class);
 
     @Autowired
-    private UserInfoWeiXinService userInfoWeiXinService;
+    private UserService userService;
 
     @Override
     public void onSubscribe(final WeiXinSession session, Event event, final EventMessage message) {
@@ -29,9 +29,12 @@ public class SubscribeListener implements SubscribeEventListener {
             @Override
             public void run() {
                 try {
-                    userInfoWeiXinService.checkCreateMember(message.getFromUserName());
+                    WeiXinSessionUtils.saveSession(session);
+                    userService.checkCreateMember(session.getAccountDetails().getAppId(),message.getFromUserName());
                 } catch (WeiXinException e) {
                     LOG.error(e.getMessage(), e);
+                } finally {
+                    WeiXinSessionUtils.closeSession();
                 }
             }
         });

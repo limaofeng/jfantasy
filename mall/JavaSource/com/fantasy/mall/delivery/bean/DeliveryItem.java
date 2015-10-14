@@ -1,9 +1,12 @@
+
 package com.fantasy.mall.delivery.bean;
 
+import com.fantasy.common.order.OrderItem;
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.mall.goods.bean.Product;
-import com.fantasy.mall.goods.service.ProductService;
-import com.fantasy.mall.order.bean.OrderItem;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -17,6 +20,9 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "MALL_DELIVERY_ITEM")
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class DeliveryItem extends BaseBusEntity {
 
     private static final long serialVersionUID = -6783787752984851646L;
@@ -29,7 +35,6 @@ public class DeliveryItem extends BaseBusEntity {
     public void initialize(OrderItem orderItem) {
         this.setSn(orderItem.getSn());
         this.setName(orderItem.getName());
-        this.setProduct(ProductService.copyProduct(orderItem.getProduct()));
     }
 
     @Id
@@ -44,12 +49,7 @@ public class DeliveryItem extends BaseBusEntity {
     @Column(name = "QUANTITY", updatable = false, nullable = false)
     private Integer quantity;// 物流数量
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PRODUCT_ID",foreignKey = @ForeignKey(name = "FK_DELIVERY_ITEM_PRODUCT") )
-
-    private Product product;// 商品
-    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "SHIPPING_ID",foreignKey = @ForeignKey(name = "FK_DELIVERY_ITEM_SHIPPING"))
-
     private Shipping shipping;// 发货
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESHIP_ID",foreignKey = @ForeignKey(name = "FK_DELIVERY_ITEM_RESHIP"))
@@ -86,14 +86,6 @@ public class DeliveryItem extends BaseBusEntity {
 
     public void setQuantity(Integer quantity) {
         this.quantity = quantity;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public Shipping getShipping() {

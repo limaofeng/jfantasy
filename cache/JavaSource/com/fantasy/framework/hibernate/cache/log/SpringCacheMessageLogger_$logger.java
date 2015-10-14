@@ -208,6 +208,7 @@ public class SpringCacheMessageLogger_$logger extends DelegatingBasicLogger impl
     private final static String expired = "HHH000092: An item was expired by the cache while it was locked (increase your cache timeout): %s";
     private final static String indexes = "HHH000126: Indexes: %s";
     private final static String containerProvidingNullPersistenceUnitRootUrl = "HHH000050: Container is providing a null PersistenceUnitRootUrl: discovery impossible";
+    private final static java.lang.String logUnexpectedSessionInCollectionNotConnected = "HHH000470: An unexpected session is defined for a collection, but the collection is not connected to that session. A persistent collection may only be associated with one session at a time. Overwriting session. %s";
     private final static String tooManyInExpressions = "HHH000443: Dialect [%s] limits the number of elements in an IN predicate to %s entries.  However, the given parameter list [%s] contained %s entries, which will likely cause failures to execute the query in the database";
     private final static String timestampCacheHits = "HHH000434: update timestamps cache hits: %s";
     private final static String unableToSynchronizeDatabaseStateWithSession = "HHH000371: Could not synchronize database state with session: %s";
@@ -270,6 +271,7 @@ public class SpringCacheMessageLogger_$logger extends DelegatingBasicLogger impl
     private final static String unableToInstantiateOptimizer = "HHH000322: Unable to instantiate specified optimizer [%s], falling back to noop";
     private final static String configuringFromFile = "HHH000042: Configuring from file: %s";
     private final static String noSessionFactoryWithJndiName = "HHH000184: No session factory with JNDI name %s";
+    private final static java.lang.String logCannotUnsetUnexpectedSessionInCollection = "HHH000471: Cannot unset session in a collection because an unexpected session is defined. A persistent collection may only be associated with one session at a time. %s";
     private final static String closing = "HHH000031: Closing";
     private final static String preparedStatementAlreadyInBatch = "HHH000202: PreparedStatement was already in the batch, [%s].";
     private final static String cannotResolveNonNullableTransientDependencies = "HHH000437: Attempting to save one or more entities that have a non-nullable association with an unsaved transient entity. The unsaved transient entity must be saved in an operation prior to saving these dependent entities.\n\tUnsaved transient entity: (%s)\n\tDependent entities: (%s)\n\tNon-nullable association(s): (%s)";
@@ -3282,6 +3284,22 @@ public class SpringCacheMessageLogger_$logger extends DelegatingBasicLogger impl
 
     public final void creatingPooledLoOptimizer(final int arg0, final String arg1) {
         super.log.logf(FQCN, (org.jboss.logging.Logger.Level.DEBUG), null, creatingPooledLoOptimizer$str(), arg0, arg1);
+    }
+
+    public final void logUnexpectedSessionInCollectionNotConnected(final java.lang.String arg0) {
+        super.log.logf(FQCN, (org.jboss.logging.Logger.Level.WARN), null, logUnexpectedSessionInCollectionNotConnected$str(), arg0);
+    }
+
+    protected java.lang.String logUnexpectedSessionInCollectionNotConnected$str() {
+        return logUnexpectedSessionInCollectionNotConnected;
+    }
+
+    public final void logCannotUnsetUnexpectedSessionInCollection(final java.lang.String arg0) {
+        super.log.logf(FQCN, (org.jboss.logging.Logger.Level.WARN), null, logCannotUnsetUnexpectedSessionInCollection$str(), arg0);
+    }
+
+    protected java.lang.String logCannotUnsetUnexpectedSessionInCollection$str() {
+        return logCannotUnsetUnexpectedSessionInCollection;
     }
 
     protected String creatingPooledLoOptimizer$str() {

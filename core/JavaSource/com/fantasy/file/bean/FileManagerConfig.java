@@ -1,17 +1,16 @@
 package com.fantasy.file.bean;
 
+import com.fantasy.file.bean.converter.ConfigParamsConverter;
 import com.fantasy.file.bean.enums.FileManagerType;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.type.TypeReference;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,6 +22,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "FILE_MANAGER_CONFIG")
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "folders", "fileDetails"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileManagerConfig extends BaseBusEntity {
@@ -62,13 +62,8 @@ public class FileManagerConfig extends BaseBusEntity {
      * 存放配置参数
      */
     @Column(name = "CONFIG_PARAM_STORE", length = 500)
-    private String configParamStore;
-    /**
-     * 参数
-     */
-    @Transient
-    private List<ConfigParam> configParams = new ArrayList<ConfigParam>();
-
+    @Convert(converter = ConfigParamsConverter.class)
+    private List<ConfigParam> configParams;
     /**
      * 文件管理器对应的目录
      */
@@ -131,19 +126,7 @@ public class FileManagerConfig extends BaseBusEntity {
         this.description = description;
     }
 
-    public String getConfigParamStore() {
-        return configParamStore;
-    }
-
-    public void setConfigParamStore(String configParamStore) {
-        this.configParamStore = configParamStore;
-    }
-
     public List<ConfigParam> getConfigParams() {
-        if (configParams.isEmpty()) {
-            this.configParams = StringUtil.isBlank(this.getConfigParamStore()) ? Collections.<ConfigParam>emptyList() : JSON.deserialize(this.getConfigParamStore(), new TypeReference<List<ConfigParam>>() {
-            });
-        }
         return this.configParams;
     }
 
@@ -151,50 +134,15 @@ public class FileManagerConfig extends BaseBusEntity {
         this.configParams = configParams;
     }
 
-
     public void addConfigParam(String name, String value) {
-        ConfigParam configParam = ObjectUtil.find(this.configParams,"name",name);
-        if(configParam == null) {
+        if (this.configParams == null) {
+            this.configParams = new ArrayList<ConfigParam>();
+        }
+        ConfigParam configParam = ObjectUtil.find(this.configParams, "name", name);
+        if (configParam == null) {
             this.configParams.add(new ConfigParam(name, value));
-        }else{
+        } else {
             configParam.setValue(value);
-        }
-    }
-
-    public static class ConfigParam {
-        private String name;
-        private String value;
-
-        public ConfigParam() {
-        }
-
-        public ConfigParam(String name, String value) {
-            this.name = name;
-            this.value = value;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public void setName(String name) {
-            this.name = name;
-        }
-
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return "ConfigParam{" +
-                    "name='" + name + '\'' +
-                    ", value='" + value + '\'' +
-                    '}';
         }
     }
 

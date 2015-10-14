@@ -4,6 +4,7 @@ import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.Product;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.*;
 
@@ -24,6 +25,7 @@ import java.math.BigDecimal;
 @Entity
 @Table(name = "MALL_ORDER_ITEM")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "memeo", "order" })
 public class OrderItem extends BaseBusEntity {
 

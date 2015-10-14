@@ -81,7 +81,7 @@ public class TapasMenuWeixinWeiXinServiceTest {
         List<PropertyFilter> list = new ArrayList<PropertyFilter>();
         list.add(new PropertyFilter("EQI_layer", "0"));
         pager.setOrderBy("sort");
-        pager.setOrder(Pager.Order.asc);
+        pager.setOrders(Pager.Order.asc);
 
         Pager p = iMenuWeiXinService.findPager(pager, list);
         Assert.assertNotNull(p.getPageItems());

@@ -7,6 +7,9 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Random;
 
 public class Encoder {
+	private Encoder(){
+
+	}
 	private static char[] genV(char[] userStamp) {
 		try {
 			MessageDigest algorithm = MessageDigest.getInstance("MD5");

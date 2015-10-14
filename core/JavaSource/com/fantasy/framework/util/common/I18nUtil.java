@@ -6,6 +6,8 @@ import com.fantasy.framework.util.regexp.RegexpUtil.AbstractReplaceCallBack;
 import java.util.regex.Matcher;
 
 public class I18nUtil {
+    private I18nUtil() {
+    }
 
     public static String unicode(String text) {
         char[] utfBytes = text.toCharArray();
@@ -31,10 +33,6 @@ public class I18nUtil {
         });
     }
 
-	/*public static void main(String[] args) throws UnsupportedEncodingException {
-        String unicode = unicode("：“成功导入{0}条,新的资源!");
-		System.out.println(unicode);
-		System.out.print(decodeUnicode(unicode));
-	}*/
+
 
 }

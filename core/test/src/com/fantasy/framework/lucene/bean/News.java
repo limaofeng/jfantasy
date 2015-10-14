@@ -4,6 +4,10 @@ import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
 import com.fantasy.framework.lucene.annotations.IndexProperty;
 import com.fantasy.framework.lucene.annotations.Indexed;
+import com.fantasy.framework.util.common.StringUtil;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import opensource.jpinyin.PinyinFormat;
+import opensource.jpinyin.PinyinHelper;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
 
@@ -24,13 +28,13 @@ public class News extends BaseDynaBean {
      * 文章标题
      */
     @IndexProperty(analyze = true, store = true)
-    @Column(name = "TITLE")
+    @Column(name = "TITLE")//@Convert(converter = DESConverter.class)
     private String title;
     /**
      * 摘要
      */
     @IndexProperty(analyze = true, store = true)
-    @Column(name = "SUMMARY")
+    @Column(name = "SUMMARY",length = 500)
     private String summary;
     /**
      * 关键词
@@ -84,4 +88,35 @@ public class News extends BaseDynaBean {
     public void setContent(String content) {
         this.content = content;
     }
+
+    /**
+     * 拼音首字母
+     *
+     * @return String
+     */
+    @JsonIgnore
+    @Transient
+    @IndexProperty(analyze = true, store = true)
+    public String getPinyin() {
+        if (StringUtil.isBlank(this.getTitle())) {
+            return null;
+        }
+        return PinyinHelper.getShortPinyin(this.getTitle());
+    }
+
+    /**
+     * 全拼
+     *
+     * @return String
+     */
+    @JsonIgnore
+    @Transient
+    @IndexProperty(analyze = true, store = true)
+    public String getQpin() {
+        if (StringUtil.isBlank(this.getTitle())) {
+            return null;
+        }
+        return PinyinHelper.convertToPinyinString(this.getTitle(), "", PinyinFormat.WITHOUT_TONE);
+    }
+
 }

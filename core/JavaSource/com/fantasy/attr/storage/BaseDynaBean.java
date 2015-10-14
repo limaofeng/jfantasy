@@ -5,6 +5,7 @@ import com.fantasy.attr.storage.bean.AttributeValue;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -16,6 +17,7 @@ public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
     /**
      * 数据版本
      */
+    @ApiModelProperty(hidden = true)
     @JsonIgnore
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "VERSION_ID")
@@ -24,6 +26,7 @@ public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
     /**
      * 动态属性集合。
      */
+    @ApiModelProperty(hidden = true)
     @JsonIgnore
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @JoinColumns(value = {@JoinColumn(name = "TARGET_ID", referencedColumnName = "ID"), @JoinColumn(name = "VERSION_ID", referencedColumnName = "VERSION_ID")})
@@ -32,6 +35,7 @@ public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
     /**
      * 字段缓存
      */
+    @ApiModelProperty(hidden = true)
     @Lob
     @JsonIgnore
     @Column(name = "ATTRIBUTE_VALUE_STORE")

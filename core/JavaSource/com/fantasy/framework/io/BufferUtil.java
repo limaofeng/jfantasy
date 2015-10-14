@@ -1,6 +1,9 @@
 package com.fantasy.framework.io;
 
 public class BufferUtil {
+    private BufferUtil() {
+    }
+
     static final byte SPACE = 32;
     static final byte MINUS = 45;
     static final byte[] DIGIT = {48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 65, 66, 67, 68, 69, 70};
@@ -18,14 +21,14 @@ public class BufferUtil {
         for (int i = buffer.getIndex(); i < buffer.putIndex(); i++) {
             byte b = buffer.peek(i);
             if (b <= SPACE) {
-                if (started){
+                if (started) {
                     break;
                 }
             } else if ((b >= 48) && (b <= 57)) {
                 val = val * 10 + (b - 48);
                 started = true;
             } else {
-                if ((b != MINUS) || (started)){
+                if ((b != MINUS) || (started)) {
                     break;
                 }
                 minus = true;
@@ -33,7 +36,7 @@ public class BufferUtil {
 
         }
 
-        if (started){
+        if (started) {
             return minus ? -val : val;
         }
         throw new NumberFormatException(buffer.toString());
@@ -46,14 +49,14 @@ public class BufferUtil {
         for (int i = buffer.getIndex(); i < buffer.putIndex(); i++) {
             byte b = buffer.peek(i);
             if (b <= SPACE) {
-                if (started){
+                if (started) {
                     break;
                 }
             } else if ((b >= 48) && (b <= 57)) {
                 val = val * 10L + (b - 48);
                 started = true;
             } else {
-                if ((b != MINUS) || (started)){
+                if ((b != MINUS) || (started)) {
                     break;
                 }
                 minus = true;
@@ -61,7 +64,7 @@ public class BufferUtil {
 
         }
 
-        if (started){
+        if (started) {
             return minus ? -val : val;
         }
         throw new NumberFormatException(buffer.toString());
@@ -93,7 +96,7 @@ public class BufferUtil {
             boolean started = false;
             for (int hex : hexDivisors) {
                 if (nt < hex) {
-                    if (started){
+                    if (started) {
                         buffer.put((byte) 48);
                     }
                 } else {
@@ -154,7 +157,7 @@ public class BufferUtil {
 
             for (int decDivisor : decDivisors) {
                 if (n < decDivisor) {
-                    if (started){
+                    if (started) {
                         buffer.put((byte) 48);
                     }
                 } else {
@@ -185,7 +188,7 @@ public class BufferUtil {
 
             for (long aDecDivisorsL : decDivisorsL) {
                 if (n < aDecDivisorsL) {
-                    if (started){
+                    if (started) {
                         buffer.put((byte) 48);
                     }
                 } else {
@@ -210,12 +213,12 @@ public class BufferUtil {
     }
 
     public static boolean isPrefix(Buffer prefix, Buffer buffer) {
-        if (prefix.length() > buffer.length()){
+        if (prefix.length() > buffer.length()) {
             return false;
         }
         int bi = buffer.getIndex();
-        for (int i = prefix.getIndex(); i < prefix.putIndex(); i++){
-            if (prefix.peek(i) != buffer.peek(bi++)){
+        for (int i = prefix.getIndex(); i < prefix.putIndex(); i++) {
+            if (prefix.peek(i) != buffer.peek(bi++)) {
                 return false;
             }
         }
@@ -223,7 +226,7 @@ public class BufferUtil {
     }
 
     public static String to8859_1_String(Buffer buffer) {
-        if (buffer instanceof BufferCache.CachedBuffer){
+        if (buffer instanceof BufferCache.CachedBuffer) {
             return buffer.toString();
         }
         return buffer.toString("ISO-8859-1");

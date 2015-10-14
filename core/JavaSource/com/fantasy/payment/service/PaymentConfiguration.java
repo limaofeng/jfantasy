@@ -1,17 +1,11 @@
 package com.fantasy.payment.service;
 
-import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.payment.order.OrderDetailsService;
-import com.fantasy.payment.order.TestOrderDetailsService;
 import com.fantasy.payment.product.*;
 import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 支付配置
@@ -22,7 +16,6 @@ public class PaymentConfiguration implements InitializingBean {
      * 所有支持的支付产品
      */
     private List<PaymentProduct> paymentProducts = new ArrayList<PaymentProduct>();
-    private Map<String,OrderDetailsService> paymentOrderServices = new HashMap<String, OrderDetailsService>();
 
     public void setPaymentProducts(List<PaymentProduct> paymentProducts) {
         this.paymentProducts = paymentProducts;
@@ -30,10 +23,6 @@ public class PaymentConfiguration implements InitializingBean {
 
     public PaymentProduct getPaymentProduct(String paymentProductId) {
         return ObjectUtil.find(this.paymentProducts, "id", paymentProductId);
-    }
-
-    public void setPaymentOrderServices(Map<String, OrderDetailsService> paymentOrderServices) {
-        this.paymentOrderServices = paymentOrderServices;
     }
 
     // 获取所有支付产品集合
@@ -51,6 +40,7 @@ public class PaymentConfiguration implements InitializingBean {
             alipayDirect.setName("支付宝（即时交易）");
             alipayDirect.setBargainorIdName("合作身份者ID");
             alipayDirect.setBargainorKeyName("安全校验码");
+            alipayDirect.setShroffAccountName("支付宝账号");
             alipayDirect.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
             alipayDirect.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
             alipayDirect.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
@@ -64,6 +54,7 @@ public class PaymentConfiguration implements InitializingBean {
             alipayDirectByWap.setName("支付宝（WAP即时交易）");
             alipayDirectByWap.setBargainorIdName("合作身份者ID");
             alipayDirectByWap.setBargainorKeyName("安全校验码");
+            alipayDirectByWap.setShroffAccountName("支付宝账号");
             alipayDirectByWap.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
             alipayDirectByWap.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
             alipayDirectByWap.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
@@ -77,6 +68,7 @@ public class PaymentConfiguration implements InitializingBean {
             alipayPartner.setName("支付宝（担保交易）");
             alipayPartner.setBargainorIdName("合作身份者ID");
             alipayPartner.setBargainorKeyName("安全校验码");
+            alipayPartner.setShroffAccountName("支付宝账号");
             alipayPartner.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
             alipayPartner.setLogoPath("/template/tocer/images/payment/alipay_partner_icon.gif");
             alipayPartner.setDescription("支付宝担保交易，买家先付款到支付宝，支付宝收到买家付款后即时通知卖家发货，买家收到货物满意后通知支付宝付款给卖家。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
@@ -134,32 +126,10 @@ public class PaymentConfiguration implements InitializingBean {
             pay99bill.setDescription("快钱是国内领先的独立第三方支付企业，旨在为各类企业及个人 提供安全、便捷和保密的综合电子支付服务。");
             this.paymentProducts.add(pay99bill);
         }
-
-        //支付订单service
-        if(!this.paymentOrderServices.containsKey("test")){
-            TestOrderDetailsService orderDetailsService = SpringContextUtil.createBean(TestOrderDetailsService.class,SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE);
-            orderDetailsService.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
-            orderDetailsService.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
-            orderDetailsService.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
-            this.paymentOrderServices.put("test", orderDetailsService);
-        }
-
     }
 
-    public OrderDetailsService getPaymentOrderService(String orderType) {
-        if(!this.paymentOrderServices.containsKey(orderType)){
-            //TODO 添加自定义异常
-            throw new IgnoreException("orderType["+orderType+"] 对应的 PaymentOrderService 未配置！");
-        }
-        return this.paymentOrderServices.get(orderType);
-    }
-
-    public static List<PaymentProduct> paymentProducts(){
-        return SpringContextUtil.getBeanByType(PaymentConfiguration.class).getPaymentProducts();
-    }
-
-    public static PaymentProduct paymentProduct(String paymentProductId){
-        return SpringContextUtil.getBeanByType(PaymentConfiguration.class).getPaymentProduct(paymentProductId);
+    public void addPaymentProduct(PaymentProduct paymentProduct) {
+        this.getPaymentProducts().add(paymentProduct);
     }
 
 }

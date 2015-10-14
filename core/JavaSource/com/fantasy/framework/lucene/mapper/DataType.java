@@ -13,6 +13,7 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 
 public class DataType {
+	private DataType(){}
 	public static boolean isString(Class<?> type) {
 		return type.equals(String.class);
 	}

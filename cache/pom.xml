@@ -3,7 +3,7 @@
     <parent>
         <groupId>com.fantasy</groupId>
         <artifactId>fantasy-framework</artifactId>
-        <version>3.3.6.Alphal</version>
+        <version>3.3.22</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>fantasy-cache</artifactId>
@@ -24,13 +24,11 @@
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${redis.clients-version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework.data</groupId>
             <artifactId>spring-data-redis</artifactId>
             <version>${spring.data.redis-version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.spy</groupId>

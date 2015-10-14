@@ -2,6 +2,8 @@ package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -15,7 +17,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "AUTH_USERGROUP")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "resources"})
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "permissions", "roles", "permissions"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserGroup extends BaseBusEntity {
 
@@ -58,9 +61,9 @@ public class UserGroup extends BaseBusEntity {
     /**
      * 用户组对应的资源
      */
-    @ManyToMany(targetEntity = Resource.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_USERGROUP_RESOURCE", joinColumns = @JoinColumn(name = "USERGROUP_ID"), inverseJoinColumns = @JoinColumn(name = "RESOURCE_ID"), foreignKey = @ForeignKey(name = "FK_USERGROUP_RESOURCE_UG"))
-    private List<Resource> resources;
+    @ManyToMany(targetEntity = Permission.class, fetch = FetchType.LAZY)
+    @JoinTable(name = "AUTH_USERGROUP_PERMISSION", joinColumns = @JoinColumn(name = "USERGROUP_ID"), inverseJoinColumns = @JoinColumn(name = "PERMISSION_ID"), foreignKey = @ForeignKey(name = "FK_USERGROUP_PERMISSION_UG"))
+    private List<Permission> permissions;
 
     public Long getId() {
         return id;
@@ -102,16 +105,10 @@ public class UserGroup extends BaseBusEntity {
         return this.description;
     }
 
-    @JsonIgnore
     public List<Role> getRoles() {
         return new ArrayList<Role>();
     }
 
-    public List<Resource> getResources() {
-        return this.resources;
-    }
-
-    @JsonIgnore
     public Boolean isEnabled() {
         return this.enabled;
     }
@@ -124,8 +121,12 @@ public class UserGroup extends BaseBusEntity {
         this.menus = menus;
     }
 
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
     }
 
     @JsonIgnore
@@ -143,46 +144,6 @@ public class UserGroup extends BaseBusEntity {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
         for (Role role : getRoles()) {
             grantedAuthorities.addAll(role.getRoleAuthorities());
-        }
-        return grantedAuthorities;
-    }
-
-    @JsonIgnore
-    public List<GrantedAuthority> getUrlAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        if (ObjectUtil.isNotNull(getRoles())) {
-            for (Role role : getRoles()) {
-                if (!role.isEnabled()) {
-                    continue;
-                }
-                grantedAuthorities.addAll(role.getUrlAuthorities());
-            }
-        }
-        if (ObjectUtil.isNotNull(getResources())) {
-            List<Long> resourceIds = new ArrayList<Long>();
-            for (Resource resource : getResources()) {
-                resourceIds.add(resource.getId());
-            }
-            if (resourceIds.isEmpty()) {
-                return grantedAuthorities;
-            }
-            for (Resource re : this.getResources()) {
-                if (re.isEnabled()) {
-                    grantedAuthorities.add(re.getUrlAuthoritie());
-                }
-            }
-        }
-        return grantedAuthorities;
-    }
-
-    @JsonIgnore
-    public List<GrantedAuthority> getMenuAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        if (ObjectUtil.isNull(getMenus())) {
-            return grantedAuthorities;
-        }
-        for (Menu menu : getMenus()) {
-            grantedAuthorities.add(menu.getMenuAuthoritie());
         }
         return grantedAuthorities;
     }

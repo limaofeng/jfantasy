@@ -5,6 +5,9 @@ import org.hibernate.event.spi.PostUpdateEvent;
 
 public abstract class EntityChangeUtil {
 
+    private EntityChangeUtil() {
+    }
+
     public static boolean modified(PostUpdateEvent event, String propertyName) {
         Object[] currentState = event.getState();
         String[] propertyNames = event.getPersister().getPropertyNames();

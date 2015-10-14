@@ -6,7 +6,6 @@ import com.fantasy.file.dao.FileManagerConfigDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.jackson.JSON;
 import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,9 +30,7 @@ public class FileManagerService {
     }
 
     public FileManagerConfig save(FileManagerConfig fileManager) {
-        fileManager.setConfigParamStore(JSON.serialize(fileManager.getConfigParams()));
-        this.fileManagerConfigDao.save(fileManager);
-        return fileManager;
+        return this.fileManagerConfigDao.save(fileManager);
     }
 
     public void save(FileManagerType type, String id, String name, String description, Map<String, String> params) {

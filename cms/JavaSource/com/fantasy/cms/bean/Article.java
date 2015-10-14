@@ -2,20 +2,25 @@ package com.fantasy.cms.bean;
 
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
+import com.fantasy.cms.bean.databind.ArticleCategoryDeserializer;
+import com.fantasy.cms.bean.databind.ArticleCategorySerializer;
+import com.fantasy.cms.bean.databind.ContentDeserializer;
 import com.fantasy.framework.lucene.annotations.*;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
-import org.hibernate.annotations.Cache;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
-import java.io.IOException;
 
 /**
  * 文章表
@@ -24,12 +29,14 @@ import java.io.IOException;
  * @version 1.0
  * @since 2012-11-4 下午05:47:20
  */
+@ApiModel("文章")
 @Indexed
 @Entity
 @Table(name = "CMS_ARTICLE")
 @Persister(impl = DynaBeanEntityPersister.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "content"})
 public class Article extends BaseDynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;
@@ -38,15 +45,15 @@ public class Article extends BaseDynaBean {
         /**
          * 原创
          */
-        original,
+        original,//NOSONAR
         /**
          * 转载
          */
-        transfer,
+        transfer,//NOSONAR
         /**
          * 链接
          */
-        link
+        link//NOSONAR
     }
 
     @Id
@@ -57,49 +64,60 @@ public class Article extends BaseDynaBean {
     /**
      * 文章标题
      */
+    @ApiModelProperty("文章标题")
     @IndexProperty(analyze = true, store = true)
     @Column(name = "TITLE")
     private String title;
     /**
      * 摘要
      */
+    @ApiModelProperty("摘要")
     @IndexProperty(analyze = true, store = true)
-    @Column(name = "SUMMARY")
+    @Column(name = "SUMMARY", length = 500)
     private String summary;
     /**
      * 关键词
      */
+    @ApiModelProperty("关键词")
     @Column(name = "KEYWORDS")
     private String keywords;
     /**
      * 文章正文
      */
+    @ApiModelProperty(hidden = true)
     @IndexProperty(analyze = true, store = true)
     @JoinColumn(name = "CONTENT_ID")
-    @JsonSerialize(using = ContentSerialize.class)
+    @JsonDeserialize(using = ContentDeserializer.class)
     @OneToOne(targetEntity = Content.class, fetch = FetchType.LAZY, cascade = {CascadeType.ALL, CascadeType.REMOVE})
     private Content content;
     /**
      * 作者
      */
+    @ApiModelProperty("作者")
     @Column(name = "AUTHOR")
     private String author;
     /**
      * 发布日期
      */
+    @ApiModelProperty("发布日期")
     @IndexProperty(store = true)
     @Column(name = "RELEASE_DATE")
     private String releaseDate;
     /**
      * 文章对应的栏目
      */
+    @ApiModelProperty("对应的分类")
     @IndexEmbed
+    @JsonProperty("categoryCode")
+    @JsonSerialize(using = ArticleCategorySerializer.class)
+    @JsonDeserialize(using = ArticleCategoryDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_CODE", nullable = false, foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY"))
     private ArticleCategory category;
     /**
      * 发布标志
      */
+    @ApiModelProperty("发布标志")
     @IndexFilter(compare = Compare.IS_EQUALS, value = "true")
     @Column(name = "ISSUE")
     private Boolean issue;
@@ -174,15 +192,6 @@ public class Article extends BaseDynaBean {
 
     public void setIssue(Boolean issue) {
         this.issue = issue;
-    }
-
-    public static class ContentSerialize extends JsonSerializer<Content> {
-
-        @Override
-        public void serialize(Content content, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            jgen.writeString(content.toString());
-        }
-
     }
 
     @Override

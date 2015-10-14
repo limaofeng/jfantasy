@@ -17,7 +17,6 @@ import com.fantasy.framework.util.common.file.FileUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
@@ -25,13 +24,11 @@ import org.apache.lucene.util.Version;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.util.StringUtils;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -53,7 +50,7 @@ public class BuguIndex implements InitializingBean {
     /**
      * 分词器
      */
-    private Analyzer analyzer = new StandardAnalyzer(this.version);
+    private Analyzer analyzer = new IKAnalyzer();//new StandardAnalyzer(this.version);
     /**
      * 索引文件的存放目录
      */
@@ -98,7 +95,10 @@ public class BuguIndex implements InitializingBean {
         for (String basePackage : packagesToScan) {
             for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, LuceneDao.class)) {
                 Class entityClass = ClassUtil.getSuperClassGenricType(clazz);
-                if(entityClass.getAnnotation(Indexed.class) == null){
+                if (entityClass.getAnnotation(Indexed.class) == null) {
+                    continue;
+                }
+                if (!SpringContextUtil.startup()) {
                     continue;
                 }
                 LuceneDao dao = (LuceneDao) SpringContextUtil.getBeanByType(clazz);
@@ -116,13 +116,12 @@ public class BuguIndex implements InitializingBean {
             BuguIndex.instance = this;
         }
         if (this.rebuild) {
-            executor.execute(new Runnable() {
-
+            new Timer().schedule(new TimerTask() {
+                @Override
                 public void run() {
                     BuguIndex.this.rebuild();
                 }
-
-            }, 1000 * 60);
+            }, 1000 * 10);
         }
     }
 

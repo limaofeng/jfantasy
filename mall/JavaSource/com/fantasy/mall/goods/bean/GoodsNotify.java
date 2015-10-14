@@ -1,7 +1,10 @@
 package com.fantasy.mall.goods.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.member.bean.Member;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.*;
 
 import javax.persistence.*;
@@ -20,6 +23,8 @@ import java.util.Date;
 @Entity
 @Table(name = "MALL_GOODS_NOTIFY")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class GoodsNotify extends BaseBusEntity {
 
 	private static final long serialVersionUID = 2814795887062166006L;

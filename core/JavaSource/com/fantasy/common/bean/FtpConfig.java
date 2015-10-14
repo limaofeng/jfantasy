@@ -1,6 +1,11 @@
 package com.fantasy.common.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -13,9 +18,12 @@ import javax.persistence.*;
  * @version 1.0
  * @since 2013-7-12 下午02:32:45
  */
+@ApiModel(" Ftp 配置 ")
 @Entity
 @Table(name = "FTP_CONFIG")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class FtpConfig extends BaseBusEntity {
 
     private static final long serialVersionUID = 5513428236803813302L;
@@ -28,41 +36,49 @@ public class FtpConfig extends BaseBusEntity {
     /**
      * 名称
      */
+    @ApiModelProperty("名称")
     @Column(name = "NAME", length = 150)
     private String name;
     /**
      * 端口
      */
+    @ApiModelProperty("端口")
     @Column(name = "port", length = 8)
     private Integer port = 21;
     /**
      * FTP服务地址
      */
+    @ApiModelProperty("地址")
     @Column(name = "HOST_NAME", length = 50)
     private String hostname;
     /**
      * 登陆名称
      */
+    @ApiModelProperty("登陆名称")
     @Column(name = "USERNAME", length = 20)
     private String username;
     /**
      * 登陆密码
      */
+    @ApiModelProperty("登陆密码")
     @Column(name = "PASSWORD", length = 20)
     private String password;
     /**
      * 编码格式
      */
+    @ApiModelProperty("编码格式")
     @Column(name = "CONTROL_ENCODING", length = 20)
     private String controlEncoding;
     /**
      * 默认目录
      */
+    @ApiModelProperty("默认目录")
     @Column(name = "DEFAULT_DIR", length = 150)
     private String defaultDir;
     /**
      * 描述
      */
+    @ApiModelProperty("描述")
     @Column(name = "DESCRIPTION", length = 250)
     private String description;
 

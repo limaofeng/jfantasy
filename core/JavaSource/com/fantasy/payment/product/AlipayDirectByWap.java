@@ -3,7 +3,7 @@ package com.fantasy.payment.product;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.payment.order.OrderDetails;
+import com.fantasy.common.order.Order;
 import com.fantasy.payment.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +39,7 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
     public Map<String, String> getParameterMap(Map<String, String> parameters) {
         PaymentContext context = PaymentContext.getContext();
         PaymentConfig paymentConfig = context.getPaymentConfig();
-        OrderDetails orderDetails = context.getOrderDetails();
+        Order orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
         String returnUrl = context.getReturnUrl(payment.getSn());// 回调处理URL

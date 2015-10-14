@@ -1,5 +1,6 @@
 package com.fantasy.framework.httpclient;
 
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.httpclient.Header;
 import org.apache.commons.httpclient.HttpClient;
@@ -27,6 +28,9 @@ import java.util.Map;
  */
 public class HttpClientUtil {
 
+    private HttpClientUtil() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(HttpClientUtil.class);
 
     static {
@@ -48,7 +52,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带参数的get请求
      *
-     * @param url webUrl         webUrl
+     * @param url         webUrl         webUrl
      * @param queryString 请求参数字符串
      * @return {Response}
      * @throws IOException
@@ -60,7 +64,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带参数的get请求
      *
-     * @param url webUrl webUrl
+     * @param url    webUrl webUrl
      * @param params 请求参数 请求参数
      * @return {Response}
      * @throws IOException
@@ -72,7 +76,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带请求信息的get请求
      *
-     * @param url webUrl webUrl
+     * @param url     webUrl webUrl
      * @param request 请求对象 请求对象
      * @return {Response}
      * @throws IOException
@@ -108,7 +112,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带参数的post请求
      *
-     * @param url webUrl
+     * @param url    webUrl
      * @param params 请求参数
      * @return {Response}
      */
@@ -119,13 +123,13 @@ public class HttpClientUtil {
     /**
      * 执行一个带请求信息的post请求
      *
-     * @param url webUrl
+     * @param url     webUrl
      * @param request 请求对象
      * @return {Response}
      * @throws IOException
      */
     public static Response doPost(String url, Request request) throws IOException {
-        request = request == null ? new Request() : request;
+        request = ObjectUtil.defaultValue(request,new Request());
         HttpClient client = new HttpClient();
         PostMethod method = new PostMethod(url);
         for (Header header : request.getRequestHeaders()) {
@@ -142,7 +146,7 @@ public class HttpClientUtil {
         if (request.getRequestBody().length > 0) {
             method.setRequestBody(request.getRequestBody());
         }
-        if (request.getRequestEntity() != null){
+        if (request.getRequestEntity() != null) {
             method.setRequestEntity(request.getRequestEntity());
         }
         client.getState().addCookies(request.getCookies());

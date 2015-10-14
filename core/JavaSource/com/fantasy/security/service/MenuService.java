@@ -31,7 +31,6 @@ public class MenuService{
 
     private static final Log LOGGER = LogFactory.getLog(MenuService.class);
 
-
     public List<Menu> loadMenus(Long parentId) {
         List<Menu> menus = tree();
         return ObjectUtil.isNull(parentId) ? menus : tree(menus, parentId);
@@ -64,35 +63,7 @@ public class MenuService{
         return loadMenus(menuId);
     }
 
-    @Transactional(readOnly = true)
-    public List<Menu> tree(List<Menu> menus) {
-        Map<Long, List<Menu>> menuMap = new HashMap<Long, List<Menu>>();
-        List<Menu> roots = new ArrayList<Menu>();
-        for (Menu menu : menus) {
-            if (menu.getParent() == null || ObjectUtil.indexOf(menus,"id",menu.getParent().getId()) == -1) {
-                roots.add(menu);
-            } else {
-                if (ObjectUtil.isNull(menuMap.get(menu.getParent().getId()))) {
-                    menuMap.put(menu.getParent().getId(), new ArrayList<Menu>());
-                }
-                menuMap.get(menu.getParent().getId()).add(menu);
-            }
-        }
-        return loadMenus(roots, menuMap);
-    }
-
-    private List<Menu> loadMenus(List<Menu> menus, Map<Long, List<Menu>> menuMap) {
-        if (ObjectUtil.isNull(menus)){
-            return new ArrayList<Menu>();
-        }
-        for (Menu menu : menus) {
-            menu.setChildren(loadMenus(menuMap.get(menu.getId()), menuMap));
-            menuMap.remove(menu.getId());
-        }
-        return ObjectUtil.sort(menus, "sort", "asc");
-    }
-
-    public void save(Menu menu) {
+    public Menu save(Menu menu) {
         List<Menu> menus;
         boolean root = false;
         if (menu.getParent() == null || StringUtil.isBlank(menu.getParent().getId())) {
@@ -146,10 +117,13 @@ public class MenuService{
             menu.setPath(menu.getParent().getPath() + menu.getId() + Menu.PATH_SEPARATOR);
         }
         this.menuDao.update(menu);
+        return menu;
     }
 
-    public void delete(Long id) {
-        this.menuDao.delete(id);
+    public void delete(Long... ids) {
+        for (Long id : ids) {
+            this.menuDao.delete(id);
+        }
     }
 
     public Menu get(Long id) {
@@ -206,6 +180,33 @@ public class MenuService{
      */
     public List<Menu> listRootMenu() {
         return this.menuDao.find(Restrictions.isNull("parent"));
+    }
+
+    public static List<Menu> tree(List<Menu> menus) {
+        Map<Long, List<Menu>> menuMap = new HashMap<Long, List<Menu>>();
+        List<Menu> roots = new ArrayList<Menu>();
+        for (Menu menu : menus) {
+            if (menu.getParent() == null || ObjectUtil.indexOf(menus, "id", menu.getParent().getId()) == -1) {
+                roots.add(menu);
+            } else {
+                if (ObjectUtil.isNull(menuMap.get(menu.getParent().getId()))) {
+                    menuMap.put(menu.getParent().getId(), new ArrayList<Menu>());
+                }
+                menuMap.get(menu.getParent().getId()).add(menu);
+            }
+        }
+        return loadMenus(roots, menuMap);
+    }
+
+    private static List<Menu> loadMenus(List<Menu> menus, Map<Long, List<Menu>> menuMap) {
+        if (ObjectUtil.isNull(menus)){
+            return new ArrayList<Menu>();
+        }
+        for (Menu menu : menus) {
+            menu.setChildren(loadMenus(menuMap.get(menu.getId()), menuMap));
+            menuMap.remove(menu.getId());
+        }
+        return ObjectUtil.sort(menus, "sort", "asc");
     }
 
     /**

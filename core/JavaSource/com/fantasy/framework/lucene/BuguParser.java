@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 import java.util.Date;
 
-public class BuguParser {
+public final class BuguParser {
 
     private static final Logger LOGGER = Logger.getLogger(BuguParser.class);
 
@@ -26,6 +26,50 @@ public class BuguParser {
     public static Query parseTerm(String field, String value) {
         Term t = new Term(field, value);
         return new TermQuery(t);
+    }
+
+    /**
+     * 通配符查询
+     *
+     * @param field 字段
+     * @param value 通配符
+     * @return Query
+     */
+    public static Query parseWildcard(String field, String value) {
+        return new WildcardQuery(new Term(field, value));
+    }
+
+    /**
+     * 通配符查询 (多个条件用 OR 连接)
+     *
+     * @param fields 多字段
+     * @param value  通配符
+     * @return Query
+     */
+    public static Query parseWildcard(String[] fields, String value) {
+        Assert.isTrue(fields.length != 0, "param fields length must be greater than 1 ");
+        WildcardQuery[] wildcardQueries = new WildcardQuery[fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            wildcardQueries[i] = new WildcardQuery(new Term(fields[i], value));
+        }
+        return parse(wildcardQueries, BooleanClause.Occur.SHOULD);
+    }
+
+    /**
+     * 通配符查询
+     *
+     * @param fields 多字段
+     * @param value  通配符
+     * @param occur  条件连接方式，类似于 and 与 or 、not
+     * @return Query
+     */
+    public static Query parseWildcard(String[] fields, String value, BooleanClause.Occur occur) {
+        Assert.isTrue(fields.length != 0, "param fields length must be greater than 1 ");
+        WildcardQuery[] wildcardQueries = new WildcardQuery[fields.length];
+        for (int i = 0; i < fields.length; i++) {
+            wildcardQueries[i] = new WildcardQuery(new Term(fields[i], value));
+        }
+        return parse(wildcardQueries, occur);
     }
 
     /**
@@ -177,6 +221,15 @@ public class BuguParser {
         BooleanQuery query = new BooleanQuery();
         for (int i = 0; i < queries.length; i++) {
             query.add(queries[i], occurs[i]);
+        }
+        return query;
+    }
+
+    public static Query parse(Query[] queries, BooleanClause.Occur occur) {
+        Assert.isTrue(queries.length != 0, "param queries length must be greater than 1 ");
+        BooleanQuery query = new BooleanQuery();
+        for (Query query1 : queries) {
+            query.add(query1, occur);
         }
         return query;
     }

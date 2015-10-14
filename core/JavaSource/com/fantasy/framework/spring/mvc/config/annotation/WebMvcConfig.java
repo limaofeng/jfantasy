@@ -2,9 +2,16 @@ package com.fantasy.framework.spring.mvc.config.annotation;
 
 
 import com.fantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver;
+import com.fantasy.framework.spring.mvc.method.annotation.PagerModelAttributeMethodProcessor;
 import com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor;
 import com.fantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver;
 import com.fantasy.framework.util.jackson.JSON;
+import org.hibernate.validator.HibernateValidator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.BeanDefinitionBuilder;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -13,6 +20,9 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.Validator;
+import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
@@ -25,7 +35,7 @@ import java.util.List;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {"com.fatnasy.*.rest", "com.fantasy.*.web"}, useDefaultFilters = false, includeFilters = {
+@ComponentScan(basePackages = {"com.fantasy.*.rest", "com.fantasy.*.web"}, useDefaultFilters = false, includeFilters = {
         @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})
 })
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
@@ -49,7 +59,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry.addResourceHandler("/static/**", "/assets/**").addResourceLocations("/static/", "/assets/");
+        registry.addResourceHandler("*.html").addResourceLocations("/");
     }
 
     @Bean
@@ -73,7 +83,26 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         argumentResolvers.add(new FormModelMethodArgumentResolver());
         argumentResolvers.add(new RequestJsonParamMethodArgumentResolver());
         argumentResolvers.add(new PropertyFilterModelAttributeMethodProcessor());
+        argumentResolvers.add(new PagerModelAttributeMethodProcessor());
         super.addArgumentResolvers(argumentResolvers);
+    }
+
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    @Override
+    public Validator getValidator() {
+        if (applicationContext instanceof XmlWebApplicationContext) {
+            ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
+            DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
+            BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(LocalValidatorFactoryBean.class);
+            beanDefinitionBuilder.setAutowireMode(2);
+            beanDefinitionBuilder.addPropertyValue("providerClass", HibernateValidator.class);
+            defaultListableBeanFactory.registerBeanDefinition("validator", beanDefinitionBuilder.getBeanDefinition());
+            return configurableApplicationContext.getBean("validator", Validator.class);
+        } else {
+            return super.getValidator();
+        }
     }
 
 }

@@ -208,6 +208,10 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
         }
     }
 
+    public static boolean startup(){
+        return applicationContext != null;
+    }
+
     public void destroy() throws Exception {
         cleanApplicationContext();
     }

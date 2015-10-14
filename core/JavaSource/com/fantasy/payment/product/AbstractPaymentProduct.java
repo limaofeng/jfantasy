@@ -24,6 +24,7 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
     protected String bargainorIdName;// 商户ID参数名称
     protected String description;// 支付产品描述
     protected String bargainorKeyName;// 密钥参数名称
+    protected String shroffAccountName;//收款方账号名称
     protected CurrencyType[] currencyTypes;// 支持货币类型
     protected String logoPath;// 支付产品LOGO路径
 
@@ -129,6 +130,15 @@ public abstract class AbstractPaymentProduct implements PaymentProduct {
     @JsonIgnore
     public String getDescription() {
         return description;
+    }
+
+    @Override
+    public String getShroffAccountName() {
+        return shroffAccountName;
+    }
+
+    public void setShroffAccountName(String shroffAccountName) {
+        this.shroffAccountName = shroffAccountName;
     }
 
     public void setDescription(String description) {

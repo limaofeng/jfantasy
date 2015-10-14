@@ -2,12 +2,13 @@ package com.fantasy.system.bean;
 
 import com.fantasy.file.bean.FileManagerConfig;
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.Menu;
 import com.fantasy.security.bean.User;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -22,20 +23,17 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SYS_WEBSITE")
-@JsonIgnoreProperties(value = {"defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Website extends BaseBusEntity {
 
     private static final long serialVersionUID = 3763626581086219087L;
 
-    @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-    private Long id;
     /**
      * 网站key（唯一）
      */
+    @Id
     @Column(name = "CODE", length = 20, unique = true)
     private String key;
     /**
@@ -77,14 +75,6 @@ public class Website extends BaseBusEntity {
      */
     @OneToMany(mappedBy = "website", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     private List<User> users;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getKey() {
         return key;

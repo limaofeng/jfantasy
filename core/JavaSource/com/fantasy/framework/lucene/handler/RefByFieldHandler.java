@@ -1,21 +1,21 @@
 package com.fantasy.framework.lucene.handler;
 
 import com.fantasy.framework.lucene.annotations.IndexRefBy;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
 
-import java.lang.reflect.Field;
 import java.util.List;
 
 public class RefByFieldHandler extends ByFieldHandler {
     private Class<?> refBy;
 
-    public RefByFieldHandler(Class<?> refBy, Object obj, Field field, String prefix) {
-        super(obj, field, prefix);
+    public RefByFieldHandler(Class<?> refBy, Object obj, Property property, String prefix) {
+        super(obj, property, prefix);
         this.refBy = refBy;
     }
 
     public void handle(Document doc) {
-        IndexRefBy irb = (IndexRefBy) this.field.getAnnotation(IndexRefBy.class);
+        IndexRefBy irb = this.property.getAnnotation(IndexRefBy.class);
         Class<?>[] cls = irb.value();
         int len = cls.length;
         for (int i = 0; i < len; i++) {

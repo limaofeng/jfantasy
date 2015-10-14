@@ -1,23 +1,22 @@
 package com.fantasy.framework.lucene.handler;
 
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 
-import com.fantasy.framework.lucene.mapper.FieldUtil;
-
 public class IdFieldHandler extends AbstractFieldHandler {
 
-    public IdFieldHandler(Object obj, java.lang.reflect.Field field, String prefix) {
-        super(obj, field, prefix);
+    public IdFieldHandler(Object obj, Property property, String prefix) {
+        super(obj, property, prefix);
     }
 
     public void handle(Document doc) {
-        String fieldName = this.field.getName();
+        String fieldName = this.property.getName();
         doc.add(new Field(fieldName, getEntityId(), Field.Store.YES, Field.Index.NOT_ANALYZED));
     }
 
     private String getEntityId() {
-        Object id = FieldUtil.get(this.obj, this.field);
+        Object id = this.property.getValue(this.obj);
         if (id == null) {
             throw new RuntimeException("要索引的对象@Id字段不能为空");
         }

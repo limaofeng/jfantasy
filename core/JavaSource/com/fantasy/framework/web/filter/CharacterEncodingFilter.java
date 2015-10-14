@@ -29,11 +29,12 @@ public class CharacterEncodingFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         if ((this.encoding != null) && ((this.forceEncoding) || (request.getCharacterEncoding() == null))) {
             request.setCharacterEncoding(this.encoding);
-            request = new CharacterEncodingRequestWrapper(request);
             if (this.forceEncoding) {
                 response.setCharacterEncoding(this.encoding);
             }
+            filterChain.doFilter(new CharacterEncodingRequestWrapper(request), response);
+        } else {
+            filterChain.doFilter(request, response);
         }
-        filterChain.doFilter(request, response);
     }
 }

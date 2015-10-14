@@ -1,6 +1,9 @@
 package com.fantasy.wx.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
@@ -11,6 +14,8 @@ import javax.persistence.*;
  */
 @Entity(name="WxMedia")
 @Table(name = "WX_MEDIA")
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Media  extends BaseBusEntity {
 
     @Id

@@ -6,28 +6,21 @@ import com.fantasy.wx.framework.factory.WeiXinSessionFactory;
 import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.WeiXinMessage;
 import com.fantasy.wx.framework.session.WeiXinSession;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-/**
- * @apiDefine WeiXinMessage
- * @apiSuccess (Success 200)    {Long}      Id              MsgId	消息id，64位整型
- * @apiSuccess (Success 200)    {String}    fromUserName    发送方帐号（OpenID或者微信公众号的原始ID）
- * @apiSuccess (Success 200)    {Date}      createTime      消息创建时间
- * @apiSuccess (Success 200)    {Content}   content         消息内容(参考：WeiXinMessage 接口与其实现类)
- * @apiSuccess (Success 200)    {String}    toUserName      消息的接收方(OpenID或者微信公众号的原始ID)
- * @apiVersion 3.3.6
- */
+@Api(value = "weixin-messages", description = "微信消息推送接口")
 @RestController
-@RequestMapping("/weixin/message")
+@RequestMapping("/weixin/accounts/{appid}/messages")
 public class MessageController {
 
     private final static Log LOG = LogFactory.getLog(MessageController.class);
@@ -35,18 +28,11 @@ public class MessageController {
     @Autowired
     private WeiXinSessionFactory weiXinSessionFactory;
 
-    /**
-     * @api {get} /weixin/message/:appid/push   微信消息接口
-     * @apiVersion 3.3.6
-     * @apiName push
-     * @apiGroup 微信消息
-     * @apiDescription 该接口为微信公众平台中的接口配置地址。
-     * @apiExample Example usage:
-     * curl -i http://localhost/weixin/message/wx0e7cef7ad73417eb/push
-     * @apiUse WeiXinMessage
-     */
-    @RequestMapping(value = "/{appid}/push")
-    public String push(@PathVariable String appid, HttpServletRequest request) throws IOException {
+    @ApiOperation(value = "微信消息接口", notes = "接口接收微信公众平台推送的微信消息及事件,直接调用无效")
+    @ApiResponse(code = 200, message = "OK", response = WeiXinMessage.class)
+    @RequestMapping(value = "/push", method = {RequestMethod.GET, RequestMethod.POST})
+    @ResponseBody
+    public String push(@PathVariable("appid") String appid, HttpServletRequest request) throws IOException {
         String echostr = request.getParameter("echostr");
         if (StringUtils.isNotBlank(echostr)) {
             // 说明是一个仅仅用来验证的请求，回显echostr

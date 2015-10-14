@@ -14,7 +14,7 @@ import com.fantasy.wx.framework.message.EventMessage;
 import com.fantasy.wx.framework.session.AccountDetails;
 import com.fantasy.wx.framework.session.DefaultWeiXinSession;
 import com.fantasy.wx.framework.session.WeiXinSession;
-import com.fantasy.wx.service.AccountWeiXinService;
+import com.fantasy.wx.service.AccountService;
 import org.springframework.beans.factory.FactoryBean;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -54,7 +54,7 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
         DefaultWeiXinSessionFactory factory = new DefaultWeiXinSessionFactory();
 
         if (this.accountDetailsService == null) {
-            this.accountDetailsService = SpringContextUtil.getBeanByType(AccountWeiXinService.class);
+            this.accountDetailsService = SpringContextUtil.getBeanByType(AccountService.class);
         }
         factory.setAccountDetailsService(this.accountDetailsService);
 

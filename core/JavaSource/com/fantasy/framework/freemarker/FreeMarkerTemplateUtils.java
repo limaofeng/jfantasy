@@ -13,6 +13,9 @@ import java.util.Map;
 
 public class FreeMarkerTemplateUtils {
 
+    private FreeMarkerTemplateUtils() {
+    }
+
     private final static Logger LOGGER = LoggerFactory.getLogger(FreeMarkerTemplateUtils.class);
 
     /**

@@ -1,8 +1,20 @@
 package com.fantasy.mall.delivery.bean;
 
+import com.fantasy.common.bean.Area;
+import com.fantasy.common.bean.converter.AreaConverter;
+import com.fantasy.common.bean.databind.AreaDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.mall.order.bean.Order;
+import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.mall.delivery.bean.databind.DeliveryTypeDeserializer;
+import com.fantasy.mall.delivery.bean.databind.DeliveryTypeSerializer;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
@@ -13,196 +25,225 @@ import java.util.List;
 
 /**
  * 送货信息表
- * 
+ *
  * @author 李茂峰
  * @version 1.0
  * @since 2013-10-15 下午3:37:40
  */
+@ApiModel("送货信息")
 @Entity
 @Table(name = "MALL_DELIVERY_SHIPPING")
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "order", "deliveryItems", "shipAreaStore" })
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "items", "type"})
 public class Shipping extends BaseBusEntity {
 
-	private static final long serialVersionUID = 4315245804828793329L;
-	@Id
-	@Column(name = "ID", insertable = true, updatable = false)
-	@GeneratedValue(generator = "fantasy-sequence")
-	@GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-	private Long id;
-	@Column(name = "SN", nullable = false, unique = true)
-	@GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = { @Parameter(name = "expression", value = "'SN_' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('SHIPPING-SN'), 5)") })
-	private String sn;// 发货编号
-	@Column(name = "DELIVERY_TYPE_NAME", length = 50)
-	private String deliveryTypeName;// 配送方式名称
-	@Column(name = "DELIVERY_CORP_NAME", length = 50)
-	private String deliveryCorpName; // 物流公司名称
-	@Column(name = "DELIVERY_CORP_URL", length = 50)
-	private String deliveryCorpUrl;// 物流公司网址
-	@Column(name = "DELIVERY_SN", length = 50)
-	private String deliverySn;// 物流单号
-	@Column(name = "DELIVERY_FEE", precision = 10, scale = 2)
-	private BigDecimal deliveryFee;// 物流费用
-	@Column(name = "SHIP_NAME", length = 50)
-	private String shipName;// 收货人姓名
-	@Column(name = "SHIP_AREA_STORE", length = 300)
-	private String shipAreaStore;// 收货地区存储
-	@Column(name = "SHIP_ADDRESS", length = 150)
-	private String shipAddress;// 收货地址
-	@Column(name = "SHIP_ZIP_CODE", length = 10)
-	private String shipZipCode;// 收货邮编
-	@Column(name = "SHIP_PHONE", length = 12)
-	private String shipPhone;// 收货电话
-	@Column(name = "SHIP_MOBILE", length = 12)
-	private String shipMobile;// 收货手机
-	@Column(name = "memo", length = 150)
-	private String memo;// 备注
+    private static final long serialVersionUID = 4315245804828793329L;
+    @Id
+    @Column(name = "ID", insertable = true, updatable = false)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    private Long id;
+    @ApiModelProperty("发货编号")
+    @Column(name = "SN", nullable = false, unique = true)
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'SN_' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('SHIPPING-SN'), 5)")})
+    private String sn;
+    @ApiModelProperty("配送方式名称")
+    @JsonProperty("typeName")
+    @Column(name = "DELIVERY_TYPE_NAME", length = 50)
+    private String deliveryTypeName;
+    @ApiModelProperty("物流公司名称")
+    @JsonProperty("corpName")
+    @Column(name = "DELIVERY_CORP_NAME", length = 50)
+    private String deliveryCorpName;
+    @ApiModelProperty("物流公司网址")
+    @JsonProperty("corpURL")
+    @Column(name = "DELIVERY_CORP_URL", length = 50)
+    private String deliveryCorpUrl;
+    @ApiModelProperty("物流单号")
+    @Column(name = "DELIVERY_SN", length = 50)
+    private String deliverySn;
+    @ApiModelProperty("物流费用")
+    @Column(name = "DELIVERY_FEE", precision = 10, scale = 2)
+    private BigDecimal deliveryFee;
+    @ApiModelProperty("收货人姓名")
+    @Column(name = "SHIP_NAME", length = 50)
+    private String shipName;
+    @ApiModelProperty("收货地区信息")
+    @Column(name = "SHIP_AREA_STORE", length = 300)
+    @Convert(converter = AreaConverter.class)
+    private Area shipArea;
+    @ApiModelProperty("收货地址")
+    @Column(name = "SHIP_ADDRESS", length = 150)
+    private String shipAddress;
+    @ApiModelProperty("收货邮编")
+    @Column(name = "SHIP_ZIP_CODE", length = 10)
+    private String shipZipCode;
+    @ApiModelProperty("收货手机")
+    @Column(name = "SHIP_MOBILE", length = 12)
+    private String shipMobile;
+    @ApiModelProperty("备注")
+    @Column(name = "MEMO", length = 150)
+    private String memo;
+    @ApiModelProperty("订单类型")
+    @Column(name = "ORDER_TYPE", length = 20)
+    private String orderType;
+    @ApiModelProperty("订单编号")
+    @Column(name = "ORDER_SN")
+    private String orderSn;
+    /**
+     * 配送方式
+     */
+    @ApiModelProperty(hidden = true)
+    @JsonProperty("type")
+    @JsonSerialize(using = DeliveryTypeSerializer.class)
+    @JsonDeserialize(using = DeliveryTypeDeserializer.class)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
+    @JoinColumn(name = "DELIVERY_TYPE_ID", foreignKey = @ForeignKey(name = "FK_SHIPPING_DELIVERY_TYPE"))
+    private DeliveryType deliveryType;
+    /**
+     * 物流项
+     */
+    @ApiModelProperty(name = "items", hidden = true)
+    @JsonProperty("items")
+    @OneToMany(mappedBy = "shipping", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>();
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "ORDER_ID",foreignKey = @ForeignKey(name = "FK_SHIPPING_ORDER"))
+    public String getDeliveryTypeName() {
+        return deliveryTypeName;
+    }
 
-	private Order order;// 订单
+    public String getSn() {
+        return sn;
+    }
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "DELIVERY_TYPE_ID",foreignKey = @ForeignKey(name = "FK_SHIPPING_DELIVERY_TYPE"))
+    public void setSn(String sn) {
+        this.sn = sn;
+    }
 
-	private DeliveryType deliveryType;// 配送方式
+    public void setDeliveryTypeName(String deliveryTypeName) {
+        this.deliveryTypeName = deliveryTypeName;
+    }
 
-	@OneToMany(mappedBy = "shipping", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
-	private List<DeliveryItem> deliveryItems = new ArrayList<DeliveryItem>(); // 物流项
+    public String getDeliveryCorpName() {
+        return deliveryCorpName;
+    }
 
-	public String getDeliveryTypeName() {
-		return deliveryTypeName;
-	}
+    public void setDeliveryCorpName(String deliveryCorpName) {
+        this.deliveryCorpName = deliveryCorpName;
+    }
 
-	public String getSn() {
-		return sn;
-	}
+    public String getDeliveryCorpUrl() {
+        return deliveryCorpUrl;
+    }
 
-	public void setSn(String sn) {
-		this.sn = sn;
-	}
+    public void setDeliveryCorpUrl(String deliveryCorpUrl) {
+        this.deliveryCorpUrl = deliveryCorpUrl;
+    }
 
-	public void setDeliveryTypeName(String deliveryTypeName) {
-		this.deliveryTypeName = deliveryTypeName;
-	}
+    public String getDeliverySn() {
+        return deliverySn;
+    }
 
-	public String getDeliveryCorpName() {
-		return deliveryCorpName;
-	}
+    public void setDeliverySn(String deliverySn) {
+        this.deliverySn = deliverySn;
+    }
 
-	public void setDeliveryCorpName(String deliveryCorpName) {
-		this.deliveryCorpName = deliveryCorpName;
-	}
+    public BigDecimal getDeliveryFee() {
+        return deliveryFee;
+    }
 
-	public String getDeliveryCorpUrl() {
-		return deliveryCorpUrl;
-	}
+    public void setDeliveryFee(BigDecimal deliveryFee) {
+        this.deliveryFee = deliveryFee;
+    }
 
-	public void setDeliveryCorpUrl(String deliveryCorpUrl) {
-		this.deliveryCorpUrl = deliveryCorpUrl;
-	}
+    public String getShipName() {
+        return shipName;
+    }
 
-	public String getDeliverySn() {
-		return deliverySn;
-	}
+    public void setShipName(String shipName) {
+        this.shipName = shipName;
+    }
 
-	public void setDeliverySn(String deliverySn) {
-		this.deliverySn = deliverySn;
-	}
+    public String getShipAddress() {
+        return shipAddress;
+    }
 
-	public BigDecimal getDeliveryFee() {
-		return deliveryFee;
-	}
+    public void setShipAddress(String shipAddress) {
+        this.shipAddress = shipAddress;
+    }
 
-	public void setDeliveryFee(BigDecimal deliveryFee) {
-		this.deliveryFee = deliveryFee;
-	}
+    public String getShipZipCode() {
+        return shipZipCode;
+    }
 
-	public String getShipName() {
-		return shipName;
-	}
+    public void setShipZipCode(String shipZipCode) {
+        this.shipZipCode = shipZipCode;
+    }
 
-	public void setShipName(String shipName) {
-		this.shipName = shipName;
-	}
+    public String getShipMobile() {
+        return shipMobile;
+    }
 
-	public String getShipAreaStore() {
-		return shipAreaStore;
-	}
+    public void setShipMobile(String shipMobile) {
+        this.shipMobile = shipMobile;
+    }
 
-	public void setShipAreaStore(String shipAreaStore) {
-		this.shipAreaStore = shipAreaStore;
-	}
+    public String getMemo() {
+        return memo;
+    }
 
-	public String getShipAddress() {
-		return shipAddress;
-	}
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
 
-	public void setShipAddress(String shipAddress) {
-		this.shipAddress = shipAddress;
-	}
+    public DeliveryType getDeliveryType() {
+        return deliveryType;
+    }
 
-	public String getShipZipCode() {
-		return shipZipCode;
-	}
+    public void setDeliveryType(DeliveryType deliveryType) {
+        this.deliveryType = deliveryType;
+    }
 
-	public void setShipZipCode(String shipZipCode) {
-		this.shipZipCode = shipZipCode;
-	}
+    public List<DeliveryItem> getDeliveryItems() {
+        return deliveryItems;
+    }
 
-	public String getShipPhone() {
-		return shipPhone;
-	}
+    public void setDeliveryItems(List<DeliveryItem> deliveryItems) {
+        this.deliveryItems = deliveryItems;
+    }
 
-	public void setShipPhone(String shipPhone) {
-		this.shipPhone = shipPhone;
-	}
+    public String getOrderType() {
+        return orderType;
+    }
 
-	public String getShipMobile() {
-		return shipMobile;
-	}
+    public void setOrderType(String orderType) {
+        this.orderType = orderType;
+    }
 
-	public void setShipMobile(String shipMobile) {
-		this.shipMobile = shipMobile;
-	}
+    public String getOrderSn() {
+        return orderSn;
+    }
 
-	public String getMemo() {
-		return memo;
-	}
+    public void setOrderSn(String orderSn) {
+        this.orderSn = orderSn;
+    }
 
-	public void setMemo(String memo) {
-		this.memo = memo;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public Order getOrder() {
-		return order;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setOrder(Order order) {
-		this.order = order;
-	}
+    @ApiModelProperty("收货地区存储")
+    public Area getShipArea() {
+        return this.shipArea;
+    }
 
-	public DeliveryType getDeliveryType() {
-		return deliveryType;
-	}
-
-	public void setDeliveryType(DeliveryType deliveryType) {
-		this.deliveryType = deliveryType;
-	}
-
-	public List<DeliveryItem> getDeliveryItems() {
-		return deliveryItems;
-	}
-
-	public void setDeliveryItems(List<DeliveryItem> deliveryItems) {
-		this.deliveryItems = deliveryItems;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
+    @JsonDeserialize(using = AreaDeserializer.class)
+    public void setShipArea(Area shipArea) {
+        this.shipArea = shipArea;
+    }
 }

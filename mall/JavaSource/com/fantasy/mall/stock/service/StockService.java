@@ -64,10 +64,10 @@ public class StockService {
 	public void outStock(Shipping shipping) {
 		for (DeliveryItem deliveryItem : shipping.getDeliveryItems()) {
 			Stock stock = new Stock();
-			stock.setProduct(deliveryItem.getProduct());
+//			stock.setProduct(deliveryItem.getProduct());
 			stock.setStatus(false);
 			stock.setChangeNumber(deliveryItem.getQuantity());
-			stock.setRemark("销售出库:对应订单号:" + shipping.getOrder().getSn());
+//			stock.setRemark("销售出库:对应订单号:" + shipping.getOrder().getSn());
 			// 为了让其出发 aop
 			SpringContextUtil.getBeanByType(StockService.class).save(stock);
 		}

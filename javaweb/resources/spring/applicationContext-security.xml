@@ -1,41 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:context="http://www.springframework.org/schema/context"
-       xmlns:s="http://www.springframework.org/schema/security" xmlns:c="http://www.springframework.org/schema/c" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:s="http://www.springframework.org/schema/security" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd">
 
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/security.properties"/>
 
-    <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
-        <property name="basename" value="classpath:props/messages_zh_CN"/>
-    </bean>
-
-    <!-- 不需要权限验证的地址 -->
-    <!-- 前台静态资源 -->
-    <s:http pattern="/" security="none"/>
-    <s:http pattern="/js/**" security="none"/>
-    <s:http pattern="/css/**" security="none"/>
-    <s:http pattern="/images/**" security="none"/>
-    <!-- 后台静态资源 -->
-    <s:http pattern="/static/**" security="none"/>
-    <s:http pattern="/assets/**" security="none"/>
-    <s:http pattern="/html/**" security="none"/>
-    <!-- webservice地址 -->
-    <s:http pattern="/services/**" security="none"/>
     <!-- 支付相关接口 -->
     <s:http pattern="/payment/**" security="none"/>
-    <!-- 错误页面 -->
-    <s:http pattern="/error/**" security="none"/>
     <!-- 不需验证的资源 -->
-    <s:http pattern="/login.do" security="none"/>
-    <!-- 忘记密码-->
-    <s:http pattern="/findpwd/retrievePassword.do" security="none"/>
+    <s:http pattern="/members/**" security="none"/>
+    <s:http pattern="/files/**" security="none"/>
     <!--微信请求项目地址过滤-->
     <s:http pattern="/weixin/message/*/push" security="none"/>
 
     <!-- 管理端登陆配置 -->
     <s:http pattern="/**" auto-config="true" use-expressions="true" entry-point-ref="authenticationEntryPoint">
-        <!-- -->
+        <!--
         <s:intercept-url pattern="/**" access="hasAnyRole('ROLE_SYSTEM')"/>
+        -->
         <!-- 如果需要验证验证码,在配置该行 -->
         <!-- 在EXCEPTION_TRANSLATION_FILTER之后添加一个过滤器  -->
         <s:custom-filter ref="customExceptionTranslationFilter" after="EXCEPTION_TRANSLATION_FILTER"/>
@@ -45,11 +27,7 @@
         <s:remember-me services-ref="rememberMeServices" key="${security.rememberme.key}" authentication-success-handler-ref="adminLoginSuccessHandler"/>
     </s:http>
     <!-- 带验证码的身份认证过滤器 -->
-
-    <!-- 登录Url认证入口 -->
-    <bean id="authenticationEntryPoint" class="org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint">
-        <constructor-arg name="loginFormUrl" value="${security.loginFormUrl}"/>
-    </bean>
+    <bean id="authenticationEntryPoint" class="com.fantasy.security.web.authentication.RestAuthenticationEntryPoint"/>
     <!-- 异常转换过滤器 -->
     <bean id="customExceptionTranslationFilter" class="org.springframework.security.web.access.ExceptionTranslationFilter">
         <constructor-arg name="authenticationEntryPoint" ref="authenticationEntryPoint"/>
@@ -69,7 +47,6 @@
     <!-- 未登陆时的请求缓存 -->
     <bean id="requestCache" class="com.fantasy.security.web.savedrequest.FantasyHttpSessionRequestCache"/>
     <!-- 验证管理器 -->
-
 
     <bean id="defaultAuthEventPublisher" class="org.springframework.security.authentication.DefaultAuthenticationEventPublisher"/>
 
@@ -120,17 +97,6 @@
     </bean>
 
     <!-- 自定义权限加载接口 -->
-    <bean id="securityMetadataSource" class="com.fantasy.security.web.intercept.SecurityMetadataSource">
-        <property name="cache" ref="defaultCache"/>
-    </bean>
-
-    <!--JCaptcha验证码服务 -->
-    <bean id="captchaService" class="com.fantasy.framework.jcaptcha.FantasyCaptchaService">
-        <property name="captchaEngine">
-            <bean class="com.fantasy.framework.jcaptcha.DefaultEngine"/>
-        </property>
-        <!-- 默认生成的图片180秒过期 , 可另行设置 -->
-        <property name="minGuarantedStorageDelayInSeconds" value="180"/>
-    </bean>
+    <bean id="securityMetadataSource" class="com.fantasy.security.web.intercept.SecurityMetadataSource"/>
 
 </beans>

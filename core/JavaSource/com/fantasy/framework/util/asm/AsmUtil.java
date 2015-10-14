@@ -27,6 +27,9 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class AsmUtil implements Opcodes {
 
+    private AsmUtil() {
+    }
+
     private static final Log LOG = LogFactory.getLog(AsmUtil.class);
 
     /**
@@ -122,7 +125,7 @@ public class AsmUtil implements Opcodes {
                 return FantasyClassLoader.getClassLoader().loadClass(bytes, className);
             } catch (ClassNotFoundException ex) {
                 LOG.error(e.getMessage(), ex);
-                throw new IgnoreException(e.getMessage(),ex);
+                throw new IgnoreException(e.getMessage(), ex);
             }
         } catch (ClassNotFoundException e) {
             LOG.error(e.getMessage(), e);
@@ -262,7 +265,7 @@ public class AsmUtil implements Opcodes {
                         public MethodVisitor visitMethod(final int access, final String name, final String desc, final String signature, final String[] exceptions) {
                             final Type[] args = Type.getArgumentTypes(desc);
                             if (!name.equals(m.getName()) || !sameType(args, m.getParameterTypes())) {// 方法名相同并且参数个数相同
-                                return null;// visitMethod(access, name, desc, signature, exceptions);
+                                return null;
                             }
                             return new MethodVisitor() {
                                 public void visitLocalVariable(String name, String desc, String signature, Label start, Label end, int index) {

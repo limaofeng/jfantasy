@@ -116,7 +116,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
      */
     public static <T> T newInstance(String className) {
         try {
-            return (T)newInstance(FantasyClassLoader.getClassLoader().loadClass(className));
+            return (T) newInstance(FantasyClassLoader.getClassLoader().loadClass(className));
         } catch (ClassNotFoundException e) {
             LOGGER.error(e);
         }
@@ -152,7 +152,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return StringUtil.isNotBlank(className) ? (Class<T>) forName(className, FantasyClassLoader.getClassLoader()) : null;
         } catch (ClassNotFoundException e) {
-            LOGGER.error(e.getMessage(),e);
+            LOGGER.error(e.getMessage());
         }
         return null;
     }
@@ -160,9 +160,9 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
     public static <T> T getValue(Object target, String name) {
         Property property = getProperty(target, name);
         if ((property != null) && (property.isRead())) {
-            return (T)property.getValue(target);
+            return (T) property.getValue(target);
         }
-        return (T)classFactory.getClass(target.getClass()).getValue(target, name);
+        return (T) classFactory.getClass(target.getClass()).getValue(target, name);
     }
 
     public static Field getDeclaredField(Class<?> clazz, String fieldName) {
@@ -190,7 +190,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).getMethod(method);
         } catch (Exception e) {
-            LOGGER.error(clazz + "." + method + "-" + e.getMessage(),e);
+            LOGGER.error(clazz + "." + method + "-" + e.getMessage(), e);
         }
         return null;
     }
@@ -199,13 +199,17 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         try {
             return classFactory.getClass(clazz).getMethod(method, paramTypes);
         } catch (Exception e) {
-            LOGGER.error(clazz + "." + method + "-" + e.getMessage(),e);
+            LOGGER.error(clazz + "." + method + "-" + e.getMessage(), e);
         }
         return null;
     }
 
     public static boolean isBasicType(Class<?> type) {
-        return isPrimitiveOrWrapper(type);
+        return isPrimitiveOrWrapper(type) || String.class.isAssignableFrom(type) || Date.class.isAssignableFrom(type) || BigDecimal.class.isAssignableFrom(type) || Enum.class.isAssignableFrom(type);
+    }
+
+    public static boolean isBeanType(Class<?> clazz) {
+        return !isBasicType(clazz);
     }
 
     public static Object newInstance(Class<?> componentType, int length) {
@@ -272,7 +276,7 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
             }
             return (Class<T>) typeArguments[index];
         }
-        return (Class<T>)Object.class;
+        return (Class<T>) Object.class;
     }
 
     public static <T> Class<T> getMethodGenericReturnType(Method method) {
@@ -285,7 +289,6 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
      * @param method 反射方法
      * @param index  参数下标
      * @return 泛型类型集合
-     * @功能描述
      */
     public static List<Class> getMethodGenericParameterTypes(Method method, int index) {
         List<Class> results = new ArrayList<Class>();
@@ -436,6 +439,10 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         return null;
     }
 
+    public static <T extends Annotation> T getAnnotation(Class clazz, Class<T> annotClass) {
+        return (T) clazz.getAnnotation(annotClass);
+    }
+
     public static <T extends Annotation> T getAnnotation(Annotation[] annotations, Class<T> annotClass) {
         for (Annotation annot : annotations) {
             if (annotClass.equals(annot.annotationType())) {
@@ -505,22 +512,33 @@ public class ClassUtil extends org.springframework.util.ClassUtils {
         Type[] genTypes = clazz.getGenericInterfaces();
         for (Type genType : genTypes) {
             if (!(genType instanceof ParameterizedType)) {
-                return (Class<T>)Object.class;
+                return (Class<T>) Object.class;
             }
             if (interfaceClazz.equals(((ParameterizedType) genType).getRawType())) {
                 Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
                 if ((index >= params.length) || (index < 0)) {
                     LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
-                    return (Class<T>)Object.class;
+                    return (Class<T>) Object.class;
                 }
                 if (!(params[index] instanceof Class<?>)) {
                     LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
-                    return (Class<T>)Object.class;
+                    return (Class<T>) Object.class;
                 }
                 return (Class<T>) params[index];
             }
         }
-        return (Class<T>)Object.class;
+        return (Class<T>) Object.class;
+    }
+
+    public static Class getRealType(Property property) {
+        return getRealType(property.getPropertyType());
+    }
+
+    public static Class getRealType(Class clazz) {
+        if (clazz.isInterface()) {
+            LOGGER.error("The implementation of interface " + clazz.toString() + " is not specified.");
+        }
+        return clazz;
     }
 
 }

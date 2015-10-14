@@ -37,7 +37,7 @@ public abstract class AbstractFileItem implements FileItem {
     }
 
     public AbstractFileItem(String absolutePath, long size, Date lastModified, Metadata metadata) {
-        this.absolutePath = absolutePath;
+        this.absolutePath = absolutePath.replace(File.separator, "/");
         this.name = RegexpUtil.parseGroup(absolutePath, "([^/]+)$", 1);
         this.size = size;
         this.directory = false;

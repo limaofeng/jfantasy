@@ -59,9 +59,8 @@ public class WebsiteService {
         return websiteDao.save(website);
     }
 
-    public boolean websiteCodeUnique(String key, Long id) {
-        Website website = this.websiteDao.findUniqueBy("key", key);
-        return (website == null) || website.getId().equals(id);
+    public boolean websiteCodeUnique(String key) {
+        return this.websiteDao.findUniqueBy("key", key) == null;
     }
 
     public List<Website> getAll() {
@@ -71,7 +70,7 @@ public class WebsiteService {
     /**
      * 获取列表
      *
-     * @return
+     * @return List<Website>
      */
     public List<Website> listWebsite() {
         return this.websiteDao.find(new Criterion[0], "id", "asc");

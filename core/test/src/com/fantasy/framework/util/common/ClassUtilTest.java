@@ -1,12 +1,17 @@
 package com.fantasy.framework.util.common;
 
+import com.fantasy.framework.util.asm.Article;
+import com.fantasy.framework.util.reflect.Property;
 import com.fantasy.security.bean.User;
+import com.fantasy.security.bean.enums.Sex;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 
 public class ClassUtilTest {
 
@@ -38,12 +43,19 @@ public class ClassUtilTest {
 
     @Test
     public void testGetPropertys() throws Exception {
-
+//        Property[] propertys = ClassUtil.getPropertys(Article.class);
+//        for(Property property : propertys){
+//            System.out.println(property.getReadMethod().getAnnotations());
+//        }
     }
 
     @Test
     public void testGetProperty() throws Exception {
-
+        Property property = ClassUtil.getProperty(Article.class, "attributeValues");
+        ParameterizedType parameterizedType = property.getGenericType();
+        for(Type type : parameterizedType.getActualTypeArguments()){
+            System.out.println(type);
+        }
     }
 
     @Test
@@ -112,4 +124,10 @@ public class ClassUtilTest {
     public void testGetSuperClassGenricType() throws Exception {
 
     }
+
+    @Test
+    public void testIsBeanType() throws Exception {
+        LOG.debug(ClassUtil.isBeanType(Sex.female.getClass()));
+    }
+
 }

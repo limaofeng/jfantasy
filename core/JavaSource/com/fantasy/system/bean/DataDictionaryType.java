@@ -2,23 +2,26 @@ package com.fantasy.system.bean;
 
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fasterxml.jackson.annotation.*;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fantasy.system.bean.databind.DataDictionaryTypeDeserializer;
+import com.fantasy.system.bean.databind.DataDictionaryTypeSerializer;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
-import java.io.IOException;
 import java.util.List;
 
 /**
  * 数据字典分类表
  */
+@ApiModel(value = "数据字典分类")
 @Entity
 @Table(name = "SYS_DD_TYPE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "dataDictionaries"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "dataDictionaries", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DataDictionaryType extends BaseBusEntity {
 
@@ -27,56 +30,70 @@ public class DataDictionaryType extends BaseBusEntity {
     /**
      * 代码
      */
+    @ApiModelProperty("代码")
     @Id
     @Column(name = "CODE", length = 20)
     private String code;
     /**
      * 名称
      */
+    @ApiModelProperty("名称")
     @Column(name = "NAME", length = 200)
     private String name;
-    @Column(name = "LAYER", nullable = false)
     /**
      * 层级
      */
+    @ApiModelProperty("层级")
+    @Column(name = "LAYER", nullable = false)
     private Integer layer;
     /**
      *
      */
+    @ApiModelProperty("路径")
     @Column(name = "PATH", nullable = false, length = 200)
     private String path;
     /**
      * 排序字段
      */
+    @ApiModelProperty("排序字段")
     @Column(name = "SORT")
     private Integer sort;
     /**
      * 描述
      */
+    @ApiModelProperty("描述")
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
-
+    @ApiModelProperty(hidden = true)
     @OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime desc")
     @JoinColumn(name = "TYPE", foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE"))
     private List<DataDictionary> dataDictionaries;
-
     /**
      * 上级数据字典
      */
-    @JsonIgnore
+    @ApiModelProperty("上级数据字典分类")
+    @JsonProperty("parentCode")
+    @JsonSerialize(using = DataDictionaryTypeSerializer.class)
+    @JsonDeserialize(using = DataDictionaryTypeDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "PCODE", foreignKey = @ForeignKey(name = "FK_SYS_DD_TYPE_PID"))
-    @JsonManagedReference
     private DataDictionaryType parent;
     /**
      * 下级数据字典
      */
+    @ApiModelProperty(hidden = true)
     @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
-    @JsonBackReference
     private List<DataDictionaryType> children;
+
+    public DataDictionaryType() {
+    }
+
+    public DataDictionaryType(String code) {
+        this.code = code;
+    }
 
     public String getCode() {
         return code;
@@ -102,8 +119,6 @@ public class DataDictionaryType extends BaseBusEntity {
         this.description = description;
     }
 
-    @JsonProperty("parentCode")
-    @JsonSerialize(using = DataDictionaryTypeParentSerialize.class)
     public DataDictionaryType getParent() {
         return parent;
     }
@@ -152,12 +167,4 @@ public class DataDictionaryType extends BaseBusEntity {
         this.path = path;
     }
 
-    public static class DataDictionaryTypeParentSerialize extends JsonSerializer<DataDictionaryType> {
-
-        @Override
-        public void serialize(DataDictionaryType ddt, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            jgen.writeString(ddt.getCode());
-        }
-
-    }
 }

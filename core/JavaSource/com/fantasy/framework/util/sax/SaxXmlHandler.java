@@ -34,9 +34,9 @@ public class SaxXmlHandler extends DefaultHandler {
     }
 
     public void endElement(String uri, String localName, String qName) throws SAXException {
-        XmlElement element = (XmlElement) this.stack.pop();
+        XmlElement element = this.stack.pop();
         if (!this.stack.empty()) {
-            this.RootElement = ((XmlElement) this.stack.peek());
+            this.RootElement = this.stack.peek();
             if (this.RootElement != null) {
                 this.RootElement.addElement(element);
             }

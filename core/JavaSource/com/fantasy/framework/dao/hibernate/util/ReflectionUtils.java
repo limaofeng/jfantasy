@@ -16,10 +16,11 @@ import java.util.*;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-9-12 下午5:03:33
  */
 public class ReflectionUtils {
+    private ReflectionUtils() {
+    }
 
     private static Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
 
@@ -55,7 +56,7 @@ public class ReflectionUtils {
         try {
             result = (T) field.get(object);
         } catch (IllegalAccessException e) {
-            LOGGER.error("不可能抛出的异常{}", e.getMessage(),e);
+            LOGGER.error("不可能抛出的异常{}", e.getMessage(), e);
         }
         return result;
     }
@@ -69,7 +70,7 @@ public class ReflectionUtils {
         try {
             field.set(object, value);
         } catch (IllegalAccessException e) {
-            LOGGER.error("不可能抛出的异常:{}", e.getMessage(),e);
+            LOGGER.error("不可能抛出的异常:{}", e.getMessage(), e);
         }
     }
 
@@ -94,7 +95,7 @@ public class ReflectionUtils {
             try {
                 return superClass.getDeclaredField(fieldName);
             } catch (NoSuchFieldException localNoSuchFieldException) {
-                LOGGER.error(localNoSuchFieldException.getMessage(),localNoSuchFieldException);
+                LOGGER.debug(localNoSuchFieldException.getMessage());
                 superClass = superClass.getSuperclass();
             }
         }
@@ -103,7 +104,7 @@ public class ReflectionUtils {
     }
 
     protected static void makeAccessible(Field field) {
-        if ((!Modifier.isPublic(field.getModifiers())) || (!Modifier.isPublic(field.getDeclaringClass().getModifiers()))){
+        if ((!Modifier.isPublic(field.getModifiers())) || (!Modifier.isPublic(field.getDeclaringClass().getModifiers()))) {
             field.setAccessible(true);
         }
     }
@@ -114,7 +115,7 @@ public class ReflectionUtils {
             try {
                 return superClass.getDeclaredMethod(methodName, parameterTypes);
             } catch (NoSuchMethodException localNoSuchMethodException) {
-                LOGGER.error(localNoSuchMethodException.getMessage(),localNoSuchMethodException);
+                LOGGER.error(localNoSuchMethodException.getMessage(), localNoSuchMethodException);
                 superClass = superClass.getSuperclass();
             }
 
@@ -189,9 +190,9 @@ public class ReflectionUtils {
         return StringUtils.join(list, separator);
     }
 
-    public static Object convertStringToObject(String value, Class<?> toType) {
+    public static <T> T convertStringToObject(String value, Class<T> toType) {
         try {
-            return ConvertUtils.convert(value, toType);
+            return toType.cast(ConvertUtils.convert(value, toType));
         } catch (Exception e) {
             throw convertReflectionExceptionToUnchecked(e);
         }
@@ -201,7 +202,7 @@ public class ReflectionUtils {
         if ((e instanceof IllegalAccessException) || (e instanceof IllegalArgumentException) || (e instanceof NoSuchMethodException)) {
             return new IllegalArgumentException("Reflection Exception.", e);
         }
-        if (e instanceof InvocationTargetException){
+        if (e instanceof InvocationTargetException) {
             return new RuntimeException("Reflection Exception.", ((InvocationTargetException) e).getTargetException());
         }
         if (e instanceof RuntimeException) {

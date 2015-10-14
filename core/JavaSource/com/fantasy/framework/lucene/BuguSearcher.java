@@ -2,16 +2,15 @@ package com.fantasy.framework.lucene;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.lucene.cache.DaoCache;
-import com.fantasy.framework.lucene.cache.FieldsCache;
 import com.fantasy.framework.lucene.cache.IndexSearcherCache;
+import com.fantasy.framework.lucene.cache.PropertysCache;
 import com.fantasy.framework.lucene.dao.LuceneDao;
-import com.fantasy.framework.lucene.exception.FieldException;
 import com.fantasy.framework.lucene.exception.IdException;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import com.fantasy.framework.lucene.exception.PropertyException;
 import com.fantasy.framework.lucene.mapper.MapperUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.framework.util.reflect.Property;
 import org.apache.log4j.Logger;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Fieldable;
@@ -19,7 +18,6 @@ import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.search.*;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -47,7 +45,7 @@ public abstract class BuguSearcher<T> {
         this.entityClass = (Class<T>) ClassUtil.getSuperClassGenricType(ClassUtil.getRealClass(getClass()));
         try {
             // 获取对象的主键idName
-            idName = FieldsCache.getInstance().getIdField(this.entityClass).getName();
+            idName = PropertysCache.getInstance().getIdProperty(this.entityClass).getName();
         } catch (IdException e) {
             LOGGER.error(e.getMessage(), e);
         }
@@ -188,19 +186,19 @@ public abstract class BuguSearcher<T> {
      */
     private int getSortField(String fieldName) {
         try {
-            Field field = FieldsCache.getInstance().getField(this.entityClass, fieldName);
-            if (field.getType().isAssignableFrom(Long.class)) {
+            Property property = PropertysCache.getInstance().getProperty(this.entityClass, fieldName);
+            if (property.getPropertyType().isAssignableFrom(Long.class)) {
                 return SortField.LONG;
-            } else if (field.getType().isAssignableFrom(Integer.class)) {
+            } else if (property.getPropertyType().isAssignableFrom(Integer.class)) {
                 return SortField.INT;
-            } else if (field.getType().isAssignableFrom(Double.class)) {
+            } else if (property.getPropertyType().isAssignableFrom(Double.class)) {
                 return SortField.DOUBLE;
-            } else if (field.getType().isAssignableFrom(Float.class)) {
+            } else if (property.getPropertyType().isAssignableFrom(Float.class)) {
                 return SortField.FLOAT;
             } else {
                 return SortField.STRING;
             }
-        } catch (FieldException e) {
+        } catch (PropertyException e) {
             LOGGER.error(e.getMessage(), e);
         }
         return SortField.STRING;
@@ -210,13 +208,14 @@ public abstract class BuguSearcher<T> {
         String[] fields = highlighter.getFields();
         for (String fieldName : fields) {
             if (!fieldName.contains(".")) {
-                Field field = null;
+                Property property = null;
                 try {
-                    field = FieldsCache.getInstance().getField(this.entityClass, fieldName);
-                } catch (FieldException ex) {
+                    property = PropertysCache.getInstance().getProperty(this.entityClass, fieldName);
+                } catch (PropertyException ex) {
                     LOGGER.error(ex.getMessage(), ex);
                 }
-                Object fieldValue = FieldUtil.get(obj, field);
+                assert property != null;
+                Object fieldValue = property.getValue(obj);
                 if (fieldValue != null) {
                     String result = null;
                     try {
@@ -225,7 +224,7 @@ public abstract class BuguSearcher<T> {
                         LOGGER.error("Something is wrong when getting the highlighter result", ex);
                     }
                     if (!StringUtil.isEmpty(result)) {
-                        FieldUtil.set(obj, field, result);
+                        property.setValue(obj, result);
                     }
                 }
             }
@@ -234,18 +233,18 @@ public abstract class BuguSearcher<T> {
 
     private T build(Document doc) {
         if (LoadEntityMode.dao == this.loadMode) {
-            return this.luceneDao.get(doc.get(idName));
+            return this.luceneDao.getById(doc.get(idName));
         } else {
             T object = ClassUtil.newInstance(this.entityClass);
             for (Fieldable fieldable : doc.getFields()) {
                 try {
-                    Field field = FieldsCache.getInstance().getField(this.entityClass, fieldable.name());
-                    if (Date.class.isAssignableFrom(field.getType())) {
-                        OgnlUtil.getInstance().setValue(fieldable.name(), object, new Date(Long.valueOf(fieldable.stringValue())));
+                    Property property = PropertysCache.getInstance().getProperty(this.entityClass, fieldable.name());
+                    if (Date.class.isAssignableFrom(property.getPropertyType())) {
+                        property.setValue(object, new Date(Long.valueOf(fieldable.stringValue())));
                     } else {
-                        OgnlUtil.getInstance().setValue(fieldable.name(), object, fieldable.stringValue());
+                        property.setValue(object, fieldable.stringValue());
                     }
-                } catch (FieldException e) {
+                } catch (PropertyException e) {
                     LOGGER.error(e.getMessage(), e);
                 }
             }

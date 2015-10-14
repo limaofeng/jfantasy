@@ -3,6 +3,9 @@ package com.fantasy.framework.util;
 import java.math.BigDecimal;
 
 public class Arith {
+    private Arith() {
+    }
+
     private static final int DEF_DIV_SCALE = 10;
 
     public static double add(double v1, double v2) {

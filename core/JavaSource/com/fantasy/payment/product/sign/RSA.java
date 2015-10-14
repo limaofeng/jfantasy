@@ -16,6 +16,9 @@ import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 
 public class RSA {
+    private RSA (){
+
+    }
 
     private final static Log LOG = LogFactory.getLog(RSA.class);
 

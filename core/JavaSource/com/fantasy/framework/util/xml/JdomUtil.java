@@ -14,6 +14,9 @@ import java.net.URL;
 import java.util.List;
 
 public class JdomUtil {
+    private JdomUtil() {
+    }
+
     private static final Log LOGGER = LogFactory.getLog(JdomUtil.class);
 
     public static Document reader(String filePath) {

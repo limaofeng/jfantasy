@@ -25,7 +25,6 @@ import java.util.Map;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2012-12-3 下午02:13:53
  */
 @SuppressWarnings("rawtypes")

@@ -2,15 +2,14 @@ package com.fantasy.framework.lucene.backend;
 
 import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.lucene.annotations.IndexRefBy;
-import com.fantasy.framework.lucene.cache.FieldsCache;
+import com.fantasy.framework.lucene.cache.PropertysCache;
 import com.fantasy.framework.lucene.cluster.ClassIdMessage;
 import com.fantasy.framework.lucene.cluster.ClusterConfig;
 import com.fantasy.framework.lucene.cluster.EntityMessage;
 import com.fantasy.framework.lucene.cluster.MessageFactory;
-import com.fantasy.framework.lucene.mapper.FieldUtil;
+import com.fantasy.framework.util.reflect.Property;
 
 import javax.persistence.Id;
-import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,13 +25,13 @@ public class EntityChangedListener {
         Set<Class<?>> refBySet = new HashSet<Class<?>>();
         boolean byId = false;
         boolean byOther = false;
-        Field[] fields = FieldsCache.getInstance().get(clazz);
-        for (Field f : fields) {
-            IndexRefBy irb = f.getAnnotation(IndexRefBy.class);
+        Property[] properties = PropertysCache.getInstance().get(clazz);
+        for (Property p : properties) {
+            IndexRefBy irb = p.getAnnotation(IndexRefBy.class);
             if (irb != null) {
                 Class<?>[] cls = irb.value();
                 refBySet.addAll(Arrays.asList(cls));
-                if (f.getAnnotation(Id.class) != null) {
+                if (p.getAnnotation(Id.class) != null) {
                     byId = true;
                 } else {
                     byOther = true;
@@ -62,7 +61,7 @@ public class EntityChangedListener {
     }
 
     public void entityUpdate(Object entity) {
-        String id = FieldUtil.get(entity, FieldsCache.getInstance().getIdFieldName(clazz)).toString();
+        String id = PropertysCache.getInstance().getIdProperty(clazz).getValue(entity).toString();
         IndexFilterChecker checker = new IndexFilterChecker(entity);
         if (checker.needIndex()) {
             if ((this.cluster == null) || (this.cluster.isSelfNode())) {

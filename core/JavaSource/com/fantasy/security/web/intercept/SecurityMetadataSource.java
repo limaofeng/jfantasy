@@ -1,99 +1,81 @@
 package com.fantasy.security.web.intercept;
 
-import com.fantasy.framework.cache.Cache;
-import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.security.service.ResourceService;
+import com.fantasy.security.bean.Permission;
+import com.fantasy.security.bean.Resource;
+import com.fantasy.security.service.PermissionService;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.FilterInvocation;
 import org.springframework.security.web.access.intercept.FilterInvocationSecurityMetadataSource;
-import org.springframework.security.web.util.AntPathRequestMatcher;
-import org.springframework.security.web.util.RequestMatcher;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.OrRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 public class SecurityMetadataSource implements FilterInvocationSecurityMetadataSource, InitializingBean {
 
-	private Lock lock = new ReentrantLock();
+    @Autowired
+    private PermissionService permissionService;
 
-	@Autowired
-	private ResourceService resourceService;
+    private Map<String, RequestMatcher> requestMatchers = new ConcurrentHashMap<String, RequestMatcher>();
 
-	private Cache cache;
+    public void afterPropertiesSet() throws Exception {
+    }
 
-	private Map<String, RequestMatcher> requestMatchers = new ConcurrentHashMap<String, RequestMatcher>();
+    public Collection<ConfigAttribute> getAttributes(Object filter) throws IllegalArgumentException {
+        FilterInvocation filterInvocation = (FilterInvocation) filter;
+        return getGrantedAuthorities(filterInvocation.getHttpRequest());
+    }
 
-	public static final String LOAD_URL_AUTHORITIES_CACHE_KEY = "LOAD_URL_AUTHORITIES_CACHE_KEY";
+    public Collection<ConfigAttribute> getAllConfigAttributes() {
+        return new ArrayList<ConfigAttribute>();
+    }
 
-	public void afterPropertiesSet() throws Exception {
-	}
+    public boolean supports(Class<?> clazz) {
+        return true;
+    }
 
-	public Collection<ConfigAttribute> getAttributes(Object filter) throws IllegalArgumentException {
-		FilterInvocation filterInvocation = (FilterInvocation) filter;
-		String grantedAuthorities = getGrantedAuthorities(filterInvocation.getHttpRequest());
-		if (StringUtil.isNotBlank(grantedAuthorities)) {
-			Collection<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
-			for (String grantedAuthoritie : grantedAuthorities.split(",")) {
-				configAttributes.add(new SecurityConfig(grantedAuthoritie));
-			}
-			return configAttributes;
-		}
-		return new ArrayList<ConfigAttribute>();
-	}
+    @SuppressWarnings("unchecked")
+    public List<ConfigAttribute> getGrantedAuthorities(HttpServletRequest request) {
+        Map<Resource, List<Permission>> urlAuthorities = this.permissionService.loadPermissions();
+        for (Map.Entry<Resource, List<Permission>> entry : urlAuthorities.entrySet()) {
+            Resource resource = entry.getKey();
+            if (getRequestMatcher(resource).matches(request)) {
+                for (Permission permission : entry.getValue()) {
+                    if (getRequestMatcher(permission).matches(request)) {
+                        return permission.getAuthorities();
+                    }
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
 
-	public Collection<ConfigAttribute> getAllConfigAttributes() {
-		return new ArrayList<ConfigAttribute>();
-	}
+    private RequestMatcher getRequestMatcher(Resource resource) {
+        String key = "resource_" + resource.getId();
+        if (requestMatchers.containsKey(key)) {
+            return requestMatchers.get(key);
+        }
+        List<RequestMatcher> matchers = new ArrayList<RequestMatcher>();
+        for (String url : StringUtil.tokenizeToStringArray(resource.getValue())) {
+            matchers.add(new AntPathRequestMatcher(url));
+        }
+        requestMatchers.put(key, new OrRequestMatcher(matchers));
+        return requestMatchers.get(key);
+    }
 
-	public boolean supports(Class<?> clazz) {
-		return true;
-	}
-
-	@SuppressWarnings("unchecked")
-	public String getGrantedAuthorities(HttpServletRequest request) {
-		Object data = this.cache.getObject(LOAD_URL_AUTHORITIES_CACHE_KEY);
-		if (ObjectUtil.isNull(data)) {
-			try {
-				this.lock.lock();
-				data = this.cache.getObject(LOAD_URL_AUTHORITIES_CACHE_KEY);
-				if (ObjectUtil.isNull(data)) {
-					data = this.resourceService.loadUrlAuthorities();
-					this.cache.putObject(LOAD_URL_AUTHORITIES_CACHE_KEY, data);
-				}
-			} finally {
-				this.lock.unlock();
-			}
-		}
-		Map<String, String> urlAuthorities = (Map<String, String>) data;
-		for (Iterator<Map.Entry<String, String>> iter = urlAuthorities.entrySet().iterator(); iter.hasNext();) {
-			Map.Entry<String, String> entry = iter.next();
-			String url = (String) entry.getKey();
-			if (getRequestMatcher(url).matches(request)) {
-				return entry.getValue();
-			}
-		}
-		return "";
-	}
-
-	private RequestMatcher getRequestMatcher(String url) {
-		if (!requestMatchers.containsKey(url)) {
-			requestMatchers.put(url, new AntPathRequestMatcher(url));//new RegexRequestMatcher(url, null)
-		}
-		return requestMatchers.get(url);
-	}
-
-	public void setCache(Cache cache) {
-		this.cache = cache;
-	}
+    private RequestMatcher getRequestMatcher(Permission permission) {
+        String key = "authority_" + permission.getId();
+        if (requestMatchers.containsKey(key)) {
+            return requestMatchers.get(key);
+        }
+        requestMatchers.put(key, permission.getRequestMatcher());
+        return requestMatchers.get(key);
+    }
 
 }

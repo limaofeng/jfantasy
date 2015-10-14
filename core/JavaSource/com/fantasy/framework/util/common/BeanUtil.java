@@ -7,7 +7,7 @@ import java.lang.reflect.Array;
 import java.util.List;
 
 public class BeanUtil {
-
+    private BeanUtil(){}
     public static void setValue(Object target, String fieldName, Object value) {
         ClassUtil.setValue(target, fieldName, value);
     }
@@ -59,10 +59,6 @@ public class BeanUtil {
 
     /*
     @Deprecated
-	public static <T> T copy(T dest, Object orig, String... excludeProperties) {
-		return copy(dest, orig, "", excludeProperties);
-	}
-
 	@SuppressWarnings({ "unchecked", "rawtypes" })
     @Deprecated
 	private static <T> T copy(T dest, Object orig, String superName, String[] excludeProperties) {

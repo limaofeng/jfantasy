@@ -18,7 +18,7 @@ public interface LuceneDao<T> {
      */
     List<T> findByField(String fieldName, String fieldValue);
 
-    T get(String id);
+    T getById(String id);
 
     EntityChangedListener getLuceneListener();
 }

@@ -1,6 +1,8 @@
 package com.fantasy.framework.spring.mvc.method.annotation;
 
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.error.IgnoreException;
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.multipart.MultipartRequest;
@@ -25,9 +28,11 @@ import org.springframework.web.util.WebUtils;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
 import java.util.*;
 
 public class PropertyFilterModelAttributeMethodProcessor implements HandlerMethodArgumentResolver {
@@ -109,17 +114,42 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
 
     @SuppressWarnings("unchecked")
     protected final Map<String, String> getUriTemplateVariables(NativeWebRequest request) {
-        Map<String, String> variables =
-                (Map<String, String>) request.getAttribute(
-                        HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+        Map<String, String> variables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         return (variables != null) ? variables : Collections.<String, String>emptyMap();
     }
 
-    protected Object createAttributeFromRequestValue(String sourceValue,
-                                                     String attributeName,
-                                                     MethodParameter parameter,
-                                                     WebDataBinderFactory binderFactory,
-                                                     NativeWebRequest request) throws Exception {
+    protected final Map<String, String> getUriQueryVariables(NativeWebRequest request) {
+        parseQuery(((ServletWebRequest) request).getRequest().getQueryString());
+        return new HashMap<String, String>();
+    }
+
+    public static Map<String, String[]> parseQuery(String query) {
+        Map<String, String[]> params = new LinkedHashMap<String, String[]>();
+        if (StringUtil.isBlank(query)) {
+            return params;
+        }
+        for (String pair : query.split("[;&]")) {
+            String[] vs = pair.split("=");
+            String key = vs[0];
+            String val = vs.length == 1 ? "" : vs[1];
+            if (StringUtil.isNotBlank(val)) {
+                try {
+                    val = URLDecoder.decode(val, "utf-8");
+                } catch (UnsupportedEncodingException e) {
+                    val = pair.split("=")[1];
+                    throw new IgnoreException(e.getMessage(), e);
+                }
+            }
+            if (!params.containsKey(key)) {
+                params.put(key, new String[]{val});
+            } else {
+                params.put(key, ObjectUtil.join(params.get(key), val));
+            }
+        }
+        return params;
+    }
+
+    protected Object createAttributeFromRequestValue(String sourceValue, String attributeName, MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
         DataBinder binder = binderFactory.createBinder(request, null, attributeName);
         ConversionService conversionService = binder.getConversionService();
         if (conversionService != null) {
@@ -138,12 +168,14 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
         List<Object> target = (List<Object>) binder.getTarget();
         for (String paramName : servletRequest.getParameterMap().keySet()) {
             String[] values = request.getParameterValues(paramName);
-            if (values.length == 0 || StringUtil.isBlank(values[0])) {
+            PropertyFilter.MatchType matchType = PropertyFilter.MatchType.get(paramName);
+            assert matchType != null;
+            if (matchType.isNone()) {
                 target.add(new PropertyFilter(paramName));
-            } else if (values.length == 1) {
-                target.add(new PropertyFilter(paramName, values[0]));
-            } else {
+            } else if (matchType.isMulti()) {
                 target.add(new PropertyFilter(paramName, values));
+            } else if (values.length != 0 && StringUtil.isNotBlank(values[0])) {
+                target.add(new PropertyFilter(paramName, values[0]));
             }
         }
     }
@@ -173,19 +205,19 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
                 mockRequest.setParameter(parameterName, value);
             }
         }
+        /*
+        for (Map.Entry<String, String> entry : getUriQueryVariables(request).entrySet()) {
+            String parameterName = entry.getKey();
+            String value = entry.getValue();
+            if (isPropertyFilterModelAttribute(parameterName, modelPrefixNames)) {
+                mockRequest.setParameter(parameterName, value);
+            }
+        }*/
         return mockRequest;
     }
 
     private boolean isPropertyFilterModelAttribute(String parameterName, String[] modelPrefixNames) {
-        for (String modelPrefixName : modelPrefixNames) {
-            if (parameterName.length() == modelPrefixName.length() + 1) {
-                return false;
-            }
-            if (parameterName.startsWith(modelPrefixName + "_")) {
-                return true;
-            }
-        }
-        return false;
+        return PropertyFilter.MatchType.is(parameterName);
     }
 
     protected void validateIfApplicable(WebDataBinder binder, MethodParameter parameter) {

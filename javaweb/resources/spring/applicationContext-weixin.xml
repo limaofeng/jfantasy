@@ -4,6 +4,13 @@
        default-lazy-init="true">
 
     <bean class="com.fantasy.wx.framework.factory.WeiXinSessionFactoryBean">
+        <property name="eventListeners">
+            <map>
+                <entry key="subscribe">
+                    <bean class="com.fantasy.wx.listener.SubscribeListener"/>
+                </entry>
+            </map>
+        </property>
         <property name="messageHandler">
             <bean class="com.fantasy.wx.framework.handler.AutoReplyTextHandler"/>
         </property>

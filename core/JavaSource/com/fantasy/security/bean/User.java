@@ -1,29 +1,40 @@
 package com.fantasy.security.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.userdetails.FantasyUserDetails;
 import com.fantasy.system.bean.Website;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
+@ApiModel(value = "用户信息", description = "用户登录信息")
 @Entity
 @Table(name = "AUTH_USER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "menus", "authorities", "logoImageStore"})
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "roles", "userGroups", "website", "menus", "authorities"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class User extends BaseBusEntity implements FantasyUserDetails {
 
     private static final long serialVersionUID = 5507435998232223911L;
+
+    public User() {
+    }
+
+    public User(Long id) {
+        this.id = id;
+    }
 
     @Id
     @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
@@ -41,6 +52,12 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
      */
     @Column(name = "PASSWORD", length = 20, nullable = false)
     private String password;
+
+    /**
+     * 用户类型
+     */
+    @Column(name = "USER_TYPE", length = 20, nullable = false)
+    private String userType;
     /**
      * 用户显示昵称
      */
@@ -79,6 +96,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     /**
      * 用户对应的用户组
      */
+    @ApiModelProperty(hidden = true)
     @ManyToMany(targetEntity = UserGroup.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_USERGROUP_USER", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"), foreignKey = @ForeignKey(name = "FK_USERGROUP_USER_US"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -86,6 +104,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     /**
      * 用户对应的角色
      */
+    @ApiModelProperty(hidden = true)
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_ROLE_USER", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_USER_UID"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -93,26 +112,24 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     /**
      * 用户详细信息
      */
+    @ApiModelProperty(value = "用户详细信息", notes = "用户详细信息")
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private UserDetails details;
     /**
-     * 用户允许访问的权限
-     */
-    @Transient
-    private List<Menu> menus;
-    /**
      * 对应的网站信息
      */
+    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "WEBSITE_ID", foreignKey = @ForeignKey(name = "FK_WEBSITE_USER"))
+    @JoinColumn(name = "WEBSITE_KEY", foreignKey = @ForeignKey(name = "FK_WEBSITE_USER"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private Website website;
 
     /**
      * 对应的组织机构
      */
+    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_ORGANIZATION_USER"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -223,23 +240,6 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
         return details;
     }
 
-    public List<Menu> getMenus() {
-        if (this.menus == null) {
-            this.menus = new ArrayList<Menu>();
-            if (this.getRoles() != null) {
-                for (Role role : this.getRoles()) {
-                    ObjectUtil.join(this.menus, role.getMenus(), "id");
-                }
-            }
-            if (this.getUserGroups() != null) {
-                for (UserGroup userGroup : this.getUserGroups()) {
-                    ObjectUtil.join(this.menus, userGroup.getMenus(), "id");
-                }
-            }
-        }
-        return this.menus;
-    }
-
     public Website getWebsite() {
         return website;
     }
@@ -249,6 +249,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     }
 
     @Transient
+    @ApiModelProperty(hidden = true)
     public Collection<GrantedAuthority> getAuthorities() {
         return SpringSecurityUtils.getAuthorities(this);
     }
@@ -276,5 +277,13 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 
     public void setOrganization(Organization organization) {
         this.organization = organization;
+    }
+
+    public String getUserType() {
+        return userType;
+    }
+
+    public void setUserType(String userType) {
+        this.userType = userType;
     }
 }

@@ -15,6 +15,8 @@ import java.io.UnsupportedEncodingException;
  */
 
 public class MD5 {
+    private MD5() {
+    }
 
     /**
      * 签名字符串

@@ -39,7 +39,7 @@ public class IndexWriterCache {
                     IndexWriterConfig cfg = new IndexWriterConfig(index.getVersion(), index.getAnalyzer());
                     cfg.setRAMBufferSizeMB(index.getBufferSizeMB());
                     try {
-                        Directory dir = FSDirectory.open(BuguIndex.getInstance().getOpenFolder("/" + name));// new File(path + "/" + name);
+                        Directory dir = FSDirectory.open(BuguIndex.getInstance().getOpenFolder("/" + name));
                         if (IndexWriter.isLocked(dir)) {
                             IndexWriter.unlock(dir);
                         }
