@@ -68,14 +68,6 @@ public class Sample {
 
         // 获取Object的输入流
         InputStream objectContent = object.getObjectContent();
-
-
-        // 处理Object
-        // 关闭流
-//        StreamUtil.
-//        objectContent.close();
-//        System.out.println(object.getObjectMetadata());
-
     }
 
     /**
