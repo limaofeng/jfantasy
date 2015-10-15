@@ -329,7 +329,7 @@
                         <configuration>
                             <url>${db.driver_url}</url>
                             <autocommit>true</autocommit>
-                            <sqlCommand>drop database ${jdbc.dbname}</sqlCommand>
+                            <sqlCommand>drop database ${db.name}</sqlCommand>
                             <onError>continue</onError>
                         </configuration>
                     </execution>
@@ -342,7 +342,7 @@
                         <configuration>
                             <url>${db.driver_url}</url>
                             <autocommit>true</autocommit>
-                            <sqlCommand>create database ${jdbc.dbname}</sqlCommand>
+                            <sqlCommand>create database ${db.name}</sqlCommand>
                         </configuration>
                     </execution>
                     <execution>
