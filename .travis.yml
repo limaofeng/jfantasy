@@ -9,7 +9,9 @@ env:
 install:
   - mvn clean compile -Dmaven.test.skip=true
   - mvn install -Dmaven.test.skip=true
-  - mvn test -Dmaven.test.failure.ignore=true
+
+script:
+  - mvn test -B -X
 
 #before_install:
 #  - mysql -e "create database IF NOT EXISTS website;" -uroot
