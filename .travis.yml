@@ -16,7 +16,7 @@ mysql:
   encoding: utf8
 
 before_script:
-  - mysql -e " SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root') " -uroot
+  - mysql -e " SET PASSWORD FOR 'root@localhost' = PASSWORD('root') " -uroot
 #  - mvn clean -P test
 
 install:
