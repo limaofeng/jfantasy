@@ -2,7 +2,6 @@ package com.fantasy.system.service;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.schedule.service.ScheduleService;
@@ -225,57 +224,10 @@ public class DataDictionaryService implements InitializingBean {
                 continue;
             }
             for (DataDictionary dataDictionary : dataDictionaryType.getDataDictionaries()) {
-                this.dataDictionaryDao.batchExecute("delete from Config where type = ? and code = ? ", dataDictionaryType.getCode(), dataDictionary.getCode());
+                this.dataDictionaryDao.delete(dataDictionary.getKey());
             }
-            this.dataDictionaryTypeDao.batchExecute("delete from DataDictionary where code = ?", dataDictionaryType.getCode());
+            this.dataDictionaryTypeDao.delete(dataDictionaryType.getCode());
         }
-    }
-
-    /**
-     * 根据分类获取配置项
-     *
-     * @param dataDictionaryKey 字典值
-     * @return {DataDictionary}
-     */
-    public static List<DataDictionary> list(String dataDictionaryKey) {
-        return SpringContextUtil.getBeanByType(DataDictionaryService.class).list(dataDictionaryKey.split(":")[0], dataDictionaryKey.split(":")[1]);
-    }
-
-    /**
-     * 获取所有的配置项类型
-     *
-     * @return {DataDictionary}
-     */
-    public static List<DataDictionaryType> types() {
-        return SpringContextUtil.getBeanByType(DataDictionaryService.class).allTypes();
-    }
-
-
-    /**
-     * 根据上级CODE 分类 查询下级分类
-     *
-     * @param code
-     * @return
-     */
-    public List<DataDictionaryType> getDataDictionaryTypeByCode(String code) {
-        return this.dataDictionaryTypeDao.findUnique(Restrictions.eq("code", code)).getChildren();
-    }
-
-
-    /**
-     * 根据配置项类型和编码获取配置项
-     *
-     * @param type 类型
-     * @param code 编码
-     * @return {DataDictionary}
-     */
-    public static DataDictionary get(String type, String code) {
-        return SpringContextUtil.getBeanByType(DataDictionaryService.class).getUnique(type, code);
-    }
-
-    public static String getName(String type, String code) {
-        DataDictionary config = get(type, code);
-        return config == null ? type + ":" + code : config.getName();
     }
 
     public List<DataDictionary> find(Criterion... criterions) {
