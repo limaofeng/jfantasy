@@ -10,6 +10,7 @@ env:
   - DB=mysql
 
 mysql:
+  adapter: mysql5
   database: website
   username: root
   password: root
