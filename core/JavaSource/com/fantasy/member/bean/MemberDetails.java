@@ -108,9 +108,9 @@ public class MemberDetails implements Serializable {
     @Column(name = "score", length = 10)
     private Integer score;
     /**
-     * 用户头像存储
+     * 用户头像
      */
-    @ApiModelProperty(hidden = true)
+    @ApiModelProperty(value = "用户头像",hidden = true)
     @Column(name = "AVATAR", length = 500)
     @Convert(converter = FileDetailConverter.class)
     private FileDetail avatar;
