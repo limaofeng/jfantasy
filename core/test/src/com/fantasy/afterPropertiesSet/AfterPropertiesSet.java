@@ -108,7 +108,7 @@ public class AfterPropertiesSet {
             int count = areaDao.count();
             if (count <= 0) {
                 // 加载菜单sql脚本
-                InputStream is = AreaService.class.getResourceAsStream("/file/area.sql");
+                InputStream is = AreaService.class.getResourceAsStream("/database/area.sql");
                 FileUtil.readFile(is, new FileUtil.ReadLineCallback() {
                     @Override
                     public boolean readLine(String line) {
@@ -165,7 +165,7 @@ public class AfterPropertiesSet {
             TransactionStatus status = transactionManager.getTransaction(def);
             try {
                 // 加载菜单sql脚本
-                InputStream is = MenuService.class.getResourceAsStream("/file/auth_menu.sql");
+                InputStream is = MenuService.class.getResourceAsStream("/database/auth_menu.sql");
                 FileUtil.readFile(is, new FileUtil.ReadLineCallback() {
                     @Override
                     public boolean readLine(String line) {
