@@ -75,11 +75,11 @@
             <id>dev</id>
             <properties>
                 <env>dev</env>
-                <jdbc.dbname>website</jdbc.dbname>
-                <jdbc.driver_class>com.mysql.jdbc.Driver</jdbc.driver_class>
-                <jdbc.driver_url>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</jdbc.driver_url>
-                <jdbc.user>root</jdbc.user>
-                <jdbc.password>root</jdbc.password>
+                <db.name>website</db.name>
+                <db.driver_class>com.mysql.jdbc.Driver</db.driver_class>
+                <db.driver_url>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</db.driver_url>
+                <db.username>root</db.username>
+                <db.password>root</db.password>
             </properties>
             <activation>
                 <activeByDefault>true</activeByDefault>
@@ -89,11 +89,11 @@
             <id>test</id>
             <properties>
                 <env>test</env>
-                <jdbc.dbname>website</jdbc.dbname>
-                <jdbc.driver_class>com.mysql.jdbc.Driver</jdbc.driver_class>
-                <jdbc.driver_url>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</jdbc.driver_url>
-                <jdbc.user>root</jdbc.user>
-                <jdbc.password>123456</jdbc.password>
+                <db.name>website</db.name>
+                <db.driver_class>com.mysql.jdbc.Driver</db.driver_class>
+                <db.driver_url>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</db.driver_url>
+                <db.username>root</db.username>
+                <db.password>123456</db.password>
             </properties>
         </profile>
         <profile>
@@ -314,10 +314,10 @@
                     </dependency>
                 </dependencies>
                 <configuration>
-                    <driver>${jdbc.driver_class}</driver>
-                    <url>${jdbc.driver_url}</url>
-                    <username>${jdbc.user}</username>
-                    <password>${jdbc.password}</password>
+                    <driver>${db.driver_class}</driver>
+                    <url>${db.driver_url}</url>
+                    <username>${db.username}</username>
+                    <password>${db.password}</password>
                 </configuration>
                 <executions>
                     <execution>
@@ -327,7 +327,7 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <url>${jdbc.driver_url}</url>
+                            <url>${db.driver_url}</url>
                             <autocommit>true</autocommit>
                             <sqlCommand>drop database ${jdbc.dbname}</sqlCommand>
                             <onError>continue</onError>
@@ -340,7 +340,7 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <url>${jdbc.driver_url}</url>
+                            <url>${db.driver_url}</url>
                             <autocommit>true</autocommit>
                             <sqlCommand>create database ${jdbc.dbname}</sqlCommand>
                         </configuration>
