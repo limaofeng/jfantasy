@@ -93,24 +93,13 @@
                 <jdbc.driver_class>com.mysql.jdbc.Driver</jdbc.driver_class>
                 <jdbc.driverUrl>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</jdbc.driverUrl>
                 <jdbc.user>root</jdbc.user>
-                <jdbc.password>root</jdbc.password>
+                <jdbc.password>123456</jdbc.password>
             </properties>
         </profile>
         <profile>
             <id>production</id>
             <properties>
                 <env>production</env>
-            </properties>
-        </profile>
-        <profile>
-            <id>bamboo</id>
-            <properties>
-                <env>bamboo</env>
-                <jdbc.dbname>website</jdbc.dbname>
-                <jdbc.driver_class>com.mysql.jdbc.Driver</jdbc.driver_class>
-                <jdbc.driverUrl>jdbc:mysql://192.168.1.201:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</jdbc.driverUrl>
-                <jdbc.user>root</jdbc.user>
-                <jdbc.password>123456</jdbc.password>
             </properties>
         </profile>
     </profiles>
