@@ -11,8 +11,13 @@
 
     <repositories>
         <repository>
-            <releases/>
-            <id>hoolue</id>
+            <id>oschina Releases</id>
+            <name>oschina Releases</name>
+            <url>http://maven.oschina.net/content/groups/public</url>
+        </repository>
+        <repository>
+            <id>hoolue Releases</id>
+            <name>hoolue Releases</name>
             <url>http://maven.hoolue.com/content/groups/public/</url>
         </repository>
     </repositories>
