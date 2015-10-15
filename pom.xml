@@ -93,7 +93,7 @@
                 <jdbc.driver_class>com.mysql.jdbc.Driver</jdbc.driver_class>
                 <jdbc.driverUrl>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</jdbc.driverUrl>
                 <jdbc.user>root</jdbc.user>
-                <jdbc.password/>
+                <jdbc.password>root</jdbc.password>
             </properties>
         </profile>
         <profile>
@@ -1203,6 +1203,7 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
+        <!--
         <module>cms</module>
         <module>mall</module>
         <module>cache</module>
@@ -1212,6 +1213,7 @@
         <module>aliyun-oss</module>
         <module>javaweb</module>
         <module>test</module>
+        -->
     </modules>
 
     <!-- 项目信息设置 -->

@@ -9,8 +9,8 @@ jdk:
 env:
   - DB=mysql
 
-#before_install:
-#  - mysql -e " SET PASSWORD FOR 'root@localhost' = PASSWORD('root') " -uroot
+before_install:
+  - mysql -e " SET PASSWORD FOR 'root@localhost' = PASSWORD('root') " -uroot
 
 install:
   - mvn clean compile install -Dmaven.test.skip=true -P test
