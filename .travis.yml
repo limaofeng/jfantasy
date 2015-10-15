@@ -15,6 +15,9 @@ mysql:
   password: root
   encoding: utf8
 
+install:
+  - mvn clean compile install -Dmaven.test.skip=true -P test
+
 before_script:
   - mvn clean -P test
 
