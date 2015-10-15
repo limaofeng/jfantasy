@@ -19,8 +19,8 @@ before_script:
   - mysql -e " SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root') " -uroot
 #  - mvn clean -P test
 
-#install:
-#  - mvn clean compile install -Dmaven.test.skip=true -P test
+install:
+  - mvn clean compile install -Dmaven.test.skip=true -P test
 
 #script:
 #  - mvn compile -P test
