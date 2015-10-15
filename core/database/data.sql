@@ -16942,25 +16942,25 @@ values('6','2014-03-31 16:25:55','wxh','wxh','2014-03-31 16:25:55','','经过专
 insert into `park_brand`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`eng_name`,`introduction`,`logo_path`,`name`,`url`,`logo_image_store`)
 values('7','2014-04-25 17:00:37','admin','admin','2014-04-25 17:00:37','11','111',null,'11','11','[{"size":845941,"fileName":"Desert(1).jpg","absolutePath":"/images/logo/Desert(1).jpg","contentType":"image/jpeg","description":"","fileManagerId":"haolue-upload","md5":"ba45c8f60456a672e003a875e469d0eb","ext":"","createTime":"2014-04-25 17:00:34","modifyTime":"2014-04-25 17:00:34","creator":"admin","modifier":"admin"}]');
 TRUNCATE TABLE `photo_album`;
-TRUNCATE TABLE `qrtz_blob_triggers`;
-TRUNCATE TABLE `qrtz_calendars`;
-TRUNCATE TABLE `qrtz_cron_triggers`;
-TRUNCATE TABLE `qrtz_fired_triggers`;
-TRUNCATE TABLE `qrtz_job_details`;
-insert into `qrtz_job_details`(`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`,`DESCRIPTION`,`JOB_CLASS_NAME`,`IS_DURABLE`,`IS_NONCONCURRENT`,`IS_UPDATE_DATA`,`REQUESTS_RECOVERY`)
+TRUNCATE TABLE `QRTZ_BLOB_TRIGGERS`;
+TRUNCATE TABLE `QRTZ_CALENDARS`;
+TRUNCATE TABLE `QRTZ_CRON_TRIGGERS`;
+TRUNCATE TABLE `QRTZ_FIRED_TRIGGERS`;
+TRUNCATE TABLE `QRTZ_JOB_DETAILS`;
+insert into `QRTZ_JOB_DETAILS`(`SCHED_NAME`,`JOB_NAME`,`JOB_GROUP`,`DESCRIPTION`,`JOB_CLASS_NAME`,`IS_DURABLE`,`IS_NONCONCURRENT`,`IS_UPDATE_DATA`,`REQUESTS_RECOVERY`)
 values('scheduler','DataDictionary','SYSTEM',null,'com.fantasy.system.job.DataDictJob','1','0','0','0');
-TRUNCATE TABLE `qrtz_locks`;
-insert into `qrtz_locks`(`SCHED_NAME`,`LOCK_NAME`)
+TRUNCATE TABLE `QRTZ_LOCKS`;
+insert into `QRTZ_LOCKS`(`SCHED_NAME`,`LOCK_NAME`)
 values('scheduler','STATE_ACCESS');
-insert into `qrtz_locks`(`SCHED_NAME`,`LOCK_NAME`)
+insert into `QRTZ_LOCKS`(`SCHED_NAME`,`LOCK_NAME`)
 values('scheduler','TRIGGER_ACCESS');
-TRUNCATE TABLE `qrtz_paused_trigger_grps`;
-TRUNCATE TABLE `qrtz_scheduler_state`;
-insert into `qrtz_scheduler_state`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`)
+TRUNCATE TABLE `QRTZ_PAUSED_TRIGGER_GRPS`;
+TRUNCATE TABLE `QRTZ_SCHEDULER_STATE`;
+insert into `QRTZ_SCHEDULER_STATE`(`SCHED_NAME`,`INSTANCE_NAME`,`LAST_CHECKIN_TIME`,`CHECKIN_INTERVAL`)
 values('scheduler','iZ237h7800jZ1444454860054','1444815758247','7500');
-TRUNCATE TABLE `qrtz_simple_triggers`;
-TRUNCATE TABLE `qrtz_simprop_triggers`;
-TRUNCATE TABLE `qrtz_triggers`;
+TRUNCATE TABLE `QRTZ_SIMPLE_TRIGGERS`;
+TRUNCATE TABLE `QRTZ_SIMPROP_TRIGGERS`;
+TRUNCATE TABLE `QRTZ_TRIGGERS`;
 TRUNCATE TABLE `remind_model`;
 TRUNCATE TABLE `remind_notice`;
 TRUNCATE TABLE `shop_config`;
