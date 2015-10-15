@@ -2,7 +2,7 @@ machine:
   java:
     version: oraclejdk7
   environment:
-    CODECLIMATE_REPO_TOKEN: K5I1WJaOmUn8dFIJAAdPk5PuGIP1nMTJb
+    CODECLIMATE_REPO_TOKEN: aB6aPUVb95MZ2urV4Ij0vp9hLM2nws5f6
 
 test:
   override:
