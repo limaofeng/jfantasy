@@ -254,7 +254,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>cobertura-maven-plugin</artifactId>
-                <version>2.5.1</version>
+                <version>2.6</version>
                 <executions>
                     <execution>
                         <phase>site</phase>
@@ -360,6 +360,14 @@
                         </configuration>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <repoToken>aB6aPUVb95MZ2urV4Ij0vp9hLM2nws5f6</repoToken>
+                </configuration>
             </plugin>
         </plugins>
     </build>
