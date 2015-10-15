@@ -27,14 +27,14 @@
 	</appender>
 	-->
  	<category name="com.fantasy">
- 		<priority value="DEBUG" />
+ 		<priority value="ERROR" />
  	</category>
 	<category name="org.hibernate.cache">
-		<priority value="DEBUG" />
+		<priority value="ERROR" />
 	</category>
 	<!--
 	<category name="org.activiti">
-		<priority value="DEBUG" />
+		<priority value="ERROR" />
 		<appender-ref ref="CONSOLE" />
 	</category>
 	-->
@@ -42,7 +42,7 @@
 		<priority value="ERROR" />
 	</category>
 	<category name="java.sql.Connection">
-		<priority value="DEBUG" />
+		<priority value="ERROR" />
 	</category>
 	<category name="java.sql.Statement">
 		<priority value="ERROR" />
