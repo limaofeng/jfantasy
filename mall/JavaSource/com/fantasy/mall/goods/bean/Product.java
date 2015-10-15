@@ -77,7 +77,7 @@ public class Product extends BaseDynaBean {
             this.setWeight(goods.getWeight());
         }
 
-        if (this.getGoodsImage() == null && goods.getGoodsImages().length != 0) {// product只保存一张图片
+        if (this.getGoodsImage() == null && goods.getGoodsImages() != null && goods.getGoodsImages().length != 0) {// product只保存一张图片
             this.setGoodsImage(goods.getGoodsImages()[0]);
         }
     }
