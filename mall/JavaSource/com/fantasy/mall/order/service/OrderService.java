@@ -9,8 +9,6 @@ import com.fantasy.mall.delivery.bean.DeliveryType;
 import com.fantasy.mall.delivery.bean.Shipping;
 import com.fantasy.mall.delivery.service.DeliveryTypeService;
 import com.fantasy.mall.goods.service.ProductService;
-import com.fantasy.member.bean.Receiver;
-import com.fantasy.member.service.ReceiverService;
 import com.fantasy.mall.order.bean.Order;
 import com.fantasy.mall.order.bean.Order.OrderStatus;
 import com.fantasy.mall.order.bean.Order.PaymentStatus;
@@ -18,17 +16,17 @@ import com.fantasy.mall.order.bean.Order.ShippingStatus;
 import com.fantasy.mall.order.bean.OrderItem;
 import com.fantasy.mall.order.dao.OrderDao;
 import com.fantasy.mall.order.dao.OrderItemDao;
+import com.fantasy.member.bean.Receiver;
+import com.fantasy.member.service.ReceiverService;
 import com.fantasy.member.userdetails.MemberUser;
 import com.fantasy.security.SpringSecurityUtils;
-import com.fantasy.system.bean.DataDictionary;
-import com.fantasy.system.service.DataDictionaryService;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -153,8 +151,8 @@ public class OrderService {
         // 初始化支付信息(创建订单时只判断是否为货到付款)
         if (DeliveryType.DeliveryMethod.cashOnDelivery == deliveryType.getMethod()) {
             order.setPaymentFee(new BigDecimal(0));// 支付费
-            DataDictionary config = DataDictionaryService.get("deliveryMethod", DeliveryType.DeliveryMethod.cashOnDelivery.name());
-            order.setPaymentConfigName(config == null ? defaultCashOnDeliveryName : StringUtil.defaultValue(config.getName(), defaultCashOnDeliveryName));
+//            DataDictionary config = DataDictionaryService.get("deliveryMethod", DeliveryType.DeliveryMethod.cashOnDelivery.name());
+            order.setPaymentConfigName( DeliveryType.DeliveryMethod.cashOnDelivery.name());
             order.setPaymentConfig(null);
         } else {
             order.setPaymentConfigName("支付功能尚未实现");
