@@ -1203,7 +1203,6 @@
     <!-- 包含模块 -->
     <modules>
         <module>core</module>
-        <!--
         <module>cms</module>
         <module>mall</module>
         <module>cache</module>
@@ -1213,7 +1212,6 @@
         <module>aliyun-oss</module>
         <module>javaweb</module>
         <module>test</module>
-        -->
     </modules>
 
     <!-- 项目信息设置 -->
