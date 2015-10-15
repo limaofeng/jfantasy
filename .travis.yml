@@ -15,14 +15,15 @@ mysql:
   password: root
   encoding: utf8
 
-install:
-  - mvn clean compile install -Dmaven.test.skip=true -P test
-
 before_script:
-  - mvn clean -P test
+  - mysql -e " SET PASSWORD FOR 'root'@'localhost' = PASSWORD('root') " -uroot
+#  - mvn clean -P test
 
-script:
-  - mvn compile -P test
+#install:
+#  - mvn clean compile install -Dmaven.test.skip=true -P test
+
+#script:
+#  - mvn compile -P test
 
 after_success:
   - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
