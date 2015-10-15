@@ -6,14 +6,14 @@ services:
 env:
   - DB=mysql
 
-install:
-  - mvn clean compile install -Dmaven.test.skip=true -P test
+#install:
+#  - mvn clean compile install -Dmaven.test.skip=true -P test
 
-script:
-  - mvn test -B -X -Dmaven.test.failure.ignore=true -P test
+#script:
+#  - mvn test -B -Dmaven.test.failure.ignore=true -P test
 
 after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
 
 #before_install:
 #  - mysql -e "create database IF NOT EXISTS website;" -uroot
