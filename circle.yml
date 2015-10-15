@@ -1,9 +1,7 @@
 machine:
   java:
     version: oraclejdk7
-  environment:
-    CODECLIMATE_REPO_TOKEN: aB6aPUVb95MZ2urV4Ij0vp9hLM2nws5f6
 
 test:
   override:
-    - mvn test -B -X
+    - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
