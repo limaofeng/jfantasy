@@ -12,6 +12,9 @@ env:
 install:
   - mvn clean compile install -Dmaven.test.skip=true -P test
 
+test:
+  - mvn test -B -Dmaven.test.skip=true -P test
+
 #before_script:
 #  - mysql -e " SET PASSWORD FOR 'root@localhost' = PASSWORD('root') " -uroot
 #  - mvn clean -P test
