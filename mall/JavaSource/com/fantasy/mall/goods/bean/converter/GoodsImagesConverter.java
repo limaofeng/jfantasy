@@ -1,6 +1,7 @@
 package com.fantasy.mall.goods.bean.converter;
 
 
+import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.goods.bean.GoodsImage;
@@ -22,7 +23,7 @@ public class GoodsImagesConverter implements AttributeConverter<GoodsImage[], St
         if (StringUtil.isBlank(dbData)) {
             return new GoodsImage[0];
         }
-        return JSON.deserialize(dbData, GoodsImage[].class);
+        return ObjectUtil.defaultValue(JSON.deserialize(dbData, GoodsImage[].class), new GoodsImage[0]);
     }
 
 }
