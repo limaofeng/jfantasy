@@ -14571,13 +14571,13 @@ values('tool ','2015-04-08 20:27:33','snzxw','snzxw','2015-04-08 20:27:33','','2
 insert into `cms_article_category`(`code`,`create_time`,`creator`,`modifier`,`modify_time`,`description`,`layer`,`name`,`path`,`sort`,`pcode`,`article_template_path`,`egname`,`template_path`,`article_version_id`)
 values('zxzs','2015-04-11 18:24:03','admin','admin','2015-04-11 18:24:03','装修知识','2','装修知识','snzxw,news,zxzs,','1','news',null,'zxzs',null,null);
 TRUNCATE TABLE `cms_banner`;
-insert into `cms_banner`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`description`,`code`,`name`,`size`)
-values('1053','2015-04-01 22:10:43','slzxw','admin','2015-05-10 10:36:40','','index','首页轮播图','300x150');
+insert into `cms_banner`(`create_time`,`creator`,`modifier`,`modify_time`,`description`,`code`,`name`,`size`)
+values('2015-04-01 22:10:43','slzxw','admin','2015-05-10 10:36:40','','index','首页轮播图','300x150');
 TRUNCATE TABLE `cms_banner_item`;
-insert into `cms_banner_item`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`banner_image_store`,`summary`,`title`,`url`,`banner_id`,`sort`,`banner_code`)
-values('1557','2015-04-02 10:41:40','snzxw','admin','2015-05-10 10:38:03','[{"creator":"unknown","createTime":"2015-05-10 10:35:42","modifier":"unknown","modifyTime":"2015-05-10 10:35:42","absolutePath":"/static/images/brand/cbd48f9045f84b5aa369f037762e8beb.png","fileManagerId":"haolue-upload","fileName":"banner1.png","ext":"png","contentType":"image/png","description":"","size":772864,"md5":"6d3de7d93435aedbb12daec2575fbdaa"}]','图1','图1','javascript:void(0);','1053',null,null);
-insert into `cms_banner_item`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`banner_image_store`,`summary`,`title`,`url`,`banner_id`,`sort`,`banner_code`)
-values('1558','2015-05-10 10:38:03','admin','admin','2015-05-10 10:38:03','[{"creator":"unknown","createTime":"2015-05-10 10:37:44","modifier":"unknown","modifyTime":"2015-05-10 10:37:44","absolutePath":"/static/images/brand/cd17b357d36049cd9cd1c916cfdb81f0.png","fileManagerId":"haolue-upload","fileName":"banner2.png","ext":"png","contentType":"image/png","description":"","size":524039,"md5":"1a9eb156b8eda22ac9a75f27d3fa95be"}]','图2','图2','javascript:void(0);','1053',null,null);
+insert into `cms_banner_item`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`banner_image_store`,`summary`,`title`,`url`,`sort`,`banner_code`)
+values('1557','2015-04-02 10:41:40','snzxw','admin','2015-05-10 10:38:03','[{"creator":"unknown","createTime":"2015-05-10 10:35:42","modifier":"unknown","modifyTime":"2015-05-10 10:35:42","absolutePath":"/static/images/brand/cbd48f9045f84b5aa369f037762e8beb.png","fileManagerId":"haolue-upload","fileName":"banner1.png","ext":"png","contentType":"image/png","description":"","size":772864,"md5":"6d3de7d93435aedbb12daec2575fbdaa"}]','图1','图1','javascript:void(0);',null,'index');
+insert into `cms_banner_item`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`banner_image_store`,`summary`,`title`,`url`,`sort`,`banner_code`)
+values('1558','2015-05-10 10:38:03','admin','admin','2015-05-10 10:38:03','[{"creator":"unknown","createTime":"2015-05-10 10:37:44","modifier":"unknown","modifyTime":"2015-05-10 10:37:44","absolutePath":"/static/images/brand/cd17b357d36049cd9cd1c916cfdb81f0.png","fileManagerId":"haolue-upload","fileName":"banner2.png","ext":"png","contentType":"image/png","description":"","size":524039,"md5":"1a9eb156b8eda22ac9a75f27d3fa95be"}]','图2','图2','javascript:void(0);',null,'index');
 TRUNCATE TABLE `cms_category`;
 TRUNCATE TABLE `cms_content`;
 insert into `cms_content`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`content`)

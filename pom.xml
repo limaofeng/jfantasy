@@ -77,7 +77,7 @@
                 <env>dev</env>
                 <jdbc.dbname>website</jdbc.dbname>
                 <jdbc.driver_class>com.mysql.jdbc.Driver</jdbc.driver_class>
-                <jdbc.driverUrl>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</jdbc.driverUrl>
+                <jdbc.driver_url>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</jdbc.driver_url>
                 <jdbc.user>root</jdbc.user>
                 <jdbc.password>root</jdbc.password>
             </properties>
@@ -315,7 +315,7 @@
                 </dependencies>
                 <configuration>
                     <driver>${jdbc.driver_class}</driver>
-                    <url>${jdbc.driverUrl}</url>
+                    <url>${jdbc.driver_url}</url>
                     <username>${jdbc.user}</username>
                     <password>${jdbc.password}</password>
                 </configuration>
@@ -327,7 +327,7 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <url>${jdbc.driverUrl}</url>
+                            <url>${jdbc.driver_url}</url>
                             <autocommit>true</autocommit>
                             <sqlCommand>drop database ${jdbc.dbname}</sqlCommand>
                             <onError>continue</onError>
@@ -340,7 +340,7 @@
                             <goal>execute</goal>
                         </goals>
                         <configuration>
-                            <url>${jdbc.driverUrl}</url>
+                            <url>${jdbc.driver_url}</url>
                             <autocommit>true</autocommit>
                             <sqlCommand>create database ${jdbc.dbname}</sqlCommand>
                         </configuration>

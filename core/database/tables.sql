@@ -698,17 +698,15 @@ CREATE TABLE `cms_article_category` (
 
 DROP TABLE IF EXISTS `cms_banner`;
 CREATE TABLE `cms_banner` (
-  `id`          BIGINT(20)  NOT NULL,
+  `code`        VARCHAR(20)  NOT NULL,
   `create_time` DATETIME     DEFAULT NULL,
   `creator`     VARCHAR(20)  DEFAULT NULL,
   `modifier`    VARCHAR(20)  DEFAULT NULL,
   `modify_time` DATETIME     DEFAULT NULL,
   `description` VARCHAR(500) DEFAULT NULL,
-  `code`        VARCHAR(20) NOT NULL,
   `name`        VARCHAR(50)  DEFAULT NULL,
   `size`        VARCHAR(20)  DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `code` (`code`)
+  PRIMARY KEY (`code`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
@@ -724,14 +722,11 @@ CREATE TABLE `cms_banner_item` (
   `summary`            VARCHAR(500) DEFAULT NULL,
   `title`              VARCHAR(200) DEFAULT NULL,
   `url`                VARCHAR(100) DEFAULT NULL,
-  `banner_id`          BIGINT(20)   DEFAULT NULL,
   `sort`               INT(11)      DEFAULT NULL,
   `banner_code`        VARCHAR(20)  DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `FK79648A50893C68FE` (`banner_id`),
   KEY `FK_5vneejmcl6jkybilrepil6f7s` (`banner_code`),
-  CONSTRAINT `FK_5vneejmcl6jkybilrepil6f7s` FOREIGN KEY (`banner_code`) REFERENCES `cms_banner` (`code`),
-  CONSTRAINT `FK79648A50893C68FE` FOREIGN KEY (`banner_id`) REFERENCES `cms_banner` (`id`)
+  CONSTRAINT `FK_5vneejmcl6jkybilrepil6f7s` FOREIGN KEY (`banner_code`) REFERENCES `cms_banner` (`code`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
