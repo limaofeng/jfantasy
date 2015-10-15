@@ -1,8 +1,11 @@
 package com.fantasy.system.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
+import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.system.bean.databind.DataDictionaryKeyDeserializer;
 import com.fantasy.system.bean.databind.DataDictionaryKeySerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -68,22 +71,39 @@ public class DataDictionary extends BaseBusEntity {
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     private List<DataDictionary> children;
-
-    @ApiModelProperty("KEY")
     @Transient
+    @ApiModelProperty("KEY")
+    private DataDictionaryKey key;
+    @Transient
+    @ApiModelProperty("上级数据KEY")
+    private DataDictionaryKey parentKey;
+
     @JsonSerialize(using = DataDictionaryKeySerializer.class)
     public DataDictionaryKey getKey() {
-        return DataDictionaryKey.newInstance(this.code, this.type);
+        return ObjectUtil.defaultValue(key, key = DataDictionaryKey.newInstance(this.code, this.type));
     }
 
-    @ApiModelProperty("上级数据KEY")
-    @Transient
+    @JsonDeserialize(using = DataDictionaryKeyDeserializer.class)
+    public void setKey(DataDictionaryKey key) {
+        this.key = key;
+        this.setCode(key.getCode());
+        this.setType(key.getType());
+    }
+
     @JsonSerialize(using = DataDictionaryKeySerializer.class)
     public DataDictionaryKey getParentKey() {
         if (this.getParent() == null) {
             return null;
         }
-        return DataDictionaryKey.newInstance(this.parent.code, this.parent.type);
+        return ObjectUtil.defaultValue(parentKey, parentKey = DataDictionaryKey.newInstance(this.parent.code, this.parent.type));
+    }
+
+    @JsonDeserialize(using = DataDictionaryKeyDeserializer.class)
+    public void setParentKey(DataDictionaryKey key) {
+        this.parentKey = key;
+        this.parent = new DataDictionary();
+        this.parent.setCode(key.getCode());
+        this.parent.setType(key.getType());
     }
 
     public String getCode() {
