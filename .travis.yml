@@ -9,18 +9,17 @@ jdk:
 env:
   - DB=mysql
 
+#before_install:
+#  - mysql -e " SET PASSWORD FOR 'root@localhost' = PASSWORD('root') " -uroot
+
 install:
   - mvn clean compile install -Dmaven.test.skip=true -P test
 
-#before_script:
-#  - mysql -e " SET PASSWORD FOR 'root@localhost' = PASSWORD('root') " -uroot
-#  - mvn clean -P test
-
 script:
-  - mvn compile -P test
+  - mvn cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
 
-after_success:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
+#after_success:
+#  - mvn
 
 notifications:
   email:
