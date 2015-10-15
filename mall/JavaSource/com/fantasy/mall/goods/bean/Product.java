@@ -8,12 +8,12 @@ import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.mall.cart.bean.CartItem;
+import com.fantasy.mall.goods.bean.converter.GoodsImageConverter;
 import com.fantasy.mall.order.bean.OrderItem;
 import com.fantasy.mall.stock.bean.Stock;
 import com.fantasy.mall.stock.bean.WarningSettings;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
@@ -78,7 +78,7 @@ public class Product extends BaseDynaBean {
         }
 
         if (goods.getGoodsImages().length != 0 && this.getGoodsImage() == null) {// product只保存一张图片
-            this.setGoodsImageStore(JSON.serialize(goods.getGoodsImages()[0]));
+            this.setGoodsImage(goods.getGoodsImages()[0]);
         }
     }
 
@@ -121,7 +121,8 @@ public class Product extends BaseDynaBean {
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<OrderItem> orderItems;// 订单项
     @Column(name = "GOODS_IMAGE_STORE", length = 3000)
-    private String goodsImageStore;
+    @Convert(converter = GoodsImageConverter.class)
+    private GoodsImage goodsImage;
     @OneToMany(mappedBy = "product", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Stock> stocks;// 库存变量
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
@@ -295,27 +296,16 @@ public class Product extends BaseDynaBean {
     }
 
     /**
-     * 商品图片存储
-     */
-    public String getGoodsImageStore() {
-        return goodsImageStore;
-    }
-
-    public void setGoodsImageStore(String goodsImageStore) {
-        this.goodsImageStore = goodsImageStore;
-    }
-
-    /**
      * 获取商品图片
      *
      * @return GoodsImage
      */
-    @Transient
     public GoodsImage getGoodsImage() {
-        if (StringUtils.isEmpty(this.goodsImageStore)) {
-            return null;
-        }
-        return JSON.deserialize(this.goodsImageStore, GoodsImage.class);
+        return this.goodsImage;
+    }
+
+    public void setGoodsImage(GoodsImage goodsImage) {
+        this.goodsImage = goodsImage;
     }
 
     /**

@@ -6,8 +6,8 @@ import com.fantasy.framework.lucene.annotations.Compare;
 import com.fantasy.framework.lucene.annotations.IndexFilter;
 import com.fantasy.framework.lucene.annotations.Indexed;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.mall.goods.bean.converter.GoodsImageConverter;
-import com.fantasy.mall.goods.bean.converter.GoodsParameterValueConverter;
+import com.fantasy.mall.goods.bean.converter.GoodsImagesConverter;
+import com.fantasy.mall.goods.bean.converter.GoodsParameterValuesConverter;
 import com.fantasy.mall.shop.bean.Shop;
 import com.fantasy.member.bean.Member;
 import com.fantasy.system.util.SettingUtil;
@@ -137,7 +137,7 @@ public class Goods extends BaseDynaBean {
      * 商品图片存储
      */
     @Column(name = "GOODS_IMAGE_STORE", length = 3000)
-    @Convert(converter = GoodsImageConverter.class)
+    @Convert(converter = GoodsImagesConverter.class)
     private GoodsImage[] goodsImages;
     /**
      * 是否启用商品规格
@@ -178,13 +178,13 @@ public class Goods extends BaseDynaBean {
      * 商品参数存储
      */
     @Column(name = "GOODS_PARAM_VALUE_STORE", length = 3000)
-    @Convert(converter = GoodsParameterValueConverter.class)
+    @Convert(converter = GoodsParameterValuesConverter.class)
     private GoodsParameterValue[] goodsParameterValues;
     /**
      * 自定义商品参数
      */
     @Column(name = "CUSTOM_GOODS_PARAM_VALUE_STORE", length = 3000)
-    @Convert(converter = GoodsParameterValueConverter.class)
+    @Convert(converter = GoodsParameterValuesConverter.class)
     private GoodsParameterValue[] customGoodsParameterValues;
 
     /**
@@ -516,7 +516,6 @@ public class Goods extends BaseDynaBean {
     /**
      * 获取商品图片集合
      */
-    @Transient
     public GoodsImage[] getGoodsImages() {
         return this.goodsImages;
     }

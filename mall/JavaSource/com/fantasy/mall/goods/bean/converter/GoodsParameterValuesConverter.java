@@ -7,7 +7,7 @@ import com.fantasy.mall.goods.bean.GoodsParameterValue;
 
 import javax.persistence.AttributeConverter;
 
-public class GoodsParameterValueConverter implements AttributeConverter<GoodsParameterValue[], String> {
+public class GoodsParameterValuesConverter implements AttributeConverter<GoodsParameterValue[], String> {
 
     @Override
     public String convertToDatabaseColumn(GoodsParameterValue[] attribute) {
