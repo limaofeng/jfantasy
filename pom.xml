@@ -100,14 +100,11 @@
             <id>production</id>
             <properties>
                 <env>production</env>
-                <properties>
-                    <env>test</env>
-                    <db.name>website</db.name>
-                    <db.driver_class>com.mysql.jdbc.Driver</db.driver_class>
-                    <db.driver_url>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</db.driver_url>
-                    <db.username>root</db.username>
-                    <db.password>123456</db.password>
-                </properties>
+                <db.name>website</db.name>
+                <db.driver_class>com.mysql.jdbc.Driver</db.driver_class>
+                <db.driver_url>jdbc:mysql://127.0.0.1:3306?autoReconnect=true&amp;useUnicode=true&amp;characterEncoding=utf-8</db.driver_url>
+                <db.username>root</db.username>
+                <db.password>123456</db.password>
             </properties>
         </profile>
     </profiles>
