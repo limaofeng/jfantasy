@@ -1,3 +1,7 @@
+# `jfantasy`
+
+[![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url] 
+
 关于 fantasy-core
 -------------
 >fantasy-core 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架。
@@ -48,3 +52,18 @@
   ```当调用端想控制返回字段时，在请求头中添加:X-Result-Fields:username,sex. 这样就只会返回两个字段```
 * RESTful 添加 X-Expend-Fields  请求头
   ```当子对象、及关联对象被服务端屏蔽时，前端可以通过设置该字段返回其关联对象的信息:如:X-Expend-Fields:member,orders```
+  
+  
+  
+----
+
+© 2015 李茂峰 <limaofeng@msn.com>
+
+Licensed under [MIT](http://jfantasy.org/mit.txt)
+
+[coveralls-img]: http://img.shields.io/coveralls/limaofeng/jfantasy/master.svg?style=flat-square
+[coveralls-url]: https://coveralls.io/r/limaofeng/jfantasy
+[gitter-img]:    http://img.shields.io/badge/gitter-join_chat-1dce73.svg?style=flat-square
+[gitter-url]:    https://gitter.im/limaofeng/jfantasy
+[travis-img]:    http://img.shields.io/travis/limaofeng/jfantasy.svg?style=flat-square
+[travis-url]:    https://travis-ci.org/limaofeng/jfantasy
