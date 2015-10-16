@@ -51,9 +51,8 @@
 * RESTful 添加 X-Result-Fields  请求头
   ```当调用端想控制返回字段时，在请求头中添加:X-Result-Fields:username,sex. 这样就只会返回两个字段```
 * RESTful 添加 X-Expend-Fields  请求头
-  ```当子对象、及关联对象被服务端屏蔽时，前端可以通过设置该字段返回其关联对象的信息:如:X-Expend-Fields:member,orders```
-  
-  
+  当子对象、及关联对象被服务端屏蔽时，前端可以通过设置该字段返回其关联对象的信息:如:X-Expend-Fields:member,orders
+ 
   
 ----
 
