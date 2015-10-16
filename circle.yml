@@ -1,6 +1,8 @@
 machine:
   java:
     version: oraclejdk7
+  services:
+    - mysql
 
 test:
   override:
