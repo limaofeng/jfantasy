@@ -5,4 +5,7 @@ machine:
     - mysql
 
 test:
-  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
+  override:
+    - mvn clean
+    - mvn compile install -Dmaven.test.skip=true -P test
+    - mvn test -B -X
