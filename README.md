@@ -2,9 +2,7 @@
 
 [![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url] 
 
-关于 fantasy-core
--------------
->fantasy-core 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架。
+jfantasy 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架.
 
 ### 快速开始
 
