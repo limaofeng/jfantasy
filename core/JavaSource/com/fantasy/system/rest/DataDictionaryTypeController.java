@@ -26,7 +26,13 @@ public class DataDictionaryTypeController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public DataDictionaryType save(@RequestBody DataDictionaryType ddt) {
+    public DataDictionaryType create(@RequestBody DataDictionaryType ddt) {
+        return this.dataDictionaryService.save(ddt);
+    }
+
+    @RequestMapping(method = RequestMethod.PUT)
+    @ResponseBody
+    public DataDictionaryType update(@RequestBody DataDictionaryType ddt) {
         return this.dataDictionaryService.save(ddt);
     }
 
