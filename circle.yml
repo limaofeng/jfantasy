@@ -5,5 +5,4 @@ machine:
     - mysql
 
 test:
-  override:
-    - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
+  - mvn clean cobertura:cobertura org.eluder.coveralls:coveralls-maven-plugin:report -P test
