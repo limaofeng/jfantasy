@@ -27,5 +27,6 @@ notifications:
   webhooks:
     urls:
       - https://webhooks.gitter.im/e/e1a387dc6d52697e07ef
+  slack: jfantasy:kByNe9JhW8MoMna45W89Mbpi
 
 sudo: false
