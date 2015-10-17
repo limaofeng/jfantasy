@@ -12,15 +12,14 @@ env:
 before_install:
   - mysql -e " SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456') " -uroot
 
-install:
-  - mvn clean compile install -Dmaven.test.skip=true -P test
+#install:
+#  - mvn clean compile install -Dmaven.test.skip=true -P test
 
 script:
-  - cd core
+  - mvn clean compile install -Dmaven.test.skip=true -P test
   - mvn cobertura:cobertura -Dmaven.test.failure.ignore=true -P test
 
 after_success:
-  - cd core
   - mvn org.eluder.coveralls:coveralls-maven-plugin:report -P test
 
 notifications:
