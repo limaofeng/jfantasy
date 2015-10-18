@@ -6,6 +6,7 @@ machine:
 
 dependencies:
   override:
+    - mvn clean
 
 database:
   override:
