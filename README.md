@@ -1,6 +1,6 @@
-# `jfantasy` [![Build Status][circle-img]][circle-url]
+# `jfantasy`
 
-[![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url]
+[![Build Status][circleci-img]][circleci-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url]
 
 jfantasy 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架.
 
@@ -62,7 +62,5 @@ Licensed under [MIT](http://jfantasy.org/mit.txt)
 [coveralls-url]: https://coveralls.io/r/limaofeng/jfantasy
 [gitter-img]:    http://img.shields.io/badge/gitter-join_chat-1dce73.svg?style=flat-square
 [gitter-url]:    https://gitter.im/limaofeng/jfantasy
-[travis-img]:    http://img.shields.io/travis/limaofeng/jfantasy.svg?style=flat-square
-[travis-url]:    https://travis-ci.org/limaofeng/jfantasy
-[circle-img]:    https://circleci.com/gh/limaofeng/jfantasy.svg?style=svg
-[circle-url]:    https://circleci.com/gh/limaofeng/jfantasy
+[circleci-img]:    https://img.shields.io/circleci/project/limaofeng/jfantasy.svg
+[circleci-url]:    https://circleci.com/gh/limaofeng/jfantasy
