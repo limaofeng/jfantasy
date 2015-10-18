@@ -1,18 +1,43 @@
 package com.fantasy.payment.service;
 
-import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.common.order.Order;
 import com.fantasy.common.order.OrderService;
+import com.fantasy.common.order.OrderUrls;
+import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.common.PropertiesHelper;
+import com.fantasy.framework.util.web.WebUtil;
+import com.fantasy.framework.util.web.context.ActionContext;
+import com.fantasy.payment.bean.Payment;
+import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
+import com.github.jknack.handlebars.Handlebars;
+import com.github.jknack.handlebars.Template;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 支付上下文对象
  */
 public class PaymentContext {
 
+    private final static Log LOG = LogFactory.getLog(PaymentContext.class);
+
     private static ThreadLocal<PaymentContext> threadLocal = new ThreadLocal<PaymentContext>();
+
+    private static Handlebars handlebars = new Handlebars();
+
+    private static String serverUrl;
+
+    private Template resultUrlTemplate;
+    private Template detailsUrlTemplate;
+    private Template notifyUrlTemplate = getTemplate("{{serverUrl}}/pays/{{paymentSn}}/notify");
+    private Template returnUrlTemplate = getTemplate("{{serverUrl}}/pays/{{paymentSn}}/return");
+
     /**
      * 支付订单对象
      */
@@ -75,6 +100,30 @@ public class PaymentContext {
         this.orderDetailsService = orderDetailsService;
     }
 
+    public void initOrderUrls() {
+        OrderUrls orderUrls = orderDetailsService.getOrderUrls();
+        this.detailsUrlTemplate = getTemplate(orderUrls.getDetailsUrl());
+        this.resultUrlTemplate = getTemplate(orderUrls.getResultUrl());
+    }
+
+    private Template getTemplate(String url) {
+        try {
+            return handlebars.compileInline(url);
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
+    private String applyTemplate(Template template, Object o) {
+        try {
+            return template.apply(o);
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+            return null;
+        }
+    }
+
     public PaymentConfig getPaymentConfig() {
         return paymentConfig;
     }
@@ -93,7 +142,7 @@ public class PaymentContext {
      * @return url
      */
     public String getNotifyUrl(String paymentSn) {
-        return orderDetailsService.getNotifyUrl(paymentSn);
+        return applyTemplate(notifyUrlTemplate, getData(paymentSn));
     }
 
     /**
@@ -102,7 +151,7 @@ public class PaymentContext {
      * @return url
      */
     public String getReturnUrl(String paymentSn) {
-        return orderDetailsService.getReturnUrl(paymentSn);
+        return applyTemplate(returnUrlTemplate, getData(paymentSn));
     }
 
     /**
@@ -111,8 +160,13 @@ public class PaymentContext {
      * @param orderSn 订单编号
      * @return url
      */
-    public String getShowUrl(String orderSn) {
-        return orderDetailsService.getShowUrl(orderSn);
+    public String getDetailsUrl(final String orderSn) {
+        return applyTemplate(detailsUrlTemplate, new HashMap<String, String>() {
+            {
+                this.putAll(getData());
+                this.put("orderSn", orderSn);
+            }
+        });
     }
 
     /**
@@ -121,8 +175,8 @@ public class PaymentContext {
      * @param paymentSn 用于支付成功后的跳转地址
      * @return url
      */
-    public String getShowPaymentUrl(String paymentSn) {
-        return orderDetailsService.getShowPaymentUrl(paymentSn);
+    public String getResultUrl(String paymentSn) {
+        return applyTemplate(resultUrlTemplate, getData(paymentSn));
     }
 
     /**
@@ -149,6 +203,22 @@ public class PaymentContext {
 
     public void setPayResult(PayResult payResult) {
         this.payResult = payResult;
+    }
+
+    private static Map<String, String> getData() {
+        Map<String, String> data = new HashMap<String, String>();
+        data.put("serverUrl", getServerUrl());
+        return data;
+    }
+
+    private static Map<String, String> getData(String sn) {
+        Map<String, String> data = getData();
+        data.put("paymentSn", sn);
+        return data;
+    }
+
+    public static String getServerUrl() {
+        return ObjectUtil.defaultValue(serverUrl, serverUrl = PropertiesHelper.load("props/application.properties").getProperty("OrderUrls.serverUrl", WebUtil.getServerUrl(ActionContext.getContext().getHttpRequest())));
     }
 
 }

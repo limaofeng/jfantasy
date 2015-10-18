@@ -61,15 +61,15 @@ public class WebUtil {
         return "";
     }
 
-    public static String getRequestUrl(HttpServletRequest request) {
-        return getRequestUrl(request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath());
+    public static String getServerUrl(HttpServletRequest request) {
+        return getServerUrl(request.getScheme(), request.getServerName(), request.getServerPort(), request.getContextPath());
     }
 
-    public static String getRequestUrl(HttpServletRequest request, String contextPath) {
-        return getRequestUrl(request.getScheme(), request.getServerName(), request.getServerPort(), contextPath);
+    public static String getServerUrl(HttpServletRequest request, String contextPath) {
+        return getServerUrl(request.getScheme(), request.getServerName(), request.getServerPort(), contextPath);
     }
 
-    public static String getRequestUrl(String scheme, String serverName, int serverPort, String contextPath) {
+    public static String getServerUrl(String scheme, String serverName, int serverPort, String contextPath) {
         scheme = scheme.toLowerCase();
         StringBuilder url = new StringBuilder();
         url.append(scheme).append("://").append(serverName);

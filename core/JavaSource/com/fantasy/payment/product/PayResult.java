@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 
 public class PayResult {
 
-    public static enum PayStatus {
+    public enum PayStatus {
         /**
          * 失败
          */

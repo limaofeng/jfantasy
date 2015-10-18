@@ -56,7 +56,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
                 escapeStr = StringUtil.isNotBlank(values[i]) ? HtmlUtils.htmlEscape(values[i]) : values[i];
             }
             // 防止链接注入 (如果以http开头的参数,同时与请求的域不相同的话,将值64位编码)
-            if (RegexpUtil.find(escapeStr, "^http://") && !WebUtil.getRequestUrl((HttpServletRequest) super.getRequest()).startsWith(escapeStr)) {
+            if (RegexpUtil.find(escapeStr, "^http://") && !WebUtil.getServerUrl((HttpServletRequest) super.getRequest()).startsWith(escapeStr)) {
                 escapeStr = "base64:" + new String(Base64Util.encode(escapeStr.getBytes()));
             }
             if (LOGGER.isDebugEnabled()) {

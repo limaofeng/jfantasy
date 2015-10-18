@@ -249,8 +249,8 @@ public class WebUtilTest {
 
     @Test
     public void testGetRequestUrl() throws Exception {
-        LOG.debug(WebUtil.getRequestUrl(request));
-        Assert.assertEquals("http://www.jfantasy.org", WebUtil.getRequestUrl(request));
+        LOG.debug(WebUtil.getServerUrl(request));
+        Assert.assertEquals("http://www.jfantasy.org", WebUtil.getServerUrl(request));
     }
 
 }

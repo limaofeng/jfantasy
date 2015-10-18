@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 
 @Api(value = "weixin-pays", description = "微信支付")
-@RestController
+@RestController("weixin.payController")
 @RequestMapping("/weixin/accounts/{appid}/pay")
 public class PayController {
 

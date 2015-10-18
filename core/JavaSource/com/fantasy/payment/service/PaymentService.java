@@ -201,7 +201,6 @@ public class PaymentService {
         }
     }
 
-
     public String buildRequest(String orderType, String orderSn, Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
         return this.buildRequest(orderType, orderSn, paymentConfigId, "", parameters);
     }
@@ -228,6 +227,7 @@ public class PaymentService {
         Map<String, String> parameterMap = paymentProduct.getParameterMap(parameters);
         String sHtmlText = paymentProduct.buildRequest(parameterMap);
         TagNode body = HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.htmlCleaner(sHtmlText), "//body");
+        assert body != null;
         body.removeChild(HtmlCleanerUtil.findFristTagNode(body, "//script"));
         for (TagNode tagNode : HtmlCleanerUtil.findTagNodes(body, "//form//input")) {
             if ("hidden".equals(tagNode.getAttributeByName("type"))) {
@@ -295,6 +295,8 @@ public class PaymentService {
 
         OrderService paymentOrderDetailsService = this.orderServiceFactory.getOrderService(payment.getOrderType());
         context.setOrderDetailsService(paymentOrderDetailsService);
+
+        context.initOrderUrls();
 
         Order orderDetails = paymentOrderDetailsService.loadOrderBySn(payment.getOrderSn());
         context.setOrderDetails(orderDetails);

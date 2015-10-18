@@ -104,7 +104,7 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         String returnUrl = context.getReturnUrl(payment.getSn());// 回调处理URL
         String sellerId = paymentConfig.getSellerEmail();// 商家ID
         String service = "create_direct_pay_by_user";// 接口类型（create_direct_pay_by_user：即时交易）
-        String showUrl = context.getShowUrl(payment.getOrderSn());// 商品显示URL
+        String showUrl = context.getDetailsUrl(payment.getOrderSn());// 商品显示URL
         String signType = "MD5";//签名加密方式（MD5）
         AtomicReference<String> subject = new AtomicReference<String>(orderDetails.getSubject());// 订单的名称、标题、关键字等
         String totalFee = DECIMAL_FORMAT.format(orderDetails.getPayableFee());// 总金额（单位：元）

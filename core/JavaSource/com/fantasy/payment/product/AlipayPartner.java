@@ -48,7 +48,7 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         String returnUrl = PaymentContext.getContext().getReturnUrl(payment.getSn());// 回调处理URL
         String sellerId = paymentConfig.getSellerEmail();
         String service = "create_partner_trade_by_buyer";// 接口类型（create_partner_trade_by_buyer：担保交易）
-        String showUrl = PaymentContext.getContext().getShowUrl(orderDetails.getSN());// 支付结果显示URL
+        String showUrl = PaymentContext.getContext().getDetailsUrl(orderDetails.getSN());// 支付结果显示URL
         String signType = "MD5";//签名加密方式（MD5）
         AtomicReference<String> subject = new AtomicReference<String>(payment.getSn());// 订单的名称、标题、关键字等
         String key = paymentConfig.getBargainorKey();// 密钥

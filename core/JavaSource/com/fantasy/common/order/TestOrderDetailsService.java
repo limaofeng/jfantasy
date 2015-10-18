@@ -1,7 +1,6 @@
 package com.fantasy.common.order;
 
 import com.fantasy.common.service.AreaService;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.payment.bean.Payment;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,12 +15,11 @@ public class TestOrderDetailsService extends AbstractOrderService implements Ini
 
     @Autowired
     private OrderServiceFactory orderServiceFactory;
+    @Autowired
+    private AreaService areaService;
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        this.setNotifyUrlTemplate("http://test.jfantasy.org/payment/notify/{paymentSn}");
-        this.setReturnUrlTemplate("http://test.jfantasy.org/payment/return/{paymentSn}");
-        this.setShowPaymentUrlTemplate("http://test.jfantasy.org/payment/{paymentSn}");
         orderServiceFactory.register("TEST", this);
     }
 
@@ -86,7 +84,7 @@ public class TestOrderDetailsService extends AbstractOrderService implements Ini
             @Override
             public ShipAddress getShipAddress() {
                 ShipAddress address = new ShipAddress();
-                address.setArea(SpringContextUtil.getBeanByType(AreaService.class).get("430103"));
+                address.setArea(areaService.get("430103"));
                 address.setName("王五");
                 address.setAddress("天心区308号");
                 address.setMobile("159218471");
@@ -106,5 +104,14 @@ public class TestOrderDetailsService extends AbstractOrderService implements Ini
     public void paySuccess(Payment payment) {
         LOG.debug("订单支付成功");
     }
+
+    @Override
+    public OrderUrls getOrderUrls() {
+        OrderUrls urls = new OrderUrls();
+        urls.setResultUrl("{{serverUrl}}/pays/{{paymentSn}}/result");
+        urls.setDetailsUrl("{{serverUrl}}/pays/{{paymentSn}}/details");
+        return urls;
+    }
+
 
 }

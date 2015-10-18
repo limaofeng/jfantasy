@@ -1,10 +1,7 @@
 package com.fantasy.mall.order.service;
 
-import com.fantasy.common.order.OrderItem;
-import com.fantasy.common.order.ShipAddress;
+import com.fantasy.common.order.*;
 import com.fantasy.payment.bean.Payment;
-import com.fantasy.common.order.AbstractOrderService;
-import com.fantasy.common.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
@@ -84,6 +81,11 @@ public class MallOrderDetailsService extends AbstractOrderService {
             order.setPaymentStatus(com.fantasy.mall.order.bean.Order.PaymentStatus.paid);
         }
         orderService.save(order);
+    }
+
+    @Override
+    public OrderUrls getOrderUrls() {
+        return null;
     }
 
 }
