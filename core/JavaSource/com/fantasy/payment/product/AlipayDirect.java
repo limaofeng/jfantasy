@@ -21,7 +21,7 @@ import java.util.concurrent.atomic.AtomicReference;
  * 支付宝（即时交易）
  */
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"debitBankcodes", "creditBankcodes"})
+@JsonIgnoreProperties({"debitBankCodes", "creditBankCodes"})
 public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
@@ -34,8 +34,8 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
     public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
-    public final List<BankCode> creditBankCodes = new LinkedList<BankCode>();
-    public final List<BankCode> debitBankCodes = new LinkedList<BankCode>();
+    private final List<BankCode> creditBankCodes = new LinkedList<BankCode>();
+    private final List<BankCode> debitBankCodes = new LinkedList<BankCode>();
 
     {
         //银行简码——混合渠道
@@ -177,12 +177,12 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         return payResult;
     }
 
-    public List<BankCode> getDebitBankcodes() {
-        return this.debitBankCodes;
+    public List<BankCode> getCreditBankCodes() {
+        return creditBankCodes;
     }
 
-    public List<BankCode> getCreditBankcodes() {
-        return this.creditBankCodes;
+    public List<BankCode> getDebitBankCodes() {
+        return debitBankCodes;
     }
 
     public static class BankCode {
