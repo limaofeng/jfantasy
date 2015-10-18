@@ -16,9 +16,11 @@ install:
   - mvn clean compile install -Dmaven.test.skip=true -P test
 
 script:
+  - cd core
   - mvn cobertura:cobertura -Dmaven.test.failure.ignore=true -P test
 
 after_success:
+  - cd core
   - mvn org.eluder.coveralls:coveralls-maven-plugin:report -P test
 
 notifications:

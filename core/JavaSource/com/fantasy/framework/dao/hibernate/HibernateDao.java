@@ -740,7 +740,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     public Pager<T> findPager(Pager<T> pager, Criterion... criterions) {
         pager = pager == null ? new Pager<T>() : pager;
         Criteria c = distinct(createCriteria(criterions, StringUtil.tokenizeToStringArray(pager.getOrderBy())));
-        if(pager.getFirst() == 0) {
+        if (pager.getFirst() == 0) {
             pager.setTotalCount(countCriteriaResult(c));
         }
         setPageParameter(c, pager);
@@ -1016,7 +1016,16 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
             if (PropertyFilter.MatchType.EQ.equals(matchType)) {
                 criterion = Restrictions.eq(propertyName, propertyValue);
             } else if (PropertyFilter.MatchType.LIKE.equals(matchType)) {
-                criterion = Restrictions.like(propertyName, (String) propertyValue, MatchMode.ANYWHERE);
+                String value = (String) propertyValue;
+                MatchMode matchMode = MatchMode.ANYWHERE;
+                if (value.startsWith("%")) {
+                    matchMode = MatchMode.START;
+                    value = value.substring(1);
+                } else if (value.endsWith("%")) {
+                    matchMode = MatchMode.END;
+                    value = value.substring(0, value.length() - 2);
+                }
+                criterion = Restrictions.like(propertyName, value, matchMode);
             } else if (PropertyFilter.MatchType.LE.equals(matchType)) {
                 criterion = Restrictions.le(propertyName, propertyValue);
             } else if (PropertyFilter.MatchType.LT.equals(matchType)) {

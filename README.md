@@ -1,6 +1,6 @@
-# `jfantasy`
+# `jfantasy` [![Build Status][circle-img]][circle-url]
 
-[![Build Status][circle-img]][circle-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url]
+[![Build Status][travis-img]][travis-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url]
 
 jfantasy 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架.
 
