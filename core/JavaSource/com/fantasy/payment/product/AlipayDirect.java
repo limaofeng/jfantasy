@@ -2,10 +2,13 @@ package com.fantasy.payment.product;
 
 import com.fantasy.common.order.Order;
 import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.service.PaymentContext;
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -17,6 +20,8 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 支付宝（即时交易）
  */
+@JsonFilter(JSON.CUSTOM_FILTER)
+@JsonIgnoreProperties({"debitBankcodes", "creditBankcodes"})
 public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL

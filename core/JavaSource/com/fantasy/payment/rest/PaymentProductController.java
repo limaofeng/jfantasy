@@ -6,10 +6,7 @@ import com.fantasy.payment.service.PaymentConfiguration;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -26,6 +23,13 @@ public class PaymentProductController {
     @ResponseBody
     public List<PaymentProduct> search() {
         return paymentConfiguration.getPaymentProducts();
+    }
+
+    @ApiOperation(value = "支付产品详情", notes = "通过该接口, 可以获取支付产品详情")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public PaymentProduct view(@PathVariable("id") String id) {
+        return paymentConfiguration.getPaymentProduct(id);
     }
 
 }
