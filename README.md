@@ -62,5 +62,5 @@ Licensed under [MIT](http://jfantasy.org/mit.txt)
 [coveralls-url]: https://coveralls.io/r/limaofeng/jfantasy
 [gitter-img]:    http://img.shields.io/badge/gitter-join_chat-1dce73.svg?style=flat-square
 [gitter-url]:    https://gitter.im/limaofeng/jfantasy
-[circleci-img]:    https://img.shields.io/circleci/project/limaofeng/jfantasy.svg
+[circleci-img]:    https://img.shields.io/circleci/project/limaofeng/jfantasy.svg?style=flat-square
 [circleci-url]:    https://circleci.com/gh/limaofeng/jfantasy
