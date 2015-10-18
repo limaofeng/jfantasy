@@ -1,19 +1,17 @@
 package com.fantasy.payment.product;
 
+import com.fantasy.common.order.Order;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.common.order.Order;
 import com.fantasy.payment.service.PaymentContext;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
@@ -31,51 +29,51 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
 
     public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
 
-    public static final Map<String, String> CREDIT_BANKCODES = new LinkedHashMap<String, String>();
-    public static final Map<String, String> DEBIT_BANKCODES = new LinkedHashMap<String, String>();
+    public final List<BankCode> creditBankCodes = new LinkedList<BankCode>();
+    public final List<BankCode> debitBankCodes = new LinkedList<BankCode>();
 
-    static {
+    {
         //银行简码——混合渠道
-        CREDIT_BANKCODES.put("ICBCBTB", "中国工商银行（B2B）");
-        CREDIT_BANKCODES.put("ABCBTB", "中国农业银行（B2B）");
-        CREDIT_BANKCODES.put("CCBBTB", "中国建设银行（B2B）");
-        CREDIT_BANKCODES.put("SPDBB2B", "上海浦东发展银行（B2B）");
-        CREDIT_BANKCODES.put("BOCBTB", "中国银行（B2B）");
-        CREDIT_BANKCODES.put("CMBBTB", "招商银行（B2B）");
-        CREDIT_BANKCODES.put("BOCB2C", "中国银行");
-        CREDIT_BANKCODES.put("ICBCB2C", "中国工商银行");
-        CREDIT_BANKCODES.put("CMB", "招商银行");
-        CREDIT_BANKCODES.put("CCB", "中国建设银行");
-        CREDIT_BANKCODES.put("ABC", "中国农业银行");
-        CREDIT_BANKCODES.put("SPDB", "上海浦东发展银行");
-        CREDIT_BANKCODES.put("CIB", "兴业银行");
-        CREDIT_BANKCODES.put("GDB", "广发银行");
-        CREDIT_BANKCODES.put("CMBC", "中国民生银行");
-        CREDIT_BANKCODES.put("CITIC", "中信银行");
-        CREDIT_BANKCODES.put("HZCBB2C", "杭州银行");
-        CREDIT_BANKCODES.put("CEBBANK", "中国光大银行");
-        CREDIT_BANKCODES.put("SHBANK", "上海银行");
-        CREDIT_BANKCODES.put("NBBANK", "宁波银行");
-        CREDIT_BANKCODES.put("SPABANK", "平安银行");
-        CREDIT_BANKCODES.put("BJRCB", "北京农村商业银行");
-        CREDIT_BANKCODES.put("FDB", "富滇银行");
-        CREDIT_BANKCODES.put("POSTGC", "中国邮政储蓄银行");
-        CREDIT_BANKCODES.put("abc1003", "visa");
-        CREDIT_BANKCODES.put(" abc1004", "master");
+        creditBankCodes.add(new BankCode("ICBCBTB", "中国工商银行（B2B）"));
+        creditBankCodes.add(new BankCode("ABCBTB", "中国农业银行（B2B）"));
+        creditBankCodes.add(new BankCode("CCBBTB", "中国建设银行（B2B）"));
+        creditBankCodes.add(new BankCode("SPDBB2B", "上海浦东发展银行（B2B）"));
+        creditBankCodes.add(new BankCode("BOCBTB", "中国银行（B2B）"));
+        creditBankCodes.add(new BankCode("CMBBTB", "招商银行（B2B）"));
+        creditBankCodes.add(new BankCode("BOCB2C", "中国银行"));
+        creditBankCodes.add(new BankCode("ICBCB2C", "中国工商银行"));
+        creditBankCodes.add(new BankCode("CMB", "招商银行"));
+        creditBankCodes.add(new BankCode("CCB", "中国建设银行"));
+        creditBankCodes.add(new BankCode("ABC", "中国农业银行"));
+        creditBankCodes.add(new BankCode("SPDB", "上海浦东发展银行"));
+        creditBankCodes.add(new BankCode("CIB", "兴业银行"));
+        creditBankCodes.add(new BankCode("GDB", "广发银行"));
+        creditBankCodes.add(new BankCode("CMBC", "中国民生银行"));
+        creditBankCodes.add(new BankCode("CITIC", "中信银行"));
+        creditBankCodes.add(new BankCode("HZCBB2C", "杭州银行"));
+        creditBankCodes.add(new BankCode("CEBBANK", "中国光大银行"));
+        creditBankCodes.add(new BankCode("SHBANK", "上海银行"));
+        creditBankCodes.add(new BankCode("NBBANK", "宁波银行"));
+        creditBankCodes.add(new BankCode("SPABANK", "平安银行"));
+        creditBankCodes.add(new BankCode("BJRCB", "北京农村商业银行"));
+        creditBankCodes.add(new BankCode("FDB", "富滇银行"));
+        creditBankCodes.add(new BankCode("POSTGC", "中国邮政储蓄银行"));
+        creditBankCodes.add(new BankCode("abc1003", "visa"));
+        creditBankCodes.add(new BankCode(" abc1004", "master"));
         //银行简码——纯借记卡渠道
-        DEBIT_BANKCODES.put("CMB-DEBIT", "招商银行");
-        DEBIT_BANKCODES.put("CCB-DEBIT", "中国建设银行");
-        DEBIT_BANKCODES.put("ICBC-DEBIT", "中国工商银行");
-        DEBIT_BANKCODES.put("COMM-DEBIT", "交通银行");
-        DEBIT_BANKCODES.put("GDB-DEBIT", "广发银行");
-        DEBIT_BANKCODES.put("BOC-DEBIT", "中国银行");
-        DEBIT_BANKCODES.put("CEB-DEBIT", "中国光大银行");
-        DEBIT_BANKCODES.put("SPDB-DEBIT", "上海浦东发展银行");
-        DEBIT_BANKCODES.put("PSBC-DEBIT", "中国邮政储蓄银行");
-        DEBIT_BANKCODES.put("BJBANK", "北京银行");
-        DEBIT_BANKCODES.put("SHRCB", "上海农商银行");
-        DEBIT_BANKCODES.put("WZCBB2C-DEBIT", "温州银行");
-        DEBIT_BANKCODES.put("COMM", "交通银行");
+        debitBankCodes.add(new BankCode("CMB-DEBIT", "招商银行"));
+        debitBankCodes.add(new BankCode("CCB-DEBIT", "中国建设银行"));
+        debitBankCodes.add(new BankCode("ICBC-DEBIT", "中国工商银行"));
+        debitBankCodes.add(new BankCode("COMM-DEBIT", "交通银行"));
+        debitBankCodes.add(new BankCode("GDB-DEBIT", "广发银行"));
+        debitBankCodes.add(new BankCode("BOC-DEBIT", "中国银行"));
+        debitBankCodes.add(new BankCode("CEB-DEBIT", "中国光大银行"));
+        debitBankCodes.add(new BankCode("SPDB-DEBIT", "上海浦东发展银行"));
+        debitBankCodes.add(new BankCode("PSBC-DEBIT", "中国邮政储蓄银行"));
+        debitBankCodes.add(new BankCode("BJBANK", "北京银行"));
+        debitBankCodes.add(new BankCode("SHRCB", "上海农商银行"));
+        debitBankCodes.add(new BankCode("WZCBB2C-DEBIT", "温州银行"));
+        debitBankCodes.add(new BankCode("COMM", "交通银行"));
     }
 
     @Override
@@ -174,12 +172,31 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         return payResult;
     }
 
-    public static Map<String, String> getDebitBankcodes() {
-        return AlipayDirect.DEBIT_BANKCODES;
+    public List<BankCode> getDebitBankcodes() {
+        return this.debitBankCodes;
     }
 
-    public static Map<String, String> getCreditBankcodes() {
-        return AlipayDirect.CREDIT_BANKCODES;
+    public List<BankCode> getCreditBankcodes() {
+        return this.creditBankCodes;
+    }
+
+    public static class BankCode {
+        private String code;
+        private String name;
+
+        public BankCode(String code, String name) {
+            this.code = code;
+            this.name = name;
+        }
+
+        public String getCode() {
+            return code;
+        }
+
+        public String getName() {
+            return name;
+        }
+
     }
 
 }

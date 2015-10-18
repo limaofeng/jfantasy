@@ -698,7 +698,7 @@ CREATE TABLE `cms_article_category` (
 
 DROP TABLE IF EXISTS `cms_banner`;
 CREATE TABLE `cms_banner` (
-  `code`        VARCHAR(20)  NOT NULL,
+  `code`        VARCHAR(20) NOT NULL,
   `create_time` DATETIME     DEFAULT NULL,
   `creator`     VARCHAR(20)  DEFAULT NULL,
   `modifier`    VARCHAR(20)  DEFAULT NULL,
@@ -1758,9 +1758,7 @@ CREATE TABLE `mall_payment_config` (
   `payment_product_id`  VARCHAR(255)  DEFAULT NULL,
   `sort`                INT(11)       DEFAULT NULL,
   `seller_email`        VARCHAR(255)  DEFAULT NULL,
-  `decryption`          VARCHAR(255)  DEFAULT NULL,
-  `encryption`          VARCHAR(255)  DEFAULT NULL,
-  PRIMARY KEY (`id`)
+    PRIMARY KEY (`id`)
 )
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
