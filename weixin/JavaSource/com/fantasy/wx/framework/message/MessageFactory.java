@@ -10,6 +10,8 @@ import com.fantasy.wx.framework.factory.WeiXinSessionUtils;
 import com.fantasy.wx.framework.message.content.*;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Method;
 import java.util.Date;
@@ -18,6 +20,8 @@ import java.util.Date;
  * 微信消息工厂
  */
 public class MessageFactory {
+
+    private final static Log LOG = LogFactory.getLog(MessageFactory.class);
 
     /**
      * 文本消息
@@ -70,8 +74,8 @@ public class MessageFactory {
                     } else {
                         return methodProxy.invokeSuper(o, objects);
                     }
-                } catch (Throwable throwable) {
-                    throwable.printStackTrace();
+                } catch (Throwable throwable) {//NOSONAR
+                    LOG.error(throwable.getMessage());
                     return null;
                 }
             }

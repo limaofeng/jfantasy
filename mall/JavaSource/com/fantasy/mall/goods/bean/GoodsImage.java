@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
+import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -67,6 +68,11 @@ public class GoodsImage extends FileDetail implements Comparable<GoodsImage> {
      */
     public String getThumbnailImagePath() {
         return RegexpUtil.replace(this.getAbsolutePath(), "[.][a-zA-Z]{1,}$", "_94x53$0");
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getFileDetailKey()).toHashCode();
     }
 
     @Override
