@@ -64,7 +64,7 @@ Licensed under [MIT](http://jfantasy.org/mit.txt)
 [gitter-url]:    https://gitter.im/limaofeng/jfantasy
 [circle-img]:    https://img.shields.io/circleci/project/limaofeng/jfantasy.svg?style=flat-square
 [circle-url]:    https://circleci.com/gh/limaofeng/jfantasy
-[tech_debt-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-core/tech_debt.svg?style=flat-square
+[tech_debt-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-framework/tech_debt.svg?style=flat-square
 [tech_debt-url]:http://sonar.hoolue.com/dashboard/index/1160
-[coverage-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-core/coverage.svg?style=flat-square
+[coverage-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-framework/coverage.svg?style=flat-square
 [coverage-url]:http://sonar.hoolue.com/dashboard/index/1160
