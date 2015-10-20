@@ -380,9 +380,6 @@
                 <groupId>org.eluder.coveralls</groupId>
                 <artifactId>coveralls-maven-plugin</artifactId>
                 <version>3.1.0</version>
-                <configuration>
-                    <repoToken>aB6aPUVb95MZ2urV4Ij0vp9hLM2nws5f6</repoToken>
-                </configuration>
             </plugin>
         </plugins>
     </build>
