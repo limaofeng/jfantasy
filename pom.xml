@@ -301,6 +301,7 @@
                 <groupId>org.codehaus.sonar</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
                 <version>4.3</version>
+                <inherited>false</inherited>
             </plugin>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
