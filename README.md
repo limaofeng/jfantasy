@@ -1,6 +1,6 @@
 # `jfantasy`
 
-[![Build Status][circleci-img]][circleci-url] [![Coverage Status][coveralls-img]][coveralls-url] [![Chat][gitter-img]][gitter-url]
+[![Build Status][circle-img]][circle-url] [![Coverage Status][coveralls-img]][coveralls-url] [![TechDebt Status][tech_debt-img]][tech_debt-url] [![Coverage Status][coverage-img]][coverage-url]
 
 jfantasy 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架.
 
@@ -60,7 +60,11 @@ Licensed under [MIT](http://jfantasy.org/mit.txt)
 
 [coveralls-img]: http://img.shields.io/coveralls/limaofeng/jfantasy/master.svg?style=flat-square
 [coveralls-url]: https://coveralls.io/r/limaofeng/jfantasy
-[gitter-img]:    http://img.shields.io/badge/gitter-join_chat-1dce73.svg?style=flat-square
+[gitter-img]:    http://img.shields.io/badge/asana-join_chat-1dce73.svg?style=flat-square
 [gitter-url]:    https://gitter.im/limaofeng/jfantasy
-[circleci-img]:    https://img.shields.io/circleci/project/limaofeng/jfantasy.svg?style=flat-square
-[circleci-url]:    https://circleci.com/gh/limaofeng/jfantasy
+[circle-img]:    https://img.shields.io/circleci/project/limaofeng/jfantasy.svg?style=flat-square
+[circle-url]:    https://circleci.com/gh/limaofeng/jfantasy
+[tech_debt-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-core/tech_debt.svg
+[tech_debt-img]:http://sonar.hoolue.com/dashboard/index/1160
+[coverage-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-core/coverage.svg
+[coverage-url]:http://sonar.hoolue.com/dashboard/index/1160

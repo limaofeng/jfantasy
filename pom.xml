@@ -1228,7 +1228,7 @@
     <!-- 持续集成信息 -->
     <ciManagement>
         <system>continuum</system>
-        <url>https://travis-ci.org/limaofeng/jfantasy</url>
+        <url>https://circleci.com/gh/limaofeng/jfantasy</url>
         <notifiers>
             <notifier>
                 <type>mail</type>
