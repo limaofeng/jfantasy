@@ -138,6 +138,7 @@
                     <include>**/*.jpg</include>
                     <include>**/*.properties</include>
                     <include>**/*.bpmn</include>
+                    <include>**/*.hbs</include>
                 </includes>
             </resource>
         </resources>

@@ -78,17 +78,17 @@ public class FileManagerFactory implements InitializingBean {
                         fileManagerService.save(fileManagerConfig);
                     }
                 }
+                // 初始化文件管理器
+                for (FileManagerConfig config : fileManagerService.getAll()) {
+                    try {
+                        FileManagerFactory.this.registerFileManager(config.getId(), config.getType(), config.getConfigParams());
+                    } catch (Exception ex) {
+                        LOG.error("注册 FileManager id = [" + config.getId() + "] 失败!", ex);
+                    }
+                }
                 return null;
             }
         }, TransactionDefinition.PROPAGATION_REQUIRED);
-        // 初始化文件管理器
-        for (FileManagerConfig config : fileManagerService.getAll()) {
-            try {
-                FileManagerFactory.this.registerFileManager(config.getId(), config.getType(), config.getConfigParams());
-            } catch (Exception ex) {
-                LOG.error("注册 FileManager id = [" + config.getId() + "] 失败!", ex);
-            }
-        }
     }
 
     public void registerFileManager(String id, FileManagerType type, final List<ConfigParam> configParams) {
