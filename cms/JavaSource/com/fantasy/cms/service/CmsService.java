@@ -83,9 +83,7 @@ public class CmsService extends BuguSearcher<Article> {
                 filters.add(new PropertyFilter("LIKES_category.path", this.articleCategoryDao.get(code).getPath()));
             }
         }
-        Pager<Article> articlePager = articleDao.findPager(pager, filters);
-        Hibernate.initialize(articlePager.getPageItems());
-        return articlePager;
+        return articleDao.findPager(pager, filters);
     }
 
     public Pager<ArticleCategory> findCategoryPager(Pager<ArticleCategory> pager, List<PropertyFilter> filters) {

@@ -5,19 +5,22 @@ import com.fantasy.cms.bean.ArticleCategory;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.lucene.dao.hibernate.HibernateLuceneDao;
 import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Repository("fantasy.cms.hibernate.ArticleDao")
+@Repository
 public class ArticleDao extends HibernateLuceneDao<Article, Long> {
+
+    @Autowired
+    private ArticleCategoryDao categoryDao;
 
     @Override
     protected Criterion[] buildPropertyFilterCriterions(List<PropertyFilter> filters) {
@@ -55,10 +58,8 @@ public class ArticleDao extends HibernateLuceneDao<Article, Long> {
         return criterions;
     }
 
-    @SuppressWarnings("unchecked")
     private String[] getRootArticleCategoryCodes() {
-        String ids = ObjectUtil.toString(this.getSession().createCriteria(ArticleCategory.class).add(Restrictions.isNull("parent")).list(), "code", ";");
-        return StringUtil.tokenizeToStringArray(ids);
+        return ObjectUtil.toFieldArray(this.categoryDao.find(Restrictions.isNull("parent")), "code", String.class);
     }
 
 }
