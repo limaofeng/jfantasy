@@ -18,13 +18,13 @@
     </appender>
 
     <category name="com.haolue">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
     </category>
     <category name="org.springframework.web">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
     </category>
     <category name="com.fantasy.framework">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
     </category>
     <category name="com.fantasy.framework.dao.mybatis">
         <priority value="ERROR"/>
@@ -34,7 +34,7 @@
         <appender-ref ref="FILE"/>
     </category>
     <category name="org.hibernate.cache">
-        <priority value="DEBUG"/>
+        <priority value="ERROR"/>
     </category>
     <category name="org.apache.struts2.dispatcher">
         <priority value="ERROR"/>
