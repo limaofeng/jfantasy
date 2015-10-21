@@ -1,4 +1,4 @@
-var port = 3000;
+var port = process.env.PORT || '3000';
 var http = require("http");
 var url = require("url");
 var fs = require("fs");

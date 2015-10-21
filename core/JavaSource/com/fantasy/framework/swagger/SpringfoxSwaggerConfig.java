@@ -24,7 +24,7 @@ public class SpringfoxSwaggerConfig {
         apiInfo = new ApiInfo(
                 propertiesHelper.getProperty("swagger.api.title", "My Apps API Title"),
                 propertiesHelper.getProperty("swagger.api.description", "My Apps API Description"),
-                "",
+                propertiesHelper.getProperty("swagger.api.version", "My Apps API Description"),
                 propertiesHelper.getProperty("swagger.api.service", "My Apps API terms of service"),
                 propertiesHelper.getProperty("swagger.api.contact.email", "My Apps API Contact Email"),
                 propertiesHelper.getProperty("swagger.api.licence.type", "My Apps API Licence Type"),
