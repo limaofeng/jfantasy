@@ -19,9 +19,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * json 测试类
@@ -238,4 +236,112 @@ public class JSONTest {
         }
     }
 
+
+    @Test
+    public void testJsonUnwrapped(){
+        TestPOJOJsonUnwrapped pojo = new TestPOJOJsonUnwrapped();
+        pojo.setA("test");
+        pojo.setDbean(new JsonUnwrappedPoJo("蔡依林",30));
+        LOG.debug(JSON.serialize(pojo));
+        pojo.setDbean(new JsonUnwrappedPoJo1("周杰伦",45));
+        LOG.debug(JSON.serialize(pojo));
+
+        pojo = JSON.deserialize("{\"name\":\"蔡依林\",\"age\":30,\"a\":\"test\"}", TestPOJOJsonUnwrapped.class);
+        Assert.assertNotNull(pojo);
+        Assert.assertNotNull(pojo.getPoJo());
+        Assert.assertEquals(pojo.getPoJo().getName(), "蔡依林");
+    }
+
+    public static class TestPOJOJsonUnwrapped extends AbsTestPOJOJsonUnwrapped{
+        private String a;
+
+        public String getA() {
+            return a;
+        }
+
+        public void setA(String a) {
+            this.a = a;
+        }
+
+    }
+
+    public abstract static class AbsTestPOJOJsonUnwrapped {
+        @JsonUnwrapped
+        private JsonUnwrappedPoJo poJo;
+        @JsonUnwrapped
+        private Object dbean;
+
+        public Object getDbean() {
+            return dbean;
+        }
+
+        public void setDbean(Object dbean) {
+            this.dbean = dbean;
+        }
+
+        public JsonUnwrappedPoJo getPoJo() {
+            return poJo;
+        }
+
+        public void setPoJo(JsonUnwrappedPoJo poJo) {
+            this.poJo = poJo;
+        }
+    }
+
+
+    public static class JsonUnwrappedPoJo {
+        private String name;
+        private int age;
+
+        public JsonUnwrappedPoJo() {
+        }
+
+        public JsonUnwrappedPoJo(String name, int age) {
+            this.name = name;
+            this.age = age;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public int getAge() {
+            return age;
+        }
+
+        public void setAge(int age) {
+            this.age = age;
+        }
+    }
+
+    public static class JsonUnwrappedPoJo1 {
+        private String rname;
+        private int rage;
+        public JsonUnwrappedPoJo1() {
+        }
+        public JsonUnwrappedPoJo1(String name, int age) {
+            this.rname = name;
+            this.rage = age;
+        }
+
+        public String getRname() {
+            return rname;
+        }
+
+        public void setRname(String rname) {
+            this.rname = rname;
+        }
+
+        public int getRage() {
+            return rage;
+        }
+
+        public void setRage(int rage) {
+            this.rage = rage;
+        }
+    }
 }
