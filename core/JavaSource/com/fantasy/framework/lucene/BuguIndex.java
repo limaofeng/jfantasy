@@ -21,8 +21,10 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.SchedulingTaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
@@ -34,7 +36,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-public class BuguIndex implements InitializingBean {
+public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Log LOGGER = LogFactory.getLog(BuguIndex.class);
 
@@ -89,8 +91,17 @@ public class BuguIndex implements InitializingBean {
         return instance;
     }
 
+    @Async
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if(BuguIndex.instance == null) {
+            this.afterPropertiesSet();
+        }
+    }
+
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
+        long start = System.currentTimeMillis();
         Set<Class<?>> indexedClasses = new LinkedHashSet<Class<?>>();
         for (String basePackage : packagesToScan) {
             for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, LuceneDao.class)) {
@@ -123,6 +134,7 @@ public class BuguIndex implements InitializingBean {
                 }
             }, 1000 * 10);
         }
+        LOGGER.error("\n初始化 BuguIndex 耗时:" + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void rebuild() {

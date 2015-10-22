@@ -8,17 +8,14 @@ import com.fantasy.cms.dao.ArticleDao;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.lucene.BuguSearcher;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.userdetails.AdminUser;
 import com.fantasy.system.util.SettingUtil;
-import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
@@ -30,7 +27,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -312,40 +308,4 @@ public class CmsService extends BuguSearcher<Article> {
     public List<ArticleCategory> listArticleCategory() {
         return this.articleCategoryDao.find(Restrictions.isNull(ARTICLECATEGORY_PARENT_PROPERTYNAME));
     }
-
-    public static List<ArticleCategory> articleCategoryList() {
-        CmsService cmsService = SpringContextUtil.getBeanByType(CmsService.class);
-        return cmsService.listArticleCategory();
-    }
-
-    /**
-     * 根据分类code跳转不同界面
-     *
-     * @param templateUrl 模板 url
-     * @param object      object
-     * @return String
-     */
-    public static String getTemplatePath(String templateUrl, final Object object) {
-        if (object == null || (!(object instanceof ArticleCategory) && !(object instanceof Article))) {
-            return RegexpUtil.replace(templateUrl, "\\{code\\}", "");
-        }
-        Configuration configuration = SpringContextUtil.getBean("freemarkerService", Configuration.class);
-        ArticleCategory category = object instanceof ArticleCategory ? (ArticleCategory) object : ((Article) object).getCategory();
-
-        do {
-            String newTemplateUrl = RegexpUtil.replace(templateUrl, "\\{code\\}", "_" + category.getCode());
-            try {
-                configuration.getTemplate(newTemplateUrl);
-                return newTemplateUrl;
-            } catch (IOException e) {
-                LOG.error(e.getMessage());
-                if (category.getParent() == null) {
-                    break;
-                }
-                category = category.getParent();
-            }
-        } while (true);
-        return RegexpUtil.replace(templateUrl, "\\{code\\}", "");
-    }
-
 }

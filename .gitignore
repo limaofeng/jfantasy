@@ -7,5 +7,6 @@
 *.iml
 target
 
+api-docs/node_modules
 rebel.xml
 rebel-remote.xml

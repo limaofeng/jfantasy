@@ -15,8 +15,10 @@ import com.fantasy.framework.util.common.PathUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +40,7 @@ import static com.fantasy.file.bean.enums.FileManagerType.local;
  * @since 2013-7-12 下午03:57:31
  */
 @Transactional
-public class FileManagerFactory implements InitializingBean {
+public class FileManagerFactory implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Log LOG = LogFactory.getLog(FileManagerFactory.class);
 
@@ -57,8 +59,16 @@ public class FileManagerFactory implements InitializingBean {
 
     private final static ConcurrentMap<String, FileManager> fileManagerCache = new ConcurrentHashMap<String, FileManager>();
 
+    @Async
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        if(fileManagerCache.isEmpty()) {
+            this.afterPropertiesSet();
+        }
+    }
 
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
+        long start = System.currentTimeMillis();
         JdbcUtil.transaction(new JdbcUtil.Callback<Void>() {
             @Override
             public Void run() {
@@ -89,6 +99,7 @@ public class FileManagerFactory implements InitializingBean {
                 return null;
             }
         }, TransactionDefinition.PROPAGATION_REQUIRED);
+        LOG.error("\n初始化 FileManagerFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void registerFileManager(String id, FileManagerType type, final List<ConfigParam> configParams) {

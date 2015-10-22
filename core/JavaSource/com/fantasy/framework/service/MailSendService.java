@@ -1,10 +1,9 @@
 package com.fantasy.framework.service;
 
-import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
+import com.fantasy.framework.util.HandlebarsTemplateUtils;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.regexp.RegexpCst;
 import com.fantasy.framework.util.regexp.RegexpUtil;
-import freemarker.template.Configuration;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,6 +13,7 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.mail.internet.MimeUtility;
+import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -36,7 +36,6 @@ public class MailSendService implements InitializingBean {
      */
     private static final Pattern PARSE_EMAIL = RegexpUtil.getPattern("^([\\S\\s]+)?\\<([\\S\\s]+)\\>");
 
-    private Configuration configuration;
     private String hostname;
     private String from;
     private String displayName;
@@ -139,7 +138,7 @@ public class MailSendService implements InitializingBean {
         try {
             Email email = this.createEmail(EmailType.simple, to);
             email.setSubject(title);
-            email.setMsg(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model));
+            email.setMsg(HandlebarsTemplateUtils.processTemplateIntoString(template,model));
             send(email);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
@@ -176,7 +175,7 @@ public class MailSendService implements InitializingBean {
         try {
             HtmlEmail email = (HtmlEmail) this.createEmail(EmailType.html, to);
             email.setSubject(title);
-            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model), EmailConstants.TEXT_HTML);
+            email.setContent(HandlebarsTemplateUtils.processTemplateIntoString(template, model), EmailConstants.TEXT_HTML);
             send(email);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
@@ -198,7 +197,7 @@ public class MailSendService implements InitializingBean {
         try {
             HtmlEmail email = (HtmlEmail) this.createEmail(EmailType.html, to);
             email.setSubject(title);
-            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model), EmailConstants.TEXT_HTML);
+            email.setContent(HandlebarsTemplateUtils.processTemplateIntoString(template, model), EmailConstants.TEXT_HTML);
             // 添加附件
             if (attachs != null && attachs.length > 0) {
                 for (EmailAttachment attachment : attachs) {
@@ -226,14 +225,14 @@ public class MailSendService implements InitializingBean {
         try {
             HtmlEmail email = (HtmlEmail) this.createEmail(EmailType.html, to);
             email.setSubject(title);
-            email.setContent(FreeMarkerTemplateUtils.processTemplateIntoString(this.configuration.getTemplate(template, this.charset), model), EmailConstants.TEXT_HTML);
+            email.setContent(HandlebarsTemplateUtils.processTemplateIntoString(template, model), EmailConstants.TEXT_HTML);
             if (attachs != null && attachs.length > 0) {
                 for (Attachment attachment : attachs) {// 添加流形式的附件
                     if (attachment.getInputStream() != null) {
                         email.attach(new ByteArrayDataSource(attachment.getInputStream(), attachment.getContentType()), MimeUtility.encodeText(attachment.getName()), attachment.getDescription());
                     } else {// freemarker 模板
                         ByteArrayOutputStream out = new ByteArrayOutputStream();
-                        FreeMarkerTemplateUtils.writer(attachment.getModel(), this.configuration.getTemplate(attachment.getTemplate(), this.charset), out);
+                        HandlebarsTemplateUtils.writer(attachment.getModel(), attachment.getTemplate(), out);
                         email.attach(new ByteArrayDataSource(out.toByteArray(), attachment.getContentType()), MimeUtility.encodeText(attachment.getName()), attachment.getDescription());
                     }
                 }
@@ -272,10 +271,6 @@ public class MailSendService implements InitializingBean {
 
     public void setCharset(String charset) {
         this.charset = charset;
-    }
-
-    public void setConfiguration(Configuration configuration) {
-        this.configuration = configuration;
     }
 
     private static enum EmailType {

@@ -35,7 +35,7 @@ import java.util.List;
 
 @EnableWebMvc
 @Configuration
-@ComponentScan(basePackages = {"com.fantasy.*.rest", "com.fantasy.*.web"}, useDefaultFilters = false, includeFilters = {
+@ComponentScan(basePackages = {"com.fantasy.*.rest"}, useDefaultFilters = false, includeFilters = {
         @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})
 })
 public class WebMvcConfig extends WebMvcConfigurerAdapter {

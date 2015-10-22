@@ -36,7 +36,7 @@ import javax.persistence.Entity;
 @Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "content"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "content","target"})
 public class Article extends BaseDynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;

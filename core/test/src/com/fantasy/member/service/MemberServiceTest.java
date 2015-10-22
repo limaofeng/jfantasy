@@ -31,7 +31,8 @@ public class MemberServiceTest {
 
     @After
     public void tearDown() throws Exception {
-
+        Member member = memberService.findUniqueByUsername("test");
+        this.memberService.delete(member.getId());
     }
 
     @Test

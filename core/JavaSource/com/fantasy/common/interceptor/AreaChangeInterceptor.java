@@ -6,8 +6,10 @@ import org.apache.log4j.Logger;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.quartz.JobExecutionException;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.SchedulingTaskExecutor;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -18,22 +20,20 @@ import org.springframework.stereotype.Component;
  * @since 2013-4-25 下午06:24:06
  */
 @Component
-public class AreaChangeInterceptor implements InitializingBean {
+public class AreaChangeInterceptor implements ApplicationListener<ContextRefreshedEvent> {
 
     private static final Logger LOGGER = Logger.getLogger(AreaChangeInterceptor.class);
 
     private Runnable runJavaScript = null;
 
-    public void afterPropertiesSet() throws Exception {
-        runJavaScript = new Runnable() {
-            public void run() {
-                try {
-                    new AreaJsJob().execute(null);
-                } catch (JobExecutionException e) {
-                    LOGGER.error(e.getMessage(), e);
-                }
-            }
-        };
+    @Async
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent event) {
+        try {
+            new AreaJsJob().execute(null);
+        } catch (JobExecutionException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
     }
 
     @After("execution(public * com.fantasy.common.service.AreaService.save(..))")

@@ -60,6 +60,7 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
 
     @Override
     public void afterPropertiesSet() throws IOException {
+        long start = System.currentTimeMillis();
         //========================== 判断是否为扩展模式 ==========================
         if (Mode.extra == packageMode) {
             this.packagesToScan = StringUtil.add(this.packagesToScan == null ? new String[0] : this.packagesToScan, ConfigResolver.parseConfiguration().getPackagesToScan());
@@ -122,26 +123,26 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
                 }
             }
         }
-
+        LOG.error("\n初始化 Hibernate 耗时:" + (System.currentTimeMillis() - start) + "ms");
     }
 
     private LocalSessionFactoryBuilder createConfiguration(Interceptor entityInterceptor, String[] packagesToScan) throws IOException {
-        DataSource dataSource = (DataSource) ClassUtil.getValue(this, "dataSource");
-        Resource[] configLocations = (Resource[]) ClassUtil.getValue(this, "configLocations");
-        String[] mappingResources = (String[]) ClassUtil.getValue(this, "mappingResources");
-        Resource[] mappingLocations = (Resource[]) ClassUtil.getValue(this, "mappingLocations");
-        Resource[] cacheableMappingLocations = (Resource[]) ClassUtil.getValue(this, "cacheableMappingLocations");
-        Resource[] mappingJarLocations = (Resource[]) ClassUtil.getValue(this, "mappingJarLocations");
-        Resource[] mappingDirectoryLocations = (Resource[]) ClassUtil.getValue(this, "mappingDirectoryLocations");
-        NamingStrategy namingStrategy = (NamingStrategy) ClassUtil.getValue(this, "namingStrategy");
+        DataSource dataSource = ClassUtil.getValue(this, "dataSource");
+        Resource[] configLocations = ClassUtil.getValue(this, "configLocations");
+        String[] mappingResources = ClassUtil.getValue(this, "mappingResources");
+        Resource[] mappingLocations = ClassUtil.getValue(this, "mappingLocations");
+        Resource[] cacheableMappingLocations = ClassUtil.getValue(this, "cacheableMappingLocations");
+        Resource[] mappingJarLocations = ClassUtil.getValue(this, "mappingJarLocations");
+        Resource[] mappingDirectoryLocations = ClassUtil.getValue(this, "mappingDirectoryLocations");
+        NamingStrategy namingStrategy = ClassUtil.getValue(this, "namingStrategy");
         Object jtaTransactionManager = ClassUtil.getValue(this, "jtaTransactionManager");
         Object multiTenantConnectionProvider = ClassUtil.getValue(this, "multiTenantConnectionProvider");
         Object currentTenantIdentifierResolver = ClassUtil.getValue(this, "currentTenantIdentifierResolver");
-        RegionFactory cacheRegionFactory = (RegionFactory) ClassUtil.getValue(this, "cacheRegionFactory");
-        TypeFilter[] entityTypeFilters = (TypeFilter[]) ClassUtil.getValue(this, "entityTypeFilters");
-        Properties hibernateProperties = (Properties) ClassUtil.getValue(this, "hibernateProperties");
-        Class<?>[] annotatedClasses = (Class<?>[]) ClassUtil.getValue(this, "annotatedClasses");
-        String[] annotatedPackages = (String[]) ClassUtil.getValue(this, "annotatedPackages");
+        RegionFactory cacheRegionFactory = ClassUtil.getValue(this, "cacheRegionFactory");
+        TypeFilter[] entityTypeFilters = ClassUtil.getValue(this, "entityTypeFilters");
+        Properties hibernateProperties = ClassUtil.getValue(this, "hibernateProperties");
+        Class<?>[] annotatedClasses = ClassUtil.getValue(this, "annotatedClasses");
+        String[] annotatedPackages = ClassUtil.getValue(this, "annotatedPackages");
         ResourcePatternResolver resourcePatternResolver = new PathMatchingResourcePatternResolver();
         LocalSessionFactoryBuilder sfb = new LocalSessionFactoryBuilder(dataSource, resourcePatternResolver);
         if (configLocations != null) {

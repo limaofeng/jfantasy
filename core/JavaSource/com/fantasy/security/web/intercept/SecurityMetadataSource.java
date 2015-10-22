@@ -4,7 +4,6 @@ import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.security.bean.Permission;
 import com.fantasy.security.bean.Resource;
 import com.fantasy.security.service.PermissionService;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.web.FilterInvocation;
@@ -17,15 +16,12 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class SecurityMetadataSource implements FilterInvocationSecurityMetadataSource, InitializingBean {
+public class SecurityMetadataSource implements FilterInvocationSecurityMetadataSource {
 
     @Autowired
     private PermissionService permissionService;
 
     private Map<String, RequestMatcher> requestMatchers = new ConcurrentHashMap<String, RequestMatcher>();
-
-    public void afterPropertiesSet() throws Exception {
-    }
 
     public Collection<ConfigAttribute> getAttributes(Object filter) throws IllegalArgumentException {
         FilterInvocation filterInvocation = (FilterInvocation) filter;

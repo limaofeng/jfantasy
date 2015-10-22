@@ -7,7 +7,6 @@ import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.mall.goods.bean.Goods;
 import com.fantasy.mall.goods.bean.GoodsCategory;
 import com.fantasy.mall.goods.bean.Product;
@@ -18,7 +17,6 @@ import com.fantasy.mall.sales.service.SalesService;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.userdetails.AdminUser;
 import com.fantasy.system.util.SettingUtil;
-import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
@@ -26,19 +24,12 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.BooleanType;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.TransactionDefinition;
-import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.transaction.support.DefaultTransactionDefinition;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,33 +41,9 @@ import java.util.List;
  */
 @Service
 @Transactional
-public class GoodsService implements InitializingBean {
+public class GoodsService {
 
     private static final Log LOG = LogFactory.getLog(GoodsService.class);
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        PlatformTransactionManager transactionManager = SpringContextUtil.getBean("transactionManager", PlatformTransactionManager.class);
-        DefaultTransactionDefinition def = new DefaultTransactionDefinition();
-        def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRES_NEW);
-        assert transactionManager != null;
-        TransactionStatus status = transactionManager.getTransaction(def);
-        try {
-            // 初始化商品根目录
-            if (goodsCategoryDao.count() == 0) {
-                StringBuffer log = new StringBuffer("初始化商品分类根目录");
-                GoodsCategory category = new GoodsCategory();
-                category.setSort(0);
-                category.setSign("root");
-                category.setName("商品分类根目录");
-                save(category);
-                LOG.debug(log);
-            }
-            // 初始化商品图片目录
-        } finally {
-            transactionManager.commit(status);
-        }
-    }
 
     @Autowired
     private GoodsDao goodsDao;
@@ -544,35 +511,6 @@ public class GoodsService implements InitializingBean {
     }
 
     /**
-     * @param templateUrl 模板路径
-     * @param object      关联对象
-     * @return 新的路径
-     */
-    public static String getTemplatePath(String templateUrl, final Object object) {
-        if (object == null || (!(object instanceof GoodsCategory) && !(object instanceof Goods))) {
-            return RegexpUtil.replace(templateUrl, "\\{sign\\}", "");
-        }
-        Configuration configuration = SpringContextUtil.getBean("freemarkerService", Configuration.class);
-        GoodsCategory category = object instanceof GoodsCategory ? (GoodsCategory) object : ((Goods) object).getCategory();
-
-        do {
-            String newTemplateUrl = RegexpUtil.replace(templateUrl, "\\{sign\\}", "_" + category.getSign());
-            try {
-                configuration.getTemplate(newTemplateUrl);
-                return newTemplateUrl;
-            } catch (IOException e) {
-                LOG.error(e.getMessage());
-                if (category.getParent() == null) {
-                    break;
-                }
-                category = category.getParent();
-            }
-        } while (true);
-        return RegexpUtil.replace(templateUrl, "\\{sign\\}", "");
-    }
-
-
-    /**
      * 移动商品
      *
      * @param ids        商品ids
@@ -590,12 +528,6 @@ public class GoodsService implements InitializingBean {
     public List<GoodsCategory> listGoodsCategory() {
         return this.goodsCategoryDao.find(Restrictions.isNull("parent"));
     }
-
-    public static List<GoodsCategory> goodsCategoryList() {
-        GoodsService goodsService = SpringContextUtil.getBeanByType(GoodsService.class);
-        return goodsService.listGoodsCategory();
-    }
-
 
     /**
      * 分类分页查询

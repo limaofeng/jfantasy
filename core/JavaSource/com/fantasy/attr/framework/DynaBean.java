@@ -15,26 +15,30 @@ public interface DynaBean {
      *
      * @return AttributeVersion
      */
-    public AttributeVersion getVersion();
+    AttributeVersion getVersion();
 
-    public void setVersion(AttributeVersion version);
+    void setVersion(AttributeVersion version);
 
     /**
      * 获取动态属性
      *
      * @return List<AttributeValue>
      */
-    public List<AttributeValue> getAttributeValues();
+    List<AttributeValue> getAttributeValues();
 
     /**
      * 设置动态属性
      *
      * @param attributeValues List<AttributeValue>
      */
-    public void setAttributeValues(List<AttributeValue> attributeValues);
+    void setAttributeValues(List<AttributeValue> attributeValues);
 
-    public void setAttributeValueStore(String json);
+    void setAttributeValueStore(String json);
 
-    public String getAttributeValueStore();
+    String getAttributeValueStore();
+
+    DynaBean getTarget();
+
+    void setTarget(DynaBean target);
 
 }

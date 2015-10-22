@@ -7,7 +7,6 @@ import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.executor.keygen.KeyGenerator;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -22,7 +21,7 @@ import java.util.Random;
  * @version 1.0
  * @since 2013-1-14 下午02:09:32
  */
-public class GUIDKeyGenerator implements KeyGenerator, InitializingBean {
+public class GUIDKeyGenerator implements KeyGenerator {
     private static final Logger LOGGER = Logger.getLogger(GUIDKeyGenerator.class);
     private Random random;
     private String s_id;

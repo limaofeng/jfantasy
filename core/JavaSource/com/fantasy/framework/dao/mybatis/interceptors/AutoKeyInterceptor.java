@@ -12,7 +12,6 @@ import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
-import org.springframework.beans.factory.InitializingBean;
 
 import javax.persistence.GeneratedValue;
 import java.lang.reflect.Field;
@@ -23,22 +22,17 @@ import java.util.*;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2012-10-28 下午08:13:36
  */
 @Intercepts({@org.apache.ibatis.plugin.Signature(type = org.apache.ibatis.executor.Executor.class, method = "update", args = {MappedStatement.class, Object.class})})
-public class AutoKeyInterceptor implements Interceptor, InitializingBean {
+public class AutoKeyInterceptor implements Interceptor {
 
     static int MAPPED_STATEMENT_INDEX = 0;
     static int PARAMETER_INDEX = 1;
 
     private Map<String, KeyGenerator> keyGenerators = null;
 
-    public AutoKeyInterceptor() {
-        this.afterPropertiesSet();
-    }
-
-    public void afterPropertiesSet() {
+    public void initKeyGenerators() {
         if (ObjectUtil.isNull(keyGenerators)) {
             keyGenerators = new HashMap<String, KeyGenerator>();
         }
@@ -62,7 +56,7 @@ public class AutoKeyInterceptor implements Interceptor, InitializingBean {
             List<String> keyPropertieNameList = new ArrayList<String>();
             Map<String, KeyGenerator> targetKeyGenerators = new HashMap<String, KeyGenerator>();
             for (Field field : fields) {
-                targetKeyGenerators.put(field.getName(), this.keyGenerators.get(((GeneratedValue) ClassUtil.getFieldGenericType(field, GeneratedValue.class)).generator()));
+                targetKeyGenerators.put(field.getName(), this.getKeyGenerator(ClassUtil.getFieldGenericType(field, GeneratedValue.class).generator()));
                 if (ObjectUtil.isNull(field.getName())) {
                     targetKeyGenerators.remove(field.getName());
                 } else {
@@ -81,6 +75,13 @@ public class AutoKeyInterceptor implements Interceptor, InitializingBean {
     }
 
     public void setProperties(Properties properties) {
+    }
+
+    private KeyGenerator getKeyGenerator(String key){
+        if(this.keyGenerators == null){
+            this.initKeyGenerators();
+        }
+        return this.keyGenerators.get(key);
     }
 
     public void setKeyGenerators(Map<String, KeyGenerator> keyGenerators) {

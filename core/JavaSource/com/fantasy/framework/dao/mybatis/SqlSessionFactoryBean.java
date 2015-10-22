@@ -4,7 +4,6 @@ import com.fantasy.framework.dao.mybatis.binding.MyBatisMapperRegistry;
 import com.fantasy.framework.dao.mybatis.dialect.Dialect;
 import com.fantasy.framework.dao.mybatis.interceptors.AutoKeyInterceptor;
 import com.fantasy.framework.dao.mybatis.interceptors.LimitInterceptor;
-import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -23,13 +22,17 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
+import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -43,7 +46,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, InitializingBean, ApplicationListener<ApplicationEvent> {
+public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, ApplicationContextAware, ApplicationListener<ApplicationEvent> {
     private final Log LOGGER = LogFactory.getLog(getClass());
     private Resource configLocation;
     private Resource[] mapperLocations;
@@ -62,6 +65,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     private DatabaseIdProvider databaseIdProvider = new DefaultDatabaseIdProvider();
     private Map<String, Object> mybatisProperties = new HashMap<String, Object>();
     private Dialect dialect;
+    private ResourceLoader resourceLoader;
 
     public DatabaseIdProvider getDatabaseIdProvider() {
         return this.databaseIdProvider;
@@ -128,9 +132,9 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     }
 
     public void afterPropertiesSet() throws Exception {
-        // TODO 添加需要额外的扫描的文件夹
+        long start = System.currentTimeMillis();
         this.mapperLocations = ObjectUtil.defaultValue(this.mapperLocations, new Resource[0]);
-        this.mapperLocations = ObjectUtil.join(this.mapperLocations, SpringContextUtil.getResources("classpath*:com/fantasy/**/dao/*-Mapper.xml"));
+        this.mapperLocations = ObjectUtil.join(this.mapperLocations, ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath*:com/fantasy/**/dao/*-Mapper.xml"));
         // 添加别名注解扫描路径
         this.typeAliasesPackage = StringUtil.defaultValue(this.typeAliasesPackage, "com.fantasy.framework.dao.mybatis.keygen.bean;");
         // 判断必要元素
@@ -158,6 +162,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
             }
             throw e;
         }
+        LOGGER.error("\n初始化 MyBatis 耗时:" + (System.currentTimeMillis() - start) + "ms");
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -285,7 +290,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
     }
 
     public Class<SqlSessionFactory> getObjectType() {
-        return this.sqlSessionFactory == null ? SqlSessionFactory.class : (Class<SqlSessionFactory>)this.sqlSessionFactory.getClass();
+        return this.sqlSessionFactory == null ? SqlSessionFactory.class : (Class<SqlSessionFactory>) this.sqlSessionFactory.getClass();
     }
 
     public void setDialect(Dialect dialect) {
@@ -305,4 +310,10 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, In
             this.sqlSessionFactory.getConfiguration().getMappedStatementNames();
         }
     }
+
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+        this.resourceLoader = applicationContext;
+    }
+
 }

@@ -14,6 +14,10 @@ import java.util.List;
 
 @MappedSuperclass
 public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
+
+    @Transient
+    private DynaBean target;
+
     /**
      * 数据版本
      */
@@ -66,5 +70,13 @@ public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
     @Override
     public AttributeVersion getVersion() {
         return version;
+    }
+
+    public DynaBean getTarget() {
+        return target;
+    }
+
+    public void setTarget(DynaBean target) {
+        this.target = target;
     }
 }

@@ -12,8 +12,10 @@
         <property name="hibernateProperties">
             <props>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
-                <prop key="hibernate.generate_statistics">true</prop>
-                <prop key="hibernate.hbm2ddl.auto">update</prop>
+                <prop key="hibernate.generate_statistics">false</prop>
+                <prop key="javax.persistence.validation.mode">none</prop>
+                <prop key="hibernate.archive.autodetection">class</prop>
+                <prop key="hibernate.query.startup_check">false</prop>
                 <prop key="hibernate.cglib.use_reflection_optimizer">true</prop>
                 <prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
                 <prop key="hibernate.cache.use_query_cache">true</prop>

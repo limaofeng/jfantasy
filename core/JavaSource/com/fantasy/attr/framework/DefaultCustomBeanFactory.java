@@ -13,16 +13,18 @@ import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.FantasyClassLoader;
 import com.fantasy.framework.util.asm.AsmUtil;
 import com.fantasy.framework.util.asm.Property;
+import com.fantasy.framework.util.cglib.CglibUtil;
 import com.fantasy.framework.util.common.*;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fasterxml.jackson.core.type.TypeReference;
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -31,6 +33,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionDefinition;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +48,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Component
 @Lazy(false)
 @Scope(proxyMode = ScopedProxyMode.NO)
-public class DefaultCustomBeanFactory implements CustomBeanFactory, InitializingBean {
+public class DefaultCustomBeanFactory implements CustomBeanFactory/*, InitializingBean*/ {
 
     private static final Log LOG = LogFactory.getLog(DefaultCustomBeanFactory.class);
 
@@ -60,7 +63,6 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
 
     private static Lock lock = new ReentrantLock();
 
-    @Override
     public void afterPropertiesSet() throws Exception {
         JdbcUtil.transaction(new JdbcUtil.Callback<Void>() {
             @Override
@@ -173,81 +175,88 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
         if (bean.getVersion() == null) {
             return bean;
         }
-        DynaBean dynaBean = makeDynaBean(bean.getVersion().getTargetClassName(), bean.getVersion().getNumber());
-        return createDynaBean(dynaBean, bean);
-    }
-
-    public DynaBean makeDynaBean(String className, String number) {
-        AttributeVersion version = getVersion(className, number);
-        assert version != null;
-        return createDynaBean(ClassUtil.forName(version.getClassName()), version);
-    }
-
-    private AttributeVersion getVersion(String className, String number) {
-        return versions.get(className + ClassUtil.CGLIB_CLASS_SEPARATOR + number);
-    }
-
-    public DynaBean createDynaBean(Class clazz, AttributeVersion version) {
-        DynaBean dynaBean = newInstance(clazz);
-        dynaBean.setVersion(version);
-        return dynaBean;
-    }
-
-    private DynaBean newInstance(Class clazz) {
-        return (DynaBean) ClassUtil.newInstance(clazz);
-    }
-
-    private DynaBean createDynaBean(DynaBean dynaBean, DynaBean bean) {
-        dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
-        List<AttributeValue> attributeValue = StringUtil.isBlank(bean.getAttributeValueStore()) ? bean.getAttributeValues() : JSON.deserialize(bean.getAttributeValueStore(), new TypeReference<List<AttributeValue>>() {
+        DynaBean dynaBean = CglibUtil.newInstance(ClassUtil.getRealClass(bean), new MethodInterceptor() {
+            @Override
+            public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+                return methodProxy.invokeSuper(o, objects);
+            }
         });
-        for (Attribute attribute : bean.getVersion().getAttributes()) {
-            AttributeValue sourceValue = ObjectUtil.find(attributeValue, "attribute.code", attribute.getCode());
-            if (sourceValue != null && StringUtil.isNotBlank(sourceValue.getValue())) {
-                getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), dynaBean, sourceValue.getValue());
-            }
-        }
-        BeanUtil.copyProperties(dynaBean, bean, "version", "attributeValues");
-        return dynaBean;
+        dynaBean.setTarget(bean);
+        //DynaBean dynaBean = makeDynaBean(bean.getVersion().getTargetClassName(), bean.getVersion().getNumber());
+        return dynaBean;//createDynaBean(dynaBean, bean);
     }
 
-    public Attribute getAttribute(Class<?> entityClass, String propertyName) {
-        for (AttributeVersion version : getVersionsByEntityClass(entityClass)) {
-            AttributeVersion attributeVersion = getVersion(entityClass.getName(), version.getNumber());
-            String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
-            assert attributeVersion != null;
-            Attribute attribute = ObjectUtil.find(attributeVersion.getAttributes(), "code", simpleName);
-            if (attribute != null) {
-                com.fantasy.framework.util.reflect.Property property = ClassUtil.getProperty(ClassUtil.forName(attribute.getAttributeType().getDataType()), RegexpUtil.replaceFirst(propertyName, simpleName + ".", ""));
-                if (property != null) {
-                    return attribute;
+            public DynaBean makeDynaBean(String className, String number) {
+                AttributeVersion version = getVersion(className, number);
+                assert version != null;
+                return createDynaBean(ClassUtil.forName(version.getClassName()), version);
+            }
+
+            private AttributeVersion getVersion(String className, String number) {
+                return versions.get(className + ClassUtil.CGLIB_CLASS_SEPARATOR + number);
+            }
+
+            public DynaBean createDynaBean(Class clazz, AttributeVersion version) {
+                DynaBean dynaBean = newInstance(clazz);
+                dynaBean.setVersion(version);
+                return dynaBean;
+            }
+
+            private DynaBean newInstance(Class clazz) {
+                return (DynaBean) ClassUtil.newInstance(clazz);
+            }
+
+            private DynaBean createDynaBean(DynaBean dynaBean, DynaBean bean) {
+                dynaBean.setAttributeValues(new ArrayList<AttributeValue>());
+                List<AttributeValue> attributeValue = StringUtil.isBlank(bean.getAttributeValueStore()) ? bean.getAttributeValues() : JSON.deserialize(bean.getAttributeValueStore(), new TypeReference<List<AttributeValue>>() {
+                });
+                for (Attribute attribute : bean.getVersion().getAttributes()) {
+                    AttributeValue sourceValue = ObjectUtil.find(attributeValue, "attribute.code", attribute.getCode());
+                    if (sourceValue != null && StringUtil.isNotBlank(sourceValue.getValue())) {
+                        getOgnlUtil(attribute.getAttributeType()).setValue(attribute.getCode(), dynaBean, sourceValue.getValue());
+                    }
                 }
+                BeanUtil.copyProperties(dynaBean, bean, "version", "attributeValues");
+                return dynaBean;
             }
-        }
-        return null;
-    }
 
-    private List<AttributeVersion> getVersionsByEntityClass(Class<?> entityClass) {
-        List<AttributeVersion> _versions = new ArrayList<AttributeVersion>();
-        for (AttributeVersion version : this.versions.values()) {
-            if (entityClass.getName().equals(version.getTargetClassName())) {
-                _versions.add(version);
+            public Attribute getAttribute(Class<?> entityClass, String propertyName) {
+                for (AttributeVersion version : getVersionsByEntityClass(entityClass)) {
+                    AttributeVersion attributeVersion = getVersion(entityClass.getName(), version.getNumber());
+                    String simpleName = propertyName.contains(".") ? propertyName.substring(0, propertyName.indexOf(".")) : propertyName;
+                    assert attributeVersion != null;
+                    Attribute attribute = ObjectUtil.find(attributeVersion.getAttributes(), "code", simpleName);
+                    if (attribute != null) {
+                        com.fantasy.framework.util.reflect.Property property = ClassUtil.getProperty(ClassUtil.forName(attribute.getAttributeType().getDataType()), RegexpUtil.replaceFirst(propertyName, simpleName + ".", ""));
+                        if (property != null) {
+                            return attribute;
+                        }
+                    }
+                }
+                return null;
             }
+
+            private List<AttributeVersion> getVersionsByEntityClass(Class<?> entityClass) {
+                List<AttributeVersion> _versions = new ArrayList<AttributeVersion>();
+                for (AttributeVersion version : this.versions.values()) {
+                    if (entityClass.getName().equals(version.getTargetClassName())) {
+                        _versions.add(version);
+                    }
+                }
+                return _versions;
+            }
+
+            public OgnlUtil getOgnlUtil(AttributeType attributeType) {
+                if (!OgnlUtil.containsKey("attr-" + attributeType.getId())) {
+                    OgnlUtil.getInstance("attr-" + attributeType.getId()).addTypeConverter(ClassUtil.forName(attributeType.getDataType()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(attributeType.getConverter().getTypeConverter()), SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE));
+                }
+                return OgnlUtil.getInstance("attr-" + attributeType.getId());
+            }
+
+            @SuppressWarnings(value = "unchecked")
+            @Override
+            public <T extends DynaBean> T makeDynaBean(Class<T> clazz, String number) {
+                return (T) makeDynaBean(clazz.getName(), number);
+            }
+
         }
-        return _versions;
-    }
-
-    public OgnlUtil getOgnlUtil(AttributeType attributeType) {
-        if (!OgnlUtil.containsKey("attr-" + attributeType.getId())) {
-            OgnlUtil.getInstance("attr-" + attributeType.getId()).addTypeConverter(ClassUtil.forName(attributeType.getDataType()), (TypeConverter) SpringContextUtil.createBean(ClassUtil.forName(attributeType.getConverter().getTypeConverter()), SpringContextUtil.AutoType.AUTOWIRE_BY_TYPE));
-        }
-        return OgnlUtil.getInstance("attr-" + attributeType.getId());
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    @Override
-    public <T extends DynaBean> T makeDynaBean(Class<T> clazz, String number) {
-        return (T) makeDynaBean(clazz.getName(), number);
-    }
-
-}

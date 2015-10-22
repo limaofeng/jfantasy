@@ -14,7 +14,7 @@ public class SpringfoxSwaggerConfig {
 
     @Bean
     public Docket swaggerSpringMvcPlugin() {
-        return new Docket(DocumentationType.SWAGGER_2).select().build().apiInfo(apiInfo());//.paths(paths())
+        return new Docket(DocumentationType.SWAGGER_2).select().build().apiInfo(apiInfo());
     }
 
     private ApiInfo apiInfo;

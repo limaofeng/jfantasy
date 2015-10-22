@@ -15,8 +15,9 @@ import com.fantasy.wx.framework.session.AccountDetails;
 import com.fantasy.wx.framework.session.DefaultWeiXinSession;
 import com.fantasy.wx.framework.session.WeiXinSession;
 import com.fantasy.wx.service.AccountService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +25,9 @@ import java.util.List;
 import java.util.Map;
 
 
-public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactory>, InitializingBean {
+public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactory> {
+
+    private static final Log LOG = LogFactory.getLog(WeiXinSessionFactoryBean.class);
 
     /**
      * 微信session工厂
@@ -49,8 +52,9 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
         }
     };
 
-    @Override
     public void afterPropertiesSet() throws Exception {
+        long start = System.currentTimeMillis();
+
         DefaultWeiXinSessionFactory factory = new DefaultWeiXinSessionFactory();
 
         if (this.accountDetailsService == null) {
@@ -76,10 +80,14 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
             weiXinSessionFactory.getWeiXinCoreHelper().register(accountDetails);
         }
 
+        LOG.error("\n初始化 WeiXinSessionFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
     }
 
     @Override
     public WeiXinSessionFactory getObject() throws Exception {
+        if(this.weiXinSessionFactory == null){
+            afterPropertiesSet();
+        }
         return weiXinSessionFactory;
     }
 
