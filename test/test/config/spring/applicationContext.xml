@@ -33,39 +33,9 @@
     <!-- 加载 properties文件 -->
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
-    <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
-    <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
-        <property name="freemarkerSettings">
-            <props>
-                <prop key="template_update_delay">1</prop>
-                <prop key="default_encoding">UTF-8</prop>
-                <prop key="locale">zh_CN</prop>
-                <prop key="number_format">#</prop>
-                <prop key="date_format">yyyy-MM-dd</prop>
-                <!-- <prop key="template_exception_handler">ignore</prop> -->
-            </props>
-        </property>
-        <property name="defaultEncoding" value="utf-8"/>
-        <property name="templateLoaderPath" value="${freemarker.templatePath}"/>
-    </bean>
-
     <!-- ehcache缓存配置 -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:cacheManagerName="appCache" p:acceptExisting="true"/>
-    <!--
-    <ehcache:annotation-driven cache-manager="cacheManager" />
-     -->
-
-    <!-- 开发中的功能
-    <bean id="logManager" class="com.fantasy.framework.log.DefaultLogManager"/>
-    <log:annotation-driven log-manager="logManager"/>
-    -->
-
-    <!--
-    <bean id="socketServer" class="com.fantasy.framework.websocket.WebSocketServer" lazy-init="false" init-method="start" destroy-method="stop">
-        <constructor-arg name="port" value="9090" />
-    </bean>
-    -->
 
     <!-- 系统默认缓存 -->
     <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">
@@ -105,7 +75,6 @@
         <property name="username" value="${mail.username}"/>
         <property name="password" value="${mail.password}"/>
         <property name="charset" value="${mail.charset}"/>
-        <property name="configuration" ref="freemarkerService"/>
     </bean>
 
     <!-- 自定义序列生成器 -->

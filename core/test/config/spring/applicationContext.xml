@@ -21,23 +21,6 @@
     <!-- 加载 properties文件 -->
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
-    <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer
-    <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
-        <property name="freemarkerSettings">
-            <props>
-                <prop key="template_update_delay">1</prop>
-                <prop key="default_encoding">UTF-8</prop>
-                <prop key="locale">zh_CN</prop>
-                <prop key="number_format">#</prop>
-                <prop key="date_format">yyyy-MM-dd</prop>
-                <prop key="template_exception_handler">ignore</prop>
-            </props>
-        </property>
-        <property name="defaultEncoding" value="utf-8"/>
-        <property name="templateLoaderPath" value="${freemarker.templatePath}"/>
-    </bean>
-     -->
-
     <!-- ehcache缓存配置 -->
     <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
     <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:acceptExisting="true" p:cacheManagerName="testAppCache"/>
@@ -86,7 +69,6 @@
     <bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">
         <property name="poolSize" value="${dataBaseKey.poolSize}"/>
     </bean>
-
 
     <!-- 支付配置 -->
     <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
