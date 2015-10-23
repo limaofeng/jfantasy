@@ -6,6 +6,7 @@ import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.PropertiesHelper;
 import com.fantasy.framework.util.web.filter.ActionContextFilter;
 import com.fantasy.framework.web.filter.CharacterEncodingFilter;
+import com.fantasy.framework.web.filter.ConcurrentRequestFilter;
 import com.tacitknowledge.filters.cache.CacheHeaderFilter;
 import com.tacitknowledge.filters.gzipfilter.GZIPFilter;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
@@ -26,7 +27,8 @@ public class WebInitializer implements WebApplicationInitializer {
 
     @Override
     public void onStartup(javax.servlet.ServletContext servletContext) throws ServletException {
-        servletContext.setInitParameter("webAppRootKey", PropertiesHelper.load("props/application.properties").getProperty("webAppRootKey"));
+        PropertiesHelper propertiesHelper = PropertiesHelper.load("props/application.properties");
+        servletContext.setInitParameter("webAppRootKey", propertiesHelper.getProperty("webAppRootKey"));
         //1、Log4jConfigListener
         servletContext.setInitParameter("log4jConfigLocation", "classpath:log4j/log4j.xml");//由Sprng载入的Log4j配置文件位置
         servletContext.setInitParameter("log4jRefreshInterval", "60000");//fresh once every minutes
@@ -65,6 +67,10 @@ public class WebInitializer implements WebApplicationInitializer {
         filterRegistration = servletContext.addFilter("jcaptchaFilter", jcaptchaFilter);
         filterRegistration.setInitParameter("targetFilterLifecycle", "true");
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/jcaptcha.jpg");
+
+        ConcurrentRequestFilter requestFilter = new ConcurrentRequestFilter(propertiesHelper.getInt("request.locks",20));
+        filterRegistration = servletContext.addFilter("requestFilter", requestFilter);
+        filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
 
         HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
         filterRegistration = servletContext.addFilter("httpMethodFilter", httpMethodFilter);

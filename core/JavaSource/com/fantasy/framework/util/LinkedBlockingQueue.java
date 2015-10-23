@@ -192,10 +192,8 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
     }
 
     /**
-     * 唤醒等待的线程(输入)
+     * 唤醒等待的线程(输入),输入线程可以开始存值了.
      *
-     * @功能描述 <br/>
-     * 输入线程可以开始存值了.
      */
     private void signalNotFull() {
         ReentrantLock putLock = this.putLock;
@@ -244,7 +242,6 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
     /**
      * 同时释放输入及输出锁
      *
-     * @功能描述
      */
     public void fullyUnlock() {
         this.takeLock.unlock();
@@ -308,15 +305,13 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
     }
 
     /**
-     * 添加元素
+     * 添加元素,可设置操作的超时时间
      *
      * @param o       要添加的元素
      * @param timeout 超时时间
      * @param unit    时间单位
      * @return boolean
      * @throws InterruptedException
-     * @功能描述 <br/>
-     * 可设置操作的超时时间
      */
     public boolean offer(E o, long timeout, TimeUnit unit) throws InterruptedException {
         if (o == null) {
@@ -354,12 +349,10 @@ public class LinkedBlockingQueue<E> extends AbstractQueue<E> implements Blocking
     }
 
     /**
-     * 添加元素
+     * 添加元素,如果容量超出，则直接返回false
      *
      * @param o E
      * @return bookean
-     * @功能描述 <br/>
-     * 如果容量超出，则直接返回false
      */
     public boolean offer(E o) {
         if (o == null) {

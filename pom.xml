@@ -344,7 +344,7 @@
                         <configuration>
                             <url>${db.driver_url}</url>
                             <autocommit>true</autocommit>
-                            <sqlCommand>create database ${db.name}</sqlCommand>
+                            <sqlCommand>create database ${db.name} default character set utf8 collate utf8_bin</sqlCommand>
                         </configuration>
                     </execution>
                     <execution>
