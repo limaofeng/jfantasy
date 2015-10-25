@@ -14207,25 +14207,6 @@ insert into `attr_version`(`id`,`create_time`,`creator`,`modifier`,`modify_time`
 values('600','2015-04-08 20:33:03','unknown','unknown','2015-04-08 20:33:03',null,null,'case',null,'com.fantasy.cms.bean.Article','ext');
 insert into `attr_version`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`attribute_sort`,`not_temporary`,`number`,`class_name`,`target_class_name`,`type`)
 values('603','2015-04-11 16:38:16','unknown','unknown','2015-04-11 16:38:16',null,null,'designer',null,'com.fantasy.cms.bean.Article','ext');
-TRUNCATE TABLE `attr_version_attribute`;
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('1','3');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('545','678');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('552','687');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('598','733');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('600','734');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('600','743');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('600','744');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('600','745');
-insert into `attr_version_attribute`(`version_id`,`attribute_id`)
-values('603','746');
 TRUNCATE TABLE `auction_deal`;
 insert into `auction_deal`(`id`,`create_time`,`creator`,`modifier`,`modify_time`,`approval_remark`,`deal_price`,`deal_state`,`entrust_brokerage`,`gain_sign`,`remark`,`service_charge`,`state`,`deal_member_id`,`entrust_member_id`,`deal_time`,`sn`,`auction_goods_id`)
 values('1','2014-08-08 15:15:10','admin','admin','2014-08-08 15:15:10','1212','4',b'1','1','3','','2',b'1','1','1','2014-08-08 00:00:00','SN_2014080800001','4');
