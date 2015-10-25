@@ -25,6 +25,7 @@ import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
@@ -39,8 +40,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * 默认的自定义Bean工厂
@@ -48,7 +47,7 @@ import java.util.concurrent.locks.ReentrantLock;
 @Component
 @Lazy(false)
 @Scope(proxyMode = ScopedProxyMode.NO)
-public class DefaultCustomBeanFactory implements CustomBeanFactory/*, InitializingBean*/ {
+public class DefaultCustomBeanFactory implements CustomBeanFactory, InitializingBean {
 
     private static final Log LOG = LogFactory.getLog(DefaultCustomBeanFactory.class);
 
@@ -61,28 +60,23 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory/*, Initializi
 
     private ConcurrentMap<String, AttributeVersion> versions = new ConcurrentHashMap<String, AttributeVersion>();
 
-    private static Lock lock = new ReentrantLock();
-
     public void afterPropertiesSet() throws Exception {
+        long start = System.currentTimeMillis();
         JdbcUtil.transaction(new JdbcUtil.Callback<Void>() {
             @Override
             public Void run() {
-                try {
-                    lock.lock();
                     DefaultCustomBeanFactory.this.initAttributeTypes();
                     for (AttributeVersion version : attributeVersionService.getAttributeVersions()) {
                         if (ClassUtil.forName(version.getTargetClassName()) == null) {
-                            LOG.debug("target:" + version.getTargetClassName());
+                            LOG.debug("target:" + version.getTargetClassName() + "\t" + version.getNumber());
                             continue;
                         }
                         makeClass(version);
                     }
-                } finally {
-                    lock.unlock();
-                }
                 return null;
             }
         }, TransactionDefinition.PROPAGATION_REQUIRED);
+        LOG.error("\n初始化 CustomBeanFactory 耗时:" + (System.currentTimeMillis() - start) + "ms");
     }
 
     public void initAttributeTypes() {
@@ -126,7 +120,9 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory/*, Initializi
                 if (javaType == null) {
                     continue;
                 }
-                properties.add(new Property(attribute.getCode(), javaType));
+                Property property = new Property(attribute.getCode(), javaType);
+//                property.
+                properties.add(property);
                 Hibernate.initialize(attribute.getAttributeType().getConverter());
             }
             Class[] iters = new Class[0];
@@ -197,8 +193,25 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory/*, Initializi
             }
 
             public DynaBean createDynaBean(Class clazz, AttributeVersion version) {
-                DynaBean dynaBean = newInstance(clazz);
-                dynaBean.setVersion(version);
+                final Class realClass =  ClassUtil.getRealClass(clazz);
+                DynaBean target = (DynaBean)ClassUtil.newInstance(realClass);
+                assert target != null;
+                target.setVersion(version);
+                DynaBean dynaBean = (DynaBean)CglibUtil.newInstance(clazz, new MethodInterceptor() {
+                    @Override
+                    public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
+                        if(method.getName().equals("setTarget") || method.getName().equals("getTarget")){
+                            return methodProxy.invokeSuper(o, objects);
+                        }
+                        Object target = o instanceof DynaBean ? ((DynaBean)o).getTarget() : null;
+                        if(ClassUtil.hasMethod(realClass,method.getName(),method.getParameterTypes())){
+                            return methodProxy.invoke(target, objects);
+                        }else{
+                            return methodProxy.invokeSuper(o, objects);
+                        }
+                    }
+                });
+                dynaBean.setTarget(target);
                 return dynaBean;
             }
 

@@ -1,15 +1,21 @@
 package com.fantasy.attr;
 
 import com.fantasy.attr.framework.CustomBeanFactory;
-import com.fantasy.attr.storage.bean.AttributeType;
+import com.fantasy.attr.framework.converter.PrimitiveTypeConverter;
+import com.fantasy.attr.framework.converter.UserTypeConverter;
+import com.fantasy.attr.framework.util.AttributeUtils;
+import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.attr.storage.service.AttributeService;
 import com.fantasy.attr.storage.service.AttributeTypeService;
 import com.fantasy.attr.storage.service.AttributeVersionService;
 import com.fantasy.attr.storage.service.ConverterService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.security.bean.User;
 import com.fantasy.security.service.UserService;
 import com.fantasy.test.bean.Article;
 import com.fantasy.test.service.CmsService;
@@ -25,7 +31,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +38,6 @@ import java.util.List;
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
-@Transactional
 public class AttributeVersionServiceTest {
 
     private final static Log logger = LogFactory.getLog(AttributeVersionServiceTest.class);
@@ -55,7 +59,6 @@ public class AttributeVersionServiceTest {
 
     @Before
     public void setUp() throws Exception {
-        /*this.tearDown();
         //定义转换器
         //基本数据类型转换器
         converterService.save(PrimitiveTypeConverter.class, "测试转换器", "测试转换器");
@@ -63,57 +66,46 @@ public class AttributeVersionServiceTest {
         converterService.save(UserTypeConverter.class, "用户对象转换器", "用户对象转换器");
         //定义数据类型
         attributeTypeService.save(Integer.class, "Integer", "测试数据类", PrimitiveTypeConverter.class);
-        attributeTypeService.save(User.class,"user","user类型",UserTypeConverter.class);
+        attributeTypeService.save(User.class, "user", "user类型", UserTypeConverter.class);
         //定义版本添加属性
-        attributeVersionService.save(Article.class.getName(),"1.0", AttributeUtils.bean("user", "user", "测试user", ClassUtil.forName(User.class.getName())),AttributeUtils.integer("intTest","测试Int类型字段","测试Int类型字段"));*/
+        attributeVersionService.save(Article.class.getName(), "1.0", AttributeUtils.bean("user", "user", "测试user", ClassUtil.forName(User.class.getName())), AttributeUtils.integer("intTest", "测试Int类型字段", "测试Int类型字段"));
     }
 
     @After
     public void tearDown() throws Exception {
-      /*  for(Article art : this.articleService.find(Restrictions.eq("title", "测试数据标题"))){
-            this.articleService.delete(art.getId());
-        }
-
-        for(Converter converter : converterService.find(Restrictions.eq("name", "测试转换器"))){
-            this.converterService.delete(converter.getId());
-        }
-
-        AttributeVersion version = attributeVersionService.findUniqueByTargetClassName(Article.class.getName(), "1.0");
-        if (version == null) {
-            for(Converter converter : converterService.find(Restrictions.eq("description", "test"))){
-                this.converterService.delete(converter.getId());
+        for(AttributeVersion version : this.attributeVersionService.getAttributeVersions()){
+            try {
+                this.attributeVersionService.delete(version.getId());
+            }catch (Exception e){
+                e.printStackTrace();
             }
-            return;
         }
-
-        for (Attribute attribute : version.getAttributes()) {
-            this.converterService.delete(attribute.getAttributeType().getConverter().getId());
-        }
-        this.attributeVersionService.delete(version.getId());*/
     }
 
     public void testFindPager() throws Exception {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
-        filters.add(new PropertyFilter("EQI_intTest","123"));
-        List<Article> articles =  this.cmsService.findPager(new Pager<Article>(),filters).getPageItems();
+        filters.add(new PropertyFilter("EQI_intTest", "123"));
+        List<Article> articles = this.cmsService.findPager(new Pager<Article>(), filters).getPageItems();
 
-        Assert.assertEquals(1,articles.size());
+        Assert.assertEquals(1, articles.size());
 
         Article article = articles.get(0);
 
-        Assert.assertEquals(123,customBeanFactory.getOgnlUtil(ObjectUtil.find(article.getVersion().getAttributes(),"code","intTest").getAttributeType()).getValue("intTest",article));
+        Assert.assertEquals(123, customBeanFactory.getOgnlUtil(ObjectUtil.find(article.getVersion().getAttributes(), "code", "intTest").getAttributeType()).getValue("intTest", article));
 
     }
 
-   /* @Test*/
+    @Test
     public void testSave() throws Exception {
-
         Article article = customBeanFactory.makeDynaBean(Article.class, "1.0");
         article.setTitle("测试数据标题");
         article.setSummary("测试数据摘要");
+        OgnlUtil.getInstance().setValue("intTest", article, "456");
+        JSON.serialize(article);
 
-        AttributeType attributeType = ObjectUtil.find(article.getVersion().getAttributes(),"code","intTest").getAttributeType();
-        AttributeType userAttributeType = ObjectUtil.find(article.getVersion().getAttributes(),"code","user").getAttributeType();
+        /*
+        AttributeType attributeType = ObjectUtil.find(article.getVersion().getAttributes(), "code", "intTest").getAttributeType();
+        AttributeType userAttributeType = ObjectUtil.find(article.getVersion().getAttributes(), "code", "user").getAttributeType();
 
         //测试普通数据类型
         customBeanFactory.getOgnlUtil(attributeType).setValue("intTest", article, "456");
@@ -134,7 +126,7 @@ public class AttributeVersionServiceTest {
         Assert.assertEquals(123, OgnlUtil.getInstance().getValue("intTest", article));
 
         //测试 findPager 中的动态属性
-        for(Article art : this.cmsService.findPager(new Pager<Article>(),new ArrayList<PropertyFilter>()).getPageItems()){
+        for (Article art : this.cmsService.findPager(new Pager<Article>(), new ArrayList<PropertyFilter>()).getPageItems()) {
             logger.debug(art);
             Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
             Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
@@ -146,19 +138,19 @@ public class AttributeVersionServiceTest {
 
         this.testFind();
 
-        for(Article art : this.cmsService.find(Restrictions.eq("title", "测试数据标题"))){
+        for (Article art : this.cmsService.find(Restrictions.eq("title", "测试数据标题"))) {
             logger.debug(art);
         }
-
+        */
     }
 
     private void testFind() {
         List<PropertyFilter> filters = new ArrayList<PropertyFilter>();
         filters.add(new PropertyFilter("EQI_intTest", "123"));
-        for(Article art : this.cmsService.find(filters)){
+        for (Article art : this.cmsService.find(filters)) {
             logger.debug(art);
         }
-        for(Article art : this.cmsService.find(Restrictions.eq("intTest",Integer.valueOf("123")))){
+        for (Article art : this.cmsService.find(Restrictions.eq("intTest", Integer.valueOf("123")))) {
             logger.debug(art);
         }
         /*
@@ -171,21 +163,15 @@ public class AttributeVersionServiceTest {
     }
 
     public void testGet() throws Exception {
-        Article article = this.cmsService.findUnique(Restrictions.eq("title","测试数据标题"));
+        Article article = this.cmsService.findUnique(Restrictions.eq("title", "测试数据标题"));
 
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
 
-        article = this.cmsService.findUniqueBy("title","测试数据标题");
+        article = this.cmsService.findUniqueBy("title", "测试数据标题");
 
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("user", article));
         Assert.assertNotNull(OgnlUtil.getInstance().getValue("intTest", article));
-    }
-
-
-    @Test
-    public void test() {
-
     }
 
 }

@@ -1,7 +1,6 @@
 package com.fantasy.framework.dao.hibernate;
 
 import com.fantasy.attr.framework.DynaBean;
-import com.fantasy.attr.framework.query.DynaBeanQueryManager;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
@@ -21,7 +20,6 @@ import org.hibernate.criterion.*;
 import org.hibernate.internal.CriteriaImpl;
 import org.hibernate.internal.CriteriaImpl.OrderEntry;
 import org.hibernate.metadata.ClassMetadata;
-import org.hibernate.sql.JoinType;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.Type;
@@ -626,9 +624,6 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
 
     protected Criteria createCriteria(Criterion[] criterions, String... orderBys) {
         Criteria criteria = getSession().createCriteria(this.entityClass);
-        if (DynaBean.class.isAssignableFrom(this.entityClass) && DynaBeanQueryManager.getManager().peek().isDynamicQuery()) {
-            criteria = criteria.createAlias("attributeValues", "_attributeValues", JoinType.LEFT_OUTER_JOIN);
-        }
         Set<String> alias = new HashSet<String>();
         for (Criterion c : criterions) {
             changePropertyName(criteria, alias, c);

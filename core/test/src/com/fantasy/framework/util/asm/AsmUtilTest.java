@@ -5,6 +5,7 @@ import com.fantasy.attr.storage.bean.AttributeType;
 import com.fantasy.attr.storage.bean.AttributeVersion;
 import com.fantasy.framework.util.common.ClassUtil;
 import com.fantasy.framework.util.ognl.OgnlUtil;
+import com.fantasy.security.bean.UserDetails;
 import junit.framework.Assert;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.logging.Log;
@@ -59,8 +60,16 @@ public class AsmUtilTest implements Opcodes {
         logger.debug("flag = " + OgnlUtil.getInstance().getValue("flag",newObject));
 
         Assert.assertEquals(false,OgnlUtil.getInstance().getValue("flag",newObject));
+    }
 
+    @Test
+    public void annotation(){
+        logger.debug(AsmUtil.trace(UserDetails.class));
 
+        Class newClass = AsmUtil.makeClass(Article.class.getName() + "$boolean",Article.class.getName(),new Property("flag",boolean.class));
+        Assert.assertNotNull(newClass);
+
+        logger.debug(AsmUtil.trace(newClass));
 
     }
 

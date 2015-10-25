@@ -15,8 +15,11 @@ database:
 test:
   override:
     - mvn compile install -Dmaven.test.skip=true -q -P test
-    - mvn cobertura:cobertura -Dmaven.test.failure.ignore=true -q -P test
+    - mvn cobertura:cobertura -q -P test #-Dmaven.test.failure.ignore=true 跳过失败后,即时有失败的测试也不显示
     - mvn org.eluder.coveralls:coveralls-maven-plugin:report -q -P test
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
 
 deployment:
   master:

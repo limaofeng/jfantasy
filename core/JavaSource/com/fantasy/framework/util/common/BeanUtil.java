@@ -4,6 +4,7 @@ import com.fantasy.framework.util.ognl.OgnlUtil;
 import com.fantasy.framework.util.reflect.Property;
 
 import java.lang.reflect.Array;
+import java.util.Date;
 import java.util.List;
 
 public class BeanUtil {
@@ -38,7 +39,9 @@ public class BeanUtil {
                 if (o == null) {
                     continue;
                 }
-                if (Boolean.class.isAssignableFrom(property.getPropertyType()) || boolean.class.isAssignableFrom(property.getPropertyType())) {
+                if (Boolean.class.isAssignableFrom(property.getPropertyType())
+                        || boolean.class.isAssignableFrom(property.getPropertyType())
+                        || Date.class.isAssignableFrom(property.getPropertyType())) {
                     OgnlUtil.getInstance().setValue(setProperty.getName(), dest, o);
                 } else {
                     OgnlUtil.getInstance().setValue(setProperty.getName(), dest, o.toString());

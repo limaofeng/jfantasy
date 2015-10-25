@@ -15,6 +15,7 @@ import java.util.List;
 @MappedSuperclass
 public abstract class BaseDynaBean extends BaseBusEntity implements DynaBean {
 
+    @JsonIgnore
     @Transient
     private DynaBean target;
 

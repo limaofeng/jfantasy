@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ATTR_ATTRIBUTE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","versions"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","version"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Attribute extends BaseBusEntity {
 
@@ -64,15 +64,20 @@ public class Attribute extends BaseBusEntity {
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
     /**
+     * 排序字段
+     */
+    @Column(name = "SORT")
+    private Integer sort;
+    /**
      * 属性对于的值集合
      */
     @OneToMany(mappedBy = "attribute", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<AttributeValue> attributeValues;
 
-    @ManyToMany(targetEntity = AttributeVersion.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "ATTR_VERSION_ATTRIBUTE", joinColumns = @JoinColumn(name = "ATTRIBUTE_ID"), inverseJoinColumns = @JoinColumn(name = "VERSION_ID"), foreignKey = @ForeignKey(name = "FK_ATTRIBUTE_VERSION"))
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "VERSION_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ATTR_VERSION_ATTR"))
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private List<AttributeVersion> versions;
+    private AttributeVersion version;
 
     public Attribute() {
     }
@@ -145,12 +150,20 @@ public class Attribute extends BaseBusEntity {
         this.notTemporary = notTemporary;
     }
 
-    public List<AttributeVersion> getVersions() {
-        return versions;
+    public AttributeVersion getVersion() {
+        return version;
     }
 
-    public void setVersions(List<AttributeVersion> versions) {
-        this.versions = versions;
+    public void setVersion(AttributeVersion version) {
+        this.version = version;
+    }
+
+    public Integer getSort() {
+        return sort;
+    }
+
+    public void setSort(Integer sort) {
+        this.sort = sort;
     }
 
     @Override

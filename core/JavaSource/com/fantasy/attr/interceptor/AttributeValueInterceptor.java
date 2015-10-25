@@ -109,7 +109,13 @@ public class AttributeValueInterceptor {
         }
         try {
             DynaBeanQueryManager.getManager().push(DynaBeanQuery.createDynaBeanQuery());
-            return toDynaBean(pjp.proceed(prepare(pjp)));
+            Object retval = pjp.proceed(prepare(pjp));
+            try {
+                return toDynaBean(retval);
+            }catch (Exception ex){
+                LOG.error(ex.getMessage(),ex);
+                return retval;
+            }
         } finally {
             DynaBeanQueryManager.getManager().pop();
         }

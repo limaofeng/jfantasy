@@ -140,7 +140,11 @@ public class AsmUtil implements Opcodes {
         String signature = getSignature(property.getType(), property.getGenericTypes());
 
         // 属性
-        classWriter.visitField(ACC_PRIVATE, fieldName, descriptor, signature, null).visitEnd();
+        FieldVisitor fieldVisitor = classWriter.visitField(ACC_PRIVATE, fieldName, descriptor, signature, null);
+        AnnotationVisitor annotationVisitor = fieldVisitor.visitAnnotation("Ljavax/persistence/Column;", true);
+        annotationVisitor.visit("name","AVATAR");
+        annotationVisitor.visit("length",500);
+        fieldVisitor.visitEnd();
 
         AsmContext.getContext().set("property", property);
 

@@ -27,7 +27,7 @@
 	</appender>
 	-->
  	<category name="com.fantasy">
- 		<priority value="ERROR" />
+ 		<priority value="DEBUG" />
  	</category>
 	<category name="org.hibernate.cache">
 		<priority value="ERROR" />

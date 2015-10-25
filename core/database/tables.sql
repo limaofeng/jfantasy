@@ -160,19 +160,6 @@ CREATE TABLE `attr_version` (
   ENGINE = InnoDB
   DEFAULT CHARSET = utf8;
 
-DROP TABLE IF EXISTS `attr_version_attribute`;
-CREATE TABLE `attr_version_attribute` (
-  `version_id`   BIGINT(20) NOT NULL,
-  `attribute_id` BIGINT(20) NOT NULL,
-  KEY `FK_VERSION_ATTRIBUTE` (`version_id`),
-  KEY `FK9E941D276A23E76D` (`attribute_id`),
-  KEY `FK9E941D279DD6B344` (`attribute_id`),
-  CONSTRAINT `FK_3e5t0trmf4o2d57hf4dxx555t` FOREIGN KEY (`version_id`) REFERENCES `attr_version` (`id`),
-  CONSTRAINT `FK_7miqgvgen00609i8eb67bc09` FOREIGN KEY (`attribute_id`) REFERENCES `attr_attribute` (`id`)
-)
-  ENGINE = InnoDB
-  DEFAULT CHARSET = utf8;
-
 DROP TABLE IF EXISTS `auction_deal`;
 CREATE TABLE `auction_deal` (
   `id`                BIGINT(20) NOT NULL,

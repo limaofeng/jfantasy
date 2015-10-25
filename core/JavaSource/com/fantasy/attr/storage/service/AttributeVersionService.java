@@ -68,9 +68,11 @@ public class AttributeVersionService {
         if (version.getAttributes() == null) {
             version.setAttributes(new ArrayList<Attribute>());
         }
+        version = this.attributeVersionDao.save(version);
         for (Attribute attribute : attributes) {
             Attribute oldAttribute = ObjectUtil.find(version.getAttributes(), "code", attribute.getCode());
             if (oldAttribute == null) {
+                attribute.setVersion(version);
                 attribute = attributeDao.save(attribute);
                 version.getAttributes().add(attribute);
             } else {
@@ -88,7 +90,7 @@ public class AttributeVersionService {
             attributeDao.delete(attribute.getId());
             ObjectUtil.remove(version.getAttributes(), "code", attribute.getCode());
         }
-        return this.attributeVersionDao.save(version);
+        return version;
     }
 
     public AttributeVersion get(Long id) {
