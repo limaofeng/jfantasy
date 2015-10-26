@@ -11,6 +11,7 @@
 		</property>
 		<property name="hibernateProperties">
             <props>
+                <prop key="hibernate.hbm2ddl.auto">update</prop>
                 <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5Dialect</prop>
                 <prop key="hibernate.generate_statistics">false</prop>
                 <prop key="javax.persistence.validation.mode">none</prop>

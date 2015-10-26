@@ -141,9 +141,15 @@ public class AsmUtil implements Opcodes {
 
         // 属性
         FieldVisitor fieldVisitor = classWriter.visitField(ACC_PRIVATE, fieldName, descriptor, signature, null);
+
+        // 属性注解
+        /*
         AnnotationVisitor annotationVisitor = fieldVisitor.visitAnnotation("Ljavax/persistence/Column;", true);
         annotationVisitor.visit("name","AVATAR");
         annotationVisitor.visit("length",500);
+        annotationVisitor.visitEnd();
+        */
+
         fieldVisitor.visitEnd();
 
         AsmContext.getContext().set("property", property);
