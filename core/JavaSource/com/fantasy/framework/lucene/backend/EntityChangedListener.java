@@ -18,7 +18,10 @@ public class EntityChangedListener {
     private Class<?> clazz;
     private boolean onlyIdRefBy;
     private RefEntityChangedListener refListener;
-    private ClusterConfig cluster = BuguIndex.getInstance().getClusterConfig();
+
+    private ClusterConfig cluster(){
+        return BuguIndex.getInstance().getClusterConfig();
+    }
 
     public EntityChangedListener(Class<?> clazz) {
         this.clazz = clazz;
@@ -49,13 +52,13 @@ public class EntityChangedListener {
     public void entityInsert(Object entity) {
         IndexFilterChecker checker = new IndexFilterChecker(entity);
         if (checker.needIndex()) {
-            if ((this.cluster == null) || (this.cluster.isSelfNode())) {
+            if ((this.cluster() == null) || (this.cluster().isSelfNode())) {
                 IndexInsertTask task = new IndexInsertTask(entity);
                 BuguIndex.getInstance().getExecutor().execute(task);
             }
-            if (this.cluster != null) {
+            if (this.cluster() != null) {
                 EntityMessage message = MessageFactory.createInsertMessage(entity);
-                this.cluster.sendMessage(message);
+                this.cluster().sendMessage(message);
             }
         }
     }
@@ -64,13 +67,13 @@ public class EntityChangedListener {
         String id = PropertysCache.getInstance().getIdProperty(clazz).getValue(entity).toString();
         IndexFilterChecker checker = new IndexFilterChecker(entity);
         if (checker.needIndex()) {
-            if ((this.cluster == null) || (this.cluster.isSelfNode())) {
+            if ((this.cluster() == null) || (this.cluster().isSelfNode())) {
                 IndexUpdateTask task = new IndexUpdateTask(entity);
                 BuguIndex.getInstance().getExecutor().execute(task);
             }
-            if (this.cluster != null) {
+            if (this.cluster() != null) {
                 EntityMessage message = MessageFactory.createUpdateMessage(entity);
-                this.cluster.sendMessage(message);
+                this.cluster().sendMessage(message);
             }
         } else {
             processRemove(id);
@@ -88,23 +91,23 @@ public class EntityChangedListener {
     }
 
     private void processRemove(String id) {
-        if ((this.cluster == null) || (this.cluster.isSelfNode())) {
+        if ((this.cluster() == null) || (this.cluster().isSelfNode())) {
             IndexRemoveTask task = new IndexRemoveTask(this.clazz, id);
             BuguIndex.getInstance().getExecutor().execute(task);
         }
-        if (this.cluster != null) {
+        if (this.cluster() != null) {
             ClassIdMessage message = MessageFactory.createRemoveMessage(this.clazz, id);
-            this.cluster.sendMessage(message);
+            this.cluster().sendMessage(message);
         }
     }
 
     private void processRefBy(String id) {
-        if ((this.cluster == null) || (this.cluster.isSelfNode())) {
+        if ((this.cluster() == null) || (this.cluster().isSelfNode())) {
             this.refListener.entityChange(this.clazz, id);
         }
-        if (this.cluster != null) {
+        if (this.cluster() != null) {
             ClassIdMessage message = MessageFactory.createRefByMessage(this.clazz, id);
-            this.cluster.sendMessage(message);
+            this.cluster().sendMessage(message);
         }
     }
 

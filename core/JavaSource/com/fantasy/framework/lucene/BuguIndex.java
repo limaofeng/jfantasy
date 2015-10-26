@@ -81,12 +81,8 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
     private String[] packagesToScan = new String[]{"com.fantasy"};
 
     public synchronized static BuguIndex getInstance() {
-        if (instance == null && SpringContextUtil.getApplicationContext() != null) {
-            instance = SpringContextUtil.getBeanByType(BuguIndex.class);
-        }
         if (instance == null) {
-            instance = new BuguIndex();
-            instance.afterPropertiesSet();
+            throw new RuntimeException(" BuguIndex 未初始化 .");
         }
         return instance;
     }
@@ -255,4 +251,7 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
         this.executor = executor;
     }
 
+    public static boolean isRunning() {
+        return BuguIndex.instance != null;
+    }
 }

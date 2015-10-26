@@ -35,14 +35,14 @@
     -->
 
     <!-- lucene 配置 -->
-    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open"
-          destroy-method="close">
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
         <property name="analyzer">
             <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
         </property>
         <property name="basePackage" value="com.fantasy.cms"/>
         <property name="directoryPath" value="${buguIndex.directoryPath}"/>
         <property name="executor" ref="executor"/>
+        <property name="rebuild" value="true"/>
     </bean>
 
     <!-- 文件管理器 -->

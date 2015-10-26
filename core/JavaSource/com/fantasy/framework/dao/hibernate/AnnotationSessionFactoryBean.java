@@ -8,7 +8,6 @@ import com.fantasy.framework.dao.hibernate.generator.SequenceGenerator;
 import com.fantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
 import com.fantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor;
 import com.fantasy.framework.install.ConfigResolver;
-import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.lucene.dao.hibernate.EntityChangedEventListener;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ClassUtil;
@@ -94,12 +93,10 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         //========================== 添加非主键的序列生成器 ==========================
         addEventListener("save-update", eventListenerMap, SpringContextUtil.getBeanByType(PropertyGeneratorSaveOrUpdatEventListener.class));
         // 添加 lucene 索引生成监听
-        if (SpringContextUtil.getBeanByType(BuguIndex.class) != null) {
-            EntityChangedEventListener entityChangedEventListener = new EntityChangedEventListener();
-            addEventListener("post-insert", eventListenerMap, entityChangedEventListener);
-            addEventListener("post-update", eventListenerMap, entityChangedEventListener);
-            addEventListener("post-delete", eventListenerMap, entityChangedEventListener);
-        }
+        EntityChangedEventListener entityChangedEventListener = new EntityChangedEventListener();
+        addEventListener("post-insert", eventListenerMap, entityChangedEventListener);
+        addEventListener("post-update", eventListenerMap, entityChangedEventListener);
+        addEventListener("post-delete", eventListenerMap, entityChangedEventListener);
 
         VersionChangedEventListener versionChangedEventListener = new VersionChangedEventListener();
         addEventListener("post-insert", eventListenerMap, versionChangedEventListener);

@@ -1,5 +1,6 @@
 package com.fantasy.framework.lucene.dao.hibernate;
 
+import com.fantasy.framework.lucene.BuguIndex;
 import com.fantasy.framework.lucene.backend.EntityChangedListener;
 import com.fantasy.framework.lucene.backend.IndexChecker;
 import com.fantasy.framework.lucene.cache.DaoCache;
@@ -13,6 +14,10 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
     private static final long serialVersionUID = -4339024045294333782L;
 
     public void onPostInsert(PostInsertEvent event) {
+        if(!BuguIndex.isRunning()){
+            return;
+        }
+
         Object entity = event.getEntity();
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
@@ -36,6 +41,10 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
     }
 
     public void onPostUpdate(PostUpdateEvent event) {
+        if(!BuguIndex.isRunning()){
+            return;
+        }
+
         Object entity = event.getEntity();
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
@@ -55,6 +64,10 @@ public class EntityChangedEventListener implements PostInsertEventListener, Post
     }
 
     public void onPostDelete(PostDeleteEvent event) {
+        if(!BuguIndex.isRunning()){
+            return;
+        }
+
         EntityPersister entityPersister = event.getPersister();
         Class<?> clazz = ClassUtil.forName(entityPersister.getRootEntityName());
         LuceneDao luceneDao = DaoCache.getInstance().get(clazz);
