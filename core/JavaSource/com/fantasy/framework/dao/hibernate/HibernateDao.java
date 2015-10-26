@@ -1,6 +1,5 @@
 package com.fantasy.framework.dao.hibernate;
 
-import com.fantasy.attr.framework.DynaBean;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.util.ReflectionUtils;
 import com.fantasy.framework.dao.hibernate.util.TypeFactory;
@@ -348,11 +347,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      */
     public void delete(T entity) {
         Assert.notNull(entity, LOG_MESSAGE_NULL);
-        if (DynaBean.class.isAssignableFrom(entityClass)) {
-            getSession().delete(get(getIdValue(entity)));
-        } else {
-            getSession().delete(entity);
-        }
+        getSession().delete(entity);
         this.LOG.debug("delete entity:" + entity);
     }
 

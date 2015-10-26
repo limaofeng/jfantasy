@@ -18,20 +18,19 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.hibernate.Hibernate;
 import org.hibernate.ObjectNotFoundException;
 import org.hibernate.collection.spi.PersistentCollection;
 import org.hibernate.criterion.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
 @Component
-@Aspect
+@Aspect*/
 public class AttributeValueInterceptor {
 
     private final static Log LOG = LogFactory.getLog(AttributeValueInterceptor.class);
