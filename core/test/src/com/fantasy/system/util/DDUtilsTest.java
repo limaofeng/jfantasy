@@ -27,6 +27,12 @@ public class DDUtilsTest {
         LOG.debug(DDUtils.get("doctor:subscribe-start"));
         LOG.debug(DDUtils.get("doctor:subscribe-end"));
 
+        LOG.debug(DDUtils.get("doctor:subscribe-start","2"));
+        LOG.debug(DDUtils.get("doctor:subscribe-end","3"));
+
+        LOG.debug(DDUtils.get("doctor:subscribe-start",int.class,4));
+        LOG.debug(DDUtils.get("doctor:subscribe-end",int.class,5));
+
         DDUtils.set("doctor:subscribe-start",1);
         DDUtils.set("doctor:subscribe-end",8);
 
