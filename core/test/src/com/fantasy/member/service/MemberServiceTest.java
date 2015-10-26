@@ -32,30 +32,27 @@ public class MemberServiceTest {
     @After
     public void tearDown() throws Exception {
         Member member = memberService.findUniqueByUsername("test");
-        this.memberService.delete(member.getId());
+        if(member != null){
+            this.memberService.delete(member.getId());
+        }
     }
 
-    @Test
     public void testFindPager() throws Exception {
 
     }
 
-    @Test
     public void testRegister() throws Exception {
 
     }
 
-    @Test
     public void testSendemail() throws Exception {
 
     }
 
-    @Test
     public void testFind() throws Exception {
 
     }
 
-    @Test
     public void testFindUnique() throws Exception {
 
     }
@@ -86,27 +83,22 @@ public class MemberServiceTest {
 
     }
 
-    @Test
     public void testGet() throws Exception {
 
     }
 
-    @Test
     public void testDelete() throws Exception {
 
     }
 
-    @Test
     public void testLogin() throws Exception {
 
     }
 
-    @Test
     public void testLogout() throws Exception {
 
     }
 
-    @Test
     public void testFindUniqueByUsername() throws Exception {
 
     }
