@@ -1,7 +1,7 @@
 package com.fantasy.framework.hibernate.cache.redis;
 
 
-import com.fantasy.test.bean.Article;
+import com.fantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,21 +30,21 @@ public class RedisTest {
 
         Cache cache = redisCacheManager.getCache("test");
 
-        cache.evict("article:1");
+        cache.evict("user:1");
 
-        Article article = cache.get("article:1",Article.class);
+        User user = cache.get("user:1",User.class);
 
-        LOG.debug(article);
+        LOG.debug(user);
 
-        article = new Article();
-        article.setTitle("测试");
-        article.setSummary("1235");
-        cache.put("article:1",article);
+        user = new User();
+        user.setUsername("myloser");
+        user.setPassword("123456");
+        cache.put("user:1",user);
 
-        article = cache.get("article:1",Article.class);
+        user = cache.get("user:1",User.class);
 
-        Assert.assertEquals(article.getTitle(),"测试");
-        Assert.assertEquals(article.getSummary(),"1235");
+        Assert.assertEquals(user.getUsername(),"myloser");
+        Assert.assertEquals(user.getPassword(),"123456");
     }
 
 }

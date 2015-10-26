@@ -1,13 +1,11 @@
 package com.fantasy.framework.hibernate.cache.redis;
 
+import com.fantasy.security.bean.User;
 import com.fantasy.system.bean.Website;
 import com.fantasy.system.service.WebsiteService;
-import com.fantasy.test.bean.Article;
-import com.fantasy.test.service.ArticleService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.cache.spi.CacheKey;
-import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.LongType;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,23 +24,22 @@ public class CacheQueryCacheTest {
     private final static Log LOG = LogFactory.getLog(CacheQueryCacheTest.class);
 
     @Autowired
-    private ArticleService articleService;
-    @Autowired
     private RedisCacheManager redisCacheManager;
     @Autowired
     private WebsiteService websiteService;
 
-    @Test
+//    @Test
     public void testGet() {
-        LOG.debug(articleService.get(1801L));
+        User user = new User();
+        user.setId(0l);
+        user.setNickName("张国荣");
+        LOG.debug(user);
 
-        LOG.debug(articleService.find(Restrictions.eq("title", "测试缓存文章")));
+        LOG.debug(user);
 
-        LOG.debug(articleService.find(Restrictions.eq("category.code", "test")));
+        Cache cache = redisCacheManager.getCache(User.class.getName());
 
-        Cache cache = redisCacheManager.getCache(Article.class.getName());
-
-        CacheKey cacheKey = new CacheKey(1801L, LongType.INSTANCE, Article.class.getName(), null, null);
+        CacheKey cacheKey = new CacheKey(1801L, LongType.INSTANCE, User.class.getName(), null, null);
 
         Object object = cache.get(cacheKey);
 
