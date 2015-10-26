@@ -1207,7 +1207,6 @@
         <module>weixin</module>
         <module>aliyun-oss</module>
         <module>javaweb</module>
-        <module>test</module>
     </modules>
 
     <!-- 项目信息设置 -->
