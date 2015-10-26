@@ -27,6 +27,10 @@ public class DataDictionaryKey implements Serializable {
     public DataDictionaryKey() {
     }
 
+    public static DataDictionaryKey newInstance(String key) {
+        return new DataDictionaryKey(key);
+    }
+
     public DataDictionaryKey(String key) {
         this.type = key.split(":")[0];
         this.code = key.split(":")[1];

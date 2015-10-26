@@ -205,7 +205,12 @@ public class DataDictionaryService implements InitializingBean {
      */
     public void delete(DataDictionaryKey... keys) {
         for (DataDictionaryKey key : keys) {
-            this.dataDictionaryDao.delete(this.get(key));
+            DataDictionary dd = this.get(key);
+            if(dd == null){
+                LOGGER.warn(" 数据字典项 key = " + key + " 不存在 , 请检查方法参数 !");
+                continue;
+            }
+            this.dataDictionaryDao.delete(dd);
         }
     }
 
