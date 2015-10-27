@@ -68,7 +68,7 @@ public class WebInitializer implements WebApplicationInitializer {
         filterRegistration.setInitParameter("targetFilterLifecycle", "true");
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/jcaptcha.jpg");
 
-        ConcurrentRequestFilter requestFilter = new ConcurrentRequestFilter(propertiesHelper.getInt("request.locks",20));
+        ConcurrentRequestFilter requestFilter = new ConcurrentRequestFilter(propertiesHelper.getInt("request.locks", 20));
         filterRegistration = servletContext.addFilter("requestFilter", requestFilter);
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
 
@@ -103,6 +103,7 @@ public class WebInitializer implements WebApplicationInitializer {
         DelegatingFilterProxy fileFilter = new DelegatingFilterProxy();
         filterRegistration = servletContext.addFilter("fileFilter", fileFilter);
         filterRegistration.setInitParameter("targetFilterLifecycle", "true");
+        filterRegistration.setInitParameter("allowHosts", propertiesHelper.getProperty("files.allowHosts", "static.jfantasy.org"));
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
 
         //依赖 weixin 模块

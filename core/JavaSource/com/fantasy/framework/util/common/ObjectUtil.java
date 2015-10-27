@@ -564,11 +564,20 @@ public final class ObjectUtil {
      * @param object 要判断的对象
      * @return boolean
      */
-    public static <T> Boolean exists(List<T> list, Object object) {
+    public static <T> Boolean exists(List<T> list, T object) {
         for (Object t : list) {
             if (t.getClass().isEnum() && t.toString().equals(object)) {
                 return true;
             } else if (t.equals(object)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static <T> Boolean exists(T[] array, T object) {
+        for (T t : array) {
+            if (t.equals(object)) {
                 return true;
             }
         }

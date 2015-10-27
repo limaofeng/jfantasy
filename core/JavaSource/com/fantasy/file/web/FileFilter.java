@@ -6,10 +6,7 @@ import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.service.FileManagerFactory;
 import com.fantasy.file.service.FileService;
 import com.fantasy.file.service.FileUploadService;
-import com.fantasy.framework.util.common.ImageUtil;
-import com.fantasy.framework.util.common.JdbcUtil;
-import com.fantasy.framework.util.common.StreamUtil;
-import com.fantasy.framework.util.common.StringUtil;
+import com.fantasy.framework.util.common.*;
 import com.fantasy.framework.util.common.file.FileUtil;
 import com.fantasy.framework.util.regexp.RegexpUtil;
 import com.fantasy.framework.util.web.ServletUtils;
@@ -38,13 +35,23 @@ public class FileFilter extends GenericFilterBean {
     @Autowired
     private FileUploadService fileUploadService;
 
+    private String[] allowHosts;
+
     private static final String regex = "_(\\d+)x(\\d+)[.]([^.]+)$";
+
+    @Override
+    protected void initFilterBean() throws ServletException {
+        this.setAllowHosts(StringUtil.tokenizeToStringArray(this.getFilterConfig().getInitParameter("allowHosts")));
+    }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-
+        if(allowHosts.length != 0 && ObjectUtil.exists(allowHosts,request.getHeader("host"))){
+            chain.doFilter(request, response);
+            return;
+        }
 
         final String url = request.getRequestURI().replaceAll("^" + request.getContextPath(), "");
         FileManager webrootFileManager = FileManagerFactory.getInstance().getFileManager("WEBROOT");
@@ -113,9 +120,7 @@ public class FileFilter extends GenericFilterBean {
             // 删除临时文件
             FileUtil.delFile(tmp);
             writeFile(request, response, fileManager.getFileItem(fileDetail.getRealPath()));
-            return;
         }
-        chain.doFilter(request, response);
     }
 
     private void writeFile(HttpServletRequest request, HttpServletResponse response, FileItem fileItem) throws IOException {
@@ -198,6 +203,10 @@ public class FileFilter extends GenericFilterBean {
                 }
             }
         }
+    }
+
+    public void setAllowHosts(String[] allowHosts) {
+        this.allowHosts = allowHosts;
     }
 
 }
