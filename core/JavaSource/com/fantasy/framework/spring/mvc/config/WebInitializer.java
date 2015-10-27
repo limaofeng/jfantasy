@@ -103,7 +103,7 @@ public class WebInitializer implements WebApplicationInitializer {
         DelegatingFilterProxy fileFilter = new DelegatingFilterProxy();
         filterRegistration = servletContext.addFilter("fileFilter", fileFilter);
         filterRegistration.setInitParameter("targetFilterLifecycle", "true");
-        filterRegistration.setInitParameter("allowHosts", propertiesHelper.getProperty("files.allowHosts", "static.jfantasy.org"));
+        filterRegistration.setInitParameter("allowHosts", propertiesHelper.getProperty("file.allowHosts", "static.jfantasy.org"));
         filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
 
         //依赖 weixin 模块

@@ -41,7 +41,7 @@ public class FileFilter extends GenericFilterBean {
 
     @Override
     protected void initFilterBean() throws ServletException {
-        this.setAllowHosts(StringUtil.tokenizeToStringArray(this.getFilterConfig().getInitParameter("allowHosts")));
+        this.addRequiredProperty("allowHosts");
     }
 
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
@@ -205,8 +205,8 @@ public class FileFilter extends GenericFilterBean {
         }
     }
 
-    public void setAllowHosts(String[] allowHosts) {
-        this.allowHosts = allowHosts;
+    public void setAllowHosts(String allowHosts) {
+        this.allowHosts = StringUtil.tokenizeToStringArray(allowHosts);
     }
 
 }
