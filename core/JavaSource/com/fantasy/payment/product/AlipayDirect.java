@@ -64,7 +64,7 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         creditBankCodes.add(new BankCode("FDB", "富滇银行"));
         creditBankCodes.add(new BankCode("POSTGC", "中国邮政储蓄银行"));
         creditBankCodes.add(new BankCode("abc1003", "visa"));
-        creditBankCodes.add(new BankCode(" abc1004", "master"));
+        creditBankCodes.add(new BankCode("abc1004", "master"));
         //银行简码——纯借记卡渠道
         debitBankCodes.add(new BankCode("CMB-DEBIT", "招商银行"));
         debitBankCodes.add(new BankCode("CCB-DEBIT", "中国建设银行"));
