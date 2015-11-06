@@ -2,9 +2,9 @@ package com.fantasy.payment.rest;
 
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.error.PaymentException;
+import com.fantasy.payment.product.Parameters;
 import com.fantasy.payment.service.PaymentConfigService;
 import com.fantasy.payment.service.PaymentService;
 import io.swagger.annotations.Api;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.List;
 
@@ -52,10 +51,10 @@ public class PaymentConfigController {
         return this.configService.get(id);
     }
 
-    @RequestMapping(value = "/{id}/test", method = RequestMethod.GET)
+    @RequestMapping(value = "/{id}/test", method = RequestMethod.POST)
     @ResponseBody
-    public String test(@PathVariable("id") Long paymentConfigId, HttpServletRequest request) throws IOException, PaymentException {
-        return this.paymentService.test(paymentConfigId, WebUtil.getParameterMap(request));
+    public String test(@PathVariable("id") Long paymentConfigId, @RequestBody Parameters parameters) throws IOException, PaymentException {
+        return this.paymentService.test(paymentConfigId, parameters);
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)

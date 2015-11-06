@@ -20,12 +20,11 @@ public class PayController {
     @Autowired
     private PaymentService paymentService;
 
-
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String execute(PayForm payForm, HttpServletRequest request) throws PaymentException {
-        return paymentService.buildRequest(payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayconfigId(), payForm.getPayer(), WebUtil.getParameterMap(request));
+    public String execute(@RequestBody PayForm payForm) throws PaymentException {
+        return paymentService.buildRequest(payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayconfigId(), payForm.getPayer(), payForm.getParameters());
     }
 
     @ApiOperation("支付同步通知")

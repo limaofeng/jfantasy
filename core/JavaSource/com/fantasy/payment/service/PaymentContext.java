@@ -3,12 +3,14 @@ package com.fantasy.payment.service;
 import com.fantasy.common.order.Order;
 import com.fantasy.common.order.OrderService;
 import com.fantasy.common.order.OrderUrls;
+import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
 import com.fantasy.framework.util.common.PropertiesHelper;
 import com.fantasy.framework.util.web.WebUtil;
 import com.fantasy.framework.util.web.context.ActionContext;
 import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
+import com.fantasy.payment.error.PaymentException;
 import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
 import com.github.jknack.handlebars.Handlebars;
@@ -57,16 +59,38 @@ public class PaymentContext {
     /**
      * 支付订单 Service
      */
-    private OrderService orderDetailsService;
+    private OrderService orderService;
     /**
      * 支付结果
      */
     private PayResult payResult;
 
-    public static PaymentContext newInstall() {
+    private PaymentConfiguration configuration;
+
+    private PaymentConfiguration configuration() {
+        if (configuration == null) {
+            return configuration = SpringContextUtil.getBeanByType(PaymentConfiguration.class);
+        }
+        return configuration;
+    }
+
+    private PaymentContext(Payment payment, OrderService orderService) throws PaymentException {
+        this.payment = payment;
+        this.paymentConfig = payment.getPaymentConfig();
+        this.paymentProduct = configuration().getPaymentProduct(this.paymentConfig.getPaymentProductId());
+        if (this.paymentProduct == null) {
+            throw new PaymentException("支付产品不存在!");
+        }
+        this.orderService = orderService;
+        this.orderDetails = orderService.loadOrderBySn(payment.getOrderSn());
+
+        this.initOrderUrls();
+    }
+
+    public static PaymentContext newInstall(Payment payment, OrderService orderService) throws PaymentException {
         PaymentContext context = getContext();
         if (context == null) {
-            setContext(new PaymentContext());
+            setContext(new PaymentContext(payment, orderService));
         }
         return getContext();
     }
@@ -92,16 +116,9 @@ public class PaymentContext {
         return orderDetails;
     }
 
-    public void setOrderDetails(Order orderDetails) {
-        this.orderDetails = orderDetails;
-    }
-
-    public void setOrderDetailsService(OrderService orderDetailsService) {
-        this.orderDetailsService = orderDetailsService;
-    }
 
     public void initOrderUrls() {
-        OrderUrls orderUrls = orderDetailsService.getOrderUrls();
+        OrderUrls orderUrls = orderService.getOrderUrls();
         this.detailsUrlTemplate = getTemplate(orderUrls.getDetailsUrl());
         this.resultUrlTemplate = getTemplate(orderUrls.getResultUrl());
     }
@@ -185,7 +202,7 @@ public class PaymentContext {
      * @param payment 支付对象
      */
     public void payFailure(Payment payment) {
-        this.orderDetailsService.payFailure(payment);
+        this.orderService.payFailure(payment);
     }
 
     /**
@@ -194,7 +211,7 @@ public class PaymentContext {
      * @param payment 支付对象
      */
     public void paySuccess(Payment payment) {
-        this.orderDetailsService.paySuccess(payment);
+        this.orderService.paySuccess(payment);
     }
 
     public PayResult getPayResult() {

@@ -30,7 +30,7 @@ public class TenpayPartner extends AbstractPaymentProduct {
     }
 
     @Override
-    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+    public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
         PaymentConfig paymentConfig = context.getPaymentConfig();
         Payment payment = context.getPayment();

@@ -21,7 +21,7 @@ public interface PaymentProduct {
      * @param parameters 请求参数
      * @return Map
      */
-    Map<String, String> getParameterMap(Map<String, String> parameters);
+    Map<String, String> getParameterMap(Parameters parameters);
 
     /**
      * 支付验证方法

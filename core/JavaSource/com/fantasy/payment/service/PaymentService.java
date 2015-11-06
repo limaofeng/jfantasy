@@ -15,6 +15,7 @@ import com.fantasy.payment.bean.Payment;
 import com.fantasy.payment.bean.PaymentConfig;
 import com.fantasy.payment.dao.PaymentDao;
 import com.fantasy.payment.error.PaymentException;
+import com.fantasy.payment.product.Parameters;
 import com.fantasy.payment.product.PayResult;
 import com.fantasy.payment.product.PaymentProduct;
 import com.fantasy.security.SpringSecurityUtils;
@@ -201,31 +202,21 @@ public class PaymentService {
         }
     }
 
-    public String buildRequest(String orderType, String orderSn, Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
+    public String buildRequest(String orderType, String orderSn, Long paymentConfigId,Parameters parameters) throws PaymentException {
         return this.buildRequest(orderType, orderSn, paymentConfigId, "", parameters);
     }
 
-    public String test(Long paymentConfigId, Map<String, String> parameters) throws PaymentException {
+    public String test(Long paymentConfigId, Parameters parameters) throws PaymentException {
         String orderType = "test";
         List<Payment> payments = this.paymentDao.find(Restrictions.eq("paymentConfig.id", paymentConfigId), Restrictions.eq("orderType", orderType), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
         String orderSn = payments.isEmpty() ? "TSN" + DateUtil.format("yyyyMMddHHmmss") : payments.get(0).getOrderSn();
-        PaymentContext context = PaymentContext.newInstall();
 
         Payment payment = this.ready(orderType, orderSn, "", paymentConfigId);
-        context.setPayment(payment);
-
-        PaymentProduct paymentProduct = this.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
-        OrderService paymentOrderDetailsService = this.orderServiceFactory.getOrderService(orderType);
-        context.setPaymentProduct(paymentProduct);
-        context.setOrderDetailsService(paymentOrderDetailsService);
-
-        //检查订单支付状态等信息
-        Order orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
-        context.setOrderDetails(orderDetails);
+        PaymentContext context = PaymentContext.newInstall(payment,this.orderServiceFactory.getOrderService(orderType));
 
         // 支付参数
-        Map<String, String> parameterMap = paymentProduct.getParameterMap(parameters);
-        String sHtmlText = paymentProduct.buildRequest(parameterMap);
+        Map<String, String> parameterMap = context.getPaymentProduct().getParameterMap(parameters);
+        String sHtmlText = context.getPaymentProduct().buildRequest(parameterMap);
         TagNode body = HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.htmlCleaner(sHtmlText), "//body");
         assert body != null;
         body.removeChild(HtmlCleanerUtil.findFristTagNode(body, "//script"));
@@ -249,7 +240,7 @@ public class PaymentService {
      * @param parameters      请求参数
      * @return html 表单字符串
      */
-    public String buildRequest(String orderType, String orderSn, Long paymentConfigId, String payMember, Map<String, String> parameters) throws PaymentException {
+    public String buildRequest(String orderType, String orderSn, Long paymentConfigId, String payMember, Parameters parameters) throws PaymentException {
         Payment payment = this.ready(orderType, orderSn, payMember, paymentConfigId);
 
         PaymentContext context = this.createPaymentContext(payment.getSn());
@@ -280,27 +271,11 @@ public class PaymentService {
     }
 
     public PaymentContext createPaymentContext(String sn) throws PaymentException {
-        PaymentContext context = PaymentContext.newInstall();
         Payment payment = this.get(sn);
         if (payment == null) {
             throw new PaymentException("支付记录不存在!");
         }
-        context.setPayment(payment);
-
-        PaymentProduct paymentProduct = this.getPaymentProduct(payment.getPaymentConfig().getPaymentProductId());
-        if (paymentProduct == null) {
-            throw new PaymentException("支付产品不存在!");
-        }
-        context.setPaymentProduct(paymentProduct);
-
-        OrderService paymentOrderDetailsService = this.orderServiceFactory.getOrderService(payment.getOrderType());
-        context.setOrderDetailsService(paymentOrderDetailsService);
-
-        context.initOrderUrls();
-
-        Order orderDetails = paymentOrderDetailsService.loadOrderBySn(payment.getOrderSn());
-        context.setOrderDetails(orderDetails);
-        return context;
+        return PaymentContext.newInstall(payment, this.orderServiceFactory.getOrderService(payment.getOrderType()));
     }
 
     public String payreturn(String sn, Map<String, String> parameterMap) throws PaymentException {

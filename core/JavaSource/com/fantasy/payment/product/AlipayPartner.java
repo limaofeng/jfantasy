@@ -29,7 +29,7 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
     }
 
     @Override
-    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+    public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
         PaymentConfig paymentConfig = context.getPaymentConfig();
         Order orderDetails = context.getOrderDetails();
@@ -45,20 +45,19 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         String paymentType = "1";// 支付类型（固定值：1）
         String price = String.format("%.2f", orderDetails.getPayableFee());// 总金额（单位：元）
         String quantity = "1";// 商品数量
-        String returnUrl = PaymentContext.getContext().getReturnUrl(payment.getSn());// 回调处理URL
+        String returnUrl = parameters.get("returnUrl", PaymentContext.getContext().getReturnUrl(payment.getSn()));// 回调处理URL
         String sellerId = paymentConfig.getSellerEmail();
         String service = "create_partner_trade_by_buyer";// 接口类型（create_partner_trade_by_buyer：担保交易）
-        String showUrl = PaymentContext.getContext().getDetailsUrl(orderDetails.getSN());// 支付结果显示URL
+        String showUrl = parameters.get("showUrl", PaymentContext.getContext().getDetailsUrl(orderDetails.getSN()));// 支付结果显示URL
         String signType = "MD5";//签名加密方式（MD5）
         AtomicReference<String> subject = new AtomicReference<String>(payment.getSn());// 订单的名称、标题、关键字等
         String key = paymentConfig.getBargainorKey();// 密钥
 
-        //TODO 担保支付时的收货人信息如何设置
-        String receiveName = "昊略软件";//收货人姓名
-        String receiveAddress = "上海市徐汇区田林路140号28号楼G09";//收货人地址
-        String receiveZip = "200233";//收货人邮编
-        String receivePhone = "0571-88158090";//收货人电话号码
-        String receiveMobile = "15921884771";//收货人手机号码
+        String receiveName = parameters.get("receiveName", "昊略软件");//收货人姓名
+        String receiveAddress = parameters.get("receiveAddress", "上海市徐汇区田林路140号28号楼G09");//收货人地址
+        String receiveZip = parameters.get("receiveZip", "200233");//收货人邮编
+        String receivePhone = parameters.get("receivePhone", "0571-88158090");//收货人电话号码
+        String receiveMobile = parameters.get("receiveMobile", "15921884771");//收货人手机号码
 
         // 生成签名
         Map<String, String> signMap = new LinkedHashMap<String, String>();
