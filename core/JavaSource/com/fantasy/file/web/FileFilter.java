@@ -48,7 +48,7 @@ public class FileFilter extends GenericFilterBean {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-        if(allowHosts.length != 0 && ObjectUtil.exists(allowHosts,request.getHeader("host"))){
+        if(allowHosts.length != 0 && !ObjectUtil.exists(allowHosts,request.getHeader("host"))){
             chain.doFilter(request, response);
             return;
         }

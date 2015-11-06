@@ -11,7 +11,7 @@ public class WxpayProduct extends AbstractPaymentProduct {
     }
 
     @Override
-    public Map<String, String> getParameterMap(Map<String, String> parameters) {
+    public Map<String, String> getParameterMap(Parameters parameters) {
         return null;
     }
 

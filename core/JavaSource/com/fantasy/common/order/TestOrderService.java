@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TestOrderDetailsService extends AbstractOrderService implements InitializingBean {
+public class TestOrderService extends AbstractOrderService implements InitializingBean {
 
     @Autowired
     private OrderServiceFactory orderServiceFactory;
@@ -20,7 +20,7 @@ public class TestOrderDetailsService extends AbstractOrderService implements Ini
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        orderServiceFactory.register("TEST", this);
+        orderServiceFactory.register("test", this);
     }
 
     @Override
@@ -108,8 +108,8 @@ public class TestOrderDetailsService extends AbstractOrderService implements Ini
     @Override
     public OrderUrls getOrderUrls() {
         OrderUrls urls = new OrderUrls();
-        urls.setResultUrl("{{serverUrl}}/pays/{{paymentSn}}/result");
-        urls.setDetailsUrl("{{serverUrl}}/pays/{{paymentSn}}/details");
+        urls.setResultUrl("{{serverUrl}}/pays/{{orderSn}}/result");
+        urls.setDetailsUrl("{{serverUrl}}/pays/{{orderSn}}/details");
         return urls;
     }
 

@@ -13,7 +13,7 @@ public class OrderServiceFactory {
 
     public OrderServiceFactory() {
         orderDetailsServices = new HashMap<String, OrderService>();
-        orderDetailsServices.put("TEST", new TestOrderDetailsService());
+        orderDetailsServices.put("TEST", new TestOrderService());
     }
 
     public OrderServiceFactory(Map<String, OrderService> orderDetailsServices) {
@@ -21,11 +21,11 @@ public class OrderServiceFactory {
     }
 
     public void register(String type, OrderService orderDetailsService) {
-        orderDetailsServices.put(type, orderDetailsService);
+        orderDetailsServices.put(type.toLowerCase(), orderDetailsService);
     }
 
     public OrderService getOrderService(String type) {
-        if (!this.orderDetailsServices.containsKey(type)) {
+        if (!this.orderDetailsServices.containsKey(type.toLowerCase())) {
             throw new NotFoundException("orderType[" + type + "] 对应的 PaymentOrderService 未配置！");
         }
         return orderDetailsServices.get(type);
