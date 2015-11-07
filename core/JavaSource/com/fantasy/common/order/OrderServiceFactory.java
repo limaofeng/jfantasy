@@ -13,7 +13,6 @@ public class OrderServiceFactory {
 
     public OrderServiceFactory() {
         orderDetailsServices = new HashMap<String, OrderService>();
-        orderDetailsServices.put("TEST", new TestOrderService());
     }
 
     public OrderServiceFactory(Map<String, OrderService> orderDetailsServices) {
@@ -28,7 +27,7 @@ public class OrderServiceFactory {
         if (!this.orderDetailsServices.containsKey(type.toLowerCase())) {
             throw new NotFoundException("orderType[" + type + "] 对应的 PaymentOrderService 未配置！");
         }
-        return orderDetailsServices.get(type);
+        return orderDetailsServices.get(type.toLowerCase());
     }
 
 }
