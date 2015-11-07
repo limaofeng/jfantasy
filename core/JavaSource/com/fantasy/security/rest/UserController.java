@@ -31,6 +31,20 @@ public class UserController {
         return this.userService.findPager(pager, filters);
     }
 
+    @ApiOperation(value = "用户登录", notes = "用户登录接口")
+    @RequestMapping(value = "/{username}/login", method = RequestMethod.POST)
+    @ResponseBody
+    public User login(@PathVariable("username") String username, @RequestBody String password) {
+        return this.userService.login(username, password);
+    }
+
+    @ApiOperation(value = "用户登出", notes = "用户登出接口")
+    @RequestMapping(value = "/{username}/logout", method = RequestMethod.GET)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(@PathVariable("username") String username) {
+        this.userService.logout(username);
+    }
 
     @ApiOperation(value = "获取用户", notes = "通过该接口, 获取用户")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)

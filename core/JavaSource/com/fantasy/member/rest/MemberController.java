@@ -38,7 +38,7 @@ public class MemberController {
     }
 
     @ApiOperation(value = "会员登出", notes = "会员登出接口")
-    @RequestMapping(value = "/{username}/register", method = RequestMethod.GET)
+    @RequestMapping(value = "/{username}/logout", method = RequestMethod.GET)
     @ResponseBody
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@PathVariable("username") String username) {

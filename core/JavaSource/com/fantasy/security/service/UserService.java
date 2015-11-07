@@ -3,17 +3,22 @@ package com.fantasy.security.service;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.service.MailSendService;
+import com.fantasy.framework.spring.mvc.error.LoginException;
+import com.fantasy.framework.spring.mvc.error.PasswordException;
 import com.fantasy.framework.util.common.DateUtil;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.security.SpringSecurityUtils;
 import com.fantasy.security.bean.User;
 import com.fantasy.security.dao.UserDao;
+import com.fantasy.security.event.context.LoginEvent;
+import com.fantasy.security.event.context.LogoutEvent;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -26,10 +31,10 @@ public class UserService {
 
     @Autowired
     private MailSendService mailSendService;
-
     @Autowired
     private UserDao userDao;
-
+    @Autowired
+    private ApplicationContext applicationContext;
     /**
      * 保存用户
      *
@@ -97,15 +102,27 @@ public class UserService {
     }
 
     @CacheEvict(value = {"fantasy.security.userService"}, allEntries = true)
-    public void login(User user) {
+    public User login(String username, String password) {
+        User user = this.userDao.findUniqueBy("username", username);
+        PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
+        if (user == null || encoder.isPasswordValid(user.getPassword(), password, null)) {
+            throw new PasswordException("用户名和密码错误");
+        }
+        if (!user.isEnabled()) {
+            throw new LoginException("用户被禁用");
+        }
+        if (!user.isAccountNonLocked()) {
+            throw new LoginException("用户被锁定");
+        }
         user.setLastLoginTime(DateUtil.now());
-        this.userDao.update(user);
+        this.userDao.save(user);
+        this.applicationContext.publishEvent(new LoginEvent(user));
+        return user;
     }
 
-    public void logout(User user) {
-
+    public void logout(String username) {
+        this.applicationContext.publishEvent(new LogoutEvent(findUniqueByUsername(username)));
     }
-
 
     public String retrievePassword(String email) {
         String massige = "";
