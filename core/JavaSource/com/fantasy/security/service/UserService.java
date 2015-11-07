@@ -105,7 +105,7 @@ public class UserService {
     public User login(String username, String password) {
         User user = this.userDao.findUniqueBy("username", username);
         PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
-        if (user == null || encoder.isPasswordValid(user.getPassword(), password, null)) {
+        if (user == null || !encoder.isPasswordValid(user.getPassword(), password, null)) {
             throw new PasswordException("用户名和密码错误");
         }
         if (!user.isEnabled()) {

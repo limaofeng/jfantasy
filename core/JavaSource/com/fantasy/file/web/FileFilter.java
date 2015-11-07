@@ -120,7 +120,10 @@ public class FileFilter extends GenericFilterBean {
             // 删除临时文件
             FileUtil.delFile(tmp);
             writeFile(request, response, fileManager.getFileItem(fileDetail.getRealPath()));
+        }else{
+            chain.doFilter(request,response);
         }
+
     }
 
     private void writeFile(HttpServletRequest request, HttpServletResponse response, FileItem fileItem) throws IOException {

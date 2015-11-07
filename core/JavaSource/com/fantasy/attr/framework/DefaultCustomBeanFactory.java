@@ -27,7 +27,6 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.stereotype.Component;
@@ -45,7 +44,7 @@ import java.util.concurrent.ConcurrentMap;
  * 默认的自定义Bean工厂
  */
 @Component
-@Lazy(false)
+//@Lazy(false)
 @Scope(proxyMode = ScopedProxyMode.NO)
 public class DefaultCustomBeanFactory implements CustomBeanFactory, InitializingBean {
 

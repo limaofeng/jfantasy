@@ -66,7 +66,7 @@ public class MemberService {
     public Member login(String username, String password) {
         Member member = this.memberDao.findUniqueBy("username", username);
         PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
-        if (member == null || encoder.isPasswordValid(member.getPassword(), password, null)) {
+        if (member == null || !encoder.isPasswordValid(member.getPassword(), password, null)) {
             throw new PasswordException("用户名和密码错误");
         }
         if (!member.isEnabled()) {
