@@ -2,16 +2,12 @@ package com.fantasy.cms.bean;
 
 import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
 import com.fantasy.attr.storage.BaseDynaBean;
-import com.fantasy.cms.bean.databind.ArticleCategoryDeserializer;
-import com.fantasy.cms.bean.databind.ArticleCategorySerializer;
 import com.fantasy.cms.bean.databind.ContentDeserializer;
 import com.fantasy.framework.lucene.annotations.*;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
@@ -36,7 +32,7 @@ import javax.persistence.Entity;
 @Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "content","target"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "category", "content", "target"})
 public class Article extends BaseDynaBean {
 
     private static final long serialVersionUID = 3480217915594201004L;
@@ -108,9 +104,6 @@ public class Article extends BaseDynaBean {
      */
     @ApiModelProperty("对应的分类")
     @IndexEmbed
-    @JsonProperty("categoryCode")
-    @JsonSerialize(using = ArticleCategorySerializer.class)
-    @JsonDeserialize(using = ArticleCategoryDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CATEGORY_CODE", nullable = false, foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY"))
     private ArticleCategory category;
