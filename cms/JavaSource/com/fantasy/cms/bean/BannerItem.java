@@ -2,10 +2,12 @@ package com.fantasy.cms.bean;
 
 import com.fantasy.file.bean.FileDetail;
 import com.fantasy.file.bean.converter.FileDetailConverter;
+import com.fantasy.file.bean.databind.FileDetailDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -52,6 +54,7 @@ public class BannerItem extends BaseBusEntity {
      */
     @Column(name = "BANNER_IMAGE_STORE", length = 500)
     @Convert(converter = FileDetailConverter.class)
+    @JsonDeserialize(using = FileDetailDeserializer.class)
     private FileDetail bannerImage;
     /**
      * 排序字段

@@ -29,6 +29,12 @@ public class JSONTest {
     private final static Log LOG = LogFactory.getLog(JSONTest.class);
 
     @Test
+    public void unknownProperties(){
+        String json = "{\"unknownPropertie\":\"xxx\",\"username\":\"limaofeng\",\"enabled\":false,\"password\":\"123456\",\"accountNonLocked\":false,\"credentialsNonExpired\":false}";
+        JSON.deserialize(json, Member.class);
+    }
+
+    @Test
     public void serializeDynaBean() {
         Member member = new Member();
         member.setUsername("limaofeng");

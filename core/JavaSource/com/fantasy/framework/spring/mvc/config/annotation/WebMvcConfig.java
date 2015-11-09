@@ -72,9 +72,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new StringHttpMessageConverter(Charset.forName("utf-8")));
-        MappingJackson2HttpMessageConverter jackson2HttpMessageConverter = new MappingJackson2HttpMessageConverter();
-        jackson2HttpMessageConverter.setObjectMapper(JSON.getObjectMapper());
-        converters.add(jackson2HttpMessageConverter);
+        converters.add(new MappingJackson2HttpMessageConverter(JSON.getObjectMapper()));
         super.configureMessageConverters(converters);
     }
 
