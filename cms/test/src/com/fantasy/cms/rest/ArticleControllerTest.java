@@ -2,7 +2,6 @@ package com.fantasy.cms.rest;
 
 import com.fantasy.cms.bean.Article;
 import com.fantasy.cms.bean.ArticleCategory;
-import com.fantasy.cms.bean.Content;
 import com.fantasy.cms.service.CmsService;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
@@ -31,7 +30,9 @@ import org.springframework.transaction.TransactionDefinition;
 import org.springframework.web.context.WebApplicationContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "src/main/webapp")
@@ -98,11 +99,11 @@ public class ArticleControllerTest {
     }
 
     public void testSave() throws Exception{
-        Article article = new Article();
-        article.setTitle("测试文章保存");
-        article.setSummary("保存");
-        article.setContent(new Content("测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存"));
-        article.setCategory(new ArticleCategory("admintest"));
+        Map<String,Object> article = new HashMap<String,Object>();
+        article.put("title","测试文章保存");
+        article.put("summary","保存");
+        article.put("content","测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存测试文章保存");
+        article.put("category",new ArticleCategory("admintest"));
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.post("/cms/articles").contentType(MediaType.APPLICATION_JSON).content(JSON.serialize(article))).andDo(MockMvcResultHandlers.print()).andReturn();
         Assert.assertEquals(HttpStatus.CREATED.value(), result.getResponse().getStatus());
     }

@@ -41,7 +41,7 @@ public class JSON {
     public static class Mirror {
 
         public String serialize(Object object, String... ignoreProperties) {
-            return JSON.newSerialize(object, ignoreProperties);
+            return JSON.serialize(object, ignoreProperties);
         }
 
         public Object deserialize(String json) {
@@ -175,11 +175,7 @@ public class JSON {
 
     }
 
-    public static String serialize(Object object) {
-        return newSerialize(object);
-    }
-
-    private static String newSerialize(Object object, String... ignoreProperties) {
+    public static String serialize(Object object, String... ignoreProperties) {
         try {
             if (object == null) {
                 return null;
