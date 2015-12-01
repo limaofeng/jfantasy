@@ -13,12 +13,15 @@ import org.apache.lucene.index.IndexWriter;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class IndexRebuildTask implements Runnable {
     private static final Log LOG = LogFactory.getLog(IndexRebuildTask.class);
-    private static Lock rebuildLock = new ReentrantLock();
+    private static final ConcurrentMap<Class<?>, ReentrantLock> rebuildLocks = new ConcurrentHashMap<Class<?>, ReentrantLock>();
+    private Lock rebuildLock;
     private Class<?> clazz;
     private IndexWriter writer;
     private int batchSize;
@@ -29,6 +32,10 @@ public class IndexRebuildTask implements Runnable {
         String name = MapperUtil.getEntityName(clazz);
         IndexWriterCache cache = IndexWriterCache.getInstance();
         this.writer = cache.get(name);
+        if (!rebuildLocks.containsKey(clazz)) {
+            rebuildLocks.put(clazz, new ReentrantLock());
+        }
+        rebuildLock = rebuildLocks.get(clazz);
     }
 
     public void run() {

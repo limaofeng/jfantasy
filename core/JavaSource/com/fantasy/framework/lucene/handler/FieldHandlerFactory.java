@@ -11,6 +11,16 @@ public class FieldHandlerFactory {
 
     private static final String DOT = ".";
 
+    public static boolean isHandler(Property p) {
+        Class[] tClases = {Id.class, IndexProperty.class, IndexEmbed.class, IndexEmbedList.class, IndexRef.class, IndexRefList.class};
+        for (Class tClass : tClases) {
+            if (p.getAnnotation(tClass) != null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static FieldHandler create(Object obj, Property p, String prefix) {
         FieldHandler handler = null;
         if (p.getAnnotation(Id.class) != null) {

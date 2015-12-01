@@ -1,5 +1,6 @@
 package com.fantasy.framework.lucene.cache;
 
+import com.fantasy.framework.error.IgnoreException;
 import com.fantasy.framework.lucene.BuguIndex;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -26,37 +27,34 @@ public class IndexWriterCache {
 		return instance;
 	}
 
-	public IndexWriter get(String name) {
-		IndexWriter writer = null;
-		if (this.cache.containsKey(name)){
-            writer = this.cache.get(name);
-        }else {
-            synchronized (this) {
-                if (this.cache.containsKey(name)) {
-                    writer = this.cache.get(name);
-                } else {
-                    BuguIndex index = BuguIndex.getInstance();
-                    IndexWriterConfig cfg = new IndexWriterConfig(index.getVersion(), index.getAnalyzer());
-                    cfg.setRAMBufferSizeMB(index.getBufferSizeMB());
-                    try {
-                        Directory dir = FSDirectory.open(BuguIndex.getInstance().getOpenFolder("/" + name));
-                        if (IndexWriter.isLocked(dir)) {
-                            IndexWriter.unlock(dir);
-                        }
-                        cfg.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-                        writer = new IndexWriter(dir, cfg);
-                    } catch (IOException ex) {
-                        LOGGER.error("Something is wrong when create IndexWriter for " + name, ex);
-                    }
-                    this.cache.put(name, writer);
+    public IndexWriter get(String name) {
+        if (this.cache.containsKey(name)) {
+            return this.cache.get(name);
+        }
+        synchronized (this) {
+            if (this.cache.containsKey(name)) {
+                return this.cache.get(name);
+            }
+            BuguIndex index = BuguIndex.getInstance();
+            IndexWriterConfig cfg = new IndexWriterConfig(index.getVersion(), index.getAnalyzer());
+            cfg.setRAMBufferSizeMB(index.getBufferSizeMB());
+            try {
+                Directory dir = FSDirectory.open(BuguIndex.getInstance().getOpenFolder("/" + name + "/"));
+                if (IndexWriter.isLocked(dir)) {
+                    IndexWriter.unlock(dir);
                 }
+                cfg.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+                this.cache.put(name, new IndexWriter(dir, cfg));
+                return this.cache.get(name);
+            } catch (IOException ex) {
+                LOGGER.error("Something is wrong when create IndexWriter for " + name, ex);
+                throw new IgnoreException(ex.getMessage(), ex);
             }
         }
-		return writer;
-	}
+    }
 
-	public Map<String, IndexWriter> getAll() {
-		return this.cache;
-	}
+    public Map<String, IndexWriter> getAll() {
+        return this.cache;
+    }
 
 }

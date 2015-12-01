@@ -36,8 +36,7 @@ public class IndexCreator {
                     doc.setBoost(bs.unfit());
                 }
             }
-            Object objValue = p.getValue(this.obj);
-            if (objValue != null) {
+            if (FieldHandlerFactory.isHandler(p) && p.getValue(this.obj) != null) {
                 FieldHandler handler = FieldHandlerFactory.create(this.obj, p, this.prefix);
                 if (handler != null) {
                     handler.handle(doc);
