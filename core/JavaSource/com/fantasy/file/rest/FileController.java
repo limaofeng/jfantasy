@@ -47,7 +47,7 @@ public class FileController {
     @ApiOperation(value = "上传文件", notes = "单独的文件上传接口，返回 FileDetail 对象", response = FileDetail.class)
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public FileDetail upload(@ApiParam(value = "分页对象", required = true) @RequestParam(value = "attach") MultipartFile file, @ApiParam(value = "上传目录编码", required = true) String dir, @ApiParam(value = "完整文件名") String entireFileName, @ApiParam(value = "完整文件上传目录") String entireFileDir, @ApiParam(value = "文章文件 Hash 值") String entireFileHash, @ApiParam(value = "片段文件 Hash 值") String partFileHash, @ApiParam(value = "片段文件总段数据") Integer total, @ApiParam(value = "当前片段序号") Integer index) throws IOException {
+    public FileDetail upload(@ApiParam(value = "上传的附件", required = true) @RequestParam(value = "attach") MultipartFile file, @ApiParam(value = "上传目录编码", required = true) String dir, @ApiParam(value = "完整文件名") String entireFileName, @ApiParam(value = "完整文件上传目录") String entireFileDir, @ApiParam(value = "文章文件 Hash 值") String entireFileHash, @ApiParam(value = "片段文件 Hash 值") String partFileHash, @ApiParam(value = "片段文件总段数据") Integer total, @ApiParam(value = "当前片段序号") Integer index) throws IOException {
         return fileUploadService.upload(file, dir, entireFileName, entireFileDir, entireFileHash, partFileHash, total, index);
     }
 
