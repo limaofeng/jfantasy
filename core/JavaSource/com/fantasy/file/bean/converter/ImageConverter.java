@@ -1,15 +1,15 @@
 package com.fantasy.file.bean.converter;
 
-import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.bean.Image;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 
 import javax.persistence.AttributeConverter;
 
-public class ImageConverter implements AttributeConverter<FileDetail, String> {
+public class ImageConverter implements AttributeConverter<Image, String> {
 
     @Override
-    public String convertToDatabaseColumn(FileDetail attribute) {
+    public String convertToDatabaseColumn(Image attribute) {
         if (attribute == null) {
             return null;
         }
@@ -17,10 +17,10 @@ public class ImageConverter implements AttributeConverter<FileDetail, String> {
     }
 
     @Override
-    public FileDetail convertToEntityAttribute(String dbData) {
+    public Image convertToEntityAttribute(String dbData) {
         if (StringUtil.isBlank(dbData)) {
             return null;
         }
-        return JSON.deserialize(dbData, FileDetail.class);
+        return JSON.deserialize(dbData, Image.class);
     }
 }

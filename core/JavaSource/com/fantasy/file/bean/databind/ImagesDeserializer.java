@@ -2,6 +2,7 @@ package com.fantasy.file.bean.databind;
 
 
 import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.bean.Image;
 import com.fantasy.file.service.FileService;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.StringUtil;
@@ -13,26 +14,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ImagesDeserializer extends JsonDeserializer<FileDetail[]> {
+public class ImagesDeserializer extends JsonDeserializer<Image[]> {
 
     private static FileService fileService;
 
     @Override
-    public FileDetail[] deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+    public Image[] deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
         String values = jp.getValueAsString();
         if (StringUtil.isBlank(values)) {
             return null;
         }
-        List<FileDetail> fileDetails = new ArrayList<FileDetail>();
+        List<Image> images = new ArrayList<Image>();
         for (String value : StringUtil.tokenizeToStringArray(values)) {
             String[] arry = value.split(":");
             FileDetail fileDetail = getFileService().getFileDetail(arry[1], arry[0]);
             if (fileDetail == null) {
                 continue;
             }
-            fileDetails.add(fileDetail);
+            images.add(new Image(fileDetail));
         }
-        return fileDetails.toArray(new FileDetail[fileDetails.size()]);
+        return images.toArray(new Image[images.size()]);
     }
 
     public FileService getFileService() {

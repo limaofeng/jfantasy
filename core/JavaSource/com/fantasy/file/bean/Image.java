@@ -10,6 +10,19 @@ public class Image extends FileDetail implements Comparable<Image> {
      */
     private Integer sort;
 
+    public Image(){
+    }
+
+    public Image(FileDetail fileDetail) {
+        this.setAbsolutePath(fileDetail.getAbsolutePath());
+        this.setContentType(fileDetail.getContentType());
+        this.setDescription(fileDetail.getDescription());
+        this.setExt(fileDetail.getExt());
+        this.setFileName(fileDetail.getFileName());
+        this.setFileManagerId(fileDetail.getFileManagerId());
+        this.setMd5(fileDetail.getMd5());
+    }
+
     @Override
     public int hashCode() {
         return new HashCodeBuilder().appendSuper(super.hashCode()).append(this.getFileDetailKey()).toHashCode();
