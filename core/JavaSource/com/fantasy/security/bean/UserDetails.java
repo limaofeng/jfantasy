@@ -1,8 +1,8 @@
 package com.fantasy.security.bean;
 
-import com.fantasy.file.bean.FileDetail;
-import com.fantasy.file.bean.converter.FileDetailConverter;
-import com.fantasy.file.bean.databind.FileDetailDeserializer;
+import com.fantasy.file.bean.Image;
+import com.fantasy.file.bean.converter.ImageConverter;
+import com.fantasy.file.bean.databind.ImageDeserializer;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.security.bean.enums.Sex;
 import com.fasterxml.jackson.annotation.JsonFilter;
@@ -96,8 +96,8 @@ public class UserDetails implements Serializable {
      */
     @ApiModelProperty(hidden = true)
     @Column(name = "AVATAR", length = 500)
-    @Convert(converter = FileDetailConverter.class)
-    private FileDetail avatar;
+    @Convert(converter = ImageConverter.class)
+    private Image avatar;
 
     @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, mappedBy = "details")
@@ -183,12 +183,12 @@ public class UserDetails implements Serializable {
         this.user = user;
     }
 
-    @JsonDeserialize(using = FileDetailDeserializer.class)
-    public void setAvatar(FileDetail fileDetail) {
-        this.avatar = fileDetail;
+    @JsonDeserialize(using = ImageDeserializer.class)
+    public void setAvatar(Image avatar) {
+        this.avatar = avatar;
     }
 
-    public FileDetail getAvatar() {
+    public Image getAvatar() {
         return this.avatar;
     }
 
