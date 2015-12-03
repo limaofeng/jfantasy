@@ -91,7 +91,7 @@ public class PropertyFilter {
         }
         Object array = this.propertyType.isAssignableFrom(Enum.class) ? new String[value.length] : ClassUtil.newInstance(this.propertyType, Array.getLength(value));
         for (int i = 0; i < Array.getLength(value); i++) {
-            Array.set(array, i, ReflectionUtils.convertStringToObject(Array.get(value, i).toString(), this.propertyType));
+            Array.set(array, i, this.propertyType == Enum.class ? Array.get(value, i).toString() : ReflectionUtils.convertStringToObject(Array.get(value, i).toString(), this.propertyType));
         }
         this.propertyValue = array;
     }

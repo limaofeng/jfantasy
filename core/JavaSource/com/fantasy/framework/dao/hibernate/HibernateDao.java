@@ -968,7 +968,8 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         for (int i = 0; i < propertyNames.length - 1; i++) {
             entityClassTemp = ClassUtil.getProperty(entityClassTemp, propertyNames[i]).getPropertyType();
         }
-        return filter.getPropertyValue(ClassUtil.getProperty(entityClassTemp, propertyNames[propertyNames.length - 1]).getPropertyType());
+        Class propertyType = ClassUtil.getProperty(entityClassTemp, propertyNames[propertyNames.length - 1]).getPropertyType();
+        return filter.isMultiProperty() ? filter.getPropertyValue(ClassUtil.newInstance(propertyType, 0).getClass()) : filter.getPropertyValue(propertyType);
     }
 
     public static String getAlias(String property) {

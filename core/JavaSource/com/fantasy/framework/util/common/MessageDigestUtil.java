@@ -1,7 +1,8 @@
 package com.fantasy.framework.util.common;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,7 +21,7 @@ public class MessageDigestUtil {
     private static final int TWO_BYTES = 0xFF;
 
     private MessageDigest messagedigest = null;
-    private static final Logger LOGGER = LoggerFactory.getLogger(MessageDigestUtil.class);
+    private static final Log LOGGER = LogFactory.getLog(MessageDigestUtil.class);
 
     private String algorithm;
 
