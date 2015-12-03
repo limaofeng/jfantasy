@@ -138,11 +138,11 @@ public class PropertyFilter {
 
     public <T> T getPropertyValue(Class<T> clazz) {
         if (this.getPropertyType().isAssignableFrom(Enum.class)) {
-            AtomicReference<Class> enumClass = new AtomicReference<Class>(clazz);
+            AtomicReference<Class> enumClass = new AtomicReference<Class>(clazz.isArray() ? clazz.getComponentType() : clazz);
             if (propertyValue instanceof String) {
                 return clazz.cast(Enum.valueOf(enumClass.get(), (String) propertyValue));
             } else if (propertyValue instanceof String[]) {
-                Object array = ClassUtil.newInstance(clazz, Array.getLength(propertyValue));
+                Object array = ClassUtil.newInstance(enumClass.get(), Array.getLength(propertyValue));
                 for (int i = 0; i < Array.getLength(propertyValue); i++) {
                     Array.set(array, i, Enum.valueOf(enumClass.get(), (String) Array.get(propertyValue, i)));
                 }
