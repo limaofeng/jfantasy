@@ -117,10 +117,10 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
                 target.setOrderBy(value);
             } else if ("order".equalsIgnoreCase(paramName)) {
                 List<Pager.Order> orders = new ArrayList<Pager.Order>();
-                for(String order : StringUtil.tokenizeToStringArray(value,",")){
+                for (String order : StringUtil.tokenizeToStringArray(value, ",")) {
                     orders.add(Pager.Order.valueOf(order));
                 }
-                if(!orders.isEmpty()) {
+                if (!orders.isEmpty()) {
                     target.setOrders(orders.toArray(new Pager.Order[orders.size()]));
                 }
             }
@@ -156,7 +156,7 @@ public class PagerModelAttributeMethodProcessor implements HandlerMethodArgument
     }
 
     private String[] getModelNames(boolean page) {
-        return page ? new String[]{"page", "size", "per_page", "sort", "order"} : new String[]{"limit"};
+        return page ? new String[]{"page", "size", "per_page", "sort", "order"} : new String[]{"limit", "sort", "order"};
     }
 
     private boolean isPagerModelAttribute(String parameterName, String[] modelNames) {
