@@ -2,8 +2,10 @@ package com.fantasy.system.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.common.ObjectUtil;
+import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.system.bean.databind.DataDictionaryKeyDeserializer;
 import com.fantasy.system.bean.databind.DataDictionaryKeySerializer;
+import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -23,6 +25,7 @@ import java.util.List;
 @Entity
 @Table(name = "SYS_DD")
 @IdClass(DataDictionaryKey.class)
+@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parent", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DataDictionary extends BaseBusEntity {
