@@ -7,7 +7,7 @@
 
     <task:executor id="executor" pool-size="10" />
 
-    <bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean" init-method="start" destroy-method="destroy">
+    <bean id="scheduler" class="com.fantasy.framework.quartz.FantasySchedulerFactoryBean" init-method="start" destroy-method="destroy">
         <property name="autoStartup" value="false"/>
         <property name="waitForJobsToCompleteOnShutdown" value="false"/>
         <property name="dataSource" ref="dataSource"/>
