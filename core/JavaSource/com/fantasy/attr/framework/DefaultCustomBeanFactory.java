@@ -25,8 +25,10 @@ import ognl.TypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionDefinition;
 
 import java.lang.reflect.Array;
@@ -40,10 +42,10 @@ import java.util.concurrent.ConcurrentMap;
 /**
  * 默认的自定义Bean工厂
  */
-//@Component
+@Component
 //@Lazy(false)
-//@Scope(proxyMode = ScopedProxyMode.NO)
-public class DefaultCustomBeanFactory implements CustomBeanFactory, InitializingBean {
+@Scope(proxyMode = ScopedProxyMode.NO)
+public class DefaultCustomBeanFactory implements CustomBeanFactory/*, InitializingBean*/ {
 
     private static final Log LOG = LogFactory.getLog(DefaultCustomBeanFactory.class);
 
@@ -117,7 +119,6 @@ public class DefaultCustomBeanFactory implements CustomBeanFactory, Initializing
                     continue;
                 }
                 Property property = new Property(attribute.getCode(), javaType);
-//                property.
                 properties.add(property);
                 Hibernate.initialize(attribute.getAttributeType().getConverter());
             }
