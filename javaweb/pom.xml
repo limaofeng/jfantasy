@@ -59,10 +59,12 @@
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-cache</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>com.fantasy</groupId>
             <artifactId>fantasy-weixin</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>

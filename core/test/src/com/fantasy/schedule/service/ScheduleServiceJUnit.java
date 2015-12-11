@@ -9,14 +9,11 @@ import org.junit.runner.RunWith;
 import org.quartz.CronExpression;
 import org.quartz.JobKey;
 import org.quartz.TriggerKey;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -39,8 +36,10 @@ public class ScheduleServiceJUnit {
         // 添加触发器
         Map<String, String> _data = new HashMap<String, String>();
         _data.put("name", "limaofeng-1");
-        scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), 1000, 0, _data);
+        System.out.println("添加触发器:" + DateUtil.format("yyyy-MM-dd HH:mm:ss"));
+        scheduleService.addTrigger(JobKey.jobKey("junit", "test"), TriggerKey.triggerKey("test"), TimeUnit.SECONDS.toMillis(10), 0, _data);
 
+        /*
         Date date = DateUtil.now();
         String expression = DateUtil.format(DateUtil.add(date, Calendar.SECOND,5),"ss mm HH dd MM ? yyyy");
         _data.put("title","五秒后触发");
@@ -48,6 +47,7 @@ public class ScheduleServiceJUnit {
 
         _data.put("title","立即触发");
         scheduleService.triggerJob(JobKey.jobKey("junit", "test"),_data);
+        */
     }
 
     @After
@@ -66,7 +66,7 @@ public class ScheduleServiceJUnit {
 
     @Test
     public void run() throws InterruptedException {
-        Thread.sleep(TimeUnit.SECONDS.toMillis(20));
+        Thread.sleep(TimeUnit.SECONDS.toMillis(200));
     }
 
     @Test

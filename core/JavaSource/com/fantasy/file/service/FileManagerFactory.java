@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,6 +40,7 @@ import static com.fantasy.file.bean.enums.FileManagerType.local;
  * @version 1.0
  * @since 2013-7-12 下午03:57:31
  */
+@Component
 @Transactional
 public class FileManagerFactory implements ApplicationListener<ContextRefreshedEvent> {
 

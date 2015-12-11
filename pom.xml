@@ -62,7 +62,7 @@
         <com.thoughtworks.xstream-version>1.4.8</com.thoughtworks.xstream-version>
         <io.springfox-swagger-version>2.2.2</io.springfox-swagger-version>
         <com.fasterxml.jackson.core-version>2.3.0</com.fasterxml.jackson.core-version>
-        <org.springframework.security-version>3.2.5.RELEASE</org.springframework.security-version>
+        <org.springframework.security-version>3.2.4.RELEASE</org.springframework.security-version>
     </properties>
 
     <profiles>

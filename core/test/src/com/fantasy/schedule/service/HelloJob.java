@@ -15,6 +15,7 @@ public class HelloJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobDataMap data = context.getMergedJobDataMap();
         StringBuilder log = new StringBuilder();
+        LOG.debug("触发时间:"+DateUtil.format("yyyy-MM-dd HH:mm:ss"));
         log.append("\n\n-===============Hello World! - ").append(new Date()).append("==================-").append("\n");
         for (Map.Entry<String, Object> entry : data.entrySet()) {
             log.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
