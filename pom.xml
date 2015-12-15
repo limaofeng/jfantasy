@@ -11,9 +11,9 @@
 
     <repositories>
         <repository>
-            <id>hoolue Releases</id>
-            <name>hoolue Releases</name>
-            <url>http://maven.hoolue.com/content/groups/public/</url>
+            <id>limaofeng-maven-snapshot-repository</id>
+            <name>limaofeng-maven-snapshot-repository</name>
+            <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
         </repository>
     </repositories>
 
