@@ -11,9 +11,14 @@
 
     <repositories>
         <repository>
-            <id>limaofeng-maven-snapshot-repository</id>
-            <name>limaofeng-maven-snapshot-repository</name>
+            <id>github snapshot</id>
+            <name>github snapshot</name>
             <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
+        </repository>
+        <repository>
+            <id>oschina public</id>
+            <name>oschina public</name>
+            <url>http://maven.oschina.net/content/groups/public</url>
         </repository>
     </repositories>
 
