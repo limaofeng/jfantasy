@@ -29,7 +29,7 @@ import java.math.BigDecimal;
  */
 @ApiModel(value = "支付记录")
 @Entity
-@Table(name = "MALL_PAYMENT")
+@Table(name = "PAYMENT")
 @JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Payment extends BaseBusEntity {

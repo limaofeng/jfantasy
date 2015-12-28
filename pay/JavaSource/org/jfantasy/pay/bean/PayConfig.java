@@ -22,7 +22,7 @@ import java.util.List;
  */
 @ApiModel("支付配置")
 @Entity
-@Table(name = "MALL_PAY_CONFIG")
+@Table(name = "PAY_CONFIG")
 @JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "payments", "refunds"})
 public class PayConfig extends BaseBusEntity {

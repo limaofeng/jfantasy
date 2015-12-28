@@ -17,7 +17,7 @@ import java.math.BigDecimal;
  * @since 2013-12-5 上午9:22:39
  */
 @Entity
-@Table(name = "MALL_PAYMENT_REFUND")
+@Table(name = "PAYMENT_REFUND")
 @JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Refund extends BaseBusEntity {
