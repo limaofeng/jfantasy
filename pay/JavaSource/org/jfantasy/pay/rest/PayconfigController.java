@@ -18,7 +18,7 @@ import java.util.List;
 @Api(value = "payconfigs", description = "支付配置")
 @RestController
 @RequestMapping("/payconfigs")
-public class PayconfigController {
+public class PayConfigController {
 
     @Autowired
     private PayConfigService configService;

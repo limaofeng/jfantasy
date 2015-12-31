@@ -1,7 +1,5 @@
 package org.jfantasy.pay.service;
 
-import com.fantasy.common.order.Order;
-import com.fantasy.common.order.OrderService;
 import com.fantasy.common.order.OrderUrls;
 import com.fantasy.framework.spring.SpringContextUtil;
 import com.fantasy.framework.util.common.ObjectUtil;
@@ -15,8 +13,10 @@ import org.apache.commons.logging.LogFactory;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.PayResult;
 import org.jfantasy.pay.product.PayProduct;
+import org.jfantasy.pay.product.PayResult;
+import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.product.order.OrderService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -65,11 +65,11 @@ public class PaymentContext {
      */
     private PayResult payResult;
 
-    private PaymentConfiguration configuration;
+    private PayProductConfiguration configuration;
 
-    private PaymentConfiguration configuration() {
+    private PayProductConfiguration configuration() {
         if (configuration == null) {
-            return configuration = SpringContextUtil.getBeanByType(PaymentConfiguration.class);
+            return configuration = SpringContextUtil.getBeanByType(PayProductConfiguration.class);
         }
         return configuration;
     }
@@ -77,12 +77,12 @@ public class PaymentContext {
     private PaymentContext(Payment payment, OrderService orderService) throws PayException {
         this.payment = payment;
         this.payConfig = payment.getPayConfig();
-        this.payProduct = configuration().getPaymentProduct(this.payConfig.getPaymentProductId());
+        this.payProduct = configuration().loadPayProduct((this.payConfig.getPayProductId()));
         if (this.payProduct == null) {
             throw new PayException("支付产品不存在!");
         }
         this.orderService = orderService;
-        this.orderDetails = orderService.loadOrderBySn(payment.getOrderSn());
+        this.orderDetails = orderService.loadOrder(payment.getOrderSn());
 
         this.initOrderUrls();
     }

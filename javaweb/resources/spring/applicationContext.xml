@@ -64,7 +64,7 @@
     </bean>
 
     <!-- 支付配置 -->
-    <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+    <bean id="paymentConfiguration" class="org.jfantasy.pay.service.PaymentConfiguration" lazy-init="false"/>
 
     <bean id="defaultSMSService" class="com.fantasy.sms.service.DefaultSMSService"/>
 

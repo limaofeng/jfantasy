@@ -1,28 +1,18 @@
 package org.jfantasy.pay.service;
 
-import com.fantasy.common.order.Order;
-import com.fantasy.common.order.OrderService;
-import com.fantasy.common.order.OrderServiceFactory;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.mvc.error.NotFoundException;
-import com.fantasy.framework.util.common.DateUtil;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
-import com.fantasy.member.bean.Member;
-import com.fantasy.member.service.MemberService;
-import com.fantasy.security.SpringSecurityUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
-import org.htmlcleaner.TagNode;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.dao.PaymentDao;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.Parameters;
-import org.jfantasy.pay.product.PayResult;
 import org.jfantasy.pay.product.PayProduct;
+import org.jfantasy.pay.product.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,39 +36,31 @@ public class PaymentService {
     @Autowired
     private PayConfigService payConfigService;
     @Autowired(required = false)
-    private PaymentConfiguration paymentConfiguration;
-    @Autowired
-    private MemberService memberService;
-    @Autowired
-    private OrderServiceFactory orderServiceFactory;
+    private PayProductConfiguration payProductConfiguration;
 
     /**
      * 支付准备
      *
-     * @param orderType       订单类型
-     * @param orderSn         订单编号
-     * @param membername      会员
-     * @param paymentConfigId 支付配置
+     * @param order       订单信息
+     * @param payConfig         支付配置
+     * @param payProduct      支付产品
+     * @param payer 付款人
      * @return Payment
      * @throws PayException
      */
-    public Payment ready(String orderType, String orderSn, String membername, Long paymentConfigId) throws PayException {
-        PayConfig paymentConfig = this.payConfigService.get(paymentConfigId);
+    public Payment ready(Order order,PayConfig payConfig, PayProduct payProduct,String payer) throws PayException {
         //在线支付
-        if (PayConfig.PaymentConfigType.online != paymentConfig.getPaymentConfigType()) {
+        if (PayConfig.PayConfigType.online != payConfig.getPayConfigType()) {
             throw new PayException("暂时只支持在线支付");
         }
-        OrderService paymentOrderDetailsService = this.orderServiceFactory.getOrderService(orderType);
-        //检查订单支付状态等信息
-        Order orderDetails = paymentOrderDetailsService.loadOrderBySn(orderSn);
 
         //支付配置类型（线下支付、在线支付）
         Payment.PaymentType paymentType = Payment.PaymentType.online;
         BigDecimal paymentFee = BigDecimal.ZERO; //支付手续费
 
-        BigDecimal amountPayable = orderDetails.getPayableFee();//应付金额（含支付手续费）
+        BigDecimal amountPayable = order.getPayableFee();//应付金额（含支付手续费）
 
-        Payment payment = this.paymentDao.findUnique(Restrictions.eq("paymentConfig.id", paymentConfigId), Restrictions.eq("orderType", orderType), Restrictions.eq("orderSn", orderSn), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
+        Payment payment = this.paymentDao.findUnique(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("orderType", order.getType()), Restrictions.eq("orderSn", order.getSN()), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
         if (payment != null) {
             //如果存在未完成的支付信息
             if (amountPayable.compareTo(payment.getTotalAmount().subtract(payment.getPaymentFee())) == 0) {
@@ -91,27 +73,20 @@ public class PaymentService {
         payment = new Payment();
 
         //在线支付
-        PayProduct payProduct = paymentConfiguration.getPaymentProduct(paymentConfig.getPaymentProductId());
         String bankName = payProduct.getName();
-        String bankAccount = paymentConfig.getBargainorId();
+        String bankAccount = payConfig.getBargainorId();
         payment.setPaymentType(paymentType);
-        payment.setPaymentConfigName(paymentConfig.getName());
+        payment.setPaymentConfigName(payConfig.getName());
         payment.setBankName(bankName);
         payment.setBankAccount(bankAccount);
         payment.setTotalAmount(amountPayable.add(paymentFee));
         payment.setPaymentFee(paymentFee);
-        payment.setPayer(StringUtil.defaultValue(membername, SpringSecurityUtils.getCurrentUserName()));
+        payment.setPayer(payer);
         payment.setMemo(null);
         payment.setPaymentStatus(Payment.PaymentStatus.ready);
-        payment.setPayConfig(paymentConfig);
-        payment.setOrderType(orderType);
-        payment.setOrderSn(orderSn);
-        if (StringUtil.isNotBlank(membername)) {
-            Member member = memberService.findUniqueByUsername(membername);
-            if (member != null) {
-                payment.setMember(member);
-            }
-        }
+        payment.setPayConfig(payConfig);
+        payment.setOrderType(order.getType());
+        payment.setOrderSn(order.getSN());
         return this.paymentDao.save(payment);
     }
 
@@ -176,10 +151,6 @@ public class PaymentService {
         return this.payConfigService.get(id);
     }
 
-    public PayProduct getPaymentProduct(String paymentProductId) {
-        return this.paymentConfiguration.getPaymentProduct(paymentProductId);
-    }
-
     public void paynotify() {
 
     }
@@ -208,26 +179,26 @@ public class PaymentService {
 
     public String test(Long paymentConfigId, Parameters parameters) throws PayException {
         String orderType = "test";
-        List<Payment> payments = this.paymentDao.find(Restrictions.eq("paymentConfig.id", paymentConfigId), Restrictions.eq("orderType", orderType), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
-        String orderSn = payments.isEmpty() ? "TSN" + DateUtil.format("yyyyMMddHHmmss") : payments.get(0).getOrderSn();
-
-        Payment payment = this.ready(orderType, orderSn, "", paymentConfigId);
-        PaymentContext context = PaymentContext.newInstall(payment,this.orderServiceFactory.getOrderService(orderType));
-
-        // 支付参数
-        Map<String, String> parameterMap = context.getPayProduct().getParameterMap(parameters);
-        String sHtmlText = context.getPayProduct().buildRequest(parameterMap);
-        TagNode body = HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.htmlCleaner(sHtmlText), "//body");
-        assert body != null;
-        body.removeChild(HtmlCleanerUtil.findFristTagNode(body, "//script"));
-        for (TagNode tagNode : HtmlCleanerUtil.findTagNodes(body, "//form//input")) {
-            if ("hidden".equals(tagNode.getAttributeByName("type"))) {
-                tagNode.addAttribute("type", "text");
-            } else if ("submit".equals(tagNode.getAttributeByName("type"))) {
-                tagNode.removeAttribute("style");
-            }
-        }
-        return HtmlCleanerUtil.getAsString(HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.getAsString(body), "//form"));
+//        List<Payment> payments = this.paymentDao.find(Restrictions.eq("paymentConfig.id", paymentConfigId), Restrictions.eq("orderType", orderType), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
+//        String orderSn = payments.isEmpty() ? "TSN" + DateUtil.format("yyyyMMddHHmmss") : payments.get(0).getOrderSn();
+//
+//        Payment payment = this.ready(orderType, orderSn, "", paymentConfigId);
+//        PaymentContext context = PaymentContext.newInstall(payment,this.orderServiceFactory.getOrderService(orderType));
+//
+//        // 支付参数
+//        Map<String, String> parameterMap = context.getPayProduct().getParameterMap(parameters);
+//        String sHtmlText = context.getPayProduct().buildRequest(parameterMap);
+//        TagNode body = HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.htmlCleaner(sHtmlText), "//body");
+//        assert body != null;
+//        body.removeChild(HtmlCleanerUtil.findFristTagNode(body, "//script"));
+//        for (TagNode tagNode : HtmlCleanerUtil.findTagNodes(body, "//form//input")) {
+//            if ("hidden".equals(tagNode.getAttributeByName("type"))) {
+//                tagNode.addAttribute("type", "text");
+//            } else if ("submit".equals(tagNode.getAttributeByName("type"))) {
+//                tagNode.removeAttribute("style");
+//            }
+//        }
+        return null;//HtmlCleanerUtil.getAsString(HtmlCleanerUtil.findFristTagNode(HtmlCleanerUtil.getAsString(body), "//form"));
     }
 
     /**
@@ -241,33 +212,34 @@ public class PaymentService {
      * @return html 表单字符串
      */
     public String buildRequest(String orderType, String orderSn, Long paymentConfigId, String payMember, Parameters parameters) throws PayException {
-        Payment payment = this.ready(orderType, orderSn, payMember, paymentConfigId);
-
-        PaymentContext context = this.createPaymentContext(payment.getSn());
-
-        PayProduct payProduct = context.getPayProduct();
-
-        // 支付参数
-        Map<String, String> parameterMap = payProduct.getParameterMap(parameters);
-        return payProduct.buildRequest(parameterMap);
+//        Payment payment = this.ready(orderType, orderSn, payMember, paymentConfigId);
+//
+//        PaymentContext context = this.createPaymentContext(payment.getSn());
+//
+//        PayProduct payProduct = context.getPayProduct();
+//
+//        // 支付参数
+//        Map<String, String> parameterMap = payProduct.getParameterMap(parameters);
+//        return payProduct.buildRequest(parameterMap);
+        return "";
     }
 
     private void verify(Map<String, String> parameterMap) throws PayException {
-        Payment payment = PaymentContext.getContext().getPayment();
-        PayProduct payProduct = PaymentContext.getContext().getPayProduct();
-
-        PayResult payResult = payProduct.parsePayResult(parameterMap);
-        PaymentContext.getContext().setPayResult(payResult);
-
-        if (!payProduct.verifySign(parameterMap)) {
-            this.failure(payment.getSn());
-            throw new PayException("支付签名错误!");
-        } else if (PayResult.PayStatus.failure == payResult.getStatus()) {
-            this.failure(payment.getSn());
-            throw new PayException("支付失败!");
-        } else if (payment.getPaymentStatus() == Payment.PaymentStatus.success) {
-            LOG.debug("订单已支付");
-        }
+//        Payment payment = PaymentContext.getContext().getPayment();
+//        PayProduct payProduct = PaymentContext.getContext().getPayProduct();
+//
+//        PayResult payResult = payProduct.parsePayResult(parameterMap);
+//        PaymentContext.getContext().setPayResult(payResult);
+//
+//        if (!payProduct.verifySign(parameterMap)) {
+//            this.failure(payment.getSn());
+//            throw new PayException("支付签名错误!");
+//        } else if (PayResult.PayStatus.failure == payResult.getStatus()) {
+//            this.failure(payment.getSn());
+//            throw new PayException("支付失败!");
+//        } else if (payment.getPaymentStatus() == Payment.PaymentStatus.success) {
+//            LOG.debug("订单已支付");
+//        }
     }
 
     public PaymentContext createPaymentContext(String sn) throws PayException {
@@ -275,27 +247,28 @@ public class PaymentService {
         if (payment == null) {
             throw new PayException("支付记录不存在!");
         }
-        return PaymentContext.newInstall(payment, this.orderServiceFactory.getOrderService(payment.getOrderType()));
+        return null;//PaymentContext.newInstall(payment, this.orderServiceFactory.getOrderService(payment.getOrderType()));
     }
 
     public String payreturn(String sn, Map<String, String> parameterMap) throws PayException {
         PaymentContext context = createPaymentContext(sn);
         verify(parameterMap);
         this.success(sn, PaymentContext.getContext().getPayResult().getTradeNo());
-        return context.getPayProduct().getPayreturnMessage(sn);
+        return null;//context.getPayProduct().getPayreturnMessage(sn);
     }
 
     public String paynotify(String sn, Map<String, String> parameterMap) throws PayException {
         PaymentContext context = createPaymentContext(sn);
         verify(parameterMap);
         this.success(sn, PaymentContext.getContext().getPayResult().getTradeNo());
-        return context.getPayProduct().getPaynotifyMessage(sn);
+        return null;//context.getPayProduct().getPaynotifyMessage(sn);
     }
 
     public Order getOrderByPaymentId(Long id) {
-        Payment payment = this.get(id);
-        OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
-        return orderService.loadOrderBySn(payment.getOrderSn());
+//        Payment payment = this.get(id);
+//        OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
+//        return orderService.loadOrderBySn(payment.getOrderSn());
+        return null;
     }
 
 }

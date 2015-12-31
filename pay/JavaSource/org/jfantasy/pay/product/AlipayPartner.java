@@ -1,12 +1,12 @@
 package org.jfantasy.pay.product;
 
 import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.common.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.service.PaymentContext;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -17,21 +17,19 @@ import java.util.concurrent.atomic.AtomicReference;
 /**
  * 支付宝（担保交易）
  */
-public class AlipayPartner extends AbstractAlipayPaymentProduct {
+public class AlipayPartner extends AlipayPayProductSupport {
     /**
      * 支付宝消息验证地址
      */
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
 
-    @Override
     public String getPaymentUrl() {
         return PAYMENT_URL;
     }
 
-    @Override
     public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
-        PaymentConfig paymentConfig = context.getPaymentConfig();
+        PayConfig paymentConfig = context.getPaymentConfig();
         Order orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
@@ -93,7 +91,7 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
 
     @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         Map<String, String> params = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
             //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
@@ -104,7 +102,6 @@ public class AlipayPartner extends AbstractAlipayPaymentProduct {
         return StringUtils.equals(params.get("sign"), DigestUtils.md5Hex(getParameterString(paraFilter(params)) + paymentConfig.getBargainorKey())) && verifyResponse(paymentConfig.getBargainorId(), params.get("notify_id"));
     }
 
-    @Override
     public PayResult parsePayResult(Map<String, String> parameters) {
         Map<String, String> params = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : parameters.entrySet()) {

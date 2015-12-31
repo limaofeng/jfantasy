@@ -80,7 +80,7 @@
     </bean>
 
     <!-- 支付配置 -->
-    <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+    <bean id="paymentConfiguration" class="org.jfantasy.pay.service.PaymentConfiguration" lazy-init="false"/>
 
     <!-- 用户登陆接口(通过XML文件配置) -->
     <bean id="userDetailsService" class="com.fantasy.security.userdetails.SimpleUserDetailsService"/>

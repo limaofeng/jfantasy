@@ -1,9 +1,13 @@
 package org.jfantasy.pay.bean;
 
+import com.fantasy.file.bean.FileDetail;
+import com.fantasy.file.bean.converter.FileDetailConverter;
+import com.fantasy.file.bean.databind.FileDetailDeserializer;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
@@ -30,12 +34,12 @@ public class PayConfig extends BaseBusEntity {
     private static final long serialVersionUID = -7950849648189504426L;
 
     // 支付配置类型（线下支付、在线支付）
-    public enum PaymentConfigType {
+    public enum PayConfigType {
         offline, online
     }
 
     // 支付手续费类型（按比例收费、固定费用）
-    public enum PaymentFeeType {
+    public enum PayFeeType {
         scale, fixed
     }
 
@@ -49,8 +53,8 @@ public class PayConfig extends BaseBusEntity {
      */
     @ApiModelProperty("支付配置类型")
     @Enumerated(EnumType.STRING)
-    @Column(name = "PAYMENT_CONFIG_TYPE", nullable = false, updatable = false)
-    private PaymentConfigType paymentConfigType;
+    @Column(name = "PAY_CONFIG_TYPE", nullable = false, updatable = false)
+    private PayConfigType payConfigType;
     /**
      * 支付方式名称
      */
@@ -61,8 +65,8 @@ public class PayConfig extends BaseBusEntity {
      * 支付产品标识
      */
     @ApiModelProperty("支付产品标识")
-    @Column(name = "PAYMENT_PRODUCT_ID", updatable = false)
-    private String paymentProductId;
+    @Column(name = "PAY_PRODUCT_ID", updatable = false)
+    private String payProductId;
     /**
      * 商家ID
      */
@@ -82,18 +86,36 @@ public class PayConfig extends BaseBusEntity {
     @Column(name = "SELLER_EMAIL")
     private String sellerEmail;
     /**
+     * 签名证书(银联支付专用)
+     */
+    @Column(name = "SIGN_CERT")
+    @Convert(converter = FileDetailConverter.class)
+    private FileDetail signCert;
+    /**
+     * 加密证书(银联支付专用)
+     */
+    @Column(name = "ENCRYPT_CERT")
+    @Convert(converter = FileDetailConverter.class)
+    private FileDetail encryptCert;
+    /**
+     * 签名验证证书(银联支付专用)
+     */
+    @Column(name = "VALIDATE_CERT")
+    @Convert(converter = FileDetailConverter.class)
+    private FileDetail validateCert;
+    /**
      * 支付手续费类型
      */
     @ApiModelProperty("支付手续费类型")
     @Enumerated(EnumType.STRING)
-    @Column(name = "PAYMENT_FEE_TYPE", nullable = false)
-    private PaymentFeeType paymentFeeType;
+    @Column(name = "PAY_FEE_TYPE", nullable = false)
+    private PayFeeType payFeeType;
     /**
      * 支付费用
      */
     @ApiModelProperty("支付费用")
-    @Column(name = "PAYMENT_FEE", nullable = false, precision = 15, scale = 5)
-    private BigDecimal paymentFee;
+    @Column(name = "PAY_FEE", nullable = false, precision = 15, scale = 5)
+    private BigDecimal payFee;
     /**
      * 介绍
      */
@@ -128,12 +150,12 @@ public class PayConfig extends BaseBusEntity {
         this.id = id;
     }
 
-    public PaymentConfigType getPaymentConfigType() {
-        return paymentConfigType;
+    public PayConfigType getPayConfigType() {
+        return payConfigType;
     }
 
-    public void setPaymentConfigType(PaymentConfigType paymentConfigType) {
-        this.paymentConfigType = paymentConfigType;
+    public void setPayConfigType(PayConfigType paymentConfigType) {
+        this.payConfigType = paymentConfigType;
     }
 
     public String getName() {
@@ -144,20 +166,20 @@ public class PayConfig extends BaseBusEntity {
         this.name = name;
     }
 
-    public PaymentFeeType getPaymentFeeType() {
-        return paymentFeeType;
+    public PayFeeType getPayFeeType() {
+        return payFeeType;
     }
 
-    public void setPaymentFeeType(PaymentFeeType paymentFeeType) {
-        this.paymentFeeType = paymentFeeType;
+    public void setPayFeeType(PayFeeType payFeeType) {
+        this.payFeeType = payFeeType;
     }
 
-    public BigDecimal getPaymentFee() {
-        return paymentFee;
+    public BigDecimal getPayFee() {
+        return payFee;
     }
 
-    public void setPaymentFee(BigDecimal paymentFee) {
-        this.paymentFee = paymentFee;
+    public void setPayFee(BigDecimal payFee) {
+        this.payFee = payFee;
     }
 
     public String getDescription() {
@@ -208,12 +230,12 @@ public class PayConfig extends BaseBusEntity {
         this.refunds = refunds;
     }
 
-    public String getPaymentProductId() {
-        return paymentProductId;
+    public String getPayProductId() {
+        return payProductId;
     }
 
-    public void setPaymentProductId(String paymentProductId) {
-        this.paymentProductId = paymentProductId;
+    public void setPayProductId(String payProductId) {
+        this.payProductId = payProductId;
     }
 
     public String getSellerEmail() {
@@ -224,20 +246,30 @@ public class PayConfig extends BaseBusEntity {
         this.sellerEmail = sellerEmail;
     }
 
-    /**
-     * 根据总金额计算支付费用
-     *
-     * @return 支付费用
-     */
-    @Transient
-    public BigDecimal getPaymentFee(BigDecimal totalAmount) {
-        BigDecimal paymentFee;
-        if (paymentFeeType == PaymentFeeType.scale) {
-            paymentFee = totalAmount.multiply(this.paymentFee.divide(new BigDecimal(100)));
-        } else {
-            paymentFee = this.paymentFee;
-        }
-        return paymentFee;
+    public FileDetail getSignCert() {
+        return signCert;
     }
 
+    @JsonDeserialize(using = FileDetailDeserializer.class)
+    public void setSignCert(FileDetail signCert) {
+        this.signCert = signCert;
+    }
+
+    public FileDetail getEncryptCert() {
+        return encryptCert;
+    }
+
+    @JsonDeserialize(using = FileDetailDeserializer.class)
+    public void setEncryptCert(FileDetail encryptCert) {
+        this.encryptCert = encryptCert;
+    }
+
+    public FileDetail getValidateCert() {
+        return validateCert;
+    }
+
+    @JsonDeserialize(using = FileDetailDeserializer.class)
+    public void setValidateCert(FileDetail validateCert) {
+        this.validateCert = validateCert;
+    }
 }

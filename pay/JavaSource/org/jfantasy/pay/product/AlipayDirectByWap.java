@@ -1,14 +1,14 @@
 package org.jfantasy.pay.product;
 
 import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.common.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.service.PaymentContext;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -21,7 +21,7 @@ import java.util.Map;
 /**
  * 支付宝 wap 支付接口
  */
-public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
+public class AlipayDirectByWap extends AlipayPayProductSupport {
 
     //支付宝网关地址
     private static final String ALIPAY_GATEWAY_NEW = "http://wappaygw.alipay.com/service/rest.htm?_input_charset=" + input_charset;
@@ -30,15 +30,13 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
     public static final String NOTIFY_URL = "/payment/paynotify.do";// 消息通知URL
     */
 
-    @Override
     public String getPaymentUrl() {
         return ALIPAY_GATEWAY_NEW;
     }
 
-    @Override
     public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
-        PaymentConfig paymentConfig = context.getPaymentConfig();
+        PayConfig paymentConfig = context.getPaymentConfig();
         Order orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
@@ -148,7 +146,6 @@ public class AlipayDirectByWap extends AbstractAlipayPaymentProduct {
         return super.buildRequest(sParaTemp, "get", "确定");
     }
 
-    @Override
     public PayResult parsePayResult(Map<String, String> parameters) {
         Map<String, String> params = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : parameters.entrySet()) {

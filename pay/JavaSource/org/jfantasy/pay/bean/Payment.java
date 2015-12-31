@@ -2,11 +2,6 @@ package org.jfantasy.pay.bean;
 
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.member.bean.Member;
-import com.fantasy.member.bean.databind.MemberDeserializer;
-import com.fantasy.member.bean.databind.MemberSerializer;
-import org.jfantasy.pay.bean.databind.PaymentConfigDeserializer;
-import org.jfantasy.pay.bean.databind.PaymentConfigSerializer;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +11,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jfantasy.pay.bean.databind.PaymentConfigDeserializer;
+import org.jfantasy.pay.bean.databind.PaymentConfigSerializer;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -120,16 +117,6 @@ public class Payment extends BaseBusEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "PAYMENT_STATUS", nullable = false)
     private PaymentStatus paymentStatus;
-    /**
-     * 会员
-     */
-    @ApiModelProperty(hidden = true)
-    @JsonProperty("memberId")
-    @JsonSerialize(using = MemberSerializer.class)
-    @JsonDeserialize(using = MemberDeserializer.class)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_PAYMENT_MEMBER"))
-    private Member member;
     /**
      * 支付方式
      */
@@ -239,14 +226,6 @@ public class Payment extends BaseBusEntity {
 
     public void setMemo(String memo) {
         this.memo = memo;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
     }
 
     public PayConfig getPayConfig() {

@@ -1,11 +1,13 @@
 package org.jfantasy.pay.product;
 
 import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.bean.PaymentConfig;
-import org.jfantasy.pay.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.service.PaymentContext;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -19,20 +21,18 @@ import java.util.Map;
  * 易宝支付
  */
 
-public class Yeepay extends AbstractPaymentProduct {
+public class Yeepay extends PayProductSupport {
 
     public static final String PAYMENT_URL = "https://www.yeepay.com/app-merchant-proxy/node";// 支付请求URL
     public static final String RETURN_URL = "/shop/payment!payreturn.action";// 回调处理URL
 
-    @Override
     public String getPaymentUrl() {
         return PAYMENT_URL;
     }
 
-    @Override
     public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
-        PaymentConfig paymentConfig = context.getPaymentConfig();
+        PayConfig paymentConfig = context.getPaymentConfig();
         Payment payment = context.getPayment();
         BigDecimal paymentAmount = payment.getTotalAmount();
         String paymentSn = payment.getSn();
@@ -78,7 +78,7 @@ public class Yeepay extends AbstractPaymentProduct {
 
     @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String p1MerId = parameters.get("p1_MerId");
         String r0Cmd = parameters.get("r0_Cmd");
@@ -147,7 +147,6 @@ public class Yeepay extends AbstractPaymentProduct {
         return stringBuffer.toString();
     }
 
-    @Override
     public PayResult parsePayResult(Map<String, String> parameters) {
         //getPaymentSn
         //parameters.get("r6_Order")
@@ -161,4 +160,28 @@ public class Yeepay extends AbstractPaymentProduct {
         return payResult;
     }
 
+    @Override
+    public String web() {
+        return null;
+    }
+
+    @Override
+    public String wap() {
+        return null;
+    }
+
+    @Override
+    public String app(Order order, Payment payment) throws PayException {
+        return null;
+    }
+
+    @Override
+    public String asyncNotify() {
+        return null;
+    }
+
+    @Override
+    public String syncNotify() {
+        return null;
+    }
 }

@@ -49,7 +49,7 @@
     </bean>
 
     <!-- 支付配置 -->
-    <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+    <bean id="paymentConfiguration" class="org.jfantasy.pay.service.PaymentConfiguration" lazy-init="false"/>
 
     <!-- 其他需要加载的spring模块 -->
     <import resource="classpath:spring/applicationContext-cache.xml"/>

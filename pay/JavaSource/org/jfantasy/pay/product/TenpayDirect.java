@@ -1,11 +1,13 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.bean.PaymentConfig;
-import org.jfantasy.pay.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.service.PaymentContext;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -17,7 +19,7 @@ import java.util.Map;
 /**
  * 财付通（即时交易）
  */
-public class TenpayDirect extends AbstractPaymentProduct {
+public class TenpayDirect extends PayProductSupport {
 
     public static final String PAYMENT_URL = "http://service.tenpay.com/cgi-bin/v3.0/payservice.cgi";// 支付请求URL
     public static final String RETURN_URL = "/shop/payment!payreturn.action";// 回调处理URL
@@ -25,15 +27,13 @@ public class TenpayDirect extends AbstractPaymentProduct {
     // 支持货币种类
     public static final CurrencyType[] currencyType = {CurrencyType.CNY};
 
-    @Override
     public String getPaymentUrl() {
         return PAYMENT_URL;
     }
 
-    @Override
     public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
-        PaymentConfig paymentConfig = context.getPaymentConfig();
+        PayConfig paymentConfig = context.getPaymentConfig();
         Payment payment = context.getPayment();
         BigDecimal paymentAmount = payment.getTotalAmount();
         String paymentSn = payment.getSn();
@@ -96,7 +96,7 @@ public class TenpayDirect extends AbstractPaymentProduct {
 
     @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 财付通（即时交易）
         String cmdno = parameters.get("cmdno");
         String payResult = parameters.get("pay_result");
@@ -145,7 +145,6 @@ public class TenpayDirect extends AbstractPaymentProduct {
         return bargainorId + dateString + paymentSn;
     }
 
-    @Override
     public PayResult parsePayResult(Map<String, String> parameters) {
                 /*
         parameters.get("sp_billno")
@@ -156,4 +155,28 @@ public class TenpayDirect extends AbstractPaymentProduct {
         return null;
     }
 
+    @Override
+    public String web() {
+        return null;
+    }
+
+    @Override
+    public String wap() {
+        return null;
+    }
+
+    @Override
+    public String app(Order order, Payment payment) throws PayException {
+        return null;
+    }
+
+    @Override
+    public String asyncNotify() {
+        return null;
+    }
+
+    @Override
+    public String syncNotify() {
+        return null;
+    }
 }

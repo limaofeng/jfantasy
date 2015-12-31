@@ -1,16 +1,16 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.common.order.Order;
 import com.fantasy.framework.util.common.StringUtil;
 import com.fantasy.framework.util.jackson.JSON;
 import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.bean.PaymentConfig;
-import org.jfantasy.pay.service.PaymentContext;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.service.PaymentContext;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -22,7 +22,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"debitBankCodes", "creditBankCodes"})
-public class AlipayDirect extends AbstractAlipayPaymentProduct {
+public class AlipayDirect extends AlipayPayProductSupport {
 
     public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
 
@@ -81,15 +81,13 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         debitBankCodes.add(new BankCode("COMM", "交通银行"));
     }
 
-    @Override
     public String getPaymentUrl() {
         return PAYMENT_URL;
     }
 
-    @Override
     public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
-        PaymentConfig paymentConfig = context.getPaymentConfig();
+        PayConfig paymentConfig = context.getPaymentConfig();
         Order orderDetails = context.getOrderDetails();
         Payment payment = context.getPayment();
 
@@ -148,7 +146,7 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
     @Override
     public boolean verifySign(Map<String, String> parameters) {
         PaymentContext context = PaymentContext.getContext();
-        PaymentConfig paymentConfig = context.getPaymentConfig();
+        PayConfig paymentConfig = context.getPaymentConfig();
 
         Map<String, String> params = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : parameters.entrySet()) {
@@ -161,7 +159,6 @@ public class AlipayDirect extends AbstractAlipayPaymentProduct {
         return StringUtils.equals(params.get("sign"), DigestUtils.md5Hex(getParameterString(paraFilter(params)) + paymentConfig.getBargainorKey())) && verifyResponse(paymentConfig.getBargainorId(), params.get("notify_id"));
     }
 
-    @Override
     public PayResult parsePayResult(Map<String, String> parameters) {
         Map<String, String> params = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : parameters.entrySet()) {

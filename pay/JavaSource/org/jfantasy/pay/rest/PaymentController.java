@@ -1,14 +1,13 @@
 package org.jfantasy.pay.rest;
 
-import com.fantasy.common.order.Order;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.framework.spring.mvc.error.NotFoundException;
-import com.fantasy.member.bean.Member;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -47,17 +46,6 @@ public class PaymentController {
             throw new NotFoundException("[id=" + id + "]对应的支付记录未找到");
         }
         return payment.getPayConfig();
-    }
-
-    @ApiOperation("支付记录对应的会员信息")
-    @RequestMapping(value = "/{id}/member", method = RequestMethod.GET)
-    @ResponseBody
-    public Member member(@PathVariable("id") Long id) {
-        Payment payment = this.paymentService.get(id);
-        if (payment == null) {
-            throw new NotFoundException("[id=" + id + "]对应的支付记录未找到");
-        }
-        return payment.getMember();
     }
 
     @ApiOperation(value = "支付记录对应的订单信息", notes = "支付记录对应的订单信息")

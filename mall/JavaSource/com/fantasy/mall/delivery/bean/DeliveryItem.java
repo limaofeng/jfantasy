@@ -1,9 +1,9 @@
 
 package com.fantasy.mall.delivery.bean;
 
-import com.fantasy.common.order.OrderItem;
 import com.fantasy.framework.dao.BaseBusEntity;
 import com.fantasy.framework.util.jackson.JSON;
+import com.fantasy.mall.order.bean.OrderItem;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;

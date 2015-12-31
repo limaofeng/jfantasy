@@ -1,6 +1,8 @@
 package org.jfantasy.pay.product;
 
-import java.util.Map;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.product.order.Order;
 
 /**
  * 支付产品接口
@@ -8,68 +10,25 @@ import java.util.Map;
 public interface PayProduct {
 
     //网页支付
+    String web();
 
     //WAP支付
+    String wap();
 
-    //app支付
+    /**
+     * app支付
+     *
+     * @param order   待支付订单
+     * @param payment 支付记录
+     * @return String
+     */
+    String app(Order order, Payment payment) throws PayException;
 
     //异步通知
+    String asyncNotify();
 
     //同步通知
-
-    /**
-     * 支付地址
-     *
-     * @return String
-     */
-    String getPaymentUrl();
-
-
-    /**
-     * 支付请求参数
-     *
-     * @param parameters 请求参数
-     * @return Map
-     */
-    Map<String, String> getParameterMap(Parameters parameters);
-
-    /**
-     * 支付验证方法
-     *
-     * @param parameters 请求参数
-     * @return boolean
-     */
-    boolean verifySign(Map<String, String> parameters);
-
-    /**
-     * 根据支付编号获取支付返回信息
-     *
-     * @return String
-     */
-    String getPayreturnMessage(String paymentSn);
-
-    /**
-     * 获取支付通知信息
-     *
-     * @return String
-     */
-    String getPaynotifyMessage(String paymentSn);
-
-    /**
-     * 建立请求，以表单HTML形式构造（默认）
-     *
-     * @param sParaTemp 请求参数数组
-     * @return 提交表单HTML文本
-     */
-    String buildRequest(Map<String, String> sParaTemp);
-
-    /**
-     * 解析支付结果
-     *
-     * @param parameters 支付结果
-     * @return PayResult
-     */
-    PayResult parsePayResult(Map<String, String> parameters);
+    String syncNotify();
 
 
     /**

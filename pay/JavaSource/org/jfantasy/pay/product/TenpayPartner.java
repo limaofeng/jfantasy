@@ -1,11 +1,13 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.payment.bean.Payment;
-import com.fantasy.payment.bean.PaymentConfig;
-import org.jfantasy.pay.service.PaymentContext;
 import com.fantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.service.PaymentContext;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -16,7 +18,7 @@ import java.util.Map;
  * 财付通（担保交易）
  */
 
-public class TenpayPartner extends AbstractPaymentProduct {
+public class TenpayPartner extends PayProductSupport {
 
     public static final String PAYMENT_URL = "https://www.tenpay.com/cgi-bin/med/show_opentrans.cgi";// 支付请求URL
     public static final String RETURN_URL = "/shop/payment!payreturn.action";// 回调处理URL
@@ -24,15 +26,13 @@ public class TenpayPartner extends AbstractPaymentProduct {
     // 支持货币种类
     public static final CurrencyType[] currencyType = {CurrencyType.CNY};
 
-    @Override
     public String getPaymentUrl() {
         return PAYMENT_URL;
     }
 
-    @Override
     public Map<String, String> getParameterMap(Parameters parameters) {
         PaymentContext context = PaymentContext.getContext();
-        PaymentConfig paymentConfig = context.getPaymentConfig();
+        PayConfig paymentConfig = context.getPaymentConfig();
         Payment payment = context.getPayment();
         BigDecimal paymentAmount = payment.getTotalAmount();
         String paymentSn = payment.getSn();
@@ -101,7 +101,7 @@ public class TenpayPartner extends AbstractPaymentProduct {
 
     @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PaymentConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String attach = parameters.get("attach");
         String buyerId = parameters.get("buyer_id");
@@ -137,12 +137,10 @@ public class TenpayPartner extends AbstractPaymentProduct {
         return StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase());
     }
 
-    @Override
     public String getPaynotifyMessage(String paymentSn) {
         return null;
     }
 
-    @Override
     public PayResult parsePayResult(Map<String, String> parameters) {
         //getPaymentSn
         //parameters.get("cft_tid")
@@ -150,6 +148,31 @@ public class TenpayPartner extends AbstractPaymentProduct {
         //new BigDecimal(parameters.get("total_fee")).divide(new BigDecimal(100))
         String status = parameters.get("status");
         StringUtils.equals(status, "3");
+        return null;
+    }
+
+    @Override
+    public String web() {
+        return null;
+    }
+
+    @Override
+    public String wap() {
+        return null;
+    }
+
+    @Override
+    public String app(Order order, Payment payment) throws PayException {
+        return null;
+    }
+
+    @Override
+    public String asyncNotify() {
+        return null;
+    }
+
+    @Override
+    public String syncNotify() {
         return null;
     }
 }

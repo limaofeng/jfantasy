@@ -3,6 +3,7 @@ package org.jfantasy.pay.rest.form;
 import org.jfantasy.pay.product.Parameters;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.jfantasy.pay.product.PayType;
 
 import java.io.Serializable;
 
@@ -14,6 +15,8 @@ public class PayForm implements Serializable {
     private String orderSn;
     @ApiModelProperty("支付配置ID")
     private Long payconfigId;
+    @ApiModelProperty("支付类型")
+    private PayType payType;
     @ApiModelProperty("付款人")
     private String payer;
     @ApiModelProperty("支付参数")
@@ -61,6 +64,14 @@ public class PayForm implements Serializable {
 
     public String getParameter(String key) {
         return this.parameters == null ? null : this.parameters.get(key);
+    }
+
+    public PayType getPayType() {
+        return payType;
+    }
+
+    public void setPayType(PayType payType) {
+        this.payType = payType;
     }
 
     public void addParameter(String key, String value) {

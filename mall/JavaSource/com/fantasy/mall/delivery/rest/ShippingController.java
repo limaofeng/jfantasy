@@ -1,6 +1,5 @@
 package com.fantasy.mall.delivery.rest;
 
-import com.fantasy.common.order.Order;
 import com.fantasy.framework.dao.Pager;
 import com.fantasy.framework.dao.hibernate.PropertyFilter;
 import com.fantasy.mall.delivery.bean.DeliveryCorp;
@@ -12,6 +11,7 @@ import com.fantasy.mall.delivery.service.ShippingService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.jfantasy.pay.product.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -51,7 +51,7 @@ public class ShippingController {
     @RequestMapping(value = "/{id}/order", method = RequestMethod.GET)
     @ResponseBody
     public Order order(@PathVariable("id") Long id) {
-        return this.shippingService.getOrder(id);
+        return null;//this.shippingService.getOrder(id);
     }
 
     @ApiOperation(value = "送货信息的配送方式", notes = "送货信息的配送方式")

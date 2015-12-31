@@ -4,23 +4,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <!-- 基本设置 -->
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.fantasy</groupId>
-    <artifactId>fantasy-framework</artifactId>
+    <groupId>org.jfantasy</groupId>
+    <artifactId>jfantasy-framework</artifactId>
     <packaging>pom</packaging>
-    <version>3.3.37</version>
-
-    <repositories>
-        <repository>
-            <id>github snapshot</id>
-            <name>github snapshot</name>
-            <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
-        </repository>
-        <repository>
-            <id>oschina public</id>
-            <name>oschina public</name>
-            <url>http://maven.oschina.net/content/groups/public</url>
-        </repository>
-    </repositories>
+    <version>1.0.0</version>
 
     <properties>
         <argLine>-Dfile.encoding=UTF-8</argLine>
@@ -39,15 +26,15 @@
         <htmlcleaner-version>2.8</htmlcleaner-version>
         <freemarker-version>2.3.19</freemarker-version>
         <org.aspectj-version>1.8.2</org.aspectj-version>
-        <org.mybatis-version>3.2.7</org.mybatis-version>
-        <com.fantasy-version>3.3.37</com.fantasy-version>
+        <org.mybatis-version>3.3.0</org.mybatis-version>
+        <org.jfantasy-version>1.0.0</org.jfantasy-version>
         <commons-codec-version>1.8</commons-codec-version>
         <spymemcached-version>2.11.6</spymemcached-version>
         <commons-lang3-version>3.3.2</commons-lang3-version>
         <commons-email-version>1.3.2</commons-email-version>
         <redis.clients-version>2.6.2</redis.clients-version>
         <aliyun-sdk-oss-version>2.0.6</aliyun-sdk-oss-version>
-        <mybatis-spring-version>1.2.2</mybatis-spring-version>
+        <mybatis-spring-version>1.2.3</mybatis-spring-version>
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
         <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
@@ -291,8 +278,8 @@
                     <check>true</check>
                     <instrumentation>
                         <ignores>
-                            <ignore>com.fantasy.**.web.*</ignore>
-                            <ignore>com.fantasy.**.typeConverter.*</ignore>
+                            <ignore>org.jfantasy.**.web.*</ignore>
+                            <ignore>org.jfantasy.**.typeConverter.*</ignore>
                         </ignores>
                         <excludes>
                             <exclude>**/*Test.class</exclude>
@@ -1117,16 +1104,9 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>jpingyin</artifactId>
-                <version>1.0</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>com.belerweb</groupId>
-                <artifactId>pinyin4j</artifactId>
-                <version>2.5.0</version>
-                <scope>test</scope>
+                <groupId>com.github.stuxuhai</groupId>
+                <artifactId>jpinyin</artifactId>
+                <version>1.1.1</version>
             </dependency>
             <dependency>
                 <groupId>jfree</groupId>
@@ -1157,43 +1137,43 @@
                 <version>${aliyun-sdk-oss-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-core</artifactId>
-                <version>${com.fantasy-version}</version>
+                <groupId>org.jfantasy</groupId>
+                <artifactId>jfantasy-core</artifactId>
+                <version>${org.jfantasy-version}</version>
             </dependency>
             <!--
             <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-test</artifactId>
-                <version>${com.fantasy-version}</version>
+                <groupId>org.jfantasy</groupId>
+                <artifactId>jfantasy-test</artifactId>
+                <version>${org.jfantasy-version}</version>
                 <scope>test</scope>
                 <exclusions>
                     <exclusion>
-                        <groupId>com.fantasy</groupId>
-                        <artifactId>fantasy-core</artifactId>
+                        <groupId>org.jfantasy</groupId>
+                        <artifactId>jfantasy-core</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
             -->
             <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-mall</artifactId>
-                <version>${com.fantasy-version}</version>
+                <groupId>org.jfantasy</groupId>
+                <artifactId>jfantasy-mall</artifactId>
+                <version>${org.jfantasy-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-cms</artifactId>
-                <version>${com.fantasy-version}</version>
+                <groupId>org.jfantasy</groupId>
+                <artifactId>jfantasy-cms</artifactId>
+                <version>${org.jfantasy-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-cache</artifactId>
-                <version>${com.fantasy-version}</version>
+                <groupId>org.jfantasy</groupId>
+                <artifactId>jfantasy-cache</artifactId>
+                <version>${org.jfantasy-version}</version>
             </dependency>
             <dependency>
-                <groupId>com.fantasy</groupId>
-                <artifactId>fantasy-weixin</artifactId>
-                <version>${com.fantasy-version}</version>
+                <groupId>org.jfantasy</groupId>
+                <artifactId>jfantasy-weixin</artifactId>
+                <version>${org.jfantasy-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -1209,6 +1189,8 @@
         <module>weixin</module>
         <module>aliyun-oss</module>
         <module>javaweb</module>
+        <module>express</module>
+        <module>pay</module>
     </modules>
 
     <!-- 项目信息设置 -->
@@ -1256,6 +1238,19 @@
         <system>Github</system>
         <url>https://github.com/limaofeng/jfantasy/issues</url>
     </issueManagement>
+
+    <repositories>
+        <repository>
+            <id>github snapshot</id>
+            <name>github snapshot</name>
+            <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
+        </repository>
+        <repository>
+            <id>oschina public</id>
+            <name>oschina public</name>
+            <url>http://maven.oschina.net/content/groups/public</url>
+        </repository>
+    </repositories>
 
     <!-- 分发管理 -->
     <distributionManagement>
