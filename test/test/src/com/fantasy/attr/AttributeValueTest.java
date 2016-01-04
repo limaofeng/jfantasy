@@ -1,11 +1,11 @@
 package org.jfantasy.attr;
 
-import org.jfantasy.attr.storage.bean.Attribute;
-import org.jfantasy.attr.storage.bean.AttributeValue;
-import org.jfantasy.framework.util.jackson.JSON;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.attr.storage.bean.Attribute;
+import org.jfantasy.attr.storage.bean.AttributeValue;
+import org.jfantasy.framework.util.jackson.JSON;
 import org.junit.Test;
 
 public class AttributeValueTest {

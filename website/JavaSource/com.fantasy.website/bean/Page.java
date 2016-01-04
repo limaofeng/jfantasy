@@ -1,11 +1,10 @@
 package org.jfantasy.website.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.system.bean.Website;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.system.bean.Website;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**

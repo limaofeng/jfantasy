@@ -1,9 +1,8 @@
 package org.jfantasy.website.dao;
 
-import org.springframework.stereotype.Repository;
-
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.website.bean.DataInferface;
+import org.springframework.stereotype.Repository;
 
 /**
  *@Author lsz

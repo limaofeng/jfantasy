@@ -1,13 +1,12 @@
 package org.jfantasy.test.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.system.util.SettingUtil;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.system.util.SettingUtil;
 
-import javax.persistence.*;
 import java.io.IOException;
 
 /**

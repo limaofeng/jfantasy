@@ -1,0 +1,17 @@
+	
+	/*
+	Query query = null;
+	if (fields.length == 1) {
+		QueryParser parser = new QueryParser(Version.LUCENE_36, fields[0], new IKAnalyzer());
+		// query = parser.parse(keyword);
+	} else {
+		String[] queries = new String[fields.length];
+		BooleanClause.Occur[] clauses = new BooleanClause.Occur[fields.length];
+		for (int i = 0; i < fields.length; i++) {
+			clauses[i] = BooleanClause.Occur.SHOULD;
+			queries[i] = keyword;
+		}
+		query = IKQueryParser.parseMultiField(fields, queries, clauses);
+	}
+	logger.debug("Query:" + query);
+	*/

@@ -1,5 +1,9 @@
 package org.jfantasy.attr;
 
+import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Restrictions;
 import org.jfantasy.attr.framework.CustomBeanFactory;
 import org.jfantasy.attr.framework.converter.PrimitiveTypeConverter;
 import org.jfantasy.attr.framework.converter.UserTypeConverter;
@@ -19,10 +23,6 @@ import org.jfantasy.security.bean.User;
 import org.jfantasy.security.service.UserService;
 import org.jfantasy.test.bean.Article;
 import org.jfantasy.test.service.CmsService;
-import junit.framework.Assert;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

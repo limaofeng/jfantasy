@@ -1,11 +1,6 @@
 package org.jfantasy.test.bean;
 
 
-import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
-import org.jfantasy.attr.storage.BaseDynaBean;
-import org.jfantasy.framework.lucene.annotations.IndexEmbed;
-import org.jfantasy.framework.lucene.annotations.IndexProperty;
-import org.jfantasy.framework.lucene.annotations.Indexed;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
@@ -15,8 +10,12 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
+import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
+import org.jfantasy.attr.storage.BaseDynaBean;
+import org.jfantasy.framework.lucene.annotations.IndexEmbed;
+import org.jfantasy.framework.lucene.annotations.IndexProperty;
+import org.jfantasy.framework.lucene.annotations.Indexed;
 
-import javax.persistence.*;
 import java.io.IOException;
 
 

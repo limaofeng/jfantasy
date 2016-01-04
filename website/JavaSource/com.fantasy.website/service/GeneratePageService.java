@@ -1,12 +1,13 @@
 package org.jfantasy.website.service;
 
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import freemarker.template.Configuration;
 import org.jfantasy.file.FileManager;
 import org.jfantasy.file.manager.LocalFileManager;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import org.jfantasy.website.util.TemplateModelUtils;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -17,12 +18,11 @@ import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.website.bean.*;
 import org.jfantasy.website.bean.enums.PageType;
 import org.jfantasy.website.util.GeneratePageUtil;
-import com.fasterxml.jackson.core.type.TypeReference;
-import freemarker.template.Configuration;
+import org.jfantasy.website.util.TemplateModelUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.io.IOException;

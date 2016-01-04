@@ -1,9 +1,8 @@
 package org.jfantasy.website.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Entity

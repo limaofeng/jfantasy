@@ -1,5 +1,6 @@
 package org.jfantasy.website;
 
+import org.apache.struts2.views.JspSupportServlet;
 import org.jfantasy.attr.storage.service.AttributeVersionService;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.struts2.StrutsSpringJUnit4TestCase;
@@ -9,7 +10,6 @@ import org.jfantasy.website.bean.PageItemData;
 import org.jfantasy.website.service.PageItemDataService;
 import org.jfantasy.website.service.PageItemService;
 import org.jfantasy.website.service._PageService;
-import org.apache.struts2.views.JspSupportServlet;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

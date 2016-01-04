@@ -1,5 +1,8 @@
 package org.jfantasy.attr;
 
+import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.attr.framework.util.AttributeUtils;
 import org.jfantasy.attr.storage.bean.CustomBeanDefinition;
 import org.jfantasy.attr.storage.service.AttributeVersionService;
@@ -7,9 +10,6 @@ import org.jfantasy.attr.storage.service.CustomBeanDefinitionService;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
-import junit.framework.Assert;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

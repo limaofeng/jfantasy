@@ -12,7 +12,6 @@ import org.springframework.util.Assert;
 import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
-import java.io.*;
 import java.sql.Blob;
 import java.sql.Clob;
 import java.sql.ResultSet;

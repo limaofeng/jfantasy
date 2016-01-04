@@ -1,7 +1,7 @@
 package org.jfantasy.framework.freemarker.loader;
 
-import org.jfantasy.framework.service.FTPService;
 import freemarker.cache.TemplateLoader;
+import org.jfantasy.framework.service.FTPService;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

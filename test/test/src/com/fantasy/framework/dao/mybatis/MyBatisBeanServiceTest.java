@@ -1,11 +1,11 @@
 package org.jfantasy.framework.dao.mybatis;
 
-import org.jfantasy.framework.dao.Pager;
-import org.jfantasy.test.bean.MyBatisBean;
-import org.jfantasy.test.service.MyBatisBeanService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.test.bean.MyBatisBean;
+import org.jfantasy.test.service.MyBatisBeanService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

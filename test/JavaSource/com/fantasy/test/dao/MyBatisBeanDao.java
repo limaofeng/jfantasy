@@ -1,9 +1,9 @@
 package org.jfantasy.test.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
 import org.jfantasy.test.bean.MyBatisBean;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;

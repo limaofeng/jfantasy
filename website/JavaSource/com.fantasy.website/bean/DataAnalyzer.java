@@ -1,9 +1,7 @@
 package org.jfantasy.website.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Entity
 @Table(name = "SWP_DATA_ANALYZER")

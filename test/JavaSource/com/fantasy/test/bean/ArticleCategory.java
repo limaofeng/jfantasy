@@ -1,17 +1,16 @@
 package org.jfantasy.test.bean;
 
-import org.jfantasy.attr.storage.bean.AttributeVersion;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
-import org.jfantasy.framework.lucene.annotations.IndexProperty;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.attr.storage.bean.AttributeVersion;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
+import org.jfantasy.framework.lucene.annotations.IndexProperty;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Entity

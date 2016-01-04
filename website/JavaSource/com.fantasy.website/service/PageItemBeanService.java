@@ -1,12 +1,11 @@
 package org.jfantasy.website.service;
 
 import org.jfantasy.website.IData;
-import org.jfantasy.website.bean.Data;
 import org.jfantasy.website.exception.SwpException;
 import org.jfantasy.website.runtime.GenerateImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.List;
 
