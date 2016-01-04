@@ -1,6 +1,6 @@
-package com.fantasy.framework.dao;
+package org.jfantasy.framework.dao;
 
-import com.fantasy.framework.util.common.JdbcUtil;
+import org.jfantasy.framework.util.common.JdbcUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

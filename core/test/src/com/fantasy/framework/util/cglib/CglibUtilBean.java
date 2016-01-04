@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.cglib;
+package org.jfantasy.framework.util.cglib;
 
 public class CglibUtilBean {
     private Integer integer;

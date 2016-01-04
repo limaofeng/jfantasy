@@ -1,6 +1,6 @@
-package com.fantasy.common.bean.converter;
+package org.jfantasy.common.bean.converter;
 
-import com.fantasy.framework.util.web.context.ActionContext;
+import org.jfantasy.framework.util.web.context.ActionContext;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

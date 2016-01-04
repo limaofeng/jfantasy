@@ -1,4 +1,4 @@
-package com.fantasy.website.backend;
+package org.jfantasy.website.backend;
 
 import java.util.HashMap;
 import java.util.Map;

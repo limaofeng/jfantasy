@@ -1,9 +1,9 @@
-package com.fantasy.attr.typeConverter;
+package org.jfantasy.attr.typeConverter;
 
-import com.fantasy.attr.framework.converter.UserTypeConverter;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.ognl.OgnlUtil;
-import com.fantasy.security.bean.User;
+import org.jfantasy.attr.framework.converter.UserTypeConverter;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.security.bean.User;
 import junit.framework.Assert;
 import ognl.TypeConverter;
 import org.apache.commons.logging.Log;

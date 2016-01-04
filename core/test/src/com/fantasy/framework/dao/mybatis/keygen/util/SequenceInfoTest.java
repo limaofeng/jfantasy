@@ -1,4 +1,4 @@
-package com.fantasy.framework.dao.mybatis.keygen.util;
+package org.jfantasy.framework.dao.mybatis.keygen.util;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,6 +1,6 @@
 package org.jfantasy.pay.product.httpClient;
 
-import com.fantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.error.IgnoreException;
 import org.apache.commons.httpclient.*;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.methods.PostMethod;

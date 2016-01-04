@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.ognl;
+package org.jfantasy.framework.util.ognl;
 
 
 import java.util.Arrays;

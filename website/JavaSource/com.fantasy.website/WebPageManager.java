@@ -1,4 +1,4 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -6,10 +6,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.website.data.HibernateData;
-import com.fantasy.website.data.SimpleData;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.website.data.HibernateData;
+import org.jfantasy.website.data.SimpleData;
 
 public class WebPageManager/* implements InitializingBean, ApplicationListener<ApplicationEvent> */{
 

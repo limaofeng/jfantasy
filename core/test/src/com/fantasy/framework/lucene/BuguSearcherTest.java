@@ -1,8 +1,8 @@
-//package com.fantasy.framework.lucene;
+//package org.jfantasy.framework.lucene;
 //
-//import com.fantasy.attr.framework.CustomBeanFactory;
-//import com.fantasy.attr.storage.service.AttributeVersionService;
-//import com.fantasy.framework.lucene.service.NewsService;
+//import org.jfantasy.attr.framework.CustomBeanFactory;
+//import org.jfantasy.attr.storage.service.AttributeVersionService;
+//import org.jfantasy.framework.lucene.service.NewsService;
 //import org.apache.commons.logging.Log;
 //import org.apache.commons.logging.LogFactory;
 //import org.junit.After;

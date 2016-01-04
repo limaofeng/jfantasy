@@ -1,8 +1,8 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.util.web.WebUtil;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.web.WebUtil;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.codec.digest.DigestUtils;

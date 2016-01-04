@@ -1,7 +1,7 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.system.util.SettingUtil;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;

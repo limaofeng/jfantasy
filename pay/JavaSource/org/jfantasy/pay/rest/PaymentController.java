@@ -1,8 +1,8 @@
 package org.jfantasy.pay.rest;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.pay.bean.PayConfig;

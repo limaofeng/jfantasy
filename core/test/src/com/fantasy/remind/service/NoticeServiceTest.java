@@ -1,10 +1,10 @@
-package com.fantasy.remind.service;
+package org.jfantasy.remind.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.remind.bean.Model;
-import com.fantasy.remind.bean.Notice;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.remind.bean.Model;
+import org.jfantasy.remind.bean.Notice;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;

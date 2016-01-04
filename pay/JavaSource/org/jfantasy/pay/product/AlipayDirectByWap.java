@@ -1,7 +1,7 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.framework.util.web.WebUtil;
-import com.fantasy.system.util.SettingUtil;
+import org.jfantasy.framework.util.web.WebUtil;
+import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;

@@ -1,10 +1,10 @@
-package com.fantasy.framework.freemarker.loader;
+package org.jfantasy.framework.freemarker.loader;
 
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileManager;
-import com.fantasy.file.service.FileManagerFactory;
-import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.util.common.StringUtil;
+import org.jfantasy.file.FileItem;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.service.FileManagerFactory;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.util.common.StringUtil;
 import freemarker.cache.TemplateLoader;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

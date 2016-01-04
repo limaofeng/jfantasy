@@ -1,6 +1,6 @@
-package com.fantasy.framework.util.cglib;
+package org.jfantasy.framework.util.cglib;
 
-import com.fantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.logging.Log;

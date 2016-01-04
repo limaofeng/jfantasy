@@ -1,26 +1,26 @@
-package com.fantasy.website.runtime;
+package org.jfantasy.website.runtime;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.file.service.FileManagerFactory;
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.website.util.TemplateModelUtils;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.PropertiesHelper;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.ognl.OgnlUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
-import com.fantasy.website.IGenerate;
-import com.fantasy.website.bean.*;
-import com.fantasy.website.bean.enums.PageType;
-import com.fantasy.website.exception.SwpException;
-import com.fantasy.website.service.PageItemDataService;
-import com.fantasy.website.service.PageItemService;
-import com.fantasy.website.service._PageService;
-import com.fantasy.website.util.GeneratePageUtil;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.service.FileManagerFactory;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.freemarker.FreeMarkerTemplateUtils;
+import org.jfantasy.website.util.TemplateModelUtils;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.PropertiesHelper;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.website.IGenerate;
+import org.jfantasy.website.bean.*;
+import org.jfantasy.website.bean.enums.PageType;
+import org.jfantasy.website.exception.SwpException;
+import org.jfantasy.website.service.PageItemDataService;
+import org.jfantasy.website.service.PageItemService;
+import org.jfantasy.website.service._PageService;
+import org.jfantasy.website.util.GeneratePageUtil;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -61,7 +61,7 @@ public class GenerateImpl implements IGenerate {
         try {
             FileManager fileManager = fileManagerFactory.getFileManager(page.getWebSite().getDefaultFileManager().getId());
             // 模版
-            final com.fantasy.website.bean.Template template = page.getTemplate();
+            final org.jfantasy.website.bean.Template template = page.getTemplate();
             // 数据定义
             List<DataInferface> dataInferfaces = template.getDataInferfaces();
             // 所有数据
@@ -149,7 +149,7 @@ public class GenerateImpl implements IGenerate {
         Page page = pageItem.getPage();
         FileManager fileManager = fileManagerFactory.getFileManager(page.getWebSite().getDefaultFileManager().getId());
         // 模版
-        com.fantasy.website.bean.Template template = page.getTemplate();
+        org.jfantasy.website.bean.Template template = page.getTemplate();
         // 数据定义
         List<DataInferface> dataInferfaces = template.getDataInferfaces();
         // 数据
@@ -231,7 +231,7 @@ public class GenerateImpl implements IGenerate {
             final Map<String, Object> dm = new HashMap<String, Object>();
             dm.putAll(this.sysProperty());
             // 模版
-            final com.fantasy.website.bean.Template template = page.getTemplate();
+            final org.jfantasy.website.bean.Template template = page.getTemplate();
             // 数据定义
             List<DataInferface> dataInferfaces = template.getDataInferfaces();
             if(dataInferfaces!=null && dataInferfaces.size()>0){
@@ -280,7 +280,7 @@ public class GenerateImpl implements IGenerate {
         // 所有数据
         final Map<String, Object> dm = new HashMap<String, Object>();
         // 模版
-        final com.fantasy.website.bean.Template template = page.getTemplate();
+        final org.jfantasy.website.bean.Template template = page.getTemplate();
         // 数据定义
         List<DataInferface> dataInferfaces = template.getDataInferfaces();
         if(dataInferfaces!=null && dataInferfaces.size()>0){

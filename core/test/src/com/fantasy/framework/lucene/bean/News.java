@@ -1,10 +1,10 @@
-package com.fantasy.framework.lucene.bean;
+package org.jfantasy.framework.lucene.bean;
 
-import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
-import com.fantasy.attr.storage.BaseDynaBean;
-import com.fantasy.framework.lucene.annotations.IndexProperty;
-import com.fantasy.framework.lucene.annotations.Indexed;
-import com.fantasy.framework.util.common.StringUtil;
+import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
+import org.jfantasy.attr.storage.BaseDynaBean;
+import org.jfantasy.framework.lucene.annotations.IndexProperty;
+import org.jfantasy.framework.lucene.annotations.Indexed;
+import org.jfantasy.framework.util.common.StringUtil;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import opensource.jpinyin.PinyinFormat;
 import opensource.jpinyin.PinyinHelper;

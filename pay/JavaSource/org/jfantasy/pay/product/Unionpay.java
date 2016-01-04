@@ -1,14 +1,14 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileManager;
-import com.fantasy.file.bean.FileDetail;
-import com.fantasy.file.manager.LocalFileManager;
-import com.fantasy.framework.httpclient.HttpClientUtil;
-import com.fantasy.framework.httpclient.Response;
-import com.fantasy.framework.util.common.DateUtil;
-import com.fantasy.framework.util.common.PathUtil;
-import com.fantasy.framework.util.common.StringUtil;
+import org.jfantasy.file.FileItem;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.bean.FileDetail;
+import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.framework.httpclient.HttpClientUtil;
+import org.jfantasy.framework.httpclient.Response;
+import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.PathUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import com.unionpay.acp.sdk.LogUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;

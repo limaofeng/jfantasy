@@ -1,6 +1,6 @@
-package com.fantasy.framework.freemarker.loader;
+package org.jfantasy.framework.freemarker.loader;
 
-import com.fantasy.framework.service.FTPService;
+import org.jfantasy.framework.service.FTPService;
 import freemarker.cache.TemplateLoader;
 
 import java.io.ByteArrayOutputStream;

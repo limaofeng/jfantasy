@@ -1,8 +1,6 @@
 package org.jfantasy.pay.product.order;
 
 
-import com.fantasy.common.order.OrderUrls;
-
 /**
  * 支付订单接口
  */

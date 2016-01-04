@@ -1,11 +1,11 @@
-package com.fantasy.security.rest;
+package org.jfantasy.security.rest;
 
-import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.util.common.JdbcUtil;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.security.bean.Role;
-import com.fantasy.security.bean.User;
-import com.fantasy.security.service.UserService;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.util.common.JdbcUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.security.bean.Role;
+import org.jfantasy.security.bean.User;
+import org.jfantasy.security.service.UserService;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;

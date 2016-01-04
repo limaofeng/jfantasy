@@ -1,4 +1,4 @@
-package com.fantasy.test.observer;
+package org.jfantasy.test.observer;
 
 import org.junit.Test;
 

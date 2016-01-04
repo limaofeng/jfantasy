@@ -1,7 +1,7 @@
 package org.jfantasy.pay.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.hibernate.criterion.Criterion;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.dao.PayConfigDao;

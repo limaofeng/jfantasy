@@ -1,11 +1,11 @@
-package com.fantasy.test.bean;
+package org.jfantasy.test.bean;
 
 
-import com.fantasy.attr.framework.query.DynaBeanEntityPersister;
-import com.fantasy.attr.storage.BaseDynaBean;
-import com.fantasy.framework.lucene.annotations.IndexEmbed;
-import com.fantasy.framework.lucene.annotations.IndexProperty;
-import com.fantasy.framework.lucene.annotations.Indexed;
+import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
+import org.jfantasy.attr.storage.BaseDynaBean;
+import org.jfantasy.framework.lucene.annotations.IndexEmbed;
+import org.jfantasy.framework.lucene.annotations.IndexProperty;
+import org.jfantasy.framework.lucene.annotations.Indexed;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;

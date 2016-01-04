@@ -1,8 +1,8 @@
-package com.fantasy.cms.rest;
+package org.jfantasy.cms.rest;
 
-import com.fantasy.cms.bean.ArticleCategory;
-import com.fantasy.cms.service.CmsService;
-import com.fantasy.framework.util.jackson.JSON;
+import org.jfantasy.cms.bean.ArticleCategory;
+import org.jfantasy.cms.service.CmsService;
+import org.jfantasy.framework.util.jackson.JSON;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;

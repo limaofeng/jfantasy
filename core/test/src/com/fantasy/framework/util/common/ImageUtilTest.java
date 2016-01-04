@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.common;
+package org.jfantasy.framework.util.common;
 
 import org.junit.After;
 import org.junit.Before;

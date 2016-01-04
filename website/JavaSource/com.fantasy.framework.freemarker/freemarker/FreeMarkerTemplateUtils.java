@@ -1,7 +1,7 @@
-package com.fantasy.framework.freemarker;
+package org.jfantasy.framework.freemarker;
 
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StreamUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StreamUtil;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;

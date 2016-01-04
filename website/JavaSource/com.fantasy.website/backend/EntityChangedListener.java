@@ -1,4 +1,4 @@
-package com.fantasy.website.backend;
+package org.jfantasy.website.backend;
 
 
 public class EntityChangedListener {

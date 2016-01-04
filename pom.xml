@@ -1187,6 +1187,7 @@
         <module>question</module>
         <module>websocket</module>
         <module>weixin</module>
+        <module>weixin-pay</module>
         <module>aliyun-oss</module>
         <module>javaweb</module>
         <module>express</module>

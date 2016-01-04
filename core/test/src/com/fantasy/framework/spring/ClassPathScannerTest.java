@@ -1,6 +1,6 @@
-package com.fantasy.framework.spring;
+package org.jfantasy.framework.spring;
 
-import com.fantasy.framework.lucene.annotations.Indexed;
+import org.jfantasy.framework.lucene.annotations.Indexed;
 import ognl.DefaultTypeConverter;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -28,7 +28,7 @@ public class ClassPathScannerTest {
 
     @Test
     public void testFindTargetClassNames() throws Exception {
-        Set<String> classeNames = pathScanner.findTargetClassNames("com.fantasy.framework.spring");
+        Set<String> classeNames = pathScanner.findTargetClassNames("org.jfantasy.framework.spring");
         for (String clazz : classeNames) {
             logger.debug(clazz);
         }
@@ -44,7 +44,7 @@ public class ClassPathScannerTest {
 
     @Test
     public void testFindInterfaceClasses() throws Exception {
-        Set<Class> classes = ClassPathScanner.getInstance().findInterfaceClasses("com.fantasy", DefaultTypeConverter.class);
+        Set<Class> classes = ClassPathScanner.getInstance().findInterfaceClasses("org.jfantasy", DefaultTypeConverter.class);
         for (Class clazz : classes) {
             logger.debug(clazz);
         }

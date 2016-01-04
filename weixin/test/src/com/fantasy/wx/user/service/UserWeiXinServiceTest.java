@@ -1,12 +1,12 @@
-package com.fantasy.wx.user.service;
+package org.jfantasy.wx.user.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.security.bean.enums.Sex;
-import com.fantasy.wx.bean.User;
-import com.fantasy.wx.bean.UserKey;
-import com.fantasy.wx.service.UserService;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.security.bean.enums.Sex;
+import org.jfantasy.wx.bean.User;
+import org.jfantasy.wx.bean.UserKey;
+import org.jfantasy.wx.service.UserService;
 import junit.framework.Assert;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.util.xml.XStreamTransformer;

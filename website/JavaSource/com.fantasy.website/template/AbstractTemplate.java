@@ -1,8 +1,8 @@
-package com.fantasy.website.template;
+package org.jfantasy.website.template;
 
-import com.fantasy.website.Template;
-import com.fantasy.website.TemplateData;
-import com.fantasy.website.data.SimpleData;
+import org.jfantasy.website.Template;
+import org.jfantasy.website.TemplateData;
+import org.jfantasy.website.data.SimpleData;
 
 import java.util.HashMap;
 import java.util.Map;

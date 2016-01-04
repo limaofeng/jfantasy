@@ -1,6 +1,6 @@
-package com.fantasy.spring.web;
+package org.jfantasy.spring.web;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;

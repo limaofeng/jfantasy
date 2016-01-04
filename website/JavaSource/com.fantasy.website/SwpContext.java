@@ -1,6 +1,6 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
-import com.fantasy.system.bean.Website;
+import org.jfantasy.system.bean.Website;
 
 /**
  * swp 上下文

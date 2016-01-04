@@ -1,6 +1,6 @@
-package com.fantasy.schedule.service;
+package org.jfantasy.schedule.service;
 
-import com.fantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.DateUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.quartz.*;

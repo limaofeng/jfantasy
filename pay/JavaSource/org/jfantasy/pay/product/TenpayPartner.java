@@ -1,6 +1,6 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.system.util.SettingUtil;
+import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jfantasy.pay.bean.PayConfig;

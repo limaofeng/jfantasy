@@ -1,4 +1,4 @@
-package com.fantasy.framework.dao.mybatis.dialect;
+package org.jfantasy.framework.dao.mybatis.dialect;
 
 
 import org.junit.Test;

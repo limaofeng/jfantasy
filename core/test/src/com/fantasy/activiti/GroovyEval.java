@@ -1,4 +1,4 @@
-package com.fantasy.activiti;
+package org.jfantasy.activiti;
 
 
 import groovy.lang.Binding;

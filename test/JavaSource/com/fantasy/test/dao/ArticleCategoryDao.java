@@ -1,7 +1,7 @@
-package com.fantasy.test.dao;
+package org.jfantasy.test.dao;
 
-import com.fantasy.framework.dao.hibernate.HibernateDao;
-import com.fantasy.test.bean.ArticleCategory;
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.test.bean.ArticleCategory;
 import org.springframework.stereotype.Repository;
 
 @Repository

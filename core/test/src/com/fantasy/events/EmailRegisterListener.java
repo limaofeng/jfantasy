@@ -1,6 +1,6 @@
-package com.fantasy.events;
+package org.jfantasy.events;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;

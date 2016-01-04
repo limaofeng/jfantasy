@@ -1,6 +1,6 @@
 package org.jfantasy.pay.service;
 
-import com.fantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.product.*;
 import org.springframework.beans.factory.InitializingBean;
 

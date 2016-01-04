@@ -1,8 +1,8 @@
-package com.fantasy.framework.util.asm;
+package org.jfantasy.framework.util.asm;
 
 
-import com.fantasy.attr.storage.bean.AttributeValue;
-import com.fantasy.framework.lucene.annotations.Indexed;
+import org.jfantasy.attr.storage.bean.AttributeValue;
+import org.jfantasy.framework.lucene.annotations.Indexed;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.common;
+package org.jfantasy.framework.util.common;
 
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;

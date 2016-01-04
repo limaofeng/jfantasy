@@ -1,14 +1,14 @@
-package com.fantasy.aliyun.oss;
+package org.jfantasy.aliyun.oss;
 
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileItemFilter;
-import com.fantasy.file.FileItemSelector;
-import com.fantasy.file.FileManager;
-import com.fantasy.file.bean.enums.FileManagerType;
-import com.fantasy.file.service.FileManagerFactory;
-import com.fantasy.file.service.FileManagerService;
-import com.fantasy.framework.util.common.StreamUtil;
-import com.fantasy.framework.util.common.file.FileUtil;
+import org.jfantasy.file.FileItem;
+import org.jfantasy.file.FileItemFilter;
+import org.jfantasy.file.FileItemSelector;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.bean.enums.FileManagerType;
+import org.jfantasy.file.service.FileManagerFactory;
+import org.jfantasy.file.service.FileManagerService;
+import org.jfantasy.framework.util.common.StreamUtil;
+import org.jfantasy.framework.util.common.file.FileUtil;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

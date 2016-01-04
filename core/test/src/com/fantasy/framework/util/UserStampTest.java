@@ -1,10 +1,10 @@
-package com.fantasy.framework.util;
+package org.jfantasy.framework.util;
 
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.util.userstamp.Decoder;
-import com.fantasy.framework.util.userstamp.Encoder;
-import com.fantasy.framework.util.userstamp.UserResult;
-import com.fantasy.framework.util.userstamp.UserStamp;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.userstamp.Decoder;
+import org.jfantasy.framework.util.userstamp.Encoder;
+import org.jfantasy.framework.util.userstamp.UserResult;
+import org.jfantasy.framework.util.userstamp.UserStamp;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

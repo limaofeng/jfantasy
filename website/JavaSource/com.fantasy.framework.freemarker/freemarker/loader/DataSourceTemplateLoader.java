@@ -1,4 +1,4 @@
-package com.fantasy.framework.freemarker.loader;
+package org.jfantasy.framework.freemarker.loader;
 
 import freemarker.cache.TemplateLoader;
 import org.apache.commons.logging.Log;

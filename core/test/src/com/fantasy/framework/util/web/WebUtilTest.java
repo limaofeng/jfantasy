@@ -1,6 +1,6 @@
-package com.fantasy.framework.util.web;
+package org.jfantasy.framework.util.web;
 
-import com.fantasy.framework.util.web.context.ActionContext;
+import org.jfantasy.framework.util.web.context.ActionContext;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,6 +1,6 @@
-package com.fantasy.attr.typeConverter;
+package org.jfantasy.attr.typeConverter;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 
 public class TypeBean {
     private String key;

@@ -1,4 +1,4 @@
-package com.fantasy.events;
+package org.jfantasy.events;
 
 import org.springframework.context.ApplicationEvent;
 

@@ -1,12 +1,12 @@
-package com.fantasy.framework;
+package org.jfantasy.framework;
 
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileItemSelector;
-import com.fantasy.file.FileManager;
-import com.fantasy.file.bean.FileDetail;
-import com.fantasy.file.manager.LocalFileManager;
-import com.fantasy.file.service.FileService;
-import com.fantasy.framework.util.common.MessageDigestUtil;
+import org.jfantasy.file.FileItem;
+import org.jfantasy.file.FileItemSelector;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.bean.FileDetail;
+import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.file.service.FileService;
+import org.jfantasy.framework.util.common.MessageDigestUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

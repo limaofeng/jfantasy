@@ -1,7 +1,7 @@
-package com.fantasy.member.service;
+package org.jfantasy.member.service;
 
-import com.fantasy.member.bean.Member;
-import com.fantasy.member.bean.MemberDetails;
+import org.jfantasy.member.bean.Member;
+import org.jfantasy.member.bean.MemberDetails;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

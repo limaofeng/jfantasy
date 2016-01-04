@@ -1,12 +1,12 @@
-package com.fantasy.attr;
+package org.jfantasy.attr;
 
-import com.fantasy.attr.framework.util.AttributeUtils;
-import com.fantasy.attr.storage.bean.CustomBeanDefinition;
-import com.fantasy.attr.storage.service.AttributeVersionService;
-import com.fantasy.attr.storage.service.CustomBeanDefinitionService;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.attr.framework.util.AttributeUtils;
+import org.jfantasy.attr.storage.bean.CustomBeanDefinition;
+import org.jfantasy.attr.storage.service.AttributeVersionService;
+import org.jfantasy.attr.storage.service.CustomBeanDefinitionService;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.htmlcleaner;
+package org.jfantasy.framework.util.htmlcleaner;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.json.bean;
+package org.jfantasy.framework.util.json.bean;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

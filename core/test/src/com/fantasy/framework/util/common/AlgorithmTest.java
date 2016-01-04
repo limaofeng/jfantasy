@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.common;
+package org.jfantasy.framework.util.common;
 
 import org.apache.log4j.Logger;
 import org.junit.After;

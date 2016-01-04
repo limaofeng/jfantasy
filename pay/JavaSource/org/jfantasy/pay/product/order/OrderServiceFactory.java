@@ -1,6 +1,6 @@
 package org.jfantasy.pay.product.order;
 
-import com.fantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

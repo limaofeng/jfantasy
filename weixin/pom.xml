@@ -91,11 +91,6 @@
             <artifactId>hibernate-ehcache</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>org.jfantasy</groupId>
-            <artifactId>jfantasy-pay</artifactId>
-            <version>1.0.0</version>
-        </dependency>
     </dependencies>
 
 </project>

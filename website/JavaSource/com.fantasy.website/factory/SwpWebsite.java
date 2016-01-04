@@ -1,16 +1,16 @@
-package com.fantasy.website.factory;
+package org.jfantasy.website.factory;
 
-import com.fantasy.website.IPage;
-import com.fantasy.website.ISwpWebsite;
-import com.fantasy.website.ITemplage;
-import com.fantasy.website.SwpContext;
-import com.fantasy.website.bean.Data;
-import com.fantasy.website.bean.DataInferface;
-import com.fantasy.website.bean.enums.PageType;
-import com.fantasy.website.exception.SwpException;
-import com.fantasy.website.service.PageBeanService;
-import com.fantasy.website.service.TemplateBeanService;
-import com.fantasy.system.bean.Website;
+import org.jfantasy.website.IPage;
+import org.jfantasy.website.ISwpWebsite;
+import org.jfantasy.website.ITemplage;
+import org.jfantasy.website.SwpContext;
+import org.jfantasy.website.bean.Data;
+import org.jfantasy.website.bean.DataInferface;
+import org.jfantasy.website.bean.enums.PageType;
+import org.jfantasy.website.exception.SwpException;
+import org.jfantasy.website.service.PageBeanService;
+import org.jfantasy.website.service.TemplateBeanService;
+import org.jfantasy.system.bean.Website;
 
 import java.io.OutputStream;
 import java.util.List;

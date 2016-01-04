@@ -1,7 +1,7 @@
-package com.fantasy.framework.lucene.dao;
+package org.jfantasy.framework.lucene.dao;
 
-import com.fantasy.framework.lucene.bean.News;
-import com.fantasy.framework.lucene.dao.hibernate.HibernateLuceneDao;
+import org.jfantasy.framework.lucene.bean.News;
+import org.jfantasy.framework.lucene.dao.hibernate.HibernateLuceneDao;
 import org.springframework.stereotype.Repository;
 
 @Repository

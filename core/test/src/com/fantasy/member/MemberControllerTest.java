@@ -1,8 +1,8 @@
-package com.fantasy.member;
+package org.jfantasy.member;
 
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.member.bean.Member;
-import com.fantasy.member.service.MemberService;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.member.bean.Member;
+import org.jfantasy.member.service.MemberService;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;

@@ -1,6 +1,6 @@
-package com.fantasy.file.service;
+package org.jfantasy.file.service;
 
-import com.fantasy.file.bean.FileDetailKey;
+import org.jfantasy.file.bean.FileDetailKey;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;

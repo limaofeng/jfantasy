@@ -1,7 +1,7 @@
 package org.jfantasy.express.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.express.bean.Express;
 import org.jfantasy.express.dao.ExpressDao;
 import org.springframework.beans.factory.annotation.Autowired;

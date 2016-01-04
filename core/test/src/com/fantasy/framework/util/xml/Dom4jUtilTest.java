@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.xml;
+package org.jfantasy.framework.util.xml;
 
 import org.dom4j.Document;
 import org.junit.Before;

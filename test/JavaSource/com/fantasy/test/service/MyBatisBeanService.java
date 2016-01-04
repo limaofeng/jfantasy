@@ -1,8 +1,8 @@
-package com.fantasy.test.service;
+package org.jfantasy.test.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.test.bean.MyBatisBean;
-import com.fantasy.test.dao.MyBatisBeanDao;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.test.bean.MyBatisBean;
+import org.jfantasy.test.dao.MyBatisBeanDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

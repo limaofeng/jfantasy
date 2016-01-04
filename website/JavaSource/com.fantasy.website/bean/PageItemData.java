@@ -1,6 +1,6 @@
-package com.fantasy.website.bean;
+package org.jfantasy.website.bean;
 
-import com.fantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 

@@ -1,7 +1,7 @@
 package org.jfantasy.express.product;
 
-import com.fantasy.framework.httpclient.HttpClientUtil;
-import com.fantasy.framework.httpclient.Response;
+import org.jfantasy.framework.httpclient.HttpClientUtil;
+import org.jfantasy.framework.httpclient.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

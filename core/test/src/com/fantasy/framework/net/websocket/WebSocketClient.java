@@ -1,4 +1,4 @@
-package com.fantasy.framework.net.websocket;
+package org.jfantasy.framework.net.websocket;
 
 import org.junit.Test;
 

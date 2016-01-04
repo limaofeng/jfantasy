@@ -1,6 +1,6 @@
 package org.jfantasy.express.rest;
 
-import com.fantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.Pager;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.express.bean.Express;

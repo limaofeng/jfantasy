@@ -1,6 +1,6 @@
-package com.fantasy.website.util;
+package org.jfantasy.website.util;
 
-import com.fantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.FreemarkerServlet;

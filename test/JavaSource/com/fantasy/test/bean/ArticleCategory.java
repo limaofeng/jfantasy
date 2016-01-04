@@ -1,9 +1,9 @@
-package com.fantasy.test.bean;
+package org.jfantasy.test.bean;
 
-import com.fantasy.attr.storage.bean.AttributeVersion;
-import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.lucene.annotations.IndexEmbedBy;
-import com.fantasy.framework.lucene.annotations.IndexProperty;
+import org.jfantasy.attr.storage.bean.AttributeVersion;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
+import org.jfantasy.framework.lucene.annotations.IndexProperty;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;

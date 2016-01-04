@@ -1,14 +1,14 @@
-package com.fantasy.mall.order.converter;
+package org.jfantasy.mall.order.converter;
 
-import com.fantasy.attr.framework.CustomBeanFactory;
-import com.fantasy.attr.storage.service.AttributeService;
-import com.fantasy.attr.storage.service.AttributeTypeService;
-import com.fantasy.attr.storage.service.AttributeVersionService;
-import com.fantasy.attr.storage.service.ConverterService;
-import com.fantasy.common.service.AreaService;
-import com.fantasy.mall.delivery.service.DeliveryCorpService;
-import com.fantasy.mall.delivery.service.DeliveryTypeService;
-import com.fantasy.mall.order.service.OrderService;
+import org.jfantasy.attr.framework.CustomBeanFactory;
+import org.jfantasy.attr.storage.service.AttributeService;
+import org.jfantasy.attr.storage.service.AttributeTypeService;
+import org.jfantasy.attr.storage.service.AttributeVersionService;
+import org.jfantasy.attr.storage.service.ConverterService;
+import org.jfantasy.common.service.AreaService;
+import org.jfantasy.mall.delivery.service.DeliveryCorpService;
+import org.jfantasy.mall.delivery.service.DeliveryTypeService;
+import org.jfantasy.mall.order.service.OrderService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.After;

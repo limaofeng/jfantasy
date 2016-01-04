@@ -1,6 +1,6 @@
-package com.fantasy.system.service;
+package org.jfantasy.system.service;
 
-import com.fantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.jackson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;

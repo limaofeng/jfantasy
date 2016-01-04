@@ -1,4 +1,4 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

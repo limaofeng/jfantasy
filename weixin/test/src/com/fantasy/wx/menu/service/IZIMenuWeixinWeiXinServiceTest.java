@@ -1,11 +1,11 @@
-package com.fantasy.wx.menu.service;
+package org.jfantasy.wx.menu.service;
 
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.wx.bean.MenuWeixin;
-import com.fantasy.wx.framework.exception.WeiXinException;
-import com.fantasy.wx.framework.message.content.Menu;
-import com.fantasy.wx.framework.oauth2.Scope;
-import com.fantasy.wx.service.MenuWeiXinService;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.wx.bean.MenuWeixin;
+import org.jfantasy.wx.framework.exception.WeiXinException;
+import org.jfantasy.wx.framework.message.content.Menu;
+import org.jfantasy.wx.framework.oauth2.Scope;
+import org.jfantasy.wx.service.MenuWeiXinService;
 import junit.framework.Assert;
 import me.chanjar.weixin.common.api.WxConsts;
 import org.apache.commons.logging.Log;

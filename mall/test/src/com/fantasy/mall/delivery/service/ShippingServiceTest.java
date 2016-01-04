@@ -1,9 +1,9 @@
-package com.fantasy.mall.delivery.service;
+package org.jfantasy.mall.delivery.service;
 
-import com.fantasy.mall.delivery.bean.DeliveryCorp;
-import com.fantasy.mall.delivery.bean.DeliveryItem;
-import com.fantasy.mall.delivery.bean.DeliveryType;
-import com.fantasy.mall.delivery.bean.Shipping;
+import org.jfantasy.mall.delivery.bean.DeliveryCorp;
+import org.jfantasy.mall.delivery.bean.DeliveryItem;
+import org.jfantasy.mall.delivery.bean.DeliveryType;
+import org.jfantasy.mall.delivery.bean.Shipping;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;

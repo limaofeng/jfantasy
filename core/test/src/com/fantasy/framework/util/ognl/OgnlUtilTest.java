@@ -1,6 +1,6 @@
-package com.fantasy.framework.util.ognl;
+package org.jfantasy.framework.util.ognl;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import org.apache.commons.logging.Log;

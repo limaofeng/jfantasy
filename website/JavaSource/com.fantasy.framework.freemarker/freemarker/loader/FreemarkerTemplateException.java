@@ -1,4 +1,4 @@
-package com.fantasy.framework.freemarker.loader;
+package org.jfantasy.framework.freemarker.loader;
 
 /**
  * FreemarkerException等价的异常类，不过继承之RuntimeException

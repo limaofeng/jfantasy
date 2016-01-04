@@ -1,6 +1,6 @@
-package com.fantasy.framework.util.regexp;
+package org.jfantasy.framework.util.regexp;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -37,7 +37,7 @@ public class RegexpUtilTest {
 
         Assert.assertTrue(RegexpUtil.isMatch(className, "^\\[L[a-zA-Z._]+;$"));
 
-        Assert.assertTrue(RegexpUtil.isMatch("[Lcom.fantasy.security.bean.User$Test;", "^\\[L[a-zA-Z._$]+;$"));
+        Assert.assertTrue(RegexpUtil.isMatch("[Lorg.jfantasy.security.bean.User$Test;", "^\\[L[a-zA-Z._$]+;$"));
 
     }
 

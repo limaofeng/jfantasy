@@ -1,6 +1,6 @@
-package com.fantasy.framework.spring;
+package org.jfantasy.framework.spring;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

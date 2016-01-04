@@ -1,4 +1,4 @@
-package com.fantasy.framework.freemarker.directive;
+package org.jfantasy.framework.freemarker.directive;
 
 import java.io.IOException;
 import java.util.Map;

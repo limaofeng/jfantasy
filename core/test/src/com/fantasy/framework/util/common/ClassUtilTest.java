@@ -1,9 +1,9 @@
-package com.fantasy.framework.util.common;
+package org.jfantasy.framework.util.common;
 
-import com.fantasy.framework.util.asm.Article;
-import com.fantasy.framework.util.reflect.Property;
-import com.fantasy.security.bean.User;
-import com.fantasy.security.bean.enums.Sex;
+import org.jfantasy.framework.util.asm.Article;
+import org.jfantasy.framework.util.reflect.Property;
+import org.jfantasy.security.bean.User;
+import org.jfantasy.security.bean.enums.Sex;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

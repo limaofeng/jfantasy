@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.json;
+package org.jfantasy.framework.util.json;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

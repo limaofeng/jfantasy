@@ -1,6 +1,6 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 
 import java.util.HashMap;
 

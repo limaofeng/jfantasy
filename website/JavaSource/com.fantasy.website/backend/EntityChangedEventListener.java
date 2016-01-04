@@ -1,4 +1,4 @@
-package com.fantasy.website.backend;
+package org.jfantasy.website.backend;
 
 import org.hibernate.event.spi.PostDeleteEvent;
 import org.hibernate.event.spi.PostDeleteEventListener;
@@ -8,7 +8,7 @@ import org.hibernate.event.spi.PostUpdateEvent;
 import org.hibernate.event.spi.PostUpdateEventListener;
 import org.hibernate.persister.entity.EntityPersister;
 
-import com.fantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ClassUtil;
 
 //eventInterfaceFromType.put("post-commit-update", PostUpdateEventListener.class);  
 //eventInterfaceFromType.put("post-commit-delete", PostDeleteEventListener.class);  

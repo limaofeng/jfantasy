@@ -1,6 +1,6 @@
-package com.fantasy.events;
+package org.jfantasy.events;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 import org.springframework.context.ApplicationEvent;
 
 public class RegisterEvent extends ApplicationEvent {

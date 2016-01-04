@@ -1,9 +1,9 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
-import com.fantasy.website.IData;
-import com.fantasy.website.bean.Data;
-import com.fantasy.website.exception.SwpException;
-import com.fantasy.website.runtime.GenerateImpl;
+import org.jfantasy.website.IData;
+import org.jfantasy.website.bean.Data;
+import org.jfantasy.website.exception.SwpException;
+import org.jfantasy.website.runtime.GenerateImpl;
 import org.springframework.stereotype.Component;
 
 import org.springframework.beans.factory.annotation.Autowired;

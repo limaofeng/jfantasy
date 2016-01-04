@@ -1,7 +1,7 @@
-package com.fantasy.system.rest;
+package org.jfantasy.system.rest;
 
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.system.bean.DataDictionaryType;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.system.bean.DataDictionaryType;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

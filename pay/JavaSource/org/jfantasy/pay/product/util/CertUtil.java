@@ -1,7 +1,7 @@
 package org.jfantasy.pay.product.util;
 
 
-import com.fantasy.file.FileItem;
+import org.jfantasy.file.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;

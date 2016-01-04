@@ -1,17 +1,17 @@
-package com.fantasy.website.listener;
+package org.jfantasy.website.listener;
 
 
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.SpELUtil;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.schedule.service.ScheduleService;
-import com.fantasy.website.bean.PageItemData;
-import com.fantasy.website.bean.Trigger;
-import com.fantasy.website.schedule.CreateHtmlJob;
-import com.fantasy.website.service.PageItemDataService;
-import com.fantasy.website.service.TriggerService;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.spring.SpELUtil;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.schedule.service.ScheduleService;
+import org.jfantasy.website.bean.PageItemData;
+import org.jfantasy.website.bean.Trigger;
+import org.jfantasy.website.schedule.CreateHtmlJob;
+import org.jfantasy.website.service.PageItemDataService;
+import org.jfantasy.website.service.TriggerService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.event.spi.*;

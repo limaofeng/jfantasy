@@ -1,4 +1,4 @@
-package com.fantasy.framework.install;
+package org.jfantasy.framework.install;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

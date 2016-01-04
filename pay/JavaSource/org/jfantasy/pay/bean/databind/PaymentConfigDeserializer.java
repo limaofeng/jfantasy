@@ -1,7 +1,7 @@
 package org.jfantasy.pay.bean.databind;
 
 
-import com.fantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.pay.bean.PayConfig;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

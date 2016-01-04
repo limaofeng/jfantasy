@@ -1,8 +1,8 @@
-package com.fantasy.framework.util.common;
+package org.jfantasy.framework.util.common;
 
-import com.fantasy.file.manager.FTPFileManager;
-import com.fantasy.framework.service.FTPService;
-import com.fantasy.framework.util.common.file.FileUtil;
+import org.jfantasy.file.manager.FTPFileManager;
+import org.jfantasy.framework.service.FTPService;
+import org.jfantasy.framework.util.common.file.FileUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

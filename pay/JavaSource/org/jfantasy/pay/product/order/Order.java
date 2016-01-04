@@ -1,6 +1,5 @@
 package org.jfantasy.pay.product.order;
 
-import com.fantasy.common.order.ShipAddress;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 

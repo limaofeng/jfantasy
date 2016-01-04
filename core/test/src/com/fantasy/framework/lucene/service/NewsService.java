@@ -1,10 +1,10 @@
-package com.fantasy.framework.lucene.service;
+package org.jfantasy.framework.lucene.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.lucene.BuguSearcher;
-import com.fantasy.framework.lucene.bean.News;
-import com.fantasy.framework.lucene.dao.NewsDao;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.lucene.BuguSearcher;
+import org.jfantasy.framework.lucene.bean.News;
+import org.jfantasy.framework.lucene.dao.NewsDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

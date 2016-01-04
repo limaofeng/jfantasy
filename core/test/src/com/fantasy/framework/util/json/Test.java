@@ -1,6 +1,6 @@
-package com.fantasy.framework.util.json;
+package org.jfantasy.framework.util.json;
 
-import com.fantasy.framework.util.json.bean.User;
+import org.jfantasy.framework.util.json.bean.User;
 
 import java.util.Date;
 

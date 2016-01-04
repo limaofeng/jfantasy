@@ -1,12 +1,12 @@
-package com.fantasy.framework;
+package org.jfantasy.framework;
 
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.DateUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.member.bean.Member;
-import com.fantasy.payment.bean.PaymentConfig;
-import com.fantasy.system.bean.DataDictionaryType;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.member.bean.Member;
+import org.jfantasy.payment.bean.PaymentConfig;
+import org.jfantasy.system.bean.DataDictionaryType;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.fasterxml.jackson.databind.MapperFeature;
@@ -82,7 +82,7 @@ public class JSONTest {
 //        member.setLastLoginTime(DateUtil.parse("2014-10-20 10:29:34"));
         //Assert.assertEquals(JSON.serialize(member), "{\"creator\":null,\"createTime\":null,\"modifier\":null,\"modifyTime\":null,\"id\":null,\"username\":\"limaofeng\",\"password\":\"123456\",\"nickName\":\"张三\",\"enabled\":false,\"accountNonExpired\":false,\"accountNonLocked\":false,\"credentialsNonExpired\":false,\"lockTime\":null,\"lastLoginTime\":\"2014-10-20 10:29:34\",\"details\":null}");
 
-//        Ognl.getValue("@com.fantasy.framework.util.jackson.JSON@serialize(pager)",new HashMap(){
+//        Ognl.getValue("@org.jfantasy.framework.util.jackson.JSON@serialize(pager)",new HashMap(){
 //            {
 //                this.put("pager",new Object());
 //                this.put("array",new String[0]);

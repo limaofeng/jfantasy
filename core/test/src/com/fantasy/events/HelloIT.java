@@ -1,4 +1,4 @@
-package com.fantasy.events;
+package org.jfantasy.events;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

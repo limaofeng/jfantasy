@@ -1,4 +1,4 @@
-package com.fantasy.framework.util.json.mixin;
+package org.jfantasy.framework.util.json.mixin;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 

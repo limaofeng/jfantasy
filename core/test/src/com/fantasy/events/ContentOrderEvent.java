@@ -1,6 +1,6 @@
-package com.fantasy.events;
+package org.jfantasy.events;
 
-import com.fantasy.common.order.Order;
+import org.jfantasy.common.order.Order;
 import org.springframework.context.ApplicationEvent;
 
 public class ContentOrderEvent  extends ApplicationEvent {

@@ -1,4 +1,4 @@
-package com.fantasy.framework.httpclient;
+package org.jfantasy.framework.httpclient;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,4 +1,4 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
 import java.util.Map;
 

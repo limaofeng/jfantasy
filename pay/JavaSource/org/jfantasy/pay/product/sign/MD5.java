@@ -1,6 +1,6 @@
 package org.jfantasy.pay.product.sign;
 
-import com.fantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.error.IgnoreException;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import java.io.UnsupportedEncodingException;

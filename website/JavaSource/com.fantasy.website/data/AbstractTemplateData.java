@@ -1,6 +1,6 @@
-package com.fantasy.website.data;
+package org.jfantasy.website.data;
 
-import com.fantasy.website.TemplateData;
+import org.jfantasy.website.TemplateData;
 
 public abstract class AbstractTemplateData implements TemplateData {
 	protected String key;

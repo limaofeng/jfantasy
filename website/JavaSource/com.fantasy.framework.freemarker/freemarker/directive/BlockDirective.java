@@ -1,9 +1,9 @@
-package com.fantasy.framework.freemarker.directive;
+package org.jfantasy.framework.freemarker.directive;
 
 import java.io.IOException;
 import java.util.Map;
 
-import com.fantasy.framework.freemarker.directive.OverrideDirective.TemplateDirectiveBodyOverrideWraper;
+import org.jfantasy.framework.freemarker.directive.OverrideDirective.TemplateDirectiveBodyOverrideWraper;
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
 import freemarker.template.TemplateDirectiveModel;

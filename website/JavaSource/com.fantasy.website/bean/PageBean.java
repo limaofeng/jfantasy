@@ -1,10 +1,10 @@
-package com.fantasy.website.bean;
+package org.jfantasy.website.bean;
 
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.website.IPage;
-import com.fantasy.website.IPageItem;
-import com.fantasy.website.exception.SwpException;
-import com.fantasy.website.service.PageBeanService;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.website.IPage;
+import org.jfantasy.website.IPageItem;
+import org.jfantasy.website.exception.SwpException;
+import org.jfantasy.website.service.PageBeanService;
 
 import java.util.List;
 

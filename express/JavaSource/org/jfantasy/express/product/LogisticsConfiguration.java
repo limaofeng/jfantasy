@@ -1,13 +1,11 @@
 package org.jfantasy.express.product;
 
-import com.fantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
 public class LogisticsConfiguration implements InitializingBean {
 
     /**

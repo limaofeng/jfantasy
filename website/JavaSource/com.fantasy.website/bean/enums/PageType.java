@@ -1,4 +1,4 @@
-package com.fantasy.website.bean.enums;
+package org.jfantasy.website.bean.enums;
 
 /**
  * 页面类型

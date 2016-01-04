@@ -1,7 +1,7 @@
 
 package org.jfantasy.pay.product.sign;
 
-import com.fantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.error.IgnoreException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

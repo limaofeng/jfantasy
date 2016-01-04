@@ -1,8 +1,8 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.common.order.ShipAddress;
-import com.fantasy.file.bean.FileDetail;
-import com.fantasy.framework.util.common.PathUtil;
+import org.jfantasy.common.order.ShipAddress;
+import org.jfantasy.file.bean.FileDetail;
+import org.jfantasy.framework.util.common.PathUtil;
 import com.unionpay.acp.sdk.SDKConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

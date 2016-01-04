@@ -1,7 +1,7 @@
-package com.fantasy.test.rest;
+package org.jfantasy.test.rest;
 
-import com.fantasy.framework.spring.mvc.bind.annotation.FormModel;
-import com.fantasy.framework.spring.mvc.util.MapWapper;
+import org.jfantasy.framework.spring.mvc.bind.annotation.FormModel;
+import org.jfantasy.framework.spring.mvc.util.MapWapper;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

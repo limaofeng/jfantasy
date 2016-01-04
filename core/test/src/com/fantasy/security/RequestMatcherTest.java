@@ -1,4 +1,4 @@
-package com.fantasy.security;
+package org.jfantasy.security;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

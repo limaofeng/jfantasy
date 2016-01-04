@@ -1,6 +1,6 @@
-package com.fantasy.website.bean;
+package org.jfantasy.website.bean;
 
-import com.fantasy.website.ITemplage;
+import org.jfantasy.website.ITemplage;
 
 public class TemplateBean implements ITemplage {
 

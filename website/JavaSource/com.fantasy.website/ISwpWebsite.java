@@ -1,8 +1,8 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
-import com.fantasy.website.bean.Data;
-import com.fantasy.website.bean.DataInferface;
-import com.fantasy.website.exception.SwpException;
+import org.jfantasy.website.bean.Data;
+import org.jfantasy.website.bean.DataInferface;
+import org.jfantasy.website.exception.SwpException;
 
 import java.io.OutputStream;
 import java.util.List;

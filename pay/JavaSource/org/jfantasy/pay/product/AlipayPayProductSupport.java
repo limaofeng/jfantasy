@@ -1,6 +1,6 @@
 package org.jfantasy.pay.product;
 
-import com.fantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.error.PayException;

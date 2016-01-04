@@ -1,9 +1,9 @@
-package com.fantasy.website.url;
+package org.jfantasy.website.url;
 
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.ognl.OgnlUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
-import com.fantasy.website.OutPutUrl;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.website.OutPutUrl;
 
 import java.util.Map;
 import java.util.regex.Matcher;

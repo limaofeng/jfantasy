@@ -1,4 +1,4 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
 import org.junit.After;
 import org.junit.Before;

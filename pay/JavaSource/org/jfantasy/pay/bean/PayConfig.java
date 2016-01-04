@@ -1,10 +1,10 @@
 package org.jfantasy.pay.bean;
 
-import com.fantasy.file.bean.FileDetail;
-import com.fantasy.file.bean.converter.FileDetailConverter;
-import com.fantasy.file.bean.databind.FileDetailDeserializer;
-import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.framework.util.jackson.JSON;
+import org.jfantasy.file.bean.FileDetail;
+import org.jfantasy.file.bean.converter.FileDetailConverter;
+import org.jfantasy.file.bean.databind.FileDetailDeserializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;

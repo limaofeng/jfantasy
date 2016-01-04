@@ -1,7 +1,7 @@
-package com.fantasy.security.rest;
+package org.jfantasy.security.rest;
 
-import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.util.common.JdbcUtil;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.util.common.JdbcUtil;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;

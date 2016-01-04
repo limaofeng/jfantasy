@@ -1,7 +1,7 @@
-package com.fantasy.framework.freemarker;
+package org.jfantasy.framework.freemarker;
 
-import com.fantasy.framework.freemarker.directive.DirectiveUtils;
-import com.fantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.freemarker.directive.DirectiveUtils;
+import org.jfantasy.framework.util.common.ClassUtil;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.ext.beans.BeansWrapper;
@@ -43,27 +43,27 @@ public class FreeMarkerConfigurationFactoryBean extends FreeMarkerConfigurationF
             configuration.setSharedVariable(entry.getKey(), entry.getValue());
         }
         if (!utils.containsKey("DateUtil")) {
-            utils.put("DateUtil", "com.fantasy.framework.util.common.DateUtil");
+            utils.put("DateUtil", "org.jfantasy.framework.util.common.DateUtil");
         }
 
         if (!utils.containsKey("ClassUtil")) {
-            utils.put("ClassUtil", "com.fantasy.framework.util.common.ClassUtil");
+            utils.put("ClassUtil", "org.jfantasy.framework.util.common.ClassUtil");
         }
 
         if (!utils.containsKey("StringUtil")) {
-            utils.put("StringUtil", "com.fantasy.framework.util.common.StringUtil");
+            utils.put("StringUtil", "org.jfantasy.framework.util.common.StringUtil");
         }
 
         if (!utils.containsKey("RegexpUtil")) {
-            utils.put("RegexpUtil", "com.fantasy.framework.util.regexp.RegexpUtil");
+            utils.put("RegexpUtil", "org.jfantasy.framework.util.regexp.RegexpUtil");
         }
 
         if (!utils.containsKey("NumberUtil")) {
-            utils.put("NumberUtil", "com.fantasy.framework.util.common.NumberUtil");
+            utils.put("NumberUtil", "org.jfantasy.framework.util.common.NumberUtil");
         }
 
         if (!utils.containsKey("JSON")) {
-            utils.put("JSON", "com.fantasy.framework.util.jackson.JSON");
+            utils.put("JSON", "org.jfantasy.framework.util.jackson.JSON");
         }
 
         if (!utils.containsKey("HtmlUtils")) {

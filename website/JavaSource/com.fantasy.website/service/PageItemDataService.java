@@ -1,9 +1,9 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.website.bean.PageItemData;
-import com.fantasy.website.dao.PageItemDataDao;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.website.bean.PageItemData;
+import org.jfantasy.website.dao.PageItemDataDao;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

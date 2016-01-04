@@ -1,6 +1,6 @@
-package com.fantasy.payment.rest.form;
+package org.jfantasy.payment.rest.form;
 
-import com.fantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.jackson.JSON;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Assert;

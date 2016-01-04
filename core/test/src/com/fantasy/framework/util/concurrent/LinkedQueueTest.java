@@ -1,6 +1,6 @@
-package com.fantasy.framework.util.concurrent;
+package org.jfantasy.framework.util.concurrent;
 
-import com.fantasy.security.bean.User;
+import org.jfantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

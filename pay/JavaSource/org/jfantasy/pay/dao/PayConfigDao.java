@@ -2,7 +2,7 @@ package org.jfantasy.pay.dao;
 
 import org.jfantasy.pay.bean.PayConfig;
 import org.springframework.stereotype.Repository;
-import com.fantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
 
 
 @Repository

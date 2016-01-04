@@ -1,4 +1,4 @@
-package com.fantasy.framework.service;
+package org.jfantasy.framework.service;
 
 import org.junit.After;
 import org.junit.Before;

@@ -1,8 +1,8 @@
-package com.fantasy.sms.rest;
+package org.jfantasy.sms.rest;
 
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.sms.bean.CaptchaConfig;
-import com.fantasy.sms.service.CaptchaConfigService;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.sms.bean.CaptchaConfig;
+import org.jfantasy.sms.service.CaptchaConfigService;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;

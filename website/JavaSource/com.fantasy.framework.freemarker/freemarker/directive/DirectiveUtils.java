@@ -1,6 +1,6 @@
-package com.fantasy.framework.freemarker.directive;
+package org.jfantasy.framework.freemarker.directive;
 
-import com.fantasy.framework.freemarker.directive.OverrideDirective.TemplateDirectiveBodyOverrideWraper;
+import org.jfantasy.framework.freemarker.directive.OverrideDirective.TemplateDirectiveBodyOverrideWraper;
 import freemarker.core.Environment;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;

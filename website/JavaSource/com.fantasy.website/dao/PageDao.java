@@ -1,9 +1,9 @@
-package com.fantasy.website.dao;
+package org.jfantasy.website.dao;
 
 import org.springframework.stereotype.Repository;
 
-import com.fantasy.framework.dao.hibernate.HibernateDao;
-import com.fantasy.website.bean.Page;
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.website.bean.Page;
 
 /**
  *@Author lsz

@@ -1,6 +1,6 @@
-package com.fantasy.website.url;
+package org.jfantasy.website.url;
 
-import com.fantasy.website.OutPutUrl;
+import org.jfantasy.website.OutPutUrl;
 
 import java.util.Map;
 

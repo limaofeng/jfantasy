@@ -1,4 +1,4 @@
-package com.fantasy.activiti;
+package org.jfantasy.activiti;
 
 
 import junit.framework.Assert;
@@ -18,7 +18,7 @@ public class VerySimpleLeaveProcess {
         ProcessEngine processEngine = ProcessEngineConfiguration.createStandaloneInMemProcessEngineConfiguration().buildProcessEngine();
         //部署流程定义
         RepositoryService repositoryService = processEngine.getRepositoryService();
-        String bpmnFileName = "com/fantasy/activiti/SayHelloToLeave.bpmn";
+        String bpmnFileName = "org.jfantasy/activiti/SayHelloToLeave.bpmn";
         //repositoryService.createDeployment().addClasspathResource(bpmnFileName).deploy();
         repositoryService.createDeployment().addInputStream("SayHelloToLeave.bpmn",this.getClass().getClassLoader().getResourceAsStream(bpmnFileName)).deploy();
         //验证已部署的流程
