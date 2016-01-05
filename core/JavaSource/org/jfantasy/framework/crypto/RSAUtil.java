@@ -2,6 +2,8 @@ package org.jfantasy.framework.crypto;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openssl.EncryptionException;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.util.Base64Utils;
 
 import javax.crypto.Cipher;
 import java.io.ByteArrayOutputStream;
@@ -20,14 +22,17 @@ public class RSAUtil {
     public static KeyPair generateKeyPair() throws EncryptionException {
         try {
             KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance("RSA", new BouncyCastleProvider());
-
             keyPairGen.initialize(KEY_SIZE, new SecureRandom());
-
             return keyPairGen.genKeyPair();
         } catch (Exception e) {
             throw new EncryptionException(e.getMessage());
         }
+    }
 
+    public static RSAPublicKey getRSAPublicKey(String key) throws EncryptionException {
+        byte[] modulus = new BigInteger(StringUtil.trim(key.split("\n")[1].split(":")[1]), 16).toByteArray();
+        byte[] publicExponent = new BigInteger(StringUtil.trim(key.split("\n")[2].split(":")[1]), 16).toByteArray();
+        return generateRSAPublicKey(modulus, publicExponent);
     }
 
     public static RSAPublicKey generateRSAPublicKey(byte[] modulus, byte[] publicExponent) throws EncryptionException {
@@ -46,7 +51,13 @@ public class RSAUtil {
         }
     }
 
-    public static RSAPrivateKey generateRSAPrivateKey(byte[] modulus, byte[] privateExponent) throws EncryptionException {
+    public static RSAPrivateKey getRSAPrivateKey(String key) throws EncryptionException {
+        byte[] modulus = new BigInteger(StringUtil.trim(key.split("\n")[1].split(":")[1]), 16).toByteArray();
+        byte[] privateExponent = new BigInteger(StringUtil.trim(key.split("\n")[3].split(":")[1]), 16).toByteArray();
+        return generateRSAPrivateKey(modulus, privateExponent);
+    }
+
+    protected static RSAPrivateKey generateRSAPrivateKey(byte[] modulus, byte[] privateExponent) throws EncryptionException {
         KeyFactory keyFac;
         try {
             keyFac = KeyFactory.getInstance("RSA", new BouncyCastleProvider());
@@ -60,6 +71,10 @@ public class RSAUtil {
             throw new EncryptionException(ex.getMessage());
         }
 
+    }
+
+    public static String encrypt(Key key, String data) throws EncryptionException {
+        return Base64Utils.encodeToString(encrypt(key, data.getBytes()));
     }
 
     public static byte[] encrypt(Key key, byte[] data) throws EncryptionException {
@@ -97,6 +112,10 @@ public class RSAUtil {
 
     }
 
+    public static String decrypt(Key key, String raw) throws EncryptionException {
+        return new String(decrypt(key, Base64Utils.decodeFromString(raw)));
+    }
+
     public static byte[] decrypt(Key key, byte[] raw) throws EncryptionException {
         try {
             Cipher cipher = Cipher.getInstance("RSA", new BouncyCastleProvider());
@@ -122,37 +141,4 @@ public class RSAUtil {
 
     }
 
-    public static void main(String[] args) throws Exception {
-        byte[] orgData = "提供了一组函数，这些函数允许应用程序在对用户的敏感私钥数据提供保护时以灵活的方式对数据进行加".getBytes();
-
-        KeyPair keyPair = generateKeyPair();
-        //公钥
-        RSAPublicKey pubKey = (RSAPublicKey) keyPair.getPublic();
-        //私钥
-        RSAPrivateKey priKey = (RSAPrivateKey) keyPair.getPrivate();
-
-        /*
-        byte[] pubModBytes = pubKey.getModulus().toByteArray();
-
-        byte[] pubPubExpBytes = pubKey.getPublicExponent().toByteArray();
-
-        byte[] priModBytes = priKey.getModulus().toByteArray();
-
-        byte[] priPriExpBytes = priKey.getPrivateExponent().toByteArray();
-
-        RSAPublicKey recoveryPubKey = generateRSAPublicKey(pubModBytes, pubPubExpBytes);
-
-        RSAPrivateKey recoveryPriKey = generateRSAPrivateKey(priModBytes, priPriExpBytes);
-        */
-
-        byte[] raw = encrypt(priKey, orgData);
-
-        System.out.println(raw.length);
-
-        System.out.println(new String(raw));
-
-        byte[] data = decrypt(pubKey, raw);
-
-        System.out.println(new String(data));
-    }
 }
