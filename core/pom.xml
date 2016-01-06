@@ -17,10 +17,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.tacitknowledge</groupId>
-            <artifactId>tk-filters</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.ckfinder</groupId>
             <artifactId>apache-ant-zip</artifactId>
         </dependency>
