@@ -1,12 +1,12 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.website.bean.DataInferface;
-import com.fantasy.website.bean.Page;
-import com.fantasy.website.bean.Template;
-import com.fantasy.website.dao.TemplateDao;
 import org.hibernate.criterion.Restrictions;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.website.bean.DataInferface;
+import org.jfantasy.website.bean.Page;
+import org.jfantasy.website.bean.Template;
+import org.jfantasy.website.dao.TemplateDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

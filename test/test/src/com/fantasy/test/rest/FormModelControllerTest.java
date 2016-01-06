@@ -1,4 +1,4 @@
-package com.fantasy.test.rest;
+package org.jfantasy.test.rest;
 
 import junit.framework.Assert;
 import org.junit.After;

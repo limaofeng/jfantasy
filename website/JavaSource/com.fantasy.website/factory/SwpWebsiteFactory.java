@@ -1,13 +1,12 @@
-package com.fantasy.website.factory;
+package org.jfantasy.website.factory;
 
-import com.fantasy.website.ISwpWebsite;
-import com.fantasy.website.service.PageBeanService;
-import com.fantasy.website.service.TemplateBeanService;
-import com.fantasy.system.bean.Website;
-import com.fantasy.system.service.WebsiteService;
-import org.springframework.stereotype.Component;
-
+import org.jfantasy.system.bean.Website;
+import org.jfantasy.system.service.WebsiteService;
+import org.jfantasy.website.ISwpWebsite;
+import org.jfantasy.website.service.PageBeanService;
+import org.jfantasy.website.service.TemplateBeanService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 站点工厂

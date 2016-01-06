@@ -1,4 +1,4 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
 /**
  * Created by lmf on 15/1/21.

@@ -1,15 +1,14 @@
-package com.fantasy.test;
+package org.jfantasy.test;
 
-import com.fantasy.file.FileItem;
-import com.fantasy.file.FileItemSelector;
-import com.fantasy.file.FileManager;
-import com.fantasy.file.manager.LocalFileManager;
-import com.fantasy.framework.util.common.PathUtil;
-import com.fantasy.framework.util.common.StreamUtil;
-import com.fantasy.framework.util.common.file.FileUtil;
+import org.jfantasy.file.FileItem;
+import org.jfantasy.file.FileItemSelector;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.framework.util.common.PathUtil;
+import org.jfantasy.framework.util.common.StreamUtil;
+import org.jfantasy.framework.util.common.file.FileUtil;
 import org.junit.Test;
 
-import java.io.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

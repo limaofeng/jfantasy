@@ -1,9 +1,9 @@
-package com.fantasy.website.bean;
+package org.jfantasy.website.bean;
 
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.website.IPageItem;
-import com.fantasy.website.exception.SwpException;
-import com.fantasy.website.service.PageItemBeanService;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.website.IPageItem;
+import org.jfantasy.website.exception.SwpException;
+import org.jfantasy.website.service.PageItemBeanService;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;

@@ -1,3 +1,4 @@
+/javaweb/WebContent/WEB-INF/index
 *.class
 .idea
 # Package Files #
@@ -7,5 +8,6 @@
 *.iml
 target
 
+api-docs/node_modules
 rebel.xml
 rebel-remote.xml

@@ -1,8 +1,8 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.website.*;
-import com.fantasy.website.runtime.ExecutionEntity;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.website.*;
+import org.jfantasy.website.runtime.ExecutionEntity;
 
 /**
  * 默认的 page servie

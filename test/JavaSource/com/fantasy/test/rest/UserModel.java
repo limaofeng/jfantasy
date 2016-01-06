@@ -1,4 +1,4 @@
-package com.fantasy.test.rest;
+package org.jfantasy.test.rest;
 
 
 public class UserModel {

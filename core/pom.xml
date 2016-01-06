@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>com.fantasy</groupId>
-        <artifactId>fantasy-framework</artifactId>
-        <version>3.3.26</version>
+        <groupId>org.jfantasy</groupId>
+        <artifactId>jfantasy-framework</artifactId>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>fantasy-core</artifactId>
+    <artifactId>jfantasy-core</artifactId>
     <packaging>jar</packaging>
-    <version>${com.fantasy-version}</version>
+    <version>${org.jfantasy-version}</version>
 
     <build>
         <sourceDirectory>JavaSource</sourceDirectory>
@@ -73,6 +73,11 @@
         <dependency>
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security.oauth</groupId>
+            <artifactId>spring-security-oauth2</artifactId>
+            <version>2.0.8.RELEASE</version>
         </dependency>
         <dependency>
             <groupId>commons-fileupload</groupId>
@@ -251,12 +256,8 @@
             <artifactId>jmagick</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>jpingyin</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.belerweb</groupId>
-            <artifactId>pinyin4j</artifactId>
+            <groupId>com.github.stuxuhai</groupId>
+            <artifactId>jpinyin</artifactId>
         </dependency>
         <dependency>
             <groupId>jfree</groupId>
@@ -270,10 +271,6 @@
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
             <version>3.3.2</version>
-        </dependency>
-        <dependency>
-            <groupId>org.freemarker</groupId>
-            <artifactId>freemarker</artifactId>
         </dependency>
         <dependency>
             <groupId>ognl</groupId>

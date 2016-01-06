@@ -1,6 +1,6 @@
-package com.fantasy.website.bean;
+package org.jfantasy.website.bean;
 
-import com.fantasy.website.IData;
+import org.jfantasy.website.IData;
 
 public class DataBean implements IData {
 

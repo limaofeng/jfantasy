@@ -1,12 +1,12 @@
-package com.fantasy.test.service;
+package org.jfantasy.test.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.lucene.BuguParser;
-import com.fantasy.test.bean.Article;
-import com.fantasy.test.bean.ArticleCategory;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.lucene.BuguParser;
+import org.jfantasy.test.bean.Article;
+import org.jfantasy.test.bean.ArticleCategory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

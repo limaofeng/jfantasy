@@ -1,4 +1,4 @@
-package com.fantasy.website.data;
+package org.jfantasy.website.data;
 
 /**
  * 简单变量接口

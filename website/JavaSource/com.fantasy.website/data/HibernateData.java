@@ -1,6 +1,6 @@
-package com.fantasy.website.data;
+package org.jfantasy.website.data;
 
-import com.fantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import org.springframework.orm.hibernate3.support.HibernateDaoSupport;
 
 import java.util.List;

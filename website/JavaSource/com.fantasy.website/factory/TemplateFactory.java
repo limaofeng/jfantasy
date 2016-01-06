@@ -1,6 +1,6 @@
-package com.fantasy.website.factory;
+package org.jfantasy.website.factory;
 
-import com.fantasy.website.Template;
+import org.jfantasy.website.Template;
 
 /**
  * 模板工厂

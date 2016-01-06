@@ -1,7 +1,7 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
-import com.fantasy.website.bean.Data;
-import com.fantasy.website.exception.SwpException;
+import org.jfantasy.website.bean.Data;
+import org.jfantasy.website.exception.SwpException;
 
 import java.io.IOException;
 import java.util.List;

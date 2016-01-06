@@ -1,9 +1,9 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.SpELUtil;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.security.service.UserService;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.spring.SpELUtil;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.security.service.UserService;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
 import org.springframework.stereotype.Service;

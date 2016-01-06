@@ -1,4 +1,4 @@
-package com.fantasy.website.exception;
+package org.jfantasy.website.exception;
 
 /**
  * 异常

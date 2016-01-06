@@ -1,15 +1,15 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
-import com.fantasy.attr.storage.service.AttributeVersionService;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.struts2.StrutsSpringJUnit4TestCase;
-import com.fantasy.website.bean.Page;
-import com.fantasy.website.bean.PageItem;
-import com.fantasy.website.bean.PageItemData;
-import com.fantasy.website.service.PageItemDataService;
-import com.fantasy.website.service.PageItemService;
-import com.fantasy.website.service._PageService;
 import org.apache.struts2.views.JspSupportServlet;
+import org.jfantasy.attr.storage.service.AttributeVersionService;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.struts2.StrutsSpringJUnit4TestCase;
+import org.jfantasy.website.bean.Page;
+import org.jfantasy.website.bean.PageItem;
+import org.jfantasy.website.bean.PageItemData;
+import org.jfantasy.website.service.PageItemDataService;
+import org.jfantasy.website.service.PageItemService;
+import org.jfantasy.website.service._PageService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

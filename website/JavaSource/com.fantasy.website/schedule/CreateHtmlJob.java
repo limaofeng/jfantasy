@@ -1,4 +1,4 @@
-package com.fantasy.website.schedule;
+package org.jfantasy.website.schedule;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

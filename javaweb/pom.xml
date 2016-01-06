@@ -1,13 +1,13 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>com.fantasy</groupId>
-        <artifactId>fantasy-framework</artifactId>
-        <version>3.3.26</version>
+        <groupId>org.jfantasy</groupId>
+        <artifactId>jfantasy-framework</artifactId>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.haolue</groupId>
-    <artifactId>fantasy-web</artifactId>
+    <artifactId>jfantasy-web</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
 
@@ -44,25 +44,27 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-core</artifactId>
+            <groupId>org.jfantasy</groupId>
+            <artifactId>jfantasy-core</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-mall</artifactId>
+            <groupId>org.jfantasy</groupId>
+            <artifactId>jfantasy-mall</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-cms</artifactId>
+            <groupId>org.jfantasy</groupId>
+            <artifactId>jfantasy-cms</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-cache</artifactId>
+            <groupId>org.jfantasy</groupId>
+            <artifactId>jfantasy-cache</artifactId>
         </dependency>
+        <!--
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-weixin</artifactId>
+            <groupId>org.jfantasy</groupId>
+            <artifactId>jfantasy-weixin</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>

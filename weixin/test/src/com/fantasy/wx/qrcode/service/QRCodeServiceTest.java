@@ -1,10 +1,10 @@
-package com.fantasy.wx.qrcode.service;
+package org.jfantasy.wx.qrcode.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.bean.QRCode;
-import com.fantasy.wx.service.QRCodeWeiXinService;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.wx.bean.QRCode;
+import org.jfantasy.wx.service.QRCodeWeiXinService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

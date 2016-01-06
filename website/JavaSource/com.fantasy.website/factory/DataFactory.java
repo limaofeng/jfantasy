@@ -1,6 +1,6 @@
-package com.fantasy.website.factory;
+package org.jfantasy.website.factory;
 
-import com.fantasy.website.TemplateData;
+import org.jfantasy.website.TemplateData;
 
 import java.math.BigDecimal;
 

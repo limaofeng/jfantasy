@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <parent>
-        <groupId>com.fantasy</groupId>
-        <artifactId>fantasy-framework</artifactId>
-        <version>3.3.26</version>
+        <groupId>org.jfantasy</groupId>
+        <artifactId>jfantasy-framework</artifactId>
+        <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>fantasy-cms</artifactId>
+    <artifactId>jfantasy-cms</artifactId>
     <packaging>jar</packaging>
-    <version>${com.fantasy-version}</version>
+    <version>${org.jfantasy-version}</version>
 
     <build>
         <sourceDirectory>JavaSource</sourceDirectory>
@@ -27,9 +27,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.fantasy</groupId>
-            <artifactId>fantasy-core</artifactId>
-            <version>${com.fantasy-version}</version>
+            <groupId>org.jfantasy</groupId>
+            <artifactId>jfantasy-core</artifactId>
+            <version>${org.jfantasy-version}</version>
         </dependency>
         <dependency>
             <groupId>javax</groupId>

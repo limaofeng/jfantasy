@@ -1,18 +1,17 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
 
-import com.fantasy.file.FileManager;
-import com.fantasy.file.bean.FileManagerConfig;
-import com.fantasy.file.service.FileManagerFactory;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.website.ITemplage;
-import com.fantasy.website.bean.*;
-import com.fantasy.website.bean.enums.PageType;
-import com.fantasy.system.bean.Website;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.service.FileManagerFactory;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.system.bean.Website;
+import org.jfantasy.website.ITemplage;
+import org.jfantasy.website.bean.*;
+import org.jfantasy.website.bean.enums.PageType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 

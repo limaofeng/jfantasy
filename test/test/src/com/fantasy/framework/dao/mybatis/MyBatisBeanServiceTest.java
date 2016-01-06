@@ -1,11 +1,11 @@
-package com.fantasy.framework.dao.mybatis;
+package org.jfantasy.framework.dao.mybatis;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.test.bean.MyBatisBean;
-import com.fantasy.test.service.MyBatisBeanService;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.test.bean.MyBatisBean;
+import org.jfantasy.test.service.MyBatisBeanService;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -135,11 +135,11 @@ public class MyBatisBeanServiceTest {
     @Test
     public void testAntPathMatcher() throws IOException {
         PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
-        for (Resource resource : patternResolver.getResources("classpath:com/fantasy/**/dao/*-Mapper.xml")) {
+        for (Resource resource : patternResolver.getResources("classpath:org.jfantasy/**/dao/*-Mapper.xml")) {
             logger.debug(resource);
         }
-        String currPath = "/Users/lmf/framework/core/target/test-classes/com/fantasy/test/";
-        String fullPattern = "/Users/lmf/framework/core/target/test-classes/com/fantasy/test/**/*-Mapper.xml";
+        String currPath = "/Users/lmf/framework/core/target/test-classes/org.jfantasy/test/";
+        String fullPattern = "/Users/lmf/framework/core/target/test-classes/org.jfantasy/test/**/*-Mapper.xml";
         logger.debug(new AntPathMatcher().matchStart(fullPattern, currPath));
     }
 

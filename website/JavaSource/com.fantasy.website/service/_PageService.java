@@ -1,20 +1,20 @@
-package com.fantasy.website.service;
+package org.jfantasy.website.service;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.file.manager.LocalFileManager;
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.website.bean.Data;
-import com.fantasy.website.bean.Page;
-import com.fantasy.website.dao.PageDao;
-import com.fantasy.website.runtime.GeneratePage;
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.website.bean.Data;
+import org.jfantasy.website.bean.Page;
+import org.jfantasy.website.dao.PageDao;
+import org.jfantasy.website.runtime.GeneratePage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @Service

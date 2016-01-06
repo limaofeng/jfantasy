@@ -1,6 +1,6 @@
-package com.fantasy.website.data;
+package org.jfantasy.website.data;
 
-import com.fantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.jackson.JSON;
 
 public class JSONData extends AbstractTemplateData {
 

@@ -1,7 +1,7 @@
-package com.fantasy.website.bean;
+package org.jfantasy.website.bean;
 
-import com.fantasy.website.TemplateData;
-import com.fantasy.website.PageService;
+import org.jfantasy.website.PageService;
+import org.jfantasy.website.TemplateData;
 
 import java.util.List;
 

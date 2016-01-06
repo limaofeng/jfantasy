@@ -1,14 +1,14 @@
-package com.fantasy.website.runtime;
+package org.jfantasy.website.runtime;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.website.OutPutUrl;
-import com.fantasy.website.PageInstance;
-import com.fantasy.website.Template;
-import com.fantasy.website.TemplateData;
-import com.fantasy.website.template.FreemarkerTemplate;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.framework.freemarker.FreeMarkerTemplateUtils;
+import org.jfantasy.website.OutPutUrl;
+import org.jfantasy.website.PageInstance;
+import org.jfantasy.website.Template;
+import org.jfantasy.website.TemplateData;
+import org.jfantasy.website.template.FreemarkerTemplate;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -43,7 +43,7 @@ public class ExecutionEntity implements PageInstance {
                 dataMap.put(entry.getKey(), new TemplateMethodModel() {
                     @Override
                     public Object exec(List arguments) throws TemplateModelException {
-//                    com.fantasy.website.DataAnalyzer analyzer = (com.fantasy.website.DataAnalyzer) ClassUtil.newInstance(_data.getDataAnalyzer().getClassName());
+//                    org.jfantasy.website.DataAnalyzer analyzer = (org.jfantasy.website.DataAnalyzer) ClassUtil.newInstance(_data.getDataAnalyzer().getClassName());
 
                         return "test";//analyzer.exec(_data.getValue(), ClassUtil.forName(_data.getDataInferface().getJavaType()),_data.getDataInferface().isList(),arguments);
                     }

@@ -1,4 +1,4 @@
-package com.fantasy.website.template;
+package org.jfantasy.website.template;
 
 import freemarker.template.Template;
 

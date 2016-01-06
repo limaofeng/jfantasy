@@ -20,43 +20,6 @@
     <!-- 加载 properties文件 -->
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
 
-    <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
-    <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
-        <property name="freemarkerSettings">
-            <props>
-                <prop key="template_update_delay">1</prop>
-                <prop key="default_encoding">UTF-8</prop>
-                <prop key="locale">zh_CN</prop>
-                <prop key="number_format">#</prop>
-                <prop key="date_format">yyyy-MM-dd</prop>
-                <!-- <prop key="template_exception_handler">ignore</prop> -->
-            </props>
-        </property>
-        <property name="defaultEncoding" value="utf-8"/>
-        <!--
-        <property name="templateLoaderPath" value="${freemarker.templatePath}" />
-        <property name="preTemplateLoaders">
-            <list>
-                <bean class="com.fantasy.framework.freemarker.loader.FileManagerTemplateLoader">
-                    <property name="fileManagerBeanName" value="freemarker" />
-                </bean>
-            </list>
-        </property>
-        -->
-    </bean>
-
-
-    <!-- 开发中的功能
-    <bean id="logManager" class="com.fantasy.framework.log.DefaultLogManager"/>
-    <log:annotation-driven log-manager="logManager"/>
-    -->
-
-    <!--
-    <bean id="socketServer" class="com.fantasy.framework.websocket.WebSocketServer" lazy-init="false" init-method="start" destroy-method="stop">
-        <constructor-arg name="port" value="9090" />
-    </bean>
-    -->
-
     <!-- lucene 配置 -->
     <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
         <property name="analyzer">
@@ -78,7 +41,6 @@
         <property name="username" value="${mail.username}"/>
         <property name="password" value="${mail.password}"/>
         <property name="charset" value="${mail.charset}"/>
-        <property name="configuration" ref="freemarkerService"/>
     </bean>
 
     <!-- 自定义序列生成器 -->
@@ -87,7 +49,7 @@
     </bean>
 
     <!-- 支付配置 -->
-    <bean id="paymentConfiguration" class="com.fantasy.payment.service.PaymentConfiguration" lazy-init="false"/>
+    <bean id="paymentConfiguration" class="org.jfantasy.pay.service.PaymentConfiguration" lazy-init="false"/>
 
     <!-- 其他需要加载的spring模块 -->
     <import resource="classpath:spring/applicationContext-cache.xml"/>

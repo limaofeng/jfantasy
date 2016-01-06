@@ -1,4 +1,4 @@
-package com.fantasy.test.bean;
+package org.jfantasy.test.bean;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

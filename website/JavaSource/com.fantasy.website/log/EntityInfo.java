@@ -1,7 +1,7 @@
-package com.fantasy.website.log;
+package org.jfantasy.website.log;
 
-import com.fantasy.framework.dao.BaseBusEntity;
-import com.fantasy.website.runtime.ExecutionEntity;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.website.runtime.ExecutionEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Id;

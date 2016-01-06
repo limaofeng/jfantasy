@@ -1,24 +1,24 @@
-package com.fantasy.website.runtime;
+package org.jfantasy.website.runtime;
 
-import com.fantasy.file.FileManager;
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.freemarker.FreeMarkerTemplateUtils;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.common.ObjectUtil;
-import com.fantasy.framework.util.common.StringUtil;
-import com.fantasy.framework.util.ognl.OgnlUtil;
-import com.fantasy.framework.util.regexp.RegexpUtil;
-import com.fantasy.website.PageInstance;
-import com.fantasy.website.bean.*;
-import com.fantasy.website.bean.enums.PageType;
-import com.fantasy.website.service.PageItemDataService;
-import com.fantasy.website.service.PageItemService;
-import com.fantasy.website.util.GeneratePageUtil;
-import com.fantasy.website.util.TemplateModelUtils;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.file.FileManager;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.freemarker.FreeMarkerTemplateUtils;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.website.PageInstance;
+import org.jfantasy.website.bean.*;
+import org.jfantasy.website.bean.enums.PageType;
+import org.jfantasy.website.service.PageItemDataService;
+import org.jfantasy.website.service.PageItemService;
+import org.jfantasy.website.util.GeneratePageUtil;
+import org.jfantasy.website.util.TemplateModelUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -54,7 +54,7 @@ public class GeneratePage implements PageInstance {
     public void execute(){
         try {
             // 模版
-            final com.fantasy.website.bean.Template template = page.getTemplate();
+            final org.jfantasy.website.bean.Template template = page.getTemplate();
             // 数据定义
             List<DataInferface> dataInferfaces = template.getDataInferfaces();
             // 所有数据

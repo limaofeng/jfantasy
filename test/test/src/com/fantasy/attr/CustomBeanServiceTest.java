@@ -1,16 +1,16 @@
-package com.fantasy.attr;
+package org.jfantasy.attr;
 
-import com.fantasy.attr.framework.CustomBean;
-import com.fantasy.attr.framework.util.AttributeUtils;
-import com.fantasy.attr.storage.bean.CustomBeanDefinition;
-import com.fantasy.attr.storage.service.CustomBeanDefinitionService;
-import com.fantasy.attr.storage.service.CustomBeanService;
-import com.fantasy.framework.util.common.ClassUtil;
-import com.fantasy.framework.util.ognl.OgnlUtil;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
+import org.jfantasy.attr.framework.CustomBean;
+import org.jfantasy.attr.framework.util.AttributeUtils;
+import org.jfantasy.attr.storage.bean.CustomBeanDefinition;
+import org.jfantasy.attr.storage.service.CustomBeanDefinitionService;
+import org.jfantasy.attr.storage.service.CustomBeanService;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

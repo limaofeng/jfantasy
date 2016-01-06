@@ -1,8 +1,7 @@
-package com.fantasy.website.bean;
+package org.jfantasy.website.bean;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**

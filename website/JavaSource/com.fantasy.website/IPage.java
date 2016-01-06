@@ -1,6 +1,6 @@
-package com.fantasy.website;
+package org.jfantasy.website;
 
-import com.fantasy.website.exception.SwpException;
+import org.jfantasy.website.exception.SwpException;
 
 import java.util.List;
 

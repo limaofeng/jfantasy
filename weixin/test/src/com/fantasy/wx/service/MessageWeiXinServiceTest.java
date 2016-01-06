@@ -1,9 +1,9 @@
-package com.fantasy.wx.service;
+package org.jfantasy.wx.service;
 
-import com.fantasy.framework.dao.Pager;
-import com.fantasy.framework.dao.hibernate.PropertyFilter;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.wx.bean.Message;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.wx.bean.Message;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

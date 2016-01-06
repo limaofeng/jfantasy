@@ -1,6 +1,5 @@
-package com.fantasy.website.util;
+package org.jfantasy.website.util;
 
-import com.fantasy.framework.spring.SpringContextUtil;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.FreemarkerServlet;
@@ -9,6 +8,7 @@ import freemarker.ext.servlet.HttpSessionHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mock.web.MockHttpServletRequest;

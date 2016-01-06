@@ -27,54 +27,34 @@
         <priority value="DEBUG"/>
     </category>
     <category name="com.fantasy.framework.dao.mybatis">
-        <priority value="ERROR"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="org.springframework">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="org.hibernate.cache">
         <priority value="DEBUG"/>
     </category>
     <category name="org.apache.struts2.dispatcher">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
-    </category>
-    <category name="org.apache.struts2.interceptor">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
-    </category>
-    <category name="com.opensymphony.xwork2.interceptor">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
-    </category>
-    <category name="com.opensymphony.xwork2.validator">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="org.apache.ibatis">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="org.mybatis.spring">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="java.sql.Connection">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="java.sql.Statement">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="java.sql.PreparedStatement">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <category name="java.sql.ResultSet">
-        <priority value="ERROR"/>
-        <appender-ref ref="FILE"/>
+        <priority value="DEBUG"/>
     </category>
     <root>
         <priority value="WARN"/>

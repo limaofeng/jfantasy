@@ -1,13 +1,13 @@
-package com.fantasy.website.util;
+package org.jfantasy.website.util;
 
-import com.fantasy.framework.error.IgnoreException;
-import com.fantasy.framework.spring.SpringContextUtil;
-import com.fantasy.framework.util.jackson.JSON;
-import com.fantasy.website.bean.Data;
-import com.fantasy.website.bean.DataInferface;
-import com.fantasy.website.service.HqlService;
-import com.fantasy.website.service.SpelService;
 import com.fasterxml.jackson.core.type.TypeReference;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.website.bean.Data;
+import org.jfantasy.website.bean.DataInferface;
+import org.jfantasy.website.service.HqlService;
+import org.jfantasy.website.service.SpelService;
 
 import java.util.HashMap;
 import java.util.List;
