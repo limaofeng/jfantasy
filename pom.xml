@@ -1241,11 +1241,13 @@
     </issueManagement>
 
     <repositories>
+        <!--
         <repository>
             <id>github snapshot</id>
             <name>github snapshot</name>
             <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
         </repository>
+        -->
         <repository>
             <id>oschina public</id>
             <name>oschina public</name>
