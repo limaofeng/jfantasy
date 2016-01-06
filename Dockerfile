@@ -1,10 +1,10 @@
 FROM daocloud.io/rockytan/docker-base-maven-tomcat:latest
 
 ADD / /tmp/build/
-RUN cd /tmp/build && mvn -q dependency:resolve
+RUN cd /tmp/build && mvn clean compile -Dmaven.test.skip=true -P test
 
         #构建应用
-RUN cd /tmp/build && mvn -q -DskipTests=true package \
+RUN cd /tmp/build && mvn package -Dmaven.test.skip=true -P production \
         #拷贝编译结果到指定目录
 	&& rm -rf $CATALINA_HOME/webapps/* \
         && mv target/*.war $CATALINA_HOME/webapps/ROOT.war \
