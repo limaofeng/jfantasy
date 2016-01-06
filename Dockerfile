@@ -3,7 +3,7 @@ FROM daocloud.io/rockytan/docker-base-maven-tomcat:latest
 ADD pom.xml /tmp/build/
 RUN cd /tmp/build && mvn -q dependency:resolve
 
-ADD src /tmp/build/src
+ADD ../ /tmp/build/
         #构建应用
 RUN cd /tmp/build && mvn -q -DskipTests=true package \
         #拷贝编译结果到指定目录
