@@ -9,7 +9,6 @@ import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import com.unionpay.acp.sdk.LogUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -460,7 +459,7 @@ public class Unionpay extends PayProductSupport {
      * @return boolean
      */
     public static boolean validate(Map<String, String> resData, String encoding, FileItem fileItem) {
-        LogUtil.writeLog("验签处理开始.");
+        LOG.debug("验签处理开始.");
         if (StringUtil.isEmpty(encoding)) {
             encoding = "UTF-8";
         }

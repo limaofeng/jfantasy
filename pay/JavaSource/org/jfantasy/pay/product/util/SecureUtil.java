@@ -1,7 +1,6 @@
 package org.jfantasy.pay.product.util;
 
 
-import com.unionpay.acp.sdk.CliperInstance;
 import org.apache.commons.codec.binary.Base64;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
@@ -342,11 +341,9 @@ public class SecureUtil {
         return string;
     }
 
-    public static byte[] encryptedPin(PublicKey publicKey, byte[] plainPin)
-            throws Exception {
-        Cipher cipher;
+    public static byte[] encryptedPin(PublicKey publicKey, byte[] plainPin) throws Exception {
         try {
-            cipher = CliperInstance.getInstance();
+            Cipher cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding", new BouncyCastleProvider());
             cipher.init(1, publicKey);
             int blockSize = cipher.getBlockSize();
             int outputSize = cipher.getOutputSize(plainPin.length);
@@ -579,7 +576,7 @@ public class SecureUtil {
         int j = 0;
         byte[] temp = new byte[76];
         bytesSet(temp, ' ');
-        StringBuffer strc = new StringBuffer("");
+        StringBuilder strc = new StringBuilder("");
         strc.append("----------------------------------------------------------------------------\n");
 
         for (int i = 0; i < inBytes.length; ++i) {
