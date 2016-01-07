@@ -6,14 +6,18 @@ jfantasy 是[昊略软件公司的java开发框架],并整合了一些开源常�
 
 ### 快速开始
 
- 通过 maven 私服地址: http://maven.hoolue.com ，配置该框架
-
 ```xml
-<dependency>
-  <groupId>com.fantasy</groupId>
-  <artifactId>fantasy-core</artifactId>
-  <version>3.3.17</version>
-</dependency>
+    <repository>
+        <id>github snapshot</id>
+        <name>github snapshot</name>
+        <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
+    </repository>
+
+    <dependency>
+      <groupId>org.jfantasy</groupId>
+      <artifactId>jfantasy-core</artifactId>
+      <version>1.0.0</version>
+    </dependency>
 ```
 
 主要功能及使用技术介绍
