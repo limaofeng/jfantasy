@@ -8,7 +8,6 @@ import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.quartz.SimpleThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
-import org.wltea.analyzer.lucene.IKAnalyzer;
 
 /**
  * Description: <应用配置类>. <br>
@@ -86,7 +85,6 @@ public class AppConfig {
     @Bean
     public BuguIndex buguIndex() {
         BuguIndex buguIndex = new BuguIndex();
-        buguIndex.setAnalyzer(new IKAnalyzer());
         buguIndex.setBasePackage("org.jfantasy.cms");
         buguIndex.setDirectoryPath("/index");
         buguIndex.setExecutor(new SimpleThreadPoolTaskExecutor());

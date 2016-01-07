@@ -17,10 +17,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.ckfinder</groupId>
-            <artifactId>apache-ant-zip</artifactId>
-        </dependency>
-        <dependency>
             <groupId>com.cloudhopper.proxool</groupId>
             <artifactId>proxool</artifactId>
             <exclusions>
@@ -116,10 +112,12 @@
             <groupId>org.tuckey</groupId>
             <artifactId>urlrewritefilter</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>org.wltea</groupId>
             <artifactId>IKAnalyzer</artifactId>
         </dependency>
+        -->
         <dependency>
             <groupId>commons-lang</groupId>
             <artifactId>commons-lang</artifactId>

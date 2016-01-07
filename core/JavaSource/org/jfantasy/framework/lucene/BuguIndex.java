@@ -1,5 +1,13 @@
 package org.jfantasy.framework.lucene;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.util.Version;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.lucene.annotations.Indexed;
 import org.jfantasy.framework.lucene.backend.IndexChecker;
@@ -14,19 +22,11 @@ import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.store.Directory;
-import org.apache.lucene.util.Version;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.util.StringUtils;
-import org.wltea.analyzer.lucene.IKAnalyzer;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
     /**
      * 分词器
      */
-    private Analyzer analyzer = new IKAnalyzer();//new StandardAnalyzer(this.version);
+    private Analyzer analyzer = new StandardAnalyzer(this.version);
     /**
      * 索引文件的存放目录
      */
