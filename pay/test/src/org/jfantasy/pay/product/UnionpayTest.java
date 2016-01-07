@@ -1,6 +1,5 @@
 package org.jfantasy.pay.product;
 
-import com.unionpay.acp.sdk.SDKConfig;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfantasy.file.bean.FileDetail;
@@ -125,7 +124,7 @@ public class UnionpayTest {
         //##支持通过商户代码读取指定证书的配置项
         properties.put("acpsdk.signCert.dir", PathUtil.classes() +  "/certs/");
 
-        SDKConfig.getConfig().loadProperties(properties);
+//        SDKConfig.getConfig().loadProperties(properties);
 
         String result = unionpay.app(order, payment);
 

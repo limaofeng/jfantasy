@@ -48,13 +48,6 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
-        <dependency>
-            <groupId>chinapay</groupId>
-            <artifactId>upacp_sdk</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/upacp_sdk-1.0.0-20150703140550.jar</systemPath>
-        </dependency>
     </dependencies>
 
     <description>开发框架 - 提供支付相关接口</description>
