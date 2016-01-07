@@ -9,6 +9,6 @@ import org.jfantasy.wx.framework.session.WeiXinSession;
  */
 public interface ClickEventListener extends WeiXinEventListener {
 
-    public void onClick(WeiXinSession session,Event event,EventMessage message);
+    void onClick(WeiXinSession session,Event event,EventMessage message);
 
 }

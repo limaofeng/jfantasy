@@ -5,7 +5,7 @@ package org.jfantasy.wx.framework.message;
  */
 public interface EventMessage<T> extends WeiXinMessage<T> {
 
-    public enum EventType {
+    enum EventType {
         /**
          * 订阅 / 扫描带参数二维码事件
          */
@@ -25,9 +25,13 @@ public interface EventMessage<T> extends WeiXinMessage<T> {
         /**
          * 点击菜单跳转链接时的事件推送
          */
-        VIEW
+        VIEW,
+        /**
+         * 地理位置
+         */
+        location;
     }
 
-    public EventType getEventType();
+    EventType getEventType();
 
 }

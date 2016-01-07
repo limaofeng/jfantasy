@@ -18,6 +18,8 @@ import org.jfantasy.wx.service.AccountService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.FactoryBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,6 +30,9 @@ import java.util.Map;
 public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactory> {
 
     private static final Log LOG = LogFactory.getLog(WeiXinSessionFactoryBean.class);
+
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * 微信session工厂
@@ -55,7 +60,7 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
     public void afterPropertiesSet() throws Exception {
         long start = System.currentTimeMillis();
 
-        DefaultWeiXinSessionFactory factory = new DefaultWeiXinSessionFactory();
+        DefaultWeiXinSessionFactory factory = new DefaultWeiXinSessionFactory(applicationContext);
 
         if (this.accountDetailsService == null) {
             this.accountDetailsService = SpringContextUtil.getBeanByType(AccountService.class);

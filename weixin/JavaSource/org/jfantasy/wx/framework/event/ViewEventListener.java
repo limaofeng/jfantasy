@@ -9,6 +9,6 @@ import org.jfantasy.wx.framework.session.WeiXinSession;
  */
 public interface ViewEventListener extends WeiXinEventListener {
 
-    public void onView(WeiXinSession session,Event event,EventMessage message);
+    void onView(WeiXinSession session,Event event,EventMessage message);
 
 }

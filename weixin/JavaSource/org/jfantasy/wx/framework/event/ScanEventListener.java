@@ -9,6 +9,6 @@ import org.jfantasy.wx.framework.session.WeiXinSession;
  */
 public interface ScanEventListener  extends WeiXinEventListener{
 
-    public void onScan(WeiXinSession session,Event event,EventMessage message);
+    void onScan(WeiXinSession session,Event event,EventMessage message);
 
 }

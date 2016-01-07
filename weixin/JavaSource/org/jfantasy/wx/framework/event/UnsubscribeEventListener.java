@@ -9,6 +9,6 @@ import org.jfantasy.wx.framework.session.WeiXinSession;
  */
 public interface UnsubscribeEventListener  extends WeiXinEventListener{
 
-    public void onUnsubscribe(WeiXinSession session,Event event,EventMessage message);
+    void onUnsubscribe(WeiXinSession session,Event event,EventMessage message);
 
 }

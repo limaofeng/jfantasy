@@ -9,6 +9,6 @@ import org.jfantasy.wx.framework.session.WeiXinSession;
  */
 public interface LocationEventListener extends WeiXinEventListener {
 
-    public void onLocation(WeiXinSession session,EventLocation event,EventMessage message);
+    void onLocation(WeiXinSession session,EventLocation event,EventMessage message);
 
 }

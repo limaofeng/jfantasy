@@ -1,20 +1,21 @@
 package org.jfantasy.wx.framework.factory;
 
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.wx.event.WeiXinEventMessageEvent;
+import org.jfantasy.wx.event.WeiXinMessageEvent;
 import org.jfantasy.wx.framework.account.AccountDetailsService;
 import org.jfantasy.wx.framework.core.WeiXinCoreHelper;
-import org.jfantasy.wx.framework.event.*;
+import org.jfantasy.wx.framework.event.WeiXinEventListener;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.handler.WeiXinHandler;
 import org.jfantasy.wx.framework.intercept.DefaultInvocation;
-import org.jfantasy.wx.framework.intercept.Invocation;
+import org.jfantasy.wx.framework.intercept.WeiXinEventMessageInterceptor;
 import org.jfantasy.wx.framework.intercept.WeiXinMessageInterceptor;
 import org.jfantasy.wx.framework.message.EventMessage;
 import org.jfantasy.wx.framework.message.WeiXinMessage;
-import org.jfantasy.wx.framework.message.content.Event;
-import org.jfantasy.wx.framework.message.content.EventLocation;
 import org.jfantasy.wx.framework.session.DefaultWeiXinSession;
 import org.jfantasy.wx.framework.session.WeiXinSession;
+import org.springframework.context.ApplicationContext;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,6 +26,8 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
     private WeiXinCoreHelper weiXinCoreHelper;
 
     private AccountDetailsService accountDetailsService;
+
+    private ApplicationContext applicationContext;
 
     private Class<? extends WeiXinSession> sessionClass = DefaultWeiXinSession.class;
 
@@ -42,6 +45,10 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
     }
 
     private ConcurrentMap<String, WeiXinSession> weiXinSessions = new ConcurrentHashMap<String, WeiXinSession>();
+
+    public DefaultWeiXinSessionFactory(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Override
     public WeiXinSession getCurrentSession() throws WeiXinException {
@@ -65,33 +72,12 @@ public class DefaultWeiXinSessionFactory implements WeiXinSessionFactory {
     public WeiXinMessage<?> execute(WeiXinMessage message) throws WeiXinException {
         List<Object> handler = new ArrayList<Object>(weiXinMessageInterceptors);
         if (message instanceof EventMessage) {
+            applicationContext.publishEvent(new WeiXinEventMessageEvent((EventMessage) message));//事件推送
             final List<WeiXinEventListener> listeners = ObjectUtil.defaultValue(eventListeners.get(((EventMessage) message).getEventType()), Collections.<WeiXinEventListener>emptyList());
-            handler.add(new WeiXinMessageInterceptor() {
-                @Override
-                public WeiXinMessage intercept(WeiXinSession session, WeiXinMessage message, Invocation invocation) throws WeiXinException {
-                    try {
-                        return invocation.invoke();
-                    } finally {
-                        for (WeiXinEventListener listener : listeners) {
-                            if (listener instanceof ClickEventListener) {
-                                ((ClickEventListener) listener).onClick(session, (Event) message.getContent(), (EventMessage) message);
-                            } else if (listener instanceof LocationEventListener) {
-                                ((LocationEventListener) listener).onLocation(session, (EventLocation) message.getContent(), (EventMessage) message);
-                            } else if (listener instanceof ScanEventListener) {
-                                ((ScanEventListener) listener).onScan(session, (Event) message.getContent(), (EventMessage) message);
-                            } else if (listener instanceof SubscribeEventListener) {
-                                ((SubscribeEventListener) listener).onSubscribe(session, (Event) message.getContent(), (EventMessage) message);
-                            } else if (listener instanceof UnsubscribeEventListener) {
-                                ((UnsubscribeEventListener) listener).onUnsubscribe(session, (Event) message.getContent(), (EventMessage) message);
-                            } else if (listener instanceof ViewEventListener) {
-                                ((ViewEventListener) listener).onView(session, (Event) message.getContent(), (EventMessage) message);
-                            }
-                        }
-                    }
-                }
-            });
+            handler.add(new WeiXinEventMessageInterceptor(((EventMessage) message).getEventType(), listeners));//添加Event拦截器,用于触发事件
             handler.add(this.eventHandler);
         } else {
+            applicationContext.publishEvent(new WeiXinMessageEvent(message));//消息事件推送
             handler.add(this.messageHandler);
         }
         return new DefaultInvocation(WeiXinSessionUtils.getCurrentSession(), message, handler.iterator()).invoke();
