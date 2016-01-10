@@ -6,7 +6,6 @@
         <version>1.0.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.haolue</groupId>
     <artifactId>jfantasy-web</artifactId>
     <packaging>war</packaging>
     <version>1.0-SNAPSHOT</version>
