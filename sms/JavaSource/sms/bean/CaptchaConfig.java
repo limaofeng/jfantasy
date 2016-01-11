@@ -2,8 +2,6 @@ package org.jfantasy.sms.bean;
 
 import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
-
 /**
  * 短信验证码定制方案
  * 

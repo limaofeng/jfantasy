@@ -1,8 +1,8 @@
 package org.jfantasy.sms.service;
 
-import org.jfantasy.sms.SMSService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.sms.SMSService;
 
 public class DefaultSMSService implements SMSService {
 

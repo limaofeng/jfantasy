@@ -1,9 +1,7 @@
 package org.jfantasy.sms.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 @Entity
 @Table(name = "SMS_LOG_MOBILE")
