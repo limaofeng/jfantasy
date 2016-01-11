@@ -1,8 +1,8 @@
 package org.jfantasy.security.web.authentication;
 
-import org.jfantasy.framework.util.common.StringUtil;
 import com.octo.captcha.service.CaptchaService;
 import com.octo.captcha.service.CaptchaServiceException;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
