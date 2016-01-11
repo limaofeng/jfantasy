@@ -24,7 +24,7 @@ import java.io.IOException;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述<br/>依赖 jcaptcha-1.0.jar jcaptcha-api-1.0 imaging.jar
+ *          依赖 jcaptcha-1.0.jar jcaptcha-api-1.0 imaging.jar
  * @since 2012-11-30 下午05:16:03
  */
 @Component("jcaptchaFilter")
@@ -53,8 +53,8 @@ public class JCaptchaFilter extends GenericFilterBean {
     /**
      * 生成验证码
      *
-     * @param request
-     * @param response
+     * @param request  request
+     * @param response response
      * @throws IOException
      */
     protected void genernateCaptchaImage(HttpServletRequest request, HttpServletResponse response) throws IOException {
@@ -76,7 +76,7 @@ public class JCaptchaFilter extends GenericFilterBean {
     }
 
     public void genernateCaptchaAudio(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        CaptchaStore captchaStore = (CaptchaStore) ClassUtil.getValue(this.captchaService, "store");
+        CaptchaStore captchaStore = ClassUtil.getValue(this.captchaService, "store");
         Captcha captcha = captchaStore.getCaptcha(request.getSession().getId());
         if (captcha != null) {
             response.setContentType("audio/mpeg");

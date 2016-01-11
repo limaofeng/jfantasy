@@ -36,7 +36,6 @@
         <aliyun-sdk-oss-version>2.0.6</aliyun-sdk-oss-version>
         <mybatis-spring-version>1.2.3</mybatis-spring-version>
         <net.sf.ehcache-version>2.5.0</net.sf.ehcache-version>
-        <com.octo.captcha-version>1.0</com.octo.captcha-version>
         <org.apache.axis2-version>1.6.2</org.apache.axis2-version>
         <org.hibernate-version>4.3.11.Final</org.hibernate-version>
         <commons-beanutils-version>1.8.3</commons-beanutils-version>
@@ -1174,6 +1173,7 @@
         <module>javaweb</module>
         <module>express</module>
         <module>pay</module>
+        <module>jcaptcha</module>
     </modules>
 
     <!-- 项目信息设置 -->
