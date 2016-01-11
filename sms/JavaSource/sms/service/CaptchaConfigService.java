@@ -4,8 +4,6 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.sms.bean.CaptchaConfig;
 import org.jfantasy.sms.dao.CaptchaConfigDao;
-import com.octo.captcha.component.word.wordgenerator.RandomWordGenerator;
-import com.octo.captcha.component.word.wordgenerator.WordGenerator;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
