@@ -1169,6 +1169,7 @@
         <module>express</module>
         <module>pay</module>
         <module>jcaptcha</module>
+        <module>sms</module>
     </modules>
 
     <!-- 项目信息设置 -->

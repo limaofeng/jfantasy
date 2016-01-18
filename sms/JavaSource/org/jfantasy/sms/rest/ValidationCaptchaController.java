@@ -5,6 +5,7 @@ import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.sms.service.ValidationCaptchaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @Api(value = "sms-captcha-valid", description = "手机验证码")
 @RestController

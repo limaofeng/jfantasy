@@ -3,6 +3,8 @@ package org.jfantasy.sms.bean;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+import javax.persistence.*;
+
 /**
  * 短信验证码
  * 

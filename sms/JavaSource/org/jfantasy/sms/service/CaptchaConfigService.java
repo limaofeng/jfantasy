@@ -23,9 +23,9 @@ public class CaptchaConfigService {
     @Autowired
     private CaptchaConfigDao captchaConfigDao;
 
-    private ConcurrentMap<String, WordGenerator> wordGeneratorCache = new ConcurrentHashMap<String, WordGenerator>();
+    private ConcurrentMap<String, RandomWordGenerator> wordGeneratorCache = new ConcurrentHashMap<String, RandomWordGenerator>();
 
-    protected WordGenerator getWordGenerator(String randomWord) {
+    protected RandomWordGenerator getWordGenerator(String randomWord) {
         if (!wordGeneratorCache.containsKey(randomWord)) {
             if (logger.isDebugEnabled()) {
                 logger.debug("缓存验证码生成器:" + randomWord);
@@ -35,7 +35,7 @@ public class CaptchaConfigService {
         return wordGeneratorCache.get(randomWord);
     }
 
-    protected WordGenerator removeWordGenerator(String randomWord) {
+    protected RandomWordGenerator removeWordGenerator(String randomWord) {
         return wordGeneratorCache.remove(randomWord);
     }
 

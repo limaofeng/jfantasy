@@ -8,6 +8,7 @@ import org.jfantasy.sms.bean.CaptchaConfig;
 import org.jfantasy.sms.service.CaptchaConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

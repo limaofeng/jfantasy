@@ -2,6 +2,11 @@ package org.jfantasy.sms.bean;
 
 import org.jfantasy.framework.dao.BaseBusEntity;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * 短信验证码定制方案
  * 
