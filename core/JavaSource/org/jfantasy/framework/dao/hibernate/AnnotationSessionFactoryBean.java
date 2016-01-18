@@ -76,7 +76,6 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
         identifierGenerators.put("fantasy-sequence", SequenceGenerator.class);
         identifierGenerators.put("serialnumber", SerialNumberGenerator.class);
         for (Map.Entry<String, Class<? extends IdentifierGenerator>> entry : this.identifierGenerators.entrySet()) {
-            identifierGenerators.put(entry.getKey(), entry.getValue());
             this.getConfiguration().getIdentifierGeneratorFactory().register(entry.getKey(), entry.getValue());
         }
 

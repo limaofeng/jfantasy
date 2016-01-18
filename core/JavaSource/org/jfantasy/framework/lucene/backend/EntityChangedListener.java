@@ -23,7 +23,7 @@ public class EntityChangedListener {
         return BuguIndex.getInstance().getClusterConfig();
     }
 
-    public EntityChangedListener(Class<?> clazz) {
+    public EntityChangedListener(Class clazz) {
         this.clazz = clazz;
         Set<Class<?>> refBySet = new HashSet<Class<?>>();
         boolean byId = false;

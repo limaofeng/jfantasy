@@ -4,11 +4,11 @@ import org.jfantasy.framework.lucene.backend.EntityChangedListener;
 
 import java.util.List;
 
-public interface LuceneDao<T> {
+public interface LuceneDao {
 
     long count();
 
-    List<T> find(int start, int size);
+    <T> List<T> find(int start, int size);
 
     /**
      *
@@ -16,9 +16,9 @@ public interface LuceneDao<T> {
      * @param fieldValue 字段值
      * @return List<T>
      */
-    List<T> findByField(String fieldName, String fieldValue);
+    <T> List<T> findByField(String fieldName, String fieldValue);
 
-    T getById(String id);
+    <T> T getById(String id);
 
     EntityChangedListener getLuceneListener();
 }

@@ -34,6 +34,10 @@ public class PayConfigService {
         return this.payConfigDao.find(filters);
     }
 
+    public List<PayConfig> find(Criterion... criterions) {
+        return this.payConfigDao.find(criterions);
+    }
+
     public PayConfig findUnique(Criterion... criterions) {
         return this.payConfigDao.findUnique(criterions);
     }

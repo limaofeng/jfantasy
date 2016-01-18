@@ -92,4 +92,9 @@ public class AppConfig {
         return buguIndex;
     }
 
+//    @Bean
+//    public RequestMappingHandlerMapping requestMappingHandlerMapping(){
+//        return new RequestMappingHandlerMapping();
+//    }
+
 }

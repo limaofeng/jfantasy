@@ -1,10 +1,7 @@
 package org.jfantasy.framework.quartz;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 public class FantasySchedulerFactoryBean extends org.springframework.scheduling.quartz.SchedulerFactoryBean {
 
-    @Autowired
     private JobBeanJobFactory jobBeanJobFactory;
 
     @Override
@@ -13,4 +10,7 @@ public class FantasySchedulerFactoryBean extends org.springframework.scheduling.
         super.afterPropertiesSet();
     }
 
+    public void setJobBeanJobFactory(JobBeanJobFactory jobBeanJobFactory) {
+        this.jobBeanJobFactory = jobBeanJobFactory;
+    }
 }

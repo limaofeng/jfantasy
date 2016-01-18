@@ -53,12 +53,7 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public boolean verifySign(Map<String, String> parameters) {
-        return false;
-    }
-
-    @Override
-    public String web() {
+    public String web(Order order, Payment payment) {
         return null;
     }
 

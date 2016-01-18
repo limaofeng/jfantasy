@@ -5,9 +5,7 @@ import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.scheduling.quartz.SpringBeanJobFactory;
-import org.springframework.stereotype.Component;
 
-@Component
 public class JobBeanJobFactory extends SpringBeanJobFactory implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;

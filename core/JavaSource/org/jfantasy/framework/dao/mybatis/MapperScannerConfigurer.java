@@ -1,6 +1,7 @@
 package org.jfantasy.framework.dao.mybatis;
 
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.mapper.MapperFactoryBean;
 import org.springframework.beans.BeansException;
@@ -120,9 +121,9 @@ public class MapperScannerConfigurer implements BeanDefinitionRegistryPostProces
 
             PropertyValues values = mapperScannerBean.getPropertyValues();
 
-            this.basePackage = updatePropertyValue("basePackage", values);
-            this.sqlSessionFactoryBeanName = updatePropertyValue("sqlSessionFactoryBeanName", values);
-            this.sqlSessionTemplateBeanName = updatePropertyValue("sqlSessionTemplateBeanName", values);
+            this.basePackage = StringUtil.defaultValue(updatePropertyValue("basePackage", values), this.basePackage);
+            this.sqlSessionFactoryBeanName = StringUtil.defaultValue(updatePropertyValue("sqlSessionFactoryBeanName", values), this.sqlSessionFactoryBeanName);
+            this.sqlSessionTemplateBeanName = StringUtil.defaultValue(updatePropertyValue("sqlSessionTemplateBeanName", values), this.sqlSessionTemplateBeanName);
         }
     }
 

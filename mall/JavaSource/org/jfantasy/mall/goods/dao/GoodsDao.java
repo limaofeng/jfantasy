@@ -1,15 +1,15 @@
 package org.jfantasy.mall.goods.dao;
 
-import org.jfantasy.framework.lucene.dao.hibernate.HibernateLuceneDao;
+import org.hibernate.criterion.Restrictions;
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.mall.goods.bean.Goods;
 import org.jfantasy.mall.goods.bean.GoodsCategory;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class GoodsDao extends HibernateLuceneDao<Goods, Long> {
+public class GoodsDao extends HibernateDao<Goods, Long> {
 
 	/*
 	@Override

@@ -88,13 +88,13 @@ public class PayConfig extends BaseBusEntity {
     /**
      * 签名证书(银联支付专用)
      */
-    @Column(name = "SIGN_CERT")
+    @Column(name = "SIGN_CERT", length = 500)
     @Convert(converter = FileDetailConverter.class)
     private FileDetail signCert;
     /**
      * 加密证书(银联支付专用)
      */
-    @Column(name = "ENCRYPT_CERT")
+    @Column(name = "ENCRYPT_CERT", length = 500)
     @Convert(converter = FileDetailConverter.class)
     private FileDetail encryptCert;
     /**
@@ -129,10 +129,10 @@ public class PayConfig extends BaseBusEntity {
     @Column(name = "SORT")
     private Integer sort;
     @ApiModelProperty(hidden = true)
-    @OneToMany(mappedBy = "paymentConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<Payment>();// 支付
     @ApiModelProperty(hidden = true)
-    @OneToMany(mappedBy = "paymentConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<Refund>();// 退款
 
     public PayConfig() {

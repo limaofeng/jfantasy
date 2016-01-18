@@ -40,7 +40,7 @@ public class Refund extends BaseBusEntity {
     @Column(name = "REFUND_TYPE", nullable = false, updatable = false)
     private RefundType refundType;// 退款类型
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false, updatable = false)
-    private String paymentConfigName;// 支付配置名称
+    private String payConfigName;// 支付配置名称
     @Column(name = "BANK_NAME", updatable = false)
     private String bankName;// 退款银行名称
     @Column(name = "BANK_ACCOUNT", updatable = false)
@@ -52,7 +52,7 @@ public class Refund extends BaseBusEntity {
     @Column(name = "MEMO", updatable = false, length = 3000)
     private String memo;// 备注
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYMENT_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT_CONFIG"))
+    @JoinColumn(name = "PAY_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT_CONFIG"))
     private PayConfig payConfig;// 支付配置
     /**
      * 订单类型
@@ -89,12 +89,12 @@ public class Refund extends BaseBusEntity {
         this.refundType = refundType;
     }
 
-    public String getPaymentConfigName() {
-        return paymentConfigName;
+    public String getPayConfigName() {
+        return payConfigName;
     }
 
-    public void setPaymentConfigName(String paymentConfigName) {
-        this.paymentConfigName = paymentConfigName;
+    public void setPayConfigName(String payConfigName) {
+        this.payConfigName = payConfigName;
     }
 
     public String getBankName() {

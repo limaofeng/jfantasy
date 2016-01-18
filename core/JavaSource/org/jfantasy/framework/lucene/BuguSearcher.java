@@ -37,7 +37,7 @@ public abstract class BuguSearcher<T> {
     private String idName;
     private LoadEntityMode loadMode;
 
-    private LuceneDao<T> luceneDao;
+    private LuceneDao luceneDao;
 
     protected BuguSearcher(LoadEntityMode loadMode) {
         this.loadMode = loadMode;
@@ -49,7 +49,10 @@ public abstract class BuguSearcher<T> {
         } catch (IdException e) {
             LOGGER.error(e.getMessage(), e);
         }
-        this.luceneDao = DaoCache.getInstance().get(this.entityClass);
+    }
+
+    private LuceneDao luceneDao(){
+        return this.luceneDao == null ? this.luceneDao = DaoCache.getInstance().get(this.entityClass) : this.luceneDao;
     }
 
     protected BuguSearcher() {
@@ -233,7 +236,7 @@ public abstract class BuguSearcher<T> {
 
     private T build(Document doc) {
         if (LoadEntityMode.dao == this.loadMode) {
-            return this.luceneDao.getById(doc.get(idName));
+            return this.luceneDao().getById(doc.get(idName));
         } else {
             T object = ClassUtil.newInstance(this.entityClass);
             for (Fieldable fieldable : doc.getFields()) {

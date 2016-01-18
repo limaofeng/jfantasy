@@ -1,10 +1,10 @@
 package org.jfantasy.pay.product.util;
 
 
-import org.jfantasy.file.FileItem;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.jfantasy.file.FileItem;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -13,7 +13,6 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,7 +21,7 @@ public class CertUtil {
     private final static Log LOG = LogFactory.getLog(CertUtil.class);
 
     private static Map<String, KeyStore> certKeyStoreCache = new ConcurrentHashMap<String, KeyStore>();
-    private static Map<String, X509Certificate> certCache = new HashMap<String, X509Certificate>();
+    private static Map<String, X509Certificate> certCache = new ConcurrentHashMap<String, X509Certificate>();
 
     public static KeyStore loadKeyStore(FileItem fileItem, String certPwd) throws IOException {
         return loadKeyStore(fileItem, certPwd, "PKCS12");
@@ -104,7 +103,7 @@ public class CertUtil {
     }
 
     public static KeyStore loadKeyStore(FileItem fileItem, String keypwd, String type) throws IOException {
-        if (!certKeyStoreCache.containsKey(fileItem.getAbsolutePath())) {
+        if (certKeyStoreCache.containsKey(fileItem.getAbsolutePath())) {
             return certKeyStoreCache.get(fileItem.getAbsolutePath());
         }
         String nPassword;

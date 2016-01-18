@@ -1,9 +1,10 @@
-package org.jfantasy.pay.order;
+package org.jfantasy.pay.service;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.common.service.AreaService;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.product.order.*;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,16 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class TestOrderService extends AbstractOrderService implements InitializingBean {
+public class TestOrderService implements OrderService {
 
-    @Autowired
-    private OrderServiceFactory orderServiceFactory;
+    protected final Log LOG = LogFactory.getLog(TestOrderService.class);
+
     @Autowired
     private AreaService areaService;
 
     @Override
-    public void afterPropertiesSet() throws Exception {
-        orderServiceFactory.register("test", this);
+    public String type() {
+        return "test";
     }
 
     @Override

@@ -1,20 +1,13 @@
-/*
- * COPYRIGHT Beijing NetQin-Tech Co.,Ltd.                                   *
- ****************************************************************************
- * 源文件名:  web.config.DaoConfig.java 													       
- * 功能: cpframework框架													   
- * 版本:	@version 1.0	                                                                   
- * 编制日期: 2014年9月3日 下午2:55:14 						    						                                        
- * 修改历史: (主要历史变动原因及说明)		
- * YYYY-MM-DD |    Author      |	 Change Description		      
- * 2014年9月3日    |    Administrator     |     Created 
- */
 package org.jfantasy.framework.spring.mvc.config;
 
-import org.jfantasy.framework.dao.hibernate.AnnotationSessionFactoryBean;
-import org.jfantasy.framework.dao.mybatis.SqlSessionFactoryBean;
+import org.apache.ibatis.plugin.Interceptor;
 import org.apache.log4j.Logger;
 import org.hibernate.cfg.ImprovedNamingStrategy;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.AnnotationSessionFactoryBean;
+import org.jfantasy.framework.dao.mybatis.SqlSessionFactoryBean;
+import org.jfantasy.framework.dao.mybatis.interceptors.BusEntityInterceptor;
+import org.jfantasy.framework.dao.mybatis.interceptors.MultiDataSourceInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
@@ -53,12 +46,22 @@ public class DaoConfig {
     public SqlSessionFactoryBean sqlSessionFactoryBean() {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(this.dataSource);
-        sqlSessionFactoryBean.setConfigLocation(new ClassPathResource("mybatis/mybatis-config.xml"));
         sqlSessionFactoryBean.setMybatisProperties(new HashMap<String, Object>() {
             {
                 this.put("mybatis.dialect", "org.jfantasy.framework.dao.mybatis.dialect.MySQLDialect");
             }
         });
+
+        sqlSessionFactoryBean.setMapperLocations(new ClassPathResource("org/jfantasy/framework/dao/mybatis/keygen/dao/Sequence-Mapper.xml"));
+
+        Properties settings = new Properties();
+        settings.setProperty("cacheEnabled","false");
+        settings.setProperty("lazyLoadingEnabled","true");
+        settings.setProperty("aggressiveLazyLoading","false");
+        sqlSessionFactoryBean.setSettings(settings);
+
+        sqlSessionFactoryBean.setTypeAliases(new Class[]{Pager.class});
+        sqlSessionFactoryBean.setPlugins(new Interceptor[]{new BusEntityInterceptor(),new MultiDataSourceInterceptor()});
         return sqlSessionFactoryBean;
     }
 
@@ -68,8 +71,6 @@ public class DaoConfig {
         AnnotationSessionFactoryBean sessionFactory = new AnnotationSessionFactoryBean();
         sessionFactory.setDataSource(this.dataSource);
         sessionFactory.setNamingStrategy(new ImprovedNamingStrategy());
-//        String[] packagesToScan = new String[]{"web.function.**.model.oracle"};
-//        sessionFactory.setPackagesToScan(packagesToScan);
         Properties hibernateProperties = new Properties();
         hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
         hibernateProperties.setProperty("hibernate.hbm2ddl.auto", "update");

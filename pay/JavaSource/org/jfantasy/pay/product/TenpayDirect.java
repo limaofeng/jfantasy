@@ -156,7 +156,7 @@ public class TenpayDirect extends PayProductSupport {
     }
 
     @Override
-    public String web() {
+    public String web(Order order, Payment payment) {
         return null;
     }
 

@@ -10,7 +10,7 @@ import org.jfantasy.pay.product.order.Order;
 public interface PayProduct {
 
     //网页支付
-    String web();
+    String web(Order order, Payment payment) throws PayException ;
 
     //WAP支付
     String wap();

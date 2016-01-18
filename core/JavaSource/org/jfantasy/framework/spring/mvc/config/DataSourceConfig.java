@@ -1,14 +1,3 @@
-/*
- * COPYRIGHT Beijing NetQin-Tech Co.,Ltd.                                   *
- ****************************************************************************
- * 源文件名:  web.config.DataSourceConfig.java 													       
- * 功能: cpframework框架													   
- * 版本:	@version 1.0	                                                                   
- * 编制日期: 2014年9月3日 下午5:24:02 						    						                                        
- * 修改历史: (主要历史变动原因及说明)		
- * YYYY-MM-DD |    Author      |	 Change Description		      
- * 2014年9月3日    |    Administrator     |     Created 
- */
 package org.jfantasy.framework.spring.mvc.config;
 
 import org.apache.log4j.Logger;
@@ -25,9 +14,7 @@ import javax.sql.DataSource;
  *<p>
 	<使用说明>
  </p>
- *Makedate:2014年9月3日 下午5:24:02 
- * @author Administrator  
- * @version V1.0                             
+ * @version V1.0
  */
 @Configuration
 //加载资源文件
@@ -74,6 +61,7 @@ public class DataSourceConfig {
 		dataSource.setVerbose(true);
 		return dataSource;
 	}
+
 }
 
 

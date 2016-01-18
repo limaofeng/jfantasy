@@ -32,7 +32,9 @@ public abstract class PayProductSupport implements PayProduct {
      * @param parameters 请求参数
      * @return 是否验证通过
      */
-    public abstract boolean verifySign(Map<String, String> parameters);
+    public boolean verifySign(Map<String, String> parameters){
+        return false;
+    }
 
     /**
      * 根据参数集合组合参数字符串（忽略空值参数）

@@ -2,7 +2,7 @@ package org.jfantasy.framework.spring.mvc.config;
 
 import org.jfantasy.framework.util.common.PropertiesHelper;
 import org.springframework.core.annotation.Order;
-import org.springframework.orm.hibernate3.support.OpenSessionInViewFilter;
+import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
 import org.springframework.web.util.Log4jConfigListener;
 

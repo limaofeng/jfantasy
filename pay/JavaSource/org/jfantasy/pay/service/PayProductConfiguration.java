@@ -127,6 +127,19 @@ public class PayProductConfiguration implements InitializingBean {
             this.payProducts.add(pay99bill);
         }
 
+        //银联电子支付
+        if (ObjectUtil.find(this.payProducts, "id", "chinapay") == null) {
+            Chinapay chinapay = new Chinapay();
+            chinapay.setId("chinapay");
+            chinapay.setName("银联电子支付");
+            chinapay.setBargainorIdName("商户号");
+            chinapay.setBargainorKeyName("证书密码");
+            chinapay.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
+            chinapay.setLogoPath("");
+            chinapay.setDescription("银联电子支付服务有限公司（ChinaPay）是中国银联控股的银行卡专业化服务公司，拥有面向全国的统一支付平台，主要从事以互联网等新兴渠道为基础的网上支付、企业B2B账户支付、电话支付、网上跨行转账、网上基金交易、企业公对私资金代付、自助终端支付等银行卡网上支付及增值业务，是中国银联旗下的网络方面军。");
+            this.payProducts.add(chinapay);
+        }
+
 
     }
 

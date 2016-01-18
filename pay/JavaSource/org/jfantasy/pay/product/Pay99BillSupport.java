@@ -153,7 +153,7 @@ public class Pay99BillSupport extends PayProductSupport {
     }
 
     @Override
-    public String web() {
+    public String web(Order order, Payment payment) throws PayException {
         return null;
     }
 

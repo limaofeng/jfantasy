@@ -1,13 +1,15 @@
 package org.jfantasy.framework.spring;
 
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
 
@@ -15,7 +17,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpringContextUtil {
+public class SpringContextUtil implements ApplicationContextAware, DisposableBean {
 
     public enum AutoType {
 
@@ -43,7 +45,7 @@ public class SpringContextUtil {
      * @param applicationContext applicationContext
      * @throws BeansException
      */
-    public static void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         LOGGER.debug(applicationContext);
         if (ObjectUtil.isNull(SpringContextUtil.applicationContext)) {
             SpringContextUtil.applicationContext = applicationContext;
@@ -66,7 +68,7 @@ public class SpringContextUtil {
      */
     public static synchronized <T> T getBean(String name) {
         try {
-            return (T)applicationContext.getBean(name);
+            return (T) applicationContext.getBean(name);
         } catch (NoSuchBeanDefinitionException e) {
             if (LOGGER.isErrorEnabled()) {
                 LOGGER.error("{Bean:" + name + "}没有找到!", e);
@@ -167,7 +169,7 @@ public class SpringContextUtil {
      * @throws NoSuchBeanDefinitionException
      */
     public static synchronized <T> Class<T> getType(String name) throws NoSuchBeanDefinitionException {
-        return (Class<T>)applicationContext.getType(name);
+        return (Class<T>) applicationContext.getType(name);
     }
 
     /**
@@ -206,7 +208,7 @@ public class SpringContextUtil {
         }
     }
 
-    public static boolean startup(){
+    public static boolean startup() {
         return applicationContext != null;
     }
 
@@ -231,7 +233,7 @@ public class SpringContextUtil {
     }
 
     public static <T> T registerBeanDefinition(String beanName, Class<?> clazz, Map<String, Object> propertyValues) {
-       return registerBeanDefinition(beanName, clazz, new Object[0], propertyValues);
+        return registerBeanDefinition(beanName, clazz, new Object[0], propertyValues);
     }
 
     public static synchronized void removeBeanDefinition(String beanName) {

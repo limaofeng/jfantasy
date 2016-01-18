@@ -58,12 +58,15 @@
             <groupId>org.jfantasy</groupId>
             <artifactId>jfantasy-cache</artifactId>
         </dependency>
-        <!--
         <dependency>
             <groupId>org.jfantasy</groupId>
             <artifactId>jfantasy-weixin</artifactId>
         </dependency>
-        -->
+        <dependency>
+            <groupId>org.jfantasy</groupId>
+            <artifactId>jfantasy-pay</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-ehcache</artifactId>

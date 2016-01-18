@@ -55,7 +55,7 @@ public class RefEntityChangedListener {
             }
         }
         if (match) {
-            LuceneDao<?> dao = DaoCache.getInstance().get(cls);
+            LuceneDao dao = DaoCache.getInstance().get(cls);
             if (dao != null) {
                 JdbcUtil.Transaction transaction = JdbcUtil.transaction();
                 try {

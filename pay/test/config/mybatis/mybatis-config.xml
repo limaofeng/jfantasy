@@ -9,12 +9,12 @@
 	</settings>
 
 	<typeAliases>
-		<typeAlias alias="Pager" type="com.fantasy.framework.dao.Pager" />
+		<typeAlias alias="Pager" type="org.jfantasy.framework.dao.Pager" />
 	</typeAliases>
 	
 	<plugins>
-		<plugin interceptor="com.fantasy.framework.dao.mybatis.interceptors.BusEntityInterceptor"/>
-		<plugin interceptor="com.fantasy.framework.dao.mybatis.interceptors.MultiDataSourceInterceptor"/>
+		<plugin interceptor="org.jfantasy.framework.dao.mybatis.interceptors.BusEntityInterceptor"/>
+		<plugin interceptor="org.jfantasy.framework.dao.mybatis.interceptors.MultiDataSourceInterceptor"/>
 	</plugins>
 
 </configuration>

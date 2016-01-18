@@ -60,7 +60,7 @@ public class PaymentService {
 
         BigDecimal amountPayable = order.getPayableFee();//应付金额（含支付手续费）
 
-        Payment payment = this.paymentDao.findUnique(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("orderType", order.getType()), Restrictions.eq("orderSn", order.getSN()), Restrictions.eq("paymentStatus", Payment.PaymentStatus.ready));
+        Payment payment = this.paymentDao.findUnique(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("orderType", order.getType()), Restrictions.eq("orderSn", order.getSN()), Restrictions.eq("status", Payment.PaymentStatus.ready));
         if (payment != null) {
             //如果存在未完成的支付信息
             if (amountPayable.compareTo(payment.getTotalAmount().subtract(payment.getPaymentFee())) == 0) {
@@ -75,15 +75,15 @@ public class PaymentService {
         //在线支付
         String bankName = payProduct.getName();
         String bankAccount = payConfig.getBargainorId();
-        payment.setPaymentType(paymentType);
-        payment.setPaymentConfigName(payConfig.getName());
+        payment.setType(paymentType);
+        payment.setPayConfigName(payConfig.getName());
         payment.setBankName(bankName);
         payment.setBankAccount(bankAccount);
         payment.setTotalAmount(amountPayable.add(paymentFee));
         payment.setPaymentFee(paymentFee);
         payment.setPayer(payer);
         payment.setMemo(null);
-        payment.setPaymentStatus(Payment.PaymentStatus.ready);
+        payment.setStatus(Payment.PaymentStatus.ready);
         payment.setPayConfig(payConfig);
         payment.setOrderType(order.getType());
         payment.setOrderSn(order.getSN());
@@ -97,13 +97,13 @@ public class PaymentService {
      */
     public void invalid(String sn) {
         Payment payment = get(sn);
-        payment.setPaymentStatus(Payment.PaymentStatus.invalid);
+        payment.setStatus(Payment.PaymentStatus.invalid);
         this.paymentDao.save(payment);
     }
 
     public void close(String sn, String tradeNo) {
         Payment payment = get(sn);
-        payment.setPaymentStatus(Payment.PaymentStatus.invalid);
+        payment.setStatus(Payment.PaymentStatus.invalid);
         payment.setTradeNo(tradeNo);
         this.paymentDao.save(payment);
     }
@@ -115,7 +115,7 @@ public class PaymentService {
      */
     public void failure(String sn) {
         Payment payment = get(sn);
-        payment.setPaymentStatus(Payment.PaymentStatus.failure);
+        payment.setStatus(Payment.PaymentStatus.failure);
         payment.setTradeNo(PaymentContext.getContext().getPayResult().getTradeNo());
         payment = this.paymentDao.save(payment);
 //        PaymentContext.getContext().payFailure(PaymentContext.getContext().getPayment());
@@ -132,7 +132,7 @@ public class PaymentService {
      */
     public void success(String sn, String tradeNo) {
         Payment payment = get(sn);
-        payment.setPaymentStatus(Payment.PaymentStatus.success);
+        payment.setStatus(Payment.PaymentStatus.success);
         payment.setTradeNo(tradeNo);
         this.paymentDao.save(payment);
         //TODO 订单事件触发方式

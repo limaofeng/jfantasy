@@ -7,6 +7,13 @@ package org.jfantasy.pay.product.order;
 public interface OrderService {
 
     /**
+     * 订单类型
+     *
+     * @return String
+     */
+    String type();
+
+    /**
      * 查询订单信息
      *
      * @param orderSn 编号

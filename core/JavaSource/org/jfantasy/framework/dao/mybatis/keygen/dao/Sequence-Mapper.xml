@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.fantasy.framework.dao.mybatis.keygen.dao.SequenceDao">
+<mapper namespace="org.jfantasy.framework.dao.mybatis.keygen.dao.SequenceDao">
 
-    <resultMap type="com.fantasy.framework.dao.mybatis.keygen.bean.Sequence" id="SequenceResultMap">
+    <resultMap type="org.jfantasy.framework.dao.mybatis.keygen.bean.Sequence" id="SequenceResultMap">
         <id property="key" column="GEN_NAME"/>
         <result property="value" column="GEN_VALUE"/>
     </resultMap>
@@ -15,7 +15,7 @@
         SELECT max(${key}) FROM ${table}
     </select>
 
-    <insert id="insert" parameterType="com.fantasy.framework.dao.mybatis.keygen.bean.Sequence">
+    <insert id="insert" parameterType="org.jfantasy.framework.dao.mybatis.keygen.bean.Sequence">
 		INSERT INTO sys_sequence
            (GEN_NAME
            ,GEN_VALUE)
@@ -24,7 +24,7 @@
            ,#{value})
 	</insert>
 
-    <update id="update" parameterType="com.fantasy.framework.dao.mybatis.keygen.bean.Sequence">
+    <update id="update" parameterType="org.jfantasy.framework.dao.mybatis.keygen.bean.Sequence">
         UPDATE sys_sequence
         <set>
             <if test=" value != null ">GEN_VALUE = #{value},</if>

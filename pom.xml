@@ -19,7 +19,7 @@
         <mysql-version>5.1.22</mysql-version>
         <jmagick-version>6.6.9</jmagick-version>
         <activiti-version>5.17.0</activiti-version>
-        <org.slf4j-version>1.6.1</org.slf4j-version>
+        <org.slf4j-version>1.7.12</org.slf4j-version>
         <commons-io-version>2.0.1</commons-io-version>
         <servlet.api-version>2.5</servlet.api-version>
         <commons-net-version>3.3</commons-net-version>
@@ -52,8 +52,8 @@
         <org.springframework-version>4.2.1.RELEASE</org.springframework-version>
         <com.thoughtworks.xstream-version>1.4.8</com.thoughtworks.xstream-version>
         <io.springfox-swagger-version>2.2.2</io.springfox-swagger-version>
-        <com.fasterxml.jackson.core-version>2.3.0</com.fasterxml.jackson.core-version>
-        <org.springframework.security-version>3.2.4.RELEASE</org.springframework.security-version>
+        <com.fasterxml.jackson.core-version>2.4.5</com.fasterxml.jackson.core-version>
+        <org.springframework.security-version>3.2.8.RELEASE</org.springframework.security-version>
     </properties>
 
     <profiles>
@@ -484,6 +484,21 @@
                 <version>${org.springframework-version}</version>
             </dependency>
             <dependency>
+                <artifactId>spring-aop</artifactId>
+                <groupId>org.springframework</groupId>
+                <version>${org.springframework-version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>spring-tx</artifactId>
+                <groupId>org.springframework</groupId>
+                <version>${org.springframework-version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>spring-core</artifactId>
+                <groupId>org.springframework</groupId>
+                <version>${org.springframework-version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.springframework.security</groupId>
                 <artifactId>spring-security-web</artifactId>
                 <version>${org.springframework.security-version}</version>
@@ -657,6 +672,11 @@
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${com.fasterxml.jackson.core-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>
                 <version>${com.fasterxml.jackson.core-version}</version>
             </dependency>
@@ -701,12 +721,6 @@
                 <groupId>net.sf.ehcache</groupId>
                 <artifactId>ehcache-core</artifactId>
                 <version>${net.sf.ehcache-version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.lucene</groupId>
@@ -734,20 +748,6 @@
                 <groupId>eu.medsea.mimeutil</groupId>
                 <artifactId>mime-util</artifactId>
                 <version>${eu.medsea.mimeutil-version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>log4j</artifactId>
-                        <groupId>log4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>slf4j-log4j12</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>mysql</groupId>
@@ -846,12 +846,6 @@
                 <groupId>org.quartz-scheduler</groupId>
                 <artifactId>quartz</artifactId>
                 <version>${org.quartz-scheduler-version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>slf4j-api</artifactId>
-                        <groupId>org.slf4j</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.quartz-scheduler</groupId>
@@ -862,6 +856,11 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${commons-codec-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${org.slf4j-version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
@@ -1004,20 +1003,6 @@
                 <groupId>org.springframework.data</groupId>
                 <artifactId>spring-data-redis</artifactId>
                 <version>${spring.data.redis-version}</version>
-                <exclusions>
-                    <exclusion>
-                        <artifactId>spring-aop</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-tx</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                    <exclusion>
-                        <artifactId>spring-core</artifactId>
-                        <groupId>org.springframework</groupId>
-                    </exclusion>
-                </exclusions>
             </dependency>
             <dependency>
                 <groupId>net.spy</groupId>
@@ -1090,6 +1075,11 @@
                 <version>1.1.1</version>
             </dependency>
             <dependency>
+                <groupId>com.github.jknack</groupId>
+                <artifactId>handlebars</artifactId>
+                <version>2.0.0</version>
+            </dependency>
+            <dependency>
                 <groupId>jfree</groupId>
                 <artifactId>jfreechart</artifactId>
                 <version>1.0.13</version>
@@ -1149,6 +1139,11 @@
             <dependency>
                 <groupId>org.jfantasy</groupId>
                 <artifactId>jfantasy-cache</artifactId>
+                <version>${org.jfantasy-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jfantasy</groupId>
+                <artifactId>jfantasy-pay</artifactId>
                 <version>${org.jfantasy-version}</version>
             </dependency>
             <dependency>

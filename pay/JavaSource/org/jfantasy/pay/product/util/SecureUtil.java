@@ -616,4 +616,12 @@ public class SecureUtil {
         for (int i = 0; i < inBytes.length; ++i)
             inBytes[i] = (byte) fill;
     }
+
+    public static byte[] sign(byte[] dataBytes, PrivateKey priKey, String sigAlgName) throws Exception {
+        Signature signature = Signature.getInstance(sigAlgName);
+        signature.initSign(priKey);
+        signature.update(dataBytes);
+        return signature.sign();
+    }
+
 }

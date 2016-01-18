@@ -1,12 +1,5 @@
 package org.jfantasy.framework.dao.mybatis;
 
-import org.jfantasy.framework.dao.mybatis.binding.MyBatisMapperRegistry;
-import org.jfantasy.framework.dao.mybatis.dialect.Dialect;
-import org.jfantasy.framework.dao.mybatis.interceptors.AutoKeyInterceptor;
-import org.jfantasy.framework.dao.mybatis.interceptors.LimitInterceptor;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.apache.ibatis.builder.xml.XMLConfigBuilder;
 import org.apache.ibatis.builder.xml.XMLMapperBuilder;
 import org.apache.ibatis.executor.ErrorContext;
@@ -21,6 +14,13 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.apache.ibatis.transaction.TransactionFactory;
 import org.apache.ibatis.type.TypeHandler;
+import org.jfantasy.framework.dao.mybatis.binding.MyBatisMapperRegistry;
+import org.jfantasy.framework.dao.mybatis.dialect.Dialect;
+import org.jfantasy.framework.dao.mybatis.interceptors.AutoKeyInterceptor;
+import org.jfantasy.framework.dao.mybatis.interceptors.LimitInterceptor;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.mybatis.spring.transaction.SpringManagedTransactionFactory;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.FactoryBean;
@@ -32,7 +32,6 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.core.NestedIOException;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.util.Assert;
 import org.springframework.util.ObjectUtils;
@@ -66,6 +65,8 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, Ap
     private Map<String, Object> mybatisProperties = new HashMap<String, Object>();
     private Dialect dialect;
     private ResourceLoader resourceLoader;
+    private Properties settings;
+
 
     public DatabaseIdProvider getDatabaseIdProvider() {
         return this.databaseIdProvider;
@@ -103,7 +104,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, Ap
         this.configLocation = configLocation;
     }
 
-    public void setMapperLocations(Resource[] mapperLocations) {
+    public void setMapperLocations(Resource... mapperLocations) {
         this.mapperLocations = mapperLocations;
     }
 
@@ -134,7 +135,7 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, Ap
     public void afterPropertiesSet() throws Exception {
         long start = System.currentTimeMillis();
         this.mapperLocations = ObjectUtil.defaultValue(this.mapperLocations, new Resource[0]);
-        this.mapperLocations = ObjectUtil.join(this.mapperLocations, ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath*:org.jfantasy/**/dao/*-Mapper.xml"));
+//        this.mapperLocations = ObjectUtil.join(this.mapperLocations, ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath*:org.jfantasy/**/dao/*-Mapper.xml"));
         // 添加别名注解扫描路径
         this.typeAliasesPackage = StringUtil.defaultValue(this.typeAliasesPackage, "org.jfantasy.framework.dao.mybatis.keygen.bean;");
         // 判断必要元素
@@ -279,7 +280,17 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, Ap
             this.LOGGER.debug("Property 'mapperLocations' was not specified or no matching resources found");
         }
 
+        if (this.settings != null) {
+            configuration.setLazyLoadingEnabled(booleanValueOf(settings.getProperty("lazyLoadingEnabled"), false));
+            configuration.setCacheEnabled(booleanValueOf(settings.getProperty("cacheEnabled"), true));
+            configuration.setAggressiveLazyLoading(booleanValueOf(settings.getProperty("aggressiveLazyLoading"), true));
+        }
+
         return this.sqlSessionFactoryBuilder.build(configuration);
+    }
+
+    protected Boolean booleanValueOf(String value, Boolean defaultValue) {
+        return value == null ? defaultValue : Boolean.valueOf(value);
     }
 
     public SqlSessionFactory getObject() throws Exception {
@@ -309,6 +320,10 @@ public class SqlSessionFactoryBean implements FactoryBean<SqlSessionFactory>, Ap
         if ((this.failFast) && (event instanceof ContextRefreshedEvent)) {
             this.sqlSessionFactory.getConfiguration().getMappedStatementNames();
         }
+    }
+
+    public void setSettings(Properties settings) {
+        this.settings = settings;
     }
 
     @Override

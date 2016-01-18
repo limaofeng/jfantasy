@@ -23,7 +23,7 @@ public class PayController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public String execute(@RequestBody PayForm payForm) throws PayException {
-        payService.paying(payForm);
+        payService.pay(payForm.getPayconfigId(),payForm.getPayType(),payForm.getOrderType(),payForm.getOrderSn(),payForm.getPayer());
         return null;//payService.buildRequest(payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayconfigId(), payForm.getPayer(), payForm.getParameters());
     }
 

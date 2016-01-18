@@ -1,5 +1,7 @@
 package org.jfantasy.wx.framework.factory;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.wx.framework.account.AccountDetailsService;
 import org.jfantasy.wx.framework.core.MpCoreHelper;
@@ -15,10 +17,7 @@ import org.jfantasy.wx.framework.session.AccountDetails;
 import org.jfantasy.wx.framework.session.DefaultWeiXinSession;
 import org.jfantasy.wx.framework.session.WeiXinSession;
 import org.jfantasy.wx.service.AccountService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.FactoryBean;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
@@ -26,12 +25,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactory> {
 
     private static final Log LOG = LogFactory.getLog(WeiXinSessionFactoryBean.class);
 
-    @Autowired
     private ApplicationContext applicationContext;
 
     /**
@@ -132,5 +129,9 @@ public class WeiXinSessionFactoryBean implements FactoryBean<WeiXinSessionFactor
 
     public void setEventListeners(Map<EventMessage.EventType, List<WeiXinEventListener>> eventListeners) {
         this.eventListeners = eventListeners;
+    }
+
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
     }
 }

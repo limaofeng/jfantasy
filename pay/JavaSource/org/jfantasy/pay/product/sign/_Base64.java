@@ -2,8 +2,8 @@ package org.jfantasy.pay.product.sign;
 
 import org.apache.log4j.Logger;
 
-public final class Base64 {
-    private Base64() {
+public final class _Base64 {
+    private _Base64() {
     }
 
     static private final int BASELENGTH = 128;
@@ -17,7 +17,7 @@ public final class Base64 {
     static private final boolean fDebug = false;
     static final private byte[] BASE_64_ALPHABET = new byte[BASELENGTH];
     static final private char[] LOOK_UP_BASE_64_ALPHABET = new char[LOOKUPLENGTH];
-    private static final Logger LOGGER = Logger.getLogger(Base64.class);
+    private static final Logger LOGGER = Logger.getLogger(_Base64.class);
 
     static {
         for (int i = 0; i < BASELENGTH; ++i) {

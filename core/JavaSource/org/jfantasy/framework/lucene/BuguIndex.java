@@ -8,6 +8,7 @@ import org.apache.lucene.index.CorruptIndexException;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.util.Version;
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.lucene.annotations.Indexed;
 import org.jfantasy.framework.lucene.backend.IndexChecker;
@@ -16,6 +17,7 @@ import org.jfantasy.framework.lucene.cache.DaoCache;
 import org.jfantasy.framework.lucene.cache.IndexWriterCache;
 import org.jfantasy.framework.lucene.cluster.ClusterConfig;
 import org.jfantasy.framework.lucene.dao.LuceneDao;
+import org.jfantasy.framework.lucene.dao.hibernate.HibernateLuceneDao;
 import org.jfantasy.framework.spring.ClassPathScanner;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -90,7 +92,7 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
     @Async
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
-        if(BuguIndex.instance == null) {
+        if (BuguIndex.instance == null) {
             this.afterPropertiesSet();
         }
     }
@@ -100,7 +102,7 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
         long start = System.currentTimeMillis();
         Set<Class<?>> indexedClasses = new LinkedHashSet<Class<?>>();
         for (String basePackage : packagesToScan) {
-            for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, LuceneDao.class)) {
+            for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, HibernateDao.class)) {
                 Class entityClass = ClassUtil.getSuperClassGenricType(clazz);
                 if (entityClass.getAnnotation(Indexed.class) == null) {
                     continue;
@@ -108,10 +110,7 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
                 if (!SpringContextUtil.startup()) {
                     continue;
                 }
-                LuceneDao dao = (LuceneDao) SpringContextUtil.getBeanByType(clazz);
-                if (dao == null) {
-                    continue;
-                }
+                LuceneDao dao = new HibernateLuceneDao((HibernateDao) SpringContextUtil.getBeanByType(clazz));
                 indexedClasses.add(entityClass);
                 DaoCache.getInstance().put(entityClass, dao);
             }

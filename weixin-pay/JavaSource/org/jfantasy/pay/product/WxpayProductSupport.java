@@ -14,7 +14,7 @@ public class WxpayProductSupport extends PayProductSupport {
     }
 
     @Override
-    public String web() {
+    public String web(Order order, Payment payment)throws PayException {
         return null;
     }
 

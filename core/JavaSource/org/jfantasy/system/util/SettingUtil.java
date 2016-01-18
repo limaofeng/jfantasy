@@ -1,5 +1,6 @@
 package org.jfantasy.system.util;
 
+import org.htmlcleaner.TagNode;
 import org.jfantasy.file.FileManager;
 import org.jfantasy.file.service.FileManagerFactory;
 import org.jfantasy.framework.spring.SpringContextUtil;
@@ -8,13 +9,9 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.jfantasy.security.SpringSecurityUtils;
-import org.jfantasy.security.bean.User;
-import org.jfantasy.security.userdetails.AdminUser;
 import org.jfantasy.system.bean.Setting;
 import org.jfantasy.system.bean.Website;
 import org.jfantasy.system.service.WebsiteService;
-import org.htmlcleaner.TagNode;
 
 import javax.servlet.ServletContext;
 import java.util.Map;
@@ -159,8 +156,7 @@ public class SettingUtil {
     private static Website current() {
         Website website = threadLocal.get();
         if (website == null) {
-            User user = SpringSecurityUtils.getCurrentUser(AdminUser.class).getUser();
-            threadLocal.set(website = SpringContextUtil.getBeanByType(WebsiteService.class).findUniqueByKey(user.getWebsite().getKey()));
+            threadLocal.set(website = SpringContextUtil.getBeanByType(WebsiteService.class).findUniqueByKey("haolue"));//TODO 如果多个应用程序如何适配
         }
         return website;
     }

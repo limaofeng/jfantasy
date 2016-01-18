@@ -65,11 +65,11 @@ public class FileManagerFactory implements ApplicationListener<ContextRefreshedE
     @Override
     public void onApplicationEvent(ContextRefreshedEvent event) {
         if(fileManagerCache.isEmpty()) {
-            this.afterPropertiesSet();
+            this.load();
         }
     }
 
-    public void afterPropertiesSet() {
+    public void load() {
         long start = System.currentTimeMillis();
         JdbcUtil.transaction(new JdbcUtil.Callback<Void>() {
             @Override
@@ -161,6 +161,9 @@ public class FileManagerFactory implements ApplicationListener<ContextRefreshedE
      * @return FileManager
      */
     public FileManager getFileManager(String id) {
+        if(fileManagerCache.isEmpty()) {
+            this.load();
+        }
         return fileManagerCache.get(id);
     }
 

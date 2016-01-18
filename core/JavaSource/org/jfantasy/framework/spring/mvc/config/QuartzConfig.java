@@ -1,6 +1,7 @@
 package org.jfantasy.framework.spring.mvc.config;
 
 import org.jfantasy.framework.quartz.FantasySchedulerFactoryBean;
+import org.jfantasy.framework.quartz.JobBeanJobFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -17,9 +18,15 @@ public class QuartzConfig {
     @Resource(name = "dataSource")
     public DataSource dataSource;
 
+    @Bean(name = "jobBeanJobFactory")
+    public JobBeanJobFactory jobBeanJobFactory(){
+        return new JobBeanJobFactory();
+    }
+
     @Bean(name = "scheduler")
     public SchedulerFactoryBean fantasySchedulerFactoryBean() {
         FantasySchedulerFactoryBean schedulerFactoryBean = new FantasySchedulerFactoryBean();
+        schedulerFactoryBean.setJobBeanJobFactory(jobBeanJobFactory());
         schedulerFactoryBean.setAutoStartup(false);
         schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(false);
         schedulerFactoryBean.setDataSource(this.dataSource);

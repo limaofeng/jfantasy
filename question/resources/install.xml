@@ -4,7 +4,7 @@
         <sessionFactory>
             <packagesToScan>
                 <list>
-                    <value>com.fantasy.question.*.bean</value>
+                    <value>org.jfantasy.question.*.bean</value>
                 </list>
             </packagesToScan>
         </sessionFactory>
@@ -15,16 +15,16 @@
             <plugins>
 
             </plugins>
-            <typeAliasesPackage>com.fantasy.framework;com.fantasy.website;</typeAliasesPackage>
+            <typeAliasesPackage>org.jfantasy.framework;org.jfantasy.website;</typeAliasesPackage>
             <mapperLocations>
                 <list>
-                    <value>classpath:com/fantasy/framework/**/*-Mapper.xml</value>
-                    <value>classpath:com/fantasy/website/**/*-Mapper.xml</value>
+                    <value>classpath:org.jfantasy/framework/**/*-Mapper.xml</value>
+                    <value>classpath:org.jfantasy/website/**/*-Mapper.xml</value>
                 </list>
             </mapperLocations>
         </sqlSessionFactoryBean>
         <mapperScannerConfigurer>
-            <basePackage>com.fantasy.framework;com.fantasy.website;</basePackage>
+            <basePackage>org.jfantasy.framework;org.jfantasy.website;</basePackage>
         </mapperScannerConfigurer>
     </mybatis>
 

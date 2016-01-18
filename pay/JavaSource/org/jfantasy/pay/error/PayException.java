@@ -1,6 +1,8 @@
 package org.jfantasy.pay.error;
 
-public class PayException extends Exception{
+import org.jfantasy.framework.spring.mvc.error.RestException;
+
+public class PayException extends RestException{
 
     public PayException(String message){
         super(message);

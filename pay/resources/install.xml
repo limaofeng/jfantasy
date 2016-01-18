@@ -1,0 +1,13 @@
+<fantasy>
+
+    <hibernate>
+        <sessionFactory>
+            <packagesToScan>
+                <list>
+                    <value>org.jfantasy.pay.bean</value>
+                </list>
+            </packagesToScan>
+        </sessionFactory>
+    </hibernate>
+
+</fantasy>

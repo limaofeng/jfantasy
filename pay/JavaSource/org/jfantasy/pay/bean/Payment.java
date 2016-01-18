@@ -66,14 +66,14 @@ public class Payment extends BaseBusEntity {
      */
     @ApiModelProperty("支付类型")
     @Enumerated(EnumType.STRING)
-    @Column(name = "PAYMENT_TYPE", nullable = false, updatable = false)
-    private PaymentType paymentType;
+    @Column(name = "TYPE", nullable = false, updatable = false)
+    private PaymentType type;
     /**
      * 支付配置名称
      */
     @ApiModelProperty("支付配置名称")
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false, updatable = false)
-    private String paymentConfigName;
+    private String payConfigName;
     /**
      * 收款银行名称
      */
@@ -115,17 +115,17 @@ public class Payment extends BaseBusEntity {
      */
     @ApiModelProperty("支付状态")
     @Enumerated(EnumType.STRING)
-    @Column(name = "PAYMENT_STATUS", nullable = false)
-    private PaymentStatus paymentStatus;
+    @Column(name = "PAY_STATUS", nullable = false)
+    private PaymentStatus status;
     /**
      * 支付方式
      */
     @ApiModelProperty(hidden = true)
-    @JsonProperty("paymentConfigId")
+    @JsonProperty("payConfigId")
     @JsonSerialize(using = PaymentConfigSerializer.class)
     @JsonDeserialize(using = PaymentConfigDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYMENT_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_PAYMENT_PAYMENT_CONFIG"))
+    @JoinColumn(name = "PAY_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_PAYMENT_PAYMENT_CONFIG"))
     private PayConfig payConfig;
     /**
      * 订单类型
@@ -156,20 +156,20 @@ public class Payment extends BaseBusEntity {
         this.sn = sn;
     }
 
-    public PaymentType getPaymentType() {
-        return paymentType;
+    public PaymentType getType() {
+        return type;
     }
 
-    public void setPaymentType(PaymentType paymentType) {
-        this.paymentType = paymentType;
+    public void setType(PaymentType type) {
+        this.type = type;
     }
 
-    public String getPaymentConfigName() {
-        return paymentConfigName;
+    public String getPayConfigName() {
+        return payConfigName;
     }
 
-    public void setPaymentConfigName(String paymentConfigName) {
-        this.paymentConfigName = paymentConfigName;
+    public void setPayConfigName(String payConfigName) {
+        this.payConfigName = payConfigName;
     }
 
     public String getBankName() {
@@ -204,12 +204,12 @@ public class Payment extends BaseBusEntity {
         this.paymentFee = paymentFee;
     }
 
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
+    public PaymentStatus getStatus() {
+        return status;
     }
 
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
     }
 
     public String getPayer() {

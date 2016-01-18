@@ -1,6 +1,5 @@
 package org.jfantasy.framework.dao;
 
-import org.jfantasy.framework.util.common.ObjectUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -10,12 +9,15 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
+import org.apache.ibatis.type.Alias;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 @ApiModel("通用分页对象")
+@Alias("Pager")
 @JsonIgnoreProperties(value = {"orders","first","orderBySetted"})
 public class Pager<T> implements Serializable {
 

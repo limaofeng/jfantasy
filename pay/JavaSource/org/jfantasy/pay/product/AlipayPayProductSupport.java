@@ -301,7 +301,7 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
         return "success";
     }
     @Override
-    public String web() {
+    public String web(Order order, Payment payment) throws PayException {
         return null;
     }
 
