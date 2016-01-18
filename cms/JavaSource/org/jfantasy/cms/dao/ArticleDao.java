@@ -1,14 +1,14 @@
 package org.jfantasy.cms.dao;
 
-import org.jfantasy.cms.bean.Article;
-import org.jfantasy.cms.bean.ArticleCategory;
-import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.lucene.dao.hibernate.HibernateLuceneDao;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.MatchMode;
 import org.hibernate.criterion.Restrictions;
+import org.jfantasy.cms.bean.Article;
+import org.jfantasy.cms.bean.ArticleCategory;
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ArticleDao extends HibernateLuceneDao<Article, Long> {
+public class ArticleDao extends HibernateDao<Article, Long> {
 
     @Autowired
     private ArticleCategoryDao categoryDao;

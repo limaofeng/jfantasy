@@ -1,6 +1,12 @@
 package org.jfantasy.cms.service;
 
-import org.jfantasy.attr.storage.service.AttributeVersionService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Restrictions;
+import org.htmlcleaner.TagNode;
 import org.jfantasy.cms.bean.Article;
 import org.jfantasy.cms.bean.ArticleCategory;
 import org.jfantasy.cms.dao.ArticleCategoryDao;
@@ -16,13 +22,6 @@ import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.security.SpringSecurityUtils;
 import org.jfantasy.security.userdetails.AdminUser;
 import org.jfantasy.system.util.SettingUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.hibernate.Hibernate;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.MatchMode;
-import org.hibernate.criterion.Restrictions;
-import org.htmlcleaner.TagNode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,8 +46,8 @@ public class CmsService extends BuguSearcher<Article> {
     @Autowired
     private ArticleDao articleDao;
 
-    @Autowired
-    private AttributeVersionService versionService;
+//    @Autowired
+//    private AttributeVersionService versionService;
 
     /**
      * 获取全部栏目
@@ -109,9 +108,9 @@ public class CmsService extends BuguSearcher<Article> {
         if (LOG.isDebugEnabled()) {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
-        if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
-            category.setArticleVersion(this.versionService.save(Article.class.getName(), category.getCode(), category.getArticleVersion().getAttributes()));
-        }
+//        if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
+//            category.setArticleVersion(this.versionService.save(Article.class.getName(), category.getCode(), category.getArticleVersion().getAttributes()));
+//        }
         List<ArticleCategory> categories;
         boolean root = false;
         if (category.getParent() == null || StringUtil.isBlank(category.getParent().getCode())) {

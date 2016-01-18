@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 import org.jfantasy.cms.bean.ArticleCategory;
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
 
-@Repository("fantasy.cms.hibernate.ArticleCategoryDao")
+@Repository
 public class ArticleCategoryDao extends HibernateDao<ArticleCategory, String> {
 	
 }
