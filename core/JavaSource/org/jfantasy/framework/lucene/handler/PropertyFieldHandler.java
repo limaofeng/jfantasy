@@ -8,6 +8,7 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.Fieldable;
 import org.apache.lucene.document.NumericField;
 
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.Date;
@@ -94,6 +95,8 @@ public class PropertyFieldHandler extends AbstractFieldHandler {
                 sb.append(entry.getValue()).append(";");
             }
             f = new org.apache.lucene.document.Field(fieldName, sb.toString(), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);
+        } else if (BigDecimal.class.equals(type)) {
+            f = new NumericField(fieldName, store ? Field.Store.YES : Field.Store.NO, true).setDoubleValue(((BigDecimal) objValue).doubleValue());
         }
         if (f != null) {
             f.setBoost(boost);
