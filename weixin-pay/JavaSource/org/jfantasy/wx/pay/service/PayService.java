@@ -18,7 +18,7 @@ import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.product.CurrencyType;
 import org.jfantasy.pay.product.PayProduct;
-import org.jfantasy.pay.product.WxpayProductSupport;
+import org.jfantasy.pay.product.Weixinpay;
 import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.product.order.OrderService;
 import org.jfantasy.pay.product.order.OrderServiceFactory;
@@ -59,7 +59,7 @@ public class PayService implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         //添加支付产品
-        WxpayProductSupport wxpayProduct = new WxpayProductSupport();
+        Weixinpay wxpayProduct = new Weixinpay();
         wxpayProduct.setId("weixinPay");
         wxpayProduct.setName("微信支付");
         wxpayProduct.setName("微信支付");

@@ -6,7 +6,7 @@ import org.jfantasy.pay.product.order.Order;
 
 import java.util.Map;
 
-public class WxpayProductSupport extends PayProductSupport {
+public class Weixinpay extends PayProductSupport {com.fantasy.system.job.DataDictJob
 
     @Override
     public boolean verifySign(Map<String, String> parameters) {

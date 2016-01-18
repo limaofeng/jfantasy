@@ -39,7 +39,7 @@ public class DataDictJob implements Job {
                     }
                 }
             });
-            template = handlebars.compile("/org.jfantasy/system/job/dicts");
+            template = handlebars.compile("/org/jfantasy/system/job/dicts");
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
         }
