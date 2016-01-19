@@ -6,7 +6,8 @@ import org.jfantasy.framework.service.MailSendService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
-import org.springframework.scheduling.quartz.SimpleThreadPoolTaskExecutor;
+import org.springframework.scheduling.SchedulingTaskExecutor;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Controller;
 
 /**
@@ -82,12 +83,27 @@ public class AppConfig {
         return mailSendService;
     }
 
+    @Bean(name = "taskExecutor")
+    public SchedulingTaskExecutor taskExecutor() {
+        ThreadPoolTaskExecutor poolTaskExecutor = new ThreadPoolTaskExecutor();
+        //线程池所使用的缓冲队列
+        poolTaskExecutor.setQueueCapacity(200);
+        //线程池维护线程的最少数量
+        poolTaskExecutor.setCorePoolSize(5);
+        //线程池维护线程的最大数量
+        poolTaskExecutor.setMaxPoolSize(1000);
+        //线程池维护线程所允许的空闲时间
+        poolTaskExecutor.setKeepAliveSeconds(30000);
+        poolTaskExecutor.initialize();
+        return poolTaskExecutor;
+    }
+
     @Bean
     public BuguIndex buguIndex() {
         BuguIndex buguIndex = new BuguIndex();
         buguIndex.setBasePackage("org.jfantasy.cms");
         buguIndex.setDirectoryPath("/index");
-        buguIndex.setExecutor(new SimpleThreadPoolTaskExecutor());
+        buguIndex.setExecutor(taskExecutor());
         buguIndex.setRebuild(true);
         return buguIndex;
     }

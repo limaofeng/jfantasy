@@ -2,9 +2,10 @@ package org.jfantasy.framework.spring.mvc.config;
 
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.swagger.SpringfoxSwaggerConfig;
+import org.jfantasy.framework.web.filter.CharacterEncodingFilter;
 import org.springframework.core.annotation.Order;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
+import org.springframework.web.filter.HiddenHttpMethodFilter;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
@@ -39,7 +40,7 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
     @SuppressWarnings({"unchecked", "rawtypes"})
     @Override
     protected Class[] getServletConfigClasses() {
-        return new Class[]{WebMvcConfig.class,SpringfoxSwaggerConfig.class};
+        return new Class[]{WebMvcConfig.class, SpringfoxSwaggerConfig.class};
     }
 
     /*
@@ -47,10 +48,12 @@ public class WebInitializer extends AbstractAnnotationConfigDispatcherServletIni
 	  */
     @Override
     protected Filter[] getServletFilters() {
+        HiddenHttpMethodFilter httpMethodFilter = new HiddenHttpMethodFilter();
+
         CharacterEncodingFilter characterEncodingFilter = new CharacterEncodingFilter();
         characterEncodingFilter.setEncoding("UTF-8");
         characterEncodingFilter.setForceEncoding(true);
-        return new Filter[]{characterEncodingFilter};
+        return new Filter[]{httpMethodFilter, characterEncodingFilter};
     }
 
     /*

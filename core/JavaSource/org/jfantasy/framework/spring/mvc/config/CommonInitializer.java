@@ -1,9 +1,11 @@
 package org.jfantasy.framework.spring.mvc.config;
 
 import org.jfantasy.framework.util.common.PropertiesHelper;
+import org.jfantasy.framework.util.web.filter.ActionContextFilter;
 import org.springframework.core.annotation.Order;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.web.WebApplicationInitializer;
+import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.util.Log4jConfigListener;
 
 import javax.servlet.DispatcherType;
@@ -26,10 +28,21 @@ public class CommonInitializer implements WebApplicationInitializer {
 		servletContext.setInitParameter("log4jExposeWebAppRoot", "true");//应用是否可以通过System.getProperties(“webAppRootKey”)得到当前应用名。
 		servletContext.addListener(Log4jConfigListener.class);
 
+		//5、为 request, response 提供上下文访问对象
+		ActionContextFilter actionContextFilter = new ActionContextFilter();
+		FilterRegistration.Dynamic filterRegistration = servletContext.addFilter("actionContextFilter", actionContextFilter);
+		filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST), false, "/*");
+
 		//OpenSessionInViewFilter
 		OpenSessionInViewFilter hibernateSessionInViewFilter = new OpenSessionInViewFilter();
-		FilterRegistration.Dynamic filterRegistration = servletContext.addFilter("hibernateOpenSessionInViewFilter", hibernateSessionInViewFilter);
+		filterRegistration = servletContext.addFilter("hibernateOpenSessionInViewFilter", hibernateSessionInViewFilter);
 		filterRegistration.setInitParameter("flushMode", "COMMIT");
+		filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
+
+		//6、FileFilter
+		DelegatingFilterProxy fileFilter = new DelegatingFilterProxy();
+		filterRegistration = servletContext.addFilter("fileFilter", fileFilter);
+		filterRegistration.setInitParameter("targetFilterLifecycle", "true");
 		filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
 
 	}

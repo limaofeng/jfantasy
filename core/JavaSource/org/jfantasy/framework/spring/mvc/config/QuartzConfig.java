@@ -4,7 +4,7 @@ import org.jfantasy.framework.quartz.FantasySchedulerFactoryBean;
 import org.jfantasy.framework.quartz.JobBeanJobFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 
 import javax.annotation.Resource;
@@ -17,6 +17,8 @@ public class QuartzConfig {
 
     @Resource(name = "dataSource")
     public DataSource dataSource;
+    @Resource(name = "taskExecutor")
+    public SchedulingTaskExecutor taskExecutor;
 
     @Bean(name = "jobBeanJobFactory")
     public JobBeanJobFactory jobBeanJobFactory(){
@@ -31,7 +33,7 @@ public class QuartzConfig {
         schedulerFactoryBean.setWaitForJobsToCompleteOnShutdown(false);
         schedulerFactoryBean.setDataSource(this.dataSource);
         schedulerFactoryBean.setOverwriteExistingJobs(false);
-        schedulerFactoryBean.setTaskExecutor(new ThreadPoolTaskExecutor());
+        schedulerFactoryBean.setTaskExecutor(taskExecutor);
         Properties properties = new Properties();
         properties.setProperty("org.quartz.scheduler.instanceName", "QuartzScheduler");
         properties.setProperty("org.quartz.scheduler.instanceId", "AUTO");
