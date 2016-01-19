@@ -43,6 +43,7 @@ public class CommonInitializer implements WebApplicationInitializer {
 		DelegatingFilterProxy fileFilter = new DelegatingFilterProxy();
 		filterRegistration = servletContext.addFilter("fileFilter", fileFilter);
 		filterRegistration.setInitParameter("targetFilterLifecycle", "true");
+		filterRegistration.setInitParameter("allowHosts", propertiesHelper.getProperty("file.allowHosts", "static.jfantasy.org"));
 		filterRegistration.addMappingForUrlPatterns(EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE), false, "/*");
 
 	}
