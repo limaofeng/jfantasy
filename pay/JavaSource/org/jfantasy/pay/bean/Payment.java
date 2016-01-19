@@ -53,7 +53,7 @@ public class Payment extends BaseBusEntity {
      */
     @ApiModelProperty("支付编号")
     @Column(name = "SN", nullable = false, updatable = false, unique = true)
-    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'SN_' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('PATMENT-SN'), 5)")})
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'P' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('PATMENT-SN'), 5)")})
     private String sn;
     /**
      * 交易号（用于记录第三方交易的交易流水号）

@@ -38,6 +38,7 @@ public class PayController {
     @RequestMapping(value = "/{sn}/notify", method = RequestMethod.POST)
     @ResponseBody
     public String paynotify(@PathVariable("sn") String sn, HttpServletRequest request) throws PayException {
+        System.out.println(sn + "|" + request.getParameterMap().toString());
         return null;//paymentService.paynotify(sn, WebUtil.getParameterMap(request));
     }
 

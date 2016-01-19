@@ -54,7 +54,7 @@ public class Chinapay extends PayProductSupport {
             data.put("TranTime", DateUtil.format(now, "HHmmss"));//商户交易日期
             data.put("OrderAmt", payment.getTotalAmount().multiply(BigDecimal.valueOf(100d)).intValue() + "");//商户交易金额
             data.put("BusiType", "0001");//业务类型
-            data.put("MerBgUrl", SettingUtil.getServerUrl() + "/" + payment.getSn() + "/notify");
+            data.put("MerBgUrl", SettingUtil.getServerUrl() + "/pays/" + payment.getSn() + "/notify");
             data.put("Signature", signature(data, keyStore, certPwd));//签名
 
             return HandlebarsTemplateUtils.processTemplateIntoString(HandlebarsTemplateUtils.template("/org.jfantasy.pay.product.template/pay"), new HashMap<String, Object>() {
