@@ -9,17 +9,17 @@ import java.io.Serializable;
 
 @ApiModel("支付表单")
 public class PayForm implements Serializable {
-    @ApiModelProperty("订单类型")
+    @ApiModelProperty(value = "订单类型", required = true)
     private String orderType;
-    @ApiModelProperty("订单编号")
+    @ApiModelProperty(value = "订单编号", required = true)
     private String orderSn;
-    @ApiModelProperty("支付配置ID")
+    @ApiModelProperty(value = "支付配置ID", required = true)
     private Long payconfigId;
-    @ApiModelProperty("支付类型")
+    @ApiModelProperty(value = "支付类型", required = true)
     private PayType payType;
-    @ApiModelProperty("付款人")
+    @ApiModelProperty(value = "付款人", required = false)
     private String payer;
-    @ApiModelProperty("支付参数")
+    @ApiModelProperty(value = "支付参数", required = false)
     private Parameters parameters;
 
     public String getOrderType() {

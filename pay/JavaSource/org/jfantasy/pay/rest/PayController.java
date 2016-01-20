@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.rest.form.PayForm;
 import org.jfantasy.pay.service.PayService;
+import org.jfantasy.pay.service.vo.ToPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,9 @@ public class PayController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public String execute(@RequestBody PayForm payForm) throws PayException {
-        payService.pay(payForm.getPayconfigId(),payForm.getPayType(),payForm.getOrderType(),payForm.getOrderSn(),payForm.getPayer());
-        return null;//payService.buildRequest(payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayconfigId(), payForm.getPayer(), payForm.getParameters());
+    public ToPayment execute(@RequestBody PayForm payForm) throws PayException {
+        return payService.pay(payForm.getPayconfigId(),payForm.getPayType(),payForm.getOrderType(),payForm.getOrderSn(),payForm.getPayer());
+        //payService.buildRequest(payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayconfigId(), payForm.getPayer(), payForm.getParameters());
     }
 
     @ApiOperation("支付同步通知")
