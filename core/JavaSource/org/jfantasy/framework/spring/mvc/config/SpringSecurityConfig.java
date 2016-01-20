@@ -64,7 +64,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
         http.logout().logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true);
 
         // session管理
-		http.sessionManagement().sessionFixation().changeSessionId().maximumSessions(1).expiredUrl("/");
+//		http.sessionManagement().sessionFixation().changeSessionId().maximumSessions(1).expiredUrl("/");
 
         // RemeberMe
          http.rememberMe().key("rememberme");
