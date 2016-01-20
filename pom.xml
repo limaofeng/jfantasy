@@ -1019,7 +1019,7 @@
         <repository>
             <snapshots/>
             <id>github snapshot</id>
-            <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
+            <url>https://raw.github.com/limaofeng/maven/snapshot</url>
         </repository>
         <repository>
             <id>oschina public</id>
@@ -1030,10 +1030,13 @@
 
     <!-- 分发管理 -->
     <distributionManagement>
+        <snapshotRepository>
+            <id>nexus-snapshots</id>
+            <url>http://maven.hoolue.com/content/repositories/snapshots</url>
+        </snapshotRepository>
         <repository>
             <id>nexus-releases</id>
-            <name>local private nexus releases</name>
-            <url>http://maven.hoolue.com/content/repositories/releases/</url>
+            <url>http://maven.hoolue.com/content/repositories/releases</url>
         </repository>
     </distributionManagement>
 
