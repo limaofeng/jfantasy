@@ -1,12 +1,10 @@
 package org.jfantasy.security;
 
 import org.jfantasy.framework.spring.SpringContextUtil;
-import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 import org.jfantasy.security.userdetails.FantasyUserDetails;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.authentication.encoding.PasswordEncoder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -104,8 +102,7 @@ public class SpringSecurityUtils {
 	}
 
 	public static PasswordEncoder getPasswordEncoder() {
-		DaoAuthenticationProvider daoProvider = SpringContextUtil.getBeanByType(DaoAuthenticationProvider.class);
-		return (PasswordEncoder) ClassUtil.getValue(daoProvider, "passwordEncoder");
+		return SpringContextUtil.getBeanByType(PasswordEncoder.class);
 	}
 	
 	public static Collection<GrantedAuthority> getAuthorities(FantasyUserDetails fantasyUserDetails){

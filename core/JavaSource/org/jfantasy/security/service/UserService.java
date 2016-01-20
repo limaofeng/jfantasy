@@ -35,6 +35,9 @@ public class UserService {
     private UserDao userDao;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     /**
      * 保存用户
      *
@@ -50,9 +53,8 @@ public class UserService {
         } else {
             if (!"******".equals(user.getPassword())) {
                 User u = this.userDao.get(user.getId());
-                PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
-                if (!encoder.isPasswordValid(u.getPassword(), user.getPassword(), null)) {
-                    user.setPassword(encoder.encodePassword(user.getPassword(), null));
+                if (!passwordEncoder.isPasswordValid(u.getPassword(), user.getPassword(), null)) {
+                    user.setPassword(passwordEncoder.encodePassword(user.getPassword(), null));
                 }
             } else {
                 user.setPassword(null);// 为NULL时,不会更新字段
@@ -104,8 +106,7 @@ public class UserService {
     @CacheEvict(value = {"fantasy.security.userService"}, allEntries = true)
     public User login(String username, String password) {
         User user = this.userDao.findUniqueBy("username", username);
-        PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
-        if (user == null || !encoder.isPasswordValid(user.getPassword(), password, null)) {
+        if (user == null || !passwordEncoder.isPasswordValid(user.getPassword(), password, null)) {
             throw new PasswordException("用户名和密码错误");
         }
         if (!user.isEnabled()) {

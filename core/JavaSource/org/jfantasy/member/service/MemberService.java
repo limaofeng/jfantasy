@@ -44,6 +44,8 @@ public class MemberService {
     private RoleService roleService;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     /**
      * 列表查询
@@ -65,8 +67,7 @@ public class MemberService {
      */
     public Member login(String username, String password) {
         Member member = this.memberDao.findUniqueBy("username", username);
-        PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
-        if (member == null || !encoder.isPasswordValid(member.getPassword(), password, null)) {
+        if (member == null || !passwordEncoder.isPasswordValid(member.getPassword(), password, null)) {
             throw new PasswordException("用户名和密码错误");
         }
         if (!member.isEnabled()) {
@@ -146,9 +147,8 @@ public class MemberService {
         }
         if (StringUtil.isNotBlank(member.getPassword()) && !"******".equals(member.getPassword())) {
             Member m = this.memberDao.get(member.getId());
-            PasswordEncoder encoder = SpringSecurityUtils.getPasswordEncoder();
-            if (!encoder.isPasswordValid(m.getPassword(), member.getPassword(), null)) {
-                member.setPassword(encoder.encodePassword(member.getPassword(), null));
+            if (!passwordEncoder.isPasswordValid(m.getPassword(), member.getPassword(), null)) {
+                member.setPassword(passwordEncoder.encodePassword(member.getPassword(), null));
             }
         } else {
             member.setPassword(null);
