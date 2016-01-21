@@ -25,8 +25,8 @@ public class QuartzConfig {
         return new JobBeanJobFactory();
     }
 
-    @Bean(name = "scheduler")
-    public SchedulerFactoryBean fantasySchedulerFactoryBean() {
+    @Bean(name = "scheduler", initMethod = "start", destroyMethod = "destroy")
+    public SchedulerFactoryBean schedulerFactoryBean() {
         FantasySchedulerFactoryBean schedulerFactoryBean = new FantasySchedulerFactoryBean();
         schedulerFactoryBean.setJobBeanJobFactory(jobBeanJobFactory());
         schedulerFactoryBean.setAutoStartup(false);
