@@ -1,6 +1,8 @@
 package org.jfantasy.framework.crypto;
 
 import com.sun.crypto.provider.SunJCE;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -10,7 +12,10 @@ import java.security.Key;
 import java.security.Security;
 
 public class DESPlus {
-    private static final String strDefaultKey = "hooluesoft";
+
+    private static final Log LOG = LogFactory.getLog(DESPlus.class);
+
+    private static final String strDefaultKey = "jfantasy.org";
     private Cipher encryptCipher = null;
     private Cipher decryptCipher = null;
 
@@ -59,7 +64,7 @@ public class DESPlus {
             this.decryptCipher = Cipher.getInstance("DES");
             this.decryptCipher.init(2, key);
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(), e);
         }
 
 
@@ -72,11 +77,8 @@ public class DESPlus {
     public String encrypt(String strIn) {
         try {
             return byteArr2HexStr(encrypt(strIn.getBytes()));
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-            return "";
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
             return "";
         }
     }
@@ -88,11 +90,8 @@ public class DESPlus {
     public String decrypt(String strIn) {
         try {
             return new String(decrypt(hexStr2ByteArr(strIn)));
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-            return "";
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOG.error(e.getMessage(), e);
             return "";
         }
     }
@@ -102,7 +101,6 @@ public class DESPlus {
         for (int i = 0; (i < arrBTmp.length) && (i < arrB.length); i++) {
             arrB[i] = arrBTmp[i];
         }
-
         return new SecretKeySpec(arrB, "DES");
     }
 

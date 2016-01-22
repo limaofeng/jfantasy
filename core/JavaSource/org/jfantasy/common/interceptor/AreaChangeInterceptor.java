@@ -48,6 +48,7 @@ public class AreaChangeInterceptor implements ApplicationListener<ContextRefresh
 
     public void runJavaScript() {
         SchedulingTaskExecutor executor = SpringContextUtil.getBeanByType(SchedulingTaskExecutor.class);
+        assert executor != null;
         executor.execute(runJavaScript);
     }
 

@@ -9,6 +9,8 @@ import org.springframework.util.SystemPropertyUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
 
 /**
  * Properties的操作的工具类,为Properties提供一个代理增加相关工具方法如
@@ -20,41 +22,52 @@ public class PropertiesHelper {
 
     public static final PropertiesHelper nullPropertiesHelper = new PropertiesHelper(new Properties());
 
-    Properties p;
+    private List<Properties> propertiesList = new ArrayList<Properties>();
+    private ConcurrentMap<String, Properties> propertiesCache = new ConcurrentHashMap<String, Properties>();
 
     public static PropertiesHelper load(String propertiesPath) {
         try {
             Iterator<URL> urls = getResources(propertiesPath, PropertiesHelper.class, true);
-            Properties props = new Properties();
+            PropertiesHelper helper = new PropertiesHelper();
             while (urls.hasNext()) {
                 URL url = urls.next();
-                Properties eProps = PropertiesLoaderUtils.loadProperties(new UrlResource(url));
-                for (Map.Entry entry : eProps.entrySet()) {
-                    if (!props.containsKey(entry.getKey())) {
-                        props.put(entry.getKey(), entry.getValue());
-                    }
-                }
+                helper.add(PropertiesLoaderUtils.loadProperties(new UrlResource(url)));
             }
-            return new PropertiesHelper(props);
+            return helper;
         } catch (IOException e) {
             LOGGER.error(e.getMessage(), e);
             return nullPropertiesHelper;
         }
     }
 
-    public PropertiesHelper(Properties p) {
-        setProperties(p);
+    private void add(Properties properties) {
+        this.propertiesList.add(properties);
     }
 
-    public Properties getProperties() {
-        return p;
-    }
-
-    public void setProperties(Properties props) {
-        if (props == null) {
-            throw new IllegalArgumentException("properties must be not null");
+    public PropertiesHelper(Properties... ps) {
+        for (Properties p : ps) {
+            this.add(p);
         }
-        this.p = props;
+    }
+
+    public Properties getProperties(String... ignorePropertyNames) {
+        Properties props = new Properties();
+        String cacheKey = Arrays.toString(ignorePropertyNames);
+        if (propertiesCache.containsKey(cacheKey)) {
+            return propertiesCache.get(cacheKey);
+        }
+        for (Properties eProps : propertiesList) {
+            for (Map.Entry entry : eProps.entrySet()) {
+                if (ObjectUtil.exists(ignorePropertyNames, entry.getKey())) {
+                    continue;
+                }
+                if (!props.containsKey(entry.getKey())) {
+                    props.put(entry.getKey(), entry.getValue());
+                }
+            }
+        }
+        propertiesCache.put(cacheKey, props);
+        return props;
     }
 
     public String getRequiredString(String key) {
@@ -174,29 +187,44 @@ public class PropertiesHelper {
     }
 
     public String getProperty(String key, String defaultValue) {
-        String value = p.getProperty(key, defaultValue);
+        String value = getProperties().getProperty(key, defaultValue);
         return StringUtil.isNotBlank(value) ? SystemPropertyUtils.resolvePlaceholders(value, true) : value;
     }
 
     public String getProperty(String key) {
-        String value = p.getProperty(key);
+        String value = getProperties().getProperty(key);
         return StringUtil.isNotBlank(value) ? SystemPropertyUtils.resolvePlaceholders(value, true) : value;
     }
 
+    public String[] getMergeProperty(String key) {
+        List<String> values = new ArrayList<String>();
+        for (Properties eProps : propertiesList) {
+            for (Object pkey : eProps.keySet()) {
+                if (key.equals(pkey)) {
+                    String value = eProps.getProperty(key);
+                    if (StringUtil.isNotBlank(value)) {
+                        values.add(eProps.getProperty(key));
+                    }
+                }
+            }
+        }
+        return values.toArray(new String[values.size()]);
+    }
+
     public Object setProperty(String key, String value) {
-        return p.setProperty(key, value);
+        return getProperties().setProperty(key, value);
     }
 
     public void clear() {
-        p.clear();
+        getProperties().clear();
     }
 
     public int size() {
-        return p.size();
+        return getProperties().size();
     }
 
     public String toString() {
-        return p.toString();
+        return getProperties().toString();
     }
 
     public static Iterator<URL> getResources(String resourceName, Class callingClass, boolean aggregate) throws IOException {
@@ -223,6 +251,7 @@ public class PropertiesHelper {
 
         return iterator;
     }
+
 
     static class AggregateIterator<E> implements Iterator<E> {
 

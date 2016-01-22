@@ -18,6 +18,7 @@ import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 import java.io.IOException;
 
+@Deprecated
 public class ConfigResolver {
 
     private ConfigResolver() {

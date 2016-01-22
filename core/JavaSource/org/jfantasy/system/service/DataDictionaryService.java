@@ -47,10 +47,11 @@ public class DataDictionaryService implements InitializingBean {
             LOGGER.error(" scheduler 定时任务未启动！");
             return;
         }
-        if (!this.scheduleService.checkExists(jobKey)) {
-            LOGGER.debug("添加用于生成 json 文件的 Job ");
-            this.scheduleService.addJob(jobKey, DataDictJob.class);
+        if (this.scheduleService.checkExists(jobKey)) {
+            this.scheduleService.deleteJob(jobKey);
         }
+        LOGGER.debug("添加用于生成 json 文件的 Job ");
+        this.scheduleService.addJob(jobKey, DataDictJob.class);
     }
 
     public List<DataDictionaryType> allTypes() {

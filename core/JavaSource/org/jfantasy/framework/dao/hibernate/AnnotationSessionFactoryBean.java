@@ -1,18 +1,5 @@
 package org.jfantasy.framework.dao.hibernate;
 
-import org.jfantasy.attr.storage.listener.AttributeVersionEventListener;
-import org.jfantasy.attr.storage.listener.VersionChangedEventListener;
-import org.jfantasy.file.listener.FileManagerEventListener;
-import org.jfantasy.framework.dao.hibernate.event.PropertyGeneratorSaveOrUpdatEventListener;
-import org.jfantasy.framework.dao.hibernate.generator.SequenceGenerator;
-import org.jfantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
-import org.jfantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor;
-import org.jfantasy.framework.install.ConfigResolver;
-import org.jfantasy.framework.lucene.dao.hibernate.EntityChangedEventListener;
-import org.jfantasy.framework.spring.SpringContextUtil;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Interceptor;
@@ -23,6 +10,18 @@ import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.event.spi.EventType;
 import org.hibernate.id.IdentifierGenerator;
 import org.hibernate.internal.SessionFactoryImpl;
+import org.jfantasy.attr.storage.listener.AttributeVersionEventListener;
+import org.jfantasy.attr.storage.listener.VersionChangedEventListener;
+import org.jfantasy.file.listener.FileManagerEventListener;
+import org.jfantasy.framework.dao.hibernate.event.PropertyGeneratorSaveOrUpdatEventListener;
+import org.jfantasy.framework.dao.hibernate.generator.SequenceGenerator;
+import org.jfantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
+import org.jfantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor;
+import org.jfantasy.framework.lucene.dao.hibernate.EntityChangedEventListener;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.context.ResourceLoaderAware;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
@@ -49,8 +48,6 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
 
     private Interceptor entityInterceptor;
 
-    private Mode packageMode = Mode.extra;
-
     private Map<String, Class<? extends IdentifierGenerator>> identifierGenerators = new HashMap<String, Class<? extends IdentifierGenerator>>();
 
     public static enum Mode {
@@ -60,11 +57,9 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
     @Override
     public void afterPropertiesSet() throws IOException {
         long start = System.currentTimeMillis();
+
         //========================== 判断是否为扩展模式 ==========================
-        if (Mode.extra == packageMode) {
-            this.packagesToScan = StringUtil.add(this.packagesToScan == null ? new String[0] : this.packagesToScan, ConfigResolver.parseConfiguration().getPackagesToScan());
-            LOG.error(Arrays.toString(packagesToScan));
-        }
+        LOG.error(Arrays.toString(packagesToScan));
 
         //========================== 添加BusEntityInterceptor拦截器 ==========================
         this.entityInterceptor = ObjectUtil.defaultValue(entityInterceptor, new BusEntityInterceptor());
@@ -244,10 +239,6 @@ public class AnnotationSessionFactoryBean extends LocalSessionFactoryBean implem
 
     public void setPackagesToScan(String packagesToScan) {
         this.packagesToScan = StringUtils.tokenizeToStringArray(packagesToScan, ",; \t\n");
-    }
-
-    public void setPackageMode(Mode packageMode) {
-        this.packageMode = packageMode;
     }
 
     public void setIdentifierGenerators(Map<String, Class<? extends IdentifierGenerator>> identifierGenerators) {

@@ -3,6 +3,8 @@ package org.jfantasy.framework.spring.mvc.config;
 import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.jfantasy.framework.lucene.BuguIndex;
 import org.jfantasy.framework.service.MailSendService;
+import org.jfantasy.framework.util.common.PropertiesHelper;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.*;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
@@ -100,17 +102,14 @@ public class AppConfig {
 
     @Bean
     public BuguIndex buguIndex() {
+        PropertiesHelper helper = PropertiesHelper.load("props/lucene.properties");
+
         BuguIndex buguIndex = new BuguIndex();
-        buguIndex.setBasePackage("org.jfantasy.cms");
-        buguIndex.setDirectoryPath("/index");
+        buguIndex.setBasePackage(StringUtil.join(helper.getMergeProperty("base.package"), ";"));
+        buguIndex.setDirectoryPath(helper.getProperty("index.path"));
         buguIndex.setExecutor(taskExecutor());
         buguIndex.setRebuild(true);
         return buguIndex;
     }
-
-//    @Bean
-//    public RequestMappingHandlerMapping requestMappingHandlerMapping(){
-//        return new RequestMappingHandlerMapping();
-//    }
 
 }
