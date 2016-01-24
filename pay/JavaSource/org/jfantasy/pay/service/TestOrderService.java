@@ -21,8 +21,8 @@ public class TestOrderService implements OrderService {
     private AreaService areaService;
 
     @Override
-    public String type() {
-        return "test";
+    public String[] types() {
+        return new String[]{"test"};
     }
 
     @Override

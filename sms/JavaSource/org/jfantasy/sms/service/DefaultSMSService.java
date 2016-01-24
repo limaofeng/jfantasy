@@ -28,7 +28,6 @@ public class DefaultSMSService implements SMSService {
 //			data.put("smsText", value);// 设置短信内容
 //			request.setRequestBody(data);
 //			Response response = HttpClientUtil.doPost("http://sms.webchinese.cn/web_api/", request);
-//			return Integer.valueOf(response.getText("utf-8")) > 0;
             return true;
 //		} catch (IOException e) {
 //			return false;

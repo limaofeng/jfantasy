@@ -10,6 +10,15 @@
     <!-- 用于非spring托管对象获取spring中的Bean -->
     <bean id="springContextUtil" class="org.jfantasy.framework.spring.SpringContextUtil" lazy-init="false"/>
 
+    <!-- spring mvc -->
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <bean class="org.jfantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver"/>
+            <bean class="org.jfantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver"/>
+            <bean class="org.jfantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
+
     <!-- 使用 annotation -->
     <context:annotation-config/>
 
@@ -17,6 +26,8 @@
 
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
     <context:component-scan base-package="org.jfantasy.config"/>
+
+    <bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>
 
     <!-- 加载 properties文件 -->
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>
@@ -38,8 +49,9 @@
         <property name="rebuild" value="true"/>
     </bean>
 
-    <!-- 文件管理器 -->
+    <!-- 文件管理器
     <bean id="fileManagerFactory" class="org.jfantasy.file.service.FileManagerFactory" init-method="load"/>
+    -->
 
     <!-- 邮件服务接口类 -->
     <bean id="mailSendService" class="org.jfantasy.framework.service.MailSendService">

@@ -16,6 +16,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * 易宝支付
@@ -161,7 +162,7 @@ public class Yeepay extends PayProductSupport {
     }
 
     @Override
-    public String web(Order order, Payment payment) {
+    public String web(Payment payment,Order order, Properties properties) {
         return null;
     }
 
@@ -171,17 +172,12 @@ public class Yeepay extends PayProductSupport {
     }
 
     @Override
-    public String app(Order order, Payment payment) throws PayException {
+    public String app(Payment payment,Order order) throws PayException {
         return null;
     }
 
     @Override
-    public String asyncNotify() {
-        return null;
-    }
-
-    @Override
-    public String syncNotify() {
+    public Payment payNotify(Payment payment,  String result) throws PayException{
         return null;
     }
 }

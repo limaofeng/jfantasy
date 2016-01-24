@@ -24,6 +24,7 @@ import java.io.UnsupportedEncodingException;
 import java.security.KeyStore;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
 import java.util.TreeMap;
 
 public class Unionpay extends PayProductSupport {
@@ -53,7 +54,7 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public String web(Order order, Payment payment) {
+    public String web(Payment payment,Order order, Properties properties) {
         return null;
     }
 
@@ -63,7 +64,7 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public String app(Order order, Payment payment) throws PayException {
+    public String app(Payment payment,Order order) throws PayException {
         //支付配置
         PayConfig config = payment.getPayConfig();
         //准备数据
@@ -176,11 +177,11 @@ public class Unionpay extends PayProductSupport {
             LOG.debug("url ==> " + urls.getAppTransUrl() + System.getProperty("line.separator") + "data:" + data);
             Response response = HttpClientUtil.doPost(urls.getAppTransUrl(), data);
             if (response.getStatusCode() != 200) {
-                throw new IOException("请求失败:" + response.getStatusCode() + "\t" + response.getText());
+                throw new IOException("请求失败:" + response.getStatusCode() + "\t" + response.getBody());
             }
 
             //验签
-            Map<String, String> result = convertResultStringToMap(response.getText()); // 将返回结果转换为map
+            Map<String, String> result = convertResultStringToMap(response.getBody()); // 将返回结果转换为map
             if (validate(result, encoding, loadFileItem(config.getValidateCert()))) {//验证签名
                 System.out.println("验证签名成功");
             } else {
@@ -196,12 +197,7 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public String asyncNotify() {
-        return null;
-    }
-
-    @Override
-    public String syncNotify() {
+    public Payment payNotify(Payment payment,  String result) throws PayException{
         return null;
     }
 

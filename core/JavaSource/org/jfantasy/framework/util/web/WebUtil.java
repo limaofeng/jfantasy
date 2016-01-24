@@ -1,13 +1,12 @@
 package org.jfantasy.framework.util.web;
 
-import org.jfantasy.framework.error.IgnoreException;
+import org.apache.log4j.Logger;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.context.ActionContext;
-import org.apache.log4j.Logger;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -15,6 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 import java.net.*;
+import java.nio.charset.Charset;
 import java.util.Enumeration;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -306,26 +306,36 @@ public class WebUtil {
      * @return {Map<String,String[]>}
      */
     public static Map<String, String[]> parseQuery(String query) {
-        Map<String, String[]> params = new LinkedHashMap<String, String[]>();
+        return parseQuery(query, false);
+    }
+
+    public static <T> Map<String, T> parseQuery(String query, boolean single) {
+        Map<String, T> params = new LinkedHashMap<String, T>();
         if (StringUtil.isBlank(query)) {
             return params;
         }
         for (String pair : query.split("[;&]")) {
             String[] vs = pair.split("=");
             String key = vs[0];
+            if (single && params.containsKey(key)) {
+                continue;
+            }
             String val = vs.length == 1 ? "" : vs[1];
             if (StringUtil.isNotBlank(val)) {
-                try {
-                    val = URLDecoder.decode(val, "utf-8");
-                } catch (UnsupportedEncodingException e) {
-                    val = pair.split("=")[1];
-                    throw new IgnoreException(e.getMessage(), e);
+                String newVal = val;
+                if (Charset.forName("ASCII").newEncoder().canEncode(val)) {
+                    newVal = StringUtil.decodeURI(val, getRequest().getCharacterEncoding());
+                    LOG.debug(key + " 的原始编码为[ASCII]转编码:" + val + "=>" + newVal);
+                } else if (Charset.forName("ISO-8859-1").newEncoder().canEncode(val)) {
+                    newVal = WebUtil.transformCoding(val, "ISO-8859-1", getRequest().getCharacterEncoding());
+                    LOG.debug(key + " 的原始编码为[ISO-8859-1]转编码:" + val + "=>" + newVal);
                 }
+                val = newVal;
             }
             if (!params.containsKey(key)) {
-                params.put(key, new String[]{val});
+                params.put(key, (T) (single ? val : new String[]{val}));
             } else {
-                params.put(key, ObjectUtil.join(params.get(key), val));
+                params.put(key, (T) ObjectUtil.join((String[]) params.get(key), val));
             }
         }
         return params;

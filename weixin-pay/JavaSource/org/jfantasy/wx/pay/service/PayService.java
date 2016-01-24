@@ -102,9 +102,9 @@ public class PayService implements InitializingBean {
             xml += ("\t<sign>" + sign + "</sign>\n</xml>");
 
             Response response = HttpClientUtil.doPost("https://api.mch.weixin.qq.com/pay/orderquery", new Request(new StringRequestEntity(xml, "text/xml", "utf-8")));
-            LOG.debug("微信端响应:" + response.getText());
+            LOG.debug("微信端响应:" + response.getBody());
             //解析数据
-            XmlElement xmlElement = XMLReader.reader(new ByteArrayInputStream(response.getText().getBytes()));
+            XmlElement xmlElement = XMLReader.reader(new ByteArrayInputStream(response.getBody().getBytes()));
             assert xmlElement != null;
             data.clear();
             for (XmlElement node : xmlElement.getChildNodes()) {
@@ -121,12 +121,15 @@ public class PayService implements InitializingBean {
             String tradeNo = data.get("transaction_id");
             String state = data.get("trade_state");
             if ("SUCCESS".equalsIgnoreCase(state)) {//支付成功
-                this.paymentService.success(payment.getSn(), tradeNo);
+                payment.setStatus(Payment.Status.success);
+                this.paymentService.result(payment,null);
             } else if ("CLOSED".equalsIgnoreCase(state)) {//已关闭
                 this.paymentService.close(payment.getSn(), tradeNo);
             } else if ("PAYERROR".equalsIgnoreCase(state) || "REFUND".equalsIgnoreCase(state) || "REVOKED".equalsIgnoreCase(state)) {
                 //支付失败 and 转入退款 and 已撤销
-                this.paymentService.failure(payment.getSn(), tradeNo, data.get("trade_state_desc"));
+                payment.setStatus(Payment.Status.failure);
+                this.paymentService.result(payment,null);
+//                this.paymentService.failure(payment.getSn(), tradeNo, data.get("trade_state_desc"));
             }
             return payment;
         } catch (IOException e) {
@@ -175,9 +178,9 @@ public class PayService implements InitializingBean {
             String sign = sign(params, paymentConfig.getBargainorKey());
             xml += ("\t<sign>" + sign + "</sign>\n</xml>");
             Response response = HttpClientUtil.doPost("", new Request(new StringRequestEntity(xml, "text/xml", "utf-8")));
-            LOG.debug("微信端响应:" + response.getText());
+            LOG.debug("微信端响应:" + response.getBody());
             //解析数据
-            XmlElement xmlElement = XMLReader.reader(new ByteArrayInputStream(response.getText().getBytes()));
+            XmlElement xmlElement = XMLReader.reader(new ByteArrayInputStream(response.getBody().getBytes()));
             assert xmlElement != null;
             data.clear();
             for (XmlElement node : xmlElement.getChildNodes()) {
@@ -270,12 +273,14 @@ public class PayService implements InitializingBean {
             String tradeNo = data.get("transaction_id");
             String state = data.get("trade_state");
             if ("SUCCESS".equalsIgnoreCase(state)) {//支付成功
-                this.paymentService.success(paysn, tradeNo);
+                //TODO
+//                this.paymentService.success(paysn, tradeNo);
             } else if ("CLOSED".equalsIgnoreCase(state)) {//已关闭
                 this.paymentService.close(paysn, tradeNo);
             } else if ("PAYERROR".equalsIgnoreCase(state) || "REFUND".equalsIgnoreCase(state) || "REVOKED".equalsIgnoreCase(state)) {
                 //支付失败 and 转入退款 and 已撤销
-                this.paymentService.failure(paysn, tradeNo, data.get("trade_state_desc"));
+                //TODO
+               // this.paymentService.failure(paysn, tradeNo, data.get("trade_state_desc"));
             }
             return "<xml><return_code><![CDATA[SUCCESS]]></return_code><return_msg><![CDATA[OK]]></return_msg></xml>";
         } catch (RestException ex) {

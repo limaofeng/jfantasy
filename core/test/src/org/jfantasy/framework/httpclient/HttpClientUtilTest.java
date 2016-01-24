@@ -33,7 +33,6 @@ public class HttpClientUtilTest {
 //        data.put("dir", "goodsImages");
 //        data.put("attach", new File("C:/log.png"));
 //        Response response = HttpClientUtil.doPost("http://180.153.176.78:8082/bth/file/upload.do", data);
-//        System.out.println(response.getText());
 /*
         // 指定URL
         String targetURL = "http://180.153.176.78:8082/bth/file/upload.do";

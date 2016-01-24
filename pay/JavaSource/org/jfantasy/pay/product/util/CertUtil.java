@@ -20,6 +20,7 @@ public class CertUtil {
 
     private final static Log LOG = LogFactory.getLog(CertUtil.class);
 
+    private static Map<String, X509Certificate> validateCertCache = new ConcurrentHashMap<String, X509Certificate>();
     private static Map<String, KeyStore> certKeyStoreCache = new ConcurrentHashMap<String, KeyStore>();
     private static Map<String, X509Certificate> certCache = new ConcurrentHashMap<String, X509Certificate>();
 
@@ -192,10 +193,14 @@ public class CertUtil {
      * @return PublicKey
      */
     public static PublicKey loadPublicKey(FileItem fileItem) {
+        if(validateCertCache.containsKey(fileItem.getAbsolutePath())){
+            return validateCertCache.get(fileItem.getAbsolutePath()).getPublicKey();
+        }
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
             X509Certificate validateCert = (X509Certificate) cf.generateCertificate(fileItem.getInputStream());
             certCache.put(validateCert.getSerialNumber().toString(), validateCert);
+            validateCertCache.put(fileItem.getAbsolutePath(),validateCert);
             LOG.info("LoadVerifyCert Successful");
             return validateCert.getPublicKey();
         } catch (CertificateException var17) {

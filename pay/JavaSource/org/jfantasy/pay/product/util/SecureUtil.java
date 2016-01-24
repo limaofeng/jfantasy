@@ -624,4 +624,11 @@ public class SecureUtil {
         return signature.sign();
     }
 
+    public static boolean verify(byte[] dataBytes, byte[] signBytes, PublicKey pubKey, String sigAlgName) throws Exception {
+        Signature signature = Signature.getInstance(sigAlgName);
+        signature.initVerify(pubKey);
+        signature.update(dataBytes);
+        return signature.verify(signBytes);
+    }
+
 }

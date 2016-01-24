@@ -5,6 +5,7 @@ import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.order.Order;
 
 import java.util.Map;
+import java.util.Properties;
 
 public class Weixinpay extends PayProductSupport {
 
@@ -14,7 +15,7 @@ public class Weixinpay extends PayProductSupport {
     }
 
     @Override
-    public String web(Order order, Payment payment)throws PayException {
+    public String web(Payment payment,Order order, Properties properties)throws PayException {
         return null;
     }
 
@@ -24,18 +25,14 @@ public class Weixinpay extends PayProductSupport {
     }
 
     @Override
-    public String app(Order order, Payment payment) throws PayException {
+    public String app(Payment payment,Order order) throws PayException {
         return null;
     }
 
     @Override
-    public String asyncNotify() {
+    public Payment payNotify(Payment payment, Map<String, String> result) throws PayException{
         return null;
     }
 
-    @Override
-    public String syncNotify() {
-        return null;
-    }
 
 }

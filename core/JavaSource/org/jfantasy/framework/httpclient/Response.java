@@ -78,8 +78,8 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getText() throws IOException {
-        return getText(getContentEncoding());
+    public String getBody() throws IOException {
+        return getBody(getContentEncoding());
     }
 
     /**
@@ -89,8 +89,8 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getText(boolean pretty) throws IOException {
-        return getText(getContentEncoding(), pretty);
+    public String getBody(boolean pretty) throws IOException {
+        return getBody(getContentEncoding(), pretty);
     }
 
     /**
@@ -100,8 +100,8 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getText(String charset) throws IOException {
-        return this.getText(charset, false);
+    public String getBody(String charset) throws IOException {
+        return this.getBody(charset, false);
     }
 
     /**
@@ -112,7 +112,7 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getText(String charset, boolean pretty) throws IOException {
+    public String getBody(String charset, boolean pretty) throws IOException {
         InputStream intemp = new ByteArrayInputStream(cache().toByteArray());
         BufferedReader reader = null;
         StringBuilder html = new StringBuilder();
@@ -133,6 +133,10 @@ public class Response {
         return html.toString();
     }
 
+    public <T> T getBody(Class<T> clazz) throws IOException {
+        return getBody(clazz, "utf-8");
+    }
+
     /**
      * 按json格式反序列化响应信息
      *
@@ -142,8 +146,8 @@ public class Response {
      * @return T
      * @throws IOException
      */
-    public <T> T deserialize(Class<T> clazz, String charset) throws IOException {
-        return JSON.deserialize(getText(charset), clazz);
+    public <T> T getBody(Class<T> clazz, String charset) throws IOException {
+        return JSON.deserialize(getBody(charset), clazz);
     }
 
     /**
@@ -179,7 +183,7 @@ public class Response {
      */
     public Header getRequestHeader(String headerName) {
         for (Header requestHeader : requestHeaders) {
-            if (requestHeader.getName().equalsIgnoreCase(headerName)){
+            if (requestHeader.getName().equalsIgnoreCase(headerName)) {
                 return requestHeader;
             }
         }
@@ -194,7 +198,7 @@ public class Response {
      */
     public Header getResponseHeader(String headerName) {
         for (Header responseHeader : responseHeaders) {
-            if (responseHeader.getName().equalsIgnoreCase(headerName)){
+            if (responseHeader.getName().equalsIgnoreCase(headerName)) {
                 return responseHeader;
             }
         }

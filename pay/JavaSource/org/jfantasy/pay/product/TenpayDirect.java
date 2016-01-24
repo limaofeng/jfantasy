@@ -11,10 +11,7 @@ import org.jfantasy.pay.service.PaymentContext;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 财付通（即时交易）
@@ -156,7 +153,7 @@ public class TenpayDirect extends PayProductSupport {
     }
 
     @Override
-    public String web(Order order, Payment payment) {
+    public String web(Payment payment,Order order, Properties properties) {
         return null;
     }
 
@@ -166,17 +163,13 @@ public class TenpayDirect extends PayProductSupport {
     }
 
     @Override
-    public String app(Order order, Payment payment) throws PayException {
+    public String app(Payment payment,Order order) throws PayException {
         return null;
     }
 
     @Override
-    public String asyncNotify() {
+    public Payment payNotify(Payment payment,  String result) throws PayException{
         return null;
     }
 
-    @Override
-    public String syncNotify() {
-        return null;
-    }
 }

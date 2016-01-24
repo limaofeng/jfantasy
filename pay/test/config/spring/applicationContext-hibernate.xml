@@ -32,10 +32,10 @@
                 <prop key="format_sql">true</prop>
             </props>
         </property>
-        <property name="packagesToScan" value="com.fantasy.*.bean;com.fantasy.framework.lucene.bean;"/>
+        <property name="packagesToScan" value="org.jfantasy.common.bean;org.jfantasy.attr.storage.bean;org.jfantasy.file.bean;org.jfantasy.security.bean;org.jfantasy.framework.dao.mybatis.keygen.bean;org.jfantasy.contacts.bean;org.jfantasy.system.bean;org.jfantasy.member.bean;org.jfantasy.payment.bean;org.jfantasy.swp.bean;org.jfantasy.sms.bean;org.jfantasy.pay.bean;org.jfantasy.cms.bean;org.jfantasy.mall.*.bean;"/>
     </bean>
 
-    <bean abstract="true" name="hibernateDao" class="com.fantasy.framework.dao.hibernate.HibernateDao">
+    <bean abstract="true" name="hibernateDao" class="org.jfantasy.framework.dao.hibernate.HibernateDao">
         <property name="sessionFactory" ref="sessionFactory"/>
     </bean>
 

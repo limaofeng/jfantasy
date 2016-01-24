@@ -14,6 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Properties;
+
 /**
  * 支付服务
  */
@@ -30,7 +32,7 @@ public class PayService {
     @Autowired
     private PaymentService paymentService;
 
-    public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer) throws PayException {
+    public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer, Properties properties) throws PayException {
         //获取订单信息
         OrderService orderService = orderServiceFactory.getOrderService(orderType);
         Order order = orderService.loadOrder(orderSn);
@@ -42,14 +44,35 @@ public class PayService {
         Payment payment = paymentService.ready(order, payConfig, payProduct, payer);
 
         ToPayment toPayment = new ToPayment();
-        BeanUtil.copyProperties(toPayment,payment);
+        BeanUtil.copyProperties(toPayment, payment);
 
         if (PayType.web == payType) {
-            toPayment.setSource(payProduct.web(order, payment));
+            toPayment.setSource(payProduct.web(payment, order, properties));
         } else if (PayType.app == payType) {
-            toPayment.setSource(payProduct.app(order, payment));
+            toPayment.setSource(payProduct.app(payment, order));
         }
         return toPayment;
-
     }
+
+    public Order notify(String sn, String body) {
+        Payment payment = paymentService.get(sn);
+
+        PayConfig payConfig = payment.getPayConfig();
+
+        //订单服务
+        OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
+
+        //获取支付产品
+        PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
+
+        //支付订单
+        Order order = orderService.loadOrder(payment.getOrderSn());
+
+        //更新支付状态
+        paymentService.result(payProduct.payNotify(payment, body), order);
+
+        //返回订单信息
+        return orderService.loadOrder(payment.getOrderSn());
+    }
+
 }

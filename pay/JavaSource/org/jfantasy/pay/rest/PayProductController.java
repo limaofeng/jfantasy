@@ -65,7 +65,7 @@ public class PayProductController {
         if (payConfigs.size() != 1) {
             throw new PayException("支付产品 [" + payProduct.getName() + " ] " + (payConfigs.size() > 1 ? "对应多份配置,请使用 /pays 接口进行支付" : "未配置,请先配置后,再调用该接口"));
         }
-        return payService.pay(payConfigs.get(0).getId(), payForm.getPayType(), payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayer());
+        return payService.pay(payConfigs.get(0).getId(), payForm.getPayType(), payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayer(), payForm.getProperties());
     }
 
 }

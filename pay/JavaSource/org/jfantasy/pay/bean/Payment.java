@@ -39,20 +39,17 @@ public class Payment extends BaseBusEntity {
     }
 
     // 支付状态（准备、超时、作废、成功、失败）
-    public enum PaymentStatus {
+    public enum Status {
         ready, timeout, invalid, success, failure
     }
 
-    @Id
-    @Column(name = "ID", insertable = true, updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-    private Long id;
     /**
      * 支付编号
      */
+    @Id
     @ApiModelProperty("支付编号")
-    @Column(name = "SN", nullable = false, updatable = false, unique = true)
+    @Column(name = "SN", updatable = false)
+    @GeneratedValue(generator = "serialnumber")
     @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'P' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('PATMENT-SN'), 5)")})
     private String sn;
     /**
@@ -116,7 +113,7 @@ public class Payment extends BaseBusEntity {
     @ApiModelProperty("支付状态")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATUS", nullable = false)
-    private PaymentStatus status;
+    private Status status;
     /**
      * 支付方式
      */
@@ -139,14 +136,6 @@ public class Payment extends BaseBusEntity {
     @ApiModelProperty("订单编号")
     @Column(name = "ORDER_SN")
     private String orderSn;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
 
     public String getSn() {
         return sn;
@@ -204,11 +193,11 @@ public class Payment extends BaseBusEntity {
         this.paymentFee = paymentFee;
     }
 
-    public PaymentStatus getStatus() {
+    public Status getStatus() {
         return status;
     }
 
-    public void setStatus(PaymentStatus status) {
+    public void setStatus(Status status) {
         this.status = status;
     }
 

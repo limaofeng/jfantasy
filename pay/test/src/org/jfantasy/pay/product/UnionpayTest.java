@@ -126,7 +126,7 @@ public class UnionpayTest {
 
 //        SDKConfig.getConfig().loadProperties(properties);
 
-        String result = unionpay.app(order, payment);
+        String result = unionpay.app(payment,order);
 
         LOG.debug(result);
     }

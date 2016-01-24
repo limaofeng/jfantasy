@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.product.order.Order;
+import org.jfantasy.pay.product.order.OrderService;
+import org.jfantasy.pay.product.order.OrderServiceFactory;
 import org.jfantasy.pay.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,11 +19,13 @@ import java.util.List;
 
 @Api(value = "payments", description = "支付记录")
 @RestController
-@RequestMapping("/system/payments")
+@RequestMapping("/payments")
 public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private OrderServiceFactory orderServiceFactory;
 
     @ApiOperation("查询支付记录")
     @RequestMapping(method = RequestMethod.GET)
@@ -31,42 +35,44 @@ public class PaymentController {
     }
 
     @ApiOperation("获取支付记录")
-    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{sn}", method = RequestMethod.GET)
     @ResponseBody
-    public Payment view(@PathVariable("id") Long id) {
-        return this.paymentService.get(id);
+    public Payment view(@PathVariable("sn") String sn) {
+        return this.paymentService.get(sn);
     }
 
     @ApiOperation("支付记录对应的支付配置信息")
-    @RequestMapping(value = "/{id}/payconfig", method = RequestMethod.GET)
+    @RequestMapping(value = "/{sn}/payconfig", method = RequestMethod.GET)
     @ResponseBody
-    public PayConfig payconfig(@PathVariable("id") Long id) {
-        Payment payment = this.paymentService.get(id);
+    public PayConfig payconfig(@PathVariable("id") String sn) {
+        Payment payment = this.paymentService.get(sn);
         if (payment == null) {
-            throw new NotFoundException("[id=" + id + "]对应的支付记录未找到");
+            throw new NotFoundException("[sn=" + sn + "]对应的支付记录未找到");
         }
         return payment.getPayConfig();
     }
 
     @ApiOperation(value = "支付记录对应的订单信息", notes = "支付记录对应的订单信息")
-    @RequestMapping(value = "/{id}/order", method = RequestMethod.GET)
+    @RequestMapping(value = "/{sn}/order", method = RequestMethod.GET)
     @ResponseBody
-    public Order order(@PathVariable("id") Long id) {
-        return this.paymentService.getOrderByPaymentId(id);
+    public Order order(@PathVariable("sn") String sn) {
+        Payment payment = view(sn);
+        OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
+        return orderService.loadOrder(payment.getOrderSn());
     }
 
     @ApiOperation("删除支付记录")
-    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@PathVariable("id") Long id) {
-        this.paymentService.delete(id);
+    public void delete(@PathVariable("sn") String sn) {
+        this.paymentService.delete(sn);
     }
 
     @ApiOperation("批量删除支付记录")
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody Long... ids) {
-        this.paymentService.delete(ids);
+    public void delete(@RequestBody String... sns) {
+        this.paymentService.delete(sns);
     }
 
 }

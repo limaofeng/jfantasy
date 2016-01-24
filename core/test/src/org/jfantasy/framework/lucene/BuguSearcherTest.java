@@ -30,7 +30,6 @@
 //    public void setUp() throws Exception {
 ////        versionService.save(News.class.getName(), "vt", AttributeUtils.string("test", "测试字段", "测试字段"));
 ////
-////        String json = I18nUtil.decodeUnicode(HttpClientUtil.doGet("http://interface.sina.cn/dfz/jx/news/index.d.html?page=1&ch=zhengwen&cid=69603").getText());
 ////        List<Map<String, String>> list = OgnlUtil.getInstance().getValue("result.data.list", JSON.deserialize(json));
 ////
 ////        for (Map<String, String> article : list) {

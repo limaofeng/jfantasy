@@ -1,7 +1,12 @@
 package org.jfantasy.pay.rest.form;
 
 import io.swagger.annotations.ApiModelProperty;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayType;
+
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * 用于 /payproducts/{id}/pay 支付的表单
@@ -16,6 +21,20 @@ public class PayForm01 {
     private PayType payType;
     @ApiModelProperty(value = "付款人",required = false)
     private String payer;
+    @ApiModelProperty(value = "支付参数", notes = "支持的参数:{backUrl:'支付成功后的跳转地址'}", required = false)
+    private Parameters parameters;
+
+    @JsonIgnore
+    public Properties getProperties() {
+        Properties props = new Properties();
+        if (this.parameters == null) {
+            return props;
+        }
+        for (Map.Entry<String, String> entity : this.parameters.entrySet()) {
+            props.put(entity.getKey(), entity.getValue());
+        }
+        return props;
+    }
 
     public String getOrderType() {
         return orderType;
@@ -43,6 +62,14 @@ public class PayForm01 {
 
     public String getPayer() {
         return payer;
+    }
+
+    public Parameters getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Parameters parameters) {
+        this.parameters = parameters;
     }
 
     public void setPayer(String payer) {

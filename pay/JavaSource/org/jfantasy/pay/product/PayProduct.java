@@ -4,13 +4,23 @@ import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.order.Order;
 
+import java.util.Properties;
+
 /**
  * 支付产品接口
  */
 public interface PayProduct {
 
-    //网页支付
-    String web(Order order, Payment payment) throws PayException ;
+    /**
+     * 网页支付
+     *
+     * @param order      订单对象
+     * @param payment    支付记录
+     * @param properties 额外属性(一般由调用端自定义)
+     * @return String
+     * @throws PayException
+     */
+    String web(Payment payment,Order order, Properties properties) throws PayException;
 
     //WAP支付
     String wap();
@@ -22,14 +32,10 @@ public interface PayProduct {
      * @param payment 支付记录
      * @return String
      */
-    String app(Order order, Payment payment) throws PayException;
+    String app(Payment payment,Order order) throws PayException;
 
-    //异步通知
-    String asyncNotify();
-
-    //同步通知
-    String syncNotify();
-
+    //支付通知
+    Payment payNotify(Payment payment, String result) throws PayException;
 
     /**
      * 支付产品标示

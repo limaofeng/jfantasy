@@ -11,7 +11,7 @@ public interface OrderService {
      *
      * @return String
      */
-    String type();
+    String[] types();
 
     /**
      * 查询订单信息

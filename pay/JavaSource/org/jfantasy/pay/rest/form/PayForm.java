@@ -1,11 +1,14 @@
 package org.jfantasy.pay.rest.form;
 
-import org.jfantasy.pay.product.Parameters;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.codehaus.jackson.annotate.JsonIgnore;
+import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayType;
 
 import java.io.Serializable;
+import java.util.Map;
+import java.util.Properties;
 
 @ApiModel("支付表单")
 public class PayForm implements Serializable {
@@ -19,7 +22,7 @@ public class PayForm implements Serializable {
     private PayType payType;
     @ApiModelProperty(value = "付款人", required = false)
     private String payer;
-    @ApiModelProperty(value = "支付参数", required = false)
+    @ApiModelProperty(value = "支付参数", notes = "支持的参数:{backUrl:'支付成功后的跳转地址'}", required = false)
     private Parameters parameters;
 
     public String getOrderType() {
@@ -62,10 +65,6 @@ public class PayForm implements Serializable {
         this.parameters = parameters;
     }
 
-    public String getParameter(String key) {
-        return this.parameters == null ? null : this.parameters.get(key);
-    }
-
     public PayType getPayType() {
         return payType;
     }
@@ -74,10 +73,15 @@ public class PayForm implements Serializable {
         this.payType = payType;
     }
 
-    public void addParameter(String key, String value) {
+    @JsonIgnore
+    public Properties getProperties() {
+        Properties props = new Properties();
         if (this.parameters == null) {
-            this.parameters = new Parameters();
+            return props;
         }
-        this.parameters.put(key, value);
+        for (Map.Entry<String, String> entity : this.parameters.entrySet()) {
+            props.put(entity.getKey(), entity.getValue());
+        }
+        return props;
     }
 }

@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Properties;
 
 /**
  * 财付通（担保交易）
@@ -152,7 +153,7 @@ public class TenpayPartner extends PayProductSupport {
     }
 
     @Override
-    public String web(Order order, Payment payment) {
+    public String web(Payment payment,Order order, Properties properties) {
         return null;
     }
 
@@ -162,17 +163,12 @@ public class TenpayPartner extends PayProductSupport {
     }
 
     @Override
-    public String app(Order order, Payment payment) throws PayException {
+    public String app(Payment payment,Order order) throws PayException {
         return null;
     }
 
     @Override
-    public String asyncNotify() {
-        return null;
+    public Payment payNotify(Payment payment,  String result) throws PayException{return null;
     }
 
-    @Override
-    public String syncNotify() {
-        return null;
-    }
 }

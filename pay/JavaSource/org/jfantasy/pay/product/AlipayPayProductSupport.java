@@ -301,7 +301,7 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
         return "success";
     }
     @Override
-    public String web(Order order, Payment payment) throws PayException {
+    public String web(Payment payment,Order order, Properties properties) throws PayException {
         return null;
     }
 
@@ -311,17 +311,12 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
     }
 
     @Override
-    public String app(Order order, Payment payment) throws PayException {
+    public String app(Payment payment,Order order) throws PayException {
         return null;
     }
 
     @Override
-    public String asyncNotify() {
-        return null;
-    }
-
-    @Override
-    public String syncNotify() {
+    public Payment payNotify(Payment payment, String result) {
         return null;
     }
 }

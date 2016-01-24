@@ -1,5 +1,6 @@
 package org.jfantasy.pay.product.order;
 
+import org.apache.log4j.Logger;
 import org.jfantasy.framework.spring.ClassPathScanner;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.springframework.beans.BeansException;
@@ -14,7 +15,9 @@ import java.util.Map;
 @Component
 public class OrderServiceFactory implements ApplicationContextAware, InitializingBean {
 
-    private Map<String, OrderService> orderDetailsServices;
+    private static final Logger LOGGER = Logger.getLogger(OrderServiceFactory.class);
+
+    private Map<String, OrderService> orderServiceMap;
 
     private ApplicationContext applicationContext;
 
@@ -30,28 +33,37 @@ public class OrderServiceFactory implements ApplicationContextAware, Initializin
         for (String basePackage : packagesToScan) {
             for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, OrderService.class)) {
                 OrderService orderService = (OrderService) this.applicationContext.getBean(clazz);
-                this.register(orderService.type(), orderService);
+                this.register(orderService.types(), orderService);
             }
         }
     }
 
     public OrderServiceFactory() {
-        orderDetailsServices = new HashMap<String, OrderService>();
+        orderServiceMap = new HashMap<String, OrderService>();
     }
 
     public OrderServiceFactory(Map<String, OrderService> orderDetailsServices) {
-        this.orderDetailsServices = orderDetailsServices;
+        this.orderServiceMap = orderDetailsServices;
     }
 
-    public void register(String type, OrderService orderDetailsService) {
-        orderDetailsServices.put(type.toLowerCase(), orderDetailsService);
+    public void register(String type, OrderService orderService) {
+        if (orderServiceMap.containsKey(type)) {
+            LOGGER.warn("type = " + type + "的 OrderService 已经存在,这将覆盖原有的 OrderService ");
+        }
+        orderServiceMap.put(type.toLowerCase(), orderService);
+    }
+
+    public void register(String[] types, OrderService orderService) {
+        for (String type : types) {
+            register(type, orderService);
+        }
     }
 
     public OrderService getOrderService(String type) {
-        if (!this.orderDetailsServices.containsKey(type.toLowerCase())) {
+        if (!this.orderServiceMap.containsKey(type.toLowerCase())) {
             throw new NotFoundException("orderType[" + type + "] 对应的 PaymentOrderService 未配置！");
         }
-        return orderDetailsServices.get(type.toLowerCase());
+        return orderServiceMap.get(type.toLowerCase());
     }
 
     public void setPackagesToScan(String[] packagesToScan) {

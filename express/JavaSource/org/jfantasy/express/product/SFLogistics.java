@@ -26,7 +26,7 @@ public class SFLogistics implements Logistics {
         try {
             Response response = HttpClientUtil.doGet("http://www.sf-express.com/sf-service-web/service/bills/" + sn + "/routes?app=bill&lang=sc&region=cn&translate=");
             System.out.println(response.getStatusCode());
-            System.out.println(response.getText());
+            System.out.println(response.getBody());
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }

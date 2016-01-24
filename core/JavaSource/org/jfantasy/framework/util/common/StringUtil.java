@@ -305,7 +305,7 @@ public abstract class StringUtil {
      */
     public static String decodeURI(String s, String enc) {
         try {
-            return isBlank(s) ? s : URLDecoder.decode(s, enc);
+            return isBlank(s) ? s : URLDecoder.decode(s.replaceAll("\\+","%2B"), enc);
         } catch (UnsupportedEncodingException e) {
             LOG.error(e.getMessage(), e);
             return s;
