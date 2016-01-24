@@ -45,8 +45,8 @@ public abstract class PayListener implements SmartApplicationListener {
         }
     }
 
-    abstract void success(Payment payment, Order order);
+    public abstract void success(Payment payment, Order order);
 
-    abstract void failure(Payment payment, Order order);
+    public abstract void failure(Payment payment, Order order);
 
 }

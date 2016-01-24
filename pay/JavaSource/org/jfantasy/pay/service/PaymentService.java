@@ -2,6 +2,7 @@ package org.jfantasy.pay.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
@@ -94,11 +95,15 @@ public class PaymentService {
         return this.paymentDao.save(payment);
     }
 
+    public List<Payment> find(Criterion... criterions) {
+        return this.paymentDao.find(criterions);
+    }
+
     /**
      * 支付结果
      *
      * @param payment 支付对象
-     * @param order 支付订单
+     * @param order   支付订单
      */
     public void result(Payment payment, Order order) {
         PayContext context = new PayContext(payment, order);

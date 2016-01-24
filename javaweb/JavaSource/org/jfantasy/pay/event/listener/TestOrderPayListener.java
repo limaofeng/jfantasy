@@ -9,7 +9,7 @@ public class TestOrderPayListener extends PayListener {
 
     @Override
     public boolean supportsOrderType(String orderType) {
-        return "test".equalsIgnoreCase(orderType);
+        return "test".equals(orderType);
     }
 
     @Override

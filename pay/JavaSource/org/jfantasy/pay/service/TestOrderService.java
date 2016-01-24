@@ -36,7 +36,7 @@ public class TestOrderService implements OrderService {
 
             @Override
             public String getType() {
-                return "TEST";
+                return "test";
             }
 
             @Override
