@@ -1,6 +1,5 @@
 package org.jfantasy.pay.product;
 
-import com.chinapay.secss.SecssUtil;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
 import org.hibernate.criterion.Restrictions;
@@ -8,7 +7,6 @@ import org.jfantasy.file.bean.FileDetail;
 import org.jfantasy.file.service.FileUploadService;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.PathUtil;
-import org.jfantasy.framework.util.common.PropertiesHelper;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
@@ -189,11 +187,11 @@ public class ChinapayTest {
 
         Map<String,String> data = WebUtil.parseQuery(text,true);
 
-        SecssUtil secssUtil = new SecssUtil();
-
-        secssUtil.init(PropertiesHelper.load("props/chinapay.properties").getProperties());
-
-        secssUtil.verify(data);
+//        SecssUtil secssUtil = new SecssUtil();
+//
+//        secssUtil.init(PropertiesHelper.load("props/chinapay.properties").getProperties());
+//
+//        secssUtil.verify(data);
 
         //SecssUtil.cpDecryptData(SignUtil.coverMapString(data, "Signature", "CertId"));
 
