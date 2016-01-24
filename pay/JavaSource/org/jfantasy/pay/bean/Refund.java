@@ -1,12 +1,16 @@
 package org.jfantasy.pay.bean;
 
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.ForeignKey;
+import javax.persistence.Table;
 import java.math.BigDecimal;
 
 /**
@@ -29,16 +33,23 @@ public class Refund extends BaseBusEntity {
         online, offline
     }
 
+    // 支付状态（准备、超时、作废、成功、失败）
+    public enum Status {
+        ready, invalid, success, failure
+    }
+
     @Id
-    @Column(name = "ID", insertable = true, updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-    private Long id;
-    @Column(name = "SN", nullable = false, updatable = false, unique = true)
+    @GeneratedValue(generator = "serialnumber")
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@org.hibernate.annotations.Parameter(name = "expression", value = "'R' + #sn")})
+    @Column(name = "SN", updatable = false)
     private String sn;// 退款编号
     @Enumerated(EnumType.STRING)
-    @Column(name = "REFUND_TYPE", nullable = false, updatable = false)
-    private RefundType refundType;// 退款类型
+    @Column(name = "TYPE", nullable = false, updatable = false)
+    private RefundType type;// 退款类型
+    @ApiModelProperty("退款状态")
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PAY_STATUS", nullable = false)
+    private Status status;
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false, updatable = false)
     private String payConfigName;// 支付配置名称
     @Column(name = "BANK_NAME", updatable = false)
@@ -55,6 +66,18 @@ public class Refund extends BaseBusEntity {
     @JoinColumn(name = "PAY_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT_CONFIG"))
     private PayConfig payConfig;// 支付配置
     /**
+     * 交易号（用于记录第三方交易的交易流水号）
+     */
+    @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
+    @Column(name = "TRADE_NO", updatable = true)
+    private String tradeNo;
+    /**
+     * 原支付交易
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PAYMENT_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT"))
+    private Payment payment;
+    /**
      * 订单类型
      */
     @Column(name = "ORDER_TYPE")
@@ -65,14 +88,6 @@ public class Refund extends BaseBusEntity {
     @Column(name = "ORDER_SN")
     private String orderSn;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public String getSn() {
         return sn;
     }
@@ -81,12 +96,12 @@ public class Refund extends BaseBusEntity {
         this.sn = sn;
     }
 
-    public RefundType getRefundType() {
-        return refundType;
+    public RefundType getType() {
+        return type;
     }
 
-    public void setRefundType(RefundType refundType) {
-        this.refundType = refundType;
+    public void setType(RefundType type) {
+        this.type = type;
     }
 
     public String getPayConfigName() {
@@ -159,5 +174,29 @@ public class Refund extends BaseBusEntity {
 
     public void setOrderType(String orderType) {
         this.orderType = orderType;
+    }
+
+    public void setTradeNo(String tradeNo) {
+        this.tradeNo = tradeNo;
+    }
+
+    public String getTradeNo() {
+        return tradeNo;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
     }
 }

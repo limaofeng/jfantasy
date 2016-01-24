@@ -3,6 +3,7 @@ package org.jfantasy.pay.service;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.PayProduct;
 import org.jfantasy.pay.product.PayType;
@@ -31,6 +32,8 @@ public class PayService {
     private OrderServiceFactory orderServiceFactory;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private RefundService refundService;
 
     public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer, Properties properties) throws PayException {
         //获取订单信息
@@ -54,8 +57,7 @@ public class PayService {
         return toPayment;
     }
 
-    public Order notify(String sn, String body) {
-        Payment payment = paymentService.get(sn);
+    public Order notify(Payment payment, String body) {
 
         PayConfig payConfig = payment.getPayConfig();
 
@@ -73,6 +75,26 @@ public class PayService {
 
         //返回订单信息
         return orderService.loadOrder(payment.getOrderSn());
+    }
+
+    public Order notify(Refund refund, String body) {
+
+        PayConfig payConfig = refund.getPayConfig();
+
+        //订单服务
+        OrderService orderService = orderServiceFactory.getOrderService(refund.getOrderType());
+
+        //获取支付产品
+        PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
+
+        //支付订单
+        Order order = orderService.loadOrder(refund.getOrderSn());
+
+        //更新支付状态
+        refundService.result(payProduct.payNotify(refund, body), order);
+
+        //返回订单信息
+        return orderService.loadOrder(refund.getOrderSn());
     }
 
 }

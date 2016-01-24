@@ -324,10 +324,10 @@ public class WebUtil {
             if (StringUtil.isNotBlank(val)) {
                 String newVal = val;
                 if (Charset.forName("ASCII").newEncoder().canEncode(val)) {
-                    newVal = StringUtil.decodeURI(val, getRequest().getCharacterEncoding());
+                    newVal = StringUtil.decodeURI(val, "utf-8");
                     LOG.debug(key + " 的原始编码为[ASCII]转编码:" + val + "=>" + newVal);
                 } else if (Charset.forName("ISO-8859-1").newEncoder().canEncode(val)) {
-                    newVal = WebUtil.transformCoding(val, "ISO-8859-1", getRequest().getCharacterEncoding());
+                    newVal = WebUtil.transformCoding(val, "ISO-8859-1", "utf-8");
                     LOG.debug(key + " 的原始编码为[ISO-8859-1]转编码:" + val + "=>" + newVal);
                 }
                 val = newVal;

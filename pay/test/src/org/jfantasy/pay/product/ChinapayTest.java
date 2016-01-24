@@ -10,13 +10,18 @@ import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.product.order.OrderItem;
 import org.jfantasy.pay.product.order.ShipAddress;
 import org.jfantasy.pay.service.PayConfigService;
 import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,8 +29,8 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
-//@RunWith(SpringJUnit4ClassRunner.class)
-//@ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath:spring/applicationContext.xml"})
 public class ChinapayTest {
 
     private Logger LOG = Logger.getLogger(ChinapayTest.class);
@@ -43,7 +48,7 @@ public class ChinapayTest {
     @Autowired
     private PayConfigService payConfigService;
 
-//    @Before
+    @Before
     public void setUp() throws Exception {
         //添加支付配置
         // 银联支付 1
@@ -197,5 +202,22 @@ public class ChinapayTest {
 
     }
 
+
+    @Test
+    public void testRefund() throws Exception {
+        Payment payment = new Payment();
+        payment.setSn("P2016012500089");
+        payment.setPayConfig(payConfigService.get(2L));
+        payment.setCreateTime(DateUtil.parse("2016-01-25 04:18:01","yyyy-MM-dd HH:mm:ss"));
+
+        Refund refund = new Refund();
+        refund.setSn("RP20160125000891");
+        refund.setPayConfig(payment.getPayConfig());
+        refund.setTotalAmount(BigDecimal.valueOf(0.01));
+        refund.setCreateTime(DateUtil.parse("2016-01-25 04:32:30","yyyy-MM-dd HH:mm:ss"));
+
+        String text = chinapay.refund(refund,payment);
+
+    }
 
 }

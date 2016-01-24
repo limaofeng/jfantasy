@@ -1,6 +1,7 @@
 package org.jfantasy.pay.product;
 
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.order.Order;
 
@@ -20,7 +21,7 @@ public interface PayProduct {
      * @return String
      * @throws PayException
      */
-    String web(Payment payment,Order order, Properties properties) throws PayException;
+    String web(Payment payment, Order order, Properties properties) throws PayException;
 
     //WAP支付
     String wap();
@@ -32,10 +33,28 @@ public interface PayProduct {
      * @param payment 支付记录
      * @return String
      */
-    String app(Payment payment,Order order) throws PayException;
+    String app(Payment payment, Order order) throws PayException;
 
-    //支付通知
+    /**
+     * 支付通知
+     *
+     * @param payment 付款对象
+     * @param result  通知内容
+     * @return Payment
+     * @throws PayException
+     */
     Payment payNotify(Payment payment, String result) throws PayException;
+
+    /**
+     * 退款成功通知
+     *
+     * @param refund 退款对象
+     * @param result 通知内容
+     * @return Refund
+     * @throws PayException
+     */
+    Refund payNotify(Refund refund, String result) throws PayException;
+
 
     /**
      * 支付产品标示
