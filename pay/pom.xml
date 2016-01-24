@@ -48,6 +48,7 @@
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
         </dependency>
+        <!--
         <dependency>
             <groupId>chinapay</groupId>
             <artifactId>chinapayfilesecure</artifactId>
@@ -62,6 +63,7 @@
             <scope>system</scope>
             <systemPath>${basedir}/lib/chinapaysecure.jar</systemPath>
         </dependency>
+        -->
     </dependencies>
 
     <description>开发框架 - 提供支付相关接口</description>
