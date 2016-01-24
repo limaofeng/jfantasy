@@ -30,7 +30,7 @@ public class Weixinpay extends PayProductSupport {
     }
 
     @Override
-    public Payment payNotify(Payment payment, Map<String, String> result) throws PayException{
+    public Payment payNotify(Payment payment, String result) throws PayException{
         return null;
     }
 
