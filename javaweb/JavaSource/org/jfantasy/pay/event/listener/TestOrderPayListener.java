@@ -13,12 +13,12 @@ public class TestOrderPayListener extends PayListener {
     }
 
     @Override
-    void success(Payment payment, Order order) {
+    public void success(Payment payment, Order order) {
         System.out.println(order);
     }
 
     @Override
-    void failure(Payment payment, Order order) {
+    public void failure(Payment payment, Order order) {
 
     }
 }

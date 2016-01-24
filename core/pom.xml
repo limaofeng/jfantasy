@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jfantasy</groupId>
         <artifactId>jfantasy-framework</artifactId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.5-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jfantasy-core</artifactId>
@@ -23,12 +23,6 @@
         <dependency>
             <groupId>com.cloudhopper.proxool</groupId>
             <artifactId>proxool</artifactId>
-            <exclusions>
-                <exclusion>
-                    <artifactId>avalon-framework-api</artifactId>
-                    <groupId>avalon-framework</groupId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
