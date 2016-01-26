@@ -5,6 +5,8 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
+import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.service.PaymentContext;
 
@@ -117,4 +119,8 @@ public class AlipayPartner extends AlipayPayProductSupport {
         return payResult;
     }
 
+    @Override
+    public Refund payNotify(Refund refund, String result) throws PayException {
+        return null;
+    }
 }

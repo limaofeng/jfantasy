@@ -55,6 +55,12 @@ public interface PayProduct {
      */
     Refund payNotify(Refund refund, String result) throws PayException;
 
+    /**
+     * 退款操作
+     * @param refund 退款对象
+     * @return String
+     */
+    Refund refund(Refund refund);
 
     /**
      * 支付产品标示

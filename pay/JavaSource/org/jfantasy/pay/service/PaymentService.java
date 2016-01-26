@@ -11,13 +11,10 @@ import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.dao.PaymentDao;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.event.PaySuccessfulEvent;
-import org.jfantasy.pay.event.context.PayContext;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayProduct;
 import org.jfantasy.pay.product.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,8 +37,6 @@ public class PaymentService {
     private PayConfigService payConfigService;
     @Autowired(required = false)
     private PayProductConfiguration payProductConfiguration;
-    @Autowired
-    private ApplicationContext applicationContext;
 
     /**
      * 支付准备
@@ -106,17 +101,7 @@ public class PaymentService {
      * @param order   支付订单
      */
     public void result(Payment payment, Order order) {
-        PayContext context = new PayContext(payment, order);
         this.paymentDao.save(payment);
-        try {
-            if (Payment.Status.success == payment.getStatus()) {
-                this.applicationContext.publishEvent(new PaySuccessfulEvent(context));
-            } else if (Payment.Status.failure == payment.getStatus()) {
-                this.applicationContext.publishEvent(new PaySuccessfulEvent(context));
-            }
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-        }
     }
 
     /**

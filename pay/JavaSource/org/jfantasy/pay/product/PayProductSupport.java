@@ -1,5 +1,6 @@
 package org.jfantasy.pay.product;
 
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.service.PaymentContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -25,6 +26,10 @@ public abstract class PayProductSupport implements PayProduct {
     protected String shroffAccountName;//收款方账号名称
     protected CurrencyType[] currencyTypes;// 支持货币类型
     protected String logoPath;// 支付产品LOGO路径
+
+    public Refund refund(Refund refund){
+        return null;
+    }
 
     /**
      * 验证签名

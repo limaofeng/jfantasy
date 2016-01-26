@@ -14,6 +14,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.product.util.CertUtil;
@@ -198,6 +199,11 @@ public class Unionpay extends PayProductSupport {
 
     @Override
     public Payment payNotify(Payment payment,  String result) throws PayException{
+        return null;
+    }
+
+    @Override
+    public Refund payNotify(Refund refund, String result) throws PayException {
         return null;
     }
 

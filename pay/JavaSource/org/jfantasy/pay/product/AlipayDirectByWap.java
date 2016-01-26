@@ -1,6 +1,8 @@
 package org.jfantasy.pay.product;
 
 import org.jfantasy.framework.util.web.WebUtil;
+import org.jfantasy.pay.bean.Refund;
+import org.jfantasy.pay.error.PayException;
 import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
@@ -179,4 +181,8 @@ public class AlipayDirectByWap extends AlipayPayProductSupport {
         return payResult;
     }
 
+    @Override
+    public Refund payNotify(Refund refund, String result) throws PayException {
+        return null;
+    }
 }

@@ -216,7 +216,7 @@ public class ChinapayTest {
         refund.setTotalAmount(BigDecimal.valueOf(0.01));
         refund.setCreateTime(DateUtil.parse("2016-01-25 04:32:30","yyyy-MM-dd HH:mm:ss"));
 
-        String text = chinapay.refund(refund,payment);
+        chinapay.refund(refund);
 
     }
 

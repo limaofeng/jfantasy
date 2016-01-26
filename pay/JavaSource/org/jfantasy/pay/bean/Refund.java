@@ -33,14 +33,30 @@ public class Refund extends BaseBusEntity {
         online, offline
     }
 
-    // 支付状态（准备、超时、作废、成功、失败）
+    // 支付状态（准备、等待银行处理、作废、成功、失败）
     public enum Status {
-        ready, invalid, success, failure
+        ready, wait, success, failure
+    }
+
+    public Refund() {
+    }
+
+    public Refund(Payment payment) {
+        this.setType(RefundType.valueOf(payment.getType().name()));
+        this.setStatus(Status.ready);
+        this.setBankAccount(payment.getBankAccount());
+        this.setBankName(payment.getBankName());
+        this.setPayConfigName(payment.getPayConfigName());
+        this.setPayConfig(payment.getPayConfig());
+        this.setPayment(payment);
+        this.setPayee(payment.getPayer());
+        this.setOrderType(payment.getOrderType());
+        this.setOrderSn(payment.getOrderSn());
     }
 
     @Id
     @GeneratedValue(generator = "serialnumber")
-    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@org.hibernate.annotations.Parameter(name = "expression", value = "'R' + #sn")})
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@org.hibernate.annotations.Parameter(name = "expression", value = "'R' + #sn + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('REFUND-'+#sn), 2)")})
     @Column(name = "SN", updatable = false)
     private String sn;// 退款编号
     @Enumerated(EnumType.STRING)

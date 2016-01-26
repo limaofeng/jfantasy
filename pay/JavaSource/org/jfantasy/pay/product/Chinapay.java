@@ -104,7 +104,7 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
-    public String signature(Map<String, String> params, KeyStore keyStore, String certPwd) throws PayException {
+    protected String signature(Map<String, String> params, KeyStore keyStore, String certPwd) throws PayException {
         try {
             return SignUtil.encodeBase64(SecureUtil.sign(SignUtil.coverMapString(params, "Signature", "CertId").getBytes("UTF-8"), CertUtil.getCertPrivateKey(keyStore, certPwd), "SHA512WithRSA"), "UTF-8");
         } catch (Exception e) {
@@ -112,7 +112,7 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
-    public boolean verify(Map<String, String> result, PublicKey publicKey) {
+    protected boolean verify(Map<String, String> result, PublicKey publicKey) {
         try {
             return SecureUtil.verify(SignUtil.coverMapString(result, "Signature", "CertId").getBytes("UTF-8"), Base64.decodeBase64(result.get("Signature").getBytes("UTF-8")), publicKey, "SHA512WithRSA");
         } catch (Exception e) {
@@ -163,6 +163,7 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
+    @Override
     public Refund payNotify(Refund refund, String result) throws PayException {
         Map<String, String> data = WebUtil.parseQuery(result, true);
         //支付配置
@@ -242,8 +243,9 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
-    public String refund(Refund refund, Payment payment) {
+    public Refund refund(Refund refund) {
         String url = urls.getAfterTransUrl("0401");
+        Payment payment = refund.getPayment();
         try {
             //支付配置
             PayConfig config = refund.getPayConfig();
@@ -281,10 +283,16 @@ public class Chinapay extends PayProductSupport {
                 throw new PayException("验证签名失败");
             }
 
-            System.out.println(result);
+            if("1003".equals(result.get("respCode"))){
+                refund.setStatus(Refund.Status.wait);
+            }else{
+                refund.setStatus(Refund.Status.failure);
+            }
 
+            MDC.put("body", response.getBody());
+            LOG.info(MDC.getContext());
 
-            return response.getBody();
+            return refund;
 
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);

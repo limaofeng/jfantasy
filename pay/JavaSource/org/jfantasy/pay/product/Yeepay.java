@@ -1,6 +1,7 @@
 package org.jfantasy.pay.product;
 
 import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jfantasy.pay.bean.PayConfig;
@@ -178,6 +179,11 @@ public class Yeepay extends PayProductSupport {
 
     @Override
     public Payment payNotify(Payment payment,  String result) throws PayException{
+        return null;
+    }
+
+    @Override
+    public Refund payNotify(Refund refund, String result) throws PayException {
         return null;
     }
 }
