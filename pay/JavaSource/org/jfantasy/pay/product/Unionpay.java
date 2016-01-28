@@ -37,7 +37,7 @@ public class Unionpay extends PayProductSupport {
 
     private final static Log LOG = LogFactory.getLog(Unionpay.class);
 
-    private DeployStatus deployStatus;
+    private DeployStatus deployStatus = DeployStatus.Production;
 
     private Map<DeployStatus, Urls> urlsMap = new HashMap<DeployStatus, Urls>() {
         {

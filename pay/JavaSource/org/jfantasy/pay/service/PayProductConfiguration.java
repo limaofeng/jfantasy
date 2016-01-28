@@ -140,6 +140,19 @@ public class PayProductConfiguration implements InitializingBean {
             this.payProducts.add(chinapay);
         }
 
+        //银联支付
+        if (ObjectUtil.find(this.payProducts, "id", "unionpay") == null) {
+            Unionpay unionpay = new Unionpay();
+            unionpay.setId("unionpay");
+            unionpay.setName("银联支付");
+            unionpay.setBargainorIdName("商户号");
+            unionpay.setBargainorKeyName("证书密码");
+            unionpay.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
+            unionpay.setLogoPath("");
+            unionpay.setDescription("");
+            this.payProducts.add(unionpay);
+        }
+
 
     }
 

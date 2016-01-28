@@ -137,7 +137,7 @@ public class UnionpayTest {
         payment.setTotalAmount(BigDecimal.valueOf(0.01));
         payment.setCreateTime(DateUtil.parse("20160128131252","yyyyMMddHHmmss"));
 
-        String result = unionpay.app(payment,order);
+        Object result = unionpay.app(payment,order);
 
         LOG.debug(result);
 

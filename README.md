@@ -8,9 +8,9 @@ jfantasy 是[昊略软件公司的java开发框架],并整合了一些开源常�
 
 ```xml
     <repository>
-        <id>github snapshot</id>
-        <name>github snapshot</name>
-        <url>https://raw.github.com/limaofeng/maven/snapshot/</url>
+        <id>jfantasy snapshot</id>
+        <name>jfantasy snapshot</name>
+        <url>http://maven.jfantasy.org/content/repositories/snapshots/</url>
     </repository>
 
     <dependency>
