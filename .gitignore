@@ -1,6 +1,5 @@
-/pay/test/config/certs/tradebc.pfx
-/pay/test/config/certs/trade.pfx
-/pay/test/config/certs/cp.cer
+/pay/test/config/certs/*.pfx
+/pay/test/config/certs/*.cer
 /javaweb/WebContent/WEB-INF/index
 *.class
 .idea

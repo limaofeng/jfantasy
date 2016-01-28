@@ -100,7 +100,7 @@ public class PayConfig extends BaseBusEntity {
     /**
      * 签名验证证书(银联支付专用)
      */
-    @Column(name = "VALIDATE_CERT")
+    @Column(name = "VALIDATE_CERT",length = 500)
     @Convert(converter = FileDetailConverter.class)
     private FileDetail validateCert;
     /**

@@ -26,7 +26,7 @@
 		<param name="sql" value="INSERT INTO TBL_CORE_AUDIT_LOG(id,priority,log_date,class_name,method,msg,user_id,url,parameter,ip,module_name,oper_type) VALUES (SEQ_TBL_AUDITLOG_PK.nextval,'%p',to_date('%d{yyyy-MM-dd HH:mm:ss}', 'yyyy-MM-dd HH24:Mi.SS'),'%C','%M','%m','%X{userId}','%X{url}','%X{parameter}','%X{ip}','%X{moduleName}','%X{operType}')" />
 	</appender>
 	-->
- 	<category name="com.fantasy.aliyun.oss">
+ 	<category name="org.jfantasy.aliyun.oss">
  		<priority value="DEBUG" />
  	</category>
 	<category name="org.hibernate.cache">
