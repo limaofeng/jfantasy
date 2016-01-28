@@ -127,8 +127,8 @@ public class Chinapay extends PayProductSupport {
     }
 
     @Override
-    public String app(Payment payment, Order order) throws PayException {
-        return null;
+    public Object app(Payment payment, Order order) throws PayException {
+        throw new PayException(" chinapay 不支持 app 支付 ");
     }
 
     @Override

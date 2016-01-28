@@ -86,7 +86,7 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public String app(Payment payment, Order order) throws PayException {
+    public Object app(Payment payment, Order order) throws PayException {
         //支付配置
         PayConfig config = payment.getPayConfig();
         //准备数据
@@ -137,7 +137,7 @@ public class Unionpay extends PayProductSupport {
             if (!verify(result, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {//验证签名
                 throw new PayException("验证签名失败");
             }
-            return result.toString();
+            return result;
         } catch (IOException e) {
             throw new PayException(e.getMessage());
         }

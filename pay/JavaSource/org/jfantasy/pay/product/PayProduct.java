@@ -33,7 +33,7 @@ public interface PayProduct {
      * @param payment 支付记录
      * @return String
      */
-    String app(Payment payment, Order order) throws PayException;
+    Object app(Payment payment, Order order) throws PayException;
 
     /**
      * 支付通知

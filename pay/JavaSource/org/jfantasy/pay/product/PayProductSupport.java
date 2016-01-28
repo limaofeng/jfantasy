@@ -1,6 +1,9 @@
 package org.jfantasy.pay.product;
 
+import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
+import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.service.PaymentContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -27,7 +30,13 @@ public abstract class PayProductSupport implements PayProduct {
     protected CurrencyType[] currencyTypes;// 支持货币类型
     protected String logoPath;// 支付产品LOGO路径
 
+    @Override
     public Refund refund(Refund refund){
+        return null;
+    }
+
+    @Override
+    public Object app(Payment payment, Order order) throws PayException{
         return null;
     }
 

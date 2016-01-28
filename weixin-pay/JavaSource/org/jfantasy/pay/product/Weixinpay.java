@@ -26,11 +26,6 @@ public class Weixinpay extends PayProductSupport {
     }
 
     @Override
-    public String app(Payment payment,Order order) throws PayException {
-        return null;
-    }
-
-    @Override
     public Payment payNotify(Payment payment, String result) throws PayException{
         return null;
     }
