@@ -161,7 +161,7 @@ public class Unionpay extends PayProductSupport {
             }
             if (isAppNotify) {
                 Map<String, String> payresult = WebUtil.parseQuery(data.get("data"), true);
-                if (payment.getTradeNo().equals(payresult.get("tn"))) {
+                if (!payment.getTradeNo().equals(payresult.get("tn"))) {
                     throw new PayException("通知与订单不匹配");
                 }
                 payment.setStatus("success".equals(payresult.get("pay_result")) ? Payment.Status.success : Payment.Status.failure);
