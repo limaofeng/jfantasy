@@ -18,7 +18,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import java.util.Map;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
@@ -205,7 +205,7 @@ public class JSON {
         return "";
     }
 
-    public static Object deserialize(String json) {
+    public static Map<String,?> deserialize(String json) {
         return deserialize(json, HashMap.class);
     }
 

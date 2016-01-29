@@ -98,9 +98,8 @@ public class PaymentService {
      * 支付结果
      *
      * @param payment 支付对象
-     * @param order   支付订单
      */
-    public void result(Payment payment, Order order) {
+    public void save(Payment payment) {
         this.paymentDao.save(payment);
     }
 

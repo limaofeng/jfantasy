@@ -26,7 +26,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.net.URLEncoder;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -169,13 +168,19 @@ public class UnionpayTest {
 
     @Test
     public void testPayNotify() throws Exception {
-        String body = "sign=FmKMECtwoSlT/71rmfHBBexR+SaIGVlYlcyFJJ2jlOqO98M0o8OlQQeYmiC2oIXMWv5/pt1uJ4rX3Jh/J+RsxLLT73QHsMFz78oySnngz2aA/8EgZnbuM28+/sDRnui2ShtB54TxFDwfNxWEyuj8eJQ05RlhDfN5VezflozZOCAMVIaUf3vsTLgtLI9F4LNekFxQupGsyPLh59kAsf/p5lq13fBDETg0jbpHidctra7R9Be4hGhKLBSAk62GHuLlmhXp+xwf889Gf2C2kJg8r8cG8RCvzyXHal6+PUR7smtjvNJAKBIslTnoViVwOqgAhhk7RLOcbtXqxfr5s43VIA==&data="+ URLEncoder.encode("pay_result=success&tn=201601281312525696898&cert_id=69597475696","utf-8");
+        String body = "{\"sign\":\"DQExtgJ/HFkvz7rMEGDKdIOS+jz7wsZ7Hwvc4iYv+hYIe4Bx5f+sMfizqaeiA64iTWeyzZ1XIERcbKcQQw7GfeCVtqfNW8HGx2bsKk7iEUrJK1Qh1kJE4xqCxrJCatXGMTFBe5PgBxSYi96d8oS/jdJe2vAo5+aOYgHRKNFqw8amgX77Dxv5FQzorviuCsW1G6NuiTNtOQBllSlVxVf61JCFH9J6qpiWibk+wKXWceuenrJpiucnxTrarh1dMpbsQlocjn/kDqP6lTleoHwWAQ6YR//fIcbDDSEIIQPeO2QkIiSKvq7BnWygunQMymmTcVKJ0XS5cb8KAttPxpbeQQ==\",\"data\":\"pay_result=success&tn=201601291406021626798&cert_id=69597475696\"}";
 
         Payment payment = new Payment();
         payment.setSn("T00000006");
         payment.setPayConfig(this.payConfig);
         payment.setTotalAmount(BigDecimal.valueOf(0.01));
         payment.setCreateTime(DateUtil.parse("20160128131252","yyyyMMddHHmmss"));
+
+        payment = unionpay.payNotify(payment,body);
+
+        LOG.debug(payment);
+
+        body = "txnType=01&respCode=00&currencyCode=156&merId=802310073920500&settleDate=0129&txnSubType=01&version=5.0.0&txnAmt=2&signMethod=01&certId=69597475696&settleAmt=2&traceTime=0129143436&encoding=UTF-8&settleCurrencyCode=156&bizType=000201&respMsg=Success%21&traceNo=460833&queryId=201601291434364608338&signature=Rs49SebZD2EbxB1A6UhzZ4ITpLv6SZ3jGzrIOYHMurLEWVndaEsmUU5%2BDvdg6AIYz8QE0D4Yg2lldHaN0NEXC8jLYY%2FdYPoJmWDBK5mzuGTbKA9ZtIblBGzLZncszyNgjvZ90dYJ167vwu7iQeMCJpq7Lj7WNp%2BFDDcOTr5nKihOsvl64i%2FIi4hYZQs9bRBIoP%2Bsn%2FtqN%2F4kQ21WoG7yqFmdqz9xE7SkZjI6eNhdAB7ol219S1BtwfM1fvxo8N76pR0QDldldIQm4Yq59qqIgPxuNcnbMqLlqDWbIsHVoOVTSgPmLMa5aj46BiXgYBY88RlpFA3w5QoPAQL00ZrMoA%3D%3D&orderId=P2016012900166&txnTime=20160129143436&accessType=0";
 
         payment = unionpay.payNotify(payment,body);
 

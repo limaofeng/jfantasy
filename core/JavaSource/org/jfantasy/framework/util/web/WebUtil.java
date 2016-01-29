@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
@@ -363,10 +364,15 @@ public class WebUtil {
         return t;
     }
 
-    public static String getQueryString(Map<String, String[]> params) {
+    public static String getQueryString(Map<String, ?> params) {
         StringBuilder queryString = new StringBuilder();
-        for (Map.Entry<String, String[]> entry : params.entrySet()) {
-            for (String value : entry.getValue()) {
+        for (Map.Entry<String, ?> entry : params.entrySet()) {
+            Object value = entry.getValue();
+            if (value.getClass().isArray()) {
+                for (int i = 0, length = Array.getLength(value); i < length; i++) {
+                    queryString.append(entry.getKey()).append("=").append(Array.get(value, i)).append("&");
+                }
+            } else {
                 queryString.append(entry.getKey()).append("=").append(value).append("&");
             }
         }

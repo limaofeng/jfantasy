@@ -122,13 +122,13 @@ public class PayService implements InitializingBean {
             String state = data.get("trade_state");
             if ("SUCCESS".equalsIgnoreCase(state)) {//支付成功
                 payment.setStatus(Payment.Status.success);
-                this.paymentService.result(payment,null);
+                this.paymentService.save(payment);
             } else if ("CLOSED".equalsIgnoreCase(state)) {//已关闭
                 this.paymentService.close(payment.getSn(), tradeNo);
             } else if ("PAYERROR".equalsIgnoreCase(state) || "REFUND".equalsIgnoreCase(state) || "REVOKED".equalsIgnoreCase(state)) {
                 //支付失败 and 转入退款 and 已撤销
                 payment.setStatus(Payment.Status.failure);
-                this.paymentService.result(payment,null);
+                this.paymentService.save(payment);
 //                this.paymentService.failure(payment.getSn(), tradeNo, data.get("trade_state_desc"));
             }
             return payment;

@@ -12,6 +12,7 @@ import org.jfantasy.framework.httpclient.HttpClientUtil;
 import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
@@ -37,35 +38,36 @@ public class Unionpay extends PayProductSupport {
 
     private final static Log LOG = LogFactory.getLog(Unionpay.class);
 
-    private DeployStatus deployStatus = DeployStatus.Production;
+    private DeployStatus deployStatus;
+    private Map<DeployStatus, Unionpay.Urls> urlsMap;
 
-    private Map<DeployStatus, Urls> urlsMap = new HashMap<DeployStatus, Urls>() {
-        {
-            //##########################交易发送地址配置#############################
-            //######(以下配置为PM环境：入网测试环境用)#######
-            Urls urls = new Urls();
-            urls.setFrontTransUrl("https://101.231.204.80:5000/gateway/api/frontTransReq.do");
-            urls.setAppTransUrl("https://101.231.204.80:5000/gateway/api/appTransReq.do");
-            urls.setBackTransUrl("https://101.231.204.80:5000/gateway/api/backTrans.do");
-            urls.setCardTransUrl("https://101.231.204.80:5000/gateway/api/cardTransReq.do");
-            urls.setSingleQueryUrl("https://101.231.204.80:5000/gateway/api/queryTrans.do");
-            urls.setBatchTransUrl("https://101.231.204.80:5000/gateway/api/batchTransReq.do");
-            urls.setFileTransUrl("https://101.231.204.80:9080/");
-            urls.setQueryTransUrl("https://101.231.204.80:5000/gateway/api/queryTrans.do");
-            this.put(DeployStatus.Develop, urls);
-            //######(以下配置为PM环境：生产环境配置)#######
-            urls = new Urls();
-            urls.setFrontTransUrl("https://gateway.95516.com/gateway/api/frontTransReq.do");
-            urls.setAppTransUrl("https://gateway.95516.com/gateway/api/appTransReq.do");
-            urls.setBackTransUrl("https://gateway.95516.com/gateway/api/backTransReq.do");
-            urls.setCardTransUrl("https://gateway.95516.com/gateway/api/cardTransReq.do");
-            urls.setSingleQueryUrl("https://gateway.95516.com/gateway/api/queryTrans.do");
-            urls.setBatchTransUrl("https://gateway.95516.com/gateway/api/batchTrans.do");
-            urls.setFileTransUrl("https://filedownload.95516.com/");
-            urls.setQueryTransUrl("https://gateway.95516.com/gateway/api/queryTrans.do");
-            this.put(DeployStatus.Production, urls);
-        }
-    };
+    public Unionpay() {
+        this.deployStatus = DeployStatus.Production;
+        this.urlsMap = new HashMap<DeployStatus, Unionpay.Urls>() {
+            {
+                Unionpay.Urls urls = Unionpay.this.new Urls();
+                urls.setFrontTransUrl("https://101.231.204.80:5000/gateway/api/frontTransReq.do");
+                urls.setAppTransUrl("https://101.231.204.80:5000/gateway/api/appTransReq.do");
+                urls.setBackTransUrl("https://101.231.204.80:5000/gateway/api/backTrans.do");
+                urls.setCardTransUrl("https://101.231.204.80:5000/gateway/api/cardTransReq.do");
+                urls.setSingleQueryUrl("https://101.231.204.80:5000/gateway/api/queryTrans.do");
+                urls.setBatchTransUrl("https://101.231.204.80:5000/gateway/api/batchTransReq.do");
+                urls.setFileTransUrl("https://101.231.204.80:9080/");
+                urls.setQueryTransUrl("https://101.231.204.80:5000/gateway/api/queryTrans.do");
+                this.put(DeployStatus.Develop, urls);
+                urls = Unionpay.this.new Urls();
+                urls.setFrontTransUrl("https://gateway.95516.com/gateway/api/frontTransReq.do");
+                urls.setAppTransUrl("https://gateway.95516.com/gateway/api/appTransReq.do");
+                urls.setBackTransUrl("https://gateway.95516.com/gateway/api/backTransReq.do");
+                urls.setCardTransUrl("https://gateway.95516.com/gateway/api/cardTransReq.do");
+                urls.setSingleQueryUrl("https://gateway.95516.com/gateway/api/queryTrans.do");
+                urls.setBatchTransUrl("https://gateway.95516.com/gateway/api/batchTrans.do");
+                urls.setFileTransUrl("https://filedownload.95516.com/");
+                urls.setQueryTransUrl("https://gateway.95516.com/gateway/api/queryTrans.do");
+                this.put(DeployStatus.Production, urls);
+            }
+        };
+    }
 
     private Urls getUrls() {
         return urlsMap.get(this.deployStatus);
@@ -137,6 +139,7 @@ public class Unionpay extends PayProductSupport {
             if (!verify(result, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {//验证签名
                 throw new PayException("验证签名失败");
             }
+            payment.setTradeNo(result.get("tn"));
             return result;
         } catch (IOException e) {
             throw new PayException(e.getMessage());
@@ -150,7 +153,7 @@ public class Unionpay extends PayProductSupport {
         PublicKey publicKey = CertUtil.loadPublicKey(loadFileItem(config.getValidateCert()));
 
         try {
-            Map<String, String> data = WebUtil.parseQuery(result, true);
+            Map<String, String> data = (Map<String, String>) (result.startsWith("{") && result.endsWith("}") ? JSON.deserialize(result) : WebUtil.parseQuery(result, true));
             //手机支付通知
             boolean isAppNotify = data.containsKey("sign");
             if (!(isAppNotify && verify(data.get("data"), data.get("sign"), publicKey) || verify(data, publicKey))) {//验证签名
@@ -158,10 +161,13 @@ public class Unionpay extends PayProductSupport {
             }
             if (isAppNotify) {
                 Map<String, String> payresult = WebUtil.parseQuery(data.get("data"), true);
+                if (payment.getTradeNo().equals(payresult.get("tn"))) {
+                    throw new PayException("通知与订单不匹配");
+                }
                 payment.setStatus("success".equals(payresult.get("pay_result")) ? Payment.Status.success : Payment.Status.failure);
-                payment.setTradeNo(payresult.get("tn"));
             } else {
                 System.out.println(result);
+                payment.setStatus(Payment.Status.success);
             }
         } finally {
             //记录支付通知日志

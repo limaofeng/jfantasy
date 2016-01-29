@@ -67,6 +67,8 @@ public class PayService {
         } else if (PayType.app == payType) {
             toPayment.setSource(payProduct.app(payment, order));
         }
+        //保存支付信息
+        paymentService.save(payment);
         return toPayment;
     }
 
@@ -105,7 +107,7 @@ public class PayService {
         Order order = orderService.loadOrder(payment.getOrderSn());
 
         //更新支付状态
-        paymentService.result(payProduct.payNotify(payment, body), order);
+        paymentService.save(payProduct.payNotify(payment, body));
 
         //推送事件
         PayContext context = new PayContext(payment, order);
