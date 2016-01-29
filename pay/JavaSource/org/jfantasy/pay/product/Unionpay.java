@@ -12,6 +12,7 @@ import org.jfantasy.framework.httpclient.HttpClientUtil;
 import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.bean.PayConfig;
@@ -161,7 +162,7 @@ public class Unionpay extends PayProductSupport {
             }
             if (isAppNotify) {
                 Map<String, String> payresult = WebUtil.parseQuery(data.get("data"), true);
-                if (!payment.getTradeNo().equals(payresult.get("tn"))) {
+                if (!StringUtil.nullValue(payresult.get("tn")).equals(payment.getTradeNo())) {
                     throw new PayException("通知与订单不匹配");
                 }
                 payment.setStatus("success".equals(payresult.get("pay_result")) ? Payment.Status.success : Payment.Status.failure);
