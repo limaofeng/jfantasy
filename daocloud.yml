@@ -1,28 +1,31 @@
-image: index.docker.io/limaofeng/java7-tomcat7-maven3:1.0
+image: daocloud/ci-golang:1.4
 
 services:
-  - mysql
-  - redis
+    - mongodb
+    - mysql
+    - redis
 
-dependencies:
-  override:
-    - mvn clean
+env:
+    - MYENV = "hello"
 
-database:
-  override:
-    - mysql -e " SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456') " -uroot
+install:
+    - echo $MYENV
+    - echo "This is an install segment"
+    - echo "Here, we usually run scripts to setup a base environment"
+    - echo "For customized base image, you need to install git here unless you have git installed in your base image"
+    - echo "e.g., apt-get install -y git-core"
 
-test:
-  override:
-    - mvn compile install -Dmaven.test.skip=true -q -P test
-    - mvn cobertura:cobertura -Dmaven.test.failure.ignore=true -q -P test
-    - mvn org.eluder.coveralls:coveralls-maven-plugin:report -q -P test
-  post:
-    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
-    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+before_script:
+    - echo $MYENV
+    - echo "This is an before_script segment"
+    - echo "Here, we usually run scripts to prepare our test"
 
-deployment:
-  master:
-    branch: master
-    commands:
-      - ./deploy_master.sh
+script:
+    - echo $MYENV
+    - echo "This is an script segment"
+    - echo "Run test cases here"
+    - echo ""
+    - echo "Below shows how to use services, mongodb/mysql/redis are the hostnames of services"
+    - ping -c 2 mongodb
+    - ping -c 2 mysql
+    - ping -c 2 redis
