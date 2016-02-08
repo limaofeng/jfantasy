@@ -1,8 +1,8 @@
-machine:
-  java:
-    version: oraclejdk7
-  services:
-    - mysql
+image: index.docker.io/limaofeng/java7-tomcat7-maven3:1.0
+
+services:
+  - mysql
+  - redis
 
 dependencies:
   override:
