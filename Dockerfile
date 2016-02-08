@@ -1,4 +1,4 @@
-FROM index.docker.io/stackoverflower/java7-tomcat7-maven3:1.0
+FROM index.docker.io/limaofeng/java7-tomcat7-maven3:1.0
 
 ADD / /tmp/build/
 RUN cd /tmp/build && mvn clean compile -Dmaven.test.skip=true -P test
@@ -20,5 +20,4 @@ ENV JAVA_OPTS="-server -Dfile.encoding=UTF-8 -Xms1024m -Xmx1024m -XX:PermSize=25
 
 VOLUME ["/mnt/haolue/hbao","/tomcat/logs"]
 
-EXPOSE 8080
-EXPOSE 50983
+EXPOSE [8080,50983]
