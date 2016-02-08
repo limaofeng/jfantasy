@@ -1,0 +1,28 @@
+machine:
+  java:
+    version: oraclejdk7
+  services:
+    - mysql
+
+dependencies:
+  override:
+    - mvn clean
+
+database:
+  override:
+    - mysql -e " SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456') " -uroot
+
+test:
+  override:
+    - mvn compile install -Dmaven.test.skip=true -q -P test
+    - mvn cobertura:cobertura -Dmaven.test.failure.ignore=true -q -P test
+    - mvn org.eluder.coveralls:coveralls-maven-plugin:report -q -P test
+  post:
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - ./deploy_master.sh
