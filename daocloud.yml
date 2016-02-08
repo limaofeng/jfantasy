@@ -1,31 +1,18 @@
-image: daocloud/ci-golang:1.4
+image: index.docker.io/limaofeng/java7-tomcat7-maven3:1.0
 
 services:
-    - mongodb
     - mysql
     - redis
 
-env:
-    - MYENV = "hello"
-
 install:
-    - echo $MYENV
-    - echo "This is an install segment"
-    - echo "Here, we usually run scripts to setup a base environment"
-    - echo "For customized base image, you need to install git here unless you have git installed in your base image"
-    - echo "e.g., apt-get install -y git-core"
+    - mysql -e " SET PASSWORD FOR 'root'@'localhost' = PASSWORD('123456') " -uroot
+    - mvn clean
 
 before_script:
-    - echo $MYENV
-    - echo "This is an before_script segment"
-    - echo "Here, we usually run scripts to prepare our test"
+    - mvn compile install -Dmaven.test.skip=true -q -P test
+    - mvn cobertura:cobertura -Dmaven.test.failure.ignore=true -q -P test
+    - mvn org.eluder.coveralls:coveralls-maven-plugin:report -q -P test
 
 script:
-    - echo $MYENV
-    - echo "This is an script segment"
-    - echo "Run test cases here"
-    - echo ""
-    - echo "Below shows how to use services, mongodb/mysql/redis are the hostnames of services"
-    - ping -c 2 mongodb
-    - ping -c 2 mysql
-    - ping -c 2 redis
+    - mkdir -p $CIRCLE_TEST_REPORTS/junit/
+    - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
