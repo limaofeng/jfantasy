@@ -1,8 +1,8 @@
 # `jfantasy`
 
-[![Build Status][circle-img]][circle-url] [![Coverage Status][coveralls-img]][coveralls-url] [![TechDebt Status][tech_debt-img]][tech_debt-url] [![Coverage Status][coverage-img]][coverage-url]
+[![Build Status][circle-img]][circle-url] [![Coverage Status][coveralls-img]][coveralls-url]
 
-jfantasy 是[昊略软件公司的java开发框架],并整合了一些开源常用的java开发框架.
+jfantasy 整合了一些开源常用的java开发框架. 主要为了方便开发基于 spring mvc 的 RESTful 接口
 
 ### 快速开始
 
@@ -68,7 +68,3 @@ Licensed under [MIT](http://jfantasy.org/mit.txt)
 [gitter-url]:    https://gitter.im/limaofeng/jfantasy
 [circle-img]:    https://img.shields.io/circleci/project/limaofeng/jfantasy.svg?style=flat-square
 [circle-url]:    https://circleci.com/gh/limaofeng/jfantasy
-[tech_debt-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-framework/tech_debt.svg?style=flat-square
-[tech_debt-url]:http://sonar.hoolue.com/dashboard/index/4676
-[coverage-img]:https://img.shields.io/sonar/http/sonar.hoolue.com/com.fantasy:fantasy-framework/coverage.svg?style=flat-square
-[coverage-url]:http://sonar.hoolue.com/dashboard/index/4676

@@ -129,7 +129,7 @@ public class OSSFileManagerTest {
             }
         });
 
-        Assert.assertEquals(fileItems.size(),2);
+        Assert.assertEquals(fileItems.size(), 2);
     }
 
     @Test

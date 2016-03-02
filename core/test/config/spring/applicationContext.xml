@@ -8,7 +8,7 @@
        default-lazy-init="true">
 
     <!-- 用于非spring托管对象获取spring中的Bean -->
-    <bean id="springContextUtil" class="com.fantasy.framework.spring.SpringContextUtil" lazy-init="false"/>
+    <bean id="springContextUtil" class="org.jfantasy.framework.spring.SpringContextUtil" lazy-init="false"/>
 
     <!-- 使用 annotation -->
     <context:annotation-config/>
@@ -16,7 +16,7 @@
     <aop:aspectj-autoproxy/>
 
     <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
-    <context:component-scan base-package="com.fantasy.modules"/>
+    <context:component-scan base-package="org.jfantasy.cms"/>
 
     <!-- 加载 properties文件 -->
     <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:props/application.properties"/>

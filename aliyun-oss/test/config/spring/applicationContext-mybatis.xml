@@ -2,19 +2,24 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id="sqlSessionFactoryBean" class="com.fantasy.framework.dao.mybatis.SqlSessionFactoryBean">
+    <bean id="sqlSessionFactoryBean" class="org.jfantasy.framework.dao.mybatis.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:mybatis/mybatis-config.xml"/>
         <property name="mybatisProperties">
             <props>
-                <prop key="mybatis.dialect">com.fantasy.framework.dao.mybatis.dialect.MySQLDialect</prop>
+                <prop key="mybatis.dialect">org.jfantasy.framework.dao.mybatis.dialect.MySQLDialect</prop>
             </props>
+        </property>
+        <property name="mapperLocations">
+            <list>
+                <value>classpath:org/jfantasy/framework/dao/mybatis/keygen/dao/Sequence-Mapper.xml</value>
+            </list>
         </property>
     </bean>
 
-    <bean class="com.fantasy.framework.dao.mybatis.MapperScannerConfigurer">
-        <property name="basePackage" value="com.fantasy.framework;com.fantasy.test;"/>
-        <property name="markerInterface" value="com.fantasy.framework.dao.mybatis.sqlmapper.SqlMapper"/>
+    <bean class="org.jfantasy.framework.dao.mybatis.MapperScannerConfigurer">
+        <property name="basePackage" value="org.jfantasy.framework.dao.mybatis.keygen;"/>
+        <property name="markerInterface" value="org.jfantasy.framework.dao.mybatis.sqlmapper.SqlMapper"/>
         <property name="sqlSessionFactoryBeanName" value="sqlSessionFactoryBean"/>
     </bean>
 
