@@ -22,13 +22,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
-import java.security.cert.X509Certificate;
 import java.util.List;
 
 /**
@@ -145,25 +140,14 @@ public class UnionpayTest {
     @Test
     public void testQuery() throws Exception {
         Payment payment = new Payment();
-        payment.setSn("T00000006");
+        payment.setSn("P2016030700363");
         payment.setPayConfig(this.payConfig);
         payment.setTotalAmount(BigDecimal.valueOf(0.01));
-        payment.setCreateTime(DateUtil.parse("20160128131252","yyyyMMddHHmmss"));
+        payment.setCreateTime(DateUtil.parse("20160307143026","yyyyMMddHHmmss"));
 
         String result = unionpay.query(payment);
 
         LOG.debug(result);
-    }
-
-    public static void main(String[] args) throws CertificateException, FileNotFoundException {
-        for(File file : new File(PathUtil.classes() + "/certs/").listFiles()){
-            if(!file.getName().endsWith(".cer")){
-                continue;
-            }
-            CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            X509Certificate validateCert = (X509Certificate) cf.generateCertificate(new FileInputStream(file));
-            System.out.println(validateCert.getSerialNumber().toString()+"==>"+file.getAbsolutePath());
-        }
     }
 
     @Test

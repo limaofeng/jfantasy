@@ -208,7 +208,7 @@ public class Unionpay extends PayProductSupport {
             data.put("signMethod", "01");// M
             data.put("txnType", "00");// 交易类型 00
             data.put("txnSubType", "00");//默认00
-            data.put("bizType", "000000");// 默认:000000
+            data.put("bizType", "000201");// 默认:000000
             data.put("accessType", "0");// 0：普通商户直连接入2：平台类商户接入
             data.put("merId", merId);// M
             data.put("txnTime", DateUtil.format(payment.getCreateTime(), "yyyyMMddHHmmss"));// 被查询交易的交易时间

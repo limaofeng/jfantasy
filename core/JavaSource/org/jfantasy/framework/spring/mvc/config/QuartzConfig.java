@@ -56,6 +56,7 @@ public class QuartzConfig {
         properties.setProperty("org.quartz.plugin.shutdownhook.class", "org.quartz.plugins.management.ShutdownHookPlugin");
         properties.setProperty("org.quartz.plugin.shutdownhook.cleanShutdown", "true");
         schedulerFactoryBean.setQuartzProperties(properties);
+        schedulerFactoryBean.setStartupDelay(20);
         return schedulerFactoryBean;
     }
 
