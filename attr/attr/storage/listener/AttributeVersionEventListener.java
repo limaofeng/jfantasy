@@ -1,15 +1,15 @@
 package org.jfantasy.attr.storage.listener;
 
-import org.jfantasy.attr.storage.bean.Attribute;
-import org.jfantasy.attr.storage.bean.AttributeVersion;
-import org.jfantasy.attr.storage.dao.AttributeDao;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.event.spi.DeleteEvent;
 import org.hibernate.event.spi.DeleteEventListener;
+import org.jfantasy.attr.storage.bean.Attribute;
+import org.jfantasy.attr.storage.bean.AttributeVersion;
+import org.jfantasy.attr.storage.dao.AttributeDao;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 

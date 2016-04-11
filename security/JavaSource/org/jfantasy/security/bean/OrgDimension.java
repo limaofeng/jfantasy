@@ -1,13 +1,11 @@
 package org.jfantasy.security.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.system.bean.Website;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.system.bean.Website;
 
 /**
  * 组织维度

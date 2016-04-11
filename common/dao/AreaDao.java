@@ -1,8 +1,8 @@
 package org.jfantasy.common.dao;
 
+import org.hibernate.Query;
 import org.jfantasy.common.bean.Area;
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
-import org.hibernate.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository

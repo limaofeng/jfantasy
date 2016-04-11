@@ -1,13 +1,12 @@
 package org.jfantasy.attr.storage.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ClassUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.ClassUtil;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**

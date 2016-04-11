@@ -1,10 +1,8 @@
 package org.jfantasy.attr.storage.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.ForeignKey;

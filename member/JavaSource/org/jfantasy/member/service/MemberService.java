@@ -1,5 +1,6 @@
 package org.jfantasy.member.service;
 
+import org.hibernate.criterion.Criterion;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.LoginException;
@@ -18,7 +19,6 @@ import org.jfantasy.security.SpringSecurityUtils;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 import org.jfantasy.security.service.RoleService;
-import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationContext;

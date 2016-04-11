@@ -1,13 +1,12 @@
 package org.jfantasy.member.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**

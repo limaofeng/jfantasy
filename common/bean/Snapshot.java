@@ -1,14 +1,12 @@
 package org.jfantasy.common.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
 
 /**
  * 应用场景，当通过一个订单去查看订单详情对应的商品时，如果该商品被编辑过。显示商品该商品购买时的快照信息

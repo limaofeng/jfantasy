@@ -1,16 +1,15 @@
 package org.jfantasy.member.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.ForbiddenException;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Receiver;
 import org.jfantasy.member.service.ReceiverService;
-import org.jfantasy.member.bean.Member;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

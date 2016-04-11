@@ -1,5 +1,8 @@
 package org.jfantasy.wx.service;
 
+import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.filestore.service.FileUploadService;
 import org.jfantasy.framework.dao.Pager;
@@ -11,17 +14,13 @@ import org.jfantasy.wx.bean.GroupMessage;
 import org.jfantasy.wx.bean.GroupNews;
 import org.jfantasy.wx.bean.GroupNewsArticle;
 import org.jfantasy.wx.media.service.impl.MediaWeiXinServiceTest;
-import junit.framework.Assert;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.io.File;

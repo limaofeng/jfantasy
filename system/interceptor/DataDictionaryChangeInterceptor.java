@@ -1,12 +1,11 @@
 package org.jfantasy.system.interceptor;
 
-import org.jfantasy.schedule.service.ScheduleService;
-import org.jfantasy.system.service.DataDictionaryService;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
-
+import org.jfantasy.schedule.service.ScheduleService;
+import org.jfantasy.system.service.DataDictionaryService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 @Aspect

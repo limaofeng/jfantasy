@@ -1,9 +1,5 @@
 package org.jfantasy.security.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.security.bean.enums.ResourceType;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,8 +7,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.security.bean.enums.ResourceType;
 
 /**
  * 资源

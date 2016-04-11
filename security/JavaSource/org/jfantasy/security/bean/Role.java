@@ -11,7 +11,6 @@ import org.jfantasy.framework.util.jackson.JSON;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,10 +1,10 @@
 package org.jfantasy.security.service;
 
+import org.hibernate.criterion.Criterion;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.security.bean.Resource;
 import org.jfantasy.security.dao.ResourceDao;
-import org.hibernate.criterion.Criterion;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

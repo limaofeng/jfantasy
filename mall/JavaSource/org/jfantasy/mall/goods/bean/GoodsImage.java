@@ -1,13 +1,12 @@
 package org.jfantasy.mall.goods.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.filestore.bean.FileDetail;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 
 /**
  * 商品预览时的图片

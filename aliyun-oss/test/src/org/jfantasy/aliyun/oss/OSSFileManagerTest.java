@@ -1,5 +1,8 @@
 package org.jfantasy.aliyun.oss;
 
+import junit.framework.Assert;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.filestore.FileItem;
 import org.jfantasy.filestore.FileItemFilter;
 import org.jfantasy.filestore.FileItemSelector;
@@ -9,9 +12,6 @@ import org.jfantasy.filestore.service.FileManagerFactory;
 import org.jfantasy.filestore.service.FileManagerService;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
-import junit.framework.Assert;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

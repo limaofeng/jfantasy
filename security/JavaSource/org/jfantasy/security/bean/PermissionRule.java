@@ -1,8 +1,8 @@
 package org.jfantasy.security.bean;
 
-import org.jfantasy.security.bean.enums.PermissionType;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.jfantasy.security.bean.enums.PermissionType;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 

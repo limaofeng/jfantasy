@@ -1,10 +1,8 @@
 package org.jfantasy.attr.storage.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 /**
  * 字段界面定义

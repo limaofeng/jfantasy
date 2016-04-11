@@ -1,14 +1,13 @@
 package org.jfantasy.system.bean;
 
-import org.jfantasy.filestore.bean.FileManagerConfig;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.filestore.bean.FileManagerConfig;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,21 +1,19 @@
 package org.jfantasy.security.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.security.bean.databind.MenuDeserializer;
-import org.jfantasy.security.bean.databind.MenuSerializer;
-import org.jfantasy.security.bean.enums.MenuType;
-import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.security.bean.databind.MenuDeserializer;
+import org.jfantasy.security.bean.databind.MenuSerializer;
+import org.jfantasy.security.bean.enums.MenuType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
-import javax.persistence.*;
 import java.util.List;
 
 @ApiModel(value = "菜单")

@@ -1,5 +1,11 @@
 package org.jfantasy.wx.service;
 
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.exception.WxErrorException;
+import me.chanjar.weixin.mp.bean.WxMpMassGroupMessage;
+import me.chanjar.weixin.mp.bean.WxMpMassNews;
+import me.chanjar.weixin.mp.bean.WxMpMassOpenIdsMessage;
+import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 import org.jfantasy.filestore.service.FileManagerFactory;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
@@ -12,12 +18,6 @@ import org.jfantasy.wx.dao.GroupMessageDao;
 import org.jfantasy.wx.dao.GroupNewsArticleDao;
 import org.jfantasy.wx.dao.GroupNewsDao;
 import org.jfantasy.wx.framework.exception.WeiXinException;
-import me.chanjar.weixin.common.api.WxConsts;
-import me.chanjar.weixin.common.exception.WxErrorException;
-import me.chanjar.weixin.mp.bean.WxMpMassGroupMessage;
-import me.chanjar.weixin.mp.bean.WxMpMassNews;
-import me.chanjar.weixin.mp.bean.WxMpMassOpenIdsMessage;
-import me.chanjar.weixin.mp.bean.result.WxMpMassUploadResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

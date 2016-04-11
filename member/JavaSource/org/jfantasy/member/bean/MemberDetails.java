@@ -1,10 +1,5 @@
 package org.jfantasy.member.bean;
 
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.converter.FileDetailConverter;
-import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.security.bean.enums.Sex;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -13,8 +8,12 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jfantasy.filestore.bean.FileDetail;
+import org.jfantasy.filestore.bean.converter.FileDetailConverter;
+import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.security.bean.enums.Sex;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 

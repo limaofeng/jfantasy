@@ -1,5 +1,8 @@
 package org.jfantasy.framework.util.validator;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jdom2.Element;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.validator.entities.DefaultValidateable;
@@ -7,9 +10,6 @@ import org.jfantasy.framework.util.validator.entities.FieldValidator;
 import org.jfantasy.framework.util.validator.validators.DefaultParamsValidator;
 import org.jfantasy.framework.util.validator.validators.StackValidator;
 import org.jfantasy.framework.util.xml.JdomUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.jdom2.Element;
 
 import java.io.InputStream;
 import java.util.ArrayList;

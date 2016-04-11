@@ -1,5 +1,9 @@
 package org.jfantasy.system.dao;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.type.StringType;
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -7,10 +11,6 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.system.bean.DataDictionary;
 import org.jfantasy.system.bean.DataDictionaryKey;
 import org.jfantasy.system.bean.DataDictionaryType;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Disjunction;
-import org.hibernate.criterion.Restrictions;
-import org.hibernate.type.StringType;
 import org.springframework.stereotype.Repository;
 
 import java.io.Serializable;

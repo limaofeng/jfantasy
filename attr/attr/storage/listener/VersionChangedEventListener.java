@@ -1,11 +1,10 @@
 package org.jfantasy.attr.storage.listener;
 
+import org.hibernate.persister.entity.EntityPersister;
 import org.jfantasy.attr.framework.CustomBeanFactory;
 import org.jfantasy.attr.storage.bean.AttributeVersion;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
-import org.hibernate.event.spi.*;
-import org.hibernate.persister.entity.EntityPersister;
 
 public class VersionChangedEventListener implements PostInsertEventListener, PostUpdateEventListener, PostDeleteEventListener {
 

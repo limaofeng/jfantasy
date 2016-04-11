@@ -1,13 +1,13 @@
 package org.jfantasy.security.service;
 
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.security.bean.Permission;
 import org.jfantasy.security.bean.Resource;
 import org.jfantasy.security.bean.enums.ResourceType;
 import org.jfantasy.security.dao.PermissionDao;
-import org.hibernate.criterion.Criterion;
-import org.hibernate.criterion.Restrictions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

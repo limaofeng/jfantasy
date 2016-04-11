@@ -1,7 +1,6 @@
 package org.jfantasy.security.bean.handler;
 
 import org.apache.commons.beanutils.Converter;
-
 import org.jfantasy.framework.dao.mybatis.type.CharEnumTypeHandler;
 import org.jfantasy.security.bean.enums.Sex;
 

@@ -1,11 +1,11 @@
 package org.jfantasy.attr.storage.service;
 
+import org.hibernate.criterion.Criterion;
 import org.jfantasy.attr.storage.bean.Attribute;
 import org.jfantasy.attr.storage.bean.AttributeVersion;
 import org.jfantasy.attr.storage.bean.CustomBeanDefinition;
 import org.jfantasy.attr.storage.dao.CustomBeanDefinitionDao;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

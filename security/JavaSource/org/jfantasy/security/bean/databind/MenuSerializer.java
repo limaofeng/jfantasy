@@ -1,9 +1,9 @@
 package org.jfantasy.security.bean.databind;
 
-import org.jfantasy.security.bean.Menu;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.jfantasy.security.bean.Menu;
 
 import java.io.IOException;
 

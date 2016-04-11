@@ -1,10 +1,10 @@
 package org.jfantasy.security.bean.databind;
 
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.security.bean.Menu;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.security.bean.Menu;
 
 import java.io.IOException;
 

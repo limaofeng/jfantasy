@@ -3,7 +3,6 @@ package org.jfantasy.common.service;
 
 import org.jfantasy.framework.util.common.StringUtil;
 
-import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 

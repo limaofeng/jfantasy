@@ -6,8 +6,6 @@ import org.jfantasy.framework.util.validator.Validateable;
 import org.jfantasy.framework.util.validator.Validator;
 import org.jfantasy.framework.util.validator.exception.Error;
 
-import java.util.*;
-
 public class DefaultValidateable implements Validateable {
     private Validateable superValidateable;
     private Map<String, Validator> validators = new HashMap<String, Validator>();

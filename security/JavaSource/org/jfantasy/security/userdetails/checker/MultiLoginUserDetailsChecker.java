@@ -1,11 +1,10 @@
 package org.jfantasy.security.userdetails.checker;
 
+import org.jfantasy.security.userdetails.FantasyUserDetails;
+import org.jfantasy.security.userdetails.SimpleUser;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
-
-import org.jfantasy.security.userdetails.FantasyUserDetails;
-import org.jfantasy.security.userdetails.SimpleUser;
 
 /**
  * 重复登陆验证

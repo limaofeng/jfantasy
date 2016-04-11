@@ -1,20 +1,5 @@
 package org.jfantasy.wx.framework.core;
 
-import org.jfantasy.filestore.FileItem;
-import org.jfantasy.filestore.manager.LocalFileManager;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.security.bean.enums.Sex;
-import org.jfantasy.wx.framework.exception.WeiXinException;
-import org.jfantasy.wx.framework.message.*;
-import org.jfantasy.wx.framework.message.content.*;
-import org.jfantasy.wx.framework.message.user.Group;
-import org.jfantasy.wx.framework.message.user.OpenIdList;
-import org.jfantasy.wx.framework.message.user.User;
-import org.jfantasy.wx.framework.oauth2.AccessToken;
-import org.jfantasy.wx.framework.oauth2.Scope;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.WxJsapiSignature;
 import me.chanjar.weixin.common.bean.WxMenu;
@@ -34,6 +19,22 @@ import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.filestore.FileItem;
+import org.jfantasy.filestore.manager.LocalFileManager;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.web.WebUtil;
+import org.jfantasy.security.bean.enums.Sex;
+import org.jfantasy.wx.framework.core.WeiXinService;
+import org.jfantasy.wx.framework.exception.WeiXinException;
+import org.jfantasy.wx.framework.message.*;
+import org.jfantasy.wx.framework.message.content.*;
+import org.jfantasy.wx.framework.message.user.Group;
+import org.jfantasy.wx.framework.message.user.OpenIdList;
+import org.jfantasy.wx.framework.message.user.User;
+import org.jfantasy.wx.framework.oauth2.AccessToken;
+import org.jfantasy.wx.framework.oauth2.Scope;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
@@ -43,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import org.jfantasy.wx.framework.core.WeiXinService;
 
 public class WeiXinMpService implements WeiXinService {
 

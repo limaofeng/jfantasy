@@ -1,10 +1,5 @@
 package org.jfantasy.system.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.system.bean.databind.DataDictionaryKeyDeserializer;
-import org.jfantasy.system.bean.databind.DataDictionaryKeySerializer;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -12,8 +7,12 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.system.bean.databind.DataDictionaryKeyDeserializer;
+import org.jfantasy.system.bean.databind.DataDictionaryKeySerializer;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**

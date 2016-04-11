@@ -1,18 +1,16 @@
 package org.jfantasy.member.bean;
 
-import org.jfantasy.common.bean.Area;
-import org.jfantasy.common.bean.converter.AreaConverter;
-import org.jfantasy.common.bean.databind.AreaDeserializer;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.common.bean.Area;
+import org.jfantasy.common.bean.converter.AreaConverter;
+import org.jfantasy.common.bean.databind.AreaDeserializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
 
 /**
  * 收货地址信息

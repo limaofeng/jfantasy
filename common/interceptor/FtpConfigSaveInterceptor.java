@@ -1,14 +1,12 @@
 package org.jfantasy.common.interceptor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
-
 import org.jfantasy.common.bean.FtpConfig;
 import org.jfantasy.common.service.FtpServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 @Component
 @Aspect

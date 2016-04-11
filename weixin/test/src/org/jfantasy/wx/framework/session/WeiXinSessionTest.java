@@ -1,5 +1,7 @@
 package org.jfantasy.wx.framework.session;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.filestore.FileManager;
 import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -9,8 +11,6 @@ import org.jfantasy.wx.framework.message.content.*;
 import org.jfantasy.wx.framework.message.user.Group;
 import org.jfantasy.wx.framework.message.user.User;
 import org.jfantasy.wx.framework.oauth2.Scope;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

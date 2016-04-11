@@ -4,9 +4,9 @@ import org.jfantasy.common.bean.JdbcConfig;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.logicalcobwebs.proxool.ProxoolDataSource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;

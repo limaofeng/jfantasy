@@ -1,9 +1,9 @@
 package org.jfantasy.system.bean.typeConverter;
 
+import ognl.DefaultTypeConverter;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.system.bean.DataDictionaryKey;
-import ognl.DefaultTypeConverter;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Member;

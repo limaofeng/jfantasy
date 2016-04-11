@@ -1,14 +1,13 @@
 package org.jfantasy.security.userdetails.checker;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsChecker;
-
 import org.jfantasy.framework.util.web.context.ActionContext;
 import org.jfantasy.security.userdetails.FantasyUserDetails;
 import org.jfantasy.security.userdetails.SimpleUser;
 import org.jfantasy.security.userdetails.exception.FirstLoginAuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 是否首次登陆验证

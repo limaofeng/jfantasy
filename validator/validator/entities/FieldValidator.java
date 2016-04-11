@@ -1,5 +1,7 @@
 package org.jfantasy.framework.util.validator.entities;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.validator.ParamsValidator;
 import org.jfantasy.framework.util.validator.Validateable;
@@ -7,10 +9,6 @@ import org.jfantasy.framework.util.validator.Validator;
 import org.jfantasy.framework.util.validator.exception.Error;
 import org.jfantasy.framework.util.validator.exception.StackValidationException;
 import org.jfantasy.framework.util.validator.exception.ValidationException;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-
-import java.util.*;
 
 public class FieldValidator {
 	private String type;

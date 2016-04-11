@@ -1,5 +1,6 @@
 package org.jfantasy.contacts.service;
 
+import org.hibernate.criterion.Restrictions;
 import org.jfantasy.contacts.bean.Book;
 import org.jfantasy.contacts.bean.Group;
 import org.jfantasy.contacts.bean.Linkman;
@@ -11,11 +12,9 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.security.SpringSecurityUtils;
 import org.jfantasy.security.userdetails.SimpleUser;
-import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 

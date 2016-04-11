@@ -1,9 +1,9 @@
 package org.jfantasy.system.bean.databind;
 
-import org.jfantasy.system.bean.DataDictionaryType;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.jfantasy.system.bean.DataDictionaryType;
 
 import java.io.IOException;
 

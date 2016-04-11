@@ -1,19 +1,18 @@
 package org.jfantasy.member.dao;
 
-import java.lang.reflect.Array;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.ProjectionList;
 import org.hibernate.criterion.Projections;
-import org.springframework.stereotype.Repository;
-
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.member.bean.Point;
+import org.springframework.stereotype.Repository;
+
+import java.lang.reflect.Array;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository("PointDao")
 public class PointDao extends HibernateDao<Point, Long>{

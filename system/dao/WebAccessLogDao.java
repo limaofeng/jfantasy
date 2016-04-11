@@ -1,11 +1,10 @@
 package org.jfantasy.system.dao;
 
-import org.jfantasy.system.bean.ChartSource;
 import org.hibernate.SQLQuery;
-import org.springframework.stereotype.Repository;
-
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.system.bean.ChartSource;
 import org.jfantasy.system.bean.WebAccessLog;
+import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;

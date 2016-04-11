@@ -1,15 +1,14 @@
 package org.jfantasy.common.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.jfantasy.common.bean.HotKeywords;
 import org.jfantasy.common.bean.enums.TimeUnit;
 import org.jfantasy.common.service.KeywordService;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 @Api(value = "common-hotkeywords", description = "热门关键词")
 @RestController

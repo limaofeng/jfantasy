@@ -1,9 +1,9 @@
 package org.jfantasy.common.bean.converter;
 
-import org.jfantasy.framework.util.web.context.ActionContext;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.web.context.ActionContext;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;

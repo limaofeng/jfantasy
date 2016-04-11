@@ -1,16 +1,14 @@
 package org.jfantasy.member.interceptor;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
-
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Point;
 import org.jfantasy.member.service.MemberService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
 @Aspect

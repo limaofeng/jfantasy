@@ -1,5 +1,9 @@
 package org.jfantasy.wx.framework.message;
 
+import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.filestore.FileItem;
 import org.jfantasy.framework.util.cglib.CglibUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -8,10 +12,6 @@ import org.jfantasy.wx.framework.core.WeiXinService;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.factory.WeiXinSessionUtils;
 import org.jfantasy.wx.framework.message.content.*;
-import net.sf.cglib.proxy.MethodInterceptor;
-import net.sf.cglib.proxy.MethodProxy;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import java.lang.reflect.Method;
 import java.util.Date;

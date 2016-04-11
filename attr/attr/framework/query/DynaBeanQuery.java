@@ -1,11 +1,11 @@
 package org.jfantasy.attr.framework.query;
 
-import org.jfantasy.framework.dao.hibernate.util.TypeFactory;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.type.Type;
+import org.jfantasy.framework.dao.hibernate.util.TypeFactory;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 import java.util.ArrayList;
 import java.util.List;

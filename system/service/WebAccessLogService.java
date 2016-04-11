@@ -8,11 +8,11 @@ import org.jfantasy.framework.util.web.WebUtil.Browser;
 import org.jfantasy.system.bean.ChartSource;
 import org.jfantasy.system.bean.WebAccessLog;
 import org.jfantasy.system.dao.WebAccessLogDao;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;

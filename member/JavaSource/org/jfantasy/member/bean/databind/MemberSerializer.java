@@ -1,10 +1,10 @@
 package org.jfantasy.member.bean.databind;
 
 
-import org.jfantasy.member.bean.Member;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.jfantasy.member.bean.Member;
 
 import java.io.IOException;
 

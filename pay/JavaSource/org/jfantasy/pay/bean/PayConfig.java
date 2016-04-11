@@ -1,18 +1,17 @@
 package org.jfantasy.pay.bean;
 
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.converter.FileDetailConverter;
-import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.filestore.bean.FileDetail;
+import org.jfantasy.filestore.bean.converter.FileDetailConverter;
+import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

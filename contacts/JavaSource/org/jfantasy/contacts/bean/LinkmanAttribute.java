@@ -1,7 +1,7 @@
 package org.jfantasy.contacts.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;

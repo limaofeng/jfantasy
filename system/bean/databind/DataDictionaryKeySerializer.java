@@ -1,10 +1,10 @@
 package org.jfantasy.system.bean.databind;
 
-import org.jfantasy.framework.error.IgnoreException;
-import org.jfantasy.system.bean.DataDictionaryKey;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.system.bean.DataDictionaryKey;
 
 import java.io.IOException;
 

@@ -1,10 +1,10 @@
 package org.jfantasy.system.rest;
 
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.system.bean.DataDictionaryType;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.system.bean.DataDictionaryType;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

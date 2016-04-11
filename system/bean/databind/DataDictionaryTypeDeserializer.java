@@ -1,11 +1,11 @@
 package org.jfantasy.system.bean.databind;
 
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.system.bean.DataDictionaryType;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.system.bean.DataDictionaryType;
 
 import java.io.IOException;
 

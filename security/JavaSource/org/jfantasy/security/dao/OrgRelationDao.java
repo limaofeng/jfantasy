@@ -2,7 +2,6 @@ package org.jfantasy.security.dao;
 
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.security.bean.OrgRelation;
-import org.jfantasy.security.bean.Organization;
 import org.springframework.stereotype.Repository;
 
 /**

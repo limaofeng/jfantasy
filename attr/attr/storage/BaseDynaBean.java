@@ -1,15 +1,14 @@
 package org.jfantasy.attr.storage;
 
-import org.jfantasy.attr.framework.DynaBean;
-import org.jfantasy.attr.storage.bean.AttributeValue;
-import org.jfantasy.attr.storage.bean.AttributeVersion;
-import org.jfantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.attr.framework.DynaBean;
+import org.jfantasy.attr.storage.bean.AttributeValue;
+import org.jfantasy.attr.storage.bean.AttributeVersion;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
 import java.util.List;
 
 @MappedSuperclass

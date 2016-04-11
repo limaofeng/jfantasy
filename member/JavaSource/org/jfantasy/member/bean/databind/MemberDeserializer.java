@@ -1,11 +1,11 @@
 package org.jfantasy.member.bean.databind;
 
 
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.member.bean.Member;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonDeserializer;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.member.bean.Member;
 
 import java.io.IOException;
 

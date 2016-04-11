@@ -1,10 +1,8 @@
 package org.jfantasy.security.userdetails;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.security.authentication.CredentialsExpiredException;
@@ -12,7 +10,8 @@ import org.springframework.security.core.SpringSecurityMessageSource;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsChecker;
 
-import org.jfantasy.framework.util.common.ObjectUtil;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * spring security 登陆后置验证

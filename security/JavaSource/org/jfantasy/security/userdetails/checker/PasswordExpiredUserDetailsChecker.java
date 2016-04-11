@@ -1,11 +1,10 @@
 package org.jfantasy.security.userdetails.checker;
 
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsChecker;
-
 import org.jfantasy.security.userdetails.FantasyUserDetails;
 import org.jfantasy.security.userdetails.SimpleUser;
 import org.jfantasy.security.userdetails.exception.FirstLoginAuthenticationException;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsChecker;
 
 /**
  * 密码过期验证

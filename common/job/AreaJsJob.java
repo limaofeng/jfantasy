@@ -1,11 +1,11 @@
 package org.jfantasy.common.job;
 
+import org.apache.log4j.Logger;
 import org.jfantasy.common.service.AreaService;
 import org.jfantasy.filestore.FileManager;
 import org.jfantasy.filestore.service.FileManagerFactory;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.jackson.JSON;
-import org.apache.log4j.Logger;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;

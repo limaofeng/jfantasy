@@ -1,12 +1,5 @@
 package org.jfantasy.member.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.validation.RESTful.*;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.security.SpringSecurityUtils;
-import org.jfantasy.security.bean.Role;
-import org.jfantasy.security.bean.UserGroup;
-import org.jfantasy.security.userdetails.FantasyUserDetails;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -16,9 +9,15 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.validation.RESTful.*;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.security.SpringSecurityUtils;
+import org.jfantasy.security.bean.Role;
+import org.jfantasy.security.bean.UserGroup;
+import org.jfantasy.security.userdetails.FantasyUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Collection;

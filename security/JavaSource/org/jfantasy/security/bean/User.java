@@ -1,10 +1,5 @@
 package org.jfantasy.security.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.security.SpringSecurityUtils;
-import org.jfantasy.security.userdetails.FantasyUserDetails;
-import org.jfantasy.system.bean.Website;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
@@ -12,9 +7,13 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.security.SpringSecurityUtils;
+import org.jfantasy.security.userdetails.FantasyUserDetails;
+import org.jfantasy.system.bean.Website;
 import org.springframework.security.core.GrantedAuthority;
 
-import javax.persistence.*;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;

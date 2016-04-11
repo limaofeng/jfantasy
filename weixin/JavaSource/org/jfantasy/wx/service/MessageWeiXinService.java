@@ -9,10 +9,10 @@ import org.jfantasy.wx.bean.Message;
 import org.jfantasy.wx.bean.User;
 import org.jfantasy.wx.dao.MessageDao;
 import org.jfantasy.wx.framework.exception.WeiXinException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;

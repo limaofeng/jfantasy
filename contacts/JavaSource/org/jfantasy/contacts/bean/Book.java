@@ -1,10 +1,9 @@
 package org.jfantasy.contacts.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 

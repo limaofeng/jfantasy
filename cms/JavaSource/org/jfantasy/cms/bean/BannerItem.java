@@ -1,17 +1,15 @@
 package org.jfantasy.cms.bean;
 
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.converter.FileDetailConverter;
-import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.filestore.bean.FileDetail;
+import org.jfantasy.filestore.bean.converter.FileDetailConverter;
+import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.jackson.JSON;
 
 /**
  * 横幅图维护项
