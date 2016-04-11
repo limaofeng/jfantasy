@@ -114,7 +114,7 @@ public class PropertiesHelperTest {
 
     @Test
     public void testGetProperty() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
 
         //普通测试
         logger.debug(helper.getProperty("test"));
@@ -139,7 +139,7 @@ public class PropertiesHelperTest {
 
     @Test
     public void testClear() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
 
         logger.debug(helper.getProperty("test"));
         Assert.assertEquals(helper.getProperty("test"), "limaofeng");
@@ -152,7 +152,7 @@ public class PropertiesHelperTest {
 
     @Test
     public void testEntrySet() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
 
         for (Map.Entry<Object, Object> entry : helper.getProperties().entrySet()) {
             logger.debug(entry.getKey() + " = " + entry.getValue());
@@ -162,7 +162,7 @@ public class PropertiesHelperTest {
 
     @Test
     public void testPropertyNames() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
 
         Enumeration<?> enumeration = helper.getProperties().propertyNames();
         while (enumeration.hasMoreElements()) {
@@ -173,25 +173,25 @@ public class PropertiesHelperTest {
 
     @Test
     public void testContains() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
         Assert.assertTrue(helper.getProperties().contains("limaofeng"));
     }
 
     @Test
     public void testContainsKey() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
         Assert.assertTrue(helper.getProperties().containsKey("test"));
     }
 
     @Test
     public void testContainsValue() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
         Assert.assertTrue(helper.getProperties().containsValue("limaofeng"));
     }
 
     @Test
     public void testElements() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
         Enumeration<?> enumeration = helper.getProperties().elements();
         while (enumeration.hasMoreElements()) {
             Object value = enumeration.nextElement();
@@ -201,9 +201,9 @@ public class PropertiesHelperTest {
 
     @Test
     public void testIsEmpty() throws Exception {
-        PropertiesHelper helper = PropertiesHelper.load("props/application.properties");
+        PropertiesHelper helper = PropertiesHelper.load("backup/testconfig/props/application.properties");
         Assert.assertFalse(helper.getProperties().isEmpty());
-        helper = PropertiesHelper.load("props/application_empty.properties");
+        helper = PropertiesHelper.load("backup/testconfig/props/application_empty.properties");
         Assert.assertTrue(helper.getProperties().isEmpty());
 
     }

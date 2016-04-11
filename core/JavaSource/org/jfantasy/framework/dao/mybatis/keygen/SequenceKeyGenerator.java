@@ -29,7 +29,7 @@ public class SequenceKeyGenerator implements KeyGenerator {
         String[] keyProperties = paramMappedStatement.getKeyProperties();
         if (keyProperties.length == 1) {
             try {
-                Ognl.setValue(keyProperties[0], paramObject, Long.valueOf(getKeyGenerator().nextValue(paramObject.getClass().getName())));
+                Ognl.setValue(keyProperties[0], paramObject, getKeyGenerator().nextValue(paramObject.getClass().getName()));
             } catch (OgnlException e) {
                 LOG.error(e.getMessage(), e);
             }

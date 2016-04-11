@@ -1,6 +1,6 @@
 package org.jfantasy.wx.framework.message;
 
-import org.jfantasy.file.FileItem;
+import org.jfantasy.filestore.FileItem;
 import org.jfantasy.framework.util.cglib.CglibUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StringUtil;

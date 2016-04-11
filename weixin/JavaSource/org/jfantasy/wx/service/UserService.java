@@ -1,6 +1,6 @@
 package org.jfantasy.wx.service;
 
-import org.jfantasy.file.service.FileUploadService;
+import org.jfantasy.filestore.service.FileUploadService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.member.service.MemberService;

@@ -12,6 +12,9 @@ public class User {
 	private String name;
 	private Date createDate;
 	private Set<Article> articles = Sets.newHashSet();
+	private String username;
+	private boolean enabled;
+	private String nickName;
 
 	public String getName() {
 		return name;
@@ -39,4 +42,28 @@ public class User {
 		this.articles = articles;
 	}
 
+	public void setUsername(String username) {
+
+		this.username = username;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setEnabled(boolean enabled) {
+		this.enabled = enabled;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
+
+	public void setNickName(String nickName) {
+		this.nickName = nickName;
+	}
+
+	public String getNickName() {
+		return nickName;
+	}
 }

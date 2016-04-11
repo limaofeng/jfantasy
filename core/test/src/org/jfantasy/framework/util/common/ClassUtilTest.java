@@ -1,12 +1,11 @@
 package org.jfantasy.framework.util.common;
 
-import org.jfantasy.framework.util.asm.Article;
-import org.jfantasy.framework.util.reflect.Property;
-import org.jfantasy.security.bean.User;
-import org.jfantasy.security.bean.enums.Sex;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.json.bean.Article;
+import org.jfantasy.framework.util.json.bean.User;
+import org.jfantasy.framework.util.reflect.Property;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
@@ -127,7 +126,7 @@ public class ClassUtilTest {
 
     @Test
     public void testIsBeanType() throws Exception {
-        LOG.debug(ClassUtil.isBeanType(Sex.female.getClass()));
+//        LOG.debug(ClassUtil.isBeanType(Sex.female.getClass()));
     }
 
 }

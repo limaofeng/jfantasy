@@ -3,7 +3,7 @@ package org.jfantasy.website.runtime;
 import freemarker.template.Configuration;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.file.FileManager;
+import org.jfantasy.filestore.FileManager;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import org.jfantasy.framework.spring.SpringContextUtil;

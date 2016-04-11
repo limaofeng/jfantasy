@@ -1,9 +1,9 @@
 package org.jfantasy.framework.util.regexp;
 
-import org.jfantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.json.bean.User;
 import org.junit.Test;
 
 import java.lang.reflect.Array;
@@ -92,6 +92,13 @@ public class RegexpUtilTest {
     @Test
     public void testWildMatch() throws Exception {
 
+    }
+
+    @Test
+    public void matches(){
+        String regex = "[/].+";
+        LOG.debug("/".matches(regex));
+        LOG.debug("/error".matches(regex));
     }
 
 

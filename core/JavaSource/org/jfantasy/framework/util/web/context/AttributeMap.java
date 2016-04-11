@@ -8,8 +8,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.jsp.PageContext;
-
 @SuppressWarnings("rawtypes")
 public class AttributeMap implements Map {
     protected static final String UNSUPPORTED = "method makes no sense for a simplified map";
@@ -42,25 +40,15 @@ public class AttributeMap implements Map {
     }
 
     public Object get(Object key) {
-        PageContext pc = getPageContext();
-        if (pc == null) {
-            Map request = (Map) context.get("request");
-            Map session = (Map) context.get("session");
-            Map application = (Map) context.get("application");
-            if ((request != null) && (request.get(key) != null)) {
-                return request.get(key);
-            } else if ((session != null) && (session.get(key) != null)) {
-                return session.get(key);
-            } else if ((application != null) && (application.get(key) != null)) {
-                return application.get(key);
-            }
-        } else {
-            try {
-                return pc.findAttribute(key.toString());
-            } catch (NullPointerException npe) {
-                LOGGER.error(npe.getMessage(), npe);
-                return null;
-            }
+        Map request = (Map) context.get("request");
+        Map session = (Map) context.get("session");
+        Map application = (Map) context.get("application");
+        if ((request != null) && (request.get(key) != null)) {
+            return request.get(key);
+        } else if ((session != null) && (session.get(key) != null)) {
+            return session.get(key);
+        } else if ((application != null) && (application.get(key) != null)) {
+            return application.get(key);
         }
         return null;
     }
@@ -70,10 +58,6 @@ public class AttributeMap implements Map {
     }
 
     public Object put(Object key, Object value) {
-        PageContext pc = getPageContext();
-        if (pc != null) {
-            pc.setAttribute(key.toString(), value);
-        }
         return null;
     }
 
@@ -93,7 +77,4 @@ public class AttributeMap implements Map {
         return Collections.EMPTY_SET;
     }
 
-    private PageContext getPageContext() {
-        return (PageContext) context.get(PAGE_CONTEXT);
-    }
 }

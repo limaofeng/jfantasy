@@ -2,8 +2,8 @@ package org.jfantasy.cms.service;
 
 import org.jfantasy.cms.bean.Banner;
 import org.jfantasy.cms.bean.BannerItem;
-import org.jfantasy.file.bean.FileDetail;
-import org.jfantasy.file.service.FileUploadService;
+import org.jfantasy.filestore.bean.FileDetail;
+import org.jfantasy.filestore.service.FileUploadService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.util.common.file.FileUtil;

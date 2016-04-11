@@ -1,10 +1,10 @@
 package org.jfantasy.framework.util.ognl;
 
-import org.jfantasy.security.bean.User;
 import ognl.Ognl;
 import ognl.OgnlContext;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.json.bean.User;
 import org.junit.Assert;
 import org.junit.Test;
 

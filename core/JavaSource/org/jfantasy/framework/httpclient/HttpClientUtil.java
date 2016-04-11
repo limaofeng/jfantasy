@@ -1,21 +1,26 @@
 package org.jfantasy.framework.httpclient;
 
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.apache.commons.httpclient.Header;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpMethod;
-import org.apache.commons.httpclient.URIException;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.methods.PostMethod;
-import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
-import org.apache.commons.httpclient.protocol.Protocol;
-import org.apache.commons.httpclient.util.URIUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.http.Consts;
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -32,11 +37,6 @@ public class HttpClientUtil {
     }
 
     private static final Log LOGGER = LogFactory.getLog(HttpClientUtil.class);
-
-    static {
-        Protocol myhttps = new Protocol("https", new DefaultProtocolSocketFactory(), 443);
-        Protocol.registerProtocol("https", myhttps);
-    }
 
     /**
      * 执行get请求
@@ -83,27 +83,23 @@ public class HttpClientUtil {
      */
     public static Response doGet(String url, Request request) throws IOException {
         request = request == null ? new Request() : request;
-        HttpClient client = new HttpClient();
-        HttpMethod method = new GetMethod(url);
+        HttpGet http = new HttpGet(url + request.queryString());
         try {
             if (StringUtil.isNotBlank(request.queryString())) {
-                method.setQueryString(URIUtil.encodeQuery(request.queryString()));
+                //TODO queryString
             }
             for (Header header : request.getRequestHeaders()) {
-                method.addRequestHeader(header);
+                http.addHeader(header);
             }
-            client.getState().addCookies(request.getCookies());
-            client.executeMethod(method);
-            Response response = new Response(url, method.getStatusCode());
-            response.setInputStream(new ResponseInputStream(method, method.getResponseBodyAsStream()));
-            response.setCookies(client.getState().getCookies());
-            response.setRequestHeaders(method.getRequestHeaders());
-            response.setResponseHeaders(method.getResponseHeaders());
+
+            CloseableHttpClient client = HttpClients.custom().setDefaultCookieStore(request.getCookies()).build();
+
+            CloseableHttpResponse _response = client.execute(http);
+            Response response = new Response(url, _response);
+            response.setInputStream(new ResponseInputStream(_response));
+            response.setRequestHeaders(request.getRequestHeaders());
             return response;
-        } catch (URIException e) {
-            LOGGER.error("执行HTTP Get请求时，编码查询字符串“" + request.queryString() + "”发生异常！", e);
-            throw e;
-        } catch (IOException e) {
+        }  catch (IOException e) {
             LOGGER.error("执行HTTP Get请求" + url + "时，发生异常！", e);
             throw e;
         }
@@ -121,7 +117,7 @@ public class HttpClientUtil {
     }
 
     /**
-     * 执行一个带请求信息的post请求
+     * 执行一个带请求信息的pos请求
      *
      * @param url     webUrl
      * @param request 请求对象
@@ -130,33 +126,38 @@ public class HttpClientUtil {
      */
     public static Response doPost(String url, Request request) throws IOException {
         request = ObjectUtil.defaultValue(request,new Request());
-        HttpClient client = new HttpClient();
-        PostMethod method = new PostMethod(url);
+        HttpPost http = new HttpPost(url);
         for (Header header : request.getRequestHeaders()) {
-            method.addRequestHeader(header);
-        }
-        if (!request.getParams().isEmpty()) {
-            for (Map.Entry<String, String> entry : request.getParams().entrySet()) {
-                method.setParameter(entry.getKey(), entry.getValue());
-            }
+            http.addHeader(header);
         }
         if (request.getUpLoadFiles().length > 0) {
-            method.setRequestEntity(new MultipartRequestEntity(request.getUpLoadFiles(), method.getParams()));
+            MultipartEntityBuilder builder = MultipartEntityBuilder.create();
+            for(Request.Part part : request.getUpLoadFiles()){
+                builder.addPart(part.getName(),part.getContentBody());
+            }
+            http.setEntity(builder.build());
+        }else if (!request.getParams().isEmpty()) {
+            List<NameValuePair> formparams = new ArrayList<NameValuePair>();
+            for (Map.Entry<String, String> entry : request.getParams().entrySet()) {
+                formparams.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+            }
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, Consts.UTF_8);
+            http.setEntity(entity);
+        }else if (request.getRequestBody().length > 0) {
+            UrlEncodedFormEntity entity = new UrlEncodedFormEntity(Arrays.asList(request.getRequestBody()), Consts.UTF_8);
+            http.setEntity(entity);
+        }else if (request.getRequestEntity() != null) {
+            http.setEntity(request.getRequestEntity());
         }
-        if (request.getRequestBody().length > 0) {
-            method.setRequestBody(request.getRequestBody());
-        }
-        if (request.getRequestEntity() != null) {
-            method.setRequestEntity(request.getRequestEntity());
-        }
-        client.getState().addCookies(request.getCookies());
         try {
-            client.executeMethod(method);
-            Response response = new Response(url, method.getStatusCode());
-            response.setInputStream(new ResponseInputStream(method, method.getResponseBodyAsStream()));
-            response.setCookies(client.getState().getCookies());
-            response.setRequestHeaders(method.getRequestHeaders());
-            response.setResponseHeaders(method.getResponseHeaders());
+
+            CloseableHttpClient client = HttpClients.custom().setDefaultCookieStore(request.getCookies()).build();
+
+            CloseableHttpResponse _response = client.execute(http);
+            Response response = new Response(url, _response);
+            response.setInputStream(new ResponseInputStream(_response));
+            response.setRequestHeaders(request.getRequestHeaders());
+
             return response;
         } catch (IOException e) {
             LOGGER.error("执行HTTP Post请求" + url + "时，发生异常！", e);
@@ -173,12 +174,12 @@ public class HttpClientUtil {
      * @since 2012-11-30 下午04:42:25
      */
     private static class ResponseInputStream extends InputStream {
-        private HttpMethod httpMethod;
+        private CloseableHttpResponse response;
         private InputStream inputStream;
 
-        public ResponseInputStream(HttpMethod httpMethod, InputStream inputStream) {
-            this.httpMethod = httpMethod;
-            this.inputStream = inputStream;
+        public ResponseInputStream(CloseableHttpResponse response) throws IOException {
+            this.response = response;
+            this.inputStream = response.getEntity().getContent();
         }
 
         public int read() throws IOException {
@@ -193,7 +194,7 @@ public class HttpClientUtil {
             try {
                 this.inputStream.close();
             } finally {
-                this.httpMethod.releaseConnection();
+                this.response.close();
             }
         }
 

@@ -2,7 +2,7 @@ package org.jfantasy.website.runtime;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.file.FileManager;
+import org.jfantasy.filestore.FileManager;
 import org.jfantasy.framework.freemarker.FreeMarkerTemplateUtils;
 import org.jfantasy.website.OutPutUrl;
 import org.jfantasy.website.PageInstance;

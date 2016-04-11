@@ -1,6 +1,6 @@
 package org.jfantasy.aliyun.oss;
 
-import org.jfantasy.file.bean.enums.FileManagerType;
+import org.jfantasy.filestore.bean.enums.FileManagerType;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Test;

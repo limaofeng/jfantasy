@@ -1,8 +1,8 @@
 package org.jfantasy.framework.dao.mybatis.keygen.dao;
 
+import org.apache.ibatis.annotations.Param;
 import org.jfantasy.framework.dao.mybatis.keygen.bean.Sequence;
 import org.jfantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**

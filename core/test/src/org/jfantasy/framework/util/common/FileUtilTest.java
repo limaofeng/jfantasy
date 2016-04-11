@@ -1,10 +1,9 @@
 package org.jfantasy.framework.util.common;
 
-import org.jfantasy.file.manager.FTPFileManager;
-import org.jfantasy.framework.service.FTPService;
-import org.jfantasy.framework.util.common.file.FileUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.service.FTPService;
+import org.jfantasy.framework.util.common.file.FileUtil;
 import org.junit.Test;
 
 import java.io.File;
@@ -19,12 +18,12 @@ public class FileUtilTest {
     }
 
     public void ftp() {
-        final FTPFileManager fileManager = new FTPFileManager();
+//        final FTPFileManager fileManager = new FTPFileManager();
         FTPService ftpService = new FTPService();
         ftpService.setHostname("192.168.199.1");
         ftpService.setUsername("lmf");
         ftpService.setPassword("123456");
-        fileManager.setFtpService(ftpService);
+//        fileManager.setFtpService(ftpService);
     }
 
     public void systemProperty() {

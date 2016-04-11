@@ -1,7 +1,7 @@
 package org.jfantasy.wx.framework.core;
 
-import org.jfantasy.file.FileItem;
-import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.filestore.FileItem;
+import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.framework.util.web.WebUtil;

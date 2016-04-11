@@ -1,6 +1,6 @@
 package org.jfantasy.website.service;
 
-import org.jfantasy.file.FileManager;
+import org.jfantasy.filestore.FileManager;
 import org.jfantasy.website.*;
 import org.jfantasy.website.runtime.ExecutionEntity;
 

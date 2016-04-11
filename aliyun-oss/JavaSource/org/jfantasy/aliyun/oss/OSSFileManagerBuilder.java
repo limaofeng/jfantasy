@@ -1,8 +1,8 @@
 package org.jfantasy.aliyun.oss;
 
 
-import org.jfantasy.file.FileManagerBuilder;
-import org.jfantasy.file.bean.enums.FileManagerType;
+import org.jfantasy.filestore.FileManagerBuilder;
+import org.jfantasy.filestore.bean.enums.FileManagerType;
 
 import java.util.Map;
 

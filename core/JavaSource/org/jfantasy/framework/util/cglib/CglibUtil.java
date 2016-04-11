@@ -1,21 +1,15 @@
 package org.jfantasy.framework.util.cglib;
 
-import org.jfantasy.framework.util.cglib.interceptor.ValidatorInterceptor;
-
-import java.util.concurrent.ConcurrentHashMap;
-
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CglibUtil {
     private CglibUtil() {
     }
 
     private final static ConcurrentHashMap<String, MethodInterceptor> defaultInterceptors = new ConcurrentHashMap<String, MethodInterceptor>();
-
-    static {
-        defaultInterceptors.put("validator", new ValidatorInterceptor());
-    }
 
     private final static ConcurrentHashMap<Class<?>, Enhancer> enhancerCache = new ConcurrentHashMap<Class<?>, Enhancer>();
 

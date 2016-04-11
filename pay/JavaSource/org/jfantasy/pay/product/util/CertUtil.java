@@ -4,7 +4,7 @@ package org.jfantasy.pay.product.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.jfantasy.file.FileItem;
+import org.jfantasy.filestore.FileItem;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

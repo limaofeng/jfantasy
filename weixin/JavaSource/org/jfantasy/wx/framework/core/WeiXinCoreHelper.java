@@ -1,6 +1,6 @@
 package org.jfantasy.wx.framework.core;
 
-import org.jfantasy.file.FileItem;
+import org.jfantasy.filestore.FileItem;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.message.WeiXinMessage;
 import org.jfantasy.wx.framework.message.content.*;

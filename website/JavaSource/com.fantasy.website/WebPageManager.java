@@ -1,6 +1,6 @@
 package org.jfantasy.website;
 
-import org.jfantasy.file.FileManager;
+import org.jfantasy.filestore.FileManager;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.website.data.HibernateData;
 import org.jfantasy.website.data.SimpleData;

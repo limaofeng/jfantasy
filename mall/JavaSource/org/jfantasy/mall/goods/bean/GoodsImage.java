@@ -2,7 +2,7 @@ package org.jfantasy.mall.goods.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-import org.jfantasy.file.bean.FileDetail;
+import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;

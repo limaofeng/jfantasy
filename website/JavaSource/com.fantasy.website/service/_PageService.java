@@ -2,8 +2,8 @@ package org.jfantasy.website.service;
 
 import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
-import org.jfantasy.file.FileManager;
-import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.filestore.FileManager;
+import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.SpringContextUtil;

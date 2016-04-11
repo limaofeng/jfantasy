@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jfantasy</groupId>
         <artifactId>jfantasy-framework</artifactId>
-        <version>1.0.5.7-SNAPSHOT</version>
+        <version>1.0.5.8-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jfantasy-cache</artifactId>
@@ -31,6 +31,17 @@
             <artifactId>jfantasy-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <version>${spring.boot.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <!--
+        <dependency>
             <groupId>redis.clients</groupId>
             <artifactId>jedis</artifactId>
             <version>${redis.clients-version}</version>
@@ -50,6 +61,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        -->
     </dependencies>
 
     <description>Hibernate - 集成 Spring CacheManager 功能</description>

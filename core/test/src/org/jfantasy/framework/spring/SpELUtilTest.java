@@ -1,9 +1,9 @@
 package org.jfantasy.framework.spring;
 
-import org.jfantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.json.bean.User;
 import org.junit.Test;
 import org.springframework.expression.EvaluationContext;
 import org.springframework.expression.Expression;
@@ -48,6 +48,7 @@ public class SpELUtilTest {
     public void testGetExpression() throws Exception {
         User user = new User();
         user.setUsername("aaa");
+
         user.setEnabled(true);
         EvaluationContext context = SpELUtil.createEvaluationContext(user);
         Expression expression = SpELUtil.getExpression(" username=='aaa' and enabled==true ");

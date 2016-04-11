@@ -1,5 +1,7 @@
 package org.jfantasy.framework.spring.mvc.http;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.web.context.ActionContext;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,8 @@ import javax.servlet.http.HttpServletResponse;
 
 @ControllerAdvice
 public class ErrorHandler {
+
+    private static Log LOG = LogFactory.getLog(ErrorHandler.class);
 
     @ExceptionHandler(value = Exception.class)
     @ResponseBody
@@ -32,6 +36,7 @@ public class ErrorHandler {
             }
             return errorResponse;
         } else {
+            LOG.error(exception.getMessage(), exception);
             response.setStatus(HttpStatus.BAD_REQUEST.value());
         }
         return new ErrorResponse(exception.getMessage());

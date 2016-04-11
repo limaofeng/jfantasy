@@ -1,8 +1,8 @@
 package org.jfantasy.website.service;
 
 
-import org.jfantasy.file.FileManager;
-import org.jfantasy.file.service.FileManagerFactory;
+import org.jfantasy.filestore.FileManager;
+import org.jfantasy.filestore.service.FileManagerFactory;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.system.bean.Website;
 import org.jfantasy.website.ITemplage;

@@ -51,6 +51,13 @@ public class LimitInterceptor implements Interceptor {
 
     private Dialect dialect;
 
+    public LimitInterceptor(){
+    }
+
+    public <T> LimitInterceptor(Class<? extends Dialect> tClass){
+        this.setDialectClass(tClass);
+    }
+
     public Object intercept(Invocation invocation) throws Throwable {
         try {
             Pager pager = getPager(invocation.getArgs()[PARAMETER_INDEX]);
@@ -255,14 +262,15 @@ public class LimitInterceptor implements Interceptor {
 
     public void setProperties(Properties properties) {
         String dialectClass = new PropertiesHelper(properties).getRequiredString("dialectClass");
-        this.setDialectClass(dialectClass);
+        Class<? extends Dialect> clazz = ClassUtil.forName(dialectClass);
+        this.setDialectClass(clazz);
     }
 
-    public void setDialectClass(String dialectClass) {
+    public void setDialectClass(Class<? extends Dialect> clazz) {
         try {
-            this.dialect = (Dialect) Class.forName(dialectClass).newInstance();
+            this.dialect = clazz.newInstance();
         } catch (Exception e) {
-            throw new RuntimeException("cannot create dialect instance by dialectClass:" + dialectClass, e);
+            throw new RuntimeException("cannot create dialect instance by dialectClass:" + clazz, e);
         }
     }
 

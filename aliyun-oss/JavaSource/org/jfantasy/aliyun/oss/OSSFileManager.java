@@ -5,7 +5,7 @@ import com.aliyun.oss.model.ListObjectsRequest;
 import com.aliyun.oss.model.OSSObjectSummary;
 import com.aliyun.oss.model.ObjectListing;
 import com.aliyun.oss.model.ObjectMetadata;
-import org.jfantasy.file.*;
+import org.jfantasy.filestore.*;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;

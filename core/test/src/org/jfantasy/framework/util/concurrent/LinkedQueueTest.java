@@ -1,9 +1,9 @@
 package org.jfantasy.framework.util.concurrent;
 
-import org.jfantasy.security.bean.User;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.json.bean.User;
 import org.junit.Test;
 
 public class LinkedQueueTest {

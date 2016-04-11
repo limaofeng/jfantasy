@@ -1,9 +1,9 @@
 package org.jfantasy.test;
 
-import org.jfantasy.file.FileItem;
-import org.jfantasy.file.FileItemSelector;
-import org.jfantasy.file.FileManager;
-import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.filestore.FileItem;
+import org.jfantasy.filestore.FileItemSelector;
+import org.jfantasy.filestore.FileManager;
+import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;

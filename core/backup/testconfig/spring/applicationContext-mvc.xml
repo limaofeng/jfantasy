@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:p="http://www.springframework.org/schema/p"
+       xmlns:c="http://www.springframework.org/schema/c"
+       xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd"
+       default-lazy-init="true">
+
+    <!-- 用于非spring托管对象获取spring中的Bean -->
+    <bean id="springContextUtil" class="com.fantasy.framework.spring.SpringContextUtil" lazy-init="false"/>
+
+    <!-- spring mvc -->
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver"/>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver"/>
+            <bean class="com.fantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor"/>
+        </mvc:argument-resolvers>
+        <mvc:message-converters>
+            <bean class="com.fantasy.framework.spring.mvc.http.converter.SecurityMappingJackson2HttpMessageConverter"/>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 使用 annotation -->
+    <context:annotation-config/>
+
+    <aop:aspectj-autoproxy/>
+
+    <!-- 使用 annotation 自动注册bean,并检查@Controller, @Service, @Repository注解已被注入 -->
+    <context:component-scan base-package="com.fantasy.modules;com.fantasy.events"/>
+
+    <!-- 加载 properties文件 -->
+    <context:property-placeholder system-properties-mode="OVERRIDE" ignore-resource-not-found="true" ignore-unresolvable="true" location="classpath:backup/testconfig/props/application.properties"/>
+
+    <!-- 自定义的一个FreeMarkerConfigurationFactoryBean,spring当中也有一个类似的类 org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer -->
+    <bean id="freemarkerService" class="com.fantasy.framework.freemarker.FreeMarkerConfigurationFactoryBean">
+        <property name="freemarkerSettings">
+            <props>
+                <prop key="template_update_delay">1</prop>
+                <prop key="default_encoding">UTF-8</prop>
+                <prop key="locale">zh_CN</prop>
+                <prop key="number_format">#</prop>
+                <prop key="date_format">yyyy-MM-dd</prop>
+                <!-- <prop key="template_exception_handler">ignore</prop> -->
+            </props>
+        </property>
+        <property name="defaultEncoding" value="utf-8"/>
+        <property name="templateLoaderPath" value="${freemarker.templatePath}"/>
+    </bean>
+
+    <!-- ehcache缓存配置 -->
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cacheManager-ref="ehcache"/>
+    <bean id="ehcache" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean" p:acceptExisting="true" p:cacheManagerName="testAppCache"/>
+
+    <!-- 系统默认缓存 -->
+    <bean id="defaultCache" class="com.fantasy.framework.cache.DefaultEhCache">
+        <constructor-arg name="id" value="fantasy.default"/>
+    </bean>
+
+    <!-- lucene 配置 -->
+    <bean id="buguIndex" class="com.fantasy.framework.lucene.BuguIndex" lazy-init="false" init-method="open" destroy-method="close">
+        <property name="analyzer">
+            <bean class="org.wltea.analyzer.lucene.IKAnalyzer"/>
+        </property>
+        <property name="basePackage" value="com.fantasy.cms;com.fantasy.framework.lucene;"/>
+        <property name="directoryPath" value="${buguIndex.directoryPath}"/>
+        <property name="executor" ref="executor"/>
+        <property name="rebuild" value="true"/>
+    </bean>
+
+    <!-- 文件管理器 -->
+    <bean id="fileManagerFactory" class="com.fantasy.file.service.FileManagerFactory" lazy-init="false"/>
+
+    <!-- 密码加密规则 -->
+    <bean id="plaintext" class="org.springframework.security.authentication.encoding.PlaintextPasswordEncoder"/>
+    <bean id="md5" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/>
+
+    <bean id="daoAuthenticationProvider"
+          class="org.springframework.security.authentication.dao.DaoAuthenticationProvider">
+        <property name="userDetailsService" ref="userDetailsService"/>
+        <property name="hideUserNotFoundExceptions" value="false"/>
+        <property name="passwordEncoder" ref="plaintext"/>
+    </bean>
+
+    <!-- 邮件服务接口类 -->
+    <bean id="mailSendService" class="com.fantasy.framework.service.MailSendService">
+        <property name="hostname" value="${mail.hostname}"/>
+        <property name="from" value="${mail.from}"/>
+        <property name="displayName" value="${mail.displayName}"/>
+        <property name="username" value="${mail.username}"/>
+        <property name="password" value="${mail.password}"/>
+        <property name="charset" value="${mail.charset}"/>
+        <property name="configuration" ref="freemarkerService"/>
+    </bean>
+
+    <!-- 自定义序列生成器 -->
+    <bean id="dataBaseKeyGenerator" class="com.fantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">
+        <property name="poolSize" value="${dataBaseKey.poolSize}"/>
+    </bean>
+
+
+    <!-- 支付配置 -->
+    <bean id="paymentConfiguration" class="org.jfantasy.pay.service.PaymentConfiguration" lazy-init="false"/>
+
+    <!-- 用户登陆接口(通过XML文件配置) -->
+    <bean id="userDetailsService" class="com.fantasy.security.userdetails.SimpleUserDetailsService"/>
+
+    <!--JCaptcha验证码服务 -->
+    <bean id="captchaService" class="com.fantasy.framework.jcaptcha.FantasyCaptchaService">
+        <property name="captchaEngine">
+            <bean class="com.fantasy.framework.jcaptcha.DefaultEngine"/>
+        </property>
+        <!-- 默认生成的图片180秒过期 , 可另行设置 -->
+        <property name="minGuarantedStorageDelayInSeconds" value="180"/>
+    </bean>
+
+    <!-- 其他需要加载的spring模块 -->
+    <import resource="classpath:spring/applicationContext-datasource.xml"/>
+
+    <import resource="classpath:spring/applicationContext-transaction.xml"/>
+
+    <import resource="classpath:spring/applicationContext-mybatis.xml"/>
+
+    <import resource="classpath:spring/applicationContext-hibernate.xml"/>
+
+    <import resource="classpath:spring/applicationContext-schedule.xml"/>
+
+</beans>

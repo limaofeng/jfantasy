@@ -1,12 +1,11 @@
 package org.jfantasy.framework.dao.hibernate.interceptors;
 
+import org.hibernate.EmptyInterceptor;
+import org.hibernate.type.Type;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.security.SpringSecurityUtils;
-import org.hibernate.EmptyInterceptor;
-import org.hibernate.type.Type;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
@@ -35,7 +34,7 @@ public class BusEntityInterceptor extends EmptyInterceptor {
     public boolean onFlushDirty(Object entity, Serializable id, Object[] currentState, Object[] previousState, String[] propertyNames, Type[] types) {
         if (entity instanceof BaseBusEntity) {
             String modifier = defaultModifier;
-            UserDetails userDetails = SpringSecurityUtils.getCurrentUser();
+            UserDetails userDetails = null;// TODO SpringSecurityUtils.getCurrentUser();
             if (ObjectUtil.isNotNull(userDetails)) {
                 modifier = userDetails.getUsername();
             }
@@ -60,7 +59,7 @@ public class BusEntityInterceptor extends EmptyInterceptor {
         if (entity instanceof BaseBusEntity) {
             String creator = defaultCreator;
             Date now = DateUtil.now();
-            UserDetails userDetails = SpringSecurityUtils.getCurrentUser();
+            UserDetails userDetails = null; //TODO SpringSecurityUtils.getCurrentUser();
             if (ObjectUtil.isNotNull(userDetails)) {
                 creator = userDetails.getUsername();
             } else if (StringUtil.isNotBlank(((BaseBusEntity) entity).getCreator())) {

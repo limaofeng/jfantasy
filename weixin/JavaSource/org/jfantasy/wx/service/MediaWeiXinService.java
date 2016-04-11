@@ -1,8 +1,8 @@
 package org.jfantasy.wx.service;
 
-import org.jfantasy.file.bean.FileDetail;
-import org.jfantasy.file.service.FileManagerFactory;
-import org.jfantasy.file.service.FileUploadService;
+import org.jfantasy.filestore.bean.FileDetail;
+import org.jfantasy.filestore.service.FileManagerFactory;
+import org.jfantasy.filestore.service.FileUploadService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.wx.bean.Media;

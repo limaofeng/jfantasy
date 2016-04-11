@@ -3,7 +3,7 @@
     <parent>
         <groupId>org.jfantasy</groupId>
         <artifactId>jfantasy-framework</artifactId>
-        <version>1.0.5.7-SNAPSHOT</version>
+        <version>1.0.5.8-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>jfantasy-pay</artifactId>
@@ -31,39 +31,6 @@
             <artifactId>jfantasy-core</artifactId>
             <version>${org.jfantasy-version}</version>
         </dependency>
-        <dependency>
-            <groupId>javax</groupId>
-            <artifactId>javaee-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate-ehcache</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-test</artifactId>
-        </dependency>
-        <!--
-        <dependency>
-            <groupId>chinapay</groupId>
-            <artifactId>chinapayfilesecure</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/chinapayfilesecure.jar</systemPath>
-        </dependency>
-        <dependency>
-            <groupId>chinapay</groupId>
-            <artifactId>chinapaysecure</artifactId>
-            <version>1.0.0</version>
-            <scope>system</scope>
-            <systemPath>${basedir}/lib/chinapaysecure.jar</systemPath>
-        </dependency>
-        -->
     </dependencies>
 
     <description>开发框架 - 提供支付相关接口</description>

@@ -22,7 +22,7 @@ public class SequenceService {
      * @param key 序列名称
      * @return boolean
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "dataSourceTransactionManager", propagation = Propagation.NOT_SUPPORTED)
     public boolean exists(String key) {
         return ObjectUtil.isNotNull(this.sequenceDao.findUniqueByKey(key));
     }
@@ -34,7 +34,7 @@ public class SequenceService {
      * @param poolSize 序列增长值
      * @return long
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "dataSourceTransactionManager", propagation = Propagation.NOT_SUPPORTED)
     public long next(String key, long poolSize) {
         Sequence sequence = this.sequenceDao.findUniqueByKey(key);
         if (ObjectUtil.isNull(sequence)) {
@@ -56,7 +56,7 @@ public class SequenceService {
      * @param poolSize 序列增长值
      * @return long
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional(value = "dataSourceTransactionManager", propagation = Propagation.NOT_SUPPORTED)
     public long newkey(String key, long poolSize) {
         String[] keys = RegexpUtil.split(key, ":");
         int index = keys.length == 2 ? ObjectUtil.defaultValue(this.sequenceDao.queryTableSequence(keys[0], keys[1]), 0) : 0;

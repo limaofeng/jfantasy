@@ -21,6 +21,8 @@ public class SequenceInfo {
 
     private final static Log LOG = LogFactory.getLog(SequenceInfo.class);
 
+    private static DataBaseKeyGenerator keyGenerator;
+
     private final static ConcurrentMap<String, SequenceInfo> keys = new ConcurrentHashMap<String, SequenceInfo>(10);
     private final static Lock retrievelock = new ReentrantLock();
 
@@ -32,7 +34,7 @@ public class SequenceInfo {
     private long poolSize;
     private String keyName;
 
-    protected static SequenceInfo retrieve(SequenceService service, long poolSize, String keyName) {
+    static SequenceInfo retrieve(SequenceService service, long poolSize, String keyName) {
         try {
             retrievelock.lock();
             if (!keys.containsKey(keyName)) {
@@ -44,6 +46,13 @@ public class SequenceInfo {
         }
     }
 
+    private static DataBaseKeyGenerator getKeyGenerator(){
+        if(keyGenerator == null){
+            keyGenerator = SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class);
+        }
+        return keyGenerator;
+    }
+
     /**
      * 提供直接通过 SequenceInfo 直接查询索引的方法
      *
@@ -51,9 +60,7 @@ public class SequenceInfo {
      * @return long
      */
     public static long nextValue(String keyName) {
-        DataBaseKeyGenerator dataBaseKeyGenerator = SpringContextUtil.getBeanByType(DataBaseKeyGenerator.class);
-        assert dataBaseKeyGenerator != null;
-        return dataBaseKeyGenerator.nextValue(keyName);
+        return getKeyGenerator().nextValue(keyName);
     }
 
     private SequenceInfo(SequenceService service, long poolSize, String keyName) {
@@ -71,7 +78,7 @@ public class SequenceInfo {
     /**
      * 从数据库检索
      */
-    public void retrieveFromDB() {
+    private void retrieveFromDB() {
         long keyFromDB;
         if ((this.service.exists(this.keyName)) || (this.nextKey > this.keyMax)) {
             keyFromDB = getKeyinfo(this.keyName, this.poolSize);
@@ -110,7 +117,7 @@ public class SequenceInfo {
      *
      * @return long
      */
-    public long nextValue() {
+    long nextValue() {
         try {
             this.lock.lock();
             if (this.nextKey > this.keyMax) {

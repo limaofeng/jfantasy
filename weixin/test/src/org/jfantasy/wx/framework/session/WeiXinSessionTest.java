@@ -1,7 +1,7 @@
 package org.jfantasy.wx.framework.session;
 
-import org.jfantasy.file.FileManager;
-import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.filestore.FileManager;
+import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.wx.framework.factory.WeiXinSessionFactory;

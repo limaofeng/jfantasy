@@ -173,7 +173,11 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
             if (matchType.isNone()) {
                 target.add(new PropertyFilter(paramName));
             } else if (matchType.isMulti()) {
-                target.add(new PropertyFilter(paramName, values));
+                List<String> _values = new ArrayList<String>();
+                for(String val : values){
+                    _values.addAll(Arrays.asList(StringUtil.tokenizeToStringArray(val)));
+                }
+                target.add(new PropertyFilter(paramName,_values.toArray(new String[_values.size()])));
             } else if (values.length != 0 && StringUtil.isNotBlank(values[0])) {
                 target.add(new PropertyFilter(paramName, values[0]));
             }

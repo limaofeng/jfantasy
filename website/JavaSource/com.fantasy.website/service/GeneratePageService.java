@@ -3,8 +3,8 @@ package org.jfantasy.website.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import freemarker.template.Configuration;
-import org.jfantasy.file.FileManager;
-import org.jfantasy.file.manager.LocalFileManager;
+import org.jfantasy.filestore.FileManager;
+import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.freemarker.FreeMarkerTemplateUtils;

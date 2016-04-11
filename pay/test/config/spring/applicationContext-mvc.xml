@@ -51,7 +51,7 @@
     </bean>
 
     <!-- 文件管理器 -->
-    <bean id="fileManagerFactory" class="org.jfantasy.file.service.FileManagerFactory" lazy-init="false"/>
+    <bean id="fileManagerFactory" class="org.jfantasy.filestore.service.FileManagerFactory" lazy-init="false"/>
 
     <!-- 自定义序列生成器 -->
     <bean id="dataBaseKeyGenerator" class="org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator">

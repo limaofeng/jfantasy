@@ -45,11 +45,4 @@ public class MD5andKL {
 		return k;
 	}
 
-	public static void main(String[] args) {
-		String s = new String("123456");
-
-		System.out.println(s);
-		System.out.println("MD5后再加密：" + KL(s));
-		System.out.println("解密为MD5后的：" + JM(KL(s)));
-	}
 }

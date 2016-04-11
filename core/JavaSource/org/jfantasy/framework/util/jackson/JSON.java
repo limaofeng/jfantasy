@@ -187,7 +187,11 @@ public class JSON {
             try {
                 ObjectMapper objectMapper = local.getObjectMapper();
                 if (ignoreProperties.length == 0) {
-                    return objectMapper.writeValueAsString(object);
+                    try {
+                        return objectMapper.writeValueAsString(object);
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
                 }
                 JsonFilter jsonFilter = ClassUtil.getClassGenricType(object.getClass(), JsonFilter.class);
                 if (jsonFilter == null) {
@@ -280,7 +284,7 @@ public class JSON {
 
     public static String[] getIgnoreProperties(Class clazz) {
         if(!IGNORE_PROPERTIES_CACHE.containsKey(clazz)){
-            JSON.serialize(ClassUtil.newInstance(clazz));
+//            JSON.serialize(ClassUtil.newInstance(clazz));
             if(!IGNORE_PROPERTIES_CACHE.containsKey(clazz)){
                 IGNORE_PROPERTIES_CACHE.put(clazz,new String[0]);
             }

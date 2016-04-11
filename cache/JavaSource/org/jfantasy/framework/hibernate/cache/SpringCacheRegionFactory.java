@@ -1,8 +1,8 @@
 package org.jfantasy.framework.hibernate.cache;
 
-import org.jfantasy.framework.spring.SpringContextUtil;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cfg.Settings;
+import org.jfantasy.framework.spring.SpringContextUtil;
 import org.springframework.cache.CacheManager;
 
 import java.util.Properties;

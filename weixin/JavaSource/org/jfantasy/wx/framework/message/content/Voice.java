@@ -1,6 +1,6 @@
 package org.jfantasy.wx.framework.message.content;
 
-import org.jfantasy.file.FileItem;
+import org.jfantasy.filestore.FileItem;
 
 /**
  * 语音消息

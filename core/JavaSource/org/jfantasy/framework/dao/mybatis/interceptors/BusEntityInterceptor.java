@@ -4,7 +4,6 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.security.SpringSecurityUtils;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Interceptor;
@@ -42,7 +41,7 @@ public class BusEntityInterceptor implements Interceptor {
 		Object parameterObject = invocation.getArgs()[PARAMETER_INDEX];
 		if (BaseBusEntity.class.isAssignableFrom(ms.getParameterMap().getType())) {
 			if (SqlCommandType.INSERT.equals(ms.getSqlCommandType())) {
-				UserDetails userDetails = SpringSecurityUtils.getCurrentUser();
+				UserDetails userDetails = null;//TODO SpringSecurityUtils.getCurrentUser();
 				if (ObjectUtil.isNotNull(userDetails)) {
 					ClassUtil.setValue(parameterObject, "creator", userDetails.getUsername());
 					ClassUtil.setValue(parameterObject, "modifier", userDetails.getUsername());
@@ -54,7 +53,7 @@ public class BusEntityInterceptor implements Interceptor {
 				ClassUtil.setValue(parameterObject, "createTime", now);
 				ClassUtil.setValue(parameterObject, "modifyTime", now);
 			} else if (SqlCommandType.UPDATE.equals(ms.getSqlCommandType())) {
-				UserDetails userDetails = SpringSecurityUtils.getCurrentUser();
+				UserDetails userDetails = null;//TODO SpringSecurityUtils.getCurrentUser();
 				if (ObjectUtil.isNotNull(userDetails)){
                     ClassUtil.setValue(parameterObject, "modifier", userDetails.getUsername());
                 }else {

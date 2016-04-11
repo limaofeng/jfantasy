@@ -4,20 +4,33 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
-import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpringContextUtil implements ApplicationContextAware, DisposableBean {
+public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,ApplicationContextAware {
+
+    private static BeanDefinitionRegistry registry;
+    private static ConfigurableListableBeanFactory beanFactory;
+
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        SpringContextUtil.registry = registry;
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        SpringContextUtil.beanFactory = beanFactory;
+    }
 
     public enum AutoType {
 
@@ -221,11 +234,9 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
     }
 
     public static synchronized void registerBeanDefinition(String beanName, Class<?> clazz) {
-        ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
-        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
         beanDefinitionBuilder.setAutowireMode(AutoType.AUTOWIRE_BY_TYPE.getValue());
-        defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
+        registry.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
     }
 
     public static <T> T registerBeanDefinition(String beanName, Class<?> clazz, Object[] argValues) {
@@ -237,14 +248,10 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
     }
 
     public static synchronized void removeBeanDefinition(String beanName) {
-        ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
-        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
-        defaultListableBeanFactory.removeBeanDefinition(beanName);
+        registry.removeBeanDefinition(beanName);
     }
 
     public static synchronized <T> T registerBeanDefinition(String beanName, Class<?> clazz, Object[] argValues, Map<String, Object> propertyValues) {
-        ConfigurableApplicationContext configurableApplicationContext = (ConfigurableApplicationContext) applicationContext;
-        DefaultListableBeanFactory defaultListableBeanFactory = (DefaultListableBeanFactory) configurableApplicationContext.getBeanFactory();
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
         beanDefinitionBuilder.setAutowireMode(AutoType.AUTOWIRE_BY_TYPE.getValue());
 
@@ -256,7 +263,7 @@ public class SpringContextUtil implements ApplicationContextAware, DisposableBea
             beanDefinitionBuilder.addConstructorArgValue(argValue);
         }
 
-        defaultListableBeanFactory.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
+        registry.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
 
         return getBean(beanName);
     }

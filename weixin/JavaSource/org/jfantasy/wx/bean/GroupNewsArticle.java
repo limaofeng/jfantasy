@@ -1,6 +1,6 @@
 package org.jfantasy.wx.bean;
 
-import org.jfantasy.file.bean.FileDetail;
+import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
