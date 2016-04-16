@@ -1,6 +1,8 @@
 package org.jfantasy.framework.autoconfigure;
 
 import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.spring.config.AppConfig;
+import org.jfantasy.framework.spring.config.MyBatisMapperScannerConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
@@ -20,6 +22,5 @@ public class JCoreAutoConfiguration {
     public SpringContextUtil springContextUtil() {
         return new SpringContextUtil();
     }
-
 
 }

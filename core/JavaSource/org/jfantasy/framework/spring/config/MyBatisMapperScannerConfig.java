@@ -1,4 +1,4 @@
-package org.jfantasy.framework.autoconfigure;
+package org.jfantasy.framework.spring.config;
 
 import org.jfantasy.framework.dao.mybatis.sqlmapper.SqlMapper;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;

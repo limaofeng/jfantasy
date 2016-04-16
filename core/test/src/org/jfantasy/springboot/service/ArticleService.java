@@ -36,4 +36,7 @@ public class ArticleService {
         return this.articleDao.findPager(pager, filters);
     }
 
+    public Article get(Long id) {
+        return this.articleJPADao.findOne(id);
+    }
 }

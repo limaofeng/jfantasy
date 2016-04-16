@@ -1,10 +1,14 @@
 package org.jfantasy.framework.httpclient;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.CookieStore;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContexts;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.mime.content.ContentBody;
 import org.apache.http.entity.mime.content.FileBody;
@@ -15,8 +19,10 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.message.BasicNameValuePair;
 import org.jfantasy.framework.util.common.StringUtil;
 
+import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.security.*;
 import java.util.*;
 
 /**
@@ -28,12 +34,16 @@ import java.util.*;
  */
 public class Request {
 
-    private CookieStore cookieStore = new BasicCookieStore();;
+    private final static Log LOG = LogFactory.getLog(Request.class);
+
+    private CookieStore cookieStore = new BasicCookieStore();
+    ;
     private List<Header> requestHeaders = new ArrayList<Header>();
     private Map<String, String> params = new HashMap<String, String>();
     private Part[] upLoadFiles = new Part[0];
     private Map<String, String> requestBody = new HashMap<String, String>();
     private HttpEntity requestEntity;
+    private SSLConnectionSocketFactory sslSocketFactory;
 
     public Request() {
     }
@@ -82,7 +92,7 @@ public class Request {
         if (params != null) {
             List<Part> parts = new ArrayList<Part>();
             for (Map.Entry<String, ?> entry : params.entrySet()) {
-                if (entry.getValue() instanceof String){
+                if (entry.getValue() instanceof String) {
                     addParam(entry.getKey(), entry.getValue().toString());
                 } else if (entry.getValue() instanceof File) {
                     parts.add(new Part(entry.getKey(), new FileBody((File) entry.getValue())));
@@ -117,12 +127,12 @@ public class Request {
     }
 
     public void addCookie(String name, String value) {
-        this.addCookie(null,name,value);
+        this.addCookie(null, name, value);
     }
 
     public void addCookie(String domain, String name, String value) {
         BasicClientCookie cookie = new BasicClientCookie(name, value);
-        if(StringUtil.isNotBlank(domain)){
+        if (StringUtil.isNotBlank(domain)) {
             cookie.setDomain(domain);
         }
         this.cookieStore.addCookie(cookie);
@@ -156,7 +166,26 @@ public class Request {
         this.requestEntity = requestEntity;
     }
 
-    class Part{
+    public void enabledSSL(KeyStore keyStore, String keyPassword) {
+        try {
+            SSLContext sslcontext = SSLContexts.custom().loadKeyMaterial(keyStore, keyPassword.toCharArray()).build();
+            this.sslSocketFactory = new SSLConnectionSocketFactory(sslcontext, new String[]{"TLSv1"}, null, SSLConnectionSocketFactory.BROWSER_COMPATIBLE_HOSTNAME_VERIFIER);//设置httpclient的SSLSocketFactory 
+        } catch (NoSuchAlgorithmException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (KeyManagementException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (KeyStoreException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (UnrecoverableKeyException e) {
+            LOG.error(e.getMessage(), e);
+        }
+    }
+
+    public SSLConnectionSocketFactory getSslSocketFactory() {
+        return sslSocketFactory;
+    }
+
+    class Part {
         String name;
         ContentBody contentBody;
 

@@ -33,7 +33,7 @@ public interface PayProduct {
      * @param payment 支付记录
      * @return String
      */
-    Object app(Payment payment, Order order) throws PayException;
+    Object app(Payment payment, Order order, Properties properties) throws PayException;
 
     /**
      * 支付通知
@@ -43,7 +43,7 @@ public interface PayProduct {
      * @return Payment
      * @throws PayException
      */
-    Payment payNotify(Payment payment, String result) throws PayException;
+    Object payNotify(Payment payment, String result) throws PayException;
 
     /**
      * 退款成功通知
@@ -53,10 +53,11 @@ public interface PayProduct {
      * @return Refund
      * @throws PayException
      */
-    Refund payNotify(Refund refund, String result) throws PayException;
+    Object payNotify(Refund refund, String result) throws PayException;
 
     /**
      * 退款操作
+     *
      * @param refund 退款对象
      * @return String
      */

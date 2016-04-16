@@ -406,6 +406,43 @@
     <!-- jar 依赖 -->
     <dependencyManagement>
         <dependencies>
+            <!-- 支持全栈式Web开发，包括Tomcat和spring-webmvc。 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-web</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!-- 支持JPA（Java Persistence API），包括spring-data-jpa、spring-orm、Hibernate。 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-jpa</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!-- 支持spring-security。 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-security</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!-- 帮助监控和管理应用 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-actuator</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!-- 通过spring-hateoas支持基于HATEOAS的RESTful Web服务。 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-hateoas</artifactId>
+                <version>${spring.boot.version}</version>
+            </dependency>
+            <!-- 支持常规的测试依赖，包括JUnit、Hamcrest、Mockito以及spring-test模块。 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-test</artifactId>
+                <version>${spring.boot.version}</version>
+                <scope>test</scope>
+            </dependency>
             <dependency>
                 <groupId>org.hibernate</groupId>
                 <artifactId>hibernate-core</artifactId>
@@ -963,8 +1000,8 @@
         <module>core</module>
         <module>cache</module>
         <module>filestore</module>
-        <!--
         <module>pay</module>
+        <!--
         <module>weixin-pay</module>
         <module>cms</module>
         <module>mall</module>

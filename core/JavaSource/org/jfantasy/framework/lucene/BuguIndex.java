@@ -1,7 +1,5 @@
 package org.jfantasy.framework.lucene;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.index.CorruptIndexException;
@@ -24,10 +22,13 @@ import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.StopWatch;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
@@ -40,7 +41,7 @@ import java.util.concurrent.TimeUnit;
 
 public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
 
-    private static final Log LOGGER = LogFactory.getLog(BuguIndex.class);
+    private final Logger LOG = LoggerFactory.getLogger(BuguIndex.class);
 
     private static BuguIndex instance;
     /**
@@ -99,7 +100,9 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
 
     @SuppressWarnings("unchecked")
     public void afterPropertiesSet() {
-        long start = System.currentTimeMillis();
+        LOG.debug("Starting Lucene");
+        StopWatch watch = new StopWatch();
+        watch.start();
         Set<Class<?>> indexedClasses = new LinkedHashSet<Class<?>>();
         for (String basePackage : packagesToScan) {
             for (Class<?> clazz : ClassPathScanner.getInstance().findInterfaceClasses(basePackage, HibernateDao.class)) {
@@ -129,7 +132,7 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
                 }
             }, 1000 * 10);
         }
-        LOGGER.error("\n初始化 BuguIndex 耗时:" + (System.currentTimeMillis() - start) + "ms");
+        LOG.debug("Started Lucene in {} ms", watch.getTotalTimeMillis());
     }
 
     public void rebuild() {
@@ -174,16 +177,16 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
                     writer.commit();
                     writer.close();
                 } catch (CorruptIndexException ex) {
-                    LOGGER.error("Can not commit and close the lucene index", ex);
+                    LOG.error("Can not commit and close the lucene index", ex);
                 } catch (IOException ex) {
-                    LOGGER.error("Can not commit and close the lucene index", ex);
+                    LOG.error("Can not commit and close the lucene index", ex);
                 } finally {
                     try {
                         if ((dir != null) && (IndexWriter.isLocked(dir))) {
                             IndexWriter.unlock(dir);
                         }
                     } catch (IOException ex) {
-                        LOGGER.error("Can not unlock the lucene index", ex);
+                        LOG.error("Can not unlock the lucene index", ex);
                     }
                 }
             }

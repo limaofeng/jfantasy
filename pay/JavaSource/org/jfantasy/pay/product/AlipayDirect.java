@@ -1,23 +1,27 @@
 package org.jfantasy.pay.product;
 
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.framework.util.web.WebUtil;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang.StringUtils;
+import org.jfantasy.framework.httpclient.HttpClientUtil;
+import org.jfantasy.framework.httpclient.Response;
+import org.jfantasy.framework.spring.mvc.error.RestException;
+import org.jfantasy.framework.util.HandlebarsTemplateUtils;
+import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.PaymentStatus;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
+import org.jfantasy.pay.product.sign.SignUtil;
+import org.jfantasy.system.util.SettingUtil;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
+import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
 
 /**
  * 支付宝（即时交易）
@@ -26,15 +30,12 @@ import java.util.concurrent.atomic.AtomicReference;
 @JsonIgnoreProperties({"debitBankCodes", "creditBankCodes"})
 public class AlipayDirect extends AlipayPayProductSupport {
 
-    public static final String PAYMENT_URL = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
-
-    /*
-    public static final String RETURN_URL = "/payment/payreturn.do";// 回调处理URL
-    public static final String NOTIFY_URL = "/payment/paynotify.do";// 消息通知URL
-    public static final String SHOW_URL = "/payment.do";// 支付单回显url
-    */
-
-    public static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat("#0.00");
+    private Urls urls = new Urls() {
+        {
+            this.paymentUrl = "https://mapi.alipay.com/gateway.do?_input_charset=" + input_charset;// 支付请求URL
+            this.refundUrl = "https://mapi.alipay.com/gateway.do";//统一收单交易退款接口
+        }
+    };
 
     private final List<BankCode> creditBankCodes = new LinkedList<BankCode>();
     private final List<BankCode> debitBankCodes = new LinkedList<BankCode>();
@@ -83,98 +84,221 @@ public class AlipayDirect extends AlipayPayProductSupport {
         debitBankCodes.add(new BankCode("COMM", "交通银行"));
     }
 
-    public String getPaymentUrl() {
-        return PAYMENT_URL;
+    @Override
+    public String web(Payment payment, Order order, Properties properties) throws PayException {
+        PayConfig config = payment.getPayConfig();
+        final Map<String, String> data = new TreeMap<String, String>();
+        try {
+            // 常规参数
+            data.put("service", "create_direct_pay_by_user");// 接口类型（create_direct_pay_by_user：即时交易）
+            data.put("_input_charset", input_charset);//字符编码格式
+            data.put("payment_type", "1");// 支付类型（固定值：1）
+            data.put("notify_url", SettingUtil.getServerUrl() + "/pays/" + payment.getSn() + "/notify");// 消息通知URL
+
+            //data.put("anti_phishing_key", "");防钓鱼时间戳
+            //data.put("exter_invoke_ip", "");客户端的IP地址
+
+            data.put("partner", config.getBargainorId());// 合作身份者ID
+            data.put("seller_id", config.getBargainorId());// 商家ID
+
+            data.put("out_trade_no", payment.getSn());// 支付编号
+            data.put("subject", order.getSubject());// 订单的名称、标题、关键字等
+            data.put("body", order.getBody());// 订单描述
+            data.put("total_fee", RMB_YUAN_FORMAT.format(order.getPayableFee()));// 总金额（单位：元）
+
+            //额外参数
+            if (StringUtil.isNotBlank(properties.getProperty("backUrl"))) {
+                data.put("return_url", properties.getProperty("backUrl"));//同步通知
+                LOG.debug("添加参数 return_url = " + data.get("MerPageUrl"));
+            }
+            if (StringUtil.isNotBlank(properties.getProperty("showUrl"))) {
+                data.put("show_url", properties.getProperty("showUrl"));// 商品显示URL
+                LOG.debug("添加参数 show_url = " + data.get("showUrl"));
+            }
+            if (StringUtil.isNotBlank(properties.getProperty("extra_common_param"))) {
+                data.put("extra_common_param", properties.getProperty("extra_common_param"));
+                LOG.debug("添加参数 extra_common_param = " + data.get("extra_common_param"));
+            }
+            if (StringUtil.isNotBlank(properties.getProperty("bankNo"))) {
+                data.put("defaultbank", properties.getProperty("bankNo"));// 默认选择银行（当paymethod为bankPay时有效）
+                LOG.debug("添加参数 defaultbank = " + data.get("defaultbank"));
+                data.put("paymethod", "bankPay");// 默认支付方式（bankPay：网银、cartoon：卡通、directPay：余额、CASH：网点支付）
+            } else {
+                data.put("paymethod", "directPay");
+            }
+
+            // 参数处理
+            data.put("sign_type", "MD5");
+            data.put("sign", sign(data, config.getBargainorKey()));
+
+            data.put("subject", WebUtil.transformCoding(order.getSubject(), "utf-8", "utf-8"));// 订单的名称、标题、关键字等
+            data.put("body", WebUtil.transformCoding(order.getBody(), "utf-8", "utf-8"));// 订单描述
+
+            //拼接支付表单
+            return HandlebarsTemplateUtils.processTemplateIntoString(HandlebarsTemplateUtils.template("/org.jfantasy.pay.product.template/pay"), new HashMap<String, Object>() {
+                {
+                    this.put("url", urls.paymentUrl);
+                    this.put("params", data.entrySet());
+                }
+            });
+        } catch (IOException e) {
+            throw new PayException("支付过程发生错误，错误信息为:" + e.getMessage());
+        }
     }
 
-    public Map<String, String> getParameterMap(Parameters parameters) {
-        PaymentContext context = PaymentContext.getContext();
-        PayConfig paymentConfig = context.getPaymentConfig();
-        Order orderDetails = context.getOrderDetails();
-        Payment payment = context.getPayment();
+    public String payNotify(Payment payment, String result) throws PayException {
+        PayConfig config = payment.getPayConfig();
 
-        AtomicReference<String> body = new AtomicReference<String>(orderDetails.getSN());// 订单描述
-        String defaultbank = parameters.get("bankNo");// 默认选择银行（当paymethod为bankPay时有效）
-        String extraCommonParam = "";// 商户数据
-        String notifyUrl = context.getNotifyUrl(payment.getSn());// 消息通知URL
-        AtomicReference<String> outTradeNo = new AtomicReference<String>(payment.getSn());// 支付编号
-        String partner = paymentConfig.getBargainorId();// 合作身份者ID
-        String paymentType = "1";// 支付类型（固定值：1）
-        String paymethod = StringUtil.isBlank(defaultbank) ? "directPay" : "bankPay";// 默认支付方式（bankPay：网银、cartoon：卡通、directPay：余额、CASH：网点支付）
-        String returnUrl = context.getReturnUrl(payment.getSn());// 回调处理URL
-        String sellerId = paymentConfig.getSellerEmail();// 商家ID
-        String service = "create_direct_pay_by_user";// 接口类型（create_direct_pay_by_user：即时交易）
-        String showUrl = context.getDetailsUrl(payment.getOrderSn());// 商品显示URL
-        String signType = "MD5";//签名加密方式（MD5）
-        AtomicReference<String> subject = new AtomicReference<String>(orderDetails.getSubject());// 订单的名称、标题、关键字等
-        String totalFee = DECIMAL_FORMAT.format(orderDetails.getPayableFee());// 总金额（单位：元）
-        String key = paymentConfig.getBargainorKey();// 密钥
-        //防钓鱼时间戳
-        String antiPhishingKey = "";
-        //若要使用请调用类文件submit中的query_timestamp函数
-        //客户端的IP地址
-        String exterInvokeIp = "";
-        //非局域网的外网IP地址，如：221.0.0.1
+        Map<String,String> privateKeys = new HashMap<String, String>();
+        privateKeys.put("MD5",config.getBargainorKey());
+        privateKeys.put("RSA", "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB");
 
-        // 生成签名
-        Map<String, String> signMap = new LinkedHashMap<String, String>();
-        signMap.put("service", service);
-        signMap.put("partner", partner);
-        signMap.put("_input_charset", input_charset);
-        signMap.put("payment_type", paymentType);
-        signMap.put("notify_url", notifyUrl);
-        signMap.put("return_url", returnUrl);
-        signMap.put("seller_email", sellerId);
-        signMap.put("out_trade_no", outTradeNo.get());
-        signMap.put("subject", subject.get());
-        signMap.put("total_fee", totalFee);
-        signMap.put("body", body.get());
-        signMap.put("show_url", showUrl);
-        signMap.put("anti_phishing_key", antiPhishingKey);
-        signMap.put("exter_invoke_ip", exterInvokeIp);
-        signMap.put("paymethod", paymethod);
-        signMap.put("defaultbank", defaultbank);
-        signMap.put("extra_common_param", extraCommonParam);
+        try {
+            Map<String, String> appdata = new HashMap<String, String>();
+            if (result.contains("result")) {//为手机同步支付通知
+                if (RegexpUtil.isMatch(result, "^\\{(.*)\\}$")){ // ios 先去掉 首尾 的括号
+                    result = RegexpUtil.parseGroup(result, "^\\{(.*)\\}$", 1);
+                }
+                for (String _ps : result.split(";")) {
+                    String key = _ps.substring(0, _ps.indexOf("="));
+                    String value = _ps.substring(_ps.indexOf("=") + 1);
+                    if (RegexpUtil.isMatch(value, "^\\{(.*)\\}$")) {
+                        appdata.put(key, RegexpUtil.parseGroup(value, "^\\{(.*)\\}$", 1));
+                    } else {
+                        appdata.put(key, value);
+                    }
+                }
+            }
 
-        String sign = DigestUtils.md5Hex(getParameterString(signMap) + key);
+            Map<String, String> data = SignUtil.parseQuery(appdata.isEmpty() ? result : appdata.get("result") , appdata.isEmpty());
+            if(appdata.isEmpty()) {
+                data.put("sign", data.get("sign").replaceAll(" ","+"));//编码的时候可能会将签名中的 '+' => '' 所以再次转换回来 * 不能使用 encodeURI 方法
+                data.put("notify_id", StringUtil.encodeURI(data.get("notify_id"),input_charset));//编码的时候可能会将通知ID中的  %2F => 和 %2B => +  所以再次转换回来
+            }
 
-        // 参数处理
-        Map<String, String> parameterMap = new HashMap<String, String>(paraFilter(signMap));
-        parameterMap.put("sign_type", signType);
-        parameterMap.put("sign", sign);
-        return parameterMap;
+            if (!verifyNotifyId(config.getBargainorId(), data.get("notify_id"))) {
+                throw new RestException("支付宝 notify_id 验证失败");
+            }
+            //验证签名
+            if (!verify(data, privateKeys.get(data.get("sign_type")))) {
+                throw new RestException("支付宝返回的响应签名错误");
+            }
+            //记录交易流水
+            payment.setTradeNo(data.get("trade_no"));
+            if("WAIT_BUYER_PAY".equals(data.get("trade_status"))){//交易创建，等待买家付款。
+                //TODO 如果有支付过期定时器的话,现在可以启动了
+            } else if ("TRADE_SUCCESS".equals(data.get("trade_status"))) {//交易成功，且可对该交易做操作，如：多级分润、退款等。
+                payment.setStatus(PaymentStatus.success);
+            }else if ("TRADE_FINISHED".equals(data.get("trade_status"))) {//交易成功且结束，即不可再做任何操作。
+                payment.setStatus(PaymentStatus.finished);
+            }else if ("TRADE_CLOSED".equals(data.get("trade_status"))) {//在指定时间段内未支付时关闭的交易；or 在交易完成全额退款成功时关闭的交易。
+                payment.setStatus(PaymentStatus.close);
+            }
+            return data.containsKey("gmt_payment") ? "success" : null;
+        } finally {
+            this.log("in", "notify", payment, config, result);
+        }
     }
 
     @Override
-    public boolean verifySign(Map<String, String> parameters) {
-        PaymentContext context = PaymentContext.getContext();
-        PayConfig paymentConfig = context.getPaymentConfig();
+    public Refund refund(Refund refund) {
+        PayConfig config = refund.getPayConfig();
+        Payment payment = refund.getPayment();
 
-        Map<String, String> params = new HashMap<String, String>();
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
-            params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
+        Map<String, String> data = new TreeMap<String, String>();
+        try {
+            data.put("service", "refund_fastpay_by_platform_pwd");
+            data.put("partner", config.getBargainorId());
+            data.put("_input_charset", input_charset);
+            data.put("sign_type", "MD5");
+            data.put("notify_url", SettingUtil.getServerUrl() + "/pays/" + refund.getSn() + "/notify");
+            data.put("seller_email", config.getSellerEmail());
+            data.put("refund_date", DateUtil.format(refund.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+            data.put("batch_no", refund.getSn());
+            data.put("batch_num", "1");
+            data.put("detail_data", payment.getSn() + "^" + RMB_YUAN_FORMAT.format(refund.getTotalAmount()) + "^none");
+
+            data.put("sign", sign(data, config.getBargainorKey()));
+
+            Response response = HttpClientUtil.doPost(urls.refundUrl, data);
+
+            System.out.println(response.getBody());
+
+            throw new PayException("暂不支持支付宝退款!");
+
+            /*
+            //公共请求参数
+
+            data.put("app_id","2016041201289130");//支付宝分配给开发者的应用Id
+            data.put("method","alipay.trade.refund");
+            data.put("charset",input_charset);
+            data.put("sign_type","RSA");
+            data.put("timestamp", DateUtil.format("yyyy-MM-dd HH:mm:ss"));
+            data.put("version","1.0");//调用的接口版本，固定为：1.0
+            //data.put("app_auth_token","");//详见应用授权概述
+
+            //请求参数
+            Map<String,String> bizcontent = new TreeMap<String, String>();
+            bizcontent.put("trade_no",payment.getTradeNo());//支付宝交易号
+            bizcontent.put("out_trade_no",payment.getSn());//商户订单号
+            bizcontent.put("refund_amount",RMB_YUAN_FORMAT.format(refund.getTotalAmount()));//需要退款的金额，该金额不能大于订单金额,单位为元，支持两位小数
+            //bizcontent.put("refund_reason","");//退款的原因说明
+            bizcontent.put("out_request_no",refund.getSn());//标识一次退款请求，同一笔交易多次退款需要保证唯一
+            //bizcontent.put("operator_id","");//商户的操作员编号
+            //bizcontent.put("store_id","");//商户的门店编号
+            //bizcontent.put("terminal_id","");//商户的终端编号
+
+            data.put("biz_content",JSON.serialize(bizcontent));
+
+            String privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBANesnTGjdj/aEtnZ\n" +
+                    "P39jKpVEEj7cuvwc4DHJbmGpyKti235ejE9V8h2puTqX3Xof5UidjFNwiHChFZmi\n" +
+                    "+EU8i8OQK09PR4OALhg9TdSBWF+mwLpJ5LeHYEXXUkWwWtK94IW12K/n4aEEVtRZ\n" +
+                    "rfa9REKrclCATnT5v/Qspqp86oNdAgMBAAECgYEAoOyHDfat0M7iqfHT0zUnHOEB\n" +
+                    "zC3exya0kfF+jxikRl0o8Y2Sm8/BLCjrsLCH7QvHhPspLUkWRROsjkpvfRnEHfTY\n" +
+                    "d3NeccKW2YuFmcL2U7J3AHvdghSR8IE2sTA8CRorCMeS0FjHc+zgJTOIalrzgDjU\n" +
+                    "U4C6KRGaSuCggy0wp4ECQQDsAkKQoLDN7Ig2D8KkhR3C9R4VgXgJBwZjJYQLHE2Q\n" +
+                    "lMPTp0TnHgJJfJFcec2kM96gIULwlsoiXNLWp313GUMFAkEA6fFop4CUVFrWWw01\n" +
+                    "WqhLSb3Q1aQ83XYOf7eku2SgEv5jEkZmpkJu5k3dSCRcgriXPhLw7hFIvEW6Gpy2\n" +
+                    "uEZeeQJBAM0LzZ9wLQxMI6+sk7RyfwACDIgsuwhE1TTQxF8O0Qj7ZwP9gKy38s67\n" +
+                    "7mME5Dh0ZEiFfW4f5DBkqz2ZuTT/eq0CQDLK1DMR6qKJ+mJYcs4VHguLp8zK1OAs\n" +
+                    "Yqd+IskA5vRYwP/VwzGz2Mot+65PHrrPAx9aE29M12LxLJ/ciJtnw9kCQEVvWtNU\n" +
+                    "CDLaWnH4SxTG7P9OsfNWgz//O7eT69wsGoFHb2PeN9XVDBQbr7SomrGeYa8SwqCS\n" +
+                    "rU4/l+JjAg+bR7o=";
+
+            data.put("sign",sign(data,privateKey));
+
+            Response response = HttpClientUtil.doPost(urls.refundUrl,data);
+
+            System.out.println(response.getBody());
+
+            //解析数据
+
+            //判断业务处理是否成功
+            if (!"SUCCESS".equalsIgnoreCase(data.get("return_code"))) {
+                throw new RestException(data.get("return_msg"));
+            }
+
+            //验证签名
+            if (!verify(data, config.getBargainorKey())) {
+                throw new RestException("微信返回的响应签名错误");
+            }
+
+            if ("FAIL".equals(data.get("result_code"))) {
+                throw new RestException("[" + data.get("err_code") + "]" + data.get("err_code_des"));
+            }
+
+            refund.setStatus(Refund.Status.wait);
+            refund.setTradeNo(data.get("refund_id"));
+
+            */
+//            return refund;
+        } catch (IOException e) {
+            throw new RestException("调用微信接口,网络错误!");
+        } catch (PayException e) {
+            throw new RestException(e.getMessage());
         }
-
-        //移除回调链接中的 paymentSn sign不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
-        params.remove("sn");
-        return StringUtils.equals(params.get("sign"), DigestUtils.md5Hex(getParameterString(paraFilter(params)) + paymentConfig.getBargainorKey())) && verifyResponse(paymentConfig.getBargainorId(), params.get("notify_id"));
     }
 
-    public PayResult parsePayResult(Map<String, String> parameters) {
-        Map<String, String> params = new HashMap<String, String>();
-        for (Map.Entry<String, String> entry : parameters.entrySet()) {
-            //乱码解决，这段代码在出现乱码时使用。如果mysign和sign不相等也可以使用这段代码转化
-            params.put(entry.getKey(), WebUtil.transformCoding(entry.getValue(), "ISO-8859-1", "utf-8"));
-        }
-        PayResult payResult = new PayResult();
-        payResult.setPaymentSN(params.get("out_trade_no"));//支付编号
-        payResult.setTradeNo(params.get("trade_no"));//交易流水号
-        payResult.setTotalFee(BigDecimal.valueOf(Double.valueOf(params.get("total_fee"))));//交易金额
-        String tradeStatus = params.get("trade_status");
-        payResult.setStatus((StringUtils.equals(tradeStatus, "TRADE_FINISHED") || StringUtils.equals(tradeStatus, "TRADE_SUCCESS")) ? PayResult.PayStatus.success : PayResult.PayStatus.failure);
-        return payResult;
-    }
 
     public List<BankCode> getCreditBankCodes() {
         return creditBankCodes;
@@ -206,6 +330,17 @@ public class AlipayDirect extends AlipayPayProductSupport {
             return name;
         }
 
+    }
+
+    class Urls {
+        /**
+         * 支付接口
+         */
+        String paymentUrl;
+        /**
+         * 退款接口
+         */
+        String refundUrl;
     }
 
 }

@@ -1,6 +1,6 @@
 package org.jfantasy.springboot.service;
 
-import org.jfantasy.ApplicationTest;
+import org.jfantasy.springboot.ApplicationTest;
 import org.jfantasy.springboot.bean.Article;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,7 +10,6 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(ApplicationTest.class)
-//@WebIntegrationTest
 public class ArticleServiceTest {
 
     @Autowired

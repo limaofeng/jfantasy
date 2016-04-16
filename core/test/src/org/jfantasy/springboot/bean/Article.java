@@ -1,7 +1,6 @@
 package org.jfantasy.springboot.bean;
 
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
@@ -9,7 +8,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 
 import javax.persistence.*;
 
@@ -17,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TEST_ARTICLE")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonFilter(JSON.CUSTOM_FILTER)
+//@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "category", "content", "target"})
 public class Article extends BaseBusEntity {
 

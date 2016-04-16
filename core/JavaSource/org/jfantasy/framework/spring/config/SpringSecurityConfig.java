@@ -1,4 +1,4 @@
-package org.jfantasy.framework.autoconfigure;
+package org.jfantasy.framework.spring.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

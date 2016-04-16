@@ -11,13 +11,14 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -52,7 +53,7 @@ public class HttpClientUtil {
     /**
      * 执行一个带参数的get请求
      *
-     * @param url         webUrl         webUrl
+     * @param url         webUrl
      * @param queryString 请求参数字符串
      * @return {Response}
      * @throws IOException
@@ -63,13 +64,15 @@ public class HttpClientUtil {
 
     /**
      * 执行一个带参数的get请求
-     *
-     * @param url    webUrl webUrl
-     * @param params 请求参数 请求参数
+     * @param url  webUrl
+     * @param params 会自动将 value 做 encode 操作
      * @return {Response}
      * @throws IOException
      */
-    public static Response doGet(String url, Map<String, Object> params) throws IOException {
+    public static Response doGet(String url, Map<String, String> params) throws IOException {
+        for(Map.Entry<String,String> entry : params.entrySet()){
+            entry.setValue(URLEncoder.encode(entry.getValue(),"utf-8"));
+        }
         return doGet(url, new Request(params));
     }
 
@@ -83,11 +86,8 @@ public class HttpClientUtil {
      */
     public static Response doGet(String url, Request request) throws IOException {
         request = request == null ? new Request() : request;
-        HttpGet http = new HttpGet(url + request.queryString());
+        HttpGet http = new HttpGet(url + (url.contains("?")?"":"?") + request.queryString());
         try {
-            if (StringUtil.isNotBlank(request.queryString())) {
-                //TODO queryString
-            }
             for (Header header : request.getRequestHeaders()) {
                 http.addHeader(header);
             }
@@ -151,7 +151,13 @@ public class HttpClientUtil {
         }
         try {
 
-            CloseableHttpClient client = HttpClients.custom().setDefaultCookieStore(request.getCookies()).build();
+            HttpClientBuilder builder = HttpClients.custom().setDefaultCookieStore(request.getCookies());
+
+            if(request.getSslSocketFactory() != null){
+                builder.setSSLSocketFactory(request.getSslSocketFactory());
+            }
+
+            CloseableHttpClient client = builder.build();
 
             CloseableHttpResponse _response = client.execute(http);
             Response response = new Response(url, _response);

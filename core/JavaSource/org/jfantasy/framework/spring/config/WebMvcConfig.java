@@ -1,4 +1,4 @@
-package org.jfantasy.framework.autoconfigure;
+package org.jfantasy.framework.spring.config;
 
 
 import com.alibaba.druid.support.http.StatViewServlet;
@@ -9,7 +9,6 @@ import org.jfantasy.framework.spring.mvc.method.annotation.FormModelMethodArgume
 import org.jfantasy.framework.spring.mvc.method.annotation.PagerModelAttributeMethodProcessor;
 import org.jfantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor;
 import org.jfantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver;
-import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.framework.util.web.filter.ActionContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
@@ -24,7 +23,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Validator;
@@ -91,7 +89,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
         converters.add(new StringHttpMessageConverter(Charset.forName("utf-8")));
-        converters.add(new MappingJackson2HttpMessageConverter(JSON.getObjectMapper()));
+//        converters.add(new MappingJackson2HttpMessageConverter(JSON.getObjectMapper()));
         super.configureMessageConverters(converters);
     }
 

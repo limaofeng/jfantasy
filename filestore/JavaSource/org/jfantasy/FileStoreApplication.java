@@ -1,9 +1,9 @@
 package org.jfantasy;
 
-import org.jfantasy.framework.autoconfigure.AppConfig;
-import org.jfantasy.framework.autoconfigure.MyBatisMapperScannerConfig;
-import org.jfantasy.framework.autoconfigure.SpringSecurityConfig;
-import org.jfantasy.framework.autoconfigure.WebMvcConfig;
+import org.jfantasy.framework.spring.config.AppConfig;
+import org.jfantasy.framework.spring.config.MyBatisMapperScannerConfig;
+import org.jfantasy.framework.spring.config.SpringSecurityConfig;
+import org.jfantasy.framework.spring.config.WebMvcConfig;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;

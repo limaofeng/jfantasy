@@ -1,18 +1,22 @@
 package org.jfantasy.pay.product;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.MDC;
+import org.jfantasy.file.FileItem;
+import org.jfantasy.file.bean.FileDetail;
+import org.jfantasy.file.bean.FileDetailKey;
+import org.jfantasy.file.service.FileManagerFactory;
+import org.jfantasy.file.service.FileService;
+import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.springframework.web.util.HtmlUtils;
 
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.Properties;
 
 /**
  * 基类 - 支付产品
@@ -31,103 +35,17 @@ public abstract class PayProductSupport implements PayProduct {
     protected String logoPath;// 支付产品LOGO路径
 
     @Override
-    public Refund refund(Refund refund){
-        return null;
+    public Refund refund(Refund refund) {
+        throw new PayException(this.getName() + " 的退款逻辑未实现");
+    }
+
+    public String wap(){
+        throw new PayException(this.getName() + " 的 wap 支付未实现");
     }
 
     @Override
-    public Object app(Payment payment, Order order) throws PayException{
-        return null;
-    }
-
-    /**
-     * 验证签名
-     *
-     * @param parameters 请求参数
-     * @return 是否验证通过
-     */
-    public boolean verifySign(Map<String, String> parameters){
-        return false;
-    }
-
-    /**
-     * 根据参数集合组合参数字符串（忽略空值参数）
-     *
-     * @param params 请求参数
-     * @return 参数字符串
-     */
-    protected String getParameterString(Map<String, String> params) {
-        List<String> keys = new ArrayList<String>(params.keySet());
-        Collections.sort(keys);
-        AtomicReference<StringBuffer> stringBuffer = new AtomicReference<StringBuffer>(new StringBuffer());
-        for (String key : keys) {
-            String value = params.get(key);
-            if (StringUtils.isNotEmpty(value)) {
-                stringBuffer.get().append("&").append(key).append("=").append(value);
-            }
-        }
-        stringBuffer.get().deleteCharAt(0);
-        return stringBuffer.get().toString();
-    }
-
-    protected static Map<String, String> paraFilter(Map<String, String> sArray) {
-        Map<String, String> result = new HashMap<String, String>();
-        if (sArray == null || sArray.isEmpty()) {
-            return result;
-        }
-        for (String key : sArray.keySet()) {
-            String value = sArray.get(key);
-            if (value == null || "".equals(value) || "sign".equalsIgnoreCase(key) || "sign_type".equalsIgnoreCase(key)) {
-                continue;
-            }
-            result.put(key, value);
-        }
-        return result;
-    }
-
-    public String buildRequest(Map<String, String> sParaTemp) {
-        return this.buildRequest(sParaTemp, "post", "确定");
-    }
-
-    /**
-     * 建立请求，以表单HTML形式构造（默认）
-     *
-     * @param sParaTemp     请求参数数组
-     * @param strMethod     提交方式。两个值可选：post、get
-     * @param strButtonName 确认按钮显示文字
-     * @return 提交表单HTML文本
-     */
-    public String buildRequest(Map<String, String> sParaTemp, String strMethod, String strButtonName) {
-        //待请求参数数组
-        List<String> keys = new ArrayList<String>(sParaTemp.keySet());
-
-        StringBuilder sbHtml = new StringBuilder();
-
-        //sbHtml.append("<form id=\"alipaysubmit\" name=\"alipaysubmit\" action=\"").append(getPaymentUrl()).append("\" method=\"").append(strMethod).append("\">\n");
-
-        for (String key : keys) {
-            String value = sParaTemp.get(key);
-            sbHtml.append(key).append(":<input type=\"hidden\" name=\"").append(key).append("\" value=\"").append(HtmlUtils.htmlEscape(value)).append("\"/><br/>\n");
-        }
-
-        //submit按钮控件请不要含有name属性
-        sbHtml.append("<input type=\"submit\" value=\"").append(strButtonName).append("\" style=\"display:none;\">\n</form>");
-
-        sbHtml.append("\n<script>document.forms['alipaysubmit'].submit();</script>");
-
-        if (LOG.isDebugEnabled()) {
-            LOG.debug(sbHtml);
-        }
-
-        return sbHtml.toString();
-    }
-
-    public String getPayreturnMessage(String paymentSn) {
-        return "<html><head><meta http-equiv=\"content-type\" content=\"text/html; charset=utf-8\" /><title>页面跳转中..</title></head><body onload=\"javascript: document.forms[0].submit();\"><form action=\"" + PaymentContext.getContext().getResultUrl(paymentSn) + "\"></form></body></html>";
-    }
-
-    public String getPaynotifyMessage(String paymentSn) {
-        return null;
+    public Object app(Payment payment, Order order, Properties properties) throws PayException {
+        throw new PayException(this.getName() + " 的 app 支付未实现");
     }
 
     public String getName() {
@@ -195,4 +113,37 @@ public abstract class PayProductSupport implements PayProduct {
     public void setId(String id) {
         this.id = id;
     }
+
+    protected static FileItem loadFileItem(FileDetail fileDetail) {
+        FileService fileService = SpringContextUtil.getBeanByType(FileService.class);
+        assert fileService != null;
+        FileDetail realFileDetail = fileService.get(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()));
+        return FileManagerFactory.getInstance().getFileManager(fileDetail.getFileManagerId()).getFileItem(realFileDetail.getRealPath());
+    }
+
+    @Override
+    public Object payNotify(Refund refund, String result) throws PayException {
+        return null;
+    }
+
+    public void log(String tyep, String payType, Payment payment, PayConfig config, String result) {
+        MDC.put("type", tyep);
+        MDC.put("payType", payType);
+        MDC.put("paymentSn", payment.getSn());
+        MDC.put("payProductId", config.getPayProductId());
+        MDC.put("payConfigId", config.getId());
+        MDC.put("body", result);
+        LOG.info(MDC.getContext());
+    }
+
+    public void log(String tyep, String payType, Refund refund, PayConfig config, String result) {
+        MDC.put("type", tyep);
+        MDC.put("payType", payType);
+        MDC.put("paymentSn", refund.getSn());
+        MDC.put("payProductId", config.getPayProductId());
+        MDC.put("payConfigId", config.getId());
+        MDC.put("body", result);
+        LOG.info(MDC.getContext());
+    }
+
 }

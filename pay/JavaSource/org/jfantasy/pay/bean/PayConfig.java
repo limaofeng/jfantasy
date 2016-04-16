@@ -2,19 +2,23 @@ package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.converter.FileDetailConverter;
-import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.jackson.JSON;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
+
+/*
+import org.jfantasy.filestore.bean.FileDetail;
+import org.jfantasy.filestore.bean.converter.FileDetailConverter;
+import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
+*/
 
 /**
  * 支付配置
@@ -85,23 +89,30 @@ public class PayConfig extends BaseBusEntity {
     @Column(name = "SELLER_EMAIL")
     private String sellerEmail;
     /**
-     * 签名证书(银联支付专用)
+     * 针对不同支付平台的额外属性
      */
+    @ApiModelProperty(hidden = true)
+    @Column(name = "PROPERTIES")
+    private Properties properties;
+
+    /**
+     * 签名证书(银联支付专用)
+
     @Column(name = "SIGN_CERT", length = 500)
     @Convert(converter = FileDetailConverter.class)
-    private FileDetail signCert;
+    private FileDetail signCert;*/
     /**
      * 加密证书(银联支付专用)
-     */
+
     @Column(name = "ENCRYPT_CERT", length = 500)
     @Convert(converter = FileDetailConverter.class)
-    private FileDetail encryptCert;
+    private FileDetail encryptCert;*/
     /**
      * 签名验证证书(银联支付专用)
-     */
+
     @Column(name = "VALIDATE_CERT",length = 500)
     @Convert(converter = FileDetailConverter.class)
-    private FileDetail validateCert;
+    private FileDetail validateCert;*/
     /**
      * 支付手续费类型
      */
@@ -245,6 +256,15 @@ public class PayConfig extends BaseBusEntity {
         this.sellerEmail = sellerEmail;
     }
 
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
+    /*
     public FileDetail getSignCert() {
         return signCert;
     }
@@ -271,4 +291,6 @@ public class PayConfig extends BaseBusEntity {
     public void setValidateCert(FileDetail validateCert) {
         this.validateCert = validateCert;
     }
+    */
+
 }

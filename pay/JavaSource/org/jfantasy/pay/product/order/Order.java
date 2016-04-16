@@ -36,6 +36,9 @@ public interface Order {
     @ApiModelProperty("订单摘要")
     String getSubject();
 
+    @ApiModelProperty("订单详情")
+    String getBody();
+
     /**
      * 订单总金额
      *

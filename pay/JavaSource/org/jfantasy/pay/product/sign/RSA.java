@@ -34,7 +34,7 @@ public class RSA {
      */
     public static String sign(String content, String privateKey, String inputCharset) {
         try {
-            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(_Base64.decode(privateKey));
+            PKCS8EncodedKeySpec priPKCS8 = new PKCS8EncodedKeySpec(Base64.decode(privateKey));
             KeyFactory keyf = KeyFactory.getInstance("RSA");
             PrivateKey priKey = keyf.generatePrivate(priPKCS8);
 
@@ -45,7 +45,7 @@ public class RSA {
 
             byte[] signed = signature.sign();
 
-            return _Base64.encode(signed);
+            return Base64.encode(signed);
         } catch (NoSuchAlgorithmException e) {
             LOG.error(e.getMessage(), e);
             throw new IgnoreException(e.getMessage());
@@ -77,7 +77,7 @@ public class RSA {
         try {
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
 
-            byte[] encodedKey = _Base64.decode(aliPublicKey);
+            byte[] encodedKey = Base64.decode(aliPublicKey);
             PublicKey pubKey = keyFactory.generatePublic(new X509EncodedKeySpec(encodedKey));
 
             Signature signature = java.security.Signature.getInstance(SIGN_ALGORITHMS);
@@ -85,7 +85,7 @@ public class RSA {
             signature.initVerify(pubKey);
             signature.update(content.getBytes(inputCharset));
 
-            return signature.verify(_Base64.decode(sign));
+            return signature.verify(Base64.decode(sign));
 
         } catch (NoSuchAlgorithmException e) {
             LOG.error(e.getMessage(), e);
@@ -115,7 +115,7 @@ public class RSA {
         Cipher cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.DECRYPT_MODE, prikey);
 
-        InputStream ins = new ByteArrayInputStream(_Base64.decode(content));
+        InputStream ins = new ByteArrayInputStream(Base64.decode(content));
         ByteArrayOutputStream writer = new ByteArrayOutputStream();
         //rsa解密的字节大小最多是128，将需要解密的内容，按128位拆开解密
         byte[] buf = new byte[128];
@@ -146,7 +146,7 @@ public class RSA {
      */
     public static PrivateKey getPrivateKey(String key) throws InvalidKeySpecException, NoSuchAlgorithmException {
         byte[] keyBytes;
-        keyBytes = _Base64.decode(key);
+        keyBytes = Base64.decode(key);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
         return keyFactory.generatePrivate(keySpec);

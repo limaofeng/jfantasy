@@ -26,7 +26,7 @@ public class OrderServiceFactory implements ApplicationContextAware, Initializin
         this.applicationContext = applicationContext;
     }
 
-    private String[] packagesToScan = new String[]{"org.jfantasy.pay.service"};
+    private String[] packagesToScan = new String[]{"org.jfantasy.pay.service","com.haolue.xguahao"};
 
     @Override
     public void afterPropertiesSet() throws Exception {
