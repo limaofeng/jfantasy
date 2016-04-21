@@ -6,21 +6,13 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
-import org.springframework.core.annotation.AnnotationUtils;
-import org.springframework.core.convert.ConversionService;
-import org.springframework.core.convert.TypeDescriptor;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
-import org.springframework.util.StringUtils;
-import org.springframework.validation.BindException;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 import org.springframework.web.multipart.MultipartRequest;
 import org.springframework.web.servlet.HandlerMapping;
@@ -29,13 +21,12 @@ import org.springframework.web.util.WebUtils;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URLDecoder;
 import java.util.*;
 
-public class PropertyFilterModelAttributeMethodProcessor implements HandlerMethodArgumentResolver {
+public class PropertyFilterModelAttributeMethodProcessor extends FormModelMethodArgumentResolver {
 
     private String[] modelPrefixNames;
 
@@ -63,27 +54,8 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
     }
 
     @Override
-    public final Object resolveArgument(MethodParameter parameter,
-                                        ModelAndViewContainer mavContainer,
-                                        NativeWebRequest request,
-                                        WebDataBinderFactory binderFactory) throws Exception {
-        String name = parameter.getParameterName();
-
-        Object target = (mavContainer.containsAttribute(name)) ? mavContainer.getModel().get(name) : createAttribute(name, parameter, binderFactory, request);
-        WebDataBinder binder = binderFactory.createBinder(request, target, name);
-        target = binder.getTarget();
-        if (target != null) {
-            bindRequestParameters(mavContainer, binderFactory, binder, request, parameter);
-            validateIfApplicable(binder, parameter);
-            if (binder.getBindingResult().hasErrors()) {
-                if (isBindExceptionRequired(binder, parameter)) {
-                    throw new BindException(binder.getBindingResult());
-                }
-            }
-        }
-        target = binder.convertIfNecessary(binder.getTarget(), parameter.getParameterType());
-        mavContainer.addAttribute(name, target);
-        return target;
+    protected String getParameterName(MethodParameter parameter) {
+        return parameter.getParameterName();
     }
 
     protected Object createAttribute(String attributeName, MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
@@ -99,17 +71,6 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
             return ArrayList.class.newInstance();
         }
         return BeanUtils.instantiateClass(parameter.getParameterType());
-    }
-
-    protected String getRequestValueForAttribute(String attributeName, NativeWebRequest request) {
-        Map<String, String> variables = getUriTemplateVariables(request);
-        if (StringUtils.hasText(variables.get(attributeName))) {
-            return variables.get(attributeName);
-        } else if (StringUtils.hasText(request.getParameter(attributeName))) {
-            return request.getParameter(attributeName);
-        } else {
-            return null;
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -136,7 +97,6 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
                 try {
                     val = URLDecoder.decode(val, "utf-8");
                 } catch (UnsupportedEncodingException e) {
-                    val = pair.split("=")[1];
                     throw new IgnoreException(e.getMessage(), e);
                 }
             }
@@ -147,19 +107,6 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
             }
         }
         return params;
-    }
-
-    protected Object createAttributeFromRequestValue(String sourceValue, String attributeName, MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
-        DataBinder binder = binderFactory.createBinder(request, null, attributeName);
-        ConversionService conversionService = binder.getConversionService();
-        if (conversionService != null) {
-            TypeDescriptor source = TypeDescriptor.valueOf(String.class);
-            TypeDescriptor target = new TypeDescriptor(parameter);
-            if (conversionService.canConvert(source, target)) {
-                return binder.convertIfNecessary(sourceValue, parameter.getParameterType(), parameter);
-            }
-        }
-        return null;
     }
 
     @SuppressWarnings("unchecked")
@@ -222,24 +169,6 @@ public class PropertyFilterModelAttributeMethodProcessor implements HandlerMetho
 
     private boolean isPropertyFilterModelAttribute(String parameterName, String[] modelPrefixNames) {
         return PropertyFilter.MatchType.is(parameterName);
-    }
-
-    protected void validateIfApplicable(WebDataBinder binder, MethodParameter parameter) {
-        Annotation[] annotations = parameter.getParameterAnnotations();
-        for (Annotation annot : annotations) {
-            if (annot.annotationType().getSimpleName().startsWith("Valid")) {
-                Object hints = AnnotationUtils.getValue(annot);
-                binder.validate(hints instanceof Object[] ? (Object[]) hints : new Object[]{hints});
-            }
-        }
-    }
-
-    protected boolean isBindExceptionRequired(WebDataBinder binder, MethodParameter parameter) {
-        int i = parameter.getParameterIndex();
-        Class<?>[] paramTypes = parameter.getMethod().getParameterTypes();
-        boolean hasBindingResult = paramTypes.length > (i + 1) && Errors.class.isAssignableFrom(paramTypes[i + 1]);
-
-        return !hasBindingResult;
     }
 
 }

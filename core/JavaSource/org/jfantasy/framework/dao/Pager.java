@@ -73,6 +73,15 @@ public class Pager<T> implements Serializable {
         this.pageSize = pageSize;
     }
 
+    public Pager(Pager pager) {
+        this.currentPage = pager.currentPage;
+        this.pageSize = pager.pageSize;
+        this.totalCount = pager.totalCount;
+        this.totalPage = pager.totalPage;
+        this.orderBy = pager.orderBy;
+        this.orders = pager.orders;
+    }
+
     /**
      * 获取总页码
      *

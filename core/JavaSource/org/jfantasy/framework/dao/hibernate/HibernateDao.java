@@ -188,8 +188,9 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
 
     private void cleanColumn(T entity, T oldEntity, Field[] fields, OgnlUtil ognlUtil) {
         for (Field field : fields) {
-            String getterMethodName = (boolean.class.equals(field.getType()) ? "is" : "get") + StringUtils.capitalize(field.getName()) + "()";
-            Object value = ognlUtil.getValue(getterMethodName, entity);
+            // TODO 为什么要取方法
+            //String getterMethodName = (boolean.class.equals(field.getType()) ? "is" : "get") + StringUtils.capitalize(field.getName()) + "()";
+            Object value = ognlUtil.getValue(field.getName(), entity);
             if (value != null) {
                 ClassUtil.setValue(oldEntity, field.getName(), value);
             }

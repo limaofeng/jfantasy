@@ -44,15 +44,10 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
         return parameter.hasParameterAnnotation(FormModel.class);
     }
 
-    public final Object resolveArgument(MethodParameter parameter,
-                                        ModelAndViewContainer mavContainer,
-                                        NativeWebRequest request,
-                                        WebDataBinderFactory binderFactory) throws Exception {
-        String name = parameter.getParameterAnnotation(FormModel.class).value();
+    public final Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer, NativeWebRequest request, WebDataBinderFactory binderFactory) throws Exception {
+        String name = getParameterName(parameter);
 
-        Object target = (mavContainer.containsAttribute(name)) ?
-                mavContainer.getModel().get(name) : createAttribute(name, parameter, binderFactory, request);
-
+        Object target = (mavContainer.containsAttribute(name)) ? mavContainer.getModel().get(name) : createAttribute(name, parameter, binderFactory, request);
         WebDataBinder binder = binderFactory.createBinder(request, target, name);
         target = binder.getTarget();
         if (target != null) {
@@ -72,8 +67,11 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
         return target;
     }
 
-    protected Object createAttribute(String attributeName, MethodParameter parameter,
-                                     WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
+    protected String getParameterName(MethodParameter parameter){
+        return parameter.getParameterAnnotation(FormModel.class).value();
+    }
+
+    protected Object createAttribute(String attributeName, MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
 
         String value = getRequestValueForAttribute(attributeName, request);
 
@@ -110,18 +108,12 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
     }
 
     @SuppressWarnings("unchecked")
-    protected final Map<String, String> getUriTemplateVariables(NativeWebRequest request) {
-        Map<String, String> variables =
-                (Map<String, String>) request.getAttribute(
-                        HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
+    protected Map<String, String> getUriTemplateVariables(NativeWebRequest request) {
+        Map<String, String> variables = (Map<String, String>) request.getAttribute(HandlerMapping.URI_TEMPLATE_VARIABLES_ATTRIBUTE, RequestAttributes.SCOPE_REQUEST);
         return (variables != null) ? variables : Collections.<String, String>emptyMap();
     }
 
-    protected Object createAttributeFromRequestValue(String sourceValue,
-                                                     String attributeName,
-                                                     MethodParameter parameter,
-                                                     WebDataBinderFactory binderFactory,
-                                                     NativeWebRequest request) throws Exception {
+    protected Object createAttributeFromRequestValue(String sourceValue, String attributeName, MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
         DataBinder binder = binderFactory.createBinder(request, null, attributeName);
         ConversionService conversionService = binder.getConversionService();
         if (conversionService != null) {
@@ -135,14 +127,7 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
     }
 
     @SuppressWarnings("unchecked")
-    protected void bindRequestParameters(
-            ModelAndViewContainer mavContainer,
-            WebDataBinderFactory binderFactory,
-            WebDataBinder binder,
-            NativeWebRequest request,
-            MethodParameter parameter) throws Exception {
-
-
+    protected void bindRequestParameters(ModelAndViewContainer mavContainer, WebDataBinderFactory binderFactory, WebDataBinder binder, NativeWebRequest request, MethodParameter parameter) throws Exception {
         Class<?> targetType = binder.getTarget().getClass();
         ServletRequest servletRequest = prepareServletRequest(binder.getTarget(), request, parameter);
         WebDataBinder simpleBinder = binderFactory.createBinder(request, null, null);
