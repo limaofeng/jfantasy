@@ -1,7 +1,7 @@
 package org.jfantasy.pay.rest.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModelProperty;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayType;
 
@@ -19,7 +19,7 @@ public class PayForm01 {
     private String orderSn;
     @ApiModelProperty(value = "支付类型",required = true)
     private PayType payType;
-    @ApiModelProperty(value = "付款人",required = false)
+    @ApiModelProperty(value = "付款人")
     private String payer;
     @ApiModelProperty(value = "支付参数", notes = "支持的参数:{backUrl:'支付成功后的跳转地址'}", required = false)
     private Parameters parameters;

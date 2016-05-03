@@ -7,7 +7,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.JdbcUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

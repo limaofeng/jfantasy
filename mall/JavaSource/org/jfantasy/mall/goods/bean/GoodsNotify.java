@@ -1,7 +1,7 @@
 package org.jfantasy.mall.goods.bean;
 
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.member.bean.Member;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

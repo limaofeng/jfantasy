@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.security.bean.enums.PermissionType;
 import org.springframework.security.access.ConfigAttribute;
 import org.springframework.security.access.SecurityConfig;
@@ -17,13 +17,13 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.util.matcher.AndRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @ApiModel(value = "权限配置", description = "权限配置信息")
 @Entity
 @Table(name = "AUTH_PERMISSION")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "roles"})
 public class Permission extends BaseBusEntity implements Cloneable {
 

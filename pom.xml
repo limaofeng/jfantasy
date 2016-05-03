@@ -1018,23 +1018,17 @@
 
     <!-- 项目信息设置 -->
     <name>${project.artifactId}</name>
-    <description>昊略公司开发框架</description>
+    <description>快速开发框架</description>
     <url>http://www.jfantasy.org</url>
     <inceptionYear>2012</inceptionYear>
     <organization>
-        <name>上海昊略信息技术有限公司</name>
+        <name>快速开发框架</name>
     </organization>
 
     <developers>
         <developer>
             <name>李茂峰</name>
             <email>limaofeng@msn.com</email>
-        </developer>
-        <developer>
-            <name>何博</name>
-        </developer>
-        <developer>
-            <name>钟振振</name>
         </developer>
     </developers>
 

@@ -1,13 +1,10 @@
 package org.jfantasy.filestore.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.filestore.service.FileService;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.SpringContextUtil;
-import org.jfantasy.framework.util.jackson.JSON;
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,7 +18,6 @@ import java.util.List;
 @Table(name = "FILE_FOLDER")
 @IdClass(FolderKey.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Folder extends BaseBusEntity {
 
@@ -72,7 +68,6 @@ public class Folder extends BaseBusEntity {
     /**
      * 获取子目录列表
      */
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
     @OneToMany(mappedBy = "parentFolder", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @OrderBy("createTime ASC")
     private List<Folder> children;

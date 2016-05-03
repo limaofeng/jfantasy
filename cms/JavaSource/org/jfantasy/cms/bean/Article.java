@@ -1,10 +1,5 @@
 package org.jfantasy.cms.bean;
 
-import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
-import org.jfantasy.attr.storage.BaseDynaBean;
-import org.jfantasy.cms.bean.databind.ContentDeserializer;
-import org.jfantasy.framework.lucene.annotations.*;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -13,7 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Persister;
+import org.jfantasy.cms.bean.databind.ContentDeserializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.lucene.annotations.*;
 
 import javax.persistence.*;
 import javax.persistence.Entity;
@@ -29,11 +27,9 @@ import javax.persistence.Entity;
 @Indexed
 @Entity
 @Table(name = "CMS_ARTICLE")
-@Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "category", "content", "target"})
-public class Article extends BaseDynaBean {
+public class Article extends BaseBusEntity {
 
     private static final long serialVersionUID = 3480217915594201004L;
 

@@ -1,8 +1,8 @@
 package org.jfantasy.pay.event.context;
 
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.pay.product.order.Order;
 
 public class PayContext {
 

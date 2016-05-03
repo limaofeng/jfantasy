@@ -1,6 +1,5 @@
 package org.jfantasy.member.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.databind.ser.std.NullSerializer;
@@ -10,14 +9,15 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.validation.RESTful.*;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.spring.validation.RESTful.POST;
+import org.jfantasy.framework.spring.validation.RESTful.PUT;
 import org.jfantasy.security.SpringSecurityUtils;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 import org.jfantasy.security.userdetails.FantasyUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Collection;
@@ -34,7 +34,6 @@ import java.util.List;
 @ApiModel("会员信息")
 @Entity
 @Table(name = "MEM_MEMBER")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "details", "userGroups", "roles", "authorities"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity implements FantasyUserDetails {

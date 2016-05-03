@@ -2,7 +2,7 @@ package org.jfantasy.filestore.bean.converter;
 
 import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 
 import javax.persistence.AttributeConverter;
 

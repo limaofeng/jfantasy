@@ -1,10 +1,10 @@
 package org.jfantasy.security.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.attr.storage.BaseDynaBean;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.dao.BaseBusEntity;
+
+import javax.persistence.*;
 
 /**
  * 岗位
@@ -15,9 +15,8 @@ import org.jfantasy.framework.util.jackson.JSON;
  */
 @Entity
 @Table(name = "AUTH_JOB")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class Job extends BaseDynaBean {
+public class Job extends BaseBusEntity {
 
     private static final long serialVersionUID = -7020427994563623645L;
 

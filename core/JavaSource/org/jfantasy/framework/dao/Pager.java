@@ -1,25 +1,28 @@
 package org.jfantasy.framework.dao;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.type.Alias;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.List;
 
 @ApiModel("通用分页对象")
 @Alias("Pager")
-@JsonIgnoreProperties(value = {"orders","first","orderBySetted"})
+@JsonIgnoreProperties(value = {"orders", "first", "orderBySetted"})
 public class Pager<T> implements Serializable {
+    /**
+     * 排序 - 升序
+     */
+    public final static String SORT_ASC = "asc";
+    /**
+     * 排序 - 降序
+     */
+    public final static String SORT_DESC = "desc";
 
     private static final long serialVersionUID = -2343309063338998483L;
     /**
@@ -56,11 +59,11 @@ public class Pager<T> implements Serializable {
      */
     @ApiModelProperty(value = "排序字段", name = "sort")
     @JsonProperty("sort")
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String orderBy;
     @ApiModelProperty(value = "排序方向", name = "order")
-    @JsonProperty("order")
-    @JsonSerialize(using = OrderSerializer.class)
-    private Order[] orders = new Order[]{Order.asc};
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String order;
     @ApiModelProperty(value = "返回的数据集", name = "items")
     @JsonProperty("items")
     private List<T> pageItems;
@@ -79,7 +82,7 @@ public class Pager<T> implements Serializable {
         this.totalCount = pager.totalCount;
         this.totalPage = pager.totalPage;
         this.orderBy = pager.orderBy;
-        this.orders = pager.orders;
+        this.order = pager.order;
     }
 
     /**
@@ -194,39 +197,25 @@ public class Pager<T> implements Serializable {
         this.orderBy = orderBy;
     }
 
-    public Order[] getOrders() {
-        return orders;
+    public String getOrder() {
+        if (StringUtil.isNotBlank(this.getOrderBy()) && StringUtil.isBlank(this.order)) {
+            this.setOrder("asc");
+        }
+        return this.order;
     }
 
-    public void setOrders(Order... order) {
-        this.orders = order;
+    public void setOrder(String order) {
+        this.order = order;
     }
 
     @ApiModelProperty("是否启用排序")
     public boolean isOrderBySetted() {
-        return (StringUtils.isNotBlank(this.orderBy)) && (ObjectUtil.isNotNull(orders));
-    }
-
-    public enum Order {
-        desc, asc
+        return StringUtil.isNotBlank(this.getOrderBy()) && StringUtil.isNotBlank(this.getOrder());
     }
 
     @Override
     public String toString() {
-        return "Pager [totalCount=" + totalCount + ", first=" + first + ", pageSize=" + pageSize + ", totalPage=" + totalPage + ", currentPage=" + currentPage + ", orderBy=" + orderBy + ", order=" + orders + "]";
-    }
-
-    public static class OrderSerializer extends JsonSerializer<Order[]> {
-
-        @Override
-        public void serialize(Order[] orders, JsonGenerator jgen, SerializerProvider provider) throws IOException {
-            if (orders.length == 0) {
-                jgen.writeNull();
-            } else {
-                jgen.writeString(ObjectUtil.toString(orders,","));
-            }
-        }
-
+        return "Pager [totalCount=" + totalCount + ", first=" + first + ", pageSize=" + pageSize + ", totalPage=" + totalPage + ", currentPage=" + currentPage + ", orderBy=" + orderBy + ", order=" + order + "]";
     }
 
 }

@@ -7,7 +7,7 @@ import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.concurrent.LinkedQueue;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.remind.bean.Model;
 import org.jfantasy.remind.bean.Notice;
 import org.jfantasy.remind.dao.ModelDao;

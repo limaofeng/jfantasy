@@ -71,8 +71,10 @@ public class SwaggerAutoConfiguration implements EnvironmentAware {
                 .genericModelSubstitutes(ResponseEntity.class)
                 .select()
                 .apis(apis)
-                .paths(regex(DEFAULT_INCLUDE_PATTERN)) // and by paths
-                .build();
+                .paths(regex(DEFAULT_INCLUDE_PATTERN)).build();// and by paths
+        if (propertyResolver.containsProperty("host")) {
+            swaggerSpringMvcPlugin.host(propertyResolver.getProperty("host"));
+        }
         watch.stop();
         LOG.debug("Started Swagger in {} ms", watch.getTotalTimeMillis());
         return swaggerSpringMvcPlugin;

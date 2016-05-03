@@ -1,25 +1,24 @@
 package org.jfantasy.framework.web.filter.wrapper;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.util.common.Base64Util;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.WebUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.web.util.HtmlUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.lang.reflect.Array;
 import java.util.*;
-import java.util.Map.Entry;
 
 public class XSSRequestWrapper extends HttpServletRequestWrapper {
 
     private static final Log LOGGER = LogFactory.getLog(XSSRequestWrapper.class);
 
-    private Map<String, String[]> parameterMaps = new HashMap<String, String[]>();
+    private Map<String, String[]> parameterMaps = new LinkedHashMap<String, String[]>();
 
     private boolean transform = false;
 
@@ -47,7 +46,7 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
         }
         Object vals = ClassUtil.newInstance(String.class, values.length);
         for (int i = 0; i < values.length; i++) {
-            String escapeStr = null;
+            String escapeStr;
             // 普通Html过滤
             if ("GET".equalsIgnoreCase(WebUtil.getMethod((HttpServletRequest) this.getRequest())) && isTransform()) {
                 escapeStr = WebUtil.transformCoding(values[i], "8859_1", this.getRequest().getCharacterEncoding());
@@ -73,63 +72,18 @@ public class XSSRequestWrapper extends HttpServletRequestWrapper {
     }
 
     @Override
-    @SuppressWarnings({"unchecked", "serial", "rawtypes"})
-    public Map getParameterMap() {
-        return new HashMap(super.getParameterMap()) {
-
-            private Set<Object> entries;
-
-            @Override
-            public Object get(Object key) {
-                return XSSRequestWrapper.this.getParameterValues(StringUtil.nullValue(key));
+    public Map<String, String[]> getParameterMap() {
+        Enumeration<String> enumeration = super.getParameterNames();
+        if (parameterMaps.size() == super.getParameterMap().size())
+            return parameterMaps;
+        while (enumeration.hasMoreElements()) {
+            String key = enumeration.nextElement();
+            if (parameterMaps.containsKey(key)) {
+                continue;
             }
-
-            public Set entrySet() {
-                if (entries == null) {
-                    entries = new HashSet<Object>();
-                    Enumeration enumeration = XSSRequestWrapper.this.getParameterNames();
-                    while (enumeration.hasMoreElements()) {
-                        final String key = enumeration.nextElement().toString();
-                        final Object value = XSSRequestWrapper.this.getParameterValues(key);
-                        entries.add(new Entry() {
-
-                            public boolean equals(Object obj) {
-                                if (!(obj instanceof Entry)) {
-                                    return false;
-                                }
-                                Entry entry = (Entry) obj;
-                                return key == null ? (entry.getKey() == null) : key.equals(entry.getKey()) && value == null ? (entry.getValue() == null) : value.equals(entry.getValue());
-                            }
-
-                            public int hashCode() {
-                                return ((key == null) ? 0 : key.hashCode()) ^ ((value == null) ? 0 : value.hashCode());
-                            }
-
-                            public Object getKey() {
-                                return key;
-                            }
-
-                            public Object getValue() {
-                                return value;
-                            }
-
-                            public Object setValue(Object obj) {
-                                return value;
-                            }
-
-                        });
-                    }
-                }
-                return entries;
-            }
-
-        };
-    }
-
-    @Override
-    @SuppressWarnings({"rawtypes"})
-    public Enumeration getParameterNames() {
-        return XSSRequestWrapper.super.getParameterNames();
+            parameterMaps.put(key, getParameterValues(key));
+        }
+        return parameterMaps;
     }
 
 }

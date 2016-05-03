@@ -3,26 +3,36 @@ package org.jfantasy.framework.spring.config;
 
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.thetransactioncompany.cors.CORSFilter;
 import org.hibernate.validator.HibernateValidator;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver;
 import org.jfantasy.framework.spring.mvc.method.annotation.PagerModelAttributeMethodProcessor;
 import org.jfantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor;
 import org.jfantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.PropertiesHelper;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.filter.ActionContextFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
+import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.EnvironmentAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.core.env.Environment;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.StringHttpMessageConverter;
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
 import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Validator;
@@ -37,15 +47,14 @@ import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.DispatcherType;
 import java.nio.charset.Charset;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {"org.jfantasy.*.rest"}, useDefaultFilters = false, includeFilters = {
         @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})
 })
-public class WebMvcConfig extends WebMvcConfigurerAdapter {
+public class WebMvcConfig extends WebMvcConfigurerAdapter implements EnvironmentAware {
 
     /**
      * <基于cookie的本地化资源处理器>. <br>
@@ -86,10 +95,38 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
         return multipartResolver;
     }
 
+    private RelaxedPropertyResolver jacksonPropertyResolver;
+
+    @Override
+    public void setEnvironment(Environment environment) {
+        this.jacksonPropertyResolver = new RelaxedPropertyResolver(environment, "spring.jackson.");
+    }
+
+    private ObjectMapper objectMapper() {
+        ObjectMapper objectMapper = JSON.getObjectMapper();
+        PropertiesHelper helper = PropertiesHelper.load("application-sub.properties");
+        Set<String> packages = new HashSet<String>();
+        for (String _packages : helper.getMergeProperty("spring.jackson.mixin.packages")) {
+            packages.addAll(Arrays.asList(StringUtil.tokenizeToStringArray(_packages)));
+        }
+        packages.addAll(Arrays.asList(StringUtil.tokenizeToStringArray(this.jacksonPropertyResolver.getProperty("mixin.packages", "org.jfantasy.*.bean"))));
+        ThreadJacksonMixInHolder.scan(packages.toArray(new String[packages.size()]));
+        objectMapper.setMixIns(ThreadJacksonMixInHolder.getSourceMixins());
+        return objectMapper;
+    }
+
     @Override
     public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
-        converters.add(new StringHttpMessageConverter(Charset.forName("utf-8")));
-//        converters.add(new MappingJackson2HttpMessageConverter(JSON.getObjectMapper()));
+        Class[] removeClazz = new Class[]{StringHttpMessageConverter.class, MappingJackson2HttpMessageConverter.class};
+        Iterator<HttpMessageConverter<?>> iterator = converters.iterator();
+        while (iterator.hasNext()) {
+            HttpMessageConverter<?> converter = iterator.next();
+            if (ObjectUtil.exists(removeClazz, converter.getClass())) {
+                iterator.remove();
+            }
+        }
+        converters.add(0, new MappingJackson2HttpMessageConverter(objectMapper()));
+        converters.add(0, new StringHttpMessageConverter(Charset.forName("utf-8")));
         super.configureMessageConverters(converters);
     }
 
@@ -121,14 +158,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter {
     }
 
     @Bean
-    public FilterRegistrationBean corsFilter(){
+    public FilterRegistrationBean corsFilter() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new CORSFilter());
-        filterRegistrationBean.addInitParameter("cors.allowOrigin","*");
-        filterRegistrationBean.addInitParameter("cors.supportedMethods","GET, POST, HEAD, PUT, DELETE, OPTIONS");
-        filterRegistrationBean.addInitParameter("cors.supportedHeaders","Accept, Origin, X-Requested-With, Content-Type, Last-Modified");
-        filterRegistrationBean.addInitParameter("cors.exposedHeaders","Set-Cookie");
-        filterRegistrationBean.addInitParameter("cors.supportsCredentials","true");
+        filterRegistrationBean.addInitParameter("cors.allowOrigin", "*");
+        filterRegistrationBean.addInitParameter("cors.supportedMethods", "GET, POST, HEAD, PUT, DELETE, OPTIONS");
+        filterRegistrationBean.addInitParameter("cors.supportedHeaders", "Accept, Origin, X-Requested-With, Content-Type, Last-Modified");
+        filterRegistrationBean.addInitParameter("cors.exposedHeaders", "Set-Cookie");
+        filterRegistrationBean.addInitParameter("cors.supportsCredentials", "true");
         filterRegistrationBean.setEnabled(true);
         filterRegistrationBean.setOrder(100);
         filterRegistrationBean.addUrlPatterns("/*");

@@ -1,12 +1,5 @@
 package org.jfantasy.cms.bean;
 
-import org.jfantasy.attr.storage.bean.AttributeVersion;
-import org.jfantasy.cms.bean.databind.ArticleCategoryDeserializer;
-import org.jfantasy.cms.bean.databind.ArticleCategorySerializer;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
-import org.jfantasy.framework.lucene.annotations.IndexProperty;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -16,6 +9,12 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.cms.bean.databind.ArticleCategoryDeserializer;
+import org.jfantasy.cms.bean.databind.ArticleCategorySerializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
+import org.jfantasy.framework.lucene.annotations.IndexProperty;
 
 import javax.persistence.*;
 import java.util.List;
@@ -31,7 +30,6 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_ARTICLE_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "articles", "children", "articleVersion"})
 public class ArticleCategory extends BaseBusEntity {
 
@@ -90,14 +88,6 @@ public class ArticleCategory extends BaseBusEntity {
     @OrderBy("sort ASC")
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<ArticleCategory> children;
-    /**
-     * 属性版本表
-     */
-    @ApiModelProperty(hidden = true)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ARTICLE_VERSION_ID", foreignKey = @ForeignKey(name = "FK_CMS_ARTICLE_CATEGORY_VERSION"))
-    @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-    private AttributeVersion articleVersion;
     /**
      * 文章
      */
@@ -182,14 +172,6 @@ public class ArticleCategory extends BaseBusEntity {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public AttributeVersion getArticleVersion() {
-        return articleVersion;
-    }
-
-    public void setArticleVersion(AttributeVersion articleVersion) {
-        this.articleVersion = articleVersion;
     }
 
 }

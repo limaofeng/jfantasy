@@ -8,6 +8,7 @@ import org.jfantasy.security.bean.Menu;
 import org.jfantasy.security.service.MenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -24,7 +25,7 @@ public class MenuController {
     @ResponseBody
     public Pager<Menu> search(Pager<Menu> pager, List<PropertyFilter> filters) {
         if (!pager.isOrderBySetted()) {
-            pager.setOrders(Pager.Order.asc);
+            pager.setOrder(Pager.SORT_ASC);
             pager.setOrderBy("sort");
         }
         return this.menuService.findPager(pager, filters);

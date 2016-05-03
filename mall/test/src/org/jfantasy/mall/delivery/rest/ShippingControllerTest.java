@@ -1,6 +1,6 @@
 package org.jfantasy.mall.delivery.rest;
 
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.mall.delivery.bean.DeliveryCorp;
 import org.jfantasy.mall.delivery.bean.DeliveryType;

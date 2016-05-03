@@ -1,14 +1,12 @@
 package org.jfantasy.pay.product;
 
-import org.jfantasy.framework.error.IgnoreException;
-import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -33,9 +31,8 @@ public class Yeepay extends PayProductSupport {
     }
 
     public Map<String, String> getParameterMap(Parameters parameters) {
-        PaymentContext context = PaymentContext.getContext();
-        PayConfig paymentConfig = context.getPaymentConfig();
-        Payment payment = context.getPayment();
+        PayConfig paymentConfig = null;//context.getPaymentConfig();
+        Payment payment = null;//context.getPayment();
         BigDecimal paymentAmount = payment.getTotalAmount();
         String paymentSn = payment.getSn();
 
@@ -47,7 +44,7 @@ public class Yeepay extends PayProductSupport {
         String p5Pid = paymentSn + ":商品名称";// 商品名称
         String p6Pcat = "";// 商品种类
         String p7Pdesc = paymentSn + ":商品描述";// 商品描述
-        String p8Url = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String p8Url = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String p9SAF = "0";// 是否需要填写送货地址（1：是、0：否）
         String paMP = "shop" + "xx";// 商户数据
         String pdFrpId = "";// 支付通道编码
@@ -78,9 +75,8 @@ public class Yeepay extends PayProductSupport {
         return parameterMap;
     }
 
-    @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = null;//PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String p1MerId = parameters.get("p1_MerId");
         String r0Cmd = parameters.get("r0_Cmd");
@@ -163,7 +159,7 @@ public class Yeepay extends PayProductSupport {
     }
 
     @Override
-    public String web(Payment payment,Order order, Properties properties) {
+    public String web(Payment payment, Order order, Properties properties) {
         return null;
     }
 

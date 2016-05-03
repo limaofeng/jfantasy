@@ -18,10 +18,7 @@ import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.htmlcleaner.HtmlCleanerUtil;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.security.SpringSecurityUtils;
-import org.jfantasy.security.userdetails.AdminUser;
-import org.jfantasy.system.util.SettingUtil;
+import org.jfantasy.framework.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -71,17 +68,19 @@ public class CmsService extends BuguSearcher<Article> {
      * @return string
      */
     public Pager<Article> findPager(Pager<Article> pager, List<PropertyFilter> filters) {
+        /*
         AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
         if (adminUser != null) {
             String code = SettingUtil.getValue("cms");
             if (StringUtil.isNotBlank(code)) {
                 filters.add(new PropertyFilter("LIKES_category.path", this.articleCategoryDao.get(code).getPath()));
             }
-        }
+        }*/
         return articleDao.findPager(pager, filters);
     }
 
     public Pager<ArticleCategory> findCategoryPager(Pager<ArticleCategory> pager, List<PropertyFilter> filters) {
+        /*
         AdminUser adminUser = SpringSecurityUtils.getCurrentUser(AdminUser.class);
         if (adminUser != null) {
             String code = SettingUtil.getValue("cms");
@@ -92,7 +91,7 @@ public class CmsService extends BuguSearcher<Article> {
                     filters.add(new PropertyFilter("NEI_layer", "0"));
                 }
             }
-        }
+        }*/
         return this.articleCategoryDao.findPager(pager, filters);
     }
 
@@ -172,11 +171,7 @@ public class CmsService extends BuguSearcher<Article> {
      * @return ArticleCategory
      */
     public ArticleCategory get(String code) {
-        ArticleCategory category = this.articleCategoryDao.get(code);
-        if (category != null && category.getArticleVersion() != null) {
-            Hibernate.initialize(category.getArticleVersion().getAttributes());
-        }
-        return category;
+        return this.articleCategoryDao.get(code);
     }
 
     /**
@@ -223,8 +218,6 @@ public class CmsService extends BuguSearcher<Article> {
         }
         Hibernate.initialize(article.getCategory());
         Hibernate.initialize(article.getContent());
-        Hibernate.initialize(article.getVersion());
-        Hibernate.initialize(article.getAttributeValues());
         return article;
     }
 
@@ -285,7 +278,7 @@ public class CmsService extends BuguSearcher<Article> {
         if (StringUtil.isBlank(orderBy)) {
             return this.articleDao.find(filters, 0, size);
         } else {
-            return this.articleDao.find(filters, orderBy, StringUtil.defaultValue(order, Pager.Order.asc.name()), 0, size);
+            return this.articleDao.find(filters, orderBy, StringUtil.defaultValue(order, Pager.SORT_ASC), 0, size);
         }
     }
 

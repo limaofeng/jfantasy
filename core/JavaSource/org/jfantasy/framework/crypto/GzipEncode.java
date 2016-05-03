@@ -1,14 +1,15 @@
 package org.jfantasy.framework.crypto;
 
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
-import org.apache.commons.io.output.ByteArrayOutputStream;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 public class GzipEncode {
 	private static final Log logger = LogFactory.getLog(GzipEncode.class);
@@ -87,24 +88,6 @@ public class GzipEncode {
 		}
 		String k = new String(a);
 		return k;
-	}
-
-	public static void main(String[] args) throws Exception {
-		String ins = "测试GZIP编码";
-
-		byte[] b = gzip(ins);
-
-		DESPlus desPlus = new DESPlus();
-
-		DESPlus desPlus2 = new DESPlus("wangchongan");
-		String e2 = desPlus2.encrypt("13588888888");
-		System.out.println(e2);
-		String d2 = desPlus2.decrypt(e2);
-		System.out.println(d2);
-
-		System.out.println(JM(KL(new String(b))));
-
-		System.out.println(new String(jUnZip(b)));
 	}
 
 	public static String StringReader(OutputStream out) {

@@ -1,23 +1,23 @@
 package org.jfantasy.framework.web.filter.wrapper;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import java.nio.charset.Charset;
 import java.util.Enumeration;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class CharacterEncodingRequestWrapper extends HttpServletRequestWrapper {
 
     protected static final Log LOG = LogFactory.getLog(CharacterEncodingRequestWrapper.class);
 
-    private Map<String, String[]> parameterMaps = new HashMap<String, String[]>();
+    private Map<String, String[]> parameterMaps = new LinkedHashMap<String, String[]>();
 
     public CharacterEncodingRequestWrapper(HttpServletRequest request) {
         super(request);
@@ -39,7 +39,7 @@ public class CharacterEncodingRequestWrapper extends HttpServletRequestWrapper {
         String[] newValues = new String[values.length];
         for (int i = 0; i < values.length; i++) {
             if (Charset.forName("ASCII").newEncoder().canEncode(values[i])) {
-                newValues[i] = StringUtil.decodeURI(values[i], getRequest().getCharacterEncoding());
+                newValues[i] = StringUtil.decodeURI(values[i].replaceAll("\\+","%2B"), getRequest().getCharacterEncoding());
                 LOG.debug(name + " 的原始编码为[ASCII]转编码:" + values[i] + "=>" + newValues[i]);
             } else if (Charset.forName("ISO-8859-1").newEncoder().canEncode(values[i])) {
                 newValues[i] = WebUtil.transformCoding(values[i], "ISO-8859-1", getRequest().getCharacterEncoding());

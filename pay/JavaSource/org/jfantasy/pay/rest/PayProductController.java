@@ -6,9 +6,12 @@ import io.swagger.annotations.ApiOperation;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.PayProduct;
+import org.jfantasy.pay.product.PayProductSupport;
 import org.jfantasy.pay.rest.form.PayForm01;
 import org.jfantasy.pay.service.PayConfigService;
 import org.jfantasy.pay.service.PayProductConfiguration;
@@ -31,6 +34,7 @@ public class PayProductController {
     @Autowired
     private PayService payService;
 
+    @JsonIgnoreProperties(value = {@IgnoreProperty(pojo = PayProductSupport.class, name = {"shroffAccountName"})})
     @ApiOperation(value = "获取支付产品", notes = "通过该接口, 可以获取支持的支付产品列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

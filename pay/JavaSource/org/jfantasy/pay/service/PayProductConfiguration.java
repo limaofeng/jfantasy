@@ -6,7 +6,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * 支付配置
@@ -18,10 +17,6 @@ public class PayProductConfiguration implements InitializingBean {
      */
     private List<PayProduct> payProducts = new ArrayList<PayProduct>();
 
-    public void setPayProducts(List<PayProduct> payProducts) {
-        this.payProducts = payProducts;
-    }
-
     public PayProduct loadPayProduct(String paymentProductId) {
         return ObjectUtil.find(this.payProducts, "id", paymentProductId);
     }
@@ -32,43 +27,28 @@ public class PayProductConfiguration implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet()  {
 
         //支付宝即时交易
         if (ObjectUtil.find(this.payProducts, "id", "alipayDirect") == null) {
-            AlipayDirect alipayDirect = new AlipayDirect();
-            alipayDirect.setId("alipayDirect");
-            alipayDirect.setName("支付宝（即时交易）");
-            alipayDirect.setBargainorIdName("合作身份者ID");
-            alipayDirect.setBargainorKeyName("安全校验码");
-            alipayDirect.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            alipayDirect.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
-            alipayDirect.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-            Properties properties = new Properties();
-            properties.put(AlipayPayProductSupport.EXTRA_PROPERTY_SELLER_EMAIL, "支付宝账号");
-            alipayDirect.setProperties(properties);
-            this.payProducts.add(alipayDirect);
+            Alipay alipay = new Alipay();
+            alipay.setId("alipayDirect");
+            alipay.setName("支付宝");
+            alipay.setBargainorIdName("合作身份者ID");
+            alipay.setBargainorKeyName("安全校验码");
+            alipay.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
+            alipay.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
+            alipay.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
+//            Properties properties = new Properties();
+//            properties.put(AlipayPayProductSupport.EXTRA_PROPERTY_SELLER_EMAIL, "支付宝账号");
+//            alipay.setExtPropertys(properties);
+            this.payProducts.add(alipay);
         }
 
-        //支付宝WAP即时交易
-        if (ObjectUtil.find(this.payProducts, "id", "alipayDirectByWap") == null) {
-            AlipayDirectByWap alipayDirectByWap = new AlipayDirectByWap();
-            alipayDirectByWap.setId("alipayDirectByWap");
-            alipayDirectByWap.setName("支付宝（WAP即时交易）");
-            alipayDirectByWap.setBargainorIdName("合作身份者ID");
-            alipayDirectByWap.setBargainorKeyName("安全校验码");
-            alipayDirectByWap.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
-            alipayDirectByWap.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
-            alipayDirectByWap.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-            Properties properties = new Properties();
-            properties.put(AlipayPayProductSupport.EXTRA_PROPERTY_SELLER_EMAIL, "支付宝账号");
-            alipayDirectByWap.setProperties(properties);
-            this.payProducts.add(alipayDirectByWap);
-        }
-
+        /*
         //支付宝担保交易
         if (ObjectUtil.find(this.payProducts, "id", "alipayPartner") == null) {
-            AlipayPartner alipayPartner = new AlipayPartner();
+            Alipay alipayPartner = new Alipay();
             alipayPartner.setId("alipayPartner");
             alipayPartner.setName("支付宝（担保交易）");
             alipayPartner.setBargainorIdName("合作身份者ID");
@@ -78,7 +58,7 @@ public class PayProductConfiguration implements InitializingBean {
             alipayPartner.setDescription("支付宝担保交易，买家先付款到支付宝，支付宝收到买家付款后即时通知卖家发货，买家收到货物满意后通知支付宝付款给卖家。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
             Properties properties = new Properties();
             properties.put(AlipayPayProductSupport.EXTRA_PROPERTY_SELLER_EMAIL, "支付宝账号");
-            alipayPartner.setProperties(properties);
+            alipayPartner.setExtraPropertys(properties);
             this.payProducts.add(alipayPartner);
         }
 
@@ -132,7 +112,7 @@ public class PayProductConfiguration implements InitializingBean {
             pay99bill.setLogoPath("/template/tocer/images/payment/pay99bill_icon.gif");
             pay99bill.setDescription("快钱是国内领先的独立第三方支付企业，旨在为各类企业及个人 提供安全、便捷和保密的综合电子支付服务。");
             this.payProducts.add(pay99bill);
-        }
+        }*/
 
         //银联电子支付
         if (ObjectUtil.find(this.payProducts, "id", "chinapay") == null) {
@@ -159,7 +139,6 @@ public class PayProductConfiguration implements InitializingBean {
             unionpay.setDescription("");
             this.payProducts.add(unionpay);
         }
-
 
     }
 

@@ -1,12 +1,13 @@
 package org.jfantasy.pay.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.pay.product.sign.Base64;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -30,7 +31,6 @@ import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
 @ApiModel("支付配置")
 @Entity
 @Table(name = "PAY_CONFIG")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "payments", "refunds"})
 public class PayConfig extends BaseBusEntity {
 
@@ -47,7 +47,7 @@ public class PayConfig extends BaseBusEntity {
     }
 
     @Id
-    @Column(name = "ID", insertable = true, updatable = false)
+    @Column(name = "ID", updatable = false)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
@@ -83,36 +83,32 @@ public class PayConfig extends BaseBusEntity {
     @Column(name = "BARGAINOR_KEY")
     private String bargainorKey;
     /**
-     * 担保支付的卖家 email
-     */
-    @ApiModelProperty("担保支付的卖家 email")
-    @Column(name = "SELLER_EMAIL")
-    private String sellerEmail;
-    /**
      * 针对不同支付平台的额外属性
      */
     @ApiModelProperty(hidden = true)
-    @Column(name = "PROPERTIES")
+    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
-
-    /**
-     * 签名证书(银联支付专用)
-
-    @Column(name = "SIGN_CERT", length = 500)
-    @Convert(converter = FileDetailConverter.class)
-    private FileDetail signCert;*/
-    /**
-     * 加密证书(银联支付专用)
-
-    @Column(name = "ENCRYPT_CERT", length = 500)
-    @Convert(converter = FileDetailConverter.class)
-    private FileDetail encryptCert;*/
-    /**
-     * 签名验证证书(银联支付专用)
-
-    @Column(name = "VALIDATE_CERT",length = 500)
-    @Convert(converter = FileDetailConverter.class)
-    private FileDetail validateCert;*/
+//    /**
+//     * 签名证书(银联支付专用)
+//     */
+//    @Deprecated
+//    @Column(name = "SIGN_CERT", length = 500)
+//    @Convert(converter = FileDetailConverter.class)
+//    private FileDetail signCert;
+//    /**
+//     * 加密证书(银联支付专用)
+//     */
+//    @Deprecated
+//    @Column(name = "ENCRYPT_CERT", length = 500)
+//    @Convert(converter = FileDetailConverter.class)
+//    private FileDetail encryptCert;
+//    /**
+//     * 签名验证证书(银联支付专用)
+//     */
+//    @Deprecated
+//    @Column(name = "VALIDATE_CERT", length = 500)
+//    @Convert(converter = FileDetailConverter.class)
+//    private FileDetail validateCert;
     /**
      * 支付手续费类型
      */
@@ -138,9 +134,15 @@ public class PayConfig extends BaseBusEntity {
     @ApiModelProperty("排序")
     @Column(name = "SORT")
     private Integer sort;
+    /**
+     * 支付记录
+     */
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<Payment>();// 支付
+    /**
+     * 退款记录
+     */
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<Refund>();// 退款
@@ -248,49 +250,64 @@ public class PayConfig extends BaseBusEntity {
         this.payProductId = payProductId;
     }
 
-    public String getSellerEmail() {
-        return sellerEmail;
-    }
-
-    public void setSellerEmail(String sellerEmail) {
-        this.sellerEmail = sellerEmail;
-    }
-
+    @JsonAnyGetter
     public Properties getProperties() {
         return properties;
+    }
+
+    @JsonAnySetter
+    public void set(String key, Object value) {
+        if (this.properties == null) {
+            this.properties = new Properties();
+        }
+        this.properties.put(key, value);
+    }
+
+    @Transient
+    public Object get(String key) {
+        if (this.properties == null) return null;
+        return this.properties.get(key);
+    }
+
+    @Transient
+    public <T> T get(String key, Class<T> tClass) {
+        if (this.properties == null) return null;
+        Object value = this.properties.get(key);
+        if(value == null){
+            return null;
+        }
+        if(tClass.isAssignableFrom(byte[].class) && value instanceof String){
+            return (T) Base64.decode(value.toString());
+        }
+        return tClass.cast(value);
     }
 
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
 
-    /*
-    public FileDetail getSignCert() {
-        return signCert;
-    }
-
-    @JsonDeserialize(using = FileDetailDeserializer.class)
-    public void setSignCert(FileDetail signCert) {
-        this.signCert = signCert;
-    }
-
-    public FileDetail getEncryptCert() {
-        return encryptCert;
-    }
-
-    @JsonDeserialize(using = FileDetailDeserializer.class)
-    public void setEncryptCert(FileDetail encryptCert) {
-        this.encryptCert = encryptCert;
-    }
-
-    public FileDetail getValidateCert() {
-        return validateCert;
-    }
-
-    @JsonDeserialize(using = FileDetailDeserializer.class)
-    public void setValidateCert(FileDetail validateCert) {
-        this.validateCert = validateCert;
-    }
-    */
+//    public FileDetail getSignCert() {
+//        return signCert;
+//    }
+//
+//    public void setSignCert(FileDetail signCert) {
+//        this.signCert = signCert;
+//    }
+//
+//    public FileDetail getEncryptCert() {
+//        return encryptCert;
+//    }
+//
+//    public void setEncryptCert(FileDetail encryptCert) {
+//        this.encryptCert = encryptCert;
+//    }
+//
+//    public FileDetail getValidateCert() {
+//        return validateCert;
+//    }
+//
+//    public void setValidateCert(FileDetail validateCert) {
+//        this.validateCert = validateCert;
+//    }
 
 }

@@ -1,6 +1,5 @@
 package org.jfantasy.security.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
@@ -9,8 +8,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.security.bean.enums.ResourceType;
+
+import javax.persistence.*;
 
 /**
  * 资源
@@ -22,7 +22,6 @@ import org.jfantasy.security.bean.enums.ResourceType;
 @ApiModel(value = "资源", description = "每个访问链接、方法、类，都可以抽象为一个资源")
 @Entity
 @Table(name = "AUTH_RESOURCE")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parentResources", "userGroups", "roles"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Resource extends BaseBusEntity implements Cloneable {

@@ -288,11 +288,20 @@ public abstract class StringUtil {
      */
     public static String encodeURI(String s, String enc) {
         try {
-            return isBlank(s) ? s : URLEncoder.encode(s, enc);
+            return isBlank(s) ? s : URLEncoder.encode(s, enc).replace("+", "%20");
         } catch (UnsupportedEncodingException e) {
             LOG.error(e.getMessage(), e);
             return s;
         }
+    }
+
+    public static boolean contains(String s, CharSequence... ses) {
+        for (CharSequence sequence : ses) {
+            if (s.contains(sequence)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -305,7 +314,15 @@ public abstract class StringUtil {
      */
     public static String decodeURI(String s, String enc) {
         try {
-            return isBlank(s) ? s : URLDecoder.decode(s.replaceAll("\\+","%2B"), enc);
+            if (s.contains(" ") && s.contains("+")) {
+                LOG.error("同时存在 ' ' 与 '+' decodeURI 后 可能会出现问题,所以原串返回");
+                return s;
+            }
+            if (contains(s, /*"+",*/ " ", "/", "?",/*"%",*/"#", "&", "=")) {
+                LOG.warn("存在 特殊字符 decodeURI 后 字符串可能已经 decodeURI 过.");
+                return s;
+            }
+            return isBlank(s) ? s : URLDecoder.decode(s, enc);
         } catch (UnsupportedEncodingException e) {
             LOG.error(e.getMessage(), e);
             return s;
@@ -510,13 +527,20 @@ public abstract class StringUtil {
 
     }
 
+    public static String toString(byte[] b, String charset) {
+        try {
+            return new String(b, 0, b.length, charset);
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
     public static String toString(byte[] b, int offset, int length, String charset) {
         try {
             return new String(b, offset, length, charset);
         } catch (UnsupportedEncodingException e) {
             throw new IllegalArgumentException(e);
         }
-
     }
 
     public static String printable(String name) {

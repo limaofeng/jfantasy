@@ -2,7 +2,7 @@ package org.jfantasy.mall.goods.bean.converter;
 
 
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.mall.goods.bean.GoodsParameterValue;
 
 import javax.persistence.AttributeConverter;

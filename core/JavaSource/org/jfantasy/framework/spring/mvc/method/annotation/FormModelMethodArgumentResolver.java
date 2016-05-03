@@ -96,7 +96,7 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
         return BeanUtils.instantiateClass(parameter.getParameterType());
     }
 
-    protected String getRequestValueForAttribute(String attributeName, NativeWebRequest request) {
+    String getRequestValueForAttribute(String attributeName, NativeWebRequest request) {
         Map<String, String> variables = getUriTemplateVariables(request);
         if (StringUtils.hasText(variables.get(attributeName))) {
             return variables.get(attributeName);
@@ -113,7 +113,7 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
         return (variables != null) ? variables : Collections.<String, String>emptyMap();
     }
 
-    protected Object createAttributeFromRequestValue(String sourceValue, String attributeName, MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
+    Object createAttributeFromRequestValue(String sourceValue, String attributeName, MethodParameter parameter, WebDataBinderFactory binderFactory, NativeWebRequest request) throws Exception {
         DataBinder binder = binderFactory.createBinder(request, null, attributeName);
         ConversionService conversionService = binder.getConversionService();
         if (conversionService != null) {
@@ -126,7 +126,6 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
         return null;
     }
 
-    @SuppressWarnings("unchecked")
     protected void bindRequestParameters(ModelAndViewContainer mavContainer, WebDataBinderFactory binderFactory, WebDataBinder binder, NativeWebRequest request, MethodParameter parameter) throws Exception {
         Class<?> targetType = binder.getTarget().getClass();
         ServletRequest servletRequest = prepareServletRequest(binder.getTarget(), request, parameter);
@@ -146,7 +145,6 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
             if (parameter.getParameterType().isArray()) {
                 componentType = parameter.getParameterType().getComponentType();
             }
-
 
             for (Object key : servletRequest.getParameterMap().keySet()) {
                 String prefixName = getPrefixName((String) key);
@@ -170,7 +168,6 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
                                 throw new BindException(componentBinder.getBindingResult());
                             }
                         }
-
                         target.add(component);
                     }
                 }

@@ -5,7 +5,7 @@ import org.jfantasy.attr.storage.BaseDynaBean;
 import org.jfantasy.framework.lucene.annotations.Compare;
 import org.jfantasy.framework.lucene.annotations.IndexFilter;
 import org.jfantasy.framework.lucene.annotations.Indexed;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.mall.goods.bean.converter.GoodsImagesConverter;
 import org.jfantasy.mall.goods.bean.converter.GoodsParameterValuesConverter;
 import org.jfantasy.mall.shop.bean.Shop;

@@ -1,33 +1,42 @@
 package org.jfantasy.pay.product;
 
-import org.apache.commons.lang.StringUtils;
 import org.dom4j.Document;
 import org.dom4j.DocumentHelper;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.product.sign.MD5;
 import org.jfantasy.pay.product.sign.RSA;
 import org.jfantasy.pay.product.sign.SignUtil;
-import org.jfantasy.pay.service.PaymentContext;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.DecimalFormat;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicReference;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
+import java.util.TreeMap;
 
 public abstract class AlipayPayProductSupport extends PayProductSupport {
 
     // 字符编码格式 目前支持  utf-8
-    public final static String input_charset = "utf-8";
+    protected final static String input_charset = "utf-8";
 
-    public static final DecimalFormat RMB_YUAN_FORMAT = new DecimalFormat("#0.00");
+    protected static final DecimalFormat RMB_YUAN_FORMAT = new DecimalFormat("#0.00");
+
+    public static final String EXT_SELLER_EMAIL = "sellerEmail";
+
+    protected Object direct(){
+        return null;
+    }
+
+    protected Object partner(){
+        return null;
+    }
 
     @Override
     public Object app(Payment payment, Order order, Properties properties) throws PayException {
@@ -43,7 +52,7 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
         data.put("out_trade_no", payment.getSn());//商户网站唯一订单号
         data.put("subject", order.getSubject());//商品名称
         data.put("payment_type", "1");//支付类型
-        data.put("seller_id", config.getSellerEmail());//卖家支付宝账号
+        data.put("seller_id", config.get(EXT_SELLER_EMAIL,String.class));//卖家支付宝账号
         data.put("total_fee", RMB_YUAN_FORMAT.format(order.getPayableFee()));//总金额
         data.put("body", order.getBody());//商品详情
 
@@ -84,52 +93,6 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
     }
 
     /**
-     * 把数组所有元素按照固定参数排序，以“参数=参数值”的模式用“&”字符拼接成字符串
-     *
-     * @param params 需要参与字符拼接的参数组
-     * @return 拼接后字符串
-     */
-    public static String createLinkStringNoSort(Map<String, String> params) {
-        //手机网站支付MD5签名固定参数排序，顺序参照文档说明
-        return "service=" + params.get("service") + "&v=" + params.get("v") + "&sec_id=" + params.get("sec_id") + "&notify_data=" + params.get("notify_data");
-    }
-
-    /**
-     * 根据参数集合组合参数字符串（忽略空值参数）
-     *
-     * @param params 请求参数
-     * @return 参数字符串
-     */
-    protected String getParameterString(Map<String, String> params) {
-        List<String> keys = new ArrayList<String>(params.keySet());
-        Collections.sort(keys);
-        AtomicReference<StringBuffer> stringBuffer = new AtomicReference<StringBuffer>(new StringBuffer());
-        for (String key : keys) {
-            String value = params.get(key);
-            if (StringUtils.isNotEmpty(value)) {
-                stringBuffer.get().append("&").append(key).append("=").append(value);
-            }
-        }
-        stringBuffer.get().deleteCharAt(0);
-        return stringBuffer.get().toString();
-    }
-
-    protected static Map<String, String> paraFilter(Map<String, String> sArray) {
-        Map<String, String> result = new HashMap<String, String>();
-        if (sArray == null || sArray.isEmpty()) {
-            return result;
-        }
-        for (String key : sArray.keySet()) {
-            String value = sArray.get(key);
-            if (value == null || "".equals(value) || "sign".equalsIgnoreCase(key) || "sign_type".equalsIgnoreCase(key)) {
-                continue;
-            }
-            result.put(key, value);
-        }
-        return result;
-    }
-
-    /**
      * 生成签名结果
      *
      * @param data 要签名的数组
@@ -164,22 +127,6 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
     }
 
     /**
-     * 生成要请求给支付宝的参数数组
-     *
-     * @param data 请求前的参数数组
-     * @return 要请求的参数数组
-     */
-    protected static Map<String, String> buildRequestPara(Map<String, String> data, String bargainorKey) {
-        String signType = ObjectUtil.defaultValue(data.get("sign_type"), "MD5");
-        //签名结果与签名方式加入请求提交参数组中
-        data.put("sign", sign(data, bargainorKey));
-        if (!"alipay.wap.trade.create.direct".equals(data.get("service")) && !"alipay.wap.auth.authAndExecute".equals(data.get("service"))) {
-            data.put("sign_type", signType);
-        }
-        return data;
-    }
-
-    /**
      * 解析远程模拟提交后返回的信息，获得token
      *
      * @param text 要解析的字符串
@@ -209,7 +156,7 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
             String resData = paraText.get("res_data");
             //解析加密部分字符串（RSA与MD5区别仅此一句）
             if ("0001".equals(signType)) {
-                resData = RSA.decrypt(resData, PaymentContext.getContext().getPaymentConfig().getBargainorKey(), input_charset);
+                resData = RSA.decrypt(resData, "", input_charset);
             }
 
             //token从res_data中解析出来（也就是说res_data中已经包含token的内容）
@@ -217,71 +164,6 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
             requestToken = document.selectSingleNode("//direct_trade_create_res/request_token").getText();
         }
         return requestToken;
-    }
-
-    /**
-     * 解密
-     *
-     * @param inputPara 要解密数据
-     * @return 解密后结果
-     */
-    public static Map<String, String> decrypt(Map<String, String> inputPara) throws Exception {
-        inputPara.put("notify_data", RSA.decrypt(inputPara.get("notify_data"), PaymentContext.getContext().getPaymentConfig().getBargainorKey(), input_charset));
-        return inputPara;
-    }
-
-    /**
-     * 验证消息是否是支付宝发出的合法消息，验证服务器异步通知
-     *
-     * @param params 通知返回来的参数数组
-     * @return 验证结果
-     */
-    public static boolean verifyNotify(Map<String, String> params) throws Exception {
-        //获取是否是支付宝服务器发来的请求的验证结果
-        boolean verifyResponse;
-        try {
-            //XML解析notify_data数据，获取notify_id
-            Document document = DocumentHelper.parseText(params.get("notify_data"));
-            String notifyId = document.selectSingleNode("//notify/notify_id").getText();
-            verifyResponse = verifyNotifyId(PaymentContext.getContext().getPaymentConfig().getBargainorId(), notifyId);
-        } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
-            verifyResponse = false;
-        }
-        //获取返回时的签名验证结果
-        //判断responsetTxt是否为true，isSign是否为true
-        //responsetTxt的结果不是true，与服务器设置问题、合作身份者ID、notify_id一分钟失效有关
-        //isSign不是true，与安全校验码、请求时的参数格式（如：带自定义参数等）、编码格式有关
-        return getSignVeryfy(params, ObjectUtil.defaultValue(params.get("sign"), ""), false) && verifyResponse;
-    }
-
-
-    /**
-     * 根据反馈回来的信息，生成签名结果
-     *
-     * @param params 通知返回来的参数数组
-     * @param sign   比对的签名结果
-     * @param isSort 是否排序
-     * @return 生成的签名结果
-     */
-    private static boolean getSignVeryfy(Map<String, String> params, String sign, boolean isSort) {
-        //过滤空值、sign与sign_type参数
-        Map<String, String> sParaNew = paraFilter(params);
-        //获取待签名字符串
-        String preSignStr;
-        if (isSort) {
-            preSignStr = null;//createLinkString(sParaNew);
-        } else {
-            preSignStr = createLinkStringNoSort(sParaNew);
-        }
-        //获得签名验证结果
-        boolean isSign = false;
-        if ("MD5".equals(params.get("sign_type"))) {
-            isSign = MD5.verify(preSignStr, sign, PaymentContext.getContext().getPaymentConfig().getBargainorKey(), input_charset);
-        } else if ("0001".equals(params.get("sign_type"))) {
-            isSign = RSA.verify(preSignStr, sign, PaymentContext.getContext().getPaymentConfig().getBargainorId(), input_charset);
-        }
-        return isSign;
     }
 
     /**
@@ -300,7 +182,7 @@ public abstract class AlipayPayProductSupport extends PayProductSupport {
      * true 返回正确信息
      * false 请检查防火墙或者是服务器阻止端口问题以及验证时间是否超过一分钟
      */
-    public static boolean verifyNotifyId(String partner, String notifyId) {
+    static boolean verifyNotifyId(String partner, String notifyId) {
         //获取远程服务器ATN结果，验证是否是支付宝服务器发来的请求
         String veryfyUrl = HTTPS_VERIFY_URL + "partner=" + partner + "&notify_id=" + notifyId;
         try {

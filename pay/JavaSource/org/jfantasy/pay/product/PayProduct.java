@@ -1,9 +1,9 @@
 package org.jfantasy.pay.product;
 
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
 
 import java.util.Properties;
 
@@ -76,13 +76,6 @@ public interface PayProduct {
      * @return String
      */
     String getName();
-
-    /**
-     * 收款方账号
-     *
-     * @return String
-     */
-    String getShroffAccountName();
 
     /**
      * 商户ID参数名称

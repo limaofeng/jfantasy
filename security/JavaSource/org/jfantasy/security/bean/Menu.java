@@ -1,5 +1,7 @@
 package org.jfantasy.security.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
@@ -7,19 +9,18 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.security.bean.databind.MenuDeserializer;
 import org.jfantasy.security.bean.databind.MenuSerializer;
 import org.jfantasy.security.bean.enums.MenuType;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
+import javax.persistence.*;
 import java.util.List;
 
 @ApiModel(value = "菜单")
 @Entity
 @Table(name = "AUTH_MENU")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menuAuthoritie", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Menu extends BaseBusEntity {
@@ -30,7 +31,7 @@ public class Menu extends BaseBusEntity {
 
     @ApiModelProperty("ID")
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;

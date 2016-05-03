@@ -1,7 +1,7 @@
 package org.jfantasy.wx.bean;
 
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.databind.MemberDeserializer;
 import org.jfantasy.member.bean.databind.MemberSerializer;

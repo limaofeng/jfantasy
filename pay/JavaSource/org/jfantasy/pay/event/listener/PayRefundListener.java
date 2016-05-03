@@ -1,10 +1,10 @@
 package org.jfantasy.pay.event.listener;
 
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.pay.event.PayRefundFailedEvent;
-import org.jfantasy.pay.event.PayRefundSuccessfulEvent;
+import org.jfantasy.pay.event.PayRefundNotifyEvent;
 import org.jfantasy.pay.event.context.PayContext;
-import org.jfantasy.pay.product.order.Order;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
 
@@ -18,7 +18,7 @@ public abstract class PayRefundListener implements SmartApplicationListener {
 
     @Override
     public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
-        return eventType == PayRefundSuccessfulEvent.class || eventType == PayRefundFailedEvent.class;
+        return eventType == PayRefundNotifyEvent.class;
     }
 
     @Override
@@ -33,12 +33,12 @@ public abstract class PayRefundListener implements SmartApplicationListener {
         PayContext payContext = (PayContext) event.getSource();
         Refund refund = payContext.getRefund();
         Order order = payContext.getOrder();
-        if (!supportsOrderType(refund.getOrderType())) {
+        if (!supportsOrderType(order.getType())) {
             return;
         }
-        if (Refund.Status.success == payContext.getRefund().getStatus()) {
+        if (RefundStatus.success == payContext.getRefund().getStatus()) {
             this.success(refund, order);
-        } else if (Refund.Status.failure == payContext.getRefund().getStatus()) {
+        } else if (RefundStatus.failure == payContext.getRefund().getStatus()) {
             this.failure(refund, order);
         }
     }

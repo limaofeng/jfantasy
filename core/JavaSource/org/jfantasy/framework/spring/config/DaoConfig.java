@@ -1,6 +1,7 @@
 package org.jfantasy.framework.spring.config;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.event.service.spi.EventListenerRegistry;
@@ -34,7 +35,7 @@ import javax.sql.DataSource;
 @Import({MyBatisConfig.class})
 public class DaoConfig implements TransactionManagementConfigurer {
 
-    private static final Logger logger = Logger.getLogger(DaoConfig.class);
+    private static final Log LOG = LogFactory.getLog(DaoConfig.class);
 
     @Autowired(required = false)
     private EntityManagerFactory entityManagerFactory;
@@ -53,45 +54,11 @@ public class DaoConfig implements TransactionManagementConfigurer {
         registry.prependListeners(EventType.PERSIST,new PropertyGeneratorPersistEventListener(identifierGeneratorFactory));
 
         registry.appendListeners(EventType.POST_INSERT,new EntityChangedEventListener());
-        return sessionFactory;
-    }
 
-    /*
-    @Bean(name = "sessionFactory")
-    public LocalSessionFactoryBean localSessionFactoryBean() {
-        logger.info("sessionFactory");
-        AnnotationSessionFactoryBean sessionFactory = new AnnotationSessionFactoryBean();
-        sessionFactory.setDataSource(this.dataSource);
-        sessionFactory.setNamingStrategy(new ImprovedNamingStrategy());
-
-        String[] ignorePropertyNames = {"packages.to.scan"};
-
-        PropertiesHelper helper = PropertiesHelper.load("props/hibernate.properties");
-
-        sessionFactory.setHibernateProperties(helper.getProperties(ignorePropertyNames));
-
-        sessionFactory.setPackagesToScan(helper.getMergeProperty("packages.to.scan"));
+        LOG.debug(" SessionFactory 加载成功! ");
 
         return sessionFactory;
-
     }
-    */
-     /*
-        LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
-		sessionFactory.setDataSource(dataSource);
-		String[] packagesToScan = new String[] { "web.function.**.model.oracle" };
-		sessionFactory.setPackagesToScan(packagesToScan);
-
-		Properties hibernateProperties = new Properties();
-		hibernateProperties.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-		hibernateProperties.setProperty("hibernate.show_sql","true");
-		hibernateProperties.setProperty(
-				"hibernate.current_session_context_class",
-				"org.springframework.orm.hibernate4.SpringSessionContext");
-		sessionFactory.setHibernateProperties(hibernateProperties);
-
-		return sessionFactory;*/
-
 
     @Bean(name = "dataSourceTransactionManager")
     public PlatformTransactionManager dataSourceTransactionManager(DataSource dataSource) {
@@ -114,7 +81,7 @@ public class DaoConfig implements TransactionManagementConfigurer {
 
     @Override
     public PlatformTransactionManager annotationDrivenTransactionManager() {
-        return jpaTransactionManager();
+        return hibernateTransactionManager();
     }
 
 

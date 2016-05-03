@@ -1,26 +1,23 @@
 package org.jfantasy.pay.product;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
-import org.jfantasy.file.FileItem;
-import org.jfantasy.file.bean.FileDetail;
-import org.jfantasy.file.bean.FileDetailKey;
-import org.jfantasy.file.service.FileManagerFactory;
-import org.jfantasy.file.service.FileService;
-import org.jfantasy.framework.spring.SpringContextUtil;
-import org.jfantasy.pay.bean.PayConfig;
-import org.jfantasy.pay.bean.Payment;
-import org.jfantasy.pay.bean.Refund;
+import org.jfantasy.pay.bean.*;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Properties;
 
 /**
  * 基类 - 支付产品
  */
+@JsonIgnoreProperties
 public abstract class PayProductSupport implements PayProduct {
 
     protected final static Log LOG = LogFactory.getLog(PayProductSupport.class);
@@ -30,16 +27,16 @@ public abstract class PayProductSupport implements PayProduct {
     protected String bargainorIdName;// 商户ID参数名称
     protected String description;// 支付产品描述
     protected String bargainorKeyName;// 密钥参数名称
-    protected String shroffAccountName;//收款方账号名称
     protected CurrencyType[] currencyTypes;// 支持货币类型
     protected String logoPath;// 支付产品LOGO路径
+    protected Map<String, ExtProperty> extPropertys;//自定义的属性
 
     @Override
     public Refund refund(Refund refund) {
         throw new PayException(this.getName() + " 的退款逻辑未实现");
     }
 
-    public String wap(){
+    public String wap() {
         throw new PayException(this.getName() + " 的 wap 支付未实现");
     }
 
@@ -59,15 +56,6 @@ public abstract class PayProductSupport implements PayProduct {
     @JsonIgnore
     public String getDescription() {
         return description;
-    }
-
-    @Override
-    public String getShroffAccountName() {
-        return shroffAccountName;
-    }
-
-    public void setShroffAccountName(String shroffAccountName) {
-        this.shroffAccountName = shroffAccountName;
     }
 
     public void setDescription(String description) {
@@ -114,13 +102,6 @@ public abstract class PayProductSupport implements PayProduct {
         this.id = id;
     }
 
-    protected static FileItem loadFileItem(FileDetail fileDetail) {
-        FileService fileService = SpringContextUtil.getBeanByType(FileService.class);
-        assert fileService != null;
-        FileDetail realFileDetail = fileService.get(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()));
-        return FileManagerFactory.getInstance().getFileManager(fileDetail.getFileManagerId()).getFileItem(realFileDetail.getRealPath());
-    }
-
     @Override
     public Object payNotify(Refund refund, String result) throws PayException {
         return null;
@@ -144,6 +125,23 @@ public abstract class PayProductSupport implements PayProduct {
         MDC.put("payConfigId", config.getId());
         MDC.put("body", result);
         LOG.info(MDC.getContext());
+    }
+
+    @JsonAnyGetter
+    public Map<String, ExtProperty> getExtPropertys() {
+        return extPropertys;
+    }
+
+    public void setExtPropertys(Map<String, ExtProperty> extPropertys) {
+        this.extPropertys = extPropertys;
+    }
+
+    @JsonAnySetter
+    public void set(String key, ExtProperty extProperty) {
+        if (this.extPropertys == null) {
+            this.extPropertys = new LinkedHashMap<>();
+        }
+        this.extPropertys.put(key, extProperty);
     }
 
 }

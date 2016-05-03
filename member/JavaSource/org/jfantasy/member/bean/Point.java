@@ -1,14 +1,13 @@
 package org.jfantasy.member.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "MEM_POINTS")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler"})
 public class Point extends BaseBusEntity {
 

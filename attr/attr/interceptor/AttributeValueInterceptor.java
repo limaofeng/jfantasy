@@ -17,7 +17,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.reflect.MethodProxy;
 import org.jfantasy.framework.util.reflect.Property;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +100,7 @@ public class AttributeValueInterceptor {
      */
     @Around(value = "execution(public * org.jfantasy.framework.dao.hibernate.HibernateDao.find(..))")
     public Object find(ProceedingJoinPoint pjp) throws Throwable {
-        Class<?> entityClass = ClassUtil.getValue(pjp.getTarget(), "entityClass");
+        Class<?> entityClass = (HibernateDao)pjp.getTarget();
         if (!DynaBean.class.isAssignableFrom(entityClass)) {
             return pjp.proceed();
         }

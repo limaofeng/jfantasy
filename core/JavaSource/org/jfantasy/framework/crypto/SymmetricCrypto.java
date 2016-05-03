@@ -79,19 +79,4 @@ public class SymmetricCrypto implements SecurityInc {
         return this.vSignature.verify(signData);
     }
 
-    public static void main(String[] args) throws Exception {
-        SymmetricCrypto cryptor = new SymmetricCrypto();
-
-        byte[] bytes = "abc".getBytes();
-
-        byte[] encBytes = cryptor.encrypt(bytes);
-
-        byte[] sin = cryptor.signature(encBytes);
-
-        System.out.println(cryptor.verify(encBytes, sin));
-
-        byte[] denc = cryptor.decrypt(encBytes);
-
-        System.out.println(new String(denc));
-    }
 }

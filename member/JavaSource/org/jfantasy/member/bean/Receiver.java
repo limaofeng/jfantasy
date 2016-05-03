@@ -1,6 +1,5 @@
 package org.jfantasy.member.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
@@ -10,7 +9,8 @@ import org.jfantasy.common.bean.Area;
 import org.jfantasy.common.bean.converter.AreaConverter;
 import org.jfantasy.common.bean.databind.AreaDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
+
+import javax.persistence.*;
 
 /**
  * 收货地址信息
@@ -22,7 +22,6 @@ import org.jfantasy.framework.util.jackson.JSON;
 @ApiModel("收货地址信息")
 @Entity
 @Table(name = "MEM_RECEIVER")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "areaStore", "member"})
 public class Receiver extends BaseBusEntity {
 

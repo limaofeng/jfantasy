@@ -4,7 +4,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.rest.form.PayForm;
 import org.jfantasy.pay.rest.form.RefundForm;
 import org.jfantasy.pay.service.PayService;
@@ -32,7 +31,6 @@ public class PayController {
     @ResponseBody
     public ToPayment execute(@RequestBody PayForm payForm) throws PayException {
         return payService.pay(payForm.getPayconfigId(), payForm.getPayType(), payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayer(), payForm.getProperties());
-        //payService.buildRequest(payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayconfigId(), payForm.getPayer(), payForm.getParameters());
     }
 
     @ApiOperation("支付退款")
@@ -45,7 +43,7 @@ public class PayController {
     @ApiOperation(value = "支付通知", notes = "用于第三方支付通知系统")
     @RequestMapping(value = "/{sn}/notify", method = RequestMethod.POST)
     @ResponseBody
-    public Order notify(@PathVariable("sn") String sn, @RequestBody String body) throws PayException {
+    public Object notify(@PathVariable("sn") String sn, @RequestBody String body) throws PayException {
         if (sn.startsWith("RP")) {
             return payService.notify(refundService.get(sn), body);
         } else if (sn.startsWith("P")) {

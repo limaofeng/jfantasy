@@ -1,8 +1,8 @@
 package org.jfantasy.pay.product.sign;
 
-
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Logger;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
@@ -15,7 +15,7 @@ import java.util.TreeMap;
 
 public class SignUtil {
 
-    private static final Logger LOG = Logger.getLogger(SignUtil.class);
+    private static final Log LOG = LogFactory.getLog(SignUtil.class);
 
     public static String coverMapString(Map<String, String> data, String... ignoreFields) {
         TreeMap<String, String> tree = new TreeMap<String, String>();
@@ -57,7 +57,12 @@ public class SignUtil {
                         LOG.debug(key + " 的原始编码为[ISO-8859-1]转编码:" + val + "=>" + newVal);
                     }
                 }
-                val = newVal;
+                if (!newVal.equals(val)) {
+                    if ("signature".equals(key) || "sign".equals(key)) {
+                        newVal = newVal.replaceAll(" ", "+");
+                    }
+                    val = newVal;
+                }
             }
             params.put(key, val);
         }
@@ -66,6 +71,10 @@ public class SignUtil {
 
     public static String encodeBase64(byte[] sign, String charset) throws UnsupportedEncodingException {
         return new String(Base64.encodeBase64(sign), charset);
+    }
+
+    public static byte[] decodeBase64(String sign, String charset) throws UnsupportedEncodingException {
+        return Base64.decodeBase64(sign.getBytes(charset));
     }
 
 }

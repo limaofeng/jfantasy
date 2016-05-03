@@ -1,6 +1,5 @@
 package org.jfantasy.security.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
@@ -11,9 +10,9 @@ import org.hibernate.annotations.Parameter;
 import org.jfantasy.filestore.bean.Image;
 import org.jfantasy.filestore.bean.converter.ImageConverter;
 import org.jfantasy.filestore.bean.databind.ImageDeserializer;
-import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.security.bean.enums.Sex;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -27,7 +26,6 @@ import java.util.Date;
 @ApiModel(value = "用户详细信息", description = "用户详细信息")
 @Entity
 @Table(name = "AUTH_USER_DETAILS")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "user", "avatar"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserDetails implements Serializable {

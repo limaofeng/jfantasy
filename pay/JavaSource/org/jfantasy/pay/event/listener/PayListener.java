@@ -1,15 +1,16 @@
 package org.jfantasy.pay.event.listener;
 
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
-import org.jfantasy.pay.event.PayFailedEvent;
-import org.jfantasy.pay.event.PaySuccessfulEvent;
+import org.jfantasy.pay.event.PayNotifyEvent;
 import org.jfantasy.pay.event.context.PayContext;
-import org.jfantasy.pay.product.order.Order;
 import org.springframework.context.ApplicationEvent;
 import org.springframework.context.event.SmartApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 
 /**
- * 支付监听
+ * 采用异步方式触发 - 支付监听
  */
 public abstract class PayListener implements SmartApplicationListener {
 
@@ -20,7 +21,7 @@ public abstract class PayListener implements SmartApplicationListener {
 
     @Override
     public boolean supportsEventType(Class<? extends ApplicationEvent> eventType) {
-        return eventType == PaySuccessfulEvent.class || eventType == PayFailedEvent.class;
+        return eventType == PayNotifyEvent.class;
     }
 
     @Override
@@ -31,16 +32,17 @@ public abstract class PayListener implements SmartApplicationListener {
     public abstract boolean supportsOrderType(String orderType);
 
     @Override
+    @Async
     public void onApplicationEvent(ApplicationEvent event) {
         PayContext payContext = (PayContext) event.getSource();
         Payment payment = payContext.getPayment();
         Order order = payContext.getOrder();
-        if (!supportsOrderType(payment.getOrderType())) {
+        if (!supportsOrderType(order.getType())) {
             return;
         }
-        if (Payment.Status.success == payContext.getPayment().getStatus()) {
+        if (PaymentStatus.success == payContext.getPayment().getStatus()) {
             this.success(payment, order);
-        } else if (Payment.Status.failure == payContext.getPayment().getStatus()) {
+        } else if (PaymentStatus.failure == payContext.getPayment().getStatus()) {
             this.failure(payment, order);
         }
     }

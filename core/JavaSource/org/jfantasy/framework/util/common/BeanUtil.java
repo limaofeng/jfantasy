@@ -4,11 +4,14 @@ import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.framework.util.reflect.Property;
 
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 public class BeanUtil {
-    private BeanUtil(){}
+    private BeanUtil() {
+    }
+
     public static void setValue(Object target, String fieldName, Object value) {
         ClassUtil.setValue(target, fieldName, value);
     }
@@ -58,6 +61,17 @@ public class BeanUtil {
             setProperty.setValue(dest, o);
         }
         return dest;
+    }
+
+    public static <T> T copyNotNull(T dest, Object orig) {
+        List<String> excludeProperties = new ArrayList<String>();
+        Property[] properties = ClassUtil.getPropertys(orig);
+        for (Property property : properties) {
+            if (!property.isRead() || property.getValue(orig) == null) {
+                excludeProperties.add(property.getName());
+            }
+        }
+        return copyProperties(dest, orig, excludeProperties.toArray(new String[excludeProperties.size()]));
     }
 
     /*

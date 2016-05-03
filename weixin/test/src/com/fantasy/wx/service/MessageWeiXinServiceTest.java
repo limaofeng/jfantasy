@@ -2,7 +2,7 @@ package org.jfantasy.wx.service;
 
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.wx.bean.Message;
 import junit.framework.Assert;
 import org.apache.commons.logging.Log;

@@ -9,7 +9,9 @@ import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.filestore.bean.converter.FileDetailConverter;
 import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
+
+import javax.persistence.*;
 
 /**
  * 横幅图维护项
@@ -21,7 +23,6 @@ import org.jfantasy.framework.util.jackson.JSON;
 @Entity
 @Table(name = "CMS_BANNER_ITEM")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "banner"})
 public class BannerItem extends BaseBusEntity {
 

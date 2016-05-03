@@ -3,7 +3,7 @@ package org.jfantasy.website.util;
 import com.fasterxml.jackson.core.type.TypeReference;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.spring.SpringContextUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.website.bean.Data;
 import org.jfantasy.website.bean.DataInferface;
 import org.jfantasy.website.service.HqlService;

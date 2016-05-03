@@ -1,8 +1,5 @@
 package org.jfantasy.cms.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.system.util.SettingUtil;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.core.JsonGenerator;
@@ -10,6 +7,8 @@ import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
 
 import javax.persistence.*;
 import java.io.IOException;
@@ -25,7 +24,6 @@ import java.io.IOException;
 @Entity
 @Table(name = "CMS_CONTENT")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Content extends BaseBusEntity {
 
@@ -78,7 +76,7 @@ public class Content extends BaseBusEntity {
             if (content == null) {
                 jgen.writeString("");
             } else {
-                jgen.writeString(SettingUtil.toHtml(content.toString()));
+                jgen.writeString(content.toString());
             }
         }
 

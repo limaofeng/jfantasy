@@ -4,7 +4,7 @@ import org.jfantasy.cms.bean.Banner;
 import org.jfantasy.cms.service.BannerService;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.JdbcUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import junit.framework.Assert;
 import org.junit.After;
 import org.junit.Before;

@@ -1,6 +1,6 @@
 package org.jfantasy.remind.websocket;
 
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.remind.bean.Notice;
 import org.jfantasy.remind.service.NoticeService;
 import org.springframework.stereotype.Component;

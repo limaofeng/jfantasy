@@ -4,7 +4,7 @@ import org.jfantasy.common.bean.Area;
 import org.jfantasy.common.bean.converter.AreaConverter;
 import org.jfantasy.common.bean.databind.AreaDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.mall.delivery.bean.databind.DeliveryTypeDeserializer;
 import org.jfantasy.mall.delivery.bean.databind.DeliveryTypeSerializer;
 import com.fasterxml.jackson.annotation.JsonFilter;

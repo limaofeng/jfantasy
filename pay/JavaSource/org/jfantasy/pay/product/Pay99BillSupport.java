@@ -1,14 +1,14 @@
 package org.jfantasy.pay.product;
 
-import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
+import org.jfantasy.pay.order.entity.OrderDetails;
+import org.jfantasy.pay.product.sign.SignUtil;
 
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,17 +28,17 @@ public class Pay99BillSupport extends PayProductSupport {
     }
 
     public Map<String, String> getParameterMap(Parameters parameters) {
-        PaymentContext context = PaymentContext.getContext();
-        PayConfig paymentConfig = context.getPaymentConfig();
-        Order orderDetails = context.getOrderDetails();
-        Payment payment = context.getPayment();
+        //PaymentContext context = PaymentContext.getContext();
+        PayConfig paymentConfig = null;//context.getPaymentConfig();
+        OrderDetails orderDetails = null;//context.getOrderDetails();
+        Payment payment = null;//context.getPayment();
 
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
         String dateString = simpleDateFormat.format(new Date());
         String totalAmountString = String.format("%.2f", orderDetails.getPayableFee());
 
         String inputCharset = "1";// 字符集编码（1：UTF-8、2：GBK、3：GB2312）
-        String bgUrl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + payment.getSn();// 回调处理URL
+        String bgUrl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + payment.getSn();// 回调处理URL
         String version = "v2.0";// 网关版本
         String language = "1";// 显示语言种类（1：中文）
         String signType = "1";// 签名类型（1：MD5）
@@ -68,7 +68,7 @@ public class Pay99BillSupport extends PayProductSupport {
         signMap.put("payType", payType);
         signMap.put("redoFlag", redoFlag);
         signMap.put("key", key);
-        String signMsg = DigestUtils.md5Hex(getParameterString(signMap)).toUpperCase();
+        String signMsg = DigestUtils.md5Hex(SignUtil.coverMapString(signMap)).toUpperCase();
 
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>();
@@ -90,9 +90,8 @@ public class Pay99BillSupport extends PayProductSupport {
         return parameterMap;
     }
 
-    @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = null;//PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String merchantAcctId = parameters.get("merchantAcctId");
         String version = parameters.get("version");
@@ -131,17 +130,7 @@ public class Pay99BillSupport extends PayProductSupport {
         signMap.put("payResult", payResult);
         signMap.put("errCode", errCode);
         signMap.put("key", paymentConfig.getBargainorKey());
-        return StringUtils.equals(signMsg, DigestUtils.md5Hex(getParameterString(signMap)).toUpperCase());
-    }
-
-    @Override
-    public String getPaynotifyMessage(String paymentSn) {
-        return null;
-    }
-
-    @Override
-    public String getPayreturnMessage(String paymentSn) {
-        return "<result>1</result><redirecturl>" + PaymentContext.getContext().getResultUrl(paymentSn) + "</redirecturl>";
+        return StringUtils.equals(signMsg, DigestUtils.md5Hex(SignUtil.coverMapString(signMap)).toUpperCase());
     }
 
     public PayResult parsePayResult(Map<String, String> parameters) {
@@ -151,7 +140,7 @@ public class Pay99BillSupport extends PayProductSupport {
     }
 
     @Override
-    public String web(Payment payment,Order order, Properties properties) throws PayException {
+    public String web(Payment payment, Order order, Properties properties) throws PayException {
         return null;
     }
 

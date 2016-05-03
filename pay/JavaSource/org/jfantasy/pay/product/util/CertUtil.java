@@ -4,10 +4,9 @@ package org.jfantasy.pay.product.util;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.jfantasy.filestore.FileItem;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.security.*;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
@@ -23,7 +22,7 @@ public class CertUtil {
     private static Map<String, KeyStore> certKeyStoreCache = new ConcurrentHashMap<String, KeyStore>();
     private static Map<String, X509Certificate> certCache = new ConcurrentHashMap<String, X509Certificate>();
 
-    public static KeyStore loadKeyStore(FileItem fileItem, String certPwd) throws IOException {
+    public static KeyStore loadKeyStore(FileProxy fileItem, String certPwd) throws IOException {
         return loadKeyStore(fileItem, certPwd, "PKCS12");
     }
 
@@ -85,26 +84,25 @@ public class CertUtil {
      * @return KeyStore
      * @throws IOException
      */
-    public static KeyStore reloadKeyStore(FileItem fileItem, String certPwd) throws IOException {
+    public static KeyStore reloadKeyStore(FileProxy fileItem, String certPwd) throws IOException {
         return reloadKeyStore(fileItem, certPwd, "PKCS12");
     }
 
     /**
-     *
-     * @param fileItem 重新加载证书
-     * @param keypwd 证书文件
-     * @param type 证书密码
+     * @param fileProxy 重新加载证书
+     * @param keypwd    证书文件
+     * @param type      证书密码
      * @return
      * @throws IOException
      */
-    public static KeyStore reloadKeyStore(FileItem fileItem, String keypwd, String type) throws IOException {
-        certKeyStoreCache.remove(fileItem.getAbsolutePath());
-        return loadKeyStore(fileItem, keypwd, keypwd);
+    public static KeyStore reloadKeyStore(FileProxy fileProxy, String keypwd, String type) throws IOException {
+        certKeyStoreCache.remove(fileProxy.getKey());
+        return loadKeyStore(fileProxy, keypwd, keypwd);
     }
 
-    public static KeyStore loadKeyStore(FileItem fileItem, String keypwd, String type) throws IOException {
-        if (certKeyStoreCache.containsKey(fileItem.getAbsolutePath())) {
-            return certKeyStoreCache.get(fileItem.getAbsolutePath());
+    public static KeyStore loadKeyStore(FileProxy fileProxy, String keypwd, String type) throws IOException {
+        if (certKeyStoreCache.containsKey(fileProxy.getKey())) {
+            return certKeyStoreCache.get(fileProxy.getKey());
         }
         String nPassword;
         try {
@@ -124,12 +122,12 @@ public class CertUtil {
                 }
                 keyStore = KeyStore.getInstance(type);
             }
-            LOG.info("Load RSA CertPath=[" + fileItem.getAbsolutePath() + "],Pwd=[" + keypwd + "]");
+            LOG.info("Load RSA CertPath=[" + fileProxy.getKey() + "],Pwd=[" + keypwd + "]");
             char[] nPassword1 = null != keypwd && !"".equals(keypwd.trim()) ? keypwd.toCharArray() : null;
             if (null != keyStore) {
-                keyStore.load(fileItem.getInputStream(), nPassword1);
+                keyStore.load(fileProxy.getInputStream(), nPassword1);
             }
-            certKeyStoreCache.put(fileItem.getAbsolutePath(), keyStore);
+            certKeyStoreCache.put(fileProxy.getKey(), keyStore);
             return keyStore;
         } catch (Exception var10) {
             if (Security.getProvider("BC") == null) {
@@ -188,28 +186,22 @@ public class CertUtil {
     /**
      * 通过文件加载获取证书公钥
      *
-     * @param fileItem 文件对象
+     * @param fileProxy 文件对象
      * @return PublicKey
      */
-    public static PublicKey loadPublicKey(FileItem fileItem) {
-        if(validateCertCache.containsKey(fileItem.getAbsolutePath())){
-            return validateCertCache.get(fileItem.getAbsolutePath()).getPublicKey();
+    public static PublicKey loadPublicKey(FileProxy fileProxy) {
+        if (validateCertCache.containsKey(fileProxy.getKey())) {
+            return validateCertCache.get(fileProxy.getKey()).getPublicKey();
         }
         try {
             CertificateFactory cf = CertificateFactory.getInstance("X.509");
-            X509Certificate validateCert = (X509Certificate) cf.generateCertificate(fileItem.getInputStream());
+            X509Certificate validateCert = (X509Certificate) cf.generateCertificate(fileProxy.getInputStream());
             certCache.put(validateCert.getSerialNumber().toString(), validateCert);
-            validateCertCache.put(fileItem.getAbsolutePath(),validateCert);
+            validateCertCache.put(fileProxy.getKey(), validateCert);
             LOG.info("LoadVerifyCert Successful");
             return validateCert.getPublicKey();
         } catch (CertificateException var17) {
             LOG.error("LoadVerifyCert Error", var17);
-            return null;
-        } catch (FileNotFoundException var18) {
-            LOG.error("LoadVerifyCert Error File Not Found", var18);
-            return null;
-        } catch (IOException e) {
-            LOG.error("LoadVerifyCert Error", e);
             return null;
         }
     }

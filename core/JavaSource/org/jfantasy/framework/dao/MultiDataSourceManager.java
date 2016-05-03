@@ -11,11 +11,11 @@ public class MultiDataSourceManager {
     private Stack<DataSource> stack = new Stack<DataSource>();
 
     public static MultiDataSourceManager getManager() {
-        MultiDataSourceManager localMessage = (MultiDataSourceManager) threadLocal.get();
+        MultiDataSourceManager localMessage = threadLocal.get();
         if (ObjectUtil.isNull(localMessage)) {
             threadLocal.set(new MultiDataSourceManager());
         }
-        return (MultiDataSourceManager) threadLocal.get();
+        return threadLocal.get();
     }
 
     public void push(DataSource dataSource) {
@@ -23,11 +23,11 @@ public class MultiDataSourceManager {
     }
 
     public DataSource peek() {
-        return (DataSource) this.stack.peek();
+        return this.stack.peek();
     }
 
     public DataSource pop() {
-        return (DataSource) this.stack.pop();
+        return this.stack.pop();
     }
 
 }

@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
 org.jfantasy.framework.autoconfigure.JCoreAutoConfiguration,\
+  org.jfantasy.framework.autoconfigure.TomcatAutoConfiguration,\
 org.jfantasy.framework.swagger.SwaggerAutoConfiguration

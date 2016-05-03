@@ -1,15 +1,13 @@
 package org.jfantasy.pay.rest;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
-import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.product.order.OrderService;
-import org.jfantasy.pay.product.order.OrderServiceFactory;
 import org.jfantasy.pay.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,8 +22,6 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
-    @Autowired
-    private OrderServiceFactory orderServiceFactory;
 
     @ApiOperation("查询支付记录")
     @RequestMapping(method = RequestMethod.GET)
@@ -56,9 +52,7 @@ public class PaymentController {
     @RequestMapping(value = "/{sn}/order", method = RequestMethod.GET)
     @ResponseBody
     public Order order(@PathVariable("sn") String sn) {
-        Payment payment = view(sn);
-        OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
-        return orderService.loadOrder(payment.getOrderSn());
+        return view(sn).getOrder();
     }
 
     @ApiOperation("删除支付记录")

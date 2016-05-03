@@ -5,7 +5,7 @@ import org.jfantasy.attr.storage.BaseDynaBean;
 import org.jfantasy.common.bean.Area;
 import org.jfantasy.common.bean.converter.AreaConverter;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.member.bean.Member;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;

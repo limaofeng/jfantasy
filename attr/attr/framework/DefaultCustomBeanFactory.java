@@ -21,7 +21,7 @@ import org.jfantasy.framework.util.FantasyClassLoader;
 import org.jfantasy.framework.util.asm.AsmUtil;
 import org.jfantasy.framework.util.asm.Property;
 import org.jfantasy.framework.util.cglib.CglibUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,10 +1,8 @@
 package org.jfantasy.cms.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -22,7 +20,6 @@ import java.util.Date;
 @Entity
 @Table(name = "CMS_TOPIC")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Topic extends BaseBusEntity {
 

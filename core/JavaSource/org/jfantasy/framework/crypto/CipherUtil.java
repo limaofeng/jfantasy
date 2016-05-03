@@ -51,19 +51,4 @@ public class CipherUtil {
 		return hexDigits[d1] + hexDigits[d2];
 	}
 
-	public static void main(String[] args) {
-		String pwd1 = "123";
-		String pwd2 = "";
-		CipherUtil cipher = new CipherUtil();
-		System.out.println("未加密的密码:" + pwd1);
-
-		pwd2 = generatePassword(pwd1);
-		System.out.println("加密后的密码:" + pwd2);
-
-		System.out.print("验证密码是否下确:");
-		if (validatePassword(pwd2, pwd1)) {
-			System.out.println("正确");
-		} else
-			System.out.println("错误");
-	}
 }

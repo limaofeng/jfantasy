@@ -1,9 +1,9 @@
 package org.jfantasy.framework.spring;
 
-import org.jfantasy.framework.lucene.annotations.Indexed;
-import ognl.DefaultTypeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.dao.BaseBusEntity;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +36,7 @@ public class ClassPathScannerTest {
 
     @Test
     public void testFindAnnotationedClasses() throws Exception {
-        Set<Class> classes = pathScanner.findAnnotationedClasses("", Indexed.class);
+        Set<Class> classes = pathScanner.findAnnotationedClasses("", JsonIgnoreProperties.class);
         for (Class clazz : classes) {
             logger.debug(clazz);
         }
@@ -44,7 +44,7 @@ public class ClassPathScannerTest {
 
     @Test
     public void testFindInterfaceClasses() throws Exception {
-        Set<Class> classes = ClassPathScanner.getInstance().findInterfaceClasses("org.jfantasy", DefaultTypeConverter.class);
+        Set<Class> classes = ClassPathScanner.getInstance().findInterfaceClasses("org.jfantasy.*.bean", BaseBusEntity.class);
         for (Class clazz : classes) {
             logger.debug(clazz);
         }

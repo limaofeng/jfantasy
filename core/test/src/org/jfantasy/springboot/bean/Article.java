@@ -15,7 +15,6 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TEST_ARTICLE")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-//@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "category", "content", "target"})
 public class Article extends BaseBusEntity {
 

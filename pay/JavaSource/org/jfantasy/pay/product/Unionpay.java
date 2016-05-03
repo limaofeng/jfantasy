@@ -3,30 +3,24 @@ package org.jfantasy.pay.product;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
-import org.jfantasy.filestore.FileItem;
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.FileDetailKey;
-import org.jfantasy.filestore.service.FileManagerFactory;
-import org.jfantasy.filestore.service.FileService;
 import org.jfantasy.framework.httpclient.HttpClientUtil;
 import org.jfantasy.framework.httpclient.Response;
-import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
 import org.jfantasy.framework.util.web.WebUtil;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.product.sign.SignUtil;
 import org.jfantasy.pay.product.util.CertUtil;
+import org.jfantasy.pay.product.util.RAMFileProxy;
 import org.jfantasy.pay.product.util.SecureUtil;
-import org.jfantasy.system.util.SettingUtil;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.security.KeyStore;
 import java.security.PublicKey;
@@ -89,7 +83,7 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public Object app(Payment payment, Order order) throws PayException {
+    public Object app(Payment payment, Order order, Properties properties) throws PayException {
         //支付配置
         PayConfig config = payment.getPayConfig();
         //准备数据
@@ -99,7 +93,7 @@ public class Unionpay extends PayProductSupport {
 
         try {
             String merId = config.getBargainorId();//商户号
-            KeyStore keyStore = CertUtil.loadKeyStore(loadFileItem(config.getSignCert()), config.getBargainorKey());
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config,"signCert"), config.getBargainorKey());
             String certPwd = config.getBargainorKey();//签名证书密码
 
             /***银联全渠道系统，产品参数，除了encoding自行选择外其他不需修改***/
@@ -136,8 +130,7 @@ public class Unionpay extends PayProductSupport {
 
             //验签
             Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);// 将返回结果转换为map
-
-            if (!verify(result, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {//验证签名
+            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert")))) {//验证签名
                 throw new PayException("验证签名失败");
             }
             payment.setTradeNo(result.get("tn"));
@@ -151,7 +144,7 @@ public class Unionpay extends PayProductSupport {
     public Payment payNotify(Payment payment, String result) throws PayException {
         //支付配置
         PayConfig config = payment.getPayConfig();
-        PublicKey publicKey = CertUtil.loadPublicKey(loadFileItem(config.getValidateCert()));
+        PublicKey publicKey = CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert"));
 
         try {
             Map<String, String> data = (Map<String, String>) (result.startsWith("{") && result.endsWith("}") ? JSON.deserialize(result) : WebUtil.parseQuery(result, true));
@@ -165,10 +158,10 @@ public class Unionpay extends PayProductSupport {
                 if (!StringUtil.nullValue(payresult.get("tn")).equals(payment.getTradeNo())) {
                     throw new PayException("通知与订单不匹配");
                 }
-                payment.setStatus("success".equals(payresult.get("pay_result")) ? Payment.Status.success : Payment.Status.failure);
+                payment.setStatus("success".equals(payresult.get("pay_result")) ? PaymentStatus.success : PaymentStatus.failure);
             } else {
                 System.out.println(result);
-                payment.setStatus(Payment.Status.success);
+                payment.setStatus(PaymentStatus.success);
             }
         } finally {
             //记录支付通知日志
@@ -196,7 +189,7 @@ public class Unionpay extends PayProductSupport {
             PayConfig config = payment.getPayConfig();
             String merId = config.getBargainorId();//商户号
             //签名证书
-            KeyStore keyStore = CertUtil.loadKeyStore(loadFileItem(config.getSignCert()), config.getBargainorKey());
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config,"signCert"), config.getBargainorKey());
             String certPwd = config.getBargainorKey();//签名证书密码
 
             final Map<String, String> data = new TreeMap<String, String>();
@@ -221,8 +214,7 @@ public class Unionpay extends PayProductSupport {
             Response response = HttpClientUtil.doPost(urls.getQueryTransUrl(), data);
 
             Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);
-
-            if (!verify(result, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {
+            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert")))) {
                 throw new PayException("验证签名失败");
             }
 
@@ -236,11 +228,11 @@ public class Unionpay extends PayProductSupport {
         }
     }
 
-    public void setDeployStatus(DeployStatus deployStatus) {
+    void setDeployStatus(DeployStatus deployStatus) {
         this.deployStatus = deployStatus;
     }
 
-    class Urls {
+    private class Urls {
         /**
          * 前台交易请求地址
          */
@@ -278,15 +270,15 @@ public class Unionpay extends PayProductSupport {
             return frontTransUrl;
         }
 
-        public void setFrontTransUrl(String frontTransUrl) {
+        void setFrontTransUrl(String frontTransUrl) {
             this.frontTransUrl = frontTransUrl;
         }
 
-        public String getAppTransUrl() {
+        String getAppTransUrl() {
             return appTransUrl;
         }
 
-        public void setAppTransUrl(String appTransUrl) {
+        void setAppTransUrl(String appTransUrl) {
             this.appTransUrl = appTransUrl;
         }
 
@@ -294,7 +286,7 @@ public class Unionpay extends PayProductSupport {
             return backTransUrl;
         }
 
-        public void setBackTransUrl(String backTransUrl) {
+        void setBackTransUrl(String backTransUrl) {
             this.backTransUrl = backTransUrl;
         }
 
@@ -302,7 +294,7 @@ public class Unionpay extends PayProductSupport {
             return singleQueryUrl;
         }
 
-        public void setSingleQueryUrl(String singleQueryUrl) {
+        void setSingleQueryUrl(String singleQueryUrl) {
             this.singleQueryUrl = singleQueryUrl;
         }
 
@@ -310,7 +302,7 @@ public class Unionpay extends PayProductSupport {
             return batchTransUrl;
         }
 
-        public void setBatchTransUrl(String batchTransUrl) {
+        void setBatchTransUrl(String batchTransUrl) {
             this.batchTransUrl = batchTransUrl;
         }
 
@@ -322,31 +314,24 @@ public class Unionpay extends PayProductSupport {
             return cardTransUrl;
         }
 
-        public void setCardTransUrl(String cardTransUrl) {
+        void setCardTransUrl(String cardTransUrl) {
             this.cardTransUrl = cardTransUrl;
         }
 
-        public String getQueryTransUrl() {
+        String getQueryTransUrl() {
             return queryTransUrl;
         }
 
-        public void setQueryTransUrl(String queryTransUrl) {
+        void setQueryTransUrl(String queryTransUrl) {
             this.queryTransUrl = queryTransUrl;
         }
 
-        public void setFileTransUrl(String fileTransUrl) {
+        void setFileTransUrl(String fileTransUrl) {
             this.fileTransUrl = fileTransUrl;
         }
     }
 
-    public static FileItem loadFileItem(FileDetail fileDetail) {
-        FileService fileService = SpringContextUtil.getBeanByType(FileService.class);
-        assert fileService != null;
-        FileDetail realFileDetail = fileService.get(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()));
-        return FileManagerFactory.getInstance().getFileManager(fileDetail.getFileManagerId()).getFileItem(realFileDetail.getRealPath());
-    }
-
-    public String signature(Map<String, String> params, KeyStore keyStore, String certPwd) {
+    private String signature(Map<String, String> params, KeyStore keyStore, String certPwd) {
         try {
             byte[] e = SecureUtil.sha1X16(SignUtil.coverMapString(params), params.get("encoding"));
             byte[] byteSign1 = SecureUtil.base64Encode(SecureUtil.signBySoft(CertUtil.getCertPrivateKey(keyStore, certPwd), e));
@@ -364,25 +349,21 @@ public class Unionpay extends PayProductSupport {
      * @param publicKey 验签证书
      * @return boolean
      */
-    protected boolean verify(Map<String, String> result, PublicKey publicKey) {
+    private boolean verify(Map<String, String> result, PublicKey publicKey) {
         String stringSign = result.get("signature");
         String stringData = SignUtil.coverMapString(result, "signature");
         String encoding = result.get("encoding");
         try {
             return SecureUtil.validateSignBySoft(publicKey, SecureUtil.base64Decode(stringSign.getBytes(encoding)), SecureUtil.sha1X16(stringData, encoding));
-        } catch (UnsupportedEncodingException var6) {
-            LOG.error(var6.getMessage(), var6);
         } catch (Exception var7) {
             LOG.error(var7.getMessage(), var7);
         }
         return false;
     }
 
-    protected boolean verify(String data, String signature, PublicKey publicKey) {
+    private boolean verify(String data, String signature, PublicKey publicKey) {
         try {
             return SecureUtil.validateSignBySoft(publicKey, SecureUtil.base64Decode(signature.getBytes(encoding)), SecureUtil.sha1X16(data, encoding));
-        } catch (UnsupportedEncodingException var6) {
-            LOG.error(var6.getMessage(), var6);
         } catch (Exception var7) {
             LOG.error(var7.getMessage(), var7);
         }

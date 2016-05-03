@@ -1,5 +1,7 @@
 package org.jfantasy.framework.util.asm;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.FantasyClassLoader;
 import org.jfantasy.framework.util.common.ClassUtil;
@@ -8,8 +10,6 @@ import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.objectweb.asm.*;
 import org.objectweb.asm.util.TraceClassVisitor;
 
@@ -53,6 +53,35 @@ public class AsmUtil implements Opcodes {
 
     public static Class makeClass(String className, String superClassName, Class[] interfaces, Property... properties) {
         return makeClass(className, superClassName, interfaces, properties, new MethodInfo[0]);
+    }
+
+    public static Class makeInterface(String className, AnnotationDescriptor descriptor, Class interfacecls) {
+        return makeInterface(className, new AnnotationDescriptor[]{descriptor}, interfacecls);
+    }
+
+    public static Class makeInterface(String className, AnnotationDescriptor[] annotDescs, Class... interfaces) {
+        ClassWriter cw = new ClassWriter(F_FULL);
+
+        String newClassInternalName = className.replace('.', '/');
+
+        String[] iters = new String[interfaces.length];
+        for (int i = 0, len = interfaces.length; i < len; i++) {
+            Class inter = interfaces[i];
+            iters[i] = inter.getName().replace('.', '/');
+        }
+        cw.visit(V1_6, ACC_PUBLIC + ACC_ABSTRACT + ACC_INTERFACE, newClassInternalName, null, "java/lang/Object", iters);
+
+        for (AnnotationDescriptor descriptor : annotDescs) {
+            AnnotationVisitor visitor = cw.visitAnnotation(getTypeDescriptor(descriptor.type()), true);
+            for (String key : descriptor.keys()) {
+                visitor.visit(key, descriptor.valueOf(key));
+            }
+            visitor.visitEnd();
+        }
+
+        cw.visitEnd();
+
+        return loadClass(className, cw.toByteArray());
     }
 
     public static Class makeClass(String className, String superClassName, Class[] interfaces, Property[] properties, MethodInfo[] methodInfos) {
@@ -204,6 +233,10 @@ public class AsmUtil implements Opcodes {
      */
     public static String getTypeDescriptor(String classname) {
         return "L" + RegexpUtil.replace(classname, "\\.", "/") + ";";
+    }
+
+    public static String getTypeDescriptor(Class clas) {
+        return getTypeDescriptor(clas.getName());
     }
 
     /**

@@ -7,13 +7,15 @@ import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.dao.PaymentDao;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayProduct;
-import org.jfantasy.pay.product.order.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -60,10 +62,15 @@ public class PaymentService {
 
         BigDecimal amountPayable = order.getPayableFee();//应付金额（含支付手续费）
 
-        Payment payment = this.paymentDao.findUnique(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("orderType", order.getType()), Restrictions.eq("orderSn", order.getSN()), Restrictions.eq("status", Payment.Status.ready));
+        List<Payment> payments = this.paymentDao.find(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("orderType", order.getType()), Restrictions.eq("orderSn", order.getSn()));
+        // 如果存在完成订单
+        Payment payment = ObjectUtil.find(payments, "status", PaymentStatus.success);
+        if (payment != null && payment.getTotalAmount().subtract(payment.getPaymentFee()).compareTo(amountPayable) == 0) {//订单已支付完成
+            return payment;
+        }
+        payment = ObjectUtil.find(payments, "status", PaymentStatus.ready);
         if (payment != null) {
-            //如果存在未完成的支付信息
-            if (amountPayable.compareTo(payment.getTotalAmount().subtract(payment.getPaymentFee())) == 0) {
+            if (amountPayable.compareTo(payment.getTotalAmount().subtract(payment.getPaymentFee())) == 0) {//如果存在未完成的支付信息
                 return payment;
             } else {
                 this.invalid(payment.getSn());
@@ -83,10 +90,9 @@ public class PaymentService {
         payment.setPaymentFee(paymentFee);
         payment.setPayer(payer);
         payment.setMemo(null);
-        payment.setStatus(Payment.Status.ready);
+        payment.setStatus(PaymentStatus.ready);
         payment.setPayConfig(payConfig);
-        payment.setOrderType(order.getType());
-        payment.setOrderSn(order.getSN());
+        payment.setOrder(order);
         return this.paymentDao.save(payment);
     }
 
@@ -110,13 +116,13 @@ public class PaymentService {
      */
     public void invalid(String sn) {
         Payment payment = get(sn);
-        payment.setStatus(Payment.Status.invalid);
+        payment.setStatus(PaymentStatus.close);
         this.paymentDao.save(payment);
     }
 
     public void close(String sn, String tradeNo) {
         Payment payment = get(sn);
-        payment.setStatus(Payment.Status.invalid);
+        payment.setStatus(PaymentStatus.close);
         payment.setTradeNo(tradeNo);
         this.paymentDao.save(payment);
     }

@@ -2,7 +2,7 @@ package org.jfantasy.wx.user.service;
 
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.security.bean.enums.Sex;
 import org.jfantasy.wx.bean.User;
 import org.jfantasy.wx.bean.UserKey;

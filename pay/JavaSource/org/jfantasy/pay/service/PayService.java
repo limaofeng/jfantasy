@@ -3,19 +3,23 @@ package org.jfantasy.pay.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
+import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.event.PaySuccessfulEvent;
+import org.jfantasy.pay.event.PayNotifyEvent;
+import org.jfantasy.pay.event.PayRefundNotifyEvent;
 import org.jfantasy.pay.event.context.PayContext;
+import org.jfantasy.pay.order.OrderServiceFactory;
+import org.jfantasy.pay.order.entity.OrderDetails;
+import org.jfantasy.pay.order.entity.OrderKey;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.product.PayProduct;
 import org.jfantasy.pay.product.PayType;
-import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.product.order.OrderService;
-import org.jfantasy.pay.product.order.OrderServiceFactory;
 import org.jfantasy.pay.service.vo.ToPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -46,12 +50,30 @@ public class PayService {
     @Autowired
     private RefundService refundService;
     @Autowired
+    private OrderService orderService;
+    @Autowired
     private ApplicationContext applicationContext;
 
     public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer, Properties properties) throws PayException {
-        //获取订单信息
-        OrderService orderService = orderServiceFactory.getOrderService(orderType);
-        Order order = orderService.loadOrder(orderSn);
+        OrderKey key = OrderKey.newInstance(orderType,orderSn);
+        Order order = orderService.get(key);
+        OrderDetails orderDetails = null;
+        if(order == null) {
+            if(!orderServiceFactory.containsType(orderType)){
+                throw new RestException("orderType[" + orderType + "] 对应的 PaymentOrderService 未配置！");
+            }
+            //获取订单信息
+            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(orderSn);
+            if(orderDetails == null){
+                throw new RestException("order = [" + key + "] 不存在,请核对后,再继续操作!");
+            }
+            order = orderService.save(orderDetails);
+        }else {
+            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(orderSn);
+        }
+        if (!orderDetails.isPayment()) {
+            throw new RestException("业务系统异常,不能继续支付");
+        }
         //获取支付配置
         PayConfig payConfig = payConfigService.get(payConfigId);
         //获取支付产品
@@ -60,12 +82,14 @@ public class PayService {
         Payment payment = paymentService.ready(order, payConfig, payProduct, payer);
 
         ToPayment toPayment = new ToPayment();
-        BeanUtil.copyProperties(toPayment, payment);
+        BeanUtil.copyProperties(toPayment, payment, "status", "type");
+        toPayment.setStatus(payment.getStatus());
+        toPayment.setType(payment.getType());
 
         if (PayType.web == payType) {
             toPayment.setSource(payProduct.web(payment, order, properties));
         } else if (PayType.app == payType) {
-            toPayment.setSource(payProduct.app(payment, order));
+            toPayment.setSource(payProduct.app(payment, order, properties));
         }
         //保存支付信息
         paymentService.save(payment);
@@ -81,9 +105,6 @@ public class PayService {
      * @return Refund
      */
     public Refund refund(Payment payment, BigDecimal amount, String remark) {
-        if (payment.getStatus() != Payment.Status.success) {
-            throw new PayException("原交易[" + payment.getSn() + "]未支付成功,不能发起退款操作");
-        }
         Refund refund = refundService.ready(payment, amount, remark);
 
         PayConfig payConfig = refund.getPayConfig();
@@ -94,67 +115,69 @@ public class PayService {
         return refundService.save(payProduct.refund(refund));
     }
 
-    public Order notify(Payment payment, String body) {
+    public Object notify(Payment payment, String body) {
         PayConfig payConfig = payment.getPayConfig();
-
-        //订单服务
-        OrderService orderService = orderServiceFactory.getOrderService(payment.getOrderType());
 
         //获取支付产品
         PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
 
         //支付订单
-        Order order = orderService.loadOrder(payment.getOrderSn());
+        Order order = payment.getOrder();
+
+        PaymentStatus oldStatus = payment.getStatus();
+
+        Object result = payProduct.payNotify(payment, body);
+
+        //支付状态未发生变化
+        if (payment.getStatus() == oldStatus) {
+            return result == null ? order : result;
+        }
 
         //更新支付状态
-        paymentService.save(payProduct.payNotify(payment, body));
+        paymentService.save(payment);
+
+        // 如果为完成 或者 初始状态 不触发事件
+        if (payment.getStatus() == PaymentStatus.finished || payment.getStatus() == PaymentStatus.ready) {
+            return result == null ? order : result;
+        }
 
         //推送事件
         PayContext context = new PayContext(payment, order);
         try {
-            if (Payment.Status.success == payment.getStatus()) {
-                this.applicationContext.publishEvent(new PaySuccessfulEvent(context));
-            } else if (Payment.Status.failure == payment.getStatus()) {
-                this.applicationContext.publishEvent(new PaySuccessfulEvent(context));
-            }
+            this.applicationContext.publishEvent(new PayNotifyEvent(context));
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
 
         //返回订单信息
-        return orderService.loadOrder(payment.getOrderSn());
+        return result != null ? result : order;
     }
 
-    public Order notify(Refund refund, String body) {
+    public Object notify(Refund refund, String body) {
 
         PayConfig payConfig = refund.getPayConfig();
-
-        //订单服务
-        OrderService orderService = orderServiceFactory.getOrderService(refund.getOrderType());
 
         //获取支付产品
         PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
 
         //支付订单
-        Order order = orderService.loadOrder(refund.getOrderSn());
+        Order order = refund.getOrder();
+
+        Object result = payProduct.payNotify(refund, body);
 
         //更新状态
-        refundService.result(payProduct.payNotify(refund, body), order);
+        refundService.result(refund, order);
 
         //推送事件
         PayContext context = new PayContext(refund, order);
         try {
-            if (Refund.Status.success == refund.getStatus()) {
-                this.applicationContext.publishEvent(new PaySuccessfulEvent(context));
-            } else if (Refund.Status.failure == refund.getStatus()) {
-                this.applicationContext.publishEvent(new PaySuccessfulEvent(context));
-            }
+            this.applicationContext.publishEvent(new PayRefundNotifyEvent(context));
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
 
         //返回订单信息
-        return orderService.loadOrder(refund.getOrderSn());
+        return result != null ? result : order;
     }
 
     /**

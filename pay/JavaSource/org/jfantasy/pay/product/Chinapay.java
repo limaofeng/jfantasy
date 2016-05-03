@@ -3,27 +3,23 @@ package org.jfantasy.pay.product;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.apache.log4j.MDC;
-import org.jfantasy.filestore.FileItem;
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.FileDetailKey;
-import org.jfantasy.filestore.service.FileManagerFactory;
-import org.jfantasy.filestore.service.FileService;
 import org.jfantasy.framework.httpclient.HttpClientUtil;
 import org.jfantasy.framework.httpclient.Response;
-import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.HandlebarsTemplateUtils;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
 import org.jfantasy.pay.product.sign.SignUtil;
 import org.jfantasy.pay.product.util.CertUtil;
+import org.jfantasy.pay.product.util.RAMFileProxy;
 import org.jfantasy.pay.product.util.SecureUtil;
-import org.jfantasy.system.util.SettingUtil;
 
 import java.io.IOException;
 import java.math.BigDecimal;
@@ -59,7 +55,7 @@ public class Chinapay extends PayProductSupport {
 
         try {
             String merId = config.getBargainorId();//商户号
-            KeyStore keyStore = CertUtil.loadKeyStore(loadFileItem(config.getSignCert()), config.getBargainorKey());//签名证书
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config, "signCert"), config.getBargainorKey());//签名证书
             String certPwd = config.getBargainorKey();//签名证书密码
 
             //常规参数
@@ -94,17 +90,11 @@ public class Chinapay extends PayProductSupport {
             throw new PayException("支付过程发生错误，错误信息为:" + e.getMessage());
         } finally {
             //记录支付日志
-            MDC.put("type", "out");
-            MDC.put("payType", "web");
-            MDC.put("paymentSn", payment.getSn());
-            MDC.put("payProductId", config.getPayProductId());
-            MDC.put("payConfigId", config.getId());
-            MDC.put("body", "curl -X POST --data \"" + SignUtil.coverMapString(data) + "\" " + urls.getFrontTransUrl());
-            LOG.info(MDC.getContext());
+            this.log("out", "web", payment, config, "curl -X POST --data \"" + SignUtil.coverMapString(data) + "\" " + urls.getFrontTransUrl());
         }
     }
 
-    protected String signature(Map<String, String> params, KeyStore keyStore, String certPwd) throws PayException {
+    private String signature(Map<String, String> params, KeyStore keyStore, String certPwd) throws PayException {
         try {
             return SignUtil.encodeBase64(SecureUtil.sign(SignUtil.coverMapString(params, "Signature", "CertId").getBytes("UTF-8"), CertUtil.getCertPrivateKey(keyStore, certPwd), "SHA512WithRSA"), "UTF-8");
         } catch (Exception e) {
@@ -112,7 +102,7 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
-    protected boolean verify(Map<String, String> result, PublicKey publicKey) {
+    private boolean verify(Map<String, String> result, PublicKey publicKey) {
         try {
             return SecureUtil.verify(SignUtil.coverMapString(result, "Signature", "CertId").getBytes("UTF-8"), Base64.decodeBase64(result.get("Signature").getBytes("UTF-8")), publicKey, "SHA512WithRSA");
         } catch (Exception e) {
@@ -122,44 +112,26 @@ public class Chinapay extends PayProductSupport {
     }
 
     @Override
-    public String wap() {
-        return null;
-    }
-
-    @Override
-    public Object app(Payment payment, Order order) throws PayException {
-        throw new PayException(" chinapay 不支持 app 支付 ");
-    }
-
-    @Override
     public Payment payNotify(Payment payment, String result) throws PayException {
         Map<String, String> data = WebUtil.parseQuery(result, true);
         //支付配置
         PayConfig config = payment.getPayConfig();
 
         try {
-
-            if (!verify(data, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {
+            if (!verify(data, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }
 
             if ("0000".equals(data.get("OrderStatus"))) {
-                payment.setStatus(Payment.Status.success);
+                payment.setStatus(PaymentStatus.success);
             }
 
             payment.setTradeNo(data.get("AcqSeqId"));
 
             return payment;
 
-        } finally {
-            //记录支付通知日志
-            MDC.put("type", "in");
-            MDC.put("payType", "notify");
-            MDC.put("paymentSn", payment.getSn());
-            MDC.put("payProductId", config.getPayProductId());
-            MDC.put("payConfigId", config.getId());
-            MDC.put("body", result);
-            LOG.info(MDC.getContext());
+        } finally {//记录支付通知日志
+            this.log("in", "notify", payment, config, result);
         }
     }
 
@@ -170,8 +142,7 @@ public class Chinapay extends PayProductSupport {
         PayConfig config = refund.getPayConfig();
 
         try {
-
-            if (!verify(data, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {
+            if (!verify(data, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }
 
@@ -183,15 +154,8 @@ public class Chinapay extends PayProductSupport {
 
             return refund;
 
-        } finally {
-            //记录退款通知日志
-            MDC.put("type", "in");
-            MDC.put("payType", "notify");
-            MDC.put("paymentSn", refund.getSn());
-            MDC.put("payProductId", config.getPayProductId());
-            MDC.put("payConfigId", config.getId());
-            MDC.put("body", result);
-            LOG.info(MDC.getContext());
+        } finally {//记录退款通知日志
+            this.log("in", "notify", refund, config, result);
         }
     }
 
@@ -201,7 +165,8 @@ public class Chinapay extends PayProductSupport {
             PayConfig config = payment.getPayConfig();
             String merId = config.getBargainorId();//商户号
             //签名证书
-            KeyStore keyStore = CertUtil.loadKeyStore(loadFileItem(config.getSignCert()), config.getBargainorKey());
+            //config.getSignCert()
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config, "signCert"), config.getBargainorKey());
             String certPwd = config.getBargainorKey();//签名证书密码
 
             final Map<String, String> data = new TreeMap<String, String>();
@@ -218,8 +183,7 @@ public class Chinapay extends PayProductSupport {
             Response response = HttpClientUtil.doPost(urls.getQueryTransUrl(), data);
 
             Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);
-
-            if (!verify(result, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {
+            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }
 
@@ -228,7 +192,7 @@ public class Chinapay extends PayProductSupport {
             }
 
             if ("0000".equals(result.get("OrderStatus"))) {
-                payment.setStatus(Payment.Status.success);
+                payment.setStatus(PaymentStatus.success);
             }
 
             payment.setTradeNo(result.get("AcqSeqId"));
@@ -251,7 +215,7 @@ public class Chinapay extends PayProductSupport {
             PayConfig config = refund.getPayConfig();
             String merId = config.getBargainorId();//商户号
             //签名证书
-            KeyStore keyStore = CertUtil.loadKeyStore(loadFileItem(config.getSignCert()), config.getBargainorKey());
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config, "signCert"), config.getBargainorKey());
             String certPwd = config.getBargainorKey();//签名证书密码
 
             final Map<String, String> data = new TreeMap<String, String>();
@@ -278,15 +242,14 @@ public class Chinapay extends PayProductSupport {
             Response response = HttpClientUtil.doPost(url, data);
 
             Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);
-
-            if (!verify(result, CertUtil.loadPublicKey(loadFileItem(config.getValidateCert())))) {
+            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }
 
-            if("1003".equals(result.get("respCode"))){
-                refund.setStatus(Refund.Status.wait);
-            }else{
-                refund.setStatus(Refund.Status.failure);
+            if ("1003".equals(result.get("respCode"))) {
+                refund.setStatus(RefundStatus.wait);
+            } else {
+                refund.setStatus(RefundStatus.failure);
             }
 
             MDC.put("body", response.getBody());
@@ -300,14 +263,7 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
-    public static FileItem loadFileItem(FileDetail fileDetail) {
-        FileService fileService = SpringContextUtil.getBeanByType(FileService.class);
-        assert fileService != null;
-        FileDetail realFileDetail = fileService.get(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()));
-        return FileManagerFactory.getInstance().getFileManager(fileDetail.getFileManagerId()).getFileItem(realFileDetail.getRealPath());
-    }
-
-    class Urls {
+    private class Urls {
         /**
          * 前台交易请求地址
          */
@@ -325,35 +281,35 @@ public class Chinapay extends PayProductSupport {
          */
         private Map<String, String> afterTransUrls = new HashMap<String, String>();
 
-        public String getFrontTransUrl() {
+        String getFrontTransUrl() {
             return frontTransUrl;
         }
 
-        public void setFrontTransUrl(String frontTransUrl) {
+        void setFrontTransUrl(String frontTransUrl) {
             this.frontTransUrl = frontTransUrl;
         }
 
-        public String getBackTransUrl() {
+        String getBackTransUrl() {
             return backTransUrl;
         }
 
-        public void setBackTransUrl(String backTransUrl) {
+        void setBackTransUrl(String backTransUrl) {
             this.backTransUrl = backTransUrl;
         }
 
-        public String getQueryTransUrl() {
+        String getQueryTransUrl() {
             return queryTransUrl;
         }
 
-        public void setQueryTransUrl(String queryTransUrl) {
+        void setQueryTransUrl(String queryTransUrl) {
             this.queryTransUrl = queryTransUrl;
         }
 
-        public String getAfterTransUrl(String tranType) {
+        String getAfterTransUrl(String tranType) {
             return this.afterTransUrls.get(tranType);
         }
 
-        public void setAfterTransUrl(String url, String... tranTypes) {
+        void setAfterTransUrl(String url, String... tranTypes) {
             for (String tranType : tranTypes) {
                 this.afterTransUrls.put(tranType, url);
             }

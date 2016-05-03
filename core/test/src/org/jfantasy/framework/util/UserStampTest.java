@@ -1,6 +1,6 @@
 package org.jfantasy.framework.util;
 
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.userstamp.Decoder;
 import org.jfantasy.framework.util.userstamp.Encoder;
 import org.jfantasy.framework.util.userstamp.UserResult;

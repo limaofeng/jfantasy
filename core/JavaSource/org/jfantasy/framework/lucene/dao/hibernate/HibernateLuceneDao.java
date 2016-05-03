@@ -17,7 +17,7 @@ public class HibernateLuceneDao implements LuceneDao {//NOSONAR
 
     public HibernateLuceneDao(HibernateDao hibernateDao) {
         this.hibernateDao = hibernateDao;
-        this.changedListener = new EntityChangedListener((Class)ClassUtil.getValue(hibernateDao,"entityClass"));
+        this.changedListener = new EntityChangedListener(hibernateDao.getEntityClass());
     }
 
     @Override

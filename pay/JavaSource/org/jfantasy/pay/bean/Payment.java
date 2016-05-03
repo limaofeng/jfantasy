@@ -1,18 +1,12 @@
 package org.jfantasy.pay.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.jfantasy.pay.bean.databind.PaymentConfigDeserializer;
-import org.jfantasy.pay.bean.databind.PaymentConfigSerializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -26,8 +20,7 @@ import java.math.BigDecimal;
  */
 @ApiModel(value = "支付记录")
 @Entity
-@Table(name = "PAYMENT")
-@JsonFilter(JSON.CUSTOM_FILTER)
+@Table(name = "PAYMENT", uniqueConstraints = {@UniqueConstraint(columnNames = {"PAY_CONFIG_ID", "ORDER_TYPE", "ORDER_SN", "PAY_STATUS"})})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Payment extends BaseBusEntity {
 
@@ -38,11 +31,6 @@ public class Payment extends BaseBusEntity {
         online, offline
     }
 
-    // 支付状态（准备、超时、作废、成功、失败）
-    public enum Status {
-        ready, timeout, invalid, success, failure
-    }
-
     /**
      * 支付编号
      */
@@ -50,13 +38,13 @@ public class Payment extends BaseBusEntity {
     @ApiModelProperty("支付编号")
     @Column(name = "SN", updatable = false)
     @GeneratedValue(generator = "serialnumber")
-    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'P' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('PATMENT-SN'), 5)")})
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'P' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('PATMENT-SN' + #DateUtil.format('yyyyMMdd')), 5)")})
     private String sn;
     /**
      * 交易号（用于记录第三方交易的交易流水号）
      */
     @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
-    @Column(name = "TRADE_NO", updatable = true)
+    @Column(name = "TRADE_NO")
     private String tradeNo;
     /**
      * 支付类型
@@ -113,29 +101,21 @@ public class Payment extends BaseBusEntity {
     @ApiModelProperty("支付状态")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATUS", nullable = false)
-    private Status status;
+    private PaymentStatus status;
     /**
      * 支付方式
      */
-    @ApiModelProperty(hidden = true)
-    @JsonProperty("payConfigId")
-    @JsonSerialize(using = PaymentConfigSerializer.class)
-    @JsonDeserialize(using = PaymentConfigDeserializer.class)
+    @ApiModelProperty("支付方式")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAY_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_PAYMENT_PAYMENT_CONFIG"))
     private PayConfig payConfig;
     /**
-     * 订单类型
+     * 订单详情
      */
-    @ApiModelProperty("订单类型")
-    @Column(name = "ORDER_TYPE")
-    private String orderType;
-    /**
-     * 订单编号
-     */
-    @ApiModelProperty("订单编号")
-    @Column(name = "ORDER_SN")
-    private String orderSn;
+    @ApiModelProperty("订单详情")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE"), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN")})
+    private Order order;
 
     public String getSn() {
         return sn;
@@ -193,11 +173,11 @@ public class Payment extends BaseBusEntity {
         this.paymentFee = paymentFee;
     }
 
-    public Status getStatus() {
+    public PaymentStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(PaymentStatus status) {
         this.status = status;
     }
 
@@ -225,27 +205,19 @@ public class Payment extends BaseBusEntity {
         this.payConfig = payConfig;
     }
 
-    public String getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(String orderType) {
-        this.orderType = orderType;
-    }
-
-    public String getOrderSn() {
-        return orderSn;
-    }
-
-    public void setOrderSn(String orderSn) {
-        this.orderSn = orderSn;
-    }
-
     public String getTradeNo() {
         return tradeNo;
     }
 
     public void setTradeNo(String tradeNo) {
         this.tradeNo = tradeNo;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

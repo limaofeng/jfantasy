@@ -1,0 +1,9 @@
+apply plugin: 'spring-boot'
+
+description = ' 公共模块 '
+dependencies {
+    compile project(':jfantasy-core')
+    compile project(':jfantasy-filestore')
+    testCompile project(':jfantasy-test')
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.3.3.RELEASE'
+}

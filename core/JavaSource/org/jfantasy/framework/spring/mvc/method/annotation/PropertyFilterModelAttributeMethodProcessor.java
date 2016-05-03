@@ -109,9 +109,9 @@ public class PropertyFilterModelAttributeMethodProcessor extends FormModelMethod
         return params;
     }
 
-    @SuppressWarnings("unchecked")
     protected void bindRequestParameters(ModelAndViewContainer mavContainer, WebDataBinderFactory binderFactory, WebDataBinder binder, NativeWebRequest request, MethodParameter parameter) throws Exception {
         ServletRequest servletRequest = prepareServletRequest(binder.getTarget(), request, parameter);
+        @SuppressWarnings("unchecked")
         List<Object> target = (List<Object>) binder.getTarget();
         for (String paramName : servletRequest.getParameterMap().keySet()) {
             String[] values = request.getParameterValues(paramName);

@@ -1,14 +1,13 @@
 package org.jfantasy.pay.product;
 
-import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
+import org.jfantasy.pay.product.sign.SignUtil;
 
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -33,9 +32,9 @@ public class TenpayPartner extends PayProductSupport {
     }
 
     public Map<String, String> getParameterMap(Parameters parameters) {
-        PaymentContext context = PaymentContext.getContext();
-        PayConfig paymentConfig = context.getPaymentConfig();
-        Payment payment = context.getPayment();
+//        PaymentContext context = PaymentContext.getContext();
+        PayConfig paymentConfig = null;//context.getPaymentConfig();
+        Payment payment = null;//context.getPayment();
         BigDecimal paymentAmount = payment.getTotalAmount();
         String paymentSn = payment.getSn();
         String totalAmountString = paymentAmount.multiply(new BigDecimal(100)).setScale(0).toString();
@@ -47,12 +46,12 @@ public class TenpayPartner extends PayProductSupport {
         String mchDesc = "";// 订单描述
         String mchName = paymentSn;// 商品名称
         String mchPrice = totalAmountString;// 总金额（单位：分）
-        String mchReturl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String mchReturl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String mchType = "1";// 交易类型（1、实物交易、2、虚拟交易）
         String mchVno = paymentSn;// 交易号
         String needBuyerinfo = "2";// 是否需要填写物流信息（1：需要、2：不需要）
         String seller = paymentConfig.getBargainorId();// 商户号
-        String showUrl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 商品显示URL
+        String showUrl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 商品显示URL
         String transportDesc = "";// 物流方式说明
         String transportFee = "0";// 物流费用（单位：分）
         String version = "2";// 版本号
@@ -77,7 +76,7 @@ public class TenpayPartner extends PayProductSupport {
         signMap.put("transport_fee", transportFee);
         signMap.put("version", version);
         signMap.put("key", key);
-        String sign = DigestUtils.md5Hex(getParameterString(signMap)).toUpperCase();
+        String sign = DigestUtils.md5Hex(SignUtil.coverMapString(signMap)).toUpperCase();
 
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>();
@@ -101,9 +100,8 @@ public class TenpayPartner extends PayProductSupport {
         return parameterMap;
     }
 
-    @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = null;//PaymentContext.getContext().getPaymentConfig();
         // 获取参数
         String attach = parameters.get("attach");
         String buyerId = parameters.get("buyer_id");
@@ -136,7 +134,7 @@ public class TenpayPartner extends PayProductSupport {
         parameterMap.put("transport_fee", transportFee);
         parameterMap.put("version", version);
         parameterMap.put("key", paymentConfig.getBargainorKey());
-        return StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase());
+        return StringUtils.equals(sign, DigestUtils.md5Hex(SignUtil.coverMapString(parameterMap)).toUpperCase());
     }
 
     public String getPaynotifyMessage(String paymentSn) {
@@ -154,7 +152,7 @@ public class TenpayPartner extends PayProductSupport {
     }
 
     @Override
-    public String web(Payment payment,Order order, Properties properties) {
+    public String web(Payment payment, Order order, Properties properties) {
         return null;
     }
 

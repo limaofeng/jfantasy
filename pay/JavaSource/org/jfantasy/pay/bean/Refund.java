@@ -1,16 +1,12 @@
 package org.jfantasy.pay.bean;
 
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.*;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
 
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 
 /**
@@ -22,7 +18,6 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "PAYMENT_REFUND")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Refund extends BaseBusEntity {
 
@@ -33,30 +28,24 @@ public class Refund extends BaseBusEntity {
         online, offline
     }
 
-    // 支付状态（准备、等待银行处理、作废、成功、失败）
-    public enum Status {
-        ready, wait, success, failure
-    }
-
     public Refund() {
     }
 
     public Refund(Payment payment) {
         this.setType(RefundType.valueOf(payment.getType().name()));
-        this.setStatus(Status.ready);
+        this.setStatus(RefundStatus.ready);
         this.setBankAccount(payment.getBankAccount());
         this.setBankName(payment.getBankName());
         this.setPayConfigName(payment.getPayConfigName());
         this.setPayConfig(payment.getPayConfig());
         this.setPayment(payment);
         this.setPayee(payment.getPayer());
-        this.setOrderType(payment.getOrderType());
-        this.setOrderSn(payment.getOrderSn());
+        this.setOrder(payment.getOrder());
     }
 
     @Id
     @GeneratedValue(generator = "serialnumber")
-    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@org.hibernate.annotations.Parameter(name = "expression", value = "'R' + #sn + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('REFUND-'+#sn), 2)")})
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@org.hibernate.annotations.Parameter(name = "expression", value = "'R' + payment.sn + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('REFUND-' + payment.sn), 2)")})
     @Column(name = "SN", updatable = false)
     private String sn;// 退款编号
     @Enumerated(EnumType.STRING)
@@ -65,7 +54,7 @@ public class Refund extends BaseBusEntity {
     @ApiModelProperty("退款状态")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATUS", nullable = false)
-    private Status status;
+    private RefundStatus status;
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false, updatable = false)
     private String payConfigName;// 支付配置名称
     @Column(name = "BANK_NAME", updatable = false)
@@ -85,7 +74,7 @@ public class Refund extends BaseBusEntity {
      * 交易号（用于记录第三方交易的交易流水号）
      */
     @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
-    @Column(name = "TRADE_NO", updatable = true)
+    @Column(name = "TRADE_NO")
     private String tradeNo;
     /**
      * 原支付交易
@@ -93,16 +82,10 @@ public class Refund extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAYMENT_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT"))
     private Payment payment;
-    /**
-     * 订单类型
-     */
-    @Column(name = "ORDER_TYPE")
-    private String orderType;
-    /**
-     * 订单编号
-     */
-    @Column(name = "ORDER_SN")
-    private String orderSn;
+    @ApiModelProperty("订单详情")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE"), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN")})
+    private Order order;
 
     public String getSn() {
         return sn;
@@ -176,22 +159,6 @@ public class Refund extends BaseBusEntity {
         this.payConfig = payConfig;
     }
 
-    public String getOrderSn() {
-        return orderSn;
-    }
-
-    public void setOrderSn(String orderSn) {
-        this.orderSn = orderSn;
-    }
-
-    public String getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(String orderType) {
-        this.orderType = orderType;
-    }
-
     public void setTradeNo(String tradeNo) {
         this.tradeNo = tradeNo;
     }
@@ -200,11 +167,11 @@ public class Refund extends BaseBusEntity {
         return tradeNo;
     }
 
-    public Status getStatus() {
+    public RefundStatus getStatus() {
         return status;
     }
 
-    public void setStatus(Status status) {
+    public void setStatus(RefundStatus status) {
         this.status = status;
     }
 
@@ -214,5 +181,13 @@ public class Refund extends BaseBusEntity {
 
     public void setPayment(Payment payment) {
         this.payment = payment;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
     }
 }

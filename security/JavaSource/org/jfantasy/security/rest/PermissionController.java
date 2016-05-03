@@ -9,6 +9,7 @@ import org.jfantasy.security.bean.Permission;
 import org.jfantasy.security.service.PermissionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 

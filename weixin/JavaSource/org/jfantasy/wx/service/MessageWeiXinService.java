@@ -4,7 +4,7 @@ import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.filestore.service.FileUploadService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.wx.bean.Message;
 import org.jfantasy.wx.bean.User;
 import org.jfantasy.wx.dao.MessageDao;

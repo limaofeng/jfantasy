@@ -23,7 +23,7 @@ import org.jfantasy.filestore.FileItem;
 import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.security.bean.enums.Sex;
 import org.jfantasy.wx.framework.core.WeiXinService;

@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+org.jfantasy.framework.autoconfigure.CmsAutoConfiguration

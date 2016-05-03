@@ -1,18 +1,19 @@
 package org.jfantasy.security.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.jackson.JSON;
-import org.jfantasy.system.bean.Website;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * 组织维度
  */
 @Entity
 @Table(name = "AUTH_ORG_DIMENSION")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler","website"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgDimension extends BaseBusEntity {
@@ -32,12 +33,6 @@ public class OrgDimension extends BaseBusEntity {
      */
     @Column(name = "DESCRIPTION")
     private String description;
-    /**
-     * 维度对应的站点
-     */
-    @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.REFRESH)
-    @JoinColumn(name = "WEBSITE_KEY", foreignKey = @ForeignKey(name = "FK_AUTH_ORG_RELATION_WEBSITE"))
-    private Website website;
 
     public String getId() {
         return id;
@@ -63,11 +58,4 @@ public class OrgDimension extends BaseBusEntity {
         this.description = description;
     }
 
-    public Website getWebsite() {
-        return website;
-    }
-
-    public void setWebsite(Website website) {
-        this.website = website;
-    }
 }

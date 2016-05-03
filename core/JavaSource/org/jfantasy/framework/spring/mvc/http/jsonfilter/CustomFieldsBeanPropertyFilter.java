@@ -1,17 +1,17 @@
 package org.jfantasy.framework.spring.mvc.http.jsonfilter;
 
-import org.jfantasy.framework.util.Stack;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.databind.ser.BeanPropertyWriter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import org.jfantasy.framework.util.Stack;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+@Deprecated
 public abstract class CustomFieldsBeanPropertyFilter extends SimpleBeanPropertyFilter {
     protected Stack<Capsule> stack = new Stack<Capsule>();
 
@@ -27,9 +27,6 @@ public abstract class CustomFieldsBeanPropertyFilter extends SimpleBeanPropertyF
     protected static boolean isDisplay(String name, Class entityClass) {
         JsonFilter jsonFilter = ClassUtil.getAnnotation(entityClass, JsonFilter.class);
         String[] ignoreProperties = new String[0];
-        if (jsonFilter != null && JSON.CUSTOM_FILTER.equals(jsonFilter.value())) {
-            ignoreProperties = JSON.getIgnoreProperties(entityClass);
-        }
         return ObjectUtil.indexOf(ignoreProperties, name) == -1;
     }
 

@@ -1,14 +1,13 @@
 package org.jfantasy.pay.product;
 
-import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.system.util.SettingUtil;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.product.order.Order;
-import org.jfantasy.pay.service.PaymentContext;
+import org.jfantasy.pay.product.sign.SignUtil;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
@@ -30,9 +29,9 @@ public class TenpayDirect extends PayProductSupport {
     }
 
     public Map<String, String> getParameterMap(Parameters parameters) {
-        PaymentContext context = PaymentContext.getContext();
-        PayConfig paymentConfig = context.getPaymentConfig();
-        Payment payment = context.getPayment();
+//        PaymentContext context = PaymentContext.getContext();
+        PayConfig paymentConfig = null;//context.getPaymentConfig();
+        Payment payment = null;//context.getPayment();
         BigDecimal paymentAmount = payment.getTotalAmount();
         String paymentSn = payment.getSn();
 
@@ -51,7 +50,7 @@ public class TenpayDirect extends PayProductSupport {
         String spBillno = paymentSn;// 支付编号
         String totalFee = totalAmountString;// 总金额（单位：分）
         String feeType = "1";// 支付币种（1：人民币）
-        String returnUrl = SettingUtil.get("website", "ShopUrl") + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String returnUrl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String attach = "s" + "h" + "o" + "p" + "x" + "x";// 商户数据
         String spbillCreateIp = parameters.get("remoteAddr");// 客户IP
         String key = paymentConfig.getBargainorKey();// 密钥
@@ -69,7 +68,7 @@ public class TenpayDirect extends PayProductSupport {
         signMap.put("attach", attach);
         signMap.put("spbill_create_ip", spbillCreateIp);
         signMap.put("key", key);
-        String sign = DigestUtils.md5Hex(getParameterString(signMap)).toUpperCase();
+        String sign = DigestUtils.md5Hex(SignUtil.coverMapString(signMap)).toUpperCase();
 
         // 参数处理
         Map<String, String> parameterMap = new HashMap<String, String>();
@@ -92,9 +91,8 @@ public class TenpayDirect extends PayProductSupport {
         return parameterMap;
     }
 
-    @Override
     public boolean verifySign(Map<String, String> parameters) {
-        PayConfig paymentConfig = PaymentContext.getContext().getPaymentConfig();
+        PayConfig paymentConfig = null;//PaymentContext.getContext().getPaymentConfig();
         // 财付通（即时交易）
         String cmdno = parameters.get("cmdno");
         String payResult = parameters.get("pay_result");
@@ -117,10 +115,9 @@ public class TenpayDirect extends PayProductSupport {
         parameterMap.put("fee_type", feeType);
         parameterMap.put("attach", attach);
         parameterMap.put("key", paymentConfig.getBargainorKey());
-        return StringUtils.equals(sign, DigestUtils.md5Hex(getParameterString(parameterMap)).toUpperCase());
+        return StringUtils.equals(sign, DigestUtils.md5Hex(SignUtil.coverMapString(parameterMap)).toUpperCase());
     }
 
-    @Override
     public String getPaynotifyMessage(String paymentSn) {
         return null;
     }
@@ -154,7 +151,7 @@ public class TenpayDirect extends PayProductSupport {
     }
 
     @Override
-    public String web(Payment payment,Order order, Properties properties) {
+    public String web(Payment payment, Order order, Properties properties) {
         return null;
     }
 

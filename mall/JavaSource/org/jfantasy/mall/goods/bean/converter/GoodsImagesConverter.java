@@ -3,7 +3,7 @@ package org.jfantasy.mall.goods.bean.converter;
 
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.mall.goods.bean.GoodsImage;
 
 import javax.persistence.AttributeConverter;

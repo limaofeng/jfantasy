@@ -1,8 +1,8 @@
 package org.jfantasy.pay.rest.form;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayType;
 

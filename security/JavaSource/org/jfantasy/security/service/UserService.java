@@ -1,6 +1,5 @@
 package org.jfantasy.security.service;
 
-import org.hibernate.Hibernate;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
@@ -73,7 +72,6 @@ public class UserService {
         User user = this.userDao.findUniqueBy("username", username);
         if (user != null) {
             SpringSecurityUtils.getAuthorities(user);
-            Hibernate.initialize(user.getWebsite());
         }
         return user;
     }

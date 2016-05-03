@@ -54,8 +54,8 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         this.entityClass = ReflectionUtils.getSuperClassGenricType(getClass());
     }
 
-    public SessionFactory getSessionFactory() {
-        return this.sessionFactory;
+    public Class<T> getEntityClass(){
+        return this.entityClass;
     }
 
     @Autowired
@@ -72,21 +72,35 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         return this.sessionFactory.getCurrentSession();
     }
 
+    public T save(T entity) {
+        return save(entity, false);
+    }
+
     /**
      * 保存对象 实际调用的是 saveOrUpdate
      *
      * @param entity 保存的对象
+     * @param merge  合并模式
      */
-    public T save(T entity) {
+    public T save(T entity, boolean merge) {
         Assert.notNull(entity, LOG_MESSAGE_NULL);
-        try {
-            getSession().saveOrUpdate(entity = clean(entity));//NOSONAR
-        } catch (NonUniqueObjectException e) {
-            LOG.error(e.getMessage(), e);
-            getSession().merge(entity);
-        }
+        getSession().saveOrUpdate(merge ? entity = (mergeEntity(entity)) : entity);//NOSONAR
         this.LOG.debug("save entity: " + entity);
         return entity;
+    }
+
+    /**
+     * 合并对象
+     *
+     * @param entity 要合并的对象
+     */
+    public T merge(T entity) {
+        Assert.notNull(entity, LOG_MESSAGE_NULL);
+        try {
+            return (T) getSession().merge(entity);
+        } finally {
+            this.LOG.debug("merge entity: " + entity);
+        }
     }
 
     /**
@@ -100,33 +114,8 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
             LOG.error(e.getMessage(), e);
-            getSession().merge(entity);
         }
         this.LOG.debug("update entity: " + entity);
-    }
-
-    /**
-     * 合并对象
-     *
-     * @param entity 要合并的对象
-     */
-    public void merge(T entity) {
-        Assert.notNull(entity, LOG_MESSAGE_NULL);
-        getSession().merge(entity);
-        this.LOG.debug("update entity: " + entity);
-    }
-
-    /**
-     * 待测试方法
-     *
-     * @param m      xxx
-     * @param entity 要合并的对象
-     */
-    @Deprecated
-    public void merge(String m, T entity) {
-        Assert.notNull(entity, LOG_MESSAGE_NULL);
-        getSession().merge(m, entity);
-        this.LOG.debug("update entity:" + entity);
     }
 
     /**
@@ -143,6 +132,15 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         getSession().persist(clean(entity));
     }
 
+    public T mergeEntity(T entity) {
+        PK id = getIdValue(entity);
+        if (id != null) {
+            T oldentity = (T) this.getSession().get(this.entityClass, id);
+            return BeanUtil.copyNotNull(oldentity, entity);
+        }
+        throw new HibernateException(" id 为空,不能使用合并模式");
+    }
+
     /**
      * 自动将游离对象转为持久化对象
      * 需要实现的主要功能 <br/>
@@ -153,6 +151,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * @param entity 清理对象
      * @return <T>
      */
+    @Deprecated
     @SuppressWarnings({"unchecked", "rawtypes"})
     private T clean(T entity) {
         OgnlUtil ognlUtil = OgnlUtil.getInstance();
@@ -688,12 +687,12 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     }
 
     public String getIdName(Class entityClass) {
-        ClassMetadata meta = getSessionFactory().getClassMetadata(entityClass);
+        ClassMetadata meta = this.sessionFactory.getClassMetadata(entityClass);
         return meta.getIdentifierPropertyName();
     }
 
     public String getIdName() {
-        ClassMetadata meta = getSessionFactory().getClassMetadata(this.entityClass);
+        ClassMetadata meta = this.sessionFactory.getClassMetadata(this.entityClass);
         return meta.getIdentifierPropertyName();
     }
 
@@ -703,7 +702,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
 
     @SuppressWarnings("unchecked")
     public Pager<T> findPager(Pager<T> pager, String hql, Object... values) {
-        pager = pager == null ? new Pager<T>() : pager;
+        pager = ObjectUtil.defaultValue(pager, new Pager<T>());
         Query q = createQuery(hql, values);
         pager.setTotalCount(countHqlResult(hql, values));
         setPageParameter(q, pager);
@@ -713,7 +712,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
 
     @SuppressWarnings("unchecked")
     public Pager<T> findPager(Pager<T> pager, String hql, Map<String, ?> values) {
-        pager = pager == null ? new Pager<T>() : pager;
+        pager = ObjectUtil.defaultValue(pager, new Pager<T>());
         Query q = createQuery(hql, values);
         pager.setTotalCount(countHqlResult(hql, values));
         setPageParameter(q, pager);
@@ -750,11 +749,14 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         c.setMaxResults(pager.getPageSize());
         if (pager.isOrderBySetted()) {
             String[] orderByArray = StringUtil.tokenizeToStringArray(pager.getOrderBy());
-            Assert.isTrue(orderByArray.length == pager.getOrders().length, "分页多重排序参数中,排序字段与排序方向的个数不相等");
-            for (int i = 0; i < orderByArray.length; i++) {
-                if ("asc".equals(pager.getOrders()[i].name())) {
+            String[] orders = StringUtil.tokenizeToStringArray(pager.getOrder());
+
+            Assert.isTrue(orderByArray.length == orders.length, "分页多重排序参数中,排序字段与排序方向的个数不相等");
+
+            for (int i = 0; i < orders.length; i++) {
+                if (Pager.SORT_ASC.equals(orders[i])) {
                     c.addOrder(Order.asc(orderByAlias(orderByArray[i])));
-                } else {
+                } else if (Pager.SORT_DESC.equals(orders[i])) {
                     c.addOrder(Order.desc(orderByAlias(orderByArray[i])));
                 }
             }
@@ -794,11 +796,15 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         return c;
     }
 
-    protected int countHqlResult(String hql, Object... values) {
+    private String generateCountHql(String hql) {
         String fromHql = hql;
         fromHql = "from " + StringUtils.substringAfter(fromHql, "from");
         fromHql = StringUtils.substringBefore(fromHql, "order by");
-        String countHql = "select count(*) " + fromHql;
+        return "select count(*) " + fromHql;
+    }
+
+    protected int countHqlResult(String hql, Object... values) {
+        String countHql = generateCountHql(hql);
         try {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();
@@ -808,10 +814,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     }
 
     protected int countHqlResult(String hql, Map<String, ?> values) {
-        String fromHql = hql;
-        fromHql = "from " + StringUtils.substringAfter(fromHql, "from");
-        fromHql = StringUtils.substringBefore(fromHql, "order by");
-        String countHql = "select count(*) " + fromHql;
+        String countHql = generateCountHql(hql);
         try {
             Long count = (Long) findUnique(countHql, values);
             return count.intValue();

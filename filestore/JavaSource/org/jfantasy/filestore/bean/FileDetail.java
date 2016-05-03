@@ -1,13 +1,11 @@
 package org.jfantasy.filestore.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.jackson.JSON;
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.ObjectUtil;
 
 import javax.persistence.*;
 
@@ -18,7 +16,6 @@ import javax.persistence.*;
  */
 @ApiModel(value = "文件信息", description = "上传文件的详细信息")
 @Entity
-@JsonFilter(JSON.CUSTOM_FILTER)
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEDETAIL")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "folder", "realPath"})

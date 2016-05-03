@@ -1,6 +1,6 @@
 package org.jfantasy.framework.util.validator.exception;
 
-import org.jfantasy.framework.util.jackson.JSON;
+import org.jfantasy.framework.jackson.JSON;
 
 public class ValidationException extends Exception {
 

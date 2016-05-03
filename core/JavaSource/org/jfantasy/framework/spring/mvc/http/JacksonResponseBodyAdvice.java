@@ -1,16 +1,17 @@
 package org.jfantasy.framework.spring.mvc.http;
 
-import org.jfantasy.framework.dao.Pager;
-import org.jfantasy.framework.spring.mvc.error.RestException;
-import org.jfantasy.framework.spring.mvc.http.jsonfilter.ExpendFieldsBeanPropertyFilter;
-import org.jfantasy.framework.spring.mvc.http.jsonfilter.NoneFieldsBeanPropertyFilter;
-import org.jfantasy.framework.spring.mvc.http.jsonfilter.ResultFieldsBeanPropertyFilter;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.jackson.JSON;
 import com.fasterxml.jackson.databind.ser.PropertyFilter;
-import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
+import org.jfantasy.framework.jackson.annotation.AllowProperty;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.spring.mvc.error.RestException;
+import org.jfantasy.framework.spring.mvc.http.jsonfilter.ExpendFieldsBeanPropertyFilter;
+import org.jfantasy.framework.spring.mvc.http.jsonfilter.ResultFieldsBeanPropertyFilter;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
@@ -44,7 +45,25 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
         Class returnType = methodParameter.getMethod().getReturnType();
-        return Object.class.isAssignableFrom(returnType);
+        boolean supports = Object.class.isAssignableFrom(returnType);
+        if(supports) {
+            JsonIgnoreProperties jsonIgnoreProperties = methodParameter.getMethod().getAnnotation(JsonIgnoreProperties.class);
+            if (jsonIgnoreProperties != null) {
+                ThreadJacksonMixInHolder mixInHolder = ThreadJacksonMixInHolder.getMixInHolder();
+                AllowProperty[] allowProperties = jsonIgnoreProperties.allow();
+                IgnoreProperty[] ignoreProperties = jsonIgnoreProperties.value();
+                if (allowProperties.length != 0) {
+                    for(AllowProperty property : allowProperties){
+                        mixInHolder.addAllowPropertyNames(property.pojo(),property.name());
+                    }
+                } else if (ignoreProperties.length != 0) {
+                    for(IgnoreProperty property : ignoreProperties){
+                        mixInHolder.addIgnorePropertyNames(property.pojo(),property.name());
+                    }
+                }
+            }
+        }
+        return supports;
     }
 
     @Override
@@ -58,7 +77,11 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             if (Pager.class.isAssignableFrom(returnType) && !"true".equalsIgnoreCase(request.getHeader(X_Page_Fields))) {
                 returnValue = ((Pager) returnValue).getPageItems();
             }
+            MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
+            mappingJacksonValue.setFilters(ThreadJacksonMixInHolder.getMixInHolder().getFilterProvider());
+            return mappingJacksonValue;
 
+            /*
             if (isCustomFilter(request)) {
                 MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
                 SimpleFilterProvider filter = new SimpleFilterProvider().setFailOnUnknownId(false);
@@ -71,7 +94,7 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                 mappingJacksonValue.setFilters(filter);
                 filter.addFilter(JSON.CUSTOM_FILTER, new NoneFieldsBeanPropertyFilter());
                 return mappingJacksonValue;
-            }
+            }*/
 
         }
         return obj;

@@ -3,6 +3,7 @@ package org.jfantasy.framework.crypto;
 import com.sun.crypto.provider.SunJCE;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.common.StringUtil;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
@@ -76,6 +77,9 @@ public class DESPlus {
 
     public String encrypt(String strIn) {
         try {
+            if(StringUtil.isBlank(strIn)){
+                return "";
+            }
             return byteArr2HexStr(encrypt(strIn.getBytes()));
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
