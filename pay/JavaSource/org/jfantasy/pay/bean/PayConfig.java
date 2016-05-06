@@ -120,7 +120,7 @@ public class PayConfig extends BaseBusEntity {
      * 支付费用
      */
     @ApiModelProperty("支付费用")
-    @Column(name = "PAY_FEE", nullable = false, precision = 15, scale = 5)
+    @Column(name = "PAY_FEE", nullable = false, precision = 15, scale = 2)
     private BigDecimal payFee;
     /**
      * 介绍

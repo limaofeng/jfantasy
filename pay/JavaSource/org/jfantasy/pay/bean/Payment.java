@@ -75,13 +75,13 @@ public class Payment extends BaseBusEntity {
      * 支付金额
      */
     @ApiModelProperty("支付金额")
-    @Column(name = "TOTAL_AMOUNT", nullable = false, updatable = false, precision = 15, scale = 5)
+    @Column(name = "TOTAL_AMOUNT", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal totalAmount;
     /**
      * 支付手续费
      */
     @ApiModelProperty("支付手续费")
-    @Column(name = "PAYMENT_FEE", nullable = false, updatable = false, precision = 15, scale = 5)
+    @Column(name = "PAYMENT_FEE", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal paymentFee;
     /**
      * 付款人

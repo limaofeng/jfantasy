@@ -61,7 +61,7 @@ public class Refund extends BaseBusEntity {
     private String bankName;// 退款银行名称
     @Column(name = "BANK_ACCOUNT", updatable = false)
     private String bankAccount;// 退款银行账号
-    @Column(name = "TOTAL_AMOUNT", nullable = false, updatable = false, precision = 15, scale = 5)
+    @Column(name = "TOTAL_AMOUNT", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal totalAmount;// 退款金额
     @Column(name = "PAYEE", updatable = false)
     private String payee;// 收款人

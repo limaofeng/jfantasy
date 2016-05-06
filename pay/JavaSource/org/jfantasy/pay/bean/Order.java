@@ -43,10 +43,10 @@ public class Order extends BaseBusEntity {
     @Column(name = "Body", length = 500)
     private String Body;
     @ApiModelProperty("订单总金额")
-    @Column(name = "TOTAL_FEE", precision = 500)
+    @Column(name = "TOTAL_FEE", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal totalFee;
     @ApiModelProperty("订单应付金额")
-    @Column(name = "PAYABLE_FEE", length = 500)
+    @Column(name = "PAYABLE_FEE", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal payableFee;
     @ApiModelProperty("支付方式")
     @ManyToOne(fetch = FetchType.LAZY)
