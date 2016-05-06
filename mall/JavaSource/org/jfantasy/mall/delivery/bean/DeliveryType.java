@@ -1,8 +1,5 @@
 package org.jfantasy.mall.delivery.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.mall.delivery.bean.databind.DeliveryCorpDeserializer;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -11,8 +8,10 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.mall.delivery.bean.databind.DeliveryCorpDeserializer;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 

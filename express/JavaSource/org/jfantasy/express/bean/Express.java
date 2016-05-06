@@ -1,11 +1,11 @@
 package org.jfantasy.express.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

@@ -1,14 +1,14 @@
 package org.jfantasy.wx.menu.service;
 
+import junit.framework.Assert;
+import me.chanjar.weixin.common.api.WxConsts;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.wx.bean.MenuWeixin;
 import org.jfantasy.wx.service.MenuWeiXinService;
-import junit.framework.Assert;
-import me.chanjar.weixin.common.api.WxConsts;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

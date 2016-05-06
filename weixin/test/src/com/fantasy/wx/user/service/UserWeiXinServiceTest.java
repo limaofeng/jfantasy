@@ -1,5 +1,10 @@
 package org.jfantasy.wx.user.service;
 
+import junit.framework.Assert;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.util.xml.XStreamTransformer;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.JSON;
@@ -7,11 +12,6 @@ import org.jfantasy.security.bean.enums.Sex;
 import org.jfantasy.wx.bean.User;
 import org.jfantasy.wx.bean.UserKey;
 import org.jfantasy.wx.service.UserService;
-import junit.framework.Assert;
-import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
-import me.chanjar.weixin.mp.util.xml.XStreamTransformer;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

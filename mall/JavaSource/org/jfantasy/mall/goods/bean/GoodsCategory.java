@@ -1,12 +1,5 @@
 package org.jfantasy.mall.goods.bean;
 
-import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
-import org.jfantasy.attr.storage.BaseDynaBean;
-import org.jfantasy.attr.storage.bean.AttributeVersion;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.jackson.JSON;
-import com.fasterxml.jackson.annotation.*;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,8 +14,13 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
+import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
+import org.jfantasy.attr.storage.BaseDynaBean;
+import org.jfantasy.attr.storage.bean.AttributeVersion;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 
-import javax.persistence.*;
 import java.io.IOException;
 import java.util.List;
 

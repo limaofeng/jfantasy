@@ -1,12 +1,5 @@
 package org.jfantasy.mall.delivery.bean;
 
-import org.jfantasy.common.bean.Area;
-import org.jfantasy.common.bean.converter.AreaConverter;
-import org.jfantasy.common.bean.databind.AreaDeserializer;
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.mall.delivery.bean.databind.DeliveryTypeDeserializer;
-import org.jfantasy.mall.delivery.bean.databind.DeliveryTypeSerializer;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -17,8 +10,14 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jfantasy.common.bean.Area;
+import org.jfantasy.common.bean.converter.AreaConverter;
+import org.jfantasy.common.bean.databind.AreaDeserializer;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.mall.delivery.bean.databind.DeliveryTypeDeserializer;
+import org.jfantasy.mall.delivery.bean.databind.DeliveryTypeSerializer;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;

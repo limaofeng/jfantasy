@@ -1,15 +1,13 @@
 package org.jfantasy.wx.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.wx.framework.session.AccountDetails;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.wx.framework.session.AccountDetails;
 
 /**
  * 微信公众号设置

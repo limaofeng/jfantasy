@@ -3,7 +3,6 @@ package org.jfantasy.springnetty.client;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

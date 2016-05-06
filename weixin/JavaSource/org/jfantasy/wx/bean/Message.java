@@ -1,10 +1,9 @@
 package org.jfantasy.wx.bean;
 
-import org.jfantasy.framework.jackson.JSON;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
-import javax.persistence.*;
+import org.jfantasy.framework.jackson.JSON;
 
 /**
  * 文本消息

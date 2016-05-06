@@ -1,24 +1,23 @@
 package org.jfantasy.mall.goods.bean;
 
-import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
-import org.jfantasy.attr.storage.BaseDynaBean;
-import org.jfantasy.framework.dao.mybatis.keygen.util.SequenceInfo;
-import org.jfantasy.framework.spring.SpELUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.mall.cart.bean.CartItem;
-import org.jfantasy.mall.goods.bean.converter.GoodsImageConverter;
-import org.jfantasy.mall.order.bean.OrderItem;
-import org.jfantasy.mall.stock.bean.Stock;
-import org.jfantasy.mall.stock.bean.WarningSettings;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Persister;
+import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
+import org.jfantasy.attr.storage.BaseDynaBean;
+import org.jfantasy.framework.dao.mybatis.keygen.util.SequenceInfo;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.spring.SpELUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.mall.cart.bean.CartItem;
+import org.jfantasy.mall.goods.bean.converter.GoodsImageConverter;
+import org.jfantasy.mall.order.bean.OrderItem;
+import org.jfantasy.mall.stock.bean.Stock;
+import org.jfantasy.mall.stock.bean.WarningSettings;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 

@@ -19,7 +19,7 @@ allprojects {
     apply plugin: 'maven'
 
     group = 'org.jfantasy'
-    version = '1.0.7-SNAPSHOT'
+    version = '1.0.8-SNAPSHOT'
 
     task hello << { task -> println "I'm $task.project.name" }
 

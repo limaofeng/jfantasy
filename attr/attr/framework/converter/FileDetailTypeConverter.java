@@ -7,9 +7,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.filestore.service.FileService;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.jackson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.reflect.Array;

@@ -1,29 +1,23 @@
 package org.jfantasy.mall.goods.bean;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.Parameter;
 import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
 import org.jfantasy.attr.storage.BaseDynaBean;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.lucene.annotations.Compare;
 import org.jfantasy.framework.lucene.annotations.IndexFilter;
 import org.jfantasy.framework.lucene.annotations.Indexed;
-import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.mall.goods.bean.converter.GoodsImagesConverter;
 import org.jfantasy.mall.goods.bean.converter.GoodsParameterValuesConverter;
 import org.jfantasy.mall.shop.bean.Shop;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.system.util.SettingUtil;
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Parameter;
 
-import javax.persistence.CascadeType;
 import javax.persistence.*;
-import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
-import javax.persistence.OrderBy;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.List;
 

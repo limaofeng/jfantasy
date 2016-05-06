@@ -3,13 +3,13 @@ package org.jfantasy.remind.websocket;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.remind.bean.Notice;
 import org.jfantasy.remind.service.NoticeService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;

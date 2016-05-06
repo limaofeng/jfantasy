@@ -1,18 +1,16 @@
 package org.jfantasy.wx.bean;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.databind.MemberDeserializer;
 import org.jfantasy.member.bean.databind.MemberSerializer;
 import org.jfantasy.security.bean.enums.Sex;
-import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import javax.persistence.*;
 
 /**
  * 微信用户基本信息

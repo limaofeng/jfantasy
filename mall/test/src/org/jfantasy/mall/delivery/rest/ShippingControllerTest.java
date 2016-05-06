@@ -1,5 +1,7 @@
 package org.jfantasy.mall.delivery.rest;
 
+import junit.framework.Assert;
+import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.mall.delivery.bean.DeliveryCorp;
@@ -8,8 +10,6 @@ import org.jfantasy.mall.delivery.rest.form.DeliveryItemForm;
 import org.jfantasy.mall.delivery.rest.form.ShippingForm;
 import org.jfantasy.mall.delivery.service.DeliveryCorpService;
 import org.jfantasy.mall.delivery.service.DeliveryTypeService;
-import junit.framework.Assert;
-import org.hibernate.criterion.Restrictions;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

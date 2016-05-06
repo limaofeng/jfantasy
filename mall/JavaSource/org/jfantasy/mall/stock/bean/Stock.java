@@ -1,13 +1,11 @@
 package org.jfantasy.mall.stock.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.mall.goods.bean.Product;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
-
-import javax.persistence.*;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.mall.goods.bean.Product;
 
 /**
  *@Author lsz

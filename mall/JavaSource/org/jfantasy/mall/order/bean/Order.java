@@ -1,12 +1,5 @@
 package org.jfantasy.mall.order.bean;
 
-import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
-import org.jfantasy.attr.storage.BaseDynaBean;
-import org.jfantasy.common.bean.Area;
-import org.jfantasy.common.bean.converter.AreaConverter;
-import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.member.bean.Member;
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -14,8 +7,14 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Persister;
+import org.jfantasy.attr.framework.query.DynaBeanEntityPersister;
+import org.jfantasy.attr.storage.BaseDynaBean;
+import org.jfantasy.common.bean.Area;
+import org.jfantasy.common.bean.converter.AreaConverter;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.member.bean.Member;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
