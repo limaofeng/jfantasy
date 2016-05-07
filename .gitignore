@@ -9,6 +9,8 @@
 *.ear
 *.iml
 target
+LOG_PATH_IS_UNDEFINED/
+*/**/LOG_PATH_IS_UNDEFINED/
 
 api-docs/node_modules
 rebel.xml

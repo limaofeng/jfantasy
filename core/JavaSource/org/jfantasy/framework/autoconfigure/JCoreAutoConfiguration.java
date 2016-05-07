@@ -6,6 +6,7 @@ import org.jfantasy.framework.spring.config.MyBatisMapperScannerConfig;
 import org.springframework.boot.autoconfigure.AutoConfigureBefore;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +17,7 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @AutoConfigureBefore(DataSourceAutoConfiguration.class)
 @Import({AppConfig.class, MyBatisMapperScannerConfig.class})
+@EntityScan("org.jfantasy.framework.dao.mybatis.keygen.bean")
 public class JCoreAutoConfiguration {
 
     @Bean
