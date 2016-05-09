@@ -6,7 +6,6 @@ import org.jfantasy.framework.lucene.annotations.IndexRefList;
 import org.jfantasy.framework.lucene.cache.DaoCache;
 import org.jfantasy.framework.lucene.cache.PropertysCache;
 import org.jfantasy.framework.lucene.dao.LuceneDao;
-import org.jfantasy.framework.util.common.JdbcUtil;
 import org.jfantasy.framework.util.reflect.Property;
 
 import java.lang.reflect.ParameterizedType;
@@ -57,15 +56,10 @@ public class RefEntityChangedListener {
         if (match) {
             LuceneDao dao = DaoCache.getInstance().get(cls);
             if (dao != null) {
-                JdbcUtil.Transaction transaction = JdbcUtil.transaction();
-                try {
-                    List<?> list = dao.findByField(fieldName, id);
-                    for (Object o : list) {
-                        IndexUpdateTask task = new IndexUpdateTask(o);
-                        BuguIndex.getInstance().getExecutor().execute(task);
-                    }
-                } finally {
-                    transaction.commit();
+                List<?> list = dao.findByField(fieldName, id);
+                for (Object o : list) {
+                    IndexUpdateTask task = new IndexUpdateTask(o);
+                    BuguIndex.getInstance().getExecutor().execute(task);
                 }
             }
         }

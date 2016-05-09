@@ -27,6 +27,12 @@ public class OrderKey implements Serializable {
     public OrderKey() {
     }
 
+    public OrderKey(String key) {
+        String[] ar = key.split(":");
+        this.type = ar[0];
+        this.sn = ar[1];
+    }
+
     public OrderKey(String type, String sn) {
         super();
         this.type = type;

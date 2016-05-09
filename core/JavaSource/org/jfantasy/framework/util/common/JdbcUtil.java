@@ -14,6 +14,7 @@ import org.springframework.transaction.support.DefaultTransactionDefinition;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+@Deprecated
 public abstract class JdbcUtil extends JdbcUtils {
 
     private static Log logger = LogFactory.getLog(JdbcUtil.class);

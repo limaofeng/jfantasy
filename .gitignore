@@ -3,6 +3,7 @@
 /javaweb/WebContent/WEB-INF/index
 *.class
 .idea
+.gradle
 # Package Files #
 *.jar
 *.war

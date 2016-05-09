@@ -62,7 +62,7 @@ public class PaymentService {
 
         BigDecimal amountPayable = order.getPayableFee();//应付金额（含支付手续费）
 
-        List<Payment> payments = this.paymentDao.find(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("orderType", order.getType()), Restrictions.eq("orderSn", order.getSn()));
+        List<Payment> payments = this.paymentDao.find(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("order.type", order.getType()), Restrictions.eq("order.sn", order.getSn()));
         // 如果存在完成订单
         Payment payment = ObjectUtil.find(payments, "status", PaymentStatus.success);
         if (payment != null && payment.getTotalAmount().subtract(payment.getPaymentFee()).compareTo(amountPayable) == 0) {//订单已支付完成

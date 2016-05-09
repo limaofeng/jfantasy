@@ -113,7 +113,7 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
                 if (!SpringContextUtil.startup()) {
                     continue;
                 }
-                LuceneDao dao = new HibernateLuceneDao((HibernateDao) SpringContextUtil.getBeanByType(clazz));
+                LuceneDao dao = createHibernateLuceneDao(entityClass.getSimpleName(), (HibernateDao) SpringContextUtil.getBeanByType(clazz));
                 indexedClasses.add(entityClass);
                 DaoCache.getInstance().put(entityClass, dao);
             }
@@ -133,6 +133,10 @@ public class BuguIndex implements ApplicationListener<ContextRefreshedEvent> {
             }, 1000 * 10);
         }
         LOG.debug("Started Lucene in {} ms", watch.getTotalTimeMillis());
+    }
+
+    private static LuceneDao createHibernateLuceneDao(String name, HibernateDao hibernateDao) {
+        return SpringContextUtil.registerBeanDefinition(name + "HibernateLuceneDao", HibernateLuceneDao.class, new Object[]{hibernateDao});
     }
 
     public void rebuild() {

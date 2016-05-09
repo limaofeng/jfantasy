@@ -4,6 +4,7 @@ import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.lang.StringUtils;
+import org.jfantasy.framework.util.common.ClassUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -132,44 +133,14 @@ public class ReflectionUtils {
         return getInterfaceGenricType(clazz, interfaceClazz, 0);
     }
 
-    public static Class getInterfaceGenricType(Class clazz, Class interfaceClazz, int index) {
-        Type[] genTypes = clazz.getGenericInterfaces();
-        for (Type genType : genTypes) {
-            if (!(genType instanceof ParameterizedType)) {
-                return Object.class;
-            }
-            if (interfaceClazz.equals(((ParameterizedType) genType).getRawType())) {
-                Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
-                if ((index >= params.length) || (index < 0)) {
-                    LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
-                    return Object.class;
-                }
-                if (!(params[index] instanceof Class<?>)) {
-                    LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
-                    return Object.class;
-                }
-                return (Class<?>) params[index];
-            }
-        }
-        return Object.class;
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getInterfaceGenricType(Class clazz, Class interfaceClazz, int index) {
+        return ClassUtil.getInterfaceGenricType(clazz,interfaceClazz,index);
     }
 
-    public static Class getSuperClassGenricType(Class clazz, int index) {
-        Type genType = clazz.getGenericSuperclass();
-        if (!(genType instanceof ParameterizedType)) {
-            LOGGER.warn(clazz.getSimpleName() + "'s superclass not ParameterizedType");
-            return Object.class;
-        }
-        Type[] params = ((ParameterizedType) genType).getActualTypeArguments();
-        if ((index >= params.length) || (index < 0)) {
-            LOGGER.warn("Index: " + index + ", Size of " + clazz.getSimpleName() + "'s Parameterized Type: " + params.length);
-            return Object.class;
-        }
-        if (!(params[index] instanceof Class<?>)) {
-            LOGGER.warn(clazz.getSimpleName() + " not set the actual class on superclass generic parameter");
-            return Object.class;
-        }
-        return (Class<?>) params[index];
+    @SuppressWarnings("unchecked")
+    public static <T> Class<T> getSuperClassGenricType(Class clazz, int index) {
+        return ClassUtil.getSuperClassGenricType(clazz,index);
     }
 
     public static List<Object> convertElementPropertyToList(Collection<Object> collection, String propertyName) {

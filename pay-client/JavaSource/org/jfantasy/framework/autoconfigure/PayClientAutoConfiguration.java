@@ -2,13 +2,16 @@ package org.jfantasy.framework.autoconfigure;
 
 import org.jfantasy.pay.ons.Consumer;
 import org.jfantasy.pay.order.OrderServiceRegistry;
+import org.jfantasy.pay.order.OrderServiceRegistryRunner;
 import org.jfantasy.rpc.client.NettyClientFactory;
 import org.jfantasy.rpc.proxy.RpcProxyFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
 @Configuration
+@Import(OrderServiceRegistryRunner.class)
 public class PayClientAutoConfiguration {
 
     @Value("${pay.server.host:127.0.0.1}")

@@ -63,13 +63,13 @@ public class PayService {
                 throw new RestException("orderType[" + orderType + "] 对应的 PaymentOrderService 未配置！");
             }
             //获取订单信息
-            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(orderSn);
+            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key.toString());
             if(orderDetails == null){
                 throw new RestException("order = [" + key + "] 不存在,请核对后,再继续操作!");
             }
             order = orderService.save(orderDetails);
         }else {
-            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(orderSn);
+            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key.toString());
         }
         if (!orderDetails.isPayment()) {
             throw new RestException("业务系统异常,不能继续支付");

@@ -1,7 +1,9 @@
 package org.jfantasy.framework.spring.config;
 
+import org.apache.lucene.analysis.Analyzer;
 import org.jfantasy.framework.dao.mybatis.keygen.util.DataBaseKeyGenerator;
 import org.jfantasy.framework.lucene.BuguIndex;
+import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.PropertiesHelper;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Value;
@@ -80,15 +82,19 @@ public class AppConfig {
         return poolTaskExecutor;
     }
 
-    @Bean
+    @Bean(initMethod = "open", destroyMethod = "close")
     public BuguIndex buguIndex() {
         PropertiesHelper helper = PropertiesHelper.load("props/lucene.properties");
 
         BuguIndex buguIndex = new BuguIndex();
-        buguIndex.setBasePackage(StringUtil.join(helper.getMergeProperty("base.package"), ";"));
-        buguIndex.setDirectoryPath(helper.getProperty("index.path"));
+        if (StringUtil.isNotBlank(helper.getProperty("indexes.analyzer"))) {
+            buguIndex.setAnalyzer((Analyzer) ClassUtil.newInstance(helper.getProperty("indexes.analyzer")));
+        }
+        buguIndex.setBasePackage(StringUtil.join(helper.getMergeProperty("indexes.scan.package"), ";"));
+        buguIndex.setDirectoryPath(helper.getProperty("indexes.storage.path"));
+        buguIndex.setIndexReopenPeriod(helper.getLong("indexes.reopen.reriod",30000L));
         buguIndex.setExecutor(taskExecutor());
-        buguIndex.setRebuild(true);
+        buguIndex.setRebuild(helper.getBoolean("indexes.rebuild", false));
         return buguIndex;
     }
 

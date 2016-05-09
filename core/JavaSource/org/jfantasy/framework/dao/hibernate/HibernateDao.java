@@ -47,15 +47,21 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     protected Log LOG = LogFactory.getLog(getClass());
     protected SessionFactory sessionFactory;
     protected Class<T> entityClass;
+    protected Class<PK> idClass;
 
     private final static String LOG_MESSAGE_NULL = "entity不能为空";
 
     public HibernateDao() {
         this.entityClass = ReflectionUtils.getSuperClassGenricType(getClass());
+        this.idClass = ReflectionUtils.getSuperClassGenricType(getClass(), 1);
     }
 
     public Class<T> getEntityClass(){
         return this.entityClass;
+    }
+
+    public Class<PK> getIdClass(){
+        return this.idClass;
     }
 
     @Autowired
