@@ -1,7 +1,7 @@
 package org.jfantasy.pay.order;
 
 import org.jfantasy.pay.order.entity.OrderKey;
-import org.jfantasy.pay.order.entity.Refund;
+import org.jfantasy.pay.order.entity.RefundDetails;
 
 import java.math.BigDecimal;
 
@@ -18,6 +18,6 @@ public interface OrderProcessor {
      * @param remark 描述
      * @return Refund
      */
-    Refund refund(OrderKey key, BigDecimal amount, String remark);
+    RefundDetails refund(OrderKey key, BigDecimal amount, String remark);
 
 }

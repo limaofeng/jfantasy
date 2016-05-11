@@ -2,11 +2,9 @@ package org.jfantasy.pay.order;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.pay.order.entity.enums.PaymentStatus;
-import org.jfantasy.pay.order.entity.enums.RefundStatus;
+import org.jfantasy.pay.bean.OrderServer;
+import org.jfantasy.pay.service.OrderServerService;
 import org.jfantasy.rpc.annotation.ServiceExporter;
-import org.jfantasy.rpc.client.NettyClientFactory;
-import org.jfantasy.rpc.proxy.RpcProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @ServiceExporter(targetInterface = OrderServiceRegistry.class)
@@ -14,25 +12,19 @@ public class OrderServiceRegistryImpl implements OrderServiceRegistry {
 
     private final static Log LOG = LogFactory.getLog(OrderServiceRegistryImpl.class);
 
-    /**
-     * OrderServiceFactory
-     */
     @Autowired
-    private OrderServiceFactory orderServiceFactory;
-    /**
-     * 创建 OrderService 的超时时间
-     */
-    private long timeoutInMillis = 1000;
+    private OrderServerService orderServerService;
 
     @Override
-    public void register(String name, String description, String host, int port) {
-        //TODO 将 OrderServiceRegistry 写入到数据库中
-        RpcProxyFactory rpcProxyFactory = new RpcProxyFactory(new NettyClientFactory(host, port));
-        OrderService orderService = rpcProxyFactory.proxyBean(OrderService.class, timeoutInMillis);
-        orderServiceFactory.register(orderService.types(), orderService);
-        orderService.on("test:t000001", PaymentStatus.close, "");
-        orderService.on("test:t000001", RefundStatus.failure, "");
-        LOG.debug(" OrderService " + name + " register success !");
+    public void register(String type, String title, String description, String host, int port) {
+        orderServerService.save(OrderServer.CallType.rpc, type, host + ":" + port, title, description);
+    }
+
+    @Override
+    public void register(String[] types, String title, String description, String host, int port) {
+        for (String type : types) {
+            this.register(type, title, description, host, port);
+        }
     }
 
 }

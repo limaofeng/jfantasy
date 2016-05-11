@@ -14,7 +14,7 @@ import java.math.BigDecimal;
  * @version 1.0
  * @since 2013-12-5 上午9:22:59
  */
-public class Payment implements Serializable {
+public class PaymentDetails implements Serializable {
 
     private static final long serialVersionUID = 6404772131152718534L;
 
@@ -78,6 +78,8 @@ public class Payment implements Serializable {
      */
     @ApiModelProperty("支付状态")
     private PaymentStatus status;
+
+    private OrderKey orderKey;
 
     public String getSn() {
         return sn;
@@ -173,5 +175,13 @@ public class Payment implements Serializable {
 
     public void setPayConfigId(String payConfigId) {
         this.payConfigId = payConfigId;
+    }
+
+    public OrderKey getOrderKey() {
+        return orderKey;
+    }
+
+    public void setOrderKey(OrderKey orderKey) {
+        this.orderKey = orderKey;
     }
 }

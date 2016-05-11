@@ -8,11 +8,23 @@ public interface OrderServiceRegistry {
     /**
      * 向支付中心注册 OrderService
      *
+     * @param type       处理的订单类型
      * @param title       接入方名称
      * @param description 接入方描述
      * @param host        服务地址
      * @param port        服务IP
      */
-    void register(String title, String description, String host, int port);
+    void register(String type, String title, String description, String host, int port);
+
+    /**
+     * 向支付中心注册 OrderService
+     *
+     * @param types       处理的订单类型
+     * @param title       接入方名称
+     * @param description 接入方描述
+     * @param host        服务地址
+     * @param port        服务IP
+     */
+    void register(String[] types, String title, String description, String host, int port);
 
 }

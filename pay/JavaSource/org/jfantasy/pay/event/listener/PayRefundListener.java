@@ -1,6 +1,5 @@
 package org.jfantasy.pay.event.listener;
 
-import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.event.PayRefundNotifyEvent;
@@ -36,15 +35,9 @@ public abstract class PayRefundListener implements SmartApplicationListener {
         if (!supportsOrderType(order.getType())) {
             return;
         }
-        if (RefundStatus.success == payContext.getRefund().getStatus()) {
-            this.success(refund, order);
-        } else if (RefundStatus.failure == payContext.getRefund().getStatus()) {
-            this.failure(refund, order);
-        }
+        this.on(refund, order);
     }
 
-    public abstract void success(Refund refund, Order order);
-
-    public abstract void failure(Refund refund, Order order);
+    public abstract void on(Refund refund, Order order);
 
 }

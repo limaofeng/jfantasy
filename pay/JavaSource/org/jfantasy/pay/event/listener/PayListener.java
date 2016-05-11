@@ -1,6 +1,5 @@
 package org.jfantasy.pay.event.listener;
 
-import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.event.PayNotifyEvent;
@@ -40,15 +39,9 @@ public abstract class PayListener implements SmartApplicationListener {
         if (!supportsOrderType(order.getType())) {
             return;
         }
-        if (PaymentStatus.success == payContext.getPayment().getStatus()) {
-            this.success(payment, order);
-        } else if (PaymentStatus.failure == payContext.getPayment().getStatus()) {
-            this.failure(payment, order);
-        }
+        this.on(payment, order);
     }
 
-    public abstract void success(Payment payment, Order order);
-
-    public abstract void failure(Payment payment, Order order);
+    public abstract void on(Payment payment, Order order);
 
 }

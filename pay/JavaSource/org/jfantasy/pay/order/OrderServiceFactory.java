@@ -55,4 +55,8 @@ public class OrderServiceFactory implements ApplicationContextAware {
     public boolean containsType(String type) {
         return this.orderServiceMap.containsKey(type.toLowerCase());
     }
+
+    public void unregister(String type) {
+        this.orderServiceMap.remove(type);
+    }
 }

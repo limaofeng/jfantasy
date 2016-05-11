@@ -21,9 +21,12 @@ public class OrderServiceRegistryRunner implements CommandLineRunner {
     @Autowired
     private OrderServiceRegistry orderServiceRegistry;
 
+    @Autowired
+    private OrderService orderService;
+
     @Override
     public void run(String... args) throws Exception {
-        orderServiceRegistry.register(this.title, this.description, this.host, this.port);
+        orderServiceRegistry.register(orderService.types(), this.title, this.description, this.host, this.port);
     }
 
 }

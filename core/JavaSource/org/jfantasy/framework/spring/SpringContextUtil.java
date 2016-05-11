@@ -233,10 +233,11 @@ public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,Ap
         applicationContext = null;
     }
 
-    public static synchronized void registerBeanDefinition(String beanName, Class<?> clazz) {
+    public static synchronized <T> T registerBeanDefinition(String beanName, Class<?> clazz) {
         BeanDefinitionBuilder beanDefinitionBuilder = BeanDefinitionBuilder.genericBeanDefinition(clazz);
         beanDefinitionBuilder.setAutowireMode(AutoType.AUTOWIRE_BY_TYPE.getValue());
         registry.registerBeanDefinition(beanName, beanDefinitionBuilder.getBeanDefinition());
+        return getBean(beanName);
     }
 
     public static <T> T registerBeanDefinition(String beanName, Class<?> clazz, Object[] argValues) {

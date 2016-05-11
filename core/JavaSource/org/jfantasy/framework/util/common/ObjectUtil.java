@@ -284,6 +284,10 @@ public final class ObjectUtil {
         return null;
     }
 
+    public static <T> boolean exists(List<T> list, String field, Object value) {
+        return find(list,field,value) != null;
+    }
+
     public static <T> T find(List<T> list, Expression exper, Object value) {
         if (list == null) {
             return null;

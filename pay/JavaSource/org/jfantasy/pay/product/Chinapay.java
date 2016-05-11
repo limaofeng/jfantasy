@@ -8,14 +8,13 @@ import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.util.HandlebarsTemplateUtils;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.pay.order.entity.enums.PaymentStatus;
-import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.product.sign.SignUtil;
 import org.jfantasy.pay.product.util.CertUtil;
 import org.jfantasy.pay.product.util.RAMFileProxy;
@@ -112,8 +111,8 @@ public class Chinapay extends PayProductSupport {
     }
 
     @Override
-    public Payment payNotify(Payment payment, String result) throws PayException {
-        Map<String, String> data = WebUtil.parseQuery(result, true);
+    public Object payNotify(Payment payment, String result) throws PayException {
+        Map<String, String> data = SignUtil.parseQuery(result, true);
         //支付配置
         PayConfig config = payment.getPayConfig();
 
@@ -128,7 +127,7 @@ public class Chinapay extends PayProductSupport {
 
             payment.setTradeNo(data.get("AcqSeqId"));
 
-            return payment;
+            return null;
 
         } finally {//记录支付通知日志
             this.log("in", "notify", payment, config, result);
@@ -136,8 +135,8 @@ public class Chinapay extends PayProductSupport {
     }
 
     @Override
-    public Refund payNotify(Refund refund, String result) throws PayException {
-        Map<String, String> data = WebUtil.parseQuery(result, true);
+    public Object payNotify(Refund refund, String result) throws PayException {
+        Map<String, String> data = SignUtil.parseQuery(result, true);
         //支付配置
         PayConfig config = refund.getPayConfig();
 
@@ -152,7 +151,7 @@ public class Chinapay extends PayProductSupport {
 
             refund.setTradeNo(data.get("AcqSeqId"));
 
-            return refund;
+            return null;
 
         } finally {//记录退款通知日志
             this.log("in", "notify", refund, config, result);
@@ -165,7 +164,6 @@ public class Chinapay extends PayProductSupport {
             PayConfig config = payment.getPayConfig();
             String merId = config.getBargainorId();//商户号
             //签名证书
-            //config.getSignCert()
             KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config, "signCert"), config.getBargainorKey());
             String certPwd = config.getBargainorKey();//签名证书密码
 
@@ -182,7 +180,8 @@ public class Chinapay extends PayProductSupport {
 
             Response response = HttpClientUtil.doPost(urls.getQueryTransUrl(), data);
 
-            Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);
+            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);
+
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }
@@ -241,7 +240,8 @@ public class Chinapay extends PayProductSupport {
 
             Response response = HttpClientUtil.doPost(url, data);
 
-            Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);
+            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);
+
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }

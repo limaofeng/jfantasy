@@ -3,7 +3,7 @@ package org.jfantasy.pay.order;
 
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.pay.order.entity.OrderKey;
-import org.jfantasy.pay.order.entity.Refund;
+import org.jfantasy.pay.order.entity.RefundDetails;
 import org.jfantasy.pay.service.RefundService;
 import org.jfantasy.rpc.annotation.ServiceExporter;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,8 +17,8 @@ public class OrderProcessorImpl implements OrderProcessor {
     private RefundService refundService;
 
     @Override
-    public Refund refund(OrderKey key, BigDecimal amount, String remark) {
-        return BeanUtil.copyProperties(new Refund(), refundService.ready(key, amount, remark));
+    public RefundDetails refund(OrderKey key, BigDecimal amount, String remark) {
+        return BeanUtil.copyProperties(new RefundDetails(), refundService.ready(key, amount, remark));
     }
 
 }

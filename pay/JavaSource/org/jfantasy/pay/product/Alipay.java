@@ -32,8 +32,8 @@ public class Alipay extends AlipayPayProductSupport {
         }
     };
 
-    private final List<BankCode> creditBankCodes = new LinkedList<BankCode>();
-    private final List<BankCode> debitBankCodes = new LinkedList<BankCode>();
+    private final List<BankCode> creditBankCodes = new LinkedList<>();
+    private final List<BankCode> debitBankCodes = new LinkedList<>();
 
     {
         //银行简码——混合渠道
@@ -82,7 +82,7 @@ public class Alipay extends AlipayPayProductSupport {
     @Override
     public String web(Payment payment, Order order, Properties properties) throws PayException {
         PayConfig config = payment.getPayConfig();
-        final Map<String, String> data = new TreeMap<String, String>();
+        final Map<String, String> data = new TreeMap<>();
         try {
             // 常规参数
             data.put("service", "create_direct_pay_by_user");// 接口类型（create_direct_pay_by_user：即时交易）
@@ -144,16 +144,18 @@ public class Alipay extends AlipayPayProductSupport {
     public String payNotify(Payment payment, String result) throws PayException {
         PayConfig config = payment.getPayConfig();
 
-        Map<String, String> privateKeys = new HashMap<String, String>();
+        Map<String, String> privateKeys = new HashMap<>();
         privateKeys.put("MD5", config.getBargainorKey());
-        privateKeys.put("RSA", "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB");
+        privateKeys.put("RSA", config.get("rsaPublicKey",String.class));
 
+        //"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB"
         try {
-            Map<String, String> appdata = new HashMap<String, String>();
+            Map<String, String> appdata = new HashMap<>();
             if (result.contains("result")) {//为手机同步支付通知
                 if (RegexpUtil.isMatch(result, "^\\{(.*)\\}$")) { // ios 先去掉 首尾 的括号
                     result = RegexpUtil.parseGroup(result, "^\\{(.*)\\}$", 1);
                 }
+                assert result != null;
                 for (String _ps : result.split(";")) {
                     String key = _ps.substring(0, _ps.indexOf("="));
                     String value = _ps.substring(_ps.indexOf("=") + 1);
@@ -182,6 +184,7 @@ public class Alipay extends AlipayPayProductSupport {
             payment.setTradeNo(data.get("trade_no"));
             if ("WAIT_BUYER_PAY".equals(data.get("trade_status"))) {//交易创建，等待买家付款。
                 //TODO 如果有支付过期定时器的话,现在可以启动了
+                LOG.debug("WAIT_BUYER_PAY ... ");
             } else if ("TRADE_SUCCESS".equals(data.get("trade_status"))) {//交易成功，且可对该交易做操作，如：多级分润、退款等。
                 payment.setStatus(PaymentStatus.success);
             } else if ("TRADE_FINISHED".equals(data.get("trade_status"))) {//交易成功且结束，即不可再做任何操作。
@@ -200,7 +203,7 @@ public class Alipay extends AlipayPayProductSupport {
         PayConfig config = refund.getPayConfig();
         Payment payment = refund.getPayment();
 
-        Map<String, String> data = new TreeMap<String, String>();
+        Map<String, String> data = new TreeMap<>();
         try {
             data.put("service", "refund_fastpay_by_platform_pwd");
             data.put("partner", config.getBargainorId());

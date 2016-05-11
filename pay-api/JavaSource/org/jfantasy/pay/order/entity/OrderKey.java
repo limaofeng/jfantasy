@@ -15,22 +15,21 @@ public class OrderKey implements Serializable {
         return new OrderKey(type, sn);
     }
 
+    public static OrderKey newInstance(String key) {
+        String[] ar = key.split(":");
+        return new OrderKey(ar[0],ar[1]);
+    }
+
     /**
      * 虚拟文件路径
      */
-    @Column(name = "TYPE", nullable = false, insertable = true, updatable = true, length = 250)
+    @Column(name = "TYPE", nullable = false, updatable = false, length = 250)
     private String type;
 
-    @Column(name = "SN", nullable = false, insertable = true, updatable = false, length = 50)
+    @Column(name = "SN", nullable = false, updatable = false, length = 50)
     private String sn;
 
     public OrderKey() {
-    }
-
-    public OrderKey(String key) {
-        String[] ar = key.split(":");
-        this.type = ar[0];
-        this.sn = ar[1];
     }
 
     public OrderKey(String type, String sn) {

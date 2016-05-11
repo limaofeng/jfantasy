@@ -8,7 +8,6 @@ import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
@@ -129,7 +128,7 @@ public class Unionpay extends PayProductSupport {
             }
 
             //验签
-            Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);// 将返回结果转换为map
+            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);// 将返回结果转换为map
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert")))) {//验证签名
                 throw new PayException("验证签名失败");
             }
@@ -147,14 +146,14 @@ public class Unionpay extends PayProductSupport {
         PublicKey publicKey = CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert"));
 
         try {
-            Map<String, String> data = (Map<String, String>) (result.startsWith("{") && result.endsWith("}") ? JSON.deserialize(result) : WebUtil.parseQuery(result, true));
+            Map<String, String> data = (Map<String, String>) (result.startsWith("{") && result.endsWith("}") ? JSON.deserialize(result) : SignUtil.parseQuery(result, true));
             //手机支付通知
             boolean isAppNotify = data.containsKey("sign");
             if (!(isAppNotify && verify(data.get("data"), data.get("sign"), publicKey) || verify(data, publicKey))) {//验证签名
                 throw new PayException("验证签名失败");
             }
             if (isAppNotify) {
-                Map<String, String> payresult = WebUtil.parseQuery(data.get("data"), true);
+                Map<String, String> payresult = SignUtil.parseQuery(data.get("data"), true);
                 if (!StringUtil.nullValue(payresult.get("tn")).equals(payment.getTradeNo())) {
                     throw new PayException("通知与订单不匹配");
                 }
@@ -213,7 +212,7 @@ public class Unionpay extends PayProductSupport {
 
             Response response = HttpClientUtil.doPost(urls.getQueryTransUrl(), data);
 
-            Map<String, String> result = WebUtil.parseQuery(response.getBody(), true);
+            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert")))) {
                 throw new PayException("验证签名失败");
             }

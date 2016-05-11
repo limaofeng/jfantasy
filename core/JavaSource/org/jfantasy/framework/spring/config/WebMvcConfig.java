@@ -104,8 +104,8 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
 
     private ObjectMapper objectMapper() {
         ObjectMapper objectMapper = JSON.getObjectMapper();
-        PropertiesHelper helper = PropertiesHelper.load("application-sub.properties");
-        Set<String> packages = new HashSet<String>();
+        PropertiesHelper helper = PropertiesHelper.load("application.properties");
+        Set<String> packages = new HashSet<>();
         for (String _packages : helper.getMergeProperty("spring.jackson.mixin.packages")) {
             packages.addAll(Arrays.asList(StringUtil.tokenizeToStringArray(_packages)));
         }

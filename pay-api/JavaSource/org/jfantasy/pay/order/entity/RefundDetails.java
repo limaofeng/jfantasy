@@ -15,13 +15,13 @@ import java.util.Date;
  * @version 1.0
  * @since 2013-12-5 上午9:22:39
  */
-public class Refund implements Serializable {
+public class RefundDetails implements Serializable {
 
     private static final long serialVersionUID = -2533117666249761057L;
 
-    public Refund() {
+    public RefundDetails() {
     }
-
+    private OrderKey orderKey;
     private String sn;// 退款编号
     private RefundType type;// 退款类型
     @ApiModelProperty("退款状态")
@@ -52,7 +52,7 @@ public class Refund implements Serializable {
      * 原支付交易
      */
     @ApiModelProperty("原支付交易")
-    private Payment payment;
+    private PaymentDetails payment;
     /**
      * 创建人
      */
@@ -208,12 +208,19 @@ public class Refund implements Serializable {
         this.status = status;
     }
 
-    public Payment getPayment() {
+    public PaymentDetails getPayment() {
         return payment;
     }
 
-    public void setPayment(Payment payment) {
+    public void setPayment(PaymentDetails payment) {
         this.payment = payment;
     }
 
+    public OrderKey getOrderKey() {
+        return orderKey;
+    }
+
+    public void setOrderKey(OrderKey orderKey) {
+        this.orderKey = orderKey;
+    }
 }

@@ -1,6 +1,9 @@
 package org.jfantasy.framework.autoconfigure;
 
-import org.jfantasy.pay.ons.Consumer;
+import com.aliyun.openservices.ons.api.MessageListener;
+import com.aliyun.openservices.ons.api.bean.ConsumerBean;
+import com.aliyun.openservices.ons.api.bean.Subscription;
+import org.jfantasy.pay.ons.PayMessageListener;
 import org.jfantasy.pay.order.OrderServiceRegistry;
 import org.jfantasy.pay.order.OrderServiceRegistryRunner;
 import org.jfantasy.rpc.client.NettyClientFactory;
@@ -9,6 +12,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+
+import java.util.Map;
+import java.util.HashMap;
+import java.util.Properties;
 
 @Configuration
 @Import(OrderServiceRegistryRunner.class)
@@ -25,9 +32,33 @@ public class PayClientAutoConfiguration {
         return rpcProxyFactory.proxyBean(OrderServiceRegistry.class, 10000);
     }
 
-    @Bean(initMethod = "start")
-    public Consumer consumer(){
-        return new Consumer();
+    @Value("${aliyun.ons.consumerId:PID-20160428}")
+    private String producerId;
+    @Value("${aliyun.ons.accessKey:GjYnEEMsLVTomMzF}")
+    private String accessKey;
+    @Value("${aliyun.ons.secretKey:rYSFhN67iXR0vl0pUSatSQjEqR2e2F}")
+    private String secretKey;
+
+    @Bean(initMethod = "start", destroyMethod = "shutdown")
+    public ConsumerBean consumer() {
+        ConsumerBean consumerBean = new ConsumerBean();
+        Properties properties = new Properties();
+        properties.setProperty("ConsumerId", producerId);
+        properties.setProperty("AccessKey", accessKey);
+        properties.setProperty("SecretKey", secretKey);
+        consumerBean.setProperties(properties);
+        Map<Subscription, MessageListener> subscriptionTable = new HashMap<Subscription, MessageListener>();
+        Subscription key = new Subscription();
+        key.setTopic("TopicTestONS1985");
+        key.setExpression("pay");
+        subscriptionTable.put(key, payMessageListener());
+        consumerBean.setSubscriptionTable(subscriptionTable);
+        return consumerBean;
+    }
+
+    @Bean
+    public PayMessageListener payMessageListener() {
+        return new PayMessageListener();
     }
 
 }

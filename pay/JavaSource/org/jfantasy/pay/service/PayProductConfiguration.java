@@ -1,6 +1,7 @@
 package org.jfantasy.pay.service;
 
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.pay.bean.ExtProperty;
 import org.jfantasy.pay.product.*;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -27,10 +28,10 @@ public class PayProductConfiguration implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet()  {
+    public void afterPropertiesSet() {
 
         //支付宝即时交易
-        if (ObjectUtil.find(this.payProducts, "id", "alipayDirect") == null) {
+        if (!ObjectUtil.exists(this.payProducts, "id", "alipayDirect")) {
             Alipay alipay = new Alipay();
             alipay.setId("alipayDirect");
             alipay.setName("支付宝");
@@ -39,9 +40,7 @@ public class PayProductConfiguration implements InitializingBean {
             alipay.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
             alipay.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
             alipay.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-//            Properties properties = new Properties();
-//            properties.put(AlipayPayProductSupport.EXTRA_PROPERTY_SELLER_EMAIL, "支付宝账号");
-//            alipay.setExtPropertys(properties);
+            alipay.set(AlipayPayProductSupport.EXT_SELLER_EMAIL, ExtProperty.Builder.property(AlipayPayProductSupport.EXT_SELLER_EMAIL, "支付宝账号").build());
             this.payProducts.add(alipay);
         }
 
@@ -115,7 +114,7 @@ public class PayProductConfiguration implements InitializingBean {
         }*/
 
         //银联电子支付
-        if (ObjectUtil.find(this.payProducts, "id", "chinapay") == null) {
+        if (!ObjectUtil.exists(this.payProducts, "id", "chinapay")) {
             Chinapay chinapay = new Chinapay();
             chinapay.setId("chinapay");
             chinapay.setName("银联电子支付");
@@ -128,7 +127,7 @@ public class PayProductConfiguration implements InitializingBean {
         }
 
         //银联支付
-        if (ObjectUtil.find(this.payProducts, "id", "unionpay") == null) {
+        if (!ObjectUtil.exists(this.payProducts, "id", "unionpay")) {
             Unionpay unionpay = new Unionpay();
             unionpay.setId("unionpay");
             unionpay.setName("银联支付");
@@ -138,6 +137,21 @@ public class PayProductConfiguration implements InitializingBean {
             unionpay.setLogoPath("");
             unionpay.setDescription("");
             this.payProducts.add(unionpay);
+        }
+
+        //微信支付
+        if (!ObjectUtil.exists(this.payProducts, "id", "weixinpay")) {
+            Weixinpay weixinpay = new Weixinpay();
+            weixinpay.setId("weixinpay");
+            weixinpay.setName("微信支付");
+            weixinpay.setBargainorIdName("商户号");
+            weixinpay.setBargainorKeyName("API密钥");
+            weixinpay.set("appid", ExtProperty.Builder.property("appid", "APPID").build());
+            weixinpay.set("encryptCert", ExtProperty.Builder.property("encryptCert", "SSL双向认证证书").build());
+            weixinpay.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
+            weixinpay.setLogoPath("");
+            weixinpay.setDescription("");
+            this.payProducts.add(weixinpay);
         }
 
     }

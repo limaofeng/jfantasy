@@ -2,6 +2,10 @@ package org.jfantasy.pay.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.pay.bean.Order;
+import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.rest.form.PayForm;
@@ -26,6 +30,7 @@ public class PayController {
     @Autowired
     private RefundService refundService;
 
+    @JsonIgnoreProperties({@IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig"})})
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -33,6 +38,7 @@ public class PayController {
         return payService.pay(payForm.getPayconfigId(), payForm.getPayType(), payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayer(), payForm.getProperties());
     }
 
+    @JsonIgnoreProperties({@IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})})
     @ApiOperation("支付退款")
     @RequestMapping(value = "/{sn}/refund", method = RequestMethod.POST)
     @ResponseBody
@@ -40,6 +46,11 @@ public class PayController {
         return payService.refund(paymentService.get(sn), refundForm.getAmount(), refundForm.getRemark());
     }
 
+    @JsonIgnoreProperties({
+            @IgnoreProperty(pojo = Order.class, name = {"payConfig"}),
+            @IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig"}),
+            @IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})
+    })
     @ApiOperation(value = "支付通知", notes = "用于第三方支付通知系统")
     @RequestMapping(value = "/{sn}/notify", method = RequestMethod.POST)
     @ResponseBody
