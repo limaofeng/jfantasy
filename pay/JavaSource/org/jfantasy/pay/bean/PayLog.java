@@ -1,63 +1,46 @@
 package org.jfantasy.pay.bean;
 
+import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.pay.product.PayType;
 
 import javax.persistence.*;
 
-//@Table(name = "PAY_CONFIG")
+@Table(name = "PAY_Log")
 public class PayLog extends BaseBusEntity {
 
-    public enum Type {
-        /**
-         * 第三方支付发过来的消息或者回复的报文
-         */
-        in,
-        /**
-         * 发出去的报文
-         */
-        out;
-
+    public enum LogType {
+        payment, refund
     }
 
     @Id
-    @Column(name = "ID", insertable = true, updatable = false)
+    @Column(name = "ID", updatable = false)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
     /**
-     * 支付产品
-     */
-    @Column(name = "PAY_PRODUCT_ID", updatable = false)
-    private String payProductId;
-    /**
-     * 支付产品
-     */
-    @Column(name = "PAY_CONFIG_ID", updatable = false)
-    private PayConfig payConfig;
-    /**
-     * 支付详情
-     */
-    @Column(name = "PAYMENT_ID", updatable = false)
-    private String Payment;
-    /**
-     * 报文类型
+     * 日志类型
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE", length = 20)
-    private Type type;
+    @Column(name = "TYPE", updatable = false)
+    private LogType type;
     /**
-     * 交易类型
+     * 目标ID (支付或者退款)
      */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "PAY_TYPE", length = 20)
-    private PayType payType;
+    @Column(name = "TARGET_ID", updatable = false)
+    private String targetId;
     /**
-     * 报文主体
+     * 消息内容
      */
-    @Column(name = "BODY", length = 2000)
+    @Column(name = "BODY", length = 200)
     private String body;
+    /**
+     * 订单详情
+     */
+    @ApiModelProperty("订单详情")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE"), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN")})
+    private Order order;
 
     public Long getId() {
         return id;
@@ -67,38 +50,6 @@ public class PayLog extends BaseBusEntity {
         this.id = id;
     }
 
-    public String getPayProductId() {
-        return payProductId;
-    }
-
-    public void setPayProductId(String payProductId) {
-        this.payProductId = payProductId;
-    }
-
-    public String getPayment() {
-        return Payment;
-    }
-
-    public void setPayment(String payment) {
-        Payment = payment;
-    }
-
-    public Type getType() {
-        return type;
-    }
-
-    public void setType(Type type) {
-        this.type = type;
-    }
-
-    public PayType getPayType() {
-        return payType;
-    }
-
-    public void setPayType(PayType payType) {
-        this.payType = payType;
-    }
-
     public String getBody() {
         return body;
     }
@@ -106,4 +57,21 @@ public class PayLog extends BaseBusEntity {
     public void setBody(String body) {
         this.body = body;
     }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
+    }
+
+    public Order getOrder() {
+        return order;
+    }
+
+    public void setOrder(Order order) {
+        this.order = order;
+    }
+
 }

@@ -118,6 +118,7 @@ public class Weixinpay extends PayProductSupport {
                 throw new RestException("微信返回的响应签名错误");
             }
             payment.setTradeNo(data.get("transaction_id"));
+            payment.setTradeTime(DateUtil.now());
             payment.setStatus("SUCCESS".equals(data.get("result_code")) ? PaymentStatus.success : PaymentStatus.failure);
 
             data.clear();
@@ -131,7 +132,7 @@ public class Weixinpay extends PayProductSupport {
     }
 
     @Override
-    public Refund refund(Refund refund) {
+    public String refund(Refund refund) {
         PayConfig config = refund.getPayConfig();
         Payment payment = refund.getPayment();
         try {
@@ -175,7 +176,7 @@ public class Weixinpay extends PayProductSupport {
             refund.setTradeNo(data.get("refund_id"));
 
             //TODO 微信退款是否成功必须调用退款查询接口, 提交退款申请后，通过调用该接口查询退款状态。退款有一定延时，用零钱支付的退款20分钟内到账，银行卡支付的退款3个工作日后重新查询退款状态。
-            return refund;
+            return null;
         } catch (IOException e) {
             throw new RestException("调用微信接口,网络错误!");
         } catch (PayException e) {

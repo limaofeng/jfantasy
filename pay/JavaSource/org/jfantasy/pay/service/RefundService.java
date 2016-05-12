@@ -109,4 +109,7 @@ public class RefundService {
         return this.refundDao.findPager(pager, filters);
     }
 
+    public void delete(String... sns) {
+        this.refundDao.delete(sns);
+    }
 }

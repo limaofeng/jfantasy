@@ -11,7 +11,7 @@ public class RefundForm {
 
     @ApiModelProperty(value = "退款金额", required = true)
     private BigDecimal amount;
-    @ApiModelProperty(value = "备注", required = false)
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     public BigDecimal getAmount() {

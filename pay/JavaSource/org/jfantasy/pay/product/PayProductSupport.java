@@ -32,7 +32,7 @@ public abstract class PayProductSupport implements PayProduct {
     protected Map<String, ExtProperty> extPropertys;//自定义的属性
 
     @Override
-    public Refund refund(Refund refund) {
+    public String refund(Refund refund) {
         throw new PayException(this.getName() + " 的退款逻辑未实现");
     }
 

@@ -6,6 +6,7 @@ import org.jfantasy.pay.order.entity.enums.PaymentType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 支付记录
@@ -28,6 +29,9 @@ public class PaymentDetails implements Serializable {
      */
     @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
     private String tradeNo;
+
+    @ApiModelProperty(value = "支付时间",notes = "用于记录第三方交易的交易时间")
+    private Date tradeTime;
     /**
      * 支付类型
      */
@@ -37,7 +41,7 @@ public class PaymentDetails implements Serializable {
      * 支付配置标示
      */
     @ApiModelProperty("支付配置Id")
-    private String payConfigId;
+    private Long payConfigId;
     /**
      * 支付配置名称
      */
@@ -78,6 +82,26 @@ public class PaymentDetails implements Serializable {
      */
     @ApiModelProperty("支付状态")
     private PaymentStatus status;
+    /**
+     * 创建人
+     */
+    @ApiModelProperty(hidden = true)
+    private String creator;
+    /**
+     * 创建时间
+     */
+    @ApiModelProperty(hidden = true)
+    private Date createTime;
+    /**
+     * 最后修改人
+     */
+    @ApiModelProperty(hidden = true)
+    private String modifier;
+    /**
+     * 最后修改时间
+     */
+    @ApiModelProperty(hidden = true)
+    private Date modifyTime;
 
     private OrderKey orderKey;
 
@@ -169,11 +193,11 @@ public class PaymentDetails implements Serializable {
         this.tradeNo = tradeNo;
     }
 
-    public String getPayConfigId() {
+    public Long getPayConfigId() {
         return payConfigId;
     }
 
-    public void setPayConfigId(String payConfigId) {
+    public void setPayConfigId(Long payConfigId) {
         this.payConfigId = payConfigId;
     }
 
@@ -183,5 +207,43 @@ public class PaymentDetails implements Serializable {
 
     public void setOrderKey(OrderKey orderKey) {
         this.orderKey = orderKey;
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
+
+    public Date getCreateTime() {
+        if (this.createTime == null) {
+            return null;
+        }
+        return (Date) this.createTime.clone();
+    }
+
+    public void setCreateTime(Date createTime) {
+        if (createTime == null) {
+            this.createTime = null;
+        } else {
+            this.createTime = (Date) createTime.clone();
+        }
+    }
+
+    public Date getModifyTime() {
+        if (this.modifyTime == null) {
+            return null;
+        }
+        return (Date) this.modifyTime.clone();
+    }
+
+    public void setModifyTime(Date modifyTime) {
+        if (modifyTime == null) {
+            this.modifyTime = null;
+        } else {
+            this.modifyTime = (Date) modifyTime.clone();
+        }
     }
 }

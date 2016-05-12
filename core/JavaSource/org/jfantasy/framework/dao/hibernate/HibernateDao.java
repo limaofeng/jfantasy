@@ -360,15 +360,17 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     /**
      * 通过id删除对象
      *
-     * @param id 通过主键删除
+     * @param ids 通过主键删除
      */
-    public void delete(PK id) {
-        Assert.notNull(id, "id不能为空");
-        T t = get(id);
-        if (t != null) {
+    public final void delete(PK... ids) {
+        for(PK id : ids){
+            T t = get(id);
+            if (t == null) {
+                continue;
+            }
             delete(t);
+            this.LOG.debug("delete entity " + this.entityClass.getSimpleName() + ",id is " + id);
         }
-        this.LOG.debug("delete entity " + this.entityClass.getSimpleName() + ",id is " + id);
     }
 
     /**

@@ -21,6 +21,7 @@ public class RefundDetails implements Serializable {
 
     public RefundDetails() {
     }
+
     private OrderKey orderKey;
     private String sn;// 退款编号
     private RefundType type;// 退款类型
@@ -30,7 +31,7 @@ public class RefundDetails implements Serializable {
      * 支付配置标示
      */
     @ApiModelProperty("支付配置Id")
-    private String payConfigId;
+    private Long payConfigId;
     @ApiModelProperty("支付配置名称")
     private String payConfigName;// 支付配置名称
     @ApiModelProperty("退款银行名称")
@@ -48,6 +49,8 @@ public class RefundDetails implements Serializable {
      */
     @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
     private String tradeNo;
+    @ApiModelProperty(value = "支付时间",notes = "用于记录第三方交易的交易时间")
+    private Date tradeTime;
     /**
      * 原支付交易
      */
@@ -184,11 +187,11 @@ public class RefundDetails implements Serializable {
         this.memo = memo;
     }
 
-    public String getPayConfigId() {
+    public Long getPayConfigId() {
         return payConfigId;
     }
 
-    public void setPayConfigId(String payConfigId) {
+    public void setPayConfigId(Long payConfigId) {
         this.payConfigId = payConfigId;
     }
 

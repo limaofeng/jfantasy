@@ -11,9 +11,10 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
-import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.dao.PaymentDao;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.PaymentType;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayProduct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class PaymentService {
         }
 
         //支付配置类型（线下支付、在线支付）
-        Payment.PaymentType paymentType = Payment.PaymentType.online;
+        PaymentType paymentType = PaymentType.online;
         BigDecimal paymentFee = BigDecimal.ZERO; //支付手续费
 
         BigDecimal amountPayable = order.getPayableFee();//应付金额（含支付手续费）

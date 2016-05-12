@@ -126,7 +126,7 @@ public class Chinapay extends PayProductSupport {
             }
 
             payment.setTradeNo(data.get("AcqSeqId"));
-
+            payment.setTradeTime(DateUtil.now());
             return null;
 
         } finally {//记录支付通知日志
@@ -195,7 +195,7 @@ public class Chinapay extends PayProductSupport {
             }
 
             payment.setTradeNo(result.get("AcqSeqId"));
-
+            payment.setTradeTime(DateUtil.now());
             return response.getBody();
 
         } catch (IOException e) {
@@ -206,7 +206,7 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
-    public Refund refund(Refund refund) {
+    public String refund(Refund refund) {
         String url = urls.getAfterTransUrl("0401");
         Payment payment = refund.getPayment();
         try {
@@ -255,7 +255,7 @@ public class Chinapay extends PayProductSupport {
             MDC.put("body", response.getBody());
             LOG.info(MDC.getContext());
 
-            return refund;
+            return null;
 
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);

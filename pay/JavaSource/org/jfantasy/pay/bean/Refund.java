@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.pay.order.entity.enums.PaymentType;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 退款
@@ -23,16 +25,11 @@ public class Refund extends BaseBusEntity {
 
     private static final long serialVersionUID = -2533117666249761057L;
 
-    // 退款类型（在线支付、线下支付）
-    public enum RefundType {
-        online, offline
-    }
-
     public Refund() {
     }
 
     public Refund(Payment payment) {
-        this.setType(RefundType.valueOf(payment.getType().name()));
+        this.setType(payment.getType());
         this.setStatus(RefundStatus.ready);
         this.setBankAccount(payment.getBankAccount());
         this.setBankName(payment.getBankName());
@@ -49,8 +46,8 @@ public class Refund extends BaseBusEntity {
     @Column(name = "SN", updatable = false)
     private String sn;// 退款编号
     @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE", nullable = false, updatable = false)
-    private RefundType type;// 退款类型
+    @Column(name = "TYPE", updatable = false, nullable = false)
+    private PaymentType type;// 退款类型
     @ApiModelProperty("退款状态")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATUS", nullable = false)
@@ -68,23 +65,27 @@ public class Refund extends BaseBusEntity {
     @Column(name = "MEMO", updatable = false, length = 3000)
     private String memo;// 备注
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAY_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT_CONFIG"))
-    private PayConfig payConfig;// 支付配置
+    @JoinColumn(name = "PAY_CONFIG_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT_CONFIG"))
+    private PayConfig payConfig;
     /**
      * 交易号（用于记录第三方交易的交易流水号）
      */
     @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
     @Column(name = "TRADE_NO")
     private String tradeNo;
+    @ApiModelProperty(value = "交易时间", notes = "用于记录第三方交易的交易时间")
+    @Column(name = "TRADE_TIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date tradeTime;
     /**
      * 原支付交易
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAYMENT_ID", foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT"))
+    @JoinColumn(name = "PAYMENT_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT"))
     private Payment payment;
     @ApiModelProperty("订单详情")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE"), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN")})
+    @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE", updatable = false), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN", updatable = false)})
     private Order order;
 
     public String getSn() {
@@ -95,11 +96,11 @@ public class Refund extends BaseBusEntity {
         this.sn = sn;
     }
 
-    public RefundType getType() {
+    public PaymentType getType() {
         return type;
     }
 
-    public void setType(RefundType type) {
+    public void setType(PaymentType type) {
         this.type = type;
     }
 
@@ -185,6 +186,14 @@ public class Refund extends BaseBusEntity {
 
     public Order getOrder() {
         return order;
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
     }
 
     public void setOrder(Order order) {

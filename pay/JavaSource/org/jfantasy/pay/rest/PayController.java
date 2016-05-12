@@ -43,7 +43,7 @@ public class PayController {
     @RequestMapping(value = "/{sn}/refund", method = RequestMethod.POST)
     @ResponseBody
     public Refund refund(@PathVariable("sn") String sn, @RequestBody RefundForm refundForm) throws PayException {
-        return payService.refund(paymentService.get(sn), refundForm.getAmount(), refundForm.getRemark());
+        return payService.refund(sn, refundForm.getAmount(), refundForm.getRemark());
     }
 
     @JsonIgnoreProperties({

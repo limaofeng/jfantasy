@@ -2,18 +2,18 @@ package org.jfantasy.pay.product;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.log4j.MDC;
 import org.jfantasy.framework.httpclient.HttpClientUtil;
 import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.product.sign.SignUtil;
 import org.jfantasy.pay.product.util.CertUtil;
 import org.jfantasy.pay.product.util.RAMFileProxy;
@@ -86,13 +86,13 @@ public class Unionpay extends PayProductSupport {
         //支付配置
         PayConfig config = payment.getPayConfig();
         //准备数据
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
         //请求地址集
         Urls urls = this.getUrls();
 
         try {
             String merId = config.getBargainorId();//商户号
-            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config,"signCert"), config.getBargainorKey());
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config, "signCert"), config.getBargainorKey());
             String certPwd = config.getBargainorKey();//签名证书密码
 
             /***银联全渠道系统，产品参数，除了encoding自行选择外其他不需修改***/
@@ -129,7 +129,8 @@ public class Unionpay extends PayProductSupport {
 
             //验签
             Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);// 将返回结果转换为map
-            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert")))) {//验证签名
+            result.put("signature", result.get("signature").replaceAll(" ", "+"));
+            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {//验证签名
                 throw new PayException("验证签名失败");
             }
             payment.setTradeNo(result.get("tn"));
@@ -140,44 +141,126 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public Payment payNotify(Payment payment, String result) throws PayException {
+    public Object payNotify(Payment payment, String result) throws PayException {
         //支付配置
         PayConfig config = payment.getPayConfig();
-        PublicKey publicKey = CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert"));
+        PublicKey publicKey = CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert"));
 
         try {
             Map<String, String> data = (Map<String, String>) (result.startsWith("{") && result.endsWith("}") ? JSON.deserialize(result) : SignUtil.parseQuery(result, true));
             //手机支付通知
             boolean isAppNotify = data.containsKey("sign");
+            if (!isAppNotify) {
+                data.put("signature", data.get("signature").replaceAll(" ", "+"));
+            }
             if (!(isAppNotify && verify(data.get("data"), data.get("sign"), publicKey) || verify(data, publicKey))) {//验证签名
                 throw new PayException("验证签名失败");
             }
             if (isAppNotify) {
                 Map<String, String> payresult = SignUtil.parseQuery(data.get("data"), true);
-                if (!StringUtil.nullValue(payresult.get("tn")).equals(payment.getTradeNo())) {
+                payment.setStatus("success".equals(payresult.get("pay_result")) ? PaymentStatus.success : PaymentStatus.failure);
+                payment.setTradeTime(DateUtil.now());
+            } else {
+                if (!StringUtil.nullValue(data.get("orderId")).equals(payment.getSn())) {
                     throw new PayException("通知与订单不匹配");
                 }
-                payment.setStatus("success".equals(payresult.get("pay_result")) ? PaymentStatus.success : PaymentStatus.failure);
-            } else {
-                System.out.println(result);
-                payment.setStatus(PaymentStatus.success);
+                payment.setTradeNo(data.get("queryId"));
+                payment.setStatus("00".equals(data.get("respCode")) ? PaymentStatus.success : PaymentStatus.failure);
+                payment.setTradeTime(DateUtil.now());
             }
+            return isAppNotify ? null : "OK";
         } finally {
-            //记录支付通知日志
-            MDC.put("type", "in");
-            MDC.put("payType", "notify");
-            MDC.put("paymentSn", payment.getSn());
-            MDC.put("payProductId", config.getPayProductId());
-            MDC.put("payConfigId", config.getId());
-            MDC.put("body", result);
-            LOG.info(MDC.getContext());
+            this.log("in", "notify", payment, config, result);
         }
-        return payment;
     }
 
     @Override
-    public Refund payNotify(Refund refund, String result) throws PayException {
-        return null;
+    public String refund(Refund refund) {
+        Payment payment = refund.getPayment();
+        //支付配置
+        PayConfig config = refund.getPayConfig();
+        //准备数据
+        Map<String, String> data = new HashMap<>();
+        //请求地址集
+        Urls urls = this.getUrls();
+
+        try {
+            String merId = config.getBargainorId();//商户号
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config, "signCert"), config.getBargainorKey());
+            String certPwd = config.getBargainorKey();//签名证书密码
+
+            /***银联全渠道系统，产品参数，除了encoding自行选择外其他不需修改***/
+            data.put("version", version);               //版本号
+            data.put("encoding", encoding);             //字符集编码 可以使用UTF-8,GBK两种方式
+            data.put("signMethod", "01");               //签名方法 目前只支持01-RSA方式证书加密
+            data.put("txnType", "04");                  //交易类型 04-退货
+            data.put("txnSubType", "00");               //交易子类型  默认00
+            data.put("bizType", "000201");              //业务类型
+            data.put("channelType", "08");              //渠道类型，07-PC，08-手机
+
+            /***商户接入参数***/
+            data.put("merId", merId);                   //商户号码，请改成自己申请的商户号或者open上注册得来的777商户号测试
+            data.put("accessType", "0");                         //接入类型，商户接入固定填0，不需修改
+            data.put("orderId", refund.getSn());          //商户订单号，8-40位数字字母，不能含“-”或“_”，可以自行定制规则，重新产生，不同于原消费
+            data.put("txnTime", DateUtil.format(refund.getCreateTime(), "yyyyMMddHHmmss"));      //订单发送时间，格式为YYYYMMDDhhmmss，必须取当前时间，否则会报txnTime无效
+            data.put("currencyCode", "156");                     //交易币种（境内商户一般是156 人民币）
+            data.put("txnAmt", refund.getTotalAmount().multiply(BigDecimal.valueOf(100d)).intValue() + "");                          //****退货金额，单位分，不要带小数点。退货金额小于等于原消费金额，当小于的时候可以多次退货至退货累计金额等于原消费金额
+            //data.put("reqReserved", "透传信息");                    //请求方保留域，透传字段（可以实现商户自定义参数的追踪）本交易的后台通知,对本交易的交易状态查询交易、对账文件中均会原样返回，商户可以按需上传，长度为1-1024个字节
+            data.put("backUrl", SettingUtil.getServerUrl() + "/pays/" + refund.getSn() + "/notify");               //后台通知地址，后台通知参数详见open.unionpay.com帮助中心 下载  产品接口规范  网关支付产品接口规范 退货交易 商户通知,其他说明同消费交易的后台通知
+
+            /***要调通交易以下字段必须修改***/
+            data.put("origQryId", payment.getTradeNo());      //****原消费交易返回的的queryId，可以从消费交易后台通知接口中或者交易状态查询接口中获取
+
+            //添加签名
+            data.put("certId", CertUtil.getCertId(keyStore));
+            data.put("signature", signature(data, keyStore, certPwd));
+
+            Response response = HttpClientUtil.doPost(urls.getBackTransUrl(), data);
+            if (response.getStatusCode() != 200) {
+                throw new IOException("请求失败:" + response.getStatusCode() + "\t" + response.getBody());
+            }
+            //验签
+            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);// 将返回结果转换为map
+
+            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {//验证签名
+                throw new PayException("验证签名失败");
+            }
+            String respCode = result.get("respCode");
+            if (("00").equals(respCode)) {//交易已受理(不代表交易已成功），等待接收后台通知更新订单状态,也可以主动发起 查询交易确定交易状态。
+                refund.setStatus(RefundStatus.wait);
+            } else if (("03").equals(respCode) || ("04").equals(respCode) || ("05").equals(respCode)) {
+                //TODO 后续需发起交易状态查询交易确定交易状态
+            } else {//其他应答码为失败请排查原因
+                refund.setStatus(RefundStatus.failure);
+            }
+            return null;
+        } catch (IOException e) {
+            throw new PayException(e.getMessage());
+        }
+    }
+
+    @Override
+    public Object payNotify(Refund refund, String result) throws PayException {
+        //支付配置
+        PayConfig config = refund.getPayConfig();
+        PublicKey publicKey = CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert"));
+        try {
+            Map<String, String> data = SignUtil.parseQuery(result, true);
+            if (!verify(data, publicKey)) {//验证签名
+                throw new PayException("验证签名失败");
+            }
+            if (!StringUtil.nullValue(data.get("orderId")).equals(refund.getSn())) {
+                throw new PayException("通知与订单不匹配");
+            }
+            refund.setTradeNo(data.get("queryId"));
+            refund.setStatus("00".equals(data.get("respCode")) ? RefundStatus.success : RefundStatus.failure);
+
+            return null;
+        } finally {
+            //记录支付通知日志
+            this.log("in", "notify", refund, config, result);
+        }
+
     }
 
     public String query(Payment payment) {
@@ -188,32 +271,34 @@ public class Unionpay extends PayProductSupport {
             PayConfig config = payment.getPayConfig();
             String merId = config.getBargainorId();//商户号
             //签名证书
-            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config,"signCert"), config.getBargainorKey());
+            KeyStore keyStore = CertUtil.loadKeyStore(new RAMFileProxy(config, "signCert"), config.getBargainorKey());
             String certPwd = config.getBargainorKey();//签名证书密码
 
-            final Map<String, String> data = new TreeMap<String, String>();
+            final Map<String, String> data = new TreeMap<>();
 
-            // 固定填写
-            data.put("version", version);// M
-            // 默认取值：UTF-8
-            data.put("encoding", encoding);// M
-            data.put("signMethod", "01");// M
-            data.put("txnType", "00");// 交易类型 00
-            data.put("txnSubType", "00");//默认00
-            data.put("bizType", "000201");// 默认:000000
-            data.put("accessType", "0");// 0：普通商户直连接入2：平台类商户接入
-            data.put("merId", merId);// M
-            data.put("txnTime", DateUtil.format(payment.getCreateTime(), "yyyyMMddHHmmss"));// 被查询交易的交易时间
-            data.put("orderId", payment.getSn());// 被查询交易的订单号
-            //data.put("queryId", ""); 待查询交易的流水号
-            //data.put("reserved", ""); 格式如下：{子域名1=值&子域名2=值&子域名3=值} 子域： origTxnType N2原交易类型余额查询时必送
+            /***银联全渠道系统，产品参数，除了encoding自行选择外其他不需修改***/
+            data.put("version", version);                 //版本号
+            data.put("encoding", encoding);          //字符集编码 可以使用UTF-8,GBK两种方式
+            data.put("signMethod", "01");                          //签名方法 目前只支持01-RSA方式证书加密
+            data.put("txnType", "00");                             //交易类型 00-默认
+            data.put("txnSubType", "00");                          //交易子类型  默认00
+            data.put("bizType", "000201");                         //业务类型
+
+            /***商户接入参数***/
+            data.put("merId", merId);                               //商户号码，请改成自己申请的商户号或者open上注册得来的777商户号测试
+            data.put("accessType", "0");                           //接入类型，商户接入固定填0，不需修改
+
+            /***要调通交易以下字段必须修改***/
+            data.put("orderId", payment.getSn());                            //****商户订单号，每次发交易测试需修改为被查询的交易的订单号
+            data.put("txnTime", DateUtil.format(payment.getCreateTime(), "yyyyMMddHHmmss"));//****订单发送时间，每次发交易测试需修改为被查询的交易的订单发送时间
 
             data.put("Signature", signature(data, keyStore, certPwd));//签名
 
             Response response = HttpClientUtil.doPost(urls.getQueryTransUrl(), data);
 
             Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);
-            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config,"validateCert")))) {
+
+            if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }
 
@@ -227,11 +312,11 @@ public class Unionpay extends PayProductSupport {
         }
     }
 
-    void setDeployStatus(DeployStatus deployStatus) {
+    public void setDeployStatus(DeployStatus deployStatus) {
         this.deployStatus = deployStatus;
     }
 
-    private class Urls {
+    class Urls {
         /**
          * 前台交易请求地址
          */
@@ -269,31 +354,31 @@ public class Unionpay extends PayProductSupport {
             return frontTransUrl;
         }
 
-        void setFrontTransUrl(String frontTransUrl) {
+        private void setFrontTransUrl(String frontTransUrl) {
             this.frontTransUrl = frontTransUrl;
         }
 
-        String getAppTransUrl() {
+        private String getAppTransUrl() {
             return appTransUrl;
         }
 
-        void setAppTransUrl(String appTransUrl) {
+        private void setAppTransUrl(String appTransUrl) {
             this.appTransUrl = appTransUrl;
         }
 
-        public String getBackTransUrl() {
+        private String getBackTransUrl() {
             return backTransUrl;
         }
 
-        void setBackTransUrl(String backTransUrl) {
+        private void setBackTransUrl(String backTransUrl) {
             this.backTransUrl = backTransUrl;
         }
 
-        public String getSingleQueryUrl() {
+        private String getSingleQueryUrl() {
             return singleQueryUrl;
         }
 
-        void setSingleQueryUrl(String singleQueryUrl) {
+        private void setSingleQueryUrl(String singleQueryUrl) {
             this.singleQueryUrl = singleQueryUrl;
         }
 
@@ -301,31 +386,31 @@ public class Unionpay extends PayProductSupport {
             return batchTransUrl;
         }
 
-        void setBatchTransUrl(String batchTransUrl) {
+        private void setBatchTransUrl(String batchTransUrl) {
             this.batchTransUrl = batchTransUrl;
         }
 
-        public String getFileTransUrl() {
+        private String getFileTransUrl() {
             return fileTransUrl;
         }
 
-        public String getCardTransUrl() {
+        private String getCardTransUrl() {
             return cardTransUrl;
         }
 
-        void setCardTransUrl(String cardTransUrl) {
+        private void setCardTransUrl(String cardTransUrl) {
             this.cardTransUrl = cardTransUrl;
         }
 
-        String getQueryTransUrl() {
+        private String getQueryTransUrl() {
             return queryTransUrl;
         }
 
-        void setQueryTransUrl(String queryTransUrl) {
+        private void setQueryTransUrl(String queryTransUrl) {
             this.queryTransUrl = queryTransUrl;
         }
 
-        void setFileTransUrl(String fileTransUrl) {
+        private void setFileTransUrl(String fileTransUrl) {
             this.fileTransUrl = fileTransUrl;
         }
     }
@@ -354,20 +439,29 @@ public class Unionpay extends PayProductSupport {
         String encoding = result.get("encoding");
         try {
             return SecureUtil.validateSignBySoft(publicKey, SecureUtil.base64Decode(stringSign.getBytes(encoding)), SecureUtil.sha1X16(stringData, encoding));
-        } catch (Exception var7) {
-            LOG.error(var7.getMessage(), var7);
+        } catch (IOException var6) {
+            LOG.error(var6.getMessage(), var6);
         }
         return false;
     }
 
+    /**
+     * 验签逻辑
+     *
+     * @param data      返回数据
+     * @param signature 需要比较的签名
+     * @param publicKey 验签证书
+     * @return boolean
+     */
     private boolean verify(String data, String signature, PublicKey publicKey) {
         try {
             return SecureUtil.validateSignBySoft(publicKey, SecureUtil.base64Decode(signature.getBytes(encoding)), SecureUtil.sha1X16(data, encoding));
-        } catch (Exception var7) {
+        } catch (IOException var7) {
             LOG.error(var7.getMessage(), var7);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return false;
     }
-
 
 }

@@ -2,16 +2,13 @@ package org.jfantasy.pay.order;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.pay.order.entity.enums.PaymentStatus;
-import org.jfantasy.pay.order.entity.enums.RefundStatus;
-import org.jfantasy.pay.order.entity.OrderDetails;
-import org.jfantasy.pay.order.entity.OrderItem;
+import org.jfantasy.pay.order.entity.*;
 import org.jfantasy.rpc.annotation.ServiceExporter;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-@ServiceExporter(targetInterface = OrderService.class, debugAddress = "127.0.0.1:9091")
+@ServiceExporter(targetInterface = OrderService.class)
 public class TestOrderService implements OrderService {
 
     protected final Log LOG = LogFactory.getLog(TestOrderService.class);
@@ -22,7 +19,7 @@ public class TestOrderService implements OrderService {
     }
 
     @Override
-    public OrderDetails loadOrder(final String sn) {
+    public OrderDetails loadOrder(final OrderKey sn) {
         OrderDetails order = new OrderDetails();
         order.setType("test");
         order.setSubject("测试订单");
@@ -43,13 +40,13 @@ public class TestOrderService implements OrderService {
     }
 
     @Override
-    public void on(String sn, PaymentStatus status, String message) {
-        System.out.println(sn + " - " + status + " - " + message);
+    public void on(OrderKey key, PaymentDetails status, String message) {
+        System.out.println(key + " - " + status + " - " + message);
     }
 
     @Override
-    public void on(String sn, RefundStatus status, String message) {
-        System.out.println(sn + " - " + status + " - " + message);
+    public void on(OrderKey key, RefundDetails status, String message) {
+        System.out.println(key + " - " + status + " - " + message);
     }
 
 }

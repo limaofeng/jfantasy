@@ -6,6 +6,7 @@ import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.event.listener.PayListener;
+import org.jfantasy.pay.order.entity.OrderKey;
 import org.jfantasy.pay.order.entity.PaymentDetails;
 import org.jfantasy.rpc.util.SerializationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,8 @@ public class ONSProducerPayListener extends PayListener {
     public void on(Payment payment, Order order) {
         PaymentDetails details = new PaymentDetails();
         BeanUtil.copyProperties(details, payment);
+        details.setOrderKey(OrderKey.newInstance(payment.getOrder().getType(),payment.getOrder().getSn()));
+        details.setPayConfigId(payment.getPayConfig().getId());
         Message msg = new Message("TopicTestONS1985", "pay", SerializationUtil.serializer(details));
         msg.setKey("payment");
         producer.send(msg);

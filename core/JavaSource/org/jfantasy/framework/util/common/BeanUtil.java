@@ -47,7 +47,7 @@ public class BeanUtil {
                         || Date.class.isAssignableFrom(property.getPropertyType())) {
                     OgnlUtil.getInstance().setValue(setProperty.getName(), dest, o);
                 } else {
-                    OgnlUtil.getInstance().setValue(setProperty.getName(), dest, o.toString());
+                    OgnlUtil.getInstance().setValue(setProperty.getName(), dest, o);
                 }
                 continue;
             }
@@ -73,57 +73,6 @@ public class BeanUtil {
         }
         return copyProperties(dest, orig, excludeProperties.toArray(new String[excludeProperties.size()]));
     }
-
-    /*
-    @Deprecated
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-    @Deprecated
-	private static <T> T copy(T dest, Object orig, String superName, String[] excludeProperties) {
-		try {
-			for (Map.Entry<String, Object> entry : OgnlUtil.getInstance().getBeanMap(orig, excludeProperties).entrySet()) {
-				if (RegexpUtil.find(superName.concat((String) entry.getKey()), excludeProperties))
-					continue;
-				if (ObjectUtil.isNull(entry.getValue()))
-					continue;
-				Property property = ClassUtil.getProperty(dest, (String) entry.getKey());
-				if (ObjectUtil.isNull(property))
-					continue;
-				if (!property.isWrite())
-					continue;
-//				if (logger.isDebugEnabled())
-//					logger.debug(superName + "=>" + entry.getKey());
-				if (entry.getValue().getClass().isEnum() || ClassUtil.isPrimitiveOrWrapperOrStringOrDate(entry.getValue().getClass())) {
-					OgnlUtil.getInstance().setValue((String) entry.getKey(), dest, entry.getValue());
-				} else if (ClassUtil.isList(property.getPropertyType())) {
-					List<Object> list = new ArrayList<Object>();
-					OgnlUtil.getInstance().setValue((String) entry.getKey(), dest, list);
-					int length = length(entry.getValue());
-					for (int i = 0; i < length; i++) {
-						String _superName = superName + entry.getKey() + "[" + String.valueOf(i) + "]" + ".";
-						list.add(copy(ClassUtil.newInstance((Class) ClassUtil.getMethodGenericParameterTypes(property.getWriteMethod().getMethod()).get(0)), get(entry.getValue(), i), _superName, excludeProperties));
-					}
-				} else if (ClassUtil.isArray(property.getPropertyType())) {
-					Object object = OgnlUtil.getInstance().getValue((String) entry.getKey(), dest);
-					Object array = Array.newInstance(property.getPropertyType(), Array.getLength(object));
-					for (int i = 0; i < Array.getLength(object); i++)
-						Array.set(array, i, copy(ClassUtil.newInstance((Class) ClassUtil.getMethodGenericParameterTypes(property.getWriteMethod().getMethod()).get(0)), get(entry.getValue(), i), superName.concat((String) entry.getKey()).concat("[").concat(String.valueOf(i)).concat("]").concat("."), excludeProperties));
-				} else {
-					String _superName = superName + entry.getKey() + ".";
-					Object object = OgnlUtil.getInstance().getValue((String) entry.getKey(), dest);
-					if (object == null) {
-						OgnlUtil.getInstance().setValue((String) entry.getKey(), dest, copy(ClassUtil.newInstance(property.getPropertyType()), entry.getValue(), _superName, excludeProperties));
-					} else
-						copy(object, entry.getValue(), _superName, excludeProperties);
-				}
-			}
-		} catch (IntrospectionException e) {
-			logger.debug(e.getMessage(), e);
-		} catch (OgnlException e) {
-			logger.debug(e.getMessage(), e);
-		}
-		return dest;
-	}
-	*/
 
     private static int length(Object value) {
         if (ClassUtil.isArray(value)) {

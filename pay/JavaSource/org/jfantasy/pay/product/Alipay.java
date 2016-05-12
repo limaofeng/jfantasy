@@ -199,7 +199,7 @@ public class Alipay extends AlipayPayProductSupport {
     }
 
     @Override
-    public Refund refund(Refund refund) {
+    public String refund(Refund refund) {
         PayConfig config = refund.getPayConfig();
         Payment payment = refund.getPayment();
 
@@ -290,6 +290,7 @@ public class Alipay extends AlipayPayProductSupport {
 
             */
 //            return refund;
+
         } catch (IOException e) {
             throw new RestException("调用支付宝接口,网络错误!");
         } catch (PayException e) {

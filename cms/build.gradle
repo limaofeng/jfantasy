@@ -1,4 +1,4 @@
-apply plugin: 'spring-boot'
+//apply plugin: 'spring-boot'
 
 description = '内容管理模块'
 dependencies {

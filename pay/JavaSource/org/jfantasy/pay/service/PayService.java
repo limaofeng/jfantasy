@@ -5,6 +5,7 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.BeanUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
@@ -18,9 +19,12 @@ import org.jfantasy.pay.order.OrderServiceFactory;
 import org.jfantasy.pay.order.entity.OrderDetails;
 import org.jfantasy.pay.order.entity.OrderKey;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.PaymentType;
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.product.PayProduct;
 import org.jfantasy.pay.product.PayType;
 import org.jfantasy.pay.service.vo.ToPayment;
+import org.jfantasy.pay.service.vo.ToRefund;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
@@ -55,21 +59,21 @@ public class PayService {
     private ApplicationContext applicationContext;
 
     public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer, Properties properties) throws PayException {
-        OrderKey key = OrderKey.newInstance(orderType,orderSn);
+        OrderKey key = OrderKey.newInstance(orderType, orderSn);
         Order order = orderService.get(key);
         OrderDetails orderDetails = null;
-        if(order == null) {
-            if(!orderServiceFactory.containsType(orderType)){
+        if (order == null) {
+            if (!orderServiceFactory.containsType(orderType)) {
                 throw new RestException("orderType[" + orderType + "] 对应的 PaymentOrderService 未配置！");
             }
             //获取订单信息
-            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key.toString());
-            if(orderDetails == null){
+            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key);
+            if (orderDetails == null) {
                 throw new RestException("order = [" + key + "] 不存在,请核对后,再继续操作!");
             }
             order = orderService.save(orderDetails);
-        }else {
-            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key.toString());
+        } else {
+            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key);
         }
         if (!orderDetails.isPayment()) {
             throw new RestException("业务系统异常,不能继续支付");
@@ -99,21 +103,59 @@ public class PayService {
     /**
      * 发起退款
      *
-     * @param payment 原支付交易
-     * @param amount  退款金额
-     * @param remark  备注
+     * @param paymentSn 原支付交易
+     * @param amount    退款金额
+     * @param remark    备注
      * @return Refund
      */
-    public Refund refund(Payment payment, BigDecimal amount, String remark) {
-        Refund refund = refundService.ready(payment, amount, remark);
-
-        PayConfig payConfig = refund.getPayConfig();
-
-        //获取支付产品
-        PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
-
-        return refundService.save(payProduct.refund(refund));
+    public Refund refund(String paymentSn, BigDecimal amount, String remark) {
+        return refundService.ready(paymentService.get(paymentSn), amount, remark);
     }
+
+    /**
+     * 更新退款状态 <br/>
+     * 对应的业务操作: <br/>
+     * ready => close
+     * ready => wait
+     *
+     * @param sn     退款编号
+     * @param status 状态
+     * @param remark 备注
+     * @return Refund
+     */
+    public ToRefund refund(String sn, RefundStatus status, String remark) {
+        Refund refund = refundService.get(sn);
+        if (refund.getType() == PaymentType.online) {
+            if (refund.getStatus() != RefundStatus.ready) {
+                throw new PayException("退款状态为:" + refund.getStatus() + ",不能进行操作");
+            } else if (!ObjectUtil.exists(new RefundStatus[]{RefundStatus.close, RefundStatus.wait}, status)) {
+                throw new PayException("不能手动将退款状态调整为:" + status);
+            }
+            if (status == RefundStatus.wait) {
+                PayConfig payConfig = refund.getPayConfig();
+                //获取支付产品
+                PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
+                Object result = payProduct.refund(refund);
+                this.refundService.save(refund);
+                ToRefund toRefund = BeanUtil.copyProperties(new ToRefund(), refund);
+                toRefund.setSource(result.toString());
+                return toRefund;
+            } else if (status == RefundStatus.close) {
+                refund.setStatus(status);
+                this.refundService.save(refund);
+                return BeanUtil.copyProperties(new ToRefund(), refund);
+            } else {
+                throw new PayException(" 变更退款状态到 " + status + "功能,暂未实现! 请联系技术人员. ");
+            }
+        } else {
+            throw new PayException(" 线下退款方式,暂未实现! 请联系技术人员. ");
+        }
+    }
+
+    /*
+
+
+     */
 
     public Object notify(Payment payment, String body) {
         PayConfig payConfig = payment.getPayConfig();

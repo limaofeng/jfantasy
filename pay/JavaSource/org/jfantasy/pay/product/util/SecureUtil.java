@@ -113,12 +113,16 @@ public class SecureUtil {
         return result;
     }
 
-    public static boolean validateSignBySoft(PublicKey publicKey, byte[] signData, byte[] srcData)
-            throws Exception {
-        Signature st = Signature.getInstance("SHA1withRSA");
-        st.initVerify(publicKey);
-        st.update(srcData);
-        return st.verify(signData);
+    public static boolean validateSignBySoft(PublicKey publicKey, byte[] signData, byte[] srcData) {
+        try {
+            Signature st = Signature.getInstance("SHA1withRSA");
+            st.initVerify(publicKey);
+            st.update(srcData);
+            return st.verify(signData);
+        }catch (Exception e){
+            LogUtil.debug(e.getMessage());
+            return false;
+        }
     }
 
     public static byte[] inflater(byte[] inputByte)

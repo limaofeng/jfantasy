@@ -24,7 +24,6 @@ public class PayMessageListener implements MessageListener {
             RefundDetails details = SerializationUtil.deserializer(message.getBody(), RefundDetails.class);
             orderService.on(details.getOrderKey(), details, details.getMemo());
         }
-
         return Action.CommitMessage;
     }
 

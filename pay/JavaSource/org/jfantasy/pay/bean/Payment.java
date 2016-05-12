@@ -7,9 +7,11 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.PaymentType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * 支付记录
@@ -25,11 +27,6 @@ import java.math.BigDecimal;
 public class Payment extends BaseBusEntity {
 
     private static final long serialVersionUID = 6404772131152718534L;
-
-    // 支付类型（在线支付、线下支付）
-    public enum PaymentType {
-        online, offline
-    }
 
     /**
      * 支付编号
@@ -116,6 +113,13 @@ public class Payment extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE"), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN")})
     private Order order;
+    /**
+     * 支付时间
+     */
+    @ApiModelProperty(value = "支付时间",notes = "用于记录第三方交易的交易时间")
+    @Column(name = "TRADE_TIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date tradeTime;
 
     public String getSn() {
         return sn;
@@ -219,5 +223,13 @@ public class Payment extends BaseBusEntity {
 
     public void setOrder(Order order) {
         this.order = order;
+    }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
     }
 }

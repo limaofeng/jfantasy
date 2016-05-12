@@ -1,5 +1,6 @@
 package org.jfantasy.framework.autoconfigure;
 
+import com.aliyun.openservices.ons.api.PropertyKeyConst;
 import com.aliyun.openservices.ons.api.bean.ProducerBean;
 import org.jfantasy.pay.service.PayProductConfiguration;
 import org.springframework.beans.factory.annotation.Value;
@@ -30,9 +31,9 @@ public class PayAutoConfiguration {
     public ProducerBean producer(){
         ProducerBean producerBean = new ProducerBean();
         Properties properties = new Properties();
-        properties.setProperty("ProducerId",producerId);
-        properties.setProperty("AccessKey",accessKey);
-        properties.setProperty("SecretKey",secretKey);
+        properties.setProperty(PropertyKeyConst.ProducerId,producerId);
+        properties.setProperty(PropertyKeyConst.AccessKey,accessKey);
+        properties.setProperty(PropertyKeyConst.SecretKey,secretKey);
         producerBean.setProperties(properties);
         return producerBean;
     }
