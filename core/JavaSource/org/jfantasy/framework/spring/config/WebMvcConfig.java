@@ -4,7 +4,6 @@ package org.jfantasy.framework.spring.config;
 import com.alibaba.druid.support.http.StatViewServlet;
 import com.alibaba.druid.support.http.WebStatFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.thetransactioncompany.cors.CORSFilter;
 import org.hibernate.validator.HibernateValidator;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
@@ -157,19 +156,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
         }
     }
 
-    @Bean
-    public FilterRegistrationBean corsFilter() {
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(new CORSFilter());
-        filterRegistrationBean.addInitParameter("cors.allowOrigin", "*");
-        filterRegistrationBean.addInitParameter("cors.supportedMethods", "GET, POST, HEAD, PUT, DELETE, OPTIONS");
-        filterRegistrationBean.addInitParameter("cors.supportedHeaders", "Accept, Origin, X-Requested-With, Content-Type, Last-Modified");
-        filterRegistrationBean.addInitParameter("cors.exposedHeaders", "Set-Cookie");
-        filterRegistrationBean.addInitParameter("cors.supportsCredentials", "true");
-        filterRegistrationBean.setEnabled(true);
-        filterRegistrationBean.setOrder(100);
-        filterRegistrationBean.addUrlPatterns("/*");
-        return filterRegistrationBean;
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+                .allowedHeaders("Accept", "Origin", "X-Requested-With", "Content-Type", "Last-Modified","X-Result-Fields", "X-Expend-Fields")
+                .exposedHeaders("Set-Cookie")
+                .allowCredentials(true).maxAge(3600);
     }
 
     @Bean

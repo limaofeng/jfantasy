@@ -15,12 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-/*
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.converter.FileDetailConverter;
-import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
-*/
-
 /**
  * 支付配置
  *
@@ -88,27 +82,6 @@ public class PayConfig extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
-//    /**
-//     * 签名证书(银联支付专用)
-//     */
-//    @Deprecated
-//    @Column(name = "SIGN_CERT", length = 500)
-//    @Convert(converter = FileDetailConverter.class)
-//    private FileDetail signCert;
-//    /**
-//     * 加密证书(银联支付专用)
-//     */
-//    @Deprecated
-//    @Column(name = "ENCRYPT_CERT", length = 500)
-//    @Convert(converter = FileDetailConverter.class)
-//    private FileDetail encryptCert;
-//    /**
-//     * 签名验证证书(银联支付专用)
-//     */
-//    @Deprecated
-//    @Column(name = "VALIDATE_CERT", length = 500)
-//    @Convert(converter = FileDetailConverter.class)
-//    private FileDetail validateCert;
     /**
      * 支付手续费类型
      */
@@ -139,13 +112,13 @@ public class PayConfig extends BaseBusEntity {
      */
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<Payment> payments = new ArrayList<Payment>();// 支付
+    private List<Payment> payments = new ArrayList<>();// 支付
     /**
      * 退款记录
      */
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<Refund> refunds = new ArrayList<Refund>();// 退款
+    private List<Refund> refunds = new ArrayList<>();// 退款
 
     public PayConfig() {
     }
@@ -273,10 +246,10 @@ public class PayConfig extends BaseBusEntity {
     public <T> T get(String key, Class<T> tClass) {
         if (this.properties == null) return null;
         Object value = this.properties.get(key);
-        if(value == null){
+        if (value == null) {
             return null;
         }
-        if(tClass.isAssignableFrom(byte[].class) && value instanceof String){
+        if (tClass.isAssignableFrom(byte[].class) && value instanceof String) {
             return (T) Base64.decode(value.toString());
         }
         return tClass.cast(value);

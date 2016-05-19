@@ -15,12 +15,10 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.DigestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.util.*;
 
 @Service
@@ -38,16 +36,55 @@ public class FileUploadService {
     private transient FileManagerFactory fileManagerFactory;
 
     private static boolean isPart(String entireFileHash, String partFileHash, String entireFileName, String entireFileDir, Integer total, Integer index) {
-        if (StringUtil.isBlank(entireFileHash) || StringUtil.isBlank(partFileHash)) {
-            return false;
+        return !(StringUtil.isBlank(entireFileHash) || StringUtil.isBlank(partFileHash)) && !(StringUtil.isBlank(entireFileName) || StringUtil.isBlank(entireFileDir)) && !(ObjectUtil.isNull(total) || StringUtil.isNull(index));
+    }
+
+    private FileDetail uploadPart(FilePart part,FilePart filePart,List<FilePart> fileParts,String contentType, String entireFileName, String entireFileDir, String entireFileHash,Integer total,FileManager fileManager) throws IOException {
+        FileDetail fileDetail = null;
+        try {
+            if (part == null) {
+                List<FilePart> joinFileParts = new ArrayList<>();
+                ObjectUtil.join(joinFileParts, fileParts, "index");
+
+                if (joinFileParts.size() == total) {
+                    //临时文件
+                    File tmp = FileUtil.tmp();
+                    //合并 Part 文件
+                    FileOutputStream out = new FileOutputStream(tmp);
+                    for (FilePart filesPart : joinFileParts) {
+                        InputStream in = fileManager.readFile(filesPart.getAbsolutePath());
+                        StreamUtil.copy(in, out);
+                        StreamUtil.closeQuietly(in);
+                        fileManager.removeFile(filesPart.getAbsolutePath());
+                        ObjectUtil.remove(fileParts, SpELUtil.getExpression(" absolutePath == #value.getAbsolutePath() and fileManagerId == #value.getFileManagerId() "), filePart);
+                    }
+                    StreamUtil.closeQuietly(out);
+
+                    //保存合并后的新文件
+                    fileDetail = this.upload(tmp, contentType, entireFileName, entireFileDir);
+
+                    //删除临时文件
+                    FileUtil.delFile(tmp);
+
+                    //删除 Part 文件
+                    for (FilePart filesPart : fileParts) {
+                        fileManager.removeFile(filesPart.getAbsolutePath());
+                    }
+
+                    //在File_PART 表冗余一条数据 片段为 0
+                    filePartService.save(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()), entireFileHash, entireFileHash, total, 0);
+                }
+            } else {
+                //删除 Part 文件
+                for (FilePart filesPart : fileParts) {
+                    fileManager.removeFile(filesPart.getAbsolutePath());
+                }
+            }
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+            throw e;
         }
-        if (StringUtil.isBlank(entireFileName) || StringUtil.isBlank(entireFileDir)) {
-            return false;
-        }
-        if (ObjectUtil.isNull(total) || StringUtil.isNull(index)) {
-            return false;
-        }
-        return true;
+        return fileDetail;
     }
 
     public FileDetail upload(MultipartFile file, String dir, String entireFileName, String entireFileDir, String entireFileHash, String partFileHash, Integer total, Integer index) throws IOException {
@@ -81,52 +118,15 @@ public class FileUploadService {
                 //查询上传的片段
                 List<FilePart> fileParts = filePartService.find(entireFileHash);
                 FilePart part = ObjectUtil.remove(fileParts, "index", 0);
-                if (part == null) {
-                    List<FilePart> joinFileParts = new ArrayList<FilePart>();
-                    ObjectUtil.join(joinFileParts, fileParts, "index");
-
-                    if (joinFileParts.size() == total) {
-                        //临时文件
-                        File tmp = FileUtil.tmp();
-                        //合并 Part 文件
-                        FileOutputStream out = new FileOutputStream(tmp);
-                        for (FilePart filesPart : joinFileParts) {
-                            InputStream in = fileManager.readFile(filesPart.getAbsolutePath());
-                            StreamUtil.copy(in, out);
-                            StreamUtil.closeQuietly(in);
-                            fileManager.removeFile(filesPart.getAbsolutePath());
-                            ObjectUtil.remove(fileParts, SpELUtil.getExpression(" absolutePath == #value.getAbsolutePath() and fileManagerId == #value.getFileManagerId() "), filePart);
-                        }
-                        StreamUtil.closeQuietly(out);
-
-                        //保存合并后的新文件
-                        fileDetail = this.upload(tmp, contentType, entireFileName, entireFileDir);
-
-                        //删除临时文件
-                        FileUtil.delFile(tmp);
-
-                        //删除 Part 文件
-                        for (FilePart filesPart : fileParts) {
-                            fileManager.removeFile(filesPart.getAbsolutePath());
-                        }
-
-                        //在File_PART 表冗余一条数据 片段为 0
-                        filePartService.save(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()), entireFileHash, entireFileHash, total, 0);
-                    }
-                } else {
-                    //删除 Part 文件
-                    for (FilePart filesPart : fileParts) {
-                        fileManager.removeFile(filesPart.getAbsolutePath());
-                    }
+                FileDetail entireFileDetail = this.uploadPart(part,filePart,fileParts,contentType,entireFileName,entireFileDir,entireFileHash,total,fileManager);
+                if (entireFileDetail != null) {
+                    fileDetail = entireFileDetail;
                 }
             } else {
                 fileDetail = this.upload(file, dir);
             }
             return fileDetail;
         } catch (RuntimeException e) {
-            LOG.error(e.getMessage(), e);
-            throw e;
-        } catch (IOException e) {
             LOG.error(e.getMessage(), e);
             throw e;
         }
@@ -178,43 +178,9 @@ public class FileUploadService {
                 //查询上传的片段
                 List<FilePart> fileParts = filePartService.find(entireFileHash);
                 FilePart part = ObjectUtil.remove(fileParts, "index", 0);
-                if (part == null) {
-                    List<FilePart> joinFileParts = new ArrayList<FilePart>();
-                    ObjectUtil.join(joinFileParts, fileParts, "index");
-
-                    if (joinFileParts.size() == total) {
-                        //临时文件
-                        File tmp = FileUtil.tmp();
-                        //合并 Part 文件
-                        FileOutputStream out = new FileOutputStream(tmp);
-                        for (FilePart filesPart : joinFileParts) {
-                            InputStream in = fileManager.readFile(filesPart.getAbsolutePath());
-                            StreamUtil.copy(in, out);
-                            StreamUtil.closeQuietly(in);
-                            fileManager.removeFile(filesPart.getAbsolutePath());
-                            ObjectUtil.remove(fileParts, SpELUtil.getExpression(" absolutePath == #value.getAbsolutePath() and fileManagerId == #value.getFileManagerId() "), filePart);
-                        }
-                        StreamUtil.closeQuietly(out);
-
-                        //保存合并后的新文件
-                        fileDetail = this.upload(tmp, contentType, entireFileName, entireFileDir);
-
-                        //删除临时文件
-                        FileUtil.delFile(tmp);
-
-                        //删除 Part 文件
-                        for (FilePart filesPart : fileParts) {
-                            fileManager.removeFile(filesPart.getAbsolutePath());
-                        }
-
-                        //在File_PART 表冗余一条数据 片段为 0
-                        filePartService.save(FileDetailKey.newInstance(fileDetail.getAbsolutePath(), fileDetail.getFileManagerId()), entireFileHash, entireFileHash, total, 0);
-                    }
-                } else {
-                    //删除 Part 文件
-                    for (FilePart filesPart : fileParts) {
-                        fileManager.removeFile(filesPart.getAbsolutePath());
-                    }
+                FileDetail entireFileDetail = this.uploadPart(part,filePart,fileParts,contentType,entireFileName,entireFileDir,entireFileHash,total,fileManager);
+                if (entireFileDetail != null) {
+                    fileDetail = entireFileDetail;
                 }
             } else {
                 fileDetail = this.upload(attach, contentType, fileName, dir);
@@ -223,13 +189,10 @@ public class FileUploadService {
         } catch (RuntimeException e) {
             LOG.error(e.getMessage(), e);
             throw e;
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-            throw e;
         }
     }
 
-    public FileDetail upload(MultipartFile file, String dir) throws IOException {
+    private FileDetail upload(MultipartFile file, String dir) throws IOException {
         InputStream input = file.getInputStream();
         if (input.markSupported()) {
             return upload(input, file.getContentType(), file.getOriginalFilename(), file.getSize(), dir);
@@ -250,16 +213,8 @@ public class FileUploadService {
         }
     }
 
-    public FileDetail upload(InputStream input, String contentType, String fileName, long size, String dir) throws IOException {
-        Directory directory = this.fileService.getDirectory(dir);
-        //获取文件Md5码
-        String md5 = MessageDigestUtil.getInstance().get(input);// 获取文件MD5
-
-        input.reset();
-        String mimeType = FileUtil.getMimeType(input);
-
-        //通过 mimeType 纠正后缀名
-        Map<String, String> extensions = new HashMap<String, String>() {
+    private Map<String, String> extensions(){
+        return new HashMap<String, String>() {
             {
                 this.put("image/jpeg", "jpg");
                 this.put("image/gif", "gif");
@@ -267,6 +222,18 @@ public class FileUploadService {
                 this.put("mage/bmp", "bmp");
             }
         };
+    }
+
+    private FileDetail upload(InputStream input, String contentType, String fileName, long size, String dir) throws IOException {
+        Directory directory = this.fileService.getDirectory(dir);
+        //获取文件Md5码
+        String md5 = DigestUtils.md5DigestAsHex(input);// 获取文件MD5
+
+        input.reset();
+        String mimeType = FileUtil.getMimeType(input);
+
+        //通过 mimeType 纠正后缀名
+        Map<String, String> extensions = extensions();
 
         // 获取虚拟目录
         String absolutePath = directory.getDirPath() + separator + DateUtil.format("yyyyMMdd") + separator + StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", "")) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
@@ -293,19 +260,12 @@ public class FileUploadService {
     public FileDetail upload(File attach, String contentType, String fileName, String dir) throws IOException {
         Directory directory = this.fileService.getDirectory(dir);
         //获取文件Md5码
-        String md5 = MessageDigestUtil.getInstance().get(attach);// 获取文件MD5
+        String md5 = DigestUtils.md5DigestAsHex(new FileInputStream(attach));// 获取文件MD5
 
         String mimeType = FileUtil.getMimeType(attach);
 
         //通过 mimeType 纠正后缀名
-        Map<String, String> extensions = new HashMap<String, String>() {
-            {
-                this.put("image/jpeg", "jpg");
-                this.put("image/gif", "gif");
-                this.put("image/png", "png");
-                this.put("mage/bmp", "bmp");
-            }
-        };
+        Map<String, String> extensions = extensions();
 
         // 获取虚拟目录
         String absolutePath = directory.getDirPath() + separator + DateUtil.format("yyyyMMdd") + separator + StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", "")) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
@@ -330,19 +290,12 @@ public class FileUploadService {
 
     public FileDetail upload(File attach, String absolutePath, String fileManagerId) throws IOException {
         //获取文件Md5码
-        String md5 = MessageDigestUtil.getInstance().get(attach);// 获取文件MD5
+        String md5 = DigestUtils.md5DigestAsHex(new FileInputStream(attach));// 获取文件MD5
 
         String mimeType = FileUtil.getMimeType(attach);
 
         //通过 mimeType 纠正后缀名
-        Map<String, String> extensions = new HashMap<String, String>() {
-            {
-                this.put("image/jpeg", "jpg");
-                this.put("image/gif", "gif");
-                this.put("image/png", "png");
-                this.put("mage/bmp", "bmp");
-            }
-        };
+        Map<String, String> extensions = extensions();
         // 文件类型
         FileDetail fileDetail;
         // 获取真实目录

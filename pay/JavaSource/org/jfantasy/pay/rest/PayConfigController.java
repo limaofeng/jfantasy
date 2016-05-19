@@ -1,8 +1,10 @@
 package org.jfantasy.pay.rest;
 
+import io.swagger.annotations.Api;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import io.swagger.annotations.Api;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.Parameters;
@@ -25,6 +27,7 @@ public class PayConfigController {
     @Autowired
     private PaymentService paymentService;
 
+    @JsonIgnoreProperties({@IgnoreProperty(pojo = PayConfig.class, name = {"properties"})})
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<PayConfig> search(Pager<PayConfig> pager, List<PropertyFilter> filters) {

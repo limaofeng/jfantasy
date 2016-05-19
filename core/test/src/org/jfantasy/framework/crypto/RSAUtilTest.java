@@ -1,10 +1,10 @@
 package org.jfantasy.framework.crypto;
 
-import org.jfantasy.framework.util.common.MessageDigestUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.Before;
 import org.junit.Test;
+import org.springframework.util.DigestUtils;
 
 import java.security.KeyPair;
 import java.security.interfaces.RSAPrivateKey;
@@ -34,7 +34,7 @@ public class RSAUtilTest {
     public void testEncrypt() throws Exception {
         RSAPublicKey recoveryPubKey = RSAUtil.getRSAPublicKey(pubKey);
 
-        String source = MessageDigestUtil.getInstance().get("加密的数据");
+        String source = DigestUtils.md5DigestAsHex("加密的数据".getBytes());
         LOG.debug("原始字符串:" + source);
 
         String enstr = RSAUtil.encrypt(recoveryPubKey, source);

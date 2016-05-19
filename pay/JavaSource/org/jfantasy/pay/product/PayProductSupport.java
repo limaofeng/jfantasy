@@ -25,6 +25,7 @@ public abstract class PayProductSupport implements PayProduct {
     protected String id;//支付产品ID
     protected String name;// 支付产品名称
     protected String bargainorIdName;// 商户ID参数名称
+    protected String summary;//产品摘要
     protected String description;// 支付产品描述
     protected String bargainorKeyName;// 密钥参数名称
     protected CurrencyType[] currencyTypes;// 支持货币类型
@@ -125,6 +126,14 @@ public abstract class PayProductSupport implements PayProduct {
         MDC.put("payConfigId", config.getId());
         MDC.put("body", result);
         LOG.info(MDC.getContext());
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
     @JsonAnyGetter

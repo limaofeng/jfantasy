@@ -21,7 +21,7 @@ public interface PayProduct {
      * @return String
      * @throws PayException
      */
-    String web(Payment payment, Order order, Properties properties) throws PayException;
+    Object web(Payment payment, Order order, Properties properties) throws PayException;
 
     //WAP支付
     String wap();

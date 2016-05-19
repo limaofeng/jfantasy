@@ -7,7 +7,6 @@ import org.jfantasy.framework.httpclient.Request;
 import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.MessageDigestUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.sax.XMLReader;
 import org.jfantasy.framework.util.sax.XmlElement;
@@ -22,6 +21,7 @@ import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.product.sign.SignUtil;
 import org.jfantasy.pay.product.util.CertUtil;
 import org.jfantasy.pay.product.util.RAMFileProxy;
+import org.springframework.util.DigestUtils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -53,7 +53,7 @@ public class Weixinpay extends PayProductSupport {
     }
 
     @Override
-    public String web(Payment payment, Order order, Properties properties) throws PayException {
+    public Object web(Payment payment, Order order, Properties properties) throws PayException {
         PayConfig config = payment.getPayConfig();
         String openid = properties.getProperty("openid");
 
@@ -80,6 +80,15 @@ public class Weixinpay extends PayProductSupport {
             result.put("prepay_id", data.get("prepay_id"));
             result.put("sign", sign(result, config.getBargainorKey()));
             return StringUtil.isNotBlank(openid) ? mapToXml(result) : data.get("code_url");
+        }else if("JSAPI".equals(data.get("trade_type"))){
+            Map<String, String> result = new HashMap<>();
+            result.put("appId", data.get("appid"));
+            result.put("timeStamp", (DateUtil.now().getTime() / 1000) + "");
+            result.put("nonceStr", generateNonceString(32));
+            result.put("package", "prepay_id=" + data.get("prepay_id"));
+            result.put("signType", "MD5");
+            result.put("paySign", sign(result, config.getBargainorKey()));
+            return result;
         }
         return null;
     }
@@ -319,7 +328,7 @@ public class Weixinpay extends PayProductSupport {
     }
 
     public static String sign(Map<String, String> data, String bargainorKey) {
-        return MessageDigestUtil.getInstance().get(SignUtil.coverMapString(data, "sign") + "&key=" + bargainorKey).toUpperCase();
+        return DigestUtils.md5DigestAsHex((SignUtil.coverMapString(data, "sign") + "&key=" + bargainorKey).getBytes()).toUpperCase();
     }
 
     private static final String NONCE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";

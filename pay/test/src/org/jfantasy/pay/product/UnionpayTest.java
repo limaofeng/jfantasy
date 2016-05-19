@@ -12,6 +12,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import java.math.BigDecimal;
@@ -26,7 +27,7 @@ public class UnionpayTest {
     private final static Log LOG = LogFactory.getLog(UnionpayTest.class);
 
     private Unionpay unionpay = new Unionpay();
-
+    @Autowired
     private PayConfigService payConfigService;
     private Order order = new Order();
     private PayConfig payConfig;
@@ -102,13 +103,13 @@ public class UnionpayTest {
         payment.setTotalAmount(BigDecimal.valueOf(0.01));
         payment.setCreateTime(DateUtil.parse("20160128131252","yyyyMMddHHmmss"));
 
-        payment = unionpay.payNotify(payment,body);
+        unionpay.payNotify(payment,body);
 
         LOG.debug(payment);
 
         body = "txnType=01&respCode=00&currencyCode=156&merId=802310073920500&settleDate=0129&txnSubType=01&version=5.0.0&txnAmt=2&signMethod=01&certId=69597475696&settleAmt=2&traceTime=0129143436&encoding=UTF-8&settleCurrencyCode=156&bizType=000201&respMsg=Success%21&traceNo=460833&queryId=201601291434364608338&signature=Rs49SebZD2EbxB1A6UhzZ4ITpLv6SZ3jGzrIOYHMurLEWVndaEsmUU5%2BDvdg6AIYz8QE0D4Yg2lldHaN0NEXC8jLYY%2FdYPoJmWDBK5mzuGTbKA9ZtIblBGzLZncszyNgjvZ90dYJ167vwu7iQeMCJpq7Lj7WNp%2BFDDcOTr5nKihOsvl64i%2FIi4hYZQs9bRBIoP%2Bsn%2FtqN%2F4kQ21WoG7yqFmdqz9xE7SkZjI6eNhdAB7ol219S1BtwfM1fvxo8N76pR0QDldldIQm4Yq59qqIgPxuNcnbMqLlqDWbIsHVoOVTSgPmLMa5aj46BiXgYBY88RlpFA3w5QoPAQL00ZrMoA%3D%3D&orderId=P2016012900166&txnTime=20160129143436&accessType=0";
 
-        payment = unionpay.payNotify(payment,body);
+        unionpay.payNotify(payment,body);
 
         LOG.debug(payment);
 

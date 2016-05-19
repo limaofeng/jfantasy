@@ -1,9 +1,10 @@
 package org.jfantasy.framework.util.common;
 
-import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
+import org.springframework.util.DigestUtils;
 import org.springframework.util.StringUtils;
 
 import java.io.UnsupportedEncodingException;
@@ -717,7 +718,7 @@ public abstract class StringUtil {
                 "U", "V", "W", "X", "Y", "Z"
         };
         // 对传入网址进行 MD5 加密
-        String hex = MessageDigestUtil.getInstance().get(key + s);
+        String hex = DigestUtils.md5DigestAsHex((key + s).getBytes());
         String[] resUrl = new String[4];
         for (int i = 0; i < 4; i++) {
             // 把加密字符按照 8 位一组 16 进制与 0x3FFFFFFF 进行位与运算
