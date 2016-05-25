@@ -23,9 +23,9 @@ import java.util.Properties;
 @Import(OrderServiceRegistryRunner.class)
 public class PayClientAutoConfiguration {
 
-    @Value("${pay.server.host:127.0.0.1}")
+    @Value("${api.pay.rpc.host:127.0.0.1}")
     private String host;
-    @Value("${pay.server.port:9090}")
+    @Value("${api.pay.rpc.port:9090}")
     private int port;
 
     @Bean(name = "orderServiceRegistry")
