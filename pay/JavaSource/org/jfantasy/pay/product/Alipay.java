@@ -323,6 +323,7 @@ public class Alipay extends AlipayPayProductSupport {
 
     @Override
     public Refund payNotify(Refund refund, String result) throws PayException {
+        LOG.debug(refund);
         return null;
     }
 
