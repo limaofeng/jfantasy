@@ -4,6 +4,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
@@ -23,6 +25,7 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
+    @JsonIgnoreProperties({@IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig"})})
     @ApiOperation("查询支付记录")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

@@ -199,4 +199,10 @@ public class Refund extends BaseBusEntity {
     public void setOrder(Order order) {
         this.order = order;
     }
+
+    @Transient
+    public String getOrderKey() {
+        return this.getOrder().getKey();
+    }
+
 }

@@ -1,0 +1,11 @@
+local now = tonumber(ARGV[1])
+local timeout=tonumber(ARGV[2])
+local kt = redis.call('type', KEYS[1]);
+if (kt['ok'] == 'string') then
+    local keyValue = tonumber(redis.call('get', KEYS[1]))
+    if ((keyValue - now) <= timeout) then
+        redis.call('del', KEYS[1])
+        return 0
+    end
+end
+return 1

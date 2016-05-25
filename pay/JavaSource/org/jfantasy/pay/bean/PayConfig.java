@@ -7,9 +7,11 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.pay.product.sign.Base64;
 
 import javax.persistence.*;
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -225,6 +227,21 @@ public class PayConfig extends BaseBusEntity {
 
     @JsonAnyGetter
     public Properties getProperties() {
+        if(ThreadJacksonMixInHolder.isContainsMixIn()){
+            Properties newProperties = new Properties();
+            for(Object _key : properties.keySet()){
+                String key = _key.toString();
+                Object value = properties.get(key);
+                if(value instanceof byte[]){
+                    newProperties.setProperty(key,"--Hidden Byte data--");
+                }else if(value instanceof File) {
+                    newProperties.setProperty(key,"--Hidden File data--");
+                }else{
+                    newProperties.setProperty(key, value.toString());
+                }
+            }
+            return newProperties;
+        }
         return properties;
     }
 

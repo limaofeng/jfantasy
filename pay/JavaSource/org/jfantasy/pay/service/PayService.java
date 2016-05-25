@@ -2,6 +2,7 @@ package org.jfantasy.pay.service;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.BeanUtil;
@@ -109,7 +110,10 @@ public class PayService {
      * @return Refund
      */
     public Refund refund(String paymentSn, BigDecimal amount, String remark) {
-        return refundService.ready(paymentService.get(paymentSn), amount, remark);
+        Refund refund = refundService.ready(paymentService.get(paymentSn), amount, remark);
+        Hibernate.initialize(refund.getPayConfig());
+        Hibernate.initialize(refund.getOrder());
+        return refund;
     }
 
     /**
@@ -177,6 +181,19 @@ public class PayService {
 
         //更新支付状态
         paymentService.save(payment);
+
+        // 更新订单状态
+        switch (payment.getStatus()){
+            case close:
+                break;
+            case success:
+                order.setStatus(Order.PaymentStatus.paid);
+                break;
+            case finished:
+                break;
+            case failure:
+                break;
+        }
 
         // 如果为完成 或者 初始状态 不触发事件
         if (payment.getStatus() == PaymentStatus.finished || payment.getStatus() == PaymentStatus.ready) {

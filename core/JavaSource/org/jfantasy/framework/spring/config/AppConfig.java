@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Import;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.context.event.SimpleApplicationEventMulticaster;
 import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 import org.springframework.scheduling.SchedulingTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -80,6 +82,13 @@ public class AppConfig {
         poolTaskExecutor.setKeepAliveSeconds(30000);
         poolTaskExecutor.initialize();
         return poolTaskExecutor;
+    }
+
+    @Bean(name = "applicationEventMulticaster")
+    public ApplicationEventMulticaster applicationEventMulticaster() {
+        SimpleApplicationEventMulticaster applicationEventMulticaster = new SimpleApplicationEventMulticaster();
+        applicationEventMulticaster.setTaskExecutor(taskExecutor());
+        return applicationEventMulticaster;
     }
 
     @Bean(initMethod = "open", destroyMethod = "close")

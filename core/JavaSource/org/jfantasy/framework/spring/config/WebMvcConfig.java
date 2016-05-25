@@ -161,7 +161,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowedMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
-                .allowedHeaders("Accept", "Origin", "X-Requested-With", "Content-Type", "Last-Modified","X-Result-Fields", "X-Expend-Fields")
+                .allowedHeaders("Accept", "Origin", "X-Requested-With", "Content-Type", "Last-Modified", "X-Page-Fields", "X-Result-Fields", "X-Expend-Fields")
                 .exposedHeaders("Set-Cookie")
                 .allowCredentials(true).maxAge(3600);
     }

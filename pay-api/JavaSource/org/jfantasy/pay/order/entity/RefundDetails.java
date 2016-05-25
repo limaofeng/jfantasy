@@ -1,8 +1,8 @@
 package org.jfantasy.pay.order.entity;
 
 import io.swagger.annotations.ApiModelProperty;
+import org.jfantasy.pay.order.entity.enums.PaymentType;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
-import org.jfantasy.pay.order.entity.enums.RefundType;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -24,7 +24,7 @@ public class RefundDetails implements Serializable {
 
     private OrderKey orderKey;
     private String sn;// 退款编号
-    private RefundType type;// 退款类型
+    private PaymentType type;// 退款类型
     @ApiModelProperty("退款状态")
     private RefundStatus status;
     /**
@@ -131,11 +131,11 @@ public class RefundDetails implements Serializable {
         this.sn = sn;
     }
 
-    public RefundType getType() {
+    public PaymentType getType() {
         return type;
     }
 
-    public void setType(RefundType type) {
+    public void setType(PaymentType type) {
         this.type = type;
     }
 

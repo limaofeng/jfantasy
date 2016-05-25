@@ -1,8 +1,8 @@
 package org.jfantasy.pay.service.vo;
 
-import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 
-public class ToRefund extends Payment {
+public class ToRefund extends Refund {
 
     private Object source;
 

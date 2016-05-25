@@ -4,6 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.pay.bean.Order;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.rest.form.RefundForm01;
 import org.jfantasy.pay.service.PayService;
@@ -25,6 +30,7 @@ public class RefundController {
     @Autowired
     private PayService payService;
 
+    @JsonIgnoreProperties({@IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"})})
     @ApiOperation("查询退款记录")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -32,13 +38,19 @@ public class RefundController {
         return refundService.findPager(pager, filters);
     }
 
+    @JsonIgnoreProperties({@IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig","payment"})})
     @ApiOperation(value = "更新退款记录", notes = "该方法只能修改 退款状态 ")
     @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
     @ResponseBody
     public ToRefund update(@PathVariable("sn") String sn, @RequestBody RefundForm01 form) {
-        return payService.refund(sn,form.getStatus(),form.getRemark());
+        return payService.refund(sn, form.getStatus(), form.getRemark());
     }
 
+    @JsonIgnoreProperties({
+            @IgnoreProperty(pojo = Order.class, name = {"payConfig", "payments", "refunds"}),
+            @IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig", "refunds"}),
+            @IgnoreProperty(pojo = PayConfig.class, name = {"sellerEmail", "validateCert", "signCert", "appId", "encryptCert", "rsaPublicKey", "rsaPrivateKey", "bargainorId", "bargainorKey"})
+    })
     @ApiOperation("获取退款记录")
     @RequestMapping(value = "/{sn}", method = RequestMethod.GET)
     @ResponseBody

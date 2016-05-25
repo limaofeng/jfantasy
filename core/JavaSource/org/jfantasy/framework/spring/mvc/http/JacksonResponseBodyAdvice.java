@@ -33,7 +33,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Order(1)
 @ControllerAdvice
-public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
+public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
 
     private final static Log LOGGER = LogFactory.getLog(JacksonResponseBodyAdvice.class);
 
@@ -48,7 +48,7 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         boolean supports = Object.class.isAssignableFrom(returnType);
         if(supports) {
             JsonIgnoreProperties jsonIgnoreProperties = methodParameter.getMethod().getAnnotation(JsonIgnoreProperties.class);
-            if (jsonIgnoreProperties != null) {
+            if (jsonIgnoreProperties != null && !ThreadJacksonMixInHolder.isContainsMixIn()) {
                 ThreadJacksonMixInHolder mixInHolder = ThreadJacksonMixInHolder.getMixInHolder();
                 AllowProperty[] allowProperties = jsonIgnoreProperties.allow();
                 IgnoreProperty[] ignoreProperties = jsonIgnoreProperties.value();
@@ -70,7 +70,6 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
     public Object beforeBodyWrite(Object obj, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> converterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         Object returnValue = obj;
         HttpServletRequest request = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest();
-        final String xExpansionFields = request.getHeader(X_Expansion_Fields);//如果需要返回
         if (mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
             Class returnType = methodParameter.getMethod().getReturnType();
 
@@ -79,6 +78,7 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
             }
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
             mappingJacksonValue.setFilters(ThreadJacksonMixInHolder.getMixInHolder().getFilterProvider());
+            ThreadJacksonMixInHolder.clear();
             return mappingJacksonValue;
 
             /*

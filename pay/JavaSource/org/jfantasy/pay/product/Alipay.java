@@ -1,20 +1,18 @@
 package org.jfantasy.pay.product;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.jfantasy.framework.httpclient.HttpClientUtil;
-import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.HandlebarsTemplateUtils;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.product.sign.SignUtil;
 
 import java.io.IOException;
@@ -104,19 +102,19 @@ public class Alipay extends AlipayPayProductSupport {
             //额外参数
             if (StringUtil.isNotBlank(properties.getProperty("backUrl"))) {
                 data.put("return_url", properties.getProperty("backUrl"));//同步通知
-                LOG.debug("添加参数 return_url = " + data.get("MerPageUrl"));
+                LOG.debug("添加参数 return_url = " + properties.getProperty("MerPageUrl"));
             }
             if (StringUtil.isNotBlank(properties.getProperty("showUrl"))) {
                 data.put("show_url", properties.getProperty("showUrl"));// 商品显示URL
-                LOG.debug("添加参数 show_url = " + data.get("showUrl"));
+                LOG.debug("添加参数 show_url = " + properties.getProperty("showUrl"));
             }
             if (StringUtil.isNotBlank(properties.getProperty("extra_common_param"))) {
                 data.put("extra_common_param", properties.getProperty("extra_common_param"));
-                LOG.debug("添加参数 extra_common_param = " + data.get("extra_common_param"));
+                LOG.debug("添加参数 extra_common_param = " + properties.getProperty("extra_common_param"));
             }
             if (StringUtil.isNotBlank(properties.getProperty("bankNo"))) {
                 data.put("defaultbank", properties.getProperty("bankNo"));// 默认选择银行（当paymethod为bankPay时有效）
-                LOG.debug("添加参数 defaultbank = " + data.get("defaultbank"));
+                LOG.debug("添加参数 defaultbank = " + properties.getProperty("defaultbank"));
                 data.put("paymethod", "bankPay");// 默认支付方式（bankPay：网银、cartoon：卡通、directPay：余额、CASH：网点支付）
             } else {
                 data.put("paymethod", "directPay");
@@ -148,7 +146,6 @@ public class Alipay extends AlipayPayProductSupport {
         privateKeys.put("MD5", config.getBargainorKey());
         privateKeys.put("RSA", config.get("rsaPublicKey",String.class));
 
-        //"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCnxj/9qwVfgoUh/y2W89L6BkRAFljhNhgPdyPuBV64bfQNN1PjbCzkIM6qRdKBoLPXmKKMiFYnkd6rAoprih3/PrQEB/VsW8OoM8fxn67UDYuyBTqA23MML9q1+ilIZwBC2AQ2UBVOrFXfFl75p6/B5KsiNG9zpgmLCUYuLkxpLQIDAQAB"
         try {
             Map<String, String> appdata = new HashMap<>();
             if (result.contains("result")) {//为手机同步支付通知
@@ -168,10 +165,6 @@ public class Alipay extends AlipayPayProductSupport {
             }
 
             Map<String, String> data = SignUtil.parseQuery(appdata.isEmpty() ? result : appdata.get("result"), appdata.isEmpty());
-            if (appdata.isEmpty()) {
-                data.put("sign", data.get("sign").replaceAll(" ", "+"));//编码的时候可能会将签名中的 '+' => '' 所以再次转换回来 * 不能使用 encodeURI 方法
-                data.put("notify_id", StringUtil.encodeURI(data.get("notify_id"), input_charset));//编码的时候可能会将通知ID中的  %2F => 和 %2B => +  所以再次转换回来
-            }
 
             if (!verifyNotifyId(config.getBargainorId(), data.get("notify_id"))) {
                 throw new RestException("支付宝 notify_id 验证失败");
@@ -186,6 +179,11 @@ public class Alipay extends AlipayPayProductSupport {
                 //TODO 如果有支付过期定时器的话,现在可以启动了
                 LOG.debug("WAIT_BUYER_PAY ... ");
             } else if ("TRADE_SUCCESS".equals(data.get("trade_status"))) {//交易成功，且可对该交易做操作，如：多级分润、退款等。
+                if(data.containsKey("gmt_payment")){
+                    payment.setTradeTime(DateUtil.parse(data.get("gmt_payment"),"yyyy-MM-dd HH:mm:dd"));
+                }else{//TODO 如果为同步通知,可以发起一笔查询交易来获取交易时间
+                    payment.setTradeTime(DateUtil.parse(data.get("notify_time"),"yyyy-MM-dd HH:mm:dd"));
+                }
                 payment.setStatus(PaymentStatus.success);
             } else if ("TRADE_FINISHED".equals(data.get("trade_status"))) {//交易成功且结束，即不可再做任何操作。
                 payment.setStatus(PaymentStatus.finished);
@@ -203,7 +201,7 @@ public class Alipay extends AlipayPayProductSupport {
         PayConfig config = refund.getPayConfig();
         Payment payment = refund.getPayment();
 
-        Map<String, String> data = new TreeMap<>();
+        final Map<String, String> data = new TreeMap<>();
         try {
             data.put("service", "refund_fastpay_by_platform_pwd");
             data.put("partner", config.getBargainorId());
@@ -211,22 +209,26 @@ public class Alipay extends AlipayPayProductSupport {
             data.put("sign_type", "MD5");
             data.put("notify_url", SettingUtil.getServerUrl() + "/pays/" + refund.getSn() + "/notify");
             data.put("seller_email", config.get(EXT_SELLER_EMAIL,String.class));
+            data.put("seller_user_id",config.getBargainorId());
             data.put("refund_date", DateUtil.format(refund.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
-            data.put("batch_no", refund.getSn());
+            data.put("batch_no", DateUtil.format("yyyyMMdd") + refund.getSn());
             data.put("batch_num", "1");
-            data.put("detail_data", payment.getSn() + "^" + RMB_YUAN_FORMAT.format(refund.getTotalAmount()) + "^none");
+            data.put("detail_data", payment.getTradeNo() + "^" + RMB_YUAN_FORMAT.format(refund.getTotalAmount()) + "^退款");
 
             data.put("sign", sign(data, config.getBargainorKey()));
 
-            Response response = HttpClientUtil.doPost(urls.refundUrl, data);
+//            Response response = HttpClientUtil.doPost(urls.refundUrl, data);
 
-            System.out.println(response.getBody());
+//            System.out.println(response.getBody());
 
-            throw new PayException("暂不支持支付宝退款!");
-
-            /*
+            return HandlebarsTemplateUtils.processTemplateIntoString(HandlebarsTemplateUtils.template("/org.jfantasy.pay.product.template/pay"), new HashMap<String, Object>() {
+                {
+                    this.put("url", urls.paymentUrl);
+                    this.put("params", data.entrySet());
+                }
+            });
             //公共请求参数
-
+            /*
             data.put("app_id","2016041201289130");//支付宝分配给开发者的应用Id
             data.put("method","alipay.trade.refund");
             data.put("charset",input_charset);
@@ -246,21 +248,21 @@ public class Alipay extends AlipayPayProductSupport {
             //bizcontent.put("store_id","");//商户的门店编号
             //bizcontent.put("terminal_id","");//商户的终端编号
 
-            data.put("biz_content",JSON.serialize(bizcontent));
+            data.put("biz_content", JSON.serialize(bizcontent));
 
-            String privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBANesnTGjdj/aEtnZ\n" +
-                    "P39jKpVEEj7cuvwc4DHJbmGpyKti235ejE9V8h2puTqX3Xof5UidjFNwiHChFZmi\n" +
-                    "+EU8i8OQK09PR4OALhg9TdSBWF+mwLpJ5LeHYEXXUkWwWtK94IW12K/n4aEEVtRZ\n" +
-                    "rfa9REKrclCATnT5v/Qspqp86oNdAgMBAAECgYEAoOyHDfat0M7iqfHT0zUnHOEB\n" +
-                    "zC3exya0kfF+jxikRl0o8Y2Sm8/BLCjrsLCH7QvHhPspLUkWRROsjkpvfRnEHfTY\n" +
-                    "d3NeccKW2YuFmcL2U7J3AHvdghSR8IE2sTA8CRorCMeS0FjHc+zgJTOIalrzgDjU\n" +
-                    "U4C6KRGaSuCggy0wp4ECQQDsAkKQoLDN7Ig2D8KkhR3C9R4VgXgJBwZjJYQLHE2Q\n" +
-                    "lMPTp0TnHgJJfJFcec2kM96gIULwlsoiXNLWp313GUMFAkEA6fFop4CUVFrWWw01\n" +
-                    "WqhLSb3Q1aQ83XYOf7eku2SgEv5jEkZmpkJu5k3dSCRcgriXPhLw7hFIvEW6Gpy2\n" +
-                    "uEZeeQJBAM0LzZ9wLQxMI6+sk7RyfwACDIgsuwhE1TTQxF8O0Qj7ZwP9gKy38s67\n" +
-                    "7mME5Dh0ZEiFfW4f5DBkqz2ZuTT/eq0CQDLK1DMR6qKJ+mJYcs4VHguLp8zK1OAs\n" +
-                    "Yqd+IskA5vRYwP/VwzGz2Mot+65PHrrPAx9aE29M12LxLJ/ciJtnw9kCQEVvWtNU\n" +
-                    "CDLaWnH4SxTG7P9OsfNWgz//O7eT69wsGoFHb2PeN9XVDBQbr7SomrGeYa8SwqCS\n" +
+            String privateKey = "MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBANesnTGjdj/aEtnZ" +
+                    "P39jKpVEEj7cuvwc4DHJbmGpyKti235ejE9V8h2puTqX3Xof5UidjFNwiHChFZmi" +
+                    "+EU8i8OQK09PR4OALhg9TdSBWF+mwLpJ5LeHYEXXUkWwWtK94IW12K/n4aEEVtRZ" +
+                    "rfa9REKrclCATnT5v/Qspqp86oNdAgMBAAECgYEAoOyHDfat0M7iqfHT0zUnHOEB" +
+                    "zC3exya0kfF+jxikRl0o8Y2Sm8/BLCjrsLCH7QvHhPspLUkWRROsjkpvfRnEHfTY" +
+                    "d3NeccKW2YuFmcL2U7J3AHvdghSR8IE2sTA8CRorCMeS0FjHc+zgJTOIalrzgDjU" +
+                    "U4C6KRGaSuCggy0wp4ECQQDsAkKQoLDN7Ig2D8KkhR3C9R4VgXgJBwZjJYQLHE2Q" +
+                    "lMPTp0TnHgJJfJFcec2kM96gIULwlsoiXNLWp313GUMFAkEA6fFop4CUVFrWWw01" +
+                    "WqhLSb3Q1aQ83XYOf7eku2SgEv5jEkZmpkJu5k3dSCRcgriXPhLw7hFIvEW6Gpy2" +
+                    "uEZeeQJBAM0LzZ9wLQxMI6+sk7RyfwACDIgsuwhE1TTQxF8O0Qj7ZwP9gKy38s67" +
+                    "7mME5Dh0ZEiFfW4f5DBkqz2ZuTT/eq0CQDLK1DMR6qKJ+mJYcs4VHguLp8zK1OAs" +
+                    "Yqd+IskA5vRYwP/VwzGz2Mot+65PHrrPAx9aE29M12LxLJ/ciJtnw9kCQEVvWtNU" +
+                    "CDLaWnH4SxTG7P9OsfNWgz//O7eT69wsGoFHb2PeN9XVDBQbr7SomrGeYa8SwqCS" +
                     "rU4/l+JjAg+bR7o=";
 
             data.put("sign",sign(data,privateKey));
@@ -285,12 +287,11 @@ public class Alipay extends AlipayPayProductSupport {
                 throw new RestException("[" + data.get("err_code") + "]" + data.get("err_code_des"));
             }
 
-            refund.setStatus(Refund.Status.wait);
+            refund.setStatus(RefundStatus.wait);
             refund.setTradeNo(data.get("refund_id"));
 
+            return null;
             */
-//            return refund;
-
         } catch (IOException e) {
             throw new RestException("调用支付宝接口,网络错误!");
         } catch (PayException e) {

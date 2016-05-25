@@ -1,0 +1,17 @@
+local now = tonumber(ARGV[1])
+local timeout=tonumber(ARGV[2])
+local to = now + timeout + 1
+local locked = redis.call('SETNX', KEYS[1], to)
+if (locked == 1) then
+    return 0
+end
+local kt = redis.call('type', KEYS[1]);
+if (kt['ok'] ~= 'string') then
+    return 2
+end
+local keyValue = tonumber(redis.call('get', KEYS[1]))
+if (now - keyValue > timeout) then
+    redis.call('set', KEYS[1], to)
+    return 0
+end
+return 1

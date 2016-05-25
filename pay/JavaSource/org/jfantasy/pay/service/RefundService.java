@@ -58,7 +58,10 @@ public class RefundService {
      * @param remark  备注
      * @return Refund
      */
-    public Refund ready(Payment payment, final BigDecimal amount, String remark) {
+    public Refund ready(Payment payment, BigDecimal amount, String remark) {
+        if (amount.scale() != 2) {
+            amount = amount.setScale(2,BigDecimal.ROUND_DOWN);
+        }
         if (payment.getStatus() != PaymentStatus.success) {
             throw new PayException("原交易[" + payment.getSn() + "]未支付成功,不能发起退款操作");
         }
@@ -68,10 +71,11 @@ public class RefundService {
             if (refund != null) {//存在等待中的退单
                 return refund;
             }
-            refund = ObjectUtil.find(refunds, SpELUtil.getExpression(" #status == #value.status and #amount.equals(#value.amount) "), new HashMap<String, Object>() {
+            final BigDecimal famount = amount;
+            refund = ObjectUtil.find(refunds, SpELUtil.getExpression(" status == #value.get('status') and totalAmount.equals(#value.get('amount')) "), new HashMap<String, Object>() {
                 {
                     this.put("status", RefundStatus.ready);
-                    this.put("amount", amount);
+                    this.put("amount", famount);
                 }
             });//存在相同的退单
             if (refund != null) {

@@ -38,7 +38,7 @@ public class NettyServer implements ApplicationContextAware {
 
     private Map<String, Object> exportServiceMap = new HashMap<String, Object>();
 
-    @Value("${rpc.server.host:127.0.0.1}")
+    @Value("${rpc.server.host:0.0.0.0}")
     String host;
 
     @Value("${rpc.server.ioThreadNum:5}")

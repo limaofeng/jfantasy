@@ -59,13 +59,13 @@ public class Payment extends BaseBusEntity {
     /**
      * 收款银行名称
      */
-    @ApiModelProperty("收款方名称")
+    @ApiModelProperty(value = "收款方名称", notes = "在线支付时为支付渠道名称")
     @Column(name = "BANK_NAME", updatable = false)
     private String bankName;
     /**
      * 收款银行账号
      */
-    @ApiModelProperty("收款账号")
+    @ApiModelProperty(value = "收款账号", notes = "在线支付时为第三方支付账户")
     @Column(name = "BANK_ACCOUNT", updatable = false)
     private String bankAccount;
     /**
@@ -116,7 +116,7 @@ public class Payment extends BaseBusEntity {
     /**
      * 支付时间
      */
-    @ApiModelProperty(value = "支付时间",notes = "用于记录第三方交易的交易时间")
+    @ApiModelProperty(value = "支付时间", notes = "用于记录第三方交易的交易时间")
     @Column(name = "TRADE_TIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tradeTime;
@@ -232,4 +232,10 @@ public class Payment extends BaseBusEntity {
     public void setTradeTime(Date tradeTime) {
         this.tradeTime = tradeTime;
     }
+
+    @Transient
+    public String getOrderKey() {
+        return this.getOrder().getKey();
+    }
+
 }

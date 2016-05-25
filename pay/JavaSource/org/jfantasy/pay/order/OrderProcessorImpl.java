@@ -5,6 +5,7 @@ import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.order.entity.OrderKey;
 import org.jfantasy.pay.order.entity.RefundDetails;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
@@ -32,7 +33,12 @@ public class OrderProcessorImpl implements OrderProcessor {
         if (payment == null) {
             throw new RpcException(" 订单可能未支付成功或者已经退款! ");
         }
-        return BeanUtil.copyProperties(new RefundDetails(), payService.refund(payment.getSn(), amount, remark));
+        Refund refund = payService.refund(payment.getSn(), amount, remark);
+        RefundDetails details = new RefundDetails();
+        BeanUtil.copyProperties(details, refund);
+        details.setOrderKey(OrderKey.newInstance(payment.getOrder().getType(),payment.getOrder().getSn()));
+        details.setPayConfigId(refund.getPayConfig().getId());
+        return details;
     }
 
 }
