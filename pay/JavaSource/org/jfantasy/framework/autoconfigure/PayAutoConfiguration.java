@@ -20,11 +20,11 @@ public class PayAutoConfiguration {
         return new PayProductConfiguration();
     }
 
-    @Value("${aliyun.ons.producerId:PID-20160428}")
+    @Value("${aliyun.ons.pay.producerId:PID-20160428}")
     private String producerId;
-    @Value("${aliyun.ons.accessKey:GjYnEEMsLVTomMzF}")
+    @Value("${aliyun.ons.pay.accessKey:GjYnEEMsLVTomMzF}")
     private String accessKey;
-    @Value("${aliyun.ons.secretKey:rYSFhN67iXR0vl0pUSatSQjEqR2e2F}")
+    @Value("${aliyun.ons.pay.secretKey:rYSFhN67iXR0vl0pUSatSQjEqR2e2F}")
     private String secretKey;
 
     @Bean(initMethod = "start",destroyMethod = "shutdown")

@@ -13,6 +13,7 @@ import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.product.sign.SignUtil;
 
 import java.io.IOException;
@@ -139,12 +140,17 @@ public class Alipay extends AlipayPayProductSupport {
         }
     }
 
-    public String payNotify(Payment payment, String result) throws PayException {
-        PayConfig config = payment.getPayConfig();
-
+    private Map<String, String> getPrivateKey(PayConfig config){
         Map<String, String> privateKeys = new HashMap<>();
         privateKeys.put("MD5", config.getBargainorKey());
         privateKeys.put("RSA", config.get("rsaPublicKey",String.class));
+        return privateKeys;
+    }
+
+    public String payNotify(Payment payment, String result) throws PayException {
+        PayConfig config = payment.getPayConfig();
+
+        Map<String, String> privateKeys = getPrivateKey(config);
 
         try {
             Map<String, String> appdata = new HashMap<>();
@@ -322,8 +328,51 @@ public class Alipay extends AlipayPayProductSupport {
     }
 
     @Override
-    public Refund payNotify(Refund refund, String result) throws PayException {
-        LOG.debug(refund);
+    public String payNotify(Refund refund, String result) throws PayException {
+        PayConfig payConfig = refund.getPayConfig();
+
+        Map<String, String> privateKeys = getPrivateKey(payConfig);
+
+        Map<String, String> data = SignUtil.parseQuery(result, true);
+
+        LOG.debug(data);
+
+        if ("batch_refund_notify".equals(data.get("notify_type"))) {
+            if(!verifyNotifyId(payConfig.getBargainorId(),data.get("notify_id"))){
+                throw new RestException("支付宝 notify_id 验证失败");
+            }
+            //验证签名
+            if (!verify(data, privateKeys.get(data.get("sign_type")))) {
+                throw new RestException("支付宝返回的响应签名错误");
+            }
+            if ("1".equals(data.get("success_num"))){
+                refund.setStatus(RefundStatus.success);
+                refund.setTradeTime(DateUtil.parse(data.get("notify_time"),"yyyy-MM-dd HH:mm:dd"));
+                return "success";
+            }
+        }
+
+
+
+        //支付配置
+        /*
+        PayConfig config = refund.getPayConfig();
+        try {
+            if (!verify(data, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
+                throw new PayException("验证签名失败");
+            }
+
+            if (!data.get("RefundAmt").equals(refund.getTotalAmount().multiply(BigDecimal.valueOf(100d)).intValue() + "")) {
+                throw new PayException("交易金额不匹配");
+            }
+
+            refund.setTradeNo(data.get("AcqSeqId"));
+
+            return null;
+
+        } finally {//记录退款通知日志
+            this.log("in", "notify", refund, config, result);
+        }*/
         return null;
     }
 

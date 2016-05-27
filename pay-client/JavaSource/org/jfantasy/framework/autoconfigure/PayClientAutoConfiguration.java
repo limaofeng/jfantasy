@@ -23,9 +23,9 @@ import java.util.Properties;
 @Import(OrderServiceRegistryRunner.class)
 public class PayClientAutoConfiguration {
 
-    @Value("${api.pay.rpc.host:127.0.0.1}")
+    @Value("${api.pay.remote.rpc.host:127.0.0.1}")
     private String host;
-    @Value("${api.pay.rpc.port:9090}")
+    @Value("${api.pay.remote.rpc.port:9090}")
     private int port;
 
     @Bean(name = "orderServiceRegistry")
@@ -40,11 +40,11 @@ public class PayClientAutoConfiguration {
         return rpcProxyFactory.proxyBean(OrderProcessor.class, 10000);
     }
 
-    @Value("${aliyun.ons.consumerId:CID-20160428}")
+    @Value("${aliyun.ons.pay.consumerId:CID-20160428}")
     private String consumerId;
-    @Value("${aliyun.ons.accessKey:GjYnEEMsLVTomMzF}")
+    @Value("${aliyun.ons.pay.accessKey:GjYnEEMsLVTomMzF}")
     private String accessKey;
-    @Value("${aliyun.ons.secretKey:rYSFhN67iXR0vl0pUSatSQjEqR2e2F}")
+    @Value("${aliyun.ons.pay.secretKey:rYSFhN67iXR0vl0pUSatSQjEqR2e2F}")
     private String secretKey;
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")

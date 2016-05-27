@@ -1,14 +1,37 @@
 package org.jfantasy.pay.product;
 
+import org.jfantasy.framework.util.common.file.FileUtil;
+import org.jfantasy.pay.bean.PayConfig;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.product.sign.RSA;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.math.BigDecimal;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 
 
 public class AlipayTest {
+
+    private Alipay alipay = new Alipay();
+    private PayConfig payConfig = new PayConfig();
+    @Before
+    public void setUp() throws Exception {
+        payConfig.setName("正本上工支付宝支付");
+        payConfig.setPayConfigType(PayConfig.PayConfigType.online);
+        payConfig.setPayProductId("alipayDirect");
+        payConfig.setPayFeeType(PayConfig.PayFeeType.fixed);
+        payConfig.setPayFee(BigDecimal.ZERO);
+        payConfig.setBargainorId("2088021598024164");
+        payConfig.setBargainorKey("2s6pd34rf1u95t1hjlry13o1u13qxlbs");
+        payConfig.set("sellerEmail", "shzbsg@126.com");
+        //一些高级接口需要使用 RSA 或者 DSA 加密
+        payConfig.set("rsaPrivateKey", FileUtil.readFile(new File("/certs/rsa_private_key.pem")));//RSA 加密时的私钥
+        payConfig.set("rsaPublicKey", FileUtil.readFile(new File("/certs/rsa_public_key.pem")));//RSA 支付宝公钥
+    }
 
     @Test
     public void rsa() throws NoSuchAlgorithmException, InvalidKeySpecException {
@@ -40,6 +63,14 @@ public class AlipayTest {
     @Test
     public void sign() throws Exception {
 
+    }
+
+    @Test
+    public void payNotifyByRefund() throws Exception {
+        String result = "sign=cc4a046d5af1c621b1fcf8940d5cbbca&result_details=2016052621001004180237340740%5E0.10%5ESUCCESS&notify_time=2016-05-27+09%3A26%3A32&sign_type=MD5&notify_type=batch_refund_notify&notify_id=5176c054feac1371de0a3142edf2cf9j5x&batch_no=20160527RP201605260001101&success_num=1";
+        Refund refund = new Refund();
+        refund.setPayConfig(payConfig);
+        alipay.payNotify(refund,result);
     }
 
 }

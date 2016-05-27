@@ -222,10 +222,27 @@ public class PayService {
         //支付订单
         Order order = refund.getOrder();
 
+        RefundStatus oldStatus = refund.getStatus();
+
         Object result = payProduct.payNotify(refund, body);
+
+        //状态未发生变化
+        if (refund.getStatus() == oldStatus) {
+            return result != null ? result : order ;
+        }
 
         //更新状态
         refundService.result(refund, order);
+
+        // 更新订单状态
+        if (refund.getStatus() == RefundStatus.success) {
+            order.setStatus(Order.PaymentStatus.refunded);
+        }
+
+        // 如果为完成 或者 初始状态 不触发事件
+        if (refund.getStatus() == RefundStatus.wait || refund.getStatus() == RefundStatus.ready) {
+            return result == null ? order : result;
+        }
 
         //推送事件
         PayContext context = new PayContext(refund, order);
