@@ -226,4 +226,12 @@ public class RefundDetails implements Serializable {
     public void setOrderKey(OrderKey orderKey) {
         this.orderKey = orderKey;
     }
+
+    public Date getTradeTime() {
+        return tradeTime;
+    }
+
+    public void setTradeTime(Date tradeTime) {
+        this.tradeTime = tradeTime;
+    }
 }
