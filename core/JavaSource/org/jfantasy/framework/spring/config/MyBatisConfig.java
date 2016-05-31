@@ -2,12 +2,10 @@ package org.jfantasy.framework.spring.config;
 
 import org.apache.ibatis.plugin.Interceptor;
 import org.jfantasy.framework.dao.Pager;
-import org.jfantasy.framework.dao.mybatis.dialect.MySQLDialect;
-import org.jfantasy.framework.dao.mybatis.interceptors.AutoKeyInterceptor;
-import org.jfantasy.framework.dao.mybatis.interceptors.BusEntityInterceptor;
-import org.jfantasy.framework.dao.mybatis.interceptors.LimitInterceptor;
-import org.jfantasy.framework.dao.mybatis.interceptors.MultiDataSourceInterceptor;
 import org.jfantasy.framework.dao.mybatis.keygen.bean.Sequence;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.PropertiesHelper;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,6 +14,8 @@ import org.springframework.core.io.support.ResourcePatternResolver;
 
 import javax.sql.DataSource;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 @Configuration
@@ -31,9 +31,23 @@ public class MyBatisConfig {
         settings.setProperty("cacheEnabled", "false");
         settings.setProperty("lazyLoadingEnabled", "true");
         settings.setProperty("aggressiveLazyLoading", "false");
+        settings.setProperty("dialectClass", "org.jfantasy.framework.dao.mybatis.dialect.MySQLDialect");
         sqlSessionFactoryBean.setConfigurationProperties(settings);
 
-        sqlSessionFactoryBean.setPlugins(new Interceptor[]{new BusEntityInterceptor(), new MultiDataSourceInterceptor(), new AutoKeyInterceptor(), new LimitInterceptor(MySQLDialect.class)});
+        PropertiesHelper helper = PropertiesHelper.load("application.properties");
+
+        List<Interceptor> interceptors = new ArrayList<>();
+        for (String plugins : helper.getMergeProperty("spring.mybatis.plugins")) {
+            for (String plugin : StringUtil.tokenizeToStringArray(plugins)) {
+                if (StringUtil.isBlank(plugin)) {
+                    continue;
+                }
+                Interceptor interceptor = ClassUtil.newInstance(plugin.trim());
+                interceptors.add(interceptor);
+            }
+        }
+        sqlSessionFactoryBean.setPlugins(interceptors.toArray(new Interceptor[interceptors.size()]));
+
 
         sqlSessionFactoryBean.setTypeAliases(new Class[]{Pager.class, Sequence.class});
 

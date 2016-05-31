@@ -7,11 +7,11 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.security.SpringSecurityUtils;
 import org.jfantasy.security.userdetails.FantasyUserDetails;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -231,7 +231,7 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
     @Transient
     @ApiModelProperty(hidden = true)
     public Collection<GrantedAuthority> getAuthorities() {
-        return SpringSecurityUtils.getAuthorities(this);
+        return new ArrayList<>();//SpringSecurityUtils.getAuthorities(this);
     }
 
     @Override

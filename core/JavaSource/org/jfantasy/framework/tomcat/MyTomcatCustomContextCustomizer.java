@@ -13,7 +13,7 @@ public class MyTomcatCustomContextCustomizer implements TomcatContextCustomizer 
 
     @Override
     public void customize(Context context) {
-        context.setManager(new NoSessionManager());
+//        context.setManager(new NoSessionManager());
         context.setCookies(false);
     }
 

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.apache.commons.logging.Log;
@@ -30,7 +31,9 @@ public class JSON {
 
     static {
         //默认
-        register(DEFAULT_KEY, new ObjectMapper().setSerializationInclusion(JsonInclude.Include.NON_NULL)//为空的字段不序列化
+        register(DEFAULT_KEY, new ObjectMapper()
+                .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+                .setSerializationInclusion(JsonInclude.Include.NON_NULL)//为空的字段不序列化
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)// 当找不到对应的序列化器时 忽略此字段
                 .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)// 允许非空字段
                 .enable(JsonParser.Feature.ALLOW_SINGLE_QUOTES)// 允许单引号
@@ -38,7 +41,6 @@ public class JSON {
                 .registerModule(new SimpleModule()// 默认日期转换方式
                         .addSerializer(Date.class, new DateSerializer("yyyy-MM-dd HH:mm:ss"))
                         .addDeserializer(Date.class, new DateDeserializer())));
-
         //将中文转为 Unicode 编码
         register(UNICODE_KEY, new ObjectMapper().disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)// 当找不到对应的序列化器时 忽略此字段
                 .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)// 允许非空字段

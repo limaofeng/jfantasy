@@ -7,6 +7,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.validation.RESTful.POST;
 import org.jfantasy.member.bean.Member;
+import org.jfantasy.member.rest.form.LoginForm;
 import org.jfantasy.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -33,8 +34,8 @@ public class MemberController {
     @ApiOperation(value = "会员登录", notes = "会员登录接口")
     @RequestMapping(value = "/{username}/login", method = RequestMethod.POST)
     @ResponseBody
-    public Member login(@PathVariable("username") String username, @RequestBody String password) {
-        return this.memberService.login(username, password);
+    public Member login(@PathVariable("username") String username, @RequestBody LoginForm loginForm) {
+        return this.memberService.login(username, loginForm.getPassword());
     }
 
     @ApiOperation(value = "会员登出", notes = "会员登出接口")

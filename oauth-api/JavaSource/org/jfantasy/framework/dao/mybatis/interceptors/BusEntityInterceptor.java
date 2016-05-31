@@ -1,15 +1,16 @@
 package org.jfantasy.framework.dao.mybatis.interceptors;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.DateUtil;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.apache.ibatis.mapping.MappedStatement;
 import org.apache.ibatis.mapping.SqlCommandType;
 import org.apache.ibatis.plugin.Interceptor;
 import org.apache.ibatis.plugin.Intercepts;
 import org.apache.ibatis.plugin.Invocation;
 import org.apache.ibatis.plugin.Plugin;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.security.SpringSecurityUtils;
+import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Date;
@@ -32,8 +33,8 @@ public class BusEntityInterceptor implements Interceptor {
 	 * 默认创建人
 	 */
 	private String defaultCreator;
-	static int MAPPED_STATEMENT_INDEX = 0;
-	static int PARAMETER_INDEX = 1;
+	private static final int MAPPED_STATEMENT_INDEX = 0;
+	private static final int PARAMETER_INDEX = 1;
 
 	public Object intercept(Invocation invocation) throws Throwable {
 		Object[] queryArgs = invocation.getArgs();
@@ -41,7 +42,7 @@ public class BusEntityInterceptor implements Interceptor {
 		Object parameterObject = invocation.getArgs()[PARAMETER_INDEX];
 		if (BaseBusEntity.class.isAssignableFrom(ms.getParameterMap().getType())) {
 			if (SqlCommandType.INSERT.equals(ms.getSqlCommandType())) {
-				UserDetails userDetails = null;//TODO SpringSecurityUtils.getCurrentUser();
+				UserDetails userDetails = SpringSecurityUtils.getCurrentUser();
 				if (ObjectUtil.isNotNull(userDetails)) {
 					ClassUtil.setValue(parameterObject, "creator", userDetails.getUsername());
 					ClassUtil.setValue(parameterObject, "modifier", userDetails.getUsername());
@@ -53,7 +54,7 @@ public class BusEntityInterceptor implements Interceptor {
 				ClassUtil.setValue(parameterObject, "createTime", now);
 				ClassUtil.setValue(parameterObject, "modifyTime", now);
 			} else if (SqlCommandType.UPDATE.equals(ms.getSqlCommandType())) {
-				UserDetails userDetails = null;//TODO SpringSecurityUtils.getCurrentUser();
+				UserDetails userDetails = SpringSecurityUtils.getCurrentUser();
 				if (ObjectUtil.isNotNull(userDetails)){
                     ClassUtil.setValue(parameterObject, "modifier", userDetails.getUsername());
                 }else {

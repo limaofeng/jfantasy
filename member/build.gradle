@@ -2,6 +2,7 @@
 
 description = ' 会员模块 '
 dependencies {
+    compile project(':jfantasy-oauth-api')
     compile project(':jfantasy-core')
     compile project(':jfantasy-filestore')
     compile project(':jfantasy-common')

@@ -10,6 +10,7 @@ import java.util.Properties;
 public class Department {
     private String name;
     private String pm;
+    private String userName;
     private Properties otherProperties = new Properties(); //otherProperties用来存放Department中未定义的json字段
     //指定json反序列化创建Department对象时调用此构造函数
     @JsonCreator
@@ -46,4 +47,11 @@ public class Department {
         otherProperties.put(key, value);
     }
 
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 }

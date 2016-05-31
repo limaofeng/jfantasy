@@ -11,7 +11,6 @@ import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful.POST;
 import org.jfantasy.framework.spring.validation.RESTful.PUT;
-import org.jfantasy.security.SpringSecurityUtils;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 import org.jfantasy.security.userdetails.FantasyUserDetails;
@@ -20,6 +19,7 @@ import org.springframework.security.core.GrantedAuthority;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -40,10 +40,15 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
 
     @Null(message = "创建用户时,请不要传入ID", groups = {POST.class})
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
+    /**
+     * 用户类型
+     */
+    @Column(name = "MEMBER_TYPE", length = 20, nullable = false)
+    private String memberType;
     /**
      * 用户登录名称
      */
@@ -122,6 +127,9 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     private MemberDetails details;
+    @Transient
+    @ApiModelProperty(value = "授权码", notes = "用于 oauth 授权时使用,使用时限 10 分钟")
+    private String code;
 
     public Member() {
     }
@@ -240,7 +248,23 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
     @Transient
     @ApiModelProperty(hidden = true)
     public Collection<GrantedAuthority> getAuthorities() {
-        return SpringSecurityUtils.getAuthorities(this);
+        return new ArrayList<>();
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getMemberType() {
+        return memberType;
+    }
+
+    public void setMemberType(String memberType) {
+        this.memberType = memberType;
     }
 
     @Override

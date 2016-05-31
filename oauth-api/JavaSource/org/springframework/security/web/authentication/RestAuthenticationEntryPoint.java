@@ -1,4 +1,4 @@
-package org.jfantasy.security.web.authentication;
+package org.springframework.security.web.authentication;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

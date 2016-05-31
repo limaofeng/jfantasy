@@ -1,7 +1,6 @@
 package org.jfantasy.framework.autoconfigure;
 
 import org.apache.tomcat.ContextBind;
-import org.jfantasy.framework.spring.config.SpringSecurityConfig;
 import org.jfantasy.framework.spring.config.WebMvcConfig;
 import org.jfantasy.framework.tomcat.MyTomcatCustomContextCustomizer;
 import org.jfantasy.framework.tomcat.MyTomcatCustomizationBean;
@@ -16,7 +15,7 @@ import org.springframework.context.annotation.Import;
 @ConditionalOnClass(ContextBind.class)
 @Configuration
 @ComponentScan("org.jfantasy.framework.spring.mvc")
-@Import({WebMvcConfig.class, SpringSecurityConfig.class})
+@Import(WebMvcConfig.class)
 public class TomcatAutoConfiguration {
 
     @Bean

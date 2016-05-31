@@ -9,4 +9,8 @@ public class LoginEvent extends ApplicationEvent {
         super(member);
     }
 
+    public Member getMember() {
+        return (Member) this.getSource();
+    }
+
 }

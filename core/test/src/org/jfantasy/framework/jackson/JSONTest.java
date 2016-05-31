@@ -130,6 +130,7 @@ public class JSONTest {
         Department department = new Department("技术部");
         department.setPm("test");
         department.set("id","1");
+        department.setUserName("limaofeng");
 
         String json = JSON.serialize(department);
         LOG.debug(json);

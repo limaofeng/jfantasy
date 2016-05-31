@@ -3,12 +3,12 @@ package org.jfantasy.member.service;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Receiver;
 import org.jfantasy.member.dao.ReceiverDao;
-import org.jfantasy.member.userdetails.MemberUser;
-import org.jfantasy.security.SpringSecurityUtils;
+import org.jfantasy.oauth.userdetails.OAuthUserDetails;
+import org.jfantasy.oauth.userdetails.enums.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -52,12 +52,17 @@ public class ReceiverService {
 
     public void deltele(Long id) {
         Receiver receiver = get(id);
-        Member member = SpringSecurityUtils.getCurrentUser(MemberUser.class).getUser();
-        List<Receiver> receivers = this.receiverDao.find(new Criterion[]{Restrictions.eq("member.id", member.getId())}, "isDefault", "desc");
-        this.receiverDao.delete(receiver);
-        if (receivers.size() == 1) {
-            receivers.get(0).setIsDefault(true);
-            this.receiverDao.save(receivers.get(0));
+        OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
+        assert user != null;
+        if (user.getScope() == Scope.member) {
+            List<Receiver> receivers = this.receiverDao.find(new Criterion[]{Restrictions.eq("member.id", user.getId())}, "isDefault", "desc");
+            this.receiverDao.delete(receiver);
+            if (receivers.size() == 1) {
+                receivers.get(0).setIsDefault(true);
+                this.receiverDao.save(receivers.get(0));
+            }
+        } else {
+            this.receiverDao.delete(receiver);
         }
     }
 

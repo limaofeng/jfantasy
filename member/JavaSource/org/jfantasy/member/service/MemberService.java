@@ -15,14 +15,13 @@ import org.jfantasy.member.dao.MemberDao;
 import org.jfantasy.member.event.LoginEvent;
 import org.jfantasy.member.event.LogoutEvent;
 import org.jfantasy.member.event.RegisterEvent;
-import org.jfantasy.security.SpringSecurityUtils;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 import org.jfantasy.security.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationContext;
-import org.springframework.security.authentication.encoding.PasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -46,7 +45,6 @@ public class MemberService {
     private ApplicationContext applicationContext;
     @Autowired
     private PasswordEncoder passwordEncoder;
-
     /**
      * 列表查询
      *
@@ -67,7 +65,7 @@ public class MemberService {
      */
     public Member login(String username, String password) {
         Member member = this.memberDao.findUniqueBy("username", username);
-        if (member == null || !passwordEncoder.isPasswordValid(member.getPassword(), password, null)) {
+        if (member == null || !passwordEncoder.matches(member.getPassword(), password)) {
             throw new PasswordException("用户名和密码错误");
         }
         if (!member.isEnabled()) {
@@ -147,8 +145,8 @@ public class MemberService {
         }
         if (StringUtil.isNotBlank(member.getPassword()) && !"******".equals(member.getPassword())) {
             Member m = this.memberDao.get(member.getId());
-            if (!passwordEncoder.isPasswordValid(m.getPassword(), member.getPassword(), null)) {
-                member.setPassword(passwordEncoder.encodePassword(member.getPassword(), null));
+            if (!passwordEncoder.matches(m.getPassword(), member.getPassword())) {
+                member.setPassword(passwordEncoder.encode(member.getPassword()));
             }
         } else {
             member.setPassword(null);
@@ -193,12 +191,7 @@ public class MemberService {
      * @return Member
      */
     public Member findUniqueByUsername(String username) {
-        Member member = this.memberDao.findUniqueBy("username", username);
-        if (member == null) {
-            return null;
-        }
-        SpringSecurityUtils.getAuthorities(member);
-        return member;
+        return this.memberDao.findUniqueBy("username", username);
     }
 
 }
