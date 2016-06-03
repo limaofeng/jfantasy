@@ -123,7 +123,7 @@ public class FileFilter extends GenericFilterBean {
             String fileName = Browser.mozilla == WebUtil.browser(request) ? new String(fileItem.getName().getBytes("UTF-8"), "iso8859-1") : URLEncoder.encode(fileItem.getName(), "UTF-8");
             response.setHeader("Content-Disposition", "attachment;filename=" + fileName);
         } else {
-            ServletUtils.setExpiresHeader(response, 1000 * 60 * 5);
+            ServletUtils.setExpiresHeader(response, 1000 * 60 * 5L);
             ServletUtils.setLastModifiedHeader(response, fileItem.lastModified().getTime());
         }
         if (fileItem.getContentType().startsWith("video/")) {
@@ -155,7 +155,7 @@ public class FileFilter extends GenericFilterBean {
                 response.setHeader("Content-Type", fileItem.getContentType());
                 response.setHeader("Cache-Control", "max-age=1024");
                 ServletUtils.setLastModifiedHeader(response, fileItem.lastModified().getTime());
-                response.setHeader("Content-Length", (contentLength > fileLength ? fileLength : contentLength) + "");
+                response.setHeader("Content-Length", Long.toString(contentLength > fileLength ? fileLength : contentLength));
                 response.setHeader("Content-Range", "bytes " + start + "-" + (end != 1 && end >= fileLength ? end - 1 : end) + "/" + fileLength);
 
                 InputStream in = fileItem.getInputStream();

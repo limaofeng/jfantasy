@@ -11,7 +11,6 @@ import java.util.Date;
 
 @MappedSuperclass
 public abstract class BaseBusEntity implements Serializable {
-
     /**
      * 创建人
      */
@@ -25,6 +24,12 @@ public abstract class BaseBusEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false, name = "CREATE_TIME")
     private Date createTime;
+    /**
+     * 创建人应用ID
+     */
+    @ApiModelProperty(hidden = true)
+    @Column(updatable = false, name = "APPID")
+    private Long appId;
     /**
      * 最后修改人
      */
@@ -85,4 +90,11 @@ public abstract class BaseBusEntity implements Serializable {
         this.modifier = modifier;
     }
 
+    public Long getAppId() {
+        return appId;
+    }
+
+    public void setAppId(Long appId) {
+        this.appId = appId;
+    }
 }

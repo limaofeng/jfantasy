@@ -27,6 +27,8 @@ public class PayClientAutoConfiguration {
     private String host;
     @Value("${api.pay.remote.rpc.port:9090}")
     private int port;
+    @Value("${aliyun.ons.pay.topicId}")
+    private String topicId;
 
     @Bean(name = "orderServiceRegistry")
     public OrderServiceRegistry buildOrderServiceRegistry() {
@@ -40,11 +42,11 @@ public class PayClientAutoConfiguration {
         return rpcProxyFactory.proxyBean(OrderProcessor.class, 10000);
     }
 
-    @Value("${aliyun.ons.pay.consumerId:CID-20160428}")
+    @Value("${aliyun.ons.pay.consumerId}")
     private String consumerId;
-    @Value("${aliyun.ons.pay.accessKey:GjYnEEMsLVTomMzF}")
+    @Value("${aliyun.ons.pay.accessKey}")
     private String accessKey;
-    @Value("${aliyun.ons.pay.secretKey:rYSFhN67iXR0vl0pUSatSQjEqR2e2F}")
+    @Value("${aliyun.ons.pay.secretKey}")
     private String secretKey;
 
     @Bean(initMethod = "start", destroyMethod = "shutdown")
@@ -57,7 +59,7 @@ public class PayClientAutoConfiguration {
         consumerBean.setProperties(properties);
         Map<Subscription, MessageListener> subscriptionTable = new HashMap<>();
         Subscription key = new Subscription();
-        key.setTopic("TopicTestONS1985");
+        key.setTopic(topicId);
         key.setExpression("pay");
         subscriptionTable.put(key, payMessageListener());
         consumerBean.setSubscriptionTable(subscriptionTable);

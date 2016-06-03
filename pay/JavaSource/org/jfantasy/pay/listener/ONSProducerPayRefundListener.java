@@ -2,14 +2,15 @@ package org.jfantasy.pay.listener;
 
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.Producer;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.event.listener.PayRefundListener;
 import org.jfantasy.pay.order.entity.OrderKey;
 import org.jfantasy.pay.order.entity.RefundDetails;
-import org.jfantasy.rpc.util.SerializationUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,6 +18,9 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class ONSProducerPayRefundListener extends PayRefundListener {
+
+    @Value("${aliyun.ons.pay.topicId}")
+    private String topicId;
 
     @Autowired
     public Producer producer;
@@ -32,8 +36,7 @@ public class ONSProducerPayRefundListener extends PayRefundListener {
         BeanUtil.copyProperties(details, refund);
         details.setOrderKey(OrderKey.newInstance(refund.getOrder().getType(),refund.getOrder().getSn()));
         details.setPayConfigId(refund.getPayConfig().getId());
-        Message msg = new Message("TopicTestONS1985", "pay", SerializationUtil.serializer(details));
-        msg.setKey("refund");
+        Message msg = new Message(topicId, "pay", "refund", JSON.serialize(details).getBytes());
         producer.send(msg);
     }
 

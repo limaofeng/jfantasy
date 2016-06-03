@@ -10,6 +10,7 @@ public class TokenRequest {
     @JsonProperty("client_id")
     private String apiKey;
     @ApiModelProperty(name = "grant_type", value = "授权模式", required = true)
+    @JsonProperty("grant_type")
     private GrantType grantType;
     @ApiModelProperty(value = "授权码", notes = "授权模式 为 授权码模式 时 必填")
     private String code;
@@ -19,7 +20,8 @@ public class TokenRequest {
     private String password;
     @ApiModelProperty("表示权限范围，可选项。")
     private String scope;
-    @ApiModelProperty(value = "更新令牌", notes = "授权模式 为 更新令牌模式 时 必填")
+    @ApiModelProperty(name = "refresh_token",value = "更新令牌", notes = "授权模式 为 更新令牌模式 时 必填")
+    @JsonProperty("refresh_token")
     private String refreshToken;
 
     public GrantType getGrantType() {

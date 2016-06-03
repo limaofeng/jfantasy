@@ -1,5 +1,6 @@
 package org.jfantasy.pay.service;
 
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
@@ -115,5 +116,9 @@ public class RefundService {
 
     public void delete(String... sns) {
         this.refundDao.delete(sns);
+    }
+
+    public List<Refund> find(Criterion... criterions) {
+        return this.refundDao.find(criterions);
     }
 }

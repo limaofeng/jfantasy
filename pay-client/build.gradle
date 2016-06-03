@@ -5,6 +5,7 @@ sonarqube {
 }
 
 dependencies {
+    compile project(':jfantasy-core')
     compile project(':jfantasy-pay-api')
     compile project(':jfantasy-rpc-client')
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.5'

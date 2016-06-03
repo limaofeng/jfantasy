@@ -24,16 +24,19 @@ public class TokenResponse {
     @ApiModelProperty(name = "token_type", value = "表示令牌类型，该值大小写不敏感，必选项 ", required = true)
     @JsonProperty("token_type")
     private TokenType type;
-    @ApiModelProperty(name = "expires_in", value = "访问令牌的有效时间，单位是秒。")
-    @JsonProperty(value = "expires_in", required = true)
+    @ApiModelProperty(name = "expires_in", value = "访问令牌的有效时间，单位是秒。", required = true)
+    @JsonProperty(value = "expires_in")
     private long expires;
     @ApiModelProperty(value = "权限范围", notes = "如果与客户端申请的范围一致，此项省略")
     private String scope;
-    @ApiModelProperty(name = "refresh_token", value = "更新令牌，用来获取下一次的访问令牌")
+    @ApiModelProperty(name = "refresh_token", value = "更新令牌，用来获取下一次的访问令牌", required = true)
+    @JsonProperty("refresh_token")
     private String refreshToken;
-    @ApiModelProperty(name = "re_expires_in", value = "刷新令牌的有效时间，单位是秒。")
+    @ApiModelProperty(name = "re_expires_in", value = "刷新令牌的有效时间，单位是秒。", required = true)
+    @JsonProperty("re_expires_in")
     private long reExpires;
-    @ApiModelProperty(name = "token_creation_time", value = "token 的创建时间。")
+    @ApiModelProperty(name = "token_creation_time", value = "token 的创建时间。", required = true)
+    @JsonProperty("token_creation_time")
     private Date tokenCreationTime;
 
     public String getKey() {
