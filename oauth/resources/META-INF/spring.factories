@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-org.jfantasy.framework.autoconfigure.OauthAutoConfiguration
+org.jfantasy.framework.autoconfigure.OAuthAutoConfiguration
