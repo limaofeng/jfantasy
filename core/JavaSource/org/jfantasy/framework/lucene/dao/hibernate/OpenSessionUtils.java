@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.orm.hibernate3.SessionFactoryUtils;
+import org.springframework.orm.hibernate3.SessionHolder;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 public class OpenSessionUtils {
@@ -31,6 +32,7 @@ public class OpenSessionUtils {
         try {
             Session session = sf.openSession();
             session.setFlushMode(FlushMode.MANUAL);
+            TransactionSynchronizationManager.bindResource(sf, new SessionHolder(session));
             return session;
         } catch (HibernateException ex) {
             throw new DataAccessResourceFailureException("Could not open Hibernate Session", ex);
