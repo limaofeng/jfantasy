@@ -78,7 +78,6 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
             }
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
             mappingJacksonValue.setFilters(ThreadJacksonMixInHolder.getMixInHolder().getFilterProvider());
-            ThreadJacksonMixInHolder.clear();
             return mappingJacksonValue;
 
             /*

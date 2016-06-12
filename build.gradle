@@ -1,6 +1,6 @@
 buildscript {
     repositories {
-        maven { url "http://114.55.60.227:8081/content/groups/public" }
+        maven { url "http://maven.zbsg.com.cn/content/groups/public" }
         maven { url 'http://repo.spring.io/plugins-release' }
         mavenLocal()
         mavenCentral()
@@ -19,7 +19,7 @@ allprojects {
     apply plugin: 'maven'
 
     group = 'org.jfantasy'
-    version = '1.0.58-SNAPSHOT'
+    version = '1.1.2-SNAPSHOT'
 
     task hello << { task -> println "I'm $task.project.name" }
 

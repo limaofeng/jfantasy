@@ -31,9 +31,9 @@ public class PayProductConfiguration implements InitializingBean {
     public void afterPropertiesSet() {
 
         //支付宝即时交易
-        if (!ObjectUtil.exists(this.payProducts, "id", "alipayDirect")) {
+        if (!ObjectUtil.exists(this.payProducts, "id", "alipay")) {
             Alipay alipay = new Alipay();
-            alipay.setId("alipayDirect");
+            alipay.setId("alipay");
             alipay.setName("支付宝");
             alipay.setBargainorIdName("合作身份者ID");
             alipay.setBargainorKeyName("安全校验码");

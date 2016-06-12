@@ -31,6 +31,7 @@ public abstract class PayProductSupport implements PayProduct {
     protected CurrencyType[] currencyTypes;// 支持货币类型
     protected String logoPath;// 支付产品LOGO路径
     protected Map<String, ExtProperty> extPropertys;//自定义的属性
+    protected String examples;//集成示例
 
     @Override
     public String refund(Refund refund) {
@@ -143,6 +144,14 @@ public abstract class PayProductSupport implements PayProduct {
 
     public void setExtPropertys(Map<String, ExtProperty> extPropertys) {
         this.extPropertys = extPropertys;
+    }
+
+    public String getExamples() {
+        return examples;
+    }
+
+    public void setExamples(String examples) {
+        this.examples = examples;
     }
 
     @JsonAnySetter

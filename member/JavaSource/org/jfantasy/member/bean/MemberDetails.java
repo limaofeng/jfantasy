@@ -33,7 +33,7 @@ public class MemberDetails implements Serializable {
     private static final long serialVersionUID = -5738290484268799275L;
 
     @Id
-    @Column(name = "MEMBER_ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
+    @Column(name = "MEMBER_ID", nullable = false, updatable = false, precision = 22, scale = 0)
     @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "member")})
     @GeneratedValue(generator = "pkGenerator")
     private Long memberId;
@@ -99,15 +99,13 @@ public class MemberDetails implements Serializable {
     @Column(name = "DESCRIPTION")
     private String description;
     /**
-     * 用户积分
+     * 会员等级
      */
-    @ApiModelProperty("积分")
-    @Column(name = "score", length = 10)
-    private Integer score;
+    private int level;
     /**
      * 用户头像
      */
-    @ApiModelProperty(value = "用户头像",hidden = true)
+    @ApiModelProperty(value = "用户头像", hidden = true)
     @Column(name = "AVATAR", length = 500)
     @Convert(converter = FileDetailConverter.class)
     private FileDetail avatar;
@@ -115,14 +113,6 @@ public class MemberDetails implements Serializable {
     @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
     private Member member;
-
-    public Integer getScore() {
-        return score;
-    }
-
-    public void setScore(Integer score) {
-        this.score = score;
-    }
 
     public String getName() {
         return name;
@@ -229,4 +219,11 @@ public class MemberDetails implements Serializable {
         return this.avatar;
     }
 
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
 }

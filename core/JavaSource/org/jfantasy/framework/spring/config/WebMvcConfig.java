@@ -6,6 +6,7 @@ import com.alibaba.druid.support.http.WebStatFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.validator.HibernateValidator;
 import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.jackson.MappingJacksonHttpMessageConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver;
 import org.jfantasy.framework.spring.mvc.method.annotation.PagerModelAttributeMethodProcessor;
@@ -124,7 +125,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
                 iterator.remove();
             }
         }
-        converters.add(0, new MappingJackson2HttpMessageConverter(objectMapper()));
+        converters.add(0, new MappingJacksonHttpMessageConverter(objectMapper()));
         converters.add(0, new StringHttpMessageConverter(Charset.forName("utf-8")));
         super.configureMessageConverters(converters);
     }

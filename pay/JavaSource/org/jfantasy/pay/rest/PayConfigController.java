@@ -8,7 +8,11 @@ import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.Parameters;
+import org.jfantasy.pay.product.PayProduct;
+import org.jfantasy.pay.rest.assembler.PayConfigResourceAssembler;
+import org.jfantasy.pay.rest.results.PayConfigResource;
 import org.jfantasy.pay.service.PayConfigService;
+import org.jfantasy.pay.service.PayProductConfiguration;
 import org.jfantasy.pay.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,16 +26,20 @@ import java.util.List;
 @RequestMapping("/payconfigs")
 public class PayConfigController {
 
+    private PayConfigResourceAssembler assembler = new PayConfigResourceAssembler();
+
     @Autowired
     private PayConfigService configService;
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private PayProductConfiguration payProductConfiguration;
 
     @JsonIgnoreProperties({@IgnoreProperty(pojo = PayConfig.class, name = {"properties"})})
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<PayConfig> search(Pager<PayConfig> pager, List<PropertyFilter> filters) {
-        return this.configService.findPager(pager, filters);
+    public Pager<PayConfigResource> search(Pager<PayConfig> pager, List<PropertyFilter> filters) {
+        return assembler.toResources(this.configService.findPager(pager, filters));
     }
 
     @RequestMapping(method = RequestMethod.POST)
@@ -50,8 +58,14 @@ public class PayConfigController {
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
-    public PayConfig view(@PathVariable("id") Long id) {
-        return this.configService.get(id);
+    public PayConfigResource view(@PathVariable("id") Long id) {
+        return assembler.toResource(this.configService.get(id));
+    }
+
+    @RequestMapping(value = "/{id}/payproduct", method = RequestMethod.POST)
+    @ResponseBody
+    public PayProduct test(@PathVariable("id") Long id) throws IOException, PayException {
+        return this.payProductConfiguration.loadPayProduct(this.configService.get(id).getPayProductId());
     }
 
     @RequestMapping(value = "/{id}/test", method = RequestMethod.POST)
