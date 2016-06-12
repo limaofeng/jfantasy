@@ -121,6 +121,17 @@ public class ThreadJacksonMixInHolder {
         return holderThreadLocal.get() != null && (!holderThreadLocal.get().ignorePropertyNames.isEmpty() || !holderThreadLocal.get().allowPropertyNames.isEmpty());
     }
 
+    /**
+     * 判断属性是否被忽略
+     * @param target class
+     * @param name property
+     * @return boolean
+     */
+    public boolean isIgnoreProperty(Class<?> target, String name) {
+        MixInSource mixInSource = createMixInSource(target);
+        return this.ignorePropertyNames.containsKey(mixInSource.getFilterName()) && this.ignorePropertyNames.get(mixInSource.getFilterName()).contains(name);
+    }
+
     private static MixInSource createMixInSource(Class<?> target) {
         if (!mixInSourceMap.containsKey(target)) {
             String uuid = UUID.randomUUID().toString().replaceAll("-", "");

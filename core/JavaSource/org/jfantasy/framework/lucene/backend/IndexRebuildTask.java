@@ -4,9 +4,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexWriter;
+import org.hibernate.Session;
 import org.jfantasy.framework.lucene.cache.DaoCache;
 import org.jfantasy.framework.lucene.cache.IndexWriterCache;
 import org.jfantasy.framework.lucene.dao.LuceneDao;
+import org.jfantasy.framework.lucene.dao.hibernate.OpenSessionUtils;
 import org.jfantasy.framework.lucene.mapper.MapperUtil;
 import org.jfantasy.framework.util.common.JdbcUtil;
 
@@ -44,6 +46,7 @@ public class IndexRebuildTask implements Runnable {
             }
             return;
         }
+        Session session = OpenSessionUtils.openSession();
         try {
             if (LOG.isInfoEnabled()) {
                 LOG.info("Index(" + this.clazz + ") rebuilding start...");
@@ -79,6 +82,7 @@ public class IndexRebuildTask implements Runnable {
                 LOG.info("Index(" + this.clazz + ") rebuilding finish.");
             }
         } finally {
+            OpenSessionUtils.closeSession(session);
             rebuildLock.unlock();
         }
     }

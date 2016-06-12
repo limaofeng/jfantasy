@@ -227,16 +227,19 @@ public class PayConfig extends BaseBusEntity {
 
     @JsonAnyGetter
     public Properties getProperties() {
-        if(ThreadJacksonMixInHolder.isContainsMixIn()){
+        if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(PayConfig.class, "properties")) {
+            return null;
+        }
+        if (ThreadJacksonMixInHolder.isContainsMixIn()) {
             Properties newProperties = new Properties();
-            for(Object _key : properties.keySet()){
+            for (Object _key : properties.keySet()) {
                 String key = _key.toString();
                 Object value = properties.get(key);
-                if(value instanceof byte[]){
-                    newProperties.setProperty(key,"--Hidden Byte data--");
-                }else if(value instanceof File) {
-                    newProperties.setProperty(key,"--Hidden File data--");
-                }else{
+                if (value instanceof byte[]) {
+                    newProperties.setProperty(key, "--Hidden Byte data--");
+                } else if (value instanceof File) {
+                    newProperties.setProperty(key, "--Hidden File data--");
+                } else {
                     newProperties.setProperty(key, value.toString());
                 }
             }

@@ -1,11 +1,13 @@
 package org.jfantasy.framework.lucene.backend;
 
+import org.hibernate.Session;
 import org.jfantasy.framework.lucene.BuguIndex;
 import org.jfantasy.framework.lucene.annotations.IndexRef;
 import org.jfantasy.framework.lucene.annotations.IndexRefList;
 import org.jfantasy.framework.lucene.cache.DaoCache;
 import org.jfantasy.framework.lucene.cache.PropertysCache;
 import org.jfantasy.framework.lucene.dao.LuceneDao;
+import org.jfantasy.framework.lucene.dao.hibernate.OpenSessionUtils;
 import org.jfantasy.framework.util.reflect.Property;
 
 import java.lang.reflect.ParameterizedType;
@@ -54,13 +56,18 @@ public class RefEntityChangedListener {
             }
         }
         if (match) {
-            LuceneDao dao = DaoCache.getInstance().get(cls);
-            if (dao != null) {
-                List<?> list = dao.findByField(fieldName, id);
-                for (Object o : list) {
-                    IndexUpdateTask task = new IndexUpdateTask(o);
-                    BuguIndex.getInstance().getExecutor().execute(task);
+            Session session = OpenSessionUtils.openSession();
+            try {
+                LuceneDao dao = DaoCache.getInstance().get(cls);
+                if (dao != null) {
+                    List<?> list = dao.findByField(fieldName, id);
+                    for (Object o : list) {
+                        IndexUpdateTask task = new IndexUpdateTask(o);
+                        BuguIndex.getInstance().getExecutor().execute(task);
+                    }
                 }
+            }finally {
+                OpenSessionUtils.closeSession(session);
             }
         }
 
