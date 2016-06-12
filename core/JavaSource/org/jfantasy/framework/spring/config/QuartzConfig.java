@@ -52,8 +52,8 @@ public class QuartzConfig {
         properties.setProperty("org.quartz.jobStore.misfireThreshold", "60000");
         properties.setProperty("org.quartz.scheduler.rmi.proxy", "false");
         properties.setProperty("org.quartz.plugin.triggHistory.class", "org.quartz.plugins.history.LoggingTriggerHistoryPlugin");
-        properties.setProperty("org.quartz.plugin.triggHistory.triggerFiredMessage", " Trigger \\{1\\}.\\{0\\} fired job \\{6\\}.\\{5\\} at: \\{4,\n date, HH:mm:ss MM/dd/yyyy}");
-        properties.setProperty("org.quartz.plugin.triggHistory.triggerCompleteMessage", "Trigger \\{1\\}.\\{0\\} completed firing job \\{6\\}.\\{5\\}\n at \\{4, date, HH:mm:ss MM/dd/yyyy\\}.");
+        properties.setProperty("org.quartz.plugin.triggHistory.triggerFiredMessage", " Trigger {1}.{0} fired job {6}.{5} at: {4,\n date, HH:mm:ss MM/dd/yyyy}");
+        properties.setProperty("org.quartz.plugin.triggHistory.triggerCompleteMessage", "Trigger {1}.{0} completed firing job {6}.{5}\n at {4, date, HH:mm:ss MM/dd/yyyy}.");
         properties.setProperty("org.quartz.plugin.shutdownhook.class", "org.quartz.plugins.management.ShutdownHookPlugin");
         properties.setProperty("org.quartz.plugin.shutdownhook.cleanShutdown", "true");
         schedulerFactoryBean.setQuartzProperties(properties);
