@@ -12,6 +12,7 @@ import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.dao.PaymentDao;
+import org.jfantasy.pay.dao.PaymentLogDao;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.order.entity.enums.PaymentType;
@@ -40,6 +41,8 @@ public class PaymentService {
     private PayConfigService payConfigService;
     @Autowired(required = false)
     private PayProductConfiguration payProductConfiguration;
+    @Autowired
+    private PaymentLogDao paymentLogDao;
 
     /**
      * 支付准备
@@ -74,7 +77,7 @@ public class PaymentService {
             if (amountPayable.compareTo(payment.getTotalAmount().subtract(payment.getPaymentFee())) == 0) {//如果存在未完成的支付信息
                 return payment;
             } else {
-                this.invalid(payment.getSn());
+                this.close(payment.getSn());
             }
         }
 
@@ -94,7 +97,15 @@ public class PaymentService {
         payment.setStatus(PaymentStatus.ready);
         payment.setPayConfig(payConfig);
         payment.setOrder(order);
-        return this.paymentDao.save(payment);
+        payment = this.paymentDao.save(payment);
+
+        //保存交易日志
+        paymentLogDao.save(payment, "创建" + payment.getPayConfigName() + " 交易");
+        return payment;
+    }
+
+    public void log(Payment payment, String notes) {
+        paymentLogDao.save(payment, notes);
     }
 
     public List<Payment> find(Criterion... criterions) {
@@ -108,6 +119,8 @@ public class PaymentService {
      */
     public void save(Payment payment) {
         this.paymentDao.save(payment);
+        //保存交易日志
+        paymentLogDao.save(payment, "创建" + payment.getPayConfigName() + " 交易");
     }
 
     /**
@@ -115,17 +128,18 @@ public class PaymentService {
      *
      * @param sn 支付编号
      */
-    public void invalid(String sn) {
-        Payment payment = get(sn);
-        payment.setStatus(PaymentStatus.close);
-        this.paymentDao.save(payment);
+    public void close(String sn) {
+        this.close(sn, null);
     }
 
     public void close(String sn, String tradeNo) {
         Payment payment = get(sn);
         payment.setStatus(PaymentStatus.close);
-        payment.setTradeNo(tradeNo);
+        if (tradeNo != null) {
+            payment.setTradeNo(tradeNo);
+        }
         this.paymentDao.save(payment);
+        this.paymentLogDao.save(payment, "付款" + payment.getStatus().value());
     }
 
 

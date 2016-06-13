@@ -9,11 +9,9 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.pay.dao.OrderDao;
-import org.jfantasy.pay.dao.PaymentDao;
 import org.jfantasy.pay.dao.RefundDao;
+import org.jfantasy.pay.dao.RefundLogDao;
 import org.jfantasy.pay.error.PayException;
-import org.jfantasy.pay.order.entity.OrderKey;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +29,7 @@ public class RefundService {
     @Autowired
     private RefundDao refundDao;
     @Autowired
-    private PaymentDao paymentDao;
-    @Autowired
-    private OrderDao orderDao;
+    private RefundLogDao refundLogDao;
 
     public Refund get(String sn) {
         return this.refundDao.get(sn);
@@ -44,13 +40,6 @@ public class RefundService {
         this.refundDao.save(refund);
     }
 
-    public Refund ready(OrderKey key, BigDecimal amount, String remark) {
-        Payment payment = this.paymentDao.findUnique(Restrictions.eq("order.sn",key.getSn()),Restrictions.eq("order.type",key.getType()),Restrictions.eq("status", PaymentStatus.success));
-        return ready(payment,amount,remark);
-    }
-
-
-
     /**
      * 退款准备
      *
@@ -59,9 +48,9 @@ public class RefundService {
      * @param remark  备注
      * @return Refund
      */
-    public Refund ready(Payment payment, BigDecimal amount, String remark) {
+    Refund ready(Payment payment, BigDecimal amount, String remark) {
         if (amount.scale() != 2) {
-            amount = amount.setScale(2,BigDecimal.ROUND_DOWN);
+            amount = amount.setScale(2, BigDecimal.ROUND_DOWN);
         }
         if (payment.getStatus() != PaymentStatus.success) {
             throw new PayException("原交易[" + payment.getSn() + "]未支付成功,不能发起退款操作");
@@ -93,17 +82,28 @@ public class RefundService {
             refund = new Refund(payment);
             refund.setTotalAmount(amount);
             refund.setMemo(remark);
-            return refund = this.refundDao.save(refund);
+            refund = this.refundDao.save(refund);
+            refundLogDao.save(refund, "退款开始");
+            return refund;
         } finally {
             for (Refund _refund : ObjectUtil.filter(refunds, "status", RefundStatus.ready)) {//将其余订单设置为失败
                 assert refund != null;
                 if (_refund.getSn().equals(refund.getSn())) {
                     continue;
                 }
-                _refund.setStatus(RefundStatus.failure);
-                this.refundDao.save(_refund);
+                this.close(_refund);
             }
         }
+    }
+
+    public void close(String sn) {
+        this.close(this.refundDao.get(sn));
+    }
+
+    public void close(Refund refund) {
+        refund.setStatus(RefundStatus.close);
+        this.refundDao.save(refund);
+        this.refundLogDao.save(refund, "退款" + refund.getStatus().value());
     }
 
     public Refund save(Refund refund) {

@@ -3,11 +3,9 @@ package org.jfantasy.pay.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
-import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
@@ -32,7 +30,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -62,7 +59,7 @@ public class PayService {
     public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer, Properties properties) throws PayException {
         OrderKey key = OrderKey.newInstance(orderType, orderSn);
         Order order = orderService.get(key);
-        OrderDetails orderDetails = null;
+        OrderDetails orderDetails;
         if (order == null) {
             if (!orderServiceFactory.containsType(orderType)) {
                 throw new RestException("orderType[" + orderType + "] 对应的 PaymentOrderService 未配置！");
@@ -90,7 +87,7 @@ public class PayService {
         BeanUtil.copyProperties(toPayment, payment, "status", "type");
         toPayment.setStatus(payment.getStatus());
         toPayment.setType(payment.getType());
-
+        PaymentStatus oldStatus = payment.getStatus();
         if (PayType.web == payType) {
             toPayment.setSource(payProduct.web(payment, order, properties));
         } else if (PayType.app == payType) {
@@ -98,6 +95,9 @@ public class PayService {
         }
         //保存支付信息
         paymentService.save(payment);
+        if (oldStatus != payment.getStatus()) {//保存交易日志
+            paymentService.log(payment, "创建" + payment.getPayConfigName() + " 交易");
+        }
         return toPayment;
     }
 
@@ -143,7 +143,7 @@ public class PayService {
                 this.refundService.save(refund);
                 ToRefund toRefund = BeanUtil.copyProperties(new ToRefund(), refund);
                 toRefund.setSource(result);
-                if(refund.getStatus() != RefundStatus.ready){//不为 ready 时,推送事件
+                if (refund.getStatus() != RefundStatus.ready) {//不为 ready 时,推送事件
                     PayContext context = new PayContext(refund, refund.getOrder());
                     try {
                         this.applicationContext.publishEvent(new PayRefundNotifyEvent(context));
@@ -163,11 +163,6 @@ public class PayService {
             throw new PayException(" 线下退款方式,暂未实现! 请联系技术人员. ");
         }
     }
-
-    /*
-
-
-     */
 
     public Object notify(Payment payment, String body) {
         PayConfig payConfig = payment.getPayConfig();
@@ -189,9 +184,10 @@ public class PayService {
 
         //更新支付状态
         paymentService.save(payment);
+        paymentService.log(payment, "交易" + payment.getStatus().value());
 
         // 更新订单状态
-        switch (payment.getStatus()){
+        switch (payment.getStatus()) {
             case close:
                 break;
             case success:
@@ -236,7 +232,7 @@ public class PayService {
 
         //状态未发生变化
         if (refund.getStatus() == oldStatus) {
-            return result != null ? result : order ;
+            return result != null ? result : order;
         }
 
         //更新状态
@@ -262,18 +258,6 @@ public class PayService {
 
         //返回订单信息
         return result != null ? result : order;
-    }
-
-    /**
-     * 获取订单的支付记录
-     *
-     * @param orderKey orderType + ":" + orderSn
-     * @return List<Payment>
-     */
-    public List<Payment> getPaymentsByOrderKey(String orderKey) {
-        String[] strs = StringUtil.tokenizeToStringArray(orderKey, ":");
-        String orderType = strs[0], orderSn = strs[1];
-        return paymentService.find(Restrictions.eq("orderType", orderType), Restrictions.eq("orderSn", orderSn));
     }
 
 }
