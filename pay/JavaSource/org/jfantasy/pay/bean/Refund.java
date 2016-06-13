@@ -19,7 +19,7 @@ import java.util.Date;
  * @since 2013-12-5 上午9:22:39
  */
 @Entity
-@Table(name = "PAYMENT_REFUND")
+@Table(name = "REFUND")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Refund extends BaseBusEntity {
 

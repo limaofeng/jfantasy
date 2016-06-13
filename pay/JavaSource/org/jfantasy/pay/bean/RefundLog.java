@@ -9,7 +9,8 @@ import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "PAY_REFUND_LOG")
+@Entity
+@Table(name = "REFUND_LOG", uniqueConstraints = {@UniqueConstraint(name = "UK_LOG_REFUND_STATUS", columnNames = {"REFUND_SN", "PAY_STATUS"})})
 public class RefundLog extends BaseBusEntity {
 
     @Id

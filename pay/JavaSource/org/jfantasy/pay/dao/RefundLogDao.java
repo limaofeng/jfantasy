@@ -6,7 +6,7 @@ import org.jfantasy.pay.bean.RefundLog;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class RefundLogDao  extends HibernateDao<RefundLog, Long> {
+public class RefundLogDao extends HibernateDao<RefundLog, Long> {
 
     public void save(Refund refund, String notes) {
         RefundLog log = new RefundLog();

@@ -1,5 +1,6 @@
 package org.jfantasy.pay.bean;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -8,7 +9,9 @@ import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "PAY_PAYMEN_LOG")
+@Entity
+@Table(name = "PAYMEN_LOG", uniqueConstraints = {@UniqueConstraint(name = "UK_LOG_PAYMENT_STATUS", columnNames = {"PAYMENT_SN", "PAY_STATUS"})})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class PaymentLog extends BaseBusEntity {
 
     @Id

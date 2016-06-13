@@ -13,7 +13,9 @@ import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.event.PayNotifyEvent;
 import org.jfantasy.pay.event.PayRefundNotifyEvent;
+import org.jfantasy.pay.event.PayStatusEvent;
 import org.jfantasy.pay.event.context.PayContext;
+import org.jfantasy.pay.event.context.PayStatus;
 import org.jfantasy.pay.order.OrderServiceFactory;
 import org.jfantasy.pay.order.entity.OrderDetails;
 import org.jfantasy.pay.order.entity.OrderKey;
@@ -36,7 +38,6 @@ import java.util.Properties;
  * 支付服务
  */
 @Service
-@Transactional
 public class PayService {
 
     private final static Log LOG = LogFactory.getLog(PayService.class);
@@ -56,6 +57,7 @@ public class PayService {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Transactional
     public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer, Properties properties) throws PayException {
         OrderKey key = OrderKey.newInstance(orderType, orderSn);
         Order order = orderService.get(key);
@@ -97,6 +99,7 @@ public class PayService {
         paymentService.save(payment);
         if (oldStatus != payment.getStatus()) {//保存交易日志
             paymentService.log(payment, "创建" + payment.getPayConfigName() + " 交易");
+            this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(),payment,order)));
         }
         return toPayment;
     }
@@ -109,6 +112,7 @@ public class PayService {
      * @param remark    备注
      * @return Refund
      */
+    @Transactional
     public Refund refund(String paymentSn, BigDecimal amount, String remark) {
         Refund refund = refundService.ready(paymentService.get(paymentSn), amount, remark);
         Hibernate.initialize(refund.getPayConfig());
@@ -127,6 +131,7 @@ public class PayService {
      * @param remark 备注
      * @return Refund
      */
+    @Transactional
     public ToRefund refund(String sn, RefundStatus status, String remark) {
         Refund refund = refundService.get(sn);
         if (refund.getType() == PaymentType.online) {
@@ -164,6 +169,7 @@ public class PayService {
         }
     }
 
+    @Transactional
     public Object notify(Payment payment, String body) {
         PayConfig payConfig = payment.getPayConfig();
 
@@ -185,6 +191,7 @@ public class PayService {
         //更新支付状态
         paymentService.save(payment);
         paymentService.log(payment, "交易" + payment.getStatus().value());
+        this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(),payment,order)));
 
         // 更新订单状态
         switch (payment.getStatus()) {
@@ -216,6 +223,7 @@ public class PayService {
         return result != null ? result : order;
     }
 
+    @Transactional
     public Object notify(Refund refund, String body) {
 
         PayConfig payConfig = refund.getPayConfig();

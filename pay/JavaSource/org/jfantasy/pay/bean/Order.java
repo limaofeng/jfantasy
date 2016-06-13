@@ -17,7 +17,7 @@ import java.util.List;
 @ApiModel("订单详情")
 @Entity
 @IdClass(OrderKey.class)
-@Table(name = "PAY_ORDER")
+@Table(name = "ORDER_DETAILS")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Order extends BaseBusEntity {
 

@@ -2,25 +2,15 @@ package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.pay.bean.enums.AccountType;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "PAY_ACCOUNT")
+@Table(name = "ACCOUNT")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Account extends BaseBusEntity {
-
-    enum Type {
-        /**
-         * 个人账户
-         */
-        personal,
-        /**
-         * 企业账户
-         */
-        enterprise
-    }
 
     /**
      * 编号
@@ -33,7 +23,7 @@ public class Account extends BaseBusEntity {
      */
     @Column(name = "TYPE")
     @Enumerated(EnumType.STRING)
-    private Type type;
+    private AccountType type;
     /**
      * 账户余额
      */
@@ -53,11 +43,11 @@ public class Account extends BaseBusEntity {
         this.sn = sn;
     }
 
-    public Type getType() {
+    public AccountType getType() {
         return type;
     }
 
-    public void setType(Type type) {
+    public void setType(AccountType type) {
         this.type = type;
     }
 

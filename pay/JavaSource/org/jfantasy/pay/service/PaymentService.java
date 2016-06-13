@@ -14,11 +14,14 @@ import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.dao.PaymentDao;
 import org.jfantasy.pay.dao.PaymentLogDao;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.event.PayStatusEvent;
+import org.jfantasy.pay.event.context.PayStatus;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.order.entity.enums.PaymentType;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayProduct;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +46,8 @@ public class PaymentService {
     private PayProductConfiguration payProductConfiguration;
     @Autowired
     private PaymentLogDao paymentLogDao;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     /**
      * 支付准备
@@ -99,6 +104,7 @@ public class PaymentService {
         payment.setOrder(order);
         payment = this.paymentDao.save(payment);
 
+        this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(),payment,order)));
         //保存交易日志
         paymentLogDao.save(payment, "创建" + payment.getPayConfigName() + " 交易");
         return payment;

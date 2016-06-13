@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 @ApiModel("支付配置")
 @Entity
-@Table(name = "PAY_CONFIG")
+@Table(name = "PAYCONFIG")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "payments", "refunds"})
 public class PayConfig extends BaseBusEntity {
 

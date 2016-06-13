@@ -13,7 +13,7 @@ public class OrderServiceCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        orderServerService.register();
+//        orderServerService.register();
     }
 
 }
