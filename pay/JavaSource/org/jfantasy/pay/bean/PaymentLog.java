@@ -6,34 +6,14 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
 
-@Table(name = "PAY_Log")
-public class PayLog extends BaseBusEntity {
-
-    public enum LogType {
-        payment, refund
-    }
+@Table(name = "PAY_PAYMEN_LOG")
+public class PaymentLog extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-    /**
-     * 日志类型
-     */
-    @Enumerated(EnumType.STRING)
-    @Column(name = "TYPE", updatable = false)
-    private LogType type;
-    /**
-     * 目标ID (支付或者退款)
-     */
-    @Column(name = "TARGET_ID", updatable = false)
-    private String targetId;
-    /**
-     * 消息内容
-     */
-    @Column(name = "BODY", length = 200)
-    private String body;
     /**
      * 订单详情
      */
@@ -48,22 +28,6 @@ public class PayLog extends BaseBusEntity {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public String getTargetId() {
-        return targetId;
-    }
-
-    public void setTargetId(String targetId) {
-        this.targetId = targetId;
     }
 
     public Order getOrder() {
