@@ -15,6 +15,13 @@ plugins {
     id "org.sonarqube" version "1.2"
 }
 
+configure(allprojects) {
+    apply plugin: 'propdeps'
+    apply plugin: 'propdeps-maven'
+    apply plugin: 'propdeps-idea'
+    apply plugin: 'propdeps-eclipse'
+}
+
 allprojects {
     apply plugin: 'maven'
 
@@ -50,6 +57,8 @@ subprojects {
             resources.srcDirs = ["test/config"]
         }
     }
+
+    compileJava.dependsOn(processResources)
 
     [compileJava, compileTestJava, javadoc]*.options*.encoding = 'UTF-8'
 

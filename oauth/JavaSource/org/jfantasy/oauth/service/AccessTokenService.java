@@ -18,6 +18,7 @@ import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
@@ -128,12 +129,21 @@ public class AccessTokenService {
         //缓存 token 记录 . 避免重复生成 token 的问题
         String key = apiKey.getKey() + userDetails.getScope() + userDetails.getId();
         Set<String> tokens = setOper.members(key);
-        for(String _token : tokens){
+        for (String _token : tokens) {
             redisTemplate.delete(_token);
         }
         setOper.add(key, redisAccessTokenKey, redisRefreshTokenKey);
 
         return new TokenResponse(accessToken);
+    }
+
+    public OAuthUserDetails details(String token) {
+        HashOperations hashOper = redisTemplate.opsForHash();
+        OAuthUserDetails userDetails = (OAuthUserDetails) hashOper.get(REDIS_ASSESS_TOKEN_PREFIX + token, "user");
+        if (userDetails == null) {
+            throw new UsernameNotFoundException(" Token Invalid ");
+        }
+        return userDetails;
     }
 
     private void retrieveUser(OAuthUserDetails userDetails, OAuthUserDetails user) {

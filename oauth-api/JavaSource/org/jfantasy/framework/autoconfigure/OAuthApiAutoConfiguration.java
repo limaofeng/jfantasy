@@ -2,6 +2,7 @@ package org.jfantasy.framework.autoconfigure;
 
 
 import org.jfantasy.framework.security.config.SpringSecurityConfig;
+import org.jfantasy.oauth.AccessTokenCache;
 import org.jfantasy.oauth.userdetails.HttpOAuthUserDetailsService;
 import org.jfantasy.oauth.userdetails.RedisOAuthUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,11 @@ public class OAuthApiAutoConfiguration {
             new RedisOAuthUserDetailsService(redisTemplate);
         }
         return new HttpOAuthUserDetailsService(httpSettings.getUrl());
+    }
+
+    @Bean
+    public AccessTokenCache accessTokenCache(){
+        return new AccessTokenCache(httpSettings);
     }
 
 }
