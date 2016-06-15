@@ -1,0 +1,29 @@
+{
+  "properties": [
+    {
+      "name": "spring.mybatis.plugins",
+      "type": "java.lang.String",
+      "description": "mybatis 插件"
+    },
+    {
+      "name": "spring.oauth.redis.host",
+      "type": "java.lang.String",
+      "description": " oauth redis host "
+    },
+    {
+      "name": "spring.oauth.redis.password",
+      "type": "java.lang.String",
+      "description": " oauth redis password."
+    },
+    {
+      "name": "spring.oauth.redis.port",
+      "type": "java.lang.Integer",
+      "description": "Description for spring.oauth.redis.port."
+    },
+    {
+      "name": "spring.oauth.api.url",
+      "type": "java.lang.String",
+      "description": "Description for spring.oauth.api.url."
+    }
+  ]
+}

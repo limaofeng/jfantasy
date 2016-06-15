@@ -2,7 +2,7 @@ package org.jfantasy.framework.security.config;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.oauth.userdetails.OAuthUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.AccessDecisionManager;
@@ -103,13 +103,11 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 设置内存用户角色
-        auth.authenticationProvider(authenticationProvider()).userDetailsService(userDetailsService()).passwordEncoder(passwordEncoder());
+        auth.authenticationProvider(authenticationProvider()).userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }
 
-    @Bean
-    public UserDetailsService userDetailsService() {
-        return new OAuthUserDetailsService();
-    }
+    @Autowired
+    public UserDetailsService userDetailsService;
 
     @Bean
     public LoggerListener loggerListener() {
