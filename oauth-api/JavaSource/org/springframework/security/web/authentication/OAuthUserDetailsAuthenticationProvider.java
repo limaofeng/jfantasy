@@ -36,15 +36,13 @@ public class OAuthUserDetailsAuthenticationProvider extends AbstractUserDetailsA
         UserDetails loadedUser;
         try {
             loadedUser = this.getUserDetailsService().loadUserByUsername(username);
-        }
-        catch (UsernameNotFoundException notFound) {
+        } catch (UsernameNotFoundException notFound) {
             throw notFound;
-        }
-        catch (Exception repositoryProblem) {
+        } catch (Exception repositoryProblem) {
             throw new InternalAuthenticationServiceException(repositoryProblem.getMessage(), repositoryProblem);
         }
         if (loadedUser == null) {
-            throw new InternalAuthenticationServiceException( "UserDetailsService returned null, which is an interface contract violation");
+            throw new InternalAuthenticationServiceException("UserDetailsService returned null, which is an interface contract violation");
         }
         return loadedUser;
     }
@@ -53,7 +51,7 @@ public class OAuthUserDetailsAuthenticationProvider extends AbstractUserDetailsA
         this.userDetailsService = userDetailsService;
     }
 
-    protected UserDetailsService getUserDetailsService() {
+    private UserDetailsService getUserDetailsService() {
         return userDetailsService;
     }
 

@@ -1,6 +1,7 @@
 package org.jfantasy.framework.dao.hibernate.util;
 
-import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.BeanUtilsBean;
+import org.apache.commons.beanutils.ConvertUtilsBean;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.beanutils.converters.DateConverter;
 import org.apache.commons.lang.StringUtils;
@@ -9,7 +10,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.*;
 
 /**
@@ -19,17 +23,16 @@ import java.util.*;
  * @version 1.0
  * @since 2013-9-12 下午5:03:33
  */
-public class ReflectionUtils {
-    private ReflectionUtils() {
-    }
+public final class ReflectionUtils {
 
     private static Logger LOGGER = LoggerFactory.getLogger(ReflectionUtils.class);
 
+    private static ConvertUtilsBean convertUtils = BeanUtilsBean.getInstance().getConvertUtils();
     static {
         DateConverter dc = new DateConverter();
         dc.setUseLocaleFormat(true);
         dc.setPatterns(new String[]{"yyyy-MM", "yyyy-MM-dd", "yyyy-MM-dd HH:mm:ss", "yyyy-MM-dd HH:mm", "yyyyMMdd", "yyyyMMddHHmmss"});
-        ConvertUtils.register(dc, Date.class);
+        convertUtils.register(dc, Date.class);
     }
 
     public static Object invokeGetterMethod(Object target, String propertyName) {
@@ -163,10 +166,14 @@ public class ReflectionUtils {
 
     public static <T> T convertStringToObject(String value, Class<T> toType) {
         try {
-            return toType.cast(ConvertUtils.convert(value, toType));
+            return toType.cast(convertUtils.convert(value, toType));
         } catch (Exception e) {
             throw convertReflectionExceptionToUnchecked(e);
         }
+    }
+
+    public static <T> T convert(Object value, Class<T> toType) {
+        return toType.cast(convertUtils.convert(value, toType));
     }
 
     public static RuntimeException convertReflectionExceptionToUnchecked(Exception e) {
@@ -181,4 +188,5 @@ public class ReflectionUtils {
         }
         return new RuntimeException("Unexpected Checked Exception.", e);
     }
+
 }

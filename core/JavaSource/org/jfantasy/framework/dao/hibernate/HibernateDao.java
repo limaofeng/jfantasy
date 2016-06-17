@@ -56,11 +56,11 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         this.idClass = ReflectionUtils.getSuperClassGenricType(getClass(), 1);
     }
 
-    public Class<T> getEntityClass(){
+    public Class<T> getEntityClass() {
         return this.entityClass;
     }
 
-    public Class<PK> getIdClass(){
+    public Class<PK> getIdClass() {
         return this.idClass;
     }
 
@@ -76,6 +76,11 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      */
     protected Session getSession() {
         return this.sessionFactory.getCurrentSession();
+    }
+
+    public T insert(T entity) {
+        this.LOG.debug("insert entity: " + getSession().save(entity));
+        return entity;
     }
 
     public T save(T entity) {
@@ -363,7 +368,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * @param ids 通过主键删除
      */
     public final void delete(PK... ids) {
-        for(PK id : ids){
+        for (PK id : ids) {
             T t = get(id);
             if (t == null) {
                 continue;

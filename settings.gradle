@@ -20,6 +20,8 @@ include ':jfantasy-test'
 include ':jfantasy-oauth'
 include ':jfantasy-oauth-api'
 include ':jfantasy-wallet'
+include ':jfantasy-weixin'
+include ':jfantasy-thirdparty'
 
 project(':jfantasy-core').projectDir = "$rootDir/core" as File
 project(':jfantasy-cache').projectDir = "$rootDir/cache" as File
@@ -40,5 +42,7 @@ project(':jfantasy-sms').projectDir = "$rootDir/sms" as File
 project(':jfantasy-oauth').projectDir = "$rootDir/oauth" as File
 project(':jfantasy-oauth-api').projectDir = "$rootDir/oauth-api" as File
 project(':jfantasy-wallet').projectDir = "$rootDir/wallet" as File
+project(':jfantasy-weixin').projectDir = "$rootDir/weixin" as File
+project(':jfantasy-thirdparty').projectDir = "$rootDir/thirdparty" as File
 project(':pay-rpc-test').projectDir = "$rootDir/pay-rpc-test" as File
 project(':jfantasy-test').projectDir = "$rootDir/test" as File

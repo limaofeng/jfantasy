@@ -4,12 +4,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Order;
-import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.rest.models.assembler.PaymentResourceAssembler;
 import org.jfantasy.pay.service.PaymentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -24,13 +26,18 @@ public class PaymentController {
 
     @Autowired
     private PaymentService paymentService;
+    @Autowired
+    private PayConfigController payConfigController;
 
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig"})})
+    @JsonIgnoreProperties(
+            value = @IgnoreProperty(pojo = Payment.class, name = {"payConfig"}),
+            allow = @AllowProperty(pojo = Order.class, name = {"type", "subject", "sn"})
+    )
     @ApiOperation("查询支付记录")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<Payment> search(Pager<Payment> pager, List<PropertyFilter> filters) {
-        return paymentService.findPager(pager, filters);
+    public Pager<ResultResourceSupport> search(Pager<Payment> pager, List<PropertyFilter> filters) {
+        return new PaymentResourceAssembler().toResources(paymentService.findPager(pager, filters));
     }
 
     @ApiOperation("获取支付记录")
@@ -43,12 +50,12 @@ public class PaymentController {
     @ApiOperation("支付记录对应的支付配置信息")
     @RequestMapping(value = "/{sn}/payconfig", method = RequestMethod.GET)
     @ResponseBody
-    public PayConfig payconfig(@PathVariable("id") String sn) {
+    public ResultResourceSupport payconfig(@PathVariable("sn") String sn) {
         Payment payment = this.paymentService.get(sn);
         if (payment == null) {
             throw new NotFoundException("[sn=" + sn + "]对应的支付记录未找到");
         }
-        return payment.getPayConfig();
+        return payConfigController.view(payment.getPayConfig().getId());
     }
 
     @ApiOperation(value = "支付记录对应的订单信息", notes = "支付记录对应的订单信息")

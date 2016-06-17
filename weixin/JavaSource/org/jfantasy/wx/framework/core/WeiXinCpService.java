@@ -72,7 +72,7 @@ public class WeiXinCpService implements WeiXinService {
     public Jsapi.Signature createJsapiSignature(String url) throws WeiXinException {
         try {
             WxJsapiSignature wxJsapiSignature = wxCpService.createJsapiSignature(url);
-            return new Jsapi.Signature(wxJsapiSignature.getNoncestr(), wxJsapiSignature.getJsapiTicket(), wxJsapiSignature.getTimestamp(), wxJsapiSignature.getUrl(), wxJsapiSignature.getSignature());
+            return new Jsapi.Signature(wxJsapiSignature.getNoncestr(), wxJsapiSignature.getAppid(), wxJsapiSignature.getTimestamp(), wxJsapiSignature.getUrl(), wxJsapiSignature.getSignature());
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
@@ -228,9 +228,7 @@ public class WeiXinCpService implements WeiXinService {
                     this.sendVoiceMessage(content, toUser);
                 }
             }
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -268,9 +266,7 @@ public class WeiXinCpService implements WeiXinService {
                     this.sendVideoMessage(content, toUser);
                 }
             }
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -352,9 +348,7 @@ public class WeiXinCpService implements WeiXinService {
                     this.sendTextMessage(content, toUser);
                 }
             }
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -470,9 +464,7 @@ public class WeiXinCpService implements WeiXinService {
         try {
             WxMediaUploadResult uploadMediaRes = wxCpService.mediaUpload(mediaType.name(), WebUtil.getExtension(fileItem.getName()), fileItem.getInputStream());
             return mediaType == Media.Type.thumb ? uploadMediaRes.getThumbMediaId() : uploadMediaRes.getMediaId();
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (WxErrorException | IOException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }

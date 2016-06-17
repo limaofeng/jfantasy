@@ -11,23 +11,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 
-public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint,
-        InitializingBean {
-    // ~ Instance fields
-    // ================================================================================================
+public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint, InitializingBean {
 
     private String realmName;
-
-    // ~ Methods
-    // ========================================================================================================
 
     public void afterPropertiesSet() throws Exception {
         Assert.hasText(realmName, "realmName must be specified");
     }
 
-    public void commence(HttpServletRequest request, HttpServletResponse response,AuthenticationException authException) throws IOException, ServletException {
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         response.addHeader("WWW-Authenticate", "Basic realm=\"" + realmName + "\"");
-        response.sendError(HttpServletResponse.SC_UNAUTHORIZED,authException.getMessage());
+        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
 
     public String getRealmName() {

@@ -12,7 +12,7 @@ import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.PayProduct;
 import org.jfantasy.pay.product.PayProductSupport;
-import org.jfantasy.pay.rest.form.PayForm01;
+import org.jfantasy.pay.rest.models.PayForm01;
 import org.jfantasy.pay.service.PayConfigService;
 import org.jfantasy.pay.service.PayProductConfiguration;
 import org.jfantasy.pay.service.PayService;

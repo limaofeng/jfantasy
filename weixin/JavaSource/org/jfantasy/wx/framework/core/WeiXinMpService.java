@@ -26,7 +26,6 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.security.bean.enums.Sex;
-import org.jfantasy.wx.framework.core.WeiXinService;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.message.*;
 import org.jfantasy.wx.framework.message.content.*;
@@ -80,7 +79,7 @@ public class WeiXinMpService implements WeiXinService {
     public Jsapi.Signature createJsapiSignature(String url) throws WeiXinException {
         try {
             WxJsapiSignature wxJsapiSignature = wxMpService.createJsapiSignature(url);
-            return new Jsapi.Signature(wxJsapiSignature.getNoncestr(), wxJsapiSignature.getJsapiTicket(), wxJsapiSignature.getTimestamp(), wxJsapiSignature.getUrl(), wxJsapiSignature.getSignature());
+            return new Jsapi.Signature(wxJsapiSignature.getNoncestr(), wxJsapiSignature.getAppid(), wxJsapiSignature.getTimestamp(), wxJsapiSignature.getUrl(), wxJsapiSignature.getSignature());
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
@@ -151,9 +150,7 @@ public class WeiXinMpService implements WeiXinService {
             }
             groupMessage.setMediaId(media.getId());
             this.wxMpService.massGroupMessageSend(groupMessage);
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -163,9 +160,7 @@ public class WeiXinMpService implements WeiXinService {
         try {
             WxMediaUploadResult uploadMediaRes = this.wxMpService.mediaUpload(mediaType.name(), WebUtil.getExtension(fileItem.getName()), fileItem.getInputStream());
             return mediaType == Media.Type.thumb ? uploadMediaRes.getThumbMediaId() : uploadMediaRes.getMediaId();
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (IOException e) {
+        } catch (WxErrorException | IOException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -278,9 +273,7 @@ public class WeiXinMpService implements WeiXinService {
                 openIdsMessage.setMediaId(media.getId());
                 wxMpService.massOpenIdsMessageSend(openIdsMessage);
             }
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -340,9 +333,7 @@ public class WeiXinMpService implements WeiXinService {
                 openIdsMessage.setMediaId(result.getMediaId());
                 wxMpService.massOpenIdsMessageSend(openIdsMessage);
             }
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -366,9 +357,7 @@ public class WeiXinMpService implements WeiXinService {
             }
             groupMessage.setMediaId(result.getMediaId());
             wxMpService.massGroupMessageSend(groupMessage);
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -388,9 +377,7 @@ public class WeiXinMpService implements WeiXinService {
                 musicBuilder.description(content.getDescription());
             }
             wxMpService.customMessageSend(musicBuilder.build());
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -447,9 +434,7 @@ public class WeiXinMpService implements WeiXinService {
             WxMpMassUploadResult result = wxMpService.massNewsUpload(massNews);
             openIdsMessage.setMediaId(result.getMediaId());
             wxMpService.massOpenIdsMessageSend(openIdsMessage);
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -484,9 +469,7 @@ public class WeiXinMpService implements WeiXinService {
             WxMpMassUploadResult result = wxMpService.massNewsUpload(massNews);
             groupMessage.setMediaId(result.getMediaId());
             wxMpService.massGroupMessageSend(groupMessage);
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -574,9 +557,7 @@ public class WeiXinMpService implements WeiXinService {
                 openIdsMessage.setContent(content);
                 wxMpService.massOpenIdsMessageSend(openIdsMessage);
             }
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
@@ -661,9 +642,7 @@ public class WeiXinMpService implements WeiXinService {
                 users.add(user);
             }
             return users;
-        } catch (WxErrorException e) {
-            throw new WeiXinException(e.getMessage(), e);
-        } catch (WeiXinException e) {
+        } catch (WxErrorException | WeiXinException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }

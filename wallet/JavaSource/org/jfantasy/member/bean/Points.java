@@ -1,6 +1,5 @@
 package org.jfantasy.member.bean;
 
-
 public class Points {
     /**
      * 总积分

@@ -10,7 +10,7 @@ import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
-import org.jfantasy.pay.rest.form.RefundForm01;
+import org.jfantasy.pay.rest.models.RefundForm01;
 import org.jfantasy.pay.service.PayService;
 import org.jfantasy.pay.service.RefundService;
 import org.jfantasy.pay.service.vo.ToRefund;

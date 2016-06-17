@@ -81,7 +81,7 @@ public class PropertyFilterModelAttributeMethodProcessor extends FormModelMethod
 
     protected final Map<String, String> getUriQueryVariables(NativeWebRequest request) {
         parseQuery(((ServletWebRequest) request).getRequest().getQueryString());
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     public static Map<String, String[]> parseQuery(String query) {

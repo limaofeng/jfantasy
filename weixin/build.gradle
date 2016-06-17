@@ -1,0 +1,11 @@
+//apply plugin: 'spring-boot'
+
+description = '集成微信'
+dependencies {
+    compile 'me.chanjar:weixin-java-mp:1.3.3'
+    compile 'me.chanjar:weixin-java-cp:1.3.3'
+    compile project(':jfantasy-oauth-api')
+    compile project(':jfantasy-member')
+    testCompile project(':jfantasy-test')
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.3.3.RELEASE'
+}

@@ -6,8 +6,6 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.util.common.file.FileUtil;
 import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.wx.bean.Media;
-import org.jfantasy.wx.service.MediaWeiXinService;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Test;

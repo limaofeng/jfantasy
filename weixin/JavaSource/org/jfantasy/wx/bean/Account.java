@@ -1,13 +1,13 @@
 package org.jfantasy.wx.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.wx.framework.session.AccountDetails;
+
+import javax.persistence.*;
 
 /**
  * 微信公众号设置
@@ -16,7 +16,6 @@ import org.jfantasy.wx.framework.session.AccountDetails;
 @ApiModel("微信公众账号")
 @Entity
 @Table(name = "WX_ACCOUNT")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Account extends BaseBusEntity implements AccountDetails {

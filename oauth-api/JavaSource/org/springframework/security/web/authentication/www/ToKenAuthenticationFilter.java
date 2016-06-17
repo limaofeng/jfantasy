@@ -33,8 +33,7 @@ public class ToKenAuthenticationFilter extends OncePerRequestFilter {
         ignoreFailure = true;
     }
 
-    public ToKenAuthenticationFilter(AuthenticationManager authenticationManager,
-                                     AuthenticationEntryPoint authenticationEntryPoint) {
+    public ToKenAuthenticationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint) {
         Assert.notNull(authenticationManager, "authenticationManager cannot be null");
         Assert.notNull(authenticationEntryPoint, "authenticationEntryPoint cannot be null");
         this.authenticationManager = authenticationManager;

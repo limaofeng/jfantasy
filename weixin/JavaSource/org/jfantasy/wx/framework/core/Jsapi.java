@@ -22,8 +22,8 @@ public interface Jsapi {
     class Signature implements Serializable {
         @ApiModelProperty("随机字符串")
         private String noncestr;
-        @ApiModelProperty("ticket")
-        private String ticket;
+        @ApiModelProperty("appid")
+        private String appid;
         @ApiModelProperty("时间戳")
         private long timestamp;
         @ApiModelProperty("URL")
@@ -31,9 +31,9 @@ public interface Jsapi {
         @ApiModelProperty("签名串")
         private String signature;
 
-        public Signature(String noncestr, String ticket, long timestamp, String url, String signature) {
+        public Signature(String noncestr, String appid, long timestamp, String url, String signature) {
             this.noncestr = noncestr;
-            this.ticket = ticket;
+            this.appid = appid;
             this.timestamp = timestamp;
             this.url = url;
             this.signature = signature;
@@ -47,12 +47,12 @@ public interface Jsapi {
             this.noncestr = noncestr;
         }
 
-        public String getTicket() {
-            return ticket;
+        public String getAppid() {
+            return appid;
         }
 
-        public void setTicket(String ticket) {
-            this.ticket = ticket;
+        public void setAppid(String appid) {
+            this.appid = appid;
         }
 
         public long getTimestamp() {

@@ -279,28 +279,4 @@ public class PayConfig extends BaseBusEntity {
         this.properties = properties;
     }
 
-//    public FileDetail getSignCert() {
-//        return signCert;
-//    }
-//
-//    public void setSignCert(FileDetail signCert) {
-//        this.signCert = signCert;
-//    }
-//
-//    public FileDetail getEncryptCert() {
-//        return encryptCert;
-//    }
-//
-//    public void setEncryptCert(FileDetail encryptCert) {
-//        this.encryptCert = encryptCert;
-//    }
-//
-//    public FileDetail getValidateCert() {
-//        return validateCert;
-//    }
-//
-//    public void setValidateCert(FileDetail validateCert) {
-//        this.validateCert = validateCert;
-//    }
-
 }

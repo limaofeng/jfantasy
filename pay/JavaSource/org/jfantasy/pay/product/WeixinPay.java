@@ -80,7 +80,7 @@ public class Weixinpay extends PayProductSupport {
             result.put("prepay_id", data.get("prepay_id"));
             result.put("sign", sign(result, config.getBargainorKey()));
             return StringUtil.isNotBlank(openid) ? mapToXml(result) : data.get("code_url");
-        }else if("JSAPI".equals(data.get("trade_type"))){
+        } else if ("JSAPI".equals(data.get("trade_type"))) {
             Map<String, String> result = new HashMap<>();
             result.put("appId", data.get("appid"));
             result.put("timeStamp", (DateUtil.now().getTime() / 1000) + "");
@@ -249,6 +249,56 @@ public class Weixinpay extends PayProductSupport {
             }
 
             return data;
+        } catch (IOException e) {
+            throw new RestException("调用微信接口,网络错误!");
+        } catch (PayException e) {
+            throw new RestException(e.getMessage());
+        }
+    }
+
+    /**
+     * 订单支付查询
+     *
+     * @param payment 支付记录
+     * @return PrePayment
+     */
+    public Payment query(Payment payment) {
+        try {
+            PayConfig config = payment.getPayConfig();
+            PayConfig paymentConfig = payment.getPayConfig();
+            //组装数据
+            Map<String, String> data = new TreeMap<>();
+            data.put("appid", config.get("appid", String.class));
+            data.put("mch_id", paymentConfig.getBargainorId());
+            data.put("out_trade_no", payment.getSn());
+            data.put("nonce_str", generateNonceString(16));
+            data.put("sign", sign(data, config.getBargainorKey()));
+
+            Response response = HttpClientUtil.doPost("https://api.mch.weixin.qq.com/pay/orderquery", new Request(new StringEntity(WebUtil.transformCoding(mapToXml(data), "utf-8", "ISO8859-1"), ContentType.TEXT_XML)));
+            LOG.debug("微信端响应:" + response.getBody());
+            //解析数据
+            data = xmlToMap(response.getBody());
+
+            //判断业务处理是否成功
+            if (!"SUCCESS".equalsIgnoreCase(data.get("result_code"))) {
+                throw new RestException(data.get("return_msg"));
+            }
+
+            //验证签名
+            if (!verify(data, paymentConfig.getBargainorKey())) {
+                throw new RestException("微信返回的响应签名错误");
+            }
+            String tradeNo = data.get("transaction_id");
+            String state = data.get("trade_state");
+            if ("SUCCESS".equalsIgnoreCase(state)) {//支付成功
+                payment.setStatus(PaymentStatus.success);
+            } else if ("CLOSED".equalsIgnoreCase(state)) {//已关闭
+                payment.setStatus(PaymentStatus.close);
+            } else if ("PAYERROR".equalsIgnoreCase(state) || "REFUND".equalsIgnoreCase(state) || "REVOKED".equalsIgnoreCase(state)) {
+                //支付失败 and 转入退款 and 已撤销
+                payment.setStatus(PaymentStatus.failure);
+            }
+            return payment;
         } catch (IOException e) {
             throw new RestException("调用微信接口,网络错误!");
         } catch (PayException e) {

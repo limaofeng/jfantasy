@@ -7,7 +7,6 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
@@ -149,7 +148,7 @@ public class PropertyFilter {
                 return clazz.cast(array);
             }
         }
-        return clazz.cast(ConvertUtils.convert(this.getPropertyValue(), clazz));
+        return ReflectionUtils.convert(this.getPropertyValue(), clazz);
     }
 
     public <T> Class<T> getPropertyType() {

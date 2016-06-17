@@ -7,6 +7,7 @@ import java.util.Date;
 /**
  * 积分
  */
+
 public class Point extends BaseBusEntity {
 
     /**

@@ -1,16 +1,10 @@
 package org.jfantasy.wx.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
-import org.jfantasy.member.bean.Member;
-import org.jfantasy.member.bean.databind.MemberDeserializer;
-import org.jfantasy.member.bean.databind.MemberSerializer;
 import org.jfantasy.security.bean.enums.Sex;
+
+import javax.persistence.*;
 
 /**
  * 微信用户基本信息
@@ -19,7 +13,6 @@ import org.jfantasy.security.bean.enums.Sex;
 @Entity(name = "wxUserInfo")
 @IdClass(UserKey.class)
 @Table(name = "WX_USER_INFO")
-@JsonFilter(JSON.CUSTOM_FILTER)
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User extends BaseBusEntity {
 
@@ -37,7 +30,6 @@ public class User extends BaseBusEntity {
     //用户的标识，对当前公众号唯一
     @Id
     private String openId;
-
     //用户的昵称
     @Column(name = "NICKNAME", length = 100)
     private String nickname;
@@ -74,18 +66,6 @@ public class User extends BaseBusEntity {
     //最后查看消息时间
     @Column(name = "LAST_LOOK_TIME")
     private Long lastLookTime;
-    //未读消息条数
-    @Column(name = "UN_READ_SIZE")
-    private Integer unReadSize;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "GROUP_ID")
-    private Group group;
-    @JsonProperty("memberId")
-    @JsonDeserialize(using = MemberDeserializer.class)
-    @JsonSerialize(using = MemberSerializer.class)
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
-    private Member member;
 
     public String getNickname() {
         return nickname;
@@ -183,18 +163,6 @@ public class User extends BaseBusEntity {
         this.lastLookTime = lastLookTime;
     }
 
-    public Integer getUnReadSize() {
-        return unReadSize;
-    }
-
-    public void setUnReadSize(Integer unReadSize) {
-        this.unReadSize = unReadSize;
-    }
-
-    public Group getGroup() {
-        return group;
-    }
-
     public String getAppId() {
         return appId;
     }
@@ -211,16 +179,5 @@ public class User extends BaseBusEntity {
         this.openId = openId;
     }
 
-    public void setGroup(Group group) {
-        this.group = group;
-    }
-
-    public Member getMember() {
-        return member;
-    }
-
-    public void setMember(Member member) {
-        this.member = member;
-    }
 
 }

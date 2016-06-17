@@ -26,7 +26,7 @@ public class Comment extends BaseBusEntity {
     public static final int DEFAULT_COMMENT_LIST_PAGE_SIZE = 12;// 商品评论默认每页显示数
 
     @Id
-    @Column(name = "ID", insertable = true, updatable = false)
+    @Column(name = "ID", updatable = false)
     private Long id;
     @ApiModelProperty("用户名")
     @Column(name = "USERNAME")
