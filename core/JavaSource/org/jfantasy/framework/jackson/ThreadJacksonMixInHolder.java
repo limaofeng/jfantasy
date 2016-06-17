@@ -28,7 +28,7 @@ public class ThreadJacksonMixInHolder {
 
     private ObjectMapper objectMapper;
     private Map<String, Set<String>> ignorePropertyNames = new HashMap<String, Set<String>>();
-    private Map<String, Set<String>> allowPropertyNames = new HashMap<String, Set<String>>();
+    private Map<String, Set<String>> allowPropertyNames = new HashMap<>();
 
     private ThreadJacksonMixInHolder(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -84,7 +84,7 @@ public class ThreadJacksonMixInHolder {
             objectMapper.addMixIn(mixInSource.getTarget(), mixInSource.getMixIn());
         }
         if (!this.allowPropertyNames.containsKey(mixInSource.getFilterName())) {
-            this.allowPropertyNames.put(mixInSource.getFilterName(), new HashSet<String>(Arrays.asList(names)));
+            this.allowPropertyNames.put(mixInSource.getFilterName(), new HashSet<>(Arrays.asList(names)));
         } else {
             this.allowPropertyNames.get(mixInSource.getFilterName()).addAll(Arrays.asList(names));
         }
@@ -92,12 +92,11 @@ public class ThreadJacksonMixInHolder {
 
     public FilterProvider getFilterProvider() {
         SimpleFilterProvider provider = new SimpleFilterProvider().setFailOnUnknownId(false);
-        if (!this.allowPropertyNames.isEmpty()) {
-            for (Map.Entry<String, Set<String>> entry : this.allowPropertyNames.entrySet()) {
-                provider.addFilter(entry.getKey(), SimpleBeanPropertyFilter.filterOutAllExcept(entry.getValue()));
-            }
-        } else if (!this.ignorePropertyNames.isEmpty()) {
-            for (Map.Entry<String, Set<String>> entry : this.ignorePropertyNames.entrySet()) {
+        for (Map.Entry<String, Set<String>> entry : this.allowPropertyNames.entrySet()) {
+            provider.addFilter(entry.getKey(), SimpleBeanPropertyFilter.filterOutAllExcept(entry.getValue()));
+        }
+        for (Map.Entry<String, Set<String>> entry : this.ignorePropertyNames.entrySet()) {
+            if(!this.allowPropertyNames.containsKey(entry.getKey())) {
                 provider.addFilter(entry.getKey(), SimpleBeanPropertyFilter.serializeAllExcept(entry.getValue()));
             }
         }
@@ -123,8 +122,9 @@ public class ThreadJacksonMixInHolder {
 
     /**
      * 判断属性是否被忽略
+     *
      * @param target class
-     * @param name property
+     * @param name   property
      * @return boolean
      */
     public boolean isIgnoreProperty(Class<?> target, String name) {
@@ -159,11 +159,16 @@ public class ThreadJacksonMixInHolder {
 
     public static void scan(String... basePackages) {
         for (String basePackage : basePackages) {
-            if(StringUtil.isBlank(basePackage)){
+            if (StringUtil.isBlank(basePackage)) {
                 continue;
             }
             scan(ClassPathScanner.getInstance().findAnnotationedClasses(basePackage, JsonIgnoreProperties.class).toArray(new Class[0]));
         }
+    }
+
+    public boolean isAllow(Class<?> target) {
+        MixInSource mixInSource = createMixInSource(target);
+        return this.allowPropertyNames.containsKey(mixInSource.getFilterName());
     }
 
     private static class MixInSource {

@@ -52,14 +52,11 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
                 ThreadJacksonMixInHolder mixInHolder = ThreadJacksonMixInHolder.getMixInHolder();
                 AllowProperty[] allowProperties = jsonIgnoreProperties.allow();
                 IgnoreProperty[] ignoreProperties = jsonIgnoreProperties.value();
-                if (allowProperties.length != 0) {
-                    for(AllowProperty property : allowProperties){
-                        mixInHolder.addAllowPropertyNames(property.pojo(),property.name());
-                    }
-                } else if (ignoreProperties.length != 0) {
-                    for(IgnoreProperty property : ignoreProperties){
-                        mixInHolder.addIgnorePropertyNames(property.pojo(),property.name());
-                    }
+                for(AllowProperty property : allowProperties){
+                    mixInHolder.addAllowPropertyNames(property.pojo(),property.name());
+                }
+                for(IgnoreProperty property : ignoreProperties){
+                    mixInHolder.addIgnorePropertyNames(property.pojo(), property.name());
                 }
             }
         }

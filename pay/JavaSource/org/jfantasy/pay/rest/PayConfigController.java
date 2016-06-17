@@ -88,7 +88,7 @@ public class PayConfigController {
     }
 
     @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Payment.class, name = {"payConfig"}),
+            value = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
             allow = @AllowProperty(pojo = Order.class, name = {"type", "subject", "sn"})
     )
     @ApiOperation("支付配置对应的支付记录")
