@@ -22,7 +22,7 @@ public class OrderService {
     @Autowired
     private OrderDao orderDao;
 
-    @Transactional
+    @Transactional(readOnly = true, propagation = Propagation.NOT_SUPPORTED)
     public Order get(OrderKey key) {
         return this.orderDao.get(key);
     }
@@ -41,6 +41,7 @@ public class OrderService {
         order.setPayableFee(details.getPayableFee());
         order.setTotalFee(details.getTotalFee());
         order.setStatus(Order.PaymentStatus.unpaid);
+        order.setOrderItems(details.getOrderItems());
         return this.orderDao.save(order);
     }
 

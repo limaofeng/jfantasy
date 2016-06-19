@@ -14,6 +14,7 @@ import org.jfantasy.framework.spring.mvc.http.jsonfilter.ResultFieldsBeanPropert
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
+import org.springframework.hateoas.MediaTypes;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonValue;
@@ -67,7 +68,7 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
     public Object beforeBodyWrite(Object obj, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> converterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         Object returnValue = obj;
         HttpServletRequest request = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest();
-        if (mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
+        if (mediaType.isCompatibleWith(MediaTypes.HAL_JSON) || mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
             Class returnType = methodParameter.getMethod().getReturnType();
 
             if (Pager.class.isAssignableFrom(returnType) && !"true".equalsIgnoreCase(request.getHeader(X_Page_Fields))) {
@@ -76,22 +77,6 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
             mappingJacksonValue.setFilters(ThreadJacksonMixInHolder.getMixInHolder().getFilterProvider());
             return mappingJacksonValue;
-
-            /*
-            if (isCustomFilter(request)) {
-                MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
-                SimpleFilterProvider filter = new SimpleFilterProvider().setFailOnUnknownId(false);
-                filter.addFilter(JSON.CUSTOM_FILTER, getPropertyFilter(request));
-                mappingJacksonValue.setFilters(filter);
-                return mappingJacksonValue;
-            } else {
-                MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
-                SimpleFilterProvider filter = new SimpleFilterProvider().setFailOnUnknownId(false);
-                mappingJacksonValue.setFilters(filter);
-                filter.addFilter(JSON.CUSTOM_FILTER, new NoneFieldsBeanPropertyFilter());
-                return mappingJacksonValue;
-            }*/
-
         }
         return obj;
     }

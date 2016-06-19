@@ -5,6 +5,7 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.rest.PayConfigController;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -29,6 +30,7 @@ public class PayConfigResourceAssembler extends ResourceAssemblerSupport<PayConf
     public ResultResourceSupport toResource(PayConfig entity) {
         ResultResourceSupport resource = createResourceWithId(entity.getId(),entity);
         resource.add(linkTo(methodOn(PayConfigController.class).payments(entity.getId().toString(),new Pager<Payment>(),new ArrayList<PropertyFilter>())).withRel("payments"));
+        resource.add(linkTo(methodOn(PayConfigController.class).refunds(entity.getId().toString(),new Pager<Refund>(),new ArrayList<PropertyFilter>())).withRel("refunds"));
         return resource;
     }
 

@@ -11,6 +11,7 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayProduct;
@@ -40,6 +41,8 @@ public class PayConfigController {
     private PayProductConfiguration payProductConfiguration;
     @Autowired
     private PaymentController paymentController;
+    @Autowired
+    private RefundController refundController;
 
     @JsonIgnoreProperties({@IgnoreProperty(pojo = PayConfig.class, name = {"properties"})})
     @RequestMapping(method = RequestMethod.GET)
@@ -98,5 +101,21 @@ public class PayConfigController {
         filters.add(new PropertyFilter("EQL_payConfig.id", id));
         return paymentController.search(pager, filters);
     }
+
+    @JsonIgnoreProperties(
+            value = @IgnoreProperty(pojo = Refund.class, name = {"payConfig", "orderKey"}),
+            allow = {
+                    @AllowProperty(pojo = Order.class, name = {"type", "subject", "sn"}),
+                    @AllowProperty(pojo = Payment.class, name = {"totalAmount", "payConfigName", "sn", "status"})
+            }
+    )
+    @ApiOperation("支付配置对应的退款记录")
+    @RequestMapping(value = "/{id}/refunds", method = RequestMethod.GET)
+    @ResponseBody
+    public Pager<ResultResourceSupport> refunds(@PathVariable("id") String id, Pager<Refund> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQL_payConfig.id", id));
+        return refundController.search(pager, filters);
+    }
+
 
 }

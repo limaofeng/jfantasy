@@ -48,10 +48,6 @@ public class Order extends BaseBusEntity {
     @ApiModelProperty("订单应付金额")
     @Column(name = "PAYABLE_FEE", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal payableFee;
-    @ApiModelProperty("支付方式")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PAY_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_ORDER_PAY_CONFIG"))
-    private PayConfig payConfig;
     @ApiModelProperty("订单项")
     @Column(name = "ORDERITEM_STORE", length = 3000)
     @Convert(converter = OrderItemConverter.class)
@@ -129,14 +125,6 @@ public class Order extends BaseBusEntity {
 
     public void setStatus(PaymentStatus status) {
         this.status = status;
-    }
-
-    public PayConfig getPayConfig() {
-        return payConfig;
-    }
-
-    public void setPayConfig(PayConfig payConfig) {
-        this.payConfig = payConfig;
     }
 
     public List<Payment> getPayments() {
