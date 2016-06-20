@@ -9,19 +9,19 @@ import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.OrderServer;
-import org.jfantasy.pay.service.OrderServerService;
+import org.jfantasy.pay.order.OrderServiceFactory;
 
 import java.util.Arrays;
 
 public class OrderServerChangedListener implements PostInsertEventListener, PostUpdateEventListener {
 
-    private OrderServerService orderServerService;
+    private OrderServiceFactory orderServiceFactory;
 
-    public OrderServerService orderServerService(){
-        if(orderServerService == null){
-            return orderServerService = SpringContextUtil.getBeanByType(OrderServerService.class);
+    private OrderServiceFactory orderServerService() {
+        if (orderServiceFactory == null) {
+            return orderServiceFactory = SpringContextUtil.getBeanByType(OrderServiceFactory.class);
         }
-        return orderServerService;
+        return orderServiceFactory;
     }
 
     @Override
@@ -33,26 +33,26 @@ public class OrderServerChangedListener implements PostInsertEventListener, Post
 
     @Override
     public void onPostInsert(PostInsertEvent event) {
-        if(!event.getEntity().getClass().isAssignableFrom(OrderServer.class)){
+        if (!event.getEntity().getClass().isAssignableFrom(OrderServer.class)) {
             return;
         }
         OrderServer entity = (OrderServer) event.getEntity();
         if (entity.isEnabled()) {
-            orderServerService().register(entity);
+            orderServerService().register(entity.getType(), orderServiceFactory.getBuilder(entity.getCallType()).build(entity.getProperties()));
         }
     }
 
     @Override
     public void onPostUpdate(PostUpdateEvent event) {
-        if(!event.getEntity().getClass().isAssignableFrom(OrderServer.class)){
+        if (!event.getEntity().getClass().isAssignableFrom(OrderServer.class)) {
             return;
         }
         if (modify(event, "enabled")) {
             OrderServer entity = (OrderServer) event.getEntity();
             if (entity.isEnabled()) {
-                orderServerService().register(entity);
+                orderServerService().register(entity.getType(), orderServiceFactory.getBuilder(entity.getCallType()).build(entity.getProperties()));
             } else {
-                orderServerService().unregister(entity);
+                orderServerService().unregister(entity.getType());
             }
         }
     }
@@ -65,7 +65,7 @@ public class OrderServerChangedListener implements PostInsertEventListener, Post
      * @return bool
      */
     private boolean modify(PostUpdateEvent event, String property) {
-        if(event.getOldState() == null){
+        if (event.getOldState() == null) {
             return true;
         }
         Arrays.binarySearch(event.getPersister().getPropertyNames(), property);

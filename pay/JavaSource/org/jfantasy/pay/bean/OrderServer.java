@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.pay.order.entity.enums.CallType;
 
 import javax.persistence.*;
 import java.util.Properties;
@@ -19,16 +20,16 @@ import java.util.Properties;
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class OrderServer extends BaseBusEntity {
 
-    public enum CallType {
-        rpc, restful
-    }
-
     /**
      * 服务的地址<br/>
      * 包含host与port,
      * 格式为:host:port
      */
     public final static String PROPS_DOMAIN = "domain";
+    /**
+     *  服务的完整地址<br/>
+     */
+    public final static String PROPS_RESTURL = "url";
     /**
      * 调用服务时,需要提供的身份信息
      */

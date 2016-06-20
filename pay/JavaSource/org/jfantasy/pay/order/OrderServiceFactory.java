@@ -2,7 +2,12 @@ package org.jfantasy.pay.order;
 
 import org.apache.log4j.Logger;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.pay.OrderServiceBuilder;
+import org.jfantasy.pay.builder.HttpOrderServiceBuilder;
+import org.jfantasy.pay.builder.RpcOrderServiceBuilder;
+import org.jfantasy.pay.order.entity.enums.CallType;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
@@ -11,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class OrderServiceFactory implements ApplicationContextAware {
+public class OrderServiceFactory implements InitializingBean, ApplicationContextAware {
 
     private static final Logger LOGGER = Logger.getLogger(OrderServiceFactory.class);
 
@@ -19,9 +24,19 @@ public class OrderServiceFactory implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
+    private Map<CallType, OrderServiceBuilder> builders = new HashMap<>();
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         this.applicationContext = applicationContext;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        OrderServiceBuilder builder = applicationContext.getBean(RpcOrderServiceBuilder.class);
+        builders.put(builder.getCallType(), builder);
+        builder = applicationContext.getBean(HttpOrderServiceBuilder.class);
+        builders.put(builder.getCallType(), builder);
     }
 
     public OrderServiceFactory() {
@@ -59,4 +74,9 @@ public class OrderServiceFactory implements ApplicationContextAware {
     public void unregister(String type) {
         this.orderServiceMap.remove(type);
     }
+
+    public OrderServiceBuilder getBuilder(CallType callType) {
+        return builders.get(callType);
+    }
+
 }

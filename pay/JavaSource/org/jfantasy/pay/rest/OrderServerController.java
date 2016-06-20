@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.pay.bean.OrderServer;
+import org.jfantasy.pay.rest.models.OrderServerForm;
 import org.jfantasy.pay.service.OrderServerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,6 +28,13 @@ public class OrderServerController {
     @ResponseBody
     public Pager<OrderServer> search(Pager<OrderServer> pager, List<PropertyFilter> filters) {
         return orderServerService.findPager(pager, filters);
+    }
+
+    @ApiOperation("保存订单服务")
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public OrderServer create(OrderServerForm form){
+        return orderServerService.save(form.getCallType(),form.getUrl(),form.getDescription(),form.getProperties());
     }
 
 }
