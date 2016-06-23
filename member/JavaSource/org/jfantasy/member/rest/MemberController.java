@@ -5,8 +5,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.AllowProperty;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.spring.validation.RESTful.POST;
 import org.jfantasy.member.bean.Member;
+import org.jfantasy.member.bean.MemberDetails;
 import org.jfantasy.member.rest.form.LoginForm;
 import org.jfantasy.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +28,10 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+    @JsonIgnoreProperties(
+            value = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
+            allow = @AllowProperty(pojo = MemberDetails.class, name = {"name", "sex", "birthday", "avatar"})
+    )
     @ApiOperation(value = "查询会员信息", notes = "通过 filters 可以过滤数据<br/>本接口支持 <br/> X-Page-Fields、X-Result-Fields、X-Expend-Fields 功能", response = Member[].class)
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

@@ -29,7 +29,7 @@ import java.util.*;
 @ApiModel("会员信息")
 @Entity
 @Table(name = "MEM_MEMBER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "details", "userGroups", "roles", "authorities"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "roles", "authorities"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity {
 
@@ -253,6 +253,9 @@ public class Member extends BaseBusEntity {
         }
         // 添加角色权限
         for (Role role : this.getRoles()) {
+            if (!role.isEnabled()) {
+                continue;
+            }
             authorities.add(role.getAuthority());
         }
         return authorities.toArray(new String[authorities.size()]);

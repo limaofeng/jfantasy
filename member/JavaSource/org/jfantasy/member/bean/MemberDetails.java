@@ -26,7 +26,7 @@ import java.util.Date;
 @ApiModel("会员详细信息")
 @Entity
 @Table(name = "MEM_MEMBER_DETAILS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member", "avatar"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MemberDetails implements Serializable {
 
