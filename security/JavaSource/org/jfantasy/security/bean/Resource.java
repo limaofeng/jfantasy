@@ -11,6 +11,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.security.bean.enums.ResourceType;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * 资源
@@ -45,6 +46,7 @@ public class Resource extends BaseBusEntity implements Cloneable {
      */
     @ApiModelProperty("资源值")
     @Column(name = "VALUE")
+    @Lob
     private String value;
     /**
      * 资源类型
@@ -65,6 +67,9 @@ public class Resource extends BaseBusEntity implements Cloneable {
     @ApiModelProperty("资源描述")
     @Column(name = "DESCRIPTION")
     private String description;
+
+    @OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<Permission> permissions;
 
     public Long getId() {
         return id;
@@ -132,8 +137,17 @@ public class Resource extends BaseBusEntity implements Cloneable {
         return getId() == null ? super.hashCode() : getId().hashCode();
     }
 
+    public List<Permission> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(List<Permission> permissions) {
+        this.permissions = permissions;
+    }
+
     @Override
     public Object clone() throws CloneNotSupportedException {
         return ObjectUtil.clone(this);
     }
+
 }

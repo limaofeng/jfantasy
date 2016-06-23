@@ -3,10 +3,8 @@ package org.jfantasy.oauth.userdetails;
 
 import org.jfantasy.oauth.userdetails.enums.Scope;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -48,6 +46,26 @@ public class OAuthUserDetails implements UserDetails {
      * 用户显示名
      */
     private String nickName;
+    /**
+     * 权限
+     */
+    private List<GrantedAuthority> authorities;
+    /**
+     * 是否启用
+     */
+    private boolean enabled;
+    /**
+     * 未过期
+     */
+    private boolean accountNonExpired;
+    /**
+     * 未锁定
+     */
+    private boolean accountNonLocked;
+    /**
+     * 未失效
+     */
+    private boolean credentialsNonExpired;
 
     public OAuthUserDetails(Long appId, String appName, String appKey, String appKeyName) {
         this.appId = appId;
@@ -104,36 +122,38 @@ public class OAuthUserDetails implements UserDetails {
         return nickName;
     }
 
+    public void setAuthorities(List<GrantedAuthority> authorities) {
+        this.authorities = authorities;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> authorities = new ArrayList<>();
-        authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
-        return authorities;
+        return this.authorities;
     }
 
     @Override
     public String getPassword() {
-        return null;
+        return "******";
     }
 
     @Override
     public String getUsername() {
-        return "limaofeng";
+        return this.username;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return this.accountNonExpired;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return this.accountNonLocked;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return this.credentialsNonExpired;
     }
 
     public Long getId() {
@@ -142,7 +162,22 @@ public class OAuthUserDetails implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.enabled;
     }
 
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
+    }
+
+    public void setAccountNonExpired(boolean accountNonExpired) {
+        this.accountNonExpired = accountNonExpired;
+    }
+
+    public void setAccountNonLocked(boolean accountNonLocked) {
+        this.accountNonLocked = accountNonLocked;
+    }
+
+    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+        this.credentialsNonExpired = credentialsNonExpired;
+    }
 }

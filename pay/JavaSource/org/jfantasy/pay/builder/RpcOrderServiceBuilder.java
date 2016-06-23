@@ -26,9 +26,8 @@ public class RpcOrderServiceBuilder implements OrderServiceBuilder {
 
     @Override
     public OrderService build(Properties props) {
-        String[] ars = props.getProperty(OrderServer.PROPS_DOMAIN).split(":");
-        String host = ars[0];
-        int port = Integer.valueOf(ars[1]);
+        String host = props.getProperty(OrderServer.PROPS_HOST);
+        int port = (int) props.get(OrderServer.PROPS_PORT);
         RpcProxyFactory rpcProxyFactory = new RpcProxyFactory(new NettyClientFactory(host, port));
         return rpcProxyFactory.proxyBean(org.jfantasy.pay.order.OrderService.class, timeoutInMillis);
     }

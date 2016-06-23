@@ -2,6 +2,7 @@ package org.jfantasy.pay.rest.models;
 
 
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import org.jfantasy.pay.bean.OrderServer;
 import org.jfantasy.pay.order.entity.enums.CallType;
 
 import java.util.Properties;
@@ -10,14 +11,34 @@ public class OrderServerForm {
 
     private CallType callType;
     private String orderType;
-    private String url;
     private String title;
     private String description;
-
+    /**
+     * callType = rpc 时必填
+     */
+    private String host;
+    /**
+     * callType = rpc 时必填
+     */
+    private int port;
+    /**
+     * callType = restful 时必填
+     */
+    private String url;
+    /**
+     * 访问授权的 token
+     */
+    private String token;
 
     @JsonAnyGetter
     public Properties getProperties() {
         Properties props = new Properties();
+        if (CallType.restful == callType) {
+            props.setProperty(OrderServer.PROPS_RESTURL, this.url);
+        } else if (CallType.rpc == callType) {
+            props.setProperty(OrderServer.PROPS_HOST, this.host);
+            props.put(OrderServer.PROPS_PORT, this.port);
+        }
         return props;
     }
 
@@ -59,5 +80,29 @@ public class OrderServerForm {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

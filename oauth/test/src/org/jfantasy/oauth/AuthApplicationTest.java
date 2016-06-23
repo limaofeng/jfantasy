@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.websocket.WebSocketAutoConfigurati
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableAutoConfiguration(exclude = {WebSocketAutoConfiguration.class, JmxAutoConfiguration.class})
+@EnableAutoConfiguration(exclude = {WebSocketAutoConfiguration.class, JmxAutoConfiguration.class})//, TomcatAutoConfiguration.class, SwaggerAutoConfiguration.class
 public class AuthApplicationTest {
 
     public static void main(String[] args) throws Exception {

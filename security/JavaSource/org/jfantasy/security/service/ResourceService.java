@@ -46,4 +46,7 @@ public class ResourceService {
         }
     }
 
+    public List<Resource> find(Criterion... criterions) {
+        return this.resourceDao.find(criterions);
+    }
 }

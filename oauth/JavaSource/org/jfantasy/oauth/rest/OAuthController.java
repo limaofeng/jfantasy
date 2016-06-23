@@ -5,7 +5,6 @@ import org.jfantasy.oauth.service.vo.TokenRequest;
 import org.jfantasy.oauth.service.vo.TokenResponse;
 import org.jfantasy.oauth.userdetails.OAuthUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.DigestUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -24,7 +23,6 @@ public class OAuthController {
     @RequestMapping(value = "/token", method = RequestMethod.POST)
     @ResponseBody
     public TokenResponse token(@RequestBody TokenRequest request) {
-        System.out.println(DigestUtils.md5DigestAsHex("12312312312".getBytes()));
         return accessTokenService.allocateToken(request);
     }
 

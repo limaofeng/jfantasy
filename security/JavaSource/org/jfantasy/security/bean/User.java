@@ -7,21 +7,16 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.security.userdetails.FantasyUserDetails;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @ApiModel(value = "用户信息", description = "用户登录信息")
 @Entity
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "roles", "userGroups", "website", "menus", "authorities"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class User extends BaseBusEntity implements FantasyUserDetails {
+public class User extends BaseBusEntity {
 
     private static final long serialVersionUID = 5507435998232223911L;
 
@@ -230,8 +225,20 @@ public class User extends BaseBusEntity implements FantasyUserDetails {
 
     @Transient
     @ApiModelProperty(hidden = true)
-    public Collection<GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();//SpringSecurityUtils.getAuthorities(this);
+    public String[] getAuthorities() {
+        Set<String> authorities = new LinkedHashSet<>();
+        for (UserGroup userGroup : this.getUserGroups()) {
+            if (!userGroup.isEnabled()) {
+                continue;
+            }
+            authorities.add(userGroup.getAuthority());
+            authorities.addAll(Arrays.asList(userGroup.getRoleAuthorities()));
+        }
+        // 添加角色权限
+        for (Role role : this.getRoles()) {
+            authorities.add(role.getAuthority());
+        }
+        return authorities.toArray(new String[authorities.size()]);
     }
 
     @Override

@@ -20,7 +20,7 @@ public class TokenAuthenticationEntryPoint implements AuthenticationEntryPoint, 
     }
 
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        response.addHeader("WWW-Authenticate", "Basic realm=\"" + realmName + "\"");
+        response.addHeader("WWW-Authenticate", "Token realm=\"" + realmName + "\"");
         response.sendError(HttpServletResponse.SC_UNAUTHORIZED, authException.getMessage());
     }
 

@@ -4,13 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -135,10 +131,8 @@ public class Role extends BaseBusEntity {
         this.type = type;
     }
 
-    public List<GrantedAuthority> getRoleAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_" + getCode()));
-        return grantedAuthorities;
+    public String getAuthority() {
+        return "ROLE_" + getCode();
     }
 
     @Override
@@ -152,18 +146,6 @@ public class Role extends BaseBusEntity {
     @Override
     public int hashCode() {
         return StringUtil.isNotBlank(code) ? code.hashCode() : super.hashCode();
-    }
-
-    @JsonIgnore
-    public List<GrantedAuthority> getMenuAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        if (ObjectUtil.isNull(getMenus())) {
-            return grantedAuthorities;
-        }
-        for (Menu menu : getMenus()) {
-            grantedAuthorities.add(menu.getMenuAuthoritie());
-        }
-        return grantedAuthorities;
     }
 
 }

@@ -20,7 +20,7 @@ public class AreaDeserializer extends JsonDeserializer<Area> {
         return StringUtil.isNotBlank(id) ? getAreaService().get(id) : null;
     }
 
-    public AreaService getAreaService() {
+    private AreaService getAreaService() {
         return areaService == null ? areaService = SpringContextUtil.getBeanByType(AreaService.class) : areaService;
     }
 

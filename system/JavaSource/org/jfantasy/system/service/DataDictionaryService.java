@@ -14,7 +14,6 @@ import org.jfantasy.system.bean.DataDictionaryKey;
 import org.jfantasy.system.bean.DataDictionaryType;
 import org.jfantasy.system.dao.DataDictionaryDao;
 import org.jfantasy.system.dao.DataDictionaryTypeDao;
-import org.jfantasy.system.job.DataDictJob;
 import org.quartz.JobKey;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +50,6 @@ public class DataDictionaryService implements InitializingBean {
             this.scheduleService.deleteJob(jobKey);
         }
         LOGGER.debug("添加用于生成 json 文件的 Job ");
-        this.scheduleService.addJob(jobKey, DataDictJob.class);
     }
 
     public List<DataDictionaryType> allTypes() {

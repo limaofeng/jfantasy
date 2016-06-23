@@ -6,8 +6,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -26,7 +24,6 @@ public class UserGroup extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
     /**
      * 用户组编码
      */
@@ -47,14 +44,12 @@ public class UserGroup extends BaseBusEntity {
      */
     @Column(name = "DESCRIPTION")
     private String description;
-
     /**
      * 用户组对应的菜单
      */
     @ManyToMany(targetEntity = Menu.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_USERGROUP_MENU", joinColumns = @JoinColumn(name = "USERGROUP_ID"), inverseJoinColumns = @JoinColumn(name = "MENU_ID"), foreignKey = @ForeignKey(name = "FK_USERGROUP_MENU_UG"))
     private List<Menu> menus;
-
     /**
      * 用户组对应的资源
      */
@@ -127,22 +122,20 @@ public class UserGroup extends BaseBusEntity {
     }
 
     @JsonIgnore
-    public List<GrantedAuthority> getGroupAuthorities() {
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
-        grantedAuthorities.add(new SimpleGrantedAuthority("GROUP_" + getCode()));
-        return grantedAuthorities;
+    public String getAuthority() {
+        return "GROUP_" + getCode();
     }
 
     @JsonIgnore
-    public List<GrantedAuthority> getRoleAuthorities() {
+    public String[] getRoleAuthorities() {
         if (ObjectUtil.isNull(getRoles())) {
-            return new ArrayList<GrantedAuthority>();
+            return new String[0];
         }
-        List<GrantedAuthority> grantedAuthorities = new ArrayList<GrantedAuthority>();
+        List<String> authorities = new ArrayList<>();
         for (Role role : getRoles()) {
-            grantedAuthorities.addAll(role.getRoleAuthorities());
+            authorities.add(role.getAuthority());
         }
-        return grantedAuthorities;
+        return authorities.toArray(new String[getRoles().size()]);
     }
 
     public boolean equals(Object obj) {

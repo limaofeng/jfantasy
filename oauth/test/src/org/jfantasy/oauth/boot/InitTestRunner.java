@@ -1,4 +1,4 @@
-package org.jfantasy.oauth.batch;
+package org.jfantasy.oauth.boot;
 
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.member.listener.MemberAuthorizationCodeLoginListener;

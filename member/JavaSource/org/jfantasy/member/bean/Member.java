@@ -13,16 +13,11 @@ import org.jfantasy.framework.spring.validation.RESTful.POST;
 import org.jfantasy.framework.spring.validation.RESTful.PUT;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
-import org.jfantasy.security.userdetails.FantasyUserDetails;
-import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * 会员
@@ -36,7 +31,7 @@ import java.util.List;
 @Table(name = "MEM_MEMBER")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "details", "userGroups", "roles", "authorities"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-public class Member extends BaseBusEntity implements FantasyUserDetails {
+public class Member extends BaseBusEntity {
 
     @Null(message = "创建用户时,请不要传入ID", groups = {POST.class})
     @Id
@@ -247,8 +242,20 @@ public class Member extends BaseBusEntity implements FantasyUserDetails {
 
     @Transient
     @ApiModelProperty(hidden = true)
-    public Collection<GrantedAuthority> getAuthorities() {
-        return new ArrayList<>();
+    public String[] getAuthorities() {
+        Set<String> authorities = new LinkedHashSet<>();
+        for (UserGroup userGroup : this.getUserGroups()) {
+            if (!userGroup.isEnabled()) {
+                continue;
+            }
+            authorities.add(userGroup.getAuthority());
+            authorities.addAll(Arrays.asList(userGroup.getRoleAuthorities()));
+        }
+        // 添加角色权限
+        for (Role role : this.getRoles()) {
+            authorities.add(role.getAuthority());
+        }
+        return authorities.toArray(new String[authorities.size()]);
     }
 
     public String getCode() {

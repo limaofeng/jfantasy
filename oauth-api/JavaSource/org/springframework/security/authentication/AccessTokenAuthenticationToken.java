@@ -7,7 +7,7 @@ public class AccessTokenAuthenticationToken extends UsernamePasswordAuthenticati
     private static final long serialVersionUID = SpringSecurityCoreVersion.SERIAL_VERSION_UID;
 
     public AccessTokenAuthenticationToken(Object token) {
-        super(token, null);
+        super(token, "******");
     }
 
 }

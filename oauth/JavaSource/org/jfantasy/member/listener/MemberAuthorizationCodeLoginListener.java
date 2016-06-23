@@ -2,7 +2,7 @@ package org.jfantasy.member.listener;
 
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.event.LoginEvent;
-import org.jfantasy.oauth.service.AccessTokenService;
+import org.jfantasy.security.data.SecurityStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -25,7 +25,7 @@ public class MemberAuthorizationCodeLoginListener implements ApplicationListener
         Member member = event.getMember();
         member.setCode(UUID.randomUUID().toString());
 
-        valueOper.set(AccessTokenService.REDIS_AUTHORIZATION_CODE_PREFIX + member.getCode(), member);
+        valueOper.set(SecurityStorage.AUTHORIZATION_CODE_PREFIX + member.getCode(), member);
     }
 
 }

@@ -21,13 +21,15 @@ import java.util.Properties;
 public class OrderServer extends BaseBusEntity {
 
     /**
-     * 服务的地址<br/>
-     * 包含host与port,
-     * 格式为:host:port
+     * 主机地址<br/>
      */
-    public final static String PROPS_DOMAIN = "domain";
+    public final static String PROPS_HOST = "host";
     /**
-     *  服务的完整地址<br/>
+     * 主机端口<br/>
+     */
+    public final static String PROPS_PORT = "port";
+    /**
+     * 服务的完整地址<br/>
      */
     public final static String PROPS_RESTURL = "url";
     /**

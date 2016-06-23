@@ -1,25 +1,14 @@
 package org.jfantasy.security.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.security.bean.enums.PermissionType;
-import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.web.util.matcher.AndRequestMatcher;
-import org.springframework.security.web.util.matcher.RequestMatcher;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 @ApiModel(value = "权限配置", description = "权限配置信息")
 @Entity
@@ -29,7 +18,7 @@ public class Permission extends BaseBusEntity implements Cloneable {
 
     @ApiModelProperty("权限ID")
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
+    @Column(name = "ID", nullable = false, precision = 22)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
@@ -40,16 +29,10 @@ public class Permission extends BaseBusEntity implements Cloneable {
     @Column(name = "NAME")
     private String name;
     /**
-     * 权限类型
-     */
-    @ApiModelProperty("权限规则类型")
-    @Column(name = "TYPE", length = 20)
-    @Enumerated(EnumType.STRING)
-    private PermissionType type;
-    /**
      * 配置规则
      */
     @ApiModelProperty(hidden = true)
+    @Lob
     @Column(name = "VALUE")
     private String value;
     /**
@@ -71,20 +54,6 @@ public class Permission extends BaseBusEntity implements Cloneable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "RESOURCE_ID", foreignKey = @ForeignKey(name = "FK_AUTH_PERMISSION_RESOURCE_PID"))
     private Resource resource;
-    /**
-     * 用户组
-     */
-    @ApiModelProperty(hidden = true)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_USERGROUP_RESOURCE", joinColumns = @JoinColumn(name = "RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"))
-    public List<UserGroup> userGroups;
-    /**
-     * 角色
-     */
-    @ApiModelProperty(hidden = true)
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_ROLE_RESOURCE", joinColumns = @JoinColumn(name = "RESOURCE_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"))
-    private List<Role> roles;
 
     public Long getId() {
         return id;
@@ -100,14 +69,6 @@ public class Permission extends BaseBusEntity implements Cloneable {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public PermissionType getType() {
-        return type;
-    }
-
-    public void setType(PermissionType type) {
-        this.type = type;
     }
 
     public String getValue() {
@@ -134,24 +95,6 @@ public class Permission extends BaseBusEntity implements Cloneable {
         this.description = description;
     }
 
-    @JsonIgnore
-    public List<Role> getRoles() {
-        return this.roles;
-    }
-
-    @JsonIgnore
-    public List<UserGroup> getUserGroups() {
-        return userGroups;
-    }
-
-    public void setUserGroups(List<UserGroup> userGroups) {
-        this.userGroups = userGroups;
-    }
-
-    public void setRoles(List<Role> roles) {
-        this.roles = roles;
-    }
-
     public Resource getResource() {
         return resource;
     }
@@ -163,66 +106,6 @@ public class Permission extends BaseBusEntity implements Cloneable {
     @JsonIgnore
     public Boolean isEnabled() {
         return ObjectUtil.defaultValue(this.enabled, Boolean.FALSE);
-    }
-
-    @ApiModelProperty("权限规则类型")
-    public PermissionRule[] getPermissionRules() {
-        if (StringUtil.isBlank(this.getValue())) {
-            return new PermissionRule[0];
-        }
-        return JSON.deserialize(this.getValue(), PermissionRule[].class);
-    }
-
-    @JsonIgnore
-    @Transient
-    @ApiModelProperty(hidden = true)
-    public RequestMatcher getRequestMatcher() {
-        PermissionRule[] permissionRules = getPermissionRules();
-        if (this.getType() == PermissionType.and || this.getType() == PermissionType.or) {
-            if (permissionRules == null || permissionRules.length == 0) {
-                return null;
-            }
-            return new AndRequestMatcher(getRequestMatcher());
-        } else {
-            PermissionRule permissionRule = permissionRules[0];
-            if (permissionRule == null) {
-                return null;
-            }
-            return permissionRule.getRequestMatcher();
-        }
-    }
-
-    @ApiModelProperty(hidden = true)
-    public static List<RequestMatcher> getRequestMatcher(PermissionRule[] permissionRules) {
-        List<RequestMatcher> requestMatchers = new ArrayList<RequestMatcher>();
-        return null;
-    }
-
-    @ApiModelProperty(hidden = true)
-    @JsonIgnore
-    @Transient
-    public List<ConfigAttribute> getAuthorities() {
-        List<ConfigAttribute> configAttributes = new ArrayList<ConfigAttribute>();
-        for (UserGroup userGroup : getUserGroups() == null ? new ArrayList<UserGroup>() : getUserGroups()) {
-            if (userGroup.isEnabled()) {
-                for (GrantedAuthority authority : userGroup.getGroupAuthorities()) {
-                    configAttributes.add(new SecurityConfig(authority.getAuthority()));
-                }
-            }
-        }
-        for (Role role : getRoles() == null ? new ArrayList<Role>() : getRoles()) {
-            if (role.isEnabled()) {
-                for (GrantedAuthority authority : role.getRoleAuthorities()) {
-                    configAttributes.add(new SecurityConfig(authority.getAuthority()));
-                }
-            }
-        }
-        return configAttributes;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return ObjectUtil.clone(this);
     }
 
 }

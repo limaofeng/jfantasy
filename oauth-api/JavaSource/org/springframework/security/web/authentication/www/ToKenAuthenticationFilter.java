@@ -5,8 +5,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import org.springframework.security.web.authentication.NullRememberMeServices;
-import org.springframework.security.web.authentication.RememberMeServices;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.Assert;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -23,15 +21,8 @@ public class ToKenAuthenticationFilter extends OncePerRequestFilter {
     private AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource = new WebAuthenticationDetailsSource();
     private AuthenticationEntryPoint authenticationEntryPoint;
     private AuthenticationManager authenticationManager;
-    private RememberMeServices rememberMeServices = new NullRememberMeServices();
     private boolean ignoreFailure = false;
     private String credentialsCharset = "UTF-8";
-
-    public ToKenAuthenticationFilter(AuthenticationManager authenticationManager) {
-        Assert.notNull(authenticationManager, "authenticationManager cannot be null");
-        this.authenticationManager = authenticationManager;
-        ignoreFailure = true;
-    }
 
     public ToKenAuthenticationFilter(AuthenticationManager authenticationManager, AuthenticationEntryPoint authenticationEntryPoint) {
         Assert.notNull(authenticationManager, "authenticationManager cannot be null");
@@ -77,8 +68,6 @@ public class ToKenAuthenticationFilter extends OncePerRequestFilter {
 
                 SecurityContextHolder.getContext().setAuthentication(authResult);
 
-                rememberMeServices.loginSuccess(request, response, authResult);
-
                 onSuccessfulAuthentication(request, response, authResult);
             }
 
@@ -88,8 +77,6 @@ public class ToKenAuthenticationFilter extends OncePerRequestFilter {
             if (debug) {
                 logger.debug("Authentication request for failed: " + failed);
             }
-
-            rememberMeServices.loginFail(request, response);
 
             onUnsuccessfulAuthentication(request, response, failed);
 
@@ -138,11 +125,6 @@ public class ToKenAuthenticationFilter extends OncePerRequestFilter {
     public void setAuthenticationDetailsSource(AuthenticationDetailsSource<HttpServletRequest, ?> authenticationDetailsSource) {
         Assert.notNull(authenticationDetailsSource,"AuthenticationDetailsSource required");
         this.authenticationDetailsSource = authenticationDetailsSource;
-    }
-
-    public void setRememberMeServices(RememberMeServices rememberMeServices) {
-        Assert.notNull(rememberMeServices, "rememberMeServices cannot be null");
-        this.rememberMeServices = rememberMeServices;
     }
 
     public void setCredentialsCharset(String credentialsCharset) {

@@ -5,6 +5,7 @@ import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.service.MemberService;
 import org.jfantasy.oauth.bean.ApiKey;
+import org.jfantasy.oauth.bean.Application;
 import org.jfantasy.oauth.bean.enums.TokenType;
 import org.jfantasy.oauth.service.vo.AccessToken;
 import org.jfantasy.oauth.service.vo.TokenRequest;
@@ -12,17 +13,22 @@ import org.jfantasy.oauth.service.vo.TokenResponse;
 import org.jfantasy.oauth.userdetails.OAuthUserDetails;
 import org.jfantasy.oauth.userdetails.enums.Scope;
 import org.jfantasy.security.bean.User;
+import org.jfantasy.security.data.SecurityStorage;
 import org.jfantasy.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.SetOperations;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -38,10 +44,6 @@ public class AccessTokenService {
     private UserService userService;
     @Autowired
     private MemberService memberService;
-
-    private final static String REDIS_ASSESS_TOKEN_PREFIX = "assess_token:";
-    private final static String REDIS_REFRESH_TOKEN_PREFIX = "refresh_token:";
-    public final static String REDIS_AUTHORIZATION_CODE_PREFIX = "authorization_code:";
 
     @Transactional
     @SuppressWarnings("unchecked")
@@ -72,11 +74,11 @@ public class AccessTokenService {
 
         switch (request.getGrantType()) {
             case authorization_code:
-                Object value = valueOper.get(REDIS_AUTHORIZATION_CODE_PREFIX + request.getCode());
+                Object value = valueOper.get(SecurityStorage.AUTHORIZATION_CODE_PREFIX + request.getCode());
                 if (value == null) {
                     throw new RestException(" authorization code 无效");
                 }
-                redisTemplate.delete(REDIS_AUTHORIZATION_CODE_PREFIX + request.getCode());
+                redisTemplate.delete(SecurityStorage.AUTHORIZATION_CODE_PREFIX + request.getCode());
                 if (value instanceof User) {
                     retrieveUser(userDetails, (User) value);
                 } else if (value instanceof Member) {
@@ -96,18 +98,18 @@ public class AccessTokenService {
                         retrieveUser(userDetails, memberService.login(request.getUsername(), request.getPassword()));
                         break;
                 }
-                redisTemplate.delete(REDIS_AUTHORIZATION_CODE_PREFIX + request.getCode());
+                redisTemplate.delete(SecurityStorage.AUTHORIZATION_CODE_PREFIX + request.getCode());
                 break;
             case refresh_token:
-                AccessToken oldaccessToken = (AccessToken) hashOper.get(REDIS_REFRESH_TOKEN_PREFIX + accessToken.getRefreshToken(), "token");
+                AccessToken oldaccessToken = (AccessToken) hashOper.get(SecurityStorage.REFRESH_TOKEN_PREFIX + accessToken.getRefreshToken(), "token");
                 if (oldaccessToken == null) {
                     throw new RestException(" refresh_token 无效");
                 }
                 if (apiKey.getKey().equals(oldaccessToken.getKey())) {
                     throw new RestException(" apikey 与原值不匹配 ");
                 }
-                retrieveUser(userDetails, (OAuthUserDetails) hashOper.get(REDIS_REFRESH_TOKEN_PREFIX + accessToken.getRefreshToken(), "user"));
-                redisTemplate.delete(REDIS_AUTHORIZATION_CODE_PREFIX + accessToken.getRefreshToken());
+                retrieveUser(userDetails, (OAuthUserDetails) hashOper.get(SecurityStorage.REFRESH_TOKEN_PREFIX + accessToken.getRefreshToken(), "user"));
+                redisTemplate.delete(SecurityStorage.AUTHORIZATION_CODE_PREFIX + accessToken.getRefreshToken());
                 break;
         }
 
@@ -115,13 +117,13 @@ public class AccessTokenService {
         accessToken.setRefreshToken(appId + "/" + DigestUtils.md5DigestAsHex((token + "RefreshToken").getBytes()));
         accessToken.setTokenCreationTime(DateUtil.now());
 
-        String redisAccessTokenKey = REDIS_ASSESS_TOKEN_PREFIX + accessToken.getKey();
+        String redisAccessTokenKey = SecurityStorage.ASSESS_TOKEN_PREFIX + accessToken.getKey();
         hashOper.put(redisAccessTokenKey, "token", accessToken);//保存 assesstoken 到 redis
         hashOper.put(redisAccessTokenKey, "user", userDetails); //保存 userdetails 到 redis
         redisTemplate.expire(redisAccessTokenKey, accessToken.getExpires(), TimeUnit.SECONDS);
 
         //保存 refreshtoken 到 redis
-        String redisRefreshTokenKey = REDIS_REFRESH_TOKEN_PREFIX + accessToken.getKey();
+        String redisRefreshTokenKey = SecurityStorage.REFRESH_TOKEN_PREFIX + accessToken.getKey();
         hashOper.put(redisRefreshTokenKey, "token", accessToken);
         hashOper.put(redisRefreshTokenKey, "user", userDetails);
         redisTemplate.expire(redisRefreshTokenKey, accessToken.getReExpires(), TimeUnit.SECONDS);
@@ -130,8 +132,9 @@ public class AccessTokenService {
         String key = apiKey.getKey() + userDetails.getScope() + userDetails.getId();
         Set<String> tokens = setOper.members(key);
         for (String _token : tokens) {
-            redisTemplate.delete(_token);
+            setOper.remove(key, _token);
         }
+        redisTemplate.delete(key);
         setOper.add(key, redisAccessTokenKey, redisRefreshTokenKey);
 
         return new TokenResponse(accessToken);
@@ -139,7 +142,7 @@ public class AccessTokenService {
 
     public OAuthUserDetails details(String token) {
         HashOperations hashOper = redisTemplate.opsForHash();
-        OAuthUserDetails userDetails = (OAuthUserDetails) hashOper.get(REDIS_ASSESS_TOKEN_PREFIX + token, "user");
+        OAuthUserDetails userDetails = (OAuthUserDetails) hashOper.get(SecurityStorage.ASSESS_TOKEN_PREFIX + token, "user");
         if (userDetails == null) {
             throw new UsernameNotFoundException(" Token Invalid ");
         }
@@ -160,6 +163,14 @@ public class AccessTokenService {
         userDetails.setUserType(null);
         userDetails.setScope(Scope.apiKey);
         userDetails.setNickName(apiKey.getDescription());
+
+        Application application = apiKey.getApplication();
+
+        userDetails.setEnabled(true);
+        userDetails.setAccountNonExpired(true);
+        userDetails.setAccountNonLocked(true);
+        userDetails.setCredentialsNonExpired(true);
+
     }
 
     private void retrieveUser(OAuthUserDetails userDetails, User user) {
@@ -168,6 +179,17 @@ public class AccessTokenService {
         userDetails.setUserType(user.getUserType());
         userDetails.setScope(Scope.user);
         userDetails.setNickName(user.getNickName());
+
+        userDetails.setEnabled(user.isEnabled());
+        userDetails.setAccountNonExpired(user.isAccountNonExpired());
+        userDetails.setAccountNonLocked(user.isAccountNonLocked());
+        userDetails.setCredentialsNonExpired(user.isCredentialsNonExpired());
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String authority : user.getAuthorities()) {
+            authorities.add(new SimpleGrantedAuthority(authority));
+        }
+        userDetails.setAuthorities(authorities);
     }
 
     private void retrieveUser(OAuthUserDetails userDetails, Member member) {
@@ -176,6 +198,17 @@ public class AccessTokenService {
         userDetails.setUserType(member.getMemberType());
         userDetails.setScope(Scope.member);
         userDetails.setNickName(member.getNickName());
+
+        userDetails.setEnabled(member.isEnabled());
+        userDetails.setAccountNonExpired(member.isAccountNonExpired());
+        userDetails.setAccountNonLocked(member.isAccountNonLocked());
+        userDetails.setCredentialsNonExpired(member.isCredentialsNonExpired());
+
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        for (String authority : member.getAuthorities()) {
+            authorities.add(new SimpleGrantedAuthority(authority));
+        }
+        userDetails.setAuthorities(authorities);
     }
 
 }

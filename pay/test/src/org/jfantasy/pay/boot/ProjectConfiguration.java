@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ProjectConfiguration  implements CommandLineRunner {
+public class ProjectConfiguration implements CommandLineRunner {
 
     @Autowired
     private ProjectService projectService;

@@ -28,6 +28,8 @@ public class Application extends BaseBusEntity {
     private String description;
     @OneToMany(mappedBy = "application", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<ApiKey> apiKeys;
+    @Column(name = "ENABLED",nullable = false)
+    private Boolean enabled;
 
     public Long getId() {
         return id;
@@ -61,4 +63,11 @@ public class Application extends BaseBusEntity {
         this.apiKeys = apiKeys;
     }
 
+    public Boolean getEnabled() {
+        return enabled;
+    }
+
+    public void setEnabled(Boolean enabled) {
+        this.enabled = enabled;
+    }
 }
