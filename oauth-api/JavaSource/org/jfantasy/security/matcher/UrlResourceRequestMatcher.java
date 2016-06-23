@@ -6,7 +6,6 @@ import org.apache.commons.logging.LogFactory;
 import org.jfantasy.oauth.PermissionRule;
 import org.jfantasy.oauth.UrlResource;
 import org.springframework.security.access.ConfigAttribute;
-import org.springframework.security.access.SecurityConfig;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.security.web.util.matcher.RequestMatcher;
 import org.springframework.util.Assert;
@@ -22,9 +21,7 @@ public class UrlResourceRequestMatcher implements RequestMatcher {
     private PermissionRule matched;
 
     public List<ConfigAttribute> getPermissions() {
-        List<ConfigAttribute> permissions = new ArrayList<>();
-        permissions.addAll(SecurityConfig.createListFromCommaDelimitedString(this.matched.getAccess()));
-        return permissions;
+        return this.matched.getSecurityConfigs();
     }
 
     public UrlResourceRequestMatcher(UrlResource urlResource) {

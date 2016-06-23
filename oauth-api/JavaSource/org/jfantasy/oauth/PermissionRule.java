@@ -1,15 +1,16 @@
 package org.jfantasy.oauth;
 
-import org.jfantasy.framework.util.common.StringUtil;
+import org.springframework.security.access.ConfigAttribute;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class PermissionRule implements Serializable {
 
     private String id;
     private String pattern;
     private String method;
-    private String access = "";
+    private List<ConfigAttribute> securityConfigs;
 
     public String getId() {
         return id;
@@ -35,16 +36,11 @@ public class PermissionRule implements Serializable {
         this.method = method;
     }
 
-    public String getAccess() {
-        return access;
+    public List<ConfigAttribute> getSecurityConfigs() {
+        return securityConfigs;
     }
 
-    public void setAccess(String access) {
-        this.access = access;
+    public void setSecurityConfigs(List<ConfigAttribute> securityConfigs) {
+        this.securityConfigs = securityConfigs;
     }
-
-    public void addAccess(String access) {
-        this.access += ((StringUtil.isBlank(this.access) ? "" : ",") + access.toUpperCase());
-    }
-
 }

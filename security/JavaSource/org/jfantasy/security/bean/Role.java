@@ -43,14 +43,6 @@ public class Role extends BaseBusEntity {
      */
     @Column(name = "DESCRIPTION")
     private String description;
-
-    /**
-     * 角色对应的菜单
-     */
-    @ManyToMany(targetEntity = Menu.class, fetch = FetchType.LAZY)
-    @JoinTable(name = "AUTH_ROLE_MENU", joinColumns = @JoinColumn(name = "ROLE_CODE"), inverseJoinColumns = @JoinColumn(name = "MENU_ID"),foreignKey = @ForeignKey(name = "FK_ROLE_MENU_RCODE") )
-    private List<Menu> menus;
-
     /**
      * 角色对应的资源
      */
@@ -107,20 +99,12 @@ public class Role extends BaseBusEntity {
         this.permissions = permissions;
     }
 
-    public List<Menu> getMenus() {
-        return menus;
-    }
-
     public List<User> getUsers() {
         return users;
     }
 
     public void setUsers(List<User> users) {
         this.users = users;
-    }
-
-    public void setMenus(List<Menu> menus) {
-        this.menus = menus;
     }
 
     public String getType() {

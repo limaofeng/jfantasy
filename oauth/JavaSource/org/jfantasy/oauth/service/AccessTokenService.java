@@ -134,7 +134,8 @@ public class AccessTokenService {
         for (String _token : tokens) {
             setOper.remove(key, _token);
         }
-        redisTemplate.delete(key);
+        tokens.add(key);
+        redisTemplate.delete(tokens);
         setOper.add(key, redisAccessTokenKey, redisRefreshTokenKey);
 
         return new TokenResponse(accessToken);
