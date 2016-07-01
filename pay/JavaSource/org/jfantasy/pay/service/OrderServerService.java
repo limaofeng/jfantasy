@@ -46,6 +46,7 @@ public class OrderServerService {
         return this.orderServerDao.save(orderServer);
     }
 
+    @Transactional(propagation = Propagation.NOT_SUPPORTED)
     public List<OrderServer> find(Criterion... criterions) {
         return this.orderServerDao.find(criterions);
     }

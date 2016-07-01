@@ -26,7 +26,7 @@ allprojects {
     apply plugin: 'maven'
 
     group = 'org.jfantasy'
-    version = '1.1.9-SNAPSHOT'
+    version = '1.1.10-SNAPSHOT'
 
     task hello << { task -> println "I'm $task.project.name" }
 
@@ -90,7 +90,7 @@ subprojects {
     uploadArchives {
         repositories {
             mavenDeployer {
-                repository(url: "http://114.55.60.227:8081/content/repositories/snapshots") {
+                repository(url: "http://maven.zbsg.com.cn/content/repositories/snapshots") {
                     authentication(userName: "admin", password: "admin123")
                 }
                 pom.version = "$project.version"
@@ -105,7 +105,7 @@ subprojects {
     repositories {
         mavenLocal()
 
-        maven { url "http://114.55.60.227:8081/content/groups/public" }
+        maven { url "http://maven.zbsg.com.cn/content/groups/public" }
     }
 
 }

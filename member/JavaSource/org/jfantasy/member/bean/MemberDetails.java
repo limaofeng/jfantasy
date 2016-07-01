@@ -1,5 +1,7 @@
 package org.jfantasy.member.bean;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
@@ -15,6 +17,7 @@ import org.jfantasy.security.bean.enums.Sex;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Properties;
 
 /**
  * 用户详细信息表
@@ -33,7 +36,7 @@ public class MemberDetails implements Serializable {
     private static final long serialVersionUID = -5738290484268799275L;
 
     @Id
-    @Column(name = "MEMBER_ID", nullable = false, updatable = false, precision = 22, scale = 0)
+    @Column(name = "MEMBER_ID", nullable = false, updatable = false, precision = 22)
     @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "member")})
     @GeneratedValue(generator = "pkGenerator")
     private Long memberId;
@@ -113,6 +116,10 @@ public class MemberDetails implements Serializable {
     @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
     private Member member;
+
+    @ApiModelProperty(hidden = true)
+    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
+    private Properties properties;
 
     public String getName() {
         return name;
@@ -226,4 +233,24 @@ public class MemberDetails implements Serializable {
     public void setLevel(int level) {
         this.level = level;
     }
+
+    @JsonAnyGetter
+    public Properties getProperties() {
+        return this.properties;
+    }
+
+    @JsonAnySetter
+    public void set(String key, String value) {
+        if (this.properties == null) {
+            this.properties = new Properties();
+        }
+        this.properties.put(key, value);
+    }
+
+    @Transient
+    public String get(String key) {
+        if (this.properties == null) return null;
+        return this.properties.getProperty(key);
+    }
+
 }

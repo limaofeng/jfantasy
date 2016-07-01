@@ -38,9 +38,17 @@ public class ApiKey extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @Column(name = "PROPERTIES", columnDefinition = "Blob")
     private Properties properties;
+    /**
+     * 对应的应用
+     */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "APP_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_OAUTH_APPKEY_APPID"))
     private Application application;
+    /**
+     * 平台简码(web/app)
+     */
+    @Column(name = "PLATFORM")
+    private String platform;
 
     public ApiKey() {
     }
@@ -89,5 +97,13 @@ public class ApiKey extends BaseBusEntity {
 
     public void setApplication(Application application) {
         this.application = application;
+    }
+
+    public String getPlatform() {
+        return platform;
+    }
+
+    public void setPlatform(String platform) {
+        this.platform = platform;
     }
 }

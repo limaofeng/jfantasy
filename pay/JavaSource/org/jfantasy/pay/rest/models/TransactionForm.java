@@ -16,6 +16,10 @@ public class TransactionForm {
      */
     private BigDecimal amount;
     /**
+     * 支付项目
+     */
+    private String project;
+    /**
      * 备注
      */
     private String notes;
@@ -50,5 +54,13 @@ public class TransactionForm {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public String getProject() {
+        return project;
+    }
+
+    public void setProject(String project) {
+        this.project = project;
     }
 }

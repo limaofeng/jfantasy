@@ -16,7 +16,6 @@ import org.jfantasy.pay.event.PayRefundNotifyEvent;
 import org.jfantasy.pay.event.PayStatusEvent;
 import org.jfantasy.pay.event.context.PayContext;
 import org.jfantasy.pay.event.context.PayStatus;
-import org.jfantasy.pay.order.OrderServiceFactory;
 import org.jfantasy.pay.order.entity.OrderDetails;
 import org.jfantasy.pay.order.entity.OrderKey;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
@@ -47,8 +46,6 @@ public class PayService {
     @Autowired
     private PayConfigService payConfigService;
     @Autowired
-    private OrderServiceFactory orderServiceFactory;
-    @Autowired
     private PaymentService paymentService;
     @Autowired
     private RefundService refundService;
@@ -58,23 +55,10 @@ public class PayService {
     private ApplicationContext applicationContext;
 
     @Transactional
-    public ToPayment pay(Long payConfigId, PayType payType, String orderType, String orderSn, String payer, Properties properties) throws PayException {
-        OrderKey key = OrderKey.newInstance(orderType, orderSn);
-        Order order = orderService.get(key);
-        OrderDetails orderDetails;
-        if (order == null) {
-            if (!orderServiceFactory.containsType(orderType)) {
-                throw new RestException("orderType[" + orderType + "] 对应的 PaymentOrderService 未配置！");
-            }
-            //获取订单信息
-            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key);
-            if (orderDetails == null) {
-                throw new RestException("order = [" + key + "] 不存在,请核对后,再继续操作!");
-            }
-            order = orderService.save(orderDetails);
-        } else {
-            orderDetails = orderServiceFactory.getOrderService(orderType).loadOrder(key);
-        }
+    public ToPayment pay(Long payConfigId, PayType payType, String orderKey, String payer, Properties properties) throws PayException {
+        OrderKey key = OrderKey.newInstance(orderKey);
+        Order order = orderService.getOrder(key);
+        OrderDetails orderDetails = order.getDetails();
         if (!orderDetails.isPayment()) {
             throw new RestException("业务系统异常,不能继续支付");
         }
@@ -89,7 +73,6 @@ public class PayService {
         BeanUtil.copyProperties(toPayment, payment, "status", "type");
         toPayment.setStatus(payment.getStatus());
         toPayment.setType(payment.getType());
-        PaymentStatus oldStatus = payment.getStatus();
         if (PayType.web == payType) {
             toPayment.setSource(payProduct.web(payment, order, properties));
         } else if (PayType.app == payType) {
@@ -97,10 +80,6 @@ public class PayService {
         }
         //保存支付信息
         paymentService.save(payment);
-        if (oldStatus != payment.getStatus()) {//保存交易日志
-            paymentService.log(payment, "创建" + payment.getPayConfigName() + " 交易");
-            this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(),payment,order)));
-        }
         return toPayment;
     }
 
@@ -190,8 +169,7 @@ public class PayService {
 
         //更新支付状态
         paymentService.save(payment);
-        paymentService.log(payment, "交易" + payment.getStatus().value());
-        this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(),payment,order)));
+        this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(), payment, order)));
 
         // 更新订单状态
         switch (payment.getStatus()) {

@@ -40,7 +40,7 @@ public class OrderServiceFactory implements InitializingBean, ApplicationContext
     }
 
     public OrderServiceFactory() {
-        orderServiceMap = new HashMap<String, OrderService>();
+        orderServiceMap = new HashMap<>();
     }
 
     public OrderServiceFactory(Map<String, OrderService> orderDetailsServices) {

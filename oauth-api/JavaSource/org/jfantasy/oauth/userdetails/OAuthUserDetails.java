@@ -1,6 +1,5 @@
 package org.jfantasy.oauth.userdetails;
 
-
 import org.jfantasy.oauth.userdetails.enums.Scope;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +9,21 @@ import java.util.List;
 
 public class OAuthUserDetails implements UserDetails {
 
+    public enum Type {
+        /**
+         * APP
+         */
+        app,
+        /**
+         * 用户
+         */
+        user,
+        /**
+         * 会员
+         */
+        member
+    }
+
     /**
      * 主键
      */
@@ -18,6 +32,10 @@ public class OAuthUserDetails implements UserDetails {
      * 用户名
      */
     private String username;
+    /**
+     * 类型
+     */
+    private Type type;
     /**
      * 用户类型
      */
@@ -66,12 +84,31 @@ public class OAuthUserDetails implements UserDetails {
      * 未失效
      */
     private boolean credentialsNonExpired;
+    /**
+     * 用于标示唯一<br/>
+     * 结构如下: type:username
+     * member:15921884771
+     */
+    private String key;
+    /**
+     * 平台简码
+     */
+    private String platform;
 
-    public OAuthUserDetails(Long appId, String appName, String appKey, String appKeyName) {
+    public void setType(Type type) {
+        this.type = type;
+    }
+
+    public OAuthUserDetails(Long appId, String appName, String appKey, String appKeyName, String platform) {
         this.appId = appId;
         this.appName = appName;
         this.appKey = appKey;
         this.appKeyName = appKeyName;
+        this.platform = platform;
+    }
+
+    public Type getType() {
+        return type;
     }
 
     public void setId(Long id) {
@@ -179,5 +216,17 @@ public class OAuthUserDetails implements UserDetails {
 
     public void setCredentialsNonExpired(boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
+    }
+
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(String key) {
+        this.key = key;
+    }
+
+    public String getPlatform() {
+        return platform;
     }
 }

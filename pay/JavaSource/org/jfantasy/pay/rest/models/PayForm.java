@@ -12,34 +12,14 @@ import java.util.Properties;
 
 @ApiModel("支付表单")
 public class PayForm implements Serializable {
-    @ApiModelProperty(value = "订单类型", required = true)
-    private String orderType;
-    @ApiModelProperty(value = "订单编号", required = true)
-    private String orderSn;
     @ApiModelProperty(value = "支付配置ID", required = true)
     private Long payconfigId;
     @ApiModelProperty(value = "支付类型", required = true)
     private PayType payType;
-    @ApiModelProperty(value = "付款人", required = false)
+    @ApiModelProperty(value = "付款人")
     private String payer;
-    @ApiModelProperty(value = "支付参数", notes = "支持的参数:{backUrl:'支付成功后的跳转地址'}", required = false)
+    @ApiModelProperty(value = "支付参数", notes = "支持的参数:{backUrl:'支付成功后的跳转地址'}")
     private Parameters parameters;
-
-    public String getOrderType() {
-        return orderType;
-    }
-
-    public void setOrderType(String orderType) {
-        this.orderType = orderType;
-    }
-
-    public String getOrderSn() {
-        return orderSn;
-    }
-
-    public void setOrderSn(String orderSn) {
-        this.orderSn = orderSn;
-    }
 
     public Long getPayconfigId() {
         return payconfigId;

@@ -51,9 +51,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public void configure(WebSecurity web) throws Exception {
-//        web.ignoring().antMatchers("/**");
-        web.ignoring().antMatchers("/oauth/token");
-        //.antMatchers("/members/**/login");.antMatchers("/**")
+        web.ignoring().antMatchers("/oauth/token","/oauth/access_token","/api-docs");
     }
 
     @Override
@@ -81,6 +79,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //        http.rememberMe().key("rememberme");
 
 //        http.httpBasic();
+
+//        http.csrf().csrfTokenRepository(new HttpSessionCsrfTokenRepository());
+
+        http.csrf().disable();
 
         ToKenAuthenticationFilter filter = new ToKenAuthenticationFilter(authenticationManager(), new TokenAuthenticationEntryPoint());
         http.addFilterBefore(filter, BasicAuthenticationFilter.class);

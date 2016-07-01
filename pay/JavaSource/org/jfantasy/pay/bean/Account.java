@@ -8,10 +8,9 @@ import javax.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "ACCOUNT")
+@Table(name = "PAY_ACCOUNT")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Account extends BaseBusEntity {
-
     /**
      * 编号
      */

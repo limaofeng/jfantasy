@@ -61,14 +61,14 @@ public class AccessTokenService {
         accessToken.setType(TokenType.bearer);
         accessToken.setGrantType(request.getGrantType());
         //TODO 后期可以改为单独配置的属性
-        accessToken.setExpires(30 * 60);
-        accessToken.setReExpires(40 * 60);
+        accessToken.setExpires(30 * 60 * 60);
+        accessToken.setReExpires(40 * 60 * 60);
 
         ValueOperations valueOper = redisTemplate.opsForValue();
         HashOperations hashOper = redisTemplate.opsForHash();
         SetOperations setOper = redisTemplate.opsForSet();
 
-        OAuthUserDetails userDetails = new OAuthUserDetails(appId, apiKey.getApplication().getName(), apiKey.getKey(), apiKey.getDescription());
+        OAuthUserDetails userDetails = new OAuthUserDetails(appId, apiKey.getApplication().getName(), apiKey.getKey(), apiKey.getDescription(),apiKey.getPlatform());
 
         String token = UUID.randomUUID().toString() + "_" + request.getGrantType() + "_" + apiKey.getKey();
 
@@ -167,11 +167,13 @@ public class AccessTokenService {
 
         Application application = apiKey.getApplication();
 
+        userDetails.setType(OAuthUserDetails.Type.app);
+        userDetails.setKey(OAuthUserDetails.Type.app.name() + ":" + application.getId());
+
         userDetails.setEnabled(true);
         userDetails.setAccountNonExpired(true);
         userDetails.setAccountNonLocked(true);
         userDetails.setCredentialsNonExpired(true);
-
     }
 
     private void retrieveUser(OAuthUserDetails userDetails, User user) {
@@ -180,6 +182,9 @@ public class AccessTokenService {
         userDetails.setUserType(user.getUserType());
         userDetails.setScope(Scope.user);
         userDetails.setNickName(user.getNickName());
+
+        userDetails.setType(OAuthUserDetails.Type.user);
+        userDetails.setKey(OAuthUserDetails.Type.user.name() + ":" + user.getUsername());
 
         userDetails.setEnabled(user.isEnabled());
         userDetails.setAccountNonExpired(user.isAccountNonExpired());
@@ -191,6 +196,7 @@ public class AccessTokenService {
             authorities.add(new SimpleGrantedAuthority(authority));
         }
         userDetails.setAuthorities(authorities);
+
     }
 
     private void retrieveUser(OAuthUserDetails userDetails, Member member) {
@@ -199,6 +205,9 @@ public class AccessTokenService {
         userDetails.setUserType(member.getMemberType());
         userDetails.setScope(Scope.member);
         userDetails.setNickName(member.getNickName());
+
+        userDetails.setType(OAuthUserDetails.Type.member);
+        userDetails.setKey(OAuthUserDetails.Type.member.name() + ":" + member.getUsername());
 
         userDetails.setEnabled(member.isEnabled());
         userDetails.setAccountNonExpired(member.isAccountNonExpired());

@@ -6,7 +6,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.BeanUtil;
-import org.jfantasy.pay.ApplicationTest;
+import org.jfantasy.pay.PayApplicationTest;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Properties;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(ApplicationTest.class)
+@SpringApplicationConfiguration(PayApplicationTest.class)
 public class PayServiceTest {
 
     private final static Log LOG = LogFactory.getLog(PayServiceTest.class);
@@ -73,7 +73,7 @@ public class PayServiceTest {
     @Test
     public void pay() throws Exception {
         PayConfig payConfig = payConfigService.findUnique(Restrictions.eq("payProductId", "alipay"));
-        ToPayment topayment = payService.pay(payConfig.getId(), PayType.web, "test", "2016061300001", "limaofeng", new Properties());
+        ToPayment topayment = payService.pay(payConfig.getId(), PayType.web, "test:2016061300001", "limaofeng", new Properties());
 
         Payment payment = paymentService.get(topayment.getSn());
 

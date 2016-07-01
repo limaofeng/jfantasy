@@ -26,7 +26,7 @@ import java.util.Properties;
  */
 @ApiModel("支付配置")
 @Entity
-@Table(name = "PAYCONFIG")
+@Table(name = "PAY_PAYCONFIG")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "payments", "refunds"})
 public class PayConfig extends BaseBusEntity {
 
@@ -121,6 +121,16 @@ public class PayConfig extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<>();// 退款
+    /**
+     * 支持的平台(包含:app/web)
+     */
+    @Column(name = "PLATFORMS")
+    private String platforms;
+    /**
+     * 是否为默认
+     */
+    @Transient
+    private Boolean isDefault;
 
     public PayConfig() {
     }
@@ -279,4 +289,19 @@ public class PayConfig extends BaseBusEntity {
         this.properties = properties;
     }
 
+    public Boolean getDefault() {
+        return isDefault;
+    }
+
+    public void setDefault(Boolean aDefault) {
+        isDefault = aDefault;
+    }
+
+    public String getPlatforms() {
+        return platforms;
+    }
+
+    public void setPlatforms(String platforms) {
+        this.platforms = platforms;
+    }
 }

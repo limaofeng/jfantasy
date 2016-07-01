@@ -15,20 +15,24 @@ import java.util.Properties;
 @EntityScan("org.jfantasy.pay.bean")
 public class PayAutoConfiguration {
 
+    public final static String ONS_TAGS_TRANSACTION = "transaction";
+    public final static String ONS_TAGS_TRANSACTION_KEY = "transaction";
+    public final static String ONS_TAGS_PAY = "pay";
+    public final static String ONS_TAGS_PAY_PAYMENTKEY = "payment";
+    public static final String ONS_TAGS_PAY_REFUNDKEY = "refund";
+
     @Bean
     public PayProductConfiguration paymentConfiguration() {
         return new PayProductConfiguration();
     }
 
-    @Value("${aliyun.ons.pay.producerId:PID-20160428}")
-    private String producerId;
-    @Value("${aliyun.ons.pay.accessKey:GjYnEEMsLVTomMzF}")
+    @Value("${aliyun.ons.pay.accessKey}")
     private String accessKey;
-    @Value("${aliyun.ons.pay.secretKey:rYSFhN67iXR0vl0pUSatSQjEqR2e2F}")
+    @Value("${aliyun.ons.pay.secretKey}")
     private String secretKey;
 
     @Bean(initMethod = "start",destroyMethod = "shutdown")
-    public ProducerBean producer(){
+    public ProducerBean payProducer(@Value("${aliyun.ons.pay.producerId:PID-PAY}")  String producerId){
         ProducerBean producerBean = new ProducerBean();
         Properties properties = new Properties();
         properties.setProperty(PropertyKeyConst.ProducerId,producerId);

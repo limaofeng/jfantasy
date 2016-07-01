@@ -6,6 +6,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 钱包
@@ -43,6 +44,9 @@ public class Wallet extends BaseBusEntity {
      */
     @Column(name = "ACCOUNT", nullable = false, updatable = false)
     private String account;
+    @OneToMany(mappedBy="wallet", fetch = FetchType.LAZY)
+    private List<WalletBill> bills;
+
     /**
      * 积分
      */

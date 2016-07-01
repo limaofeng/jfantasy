@@ -77,7 +77,7 @@ public class RegexpUtilTest {
 
     @Test
     public void testReplaceFirst() throws Exception {
-
+        LOG.debug("member:15921884771".replaceAll("^[^:]+:",""));
     }
 
     @Test

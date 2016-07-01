@@ -120,6 +120,10 @@ public class ThreadJacksonMixInHolder {
         return holderThreadLocal.get() != null && (!holderThreadLocal.get().ignorePropertyNames.isEmpty() || !holderThreadLocal.get().allowPropertyNames.isEmpty());
     }
 
+    public boolean isReturnProperty(Class<?> target, String name) {
+        return isAllowProperty(target,name) || !isIgnoreProperty(target,name);
+    }
+
     /**
      * 判断属性是否被忽略
      *
@@ -130,6 +134,11 @@ public class ThreadJacksonMixInHolder {
     public boolean isIgnoreProperty(Class<?> target, String name) {
         MixInSource mixInSource = createMixInSource(target);
         return this.ignorePropertyNames.containsKey(mixInSource.getFilterName()) && this.ignorePropertyNames.get(mixInSource.getFilterName()).contains(name);
+    }
+
+    public boolean isAllowProperty(Class<?> target, String name) {
+        MixInSource mixInSource = createMixInSource(target);
+        return this.allowPropertyNames.containsKey(mixInSource.getFilterName()) && this.allowPropertyNames.get(mixInSource.getFilterName()).contains(name);
     }
 
     private static MixInSource createMixInSource(Class<?> target) {

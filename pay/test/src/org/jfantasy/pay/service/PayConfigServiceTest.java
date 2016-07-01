@@ -8,7 +8,7 @@ import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.PathUtil;
 import org.jfantasy.framework.util.common.StreamUtil;
 import org.jfantasy.framework.util.common.file.FileUtil;
-import org.jfantasy.pay.ApplicationTest;
+import org.jfantasy.pay.PayApplicationTest;
 import org.jfantasy.pay.bean.PayConfig;
 import org.junit.Assert;
 import org.junit.Before;
@@ -24,7 +24,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(ApplicationTest.class)
+@SpringApplicationConfiguration(PayApplicationTest.class)
 public class PayConfigServiceTest {
 
     private final static Log LOG = LogFactory.getLog(PayConfigServiceTest.class);

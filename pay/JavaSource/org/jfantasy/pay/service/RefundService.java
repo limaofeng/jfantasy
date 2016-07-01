@@ -10,7 +10,6 @@ import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.dao.RefundDao;
-import org.jfantasy.pay.dao.RefundLogDao;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
@@ -28,8 +27,6 @@ public class RefundService {
 
     @Autowired
     private RefundDao refundDao;
-    @Autowired
-    private RefundLogDao refundLogDao;
 
     public Refund get(String sn) {
         return this.refundDao.get(sn);
@@ -83,7 +80,6 @@ public class RefundService {
             refund.setTotalAmount(amount);
             refund.setMemo(remark);
             refund = this.refundDao.save(refund);
-            refundLogDao.save(refund, "退款开始");
             return refund;
         } finally {
             for (Refund _refund : ObjectUtil.filter(refunds, "status", RefundStatus.ready)) {//将其余订单设置为失败
@@ -103,7 +99,6 @@ public class RefundService {
     public void close(Refund refund) {
         refund.setStatus(RefundStatus.close);
         this.refundDao.save(refund);
-        this.refundLogDao.save(refund, "退款" + refund.getStatus().value());
     }
 
     public Refund save(Refund refund) {

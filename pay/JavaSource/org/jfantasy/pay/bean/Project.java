@@ -3,19 +3,20 @@ package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.pay.bean.enums.ProjectType;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 交易项目
  */
 @Entity
-@Table(name = "PROJECT")
+@Table(name = "PAY_PROJECT")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Project extends BaseBusEntity {
+
+    public final static String ORDER_PAYMENT = "payment";
+    public final static String ORDER_REFUND = "refund";
 
     /**
      * 编码
@@ -23,6 +24,12 @@ public class Project extends BaseBusEntity {
     @Id
     @Column(name = "CODE", updatable = false)
     private String key;
+    /**
+     * 项目类型
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "TYPE")
+    private ProjectType type;
     /**
      * 名称
      */
@@ -33,6 +40,13 @@ public class Project extends BaseBusEntity {
      */
     @Column(name = "DESCRIPTION")
     private String description;
+
+    public Project(String key) {
+        this.key = key;
+    }
+
+    public Project() {
+    }
 
     public String getKey() {
         return key;
@@ -56,6 +70,14 @@ public class Project extends BaseBusEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public ProjectType getType() {
+        return type;
+    }
+
+    public void setType(ProjectType type) {
+        this.type = type;
     }
 
 }

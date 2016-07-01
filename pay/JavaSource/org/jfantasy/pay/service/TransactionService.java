@@ -1,17 +1,21 @@
 package org.jfantasy.pay.service;
 
+import org.hibernate.criterion.Restrictions;
+import org.jfantasy.framework.dao.Pager;
+import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.pay.bean.Project;
 import org.jfantasy.pay.bean.Transaction;
+import org.jfantasy.pay.bean.enums.ProjectType;
 import org.jfantasy.pay.bean.enums.TxChannel;
 import org.jfantasy.pay.bean.enums.TxStatus;
 import org.jfantasy.pay.dao.ProjectDao;
 import org.jfantasy.pay.dao.TransactionDao;
-import org.jfantasy.pay.dao.TxLogDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.List;
 import java.util.Properties;
 
 @Service
@@ -20,9 +24,9 @@ public class TransactionService {
     @Autowired
     private TransactionDao transactionDao;
     @Autowired
-    private TxLogDao txLogDao;
-    @Autowired
     private ProjectDao projectDao;
+    @Autowired
+    private PayService payService;
 
     /**
      * 第三方支付业务
@@ -41,13 +45,12 @@ public class TransactionService {
         transaction.setTo(to);
         transaction.setAmount(amount);
         transaction.setNotes(notes);
-        transaction.setStatus(TxStatus.apply);
+        transaction.setStatus(TxStatus.unprocessed);
         transaction.setChannel(TxChannel.thirdparty);
         transaction.setProject(project);
         transaction.setProperties(properties);
         //保存交易日志
         transaction = this.transactionDao.save(transaction);
-        txLogDao.save(transaction, notes);
         return transaction;
     }
 
@@ -67,13 +70,37 @@ public class TransactionService {
         transaction.setTo(to);
         transaction.setAmount(amount);
         transaction.setNotes(notes);
-        transaction.setStatus(TxStatus.apply);
+        transaction.setStatus(TxStatus.unprocessed);
         transaction.setChannel(TxChannel.internal);
         transaction.setProject(projectDao.get("transfer"));
         //保存交易日志
         transaction = this.transactionDao.save(transaction);
-        txLogDao.save(transaction, notes);
         return transaction;
+    }
+
+    public Transaction get(String sn) {
+        return transactionDao.get(sn);
+    }
+
+    public Pager<Transaction> findPager(Pager<Transaction> pager, List<PropertyFilter> filters) {
+        return this.transactionDao.findPager(pager, filters);
+    }
+
+    @Transactional
+    public Transaction save(Transaction transaction) {
+        String key = transaction.get(Transaction.ORDER_KEY);
+        String unionid = Transaction.generateUnionid(transaction.getProject().getKey(), key);
+        Transaction src = this.transactionDao.findUnique(Restrictions.eq("unionId", unionid));
+        if (src != null) {
+            return src;
+        }
+        transaction.setUnionId(unionid);
+        if (transaction.getProject().getType() == ProjectType.order) {
+            transaction.set("stage", Transaction.STAGE_PAYMENT);
+        }
+        transaction.setStatus(TxStatus.unprocessed);
+        transaction.setStatusText(transaction.getProject().getType() == ProjectType.order ? "等待付款" : "待处理");
+        return this.transactionDao.save(transaction);
     }
 
 }

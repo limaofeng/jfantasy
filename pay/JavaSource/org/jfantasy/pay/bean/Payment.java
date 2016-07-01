@@ -22,7 +22,7 @@ import java.util.Date;
  */
 @ApiModel(value = "支付记录")
 @Entity
-@Table(name = "PAYMENT", uniqueConstraints = {@UniqueConstraint(columnNames = {"PAY_CONFIG_ID", "ORDER_TYPE", "ORDER_SN", "PAY_STATUS"})})
+@Table(name = "PAY_PAYMENT", uniqueConstraints = {@UniqueConstraint(columnNames = {"PAY_CONFIG_ID", "ORDER_TYPE", "ORDER_SN", "PAY_STATUS"})})
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Payment extends BaseBusEntity {
 
@@ -113,6 +113,13 @@ public class Payment extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE"), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN")})
     private Order order;
+    /**
+     * 交易记录
+     */
+    @ApiModelProperty("交易记录")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TXN_SN", referencedColumnName = "SN")
+    private Transaction transaction;
     /**
      * 支付时间
      */
@@ -236,6 +243,14 @@ public class Payment extends BaseBusEntity {
     @Transient
     public String getOrderKey() {
         return this.getOrder().getKey();
+    }
+
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
     }
 
 }

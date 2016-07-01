@@ -5,5 +5,5 @@ import org.jfantasy.member.bean.WalletBill;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class WalletBillDao  extends HibernateDao<WalletBill, Long> {
+public class WalletBillDao extends HibernateDao<WalletBill, Long> {
 }

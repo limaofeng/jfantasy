@@ -8,13 +8,12 @@ import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
-import org.jfantasy.pay.bean.Order;
-import org.jfantasy.pay.bean.PayConfig;
-import org.jfantasy.pay.bean.Payment;
-import org.jfantasy.pay.bean.Refund;
+import org.jfantasy.pay.bean.*;
 import org.jfantasy.pay.order.entity.OrderItem;
 import org.jfantasy.pay.order.entity.OrderKey;
+import org.jfantasy.pay.rest.models.OrderTransaction;
 import org.jfantasy.pay.rest.models.assembler.OrderResourceAssembler;
+import org.jfantasy.pay.service.AccountService;
 import org.jfantasy.pay.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -32,11 +31,13 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
     @Autowired
-    private PayConfigController payConfigController;
-    @Autowired
     private PaymentController paymentController;
     @Autowired
     private RefundController refundController;
+    @Autowired
+    private TransactionController transactionController;
+    @Autowired
+    private AccountService accountService;
 
     @JsonIgnoreProperties(
             value = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
@@ -59,6 +60,34 @@ public class OrderController {
         return assembler.toResource(orderService.get(OrderKey.newInstance(key)));
     }
 
+    @JsonIgnoreProperties(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @ApiOperation(value = "创建订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
+    @RequestMapping(value = "/{id}/transactions", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultResourceSupport transaction(@PathVariable("id") String key, @RequestBody OrderTransaction orderTransaction) {
+        String from = accountService.findUniqueByCurrentUser().getSn();
+        String to = accountService.platform().getSn();
+        Order order = orderService.getOrder(OrderKey.newInstance(key));
+        Transaction transaction = new Transaction();
+        transaction.setFrom(from);
+        transaction.setTo(to);
+        transaction.setAmount(order.getPayableFee());
+        transaction.set(Transaction.ORDER_KEY, key);
+        transaction.set(Transaction.ORDER_SUBJECT, order.getSubject());
+        transaction.setProject(new Project(orderTransaction.getType().getValue()));
+        transaction.setNotes(order.getSubject());
+        return transactionController.save(transaction);
+    }
+
+    @JsonIgnoreProperties(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @ApiOperation(value = "获取订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
+    @RequestMapping(value = "/{id}/transactions", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ResultResourceSupport> transactions(@PathVariable("id") String key,List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("INS_unionId", Transaction.generateUnionid(OrderTransaction.Type.payment.getValue(), key), Transaction.generateUnionid(OrderTransaction.Type.refund.getValue(), key)));
+        return transactionController.seach(new Pager<Transaction>(), filters).getPageItems();
+    }
+
     @JsonIgnoreProperties(
             value = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
             allow = @AllowProperty(pojo = Order.class, name = {"key", "subject"})
@@ -69,7 +98,7 @@ public class OrderController {
     public Pager<ResultResourceSupport> payments(@PathVariable("id") String id) {
         OrderKey key = OrderKey.newInstance(id);
         List<PropertyFilter> filters = new ArrayList<>();
-        filters.add(new PropertyFilter("EQS_order.type",  key.getType()));
+        filters.add(new PropertyFilter("EQS_order.type", key.getType()));
         filters.add(new PropertyFilter("EQS_order.sn", key.getSn()));
         return paymentController.search(new Pager<Payment>(), filters);
     }

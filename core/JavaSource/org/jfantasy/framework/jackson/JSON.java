@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
@@ -16,8 +17,6 @@ import org.jfantasy.framework.util.common.ClassUtil;
 
 import java.io.IOException;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class JSON {
@@ -69,8 +68,17 @@ public class JSON {
         return "";
     }
 
-    public static Map<String, ?> deserialize(String json) {
-        return deserialize(json, HashMap.class);
+    public static JsonNode deserialize(String json) {
+        try {
+            ThreadJacksonMixInHolder mixInHolder = ThreadJacksonMixInHolder.getMixInHolder();
+            ObjectMapper objectMapper = mixInHolder.getObjectMapper();
+            return objectMapper.readTree(json);
+        } catch (IOException e) {
+            LOG.error(e.getMessage() + " source json string : " + json + " => readNode", e);
+        } finally {
+            ThreadJacksonMixInHolder.clear();
+        }
+        return null;
     }
 
     public static ObjectMapper getObjectMapper() {

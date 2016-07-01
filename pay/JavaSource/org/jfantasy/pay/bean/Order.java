@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.converter.OrderItemConverter;
+import org.jfantasy.pay.order.entity.OrderDetails;
 import org.jfantasy.pay.order.entity.OrderItem;
 import org.jfantasy.pay.order.entity.OrderKey;
 
@@ -17,8 +18,8 @@ import java.util.List;
 @ApiModel("订单详情")
 @Entity
 @IdClass(OrderKey.class)
-@Table(name = "ORDER_DETAILS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "PAY_ORDER")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","details"})
 public class Order extends BaseBusEntity {
 
     // 付款状态（未支付、部分支付、已支付、部分退款、全额退款）
@@ -154,6 +155,17 @@ public class Order extends BaseBusEntity {
     @Transient
     public String getKey() {
         return OrderKey.newInstance(this.type, this.sn).toString();
+    }
+
+    @Transient
+    private OrderDetails details;
+
+    public void setDetails(OrderDetails details) {
+        this.details = details;
+    }
+
+    public OrderDetails getDetails() {
+        return details;
     }
 
 }

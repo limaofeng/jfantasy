@@ -12,37 +12,50 @@ import org.jfantasy.pay.bean.enums.TxChannel;
 import org.jfantasy.pay.bean.enums.TxStatus;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 /**
  * 交易表
  */
 @Entity
-@Table(name = "TRANSACTION")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@Table(name = "PAY_TRANSACTION")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "payments", "refunds", "unionId"})
 public class Transaction extends BaseBusEntity {
+
+    public final static String STAGE = "stage";
+    public final static String STAGE_PAYMENT = "stage_payment";
+    public final static String STAGE_REFUND = "stage_refund";
+    public final static String ORDER_KEY = "order_key";
+    public static final String ORDER_SUBJECT = "order_subject";
+
     /**
      * 交易流水号
      */
     @Id
     @Column(name = "SN", updatable = false)
     @GeneratedValue(generator = "serialnumber")
-    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@org.hibernate.annotations.Parameter(name = "expression", value = "'TX' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('TX-SN' + #DateUtil.format('yyyyMMdd')), 5)")})
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@org.hibernate.annotations.Parameter(name = "expression", value = "#DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('TX-SN' + #DateUtil.format('yyyyMMdd')), 5)")})
     private String sn;
     /**
+     * 交易表唯一
+     * 主要为了防止重复交易的发生
+     * 格式为:projectKey|key
+     */
+    @Column(name = "UNION_ID", updatable = false, unique = true)
+    private String unionId;
+    /**
      * 转出账号<br/>
-     * 线下渠道时 填写 线下转账账号<br/>
-     * 第三方交易是 填写 PayConfigId
      */
     @Column(name = "FROM_ACCOUNT", nullable = false)
     private String from;
     /**
      * 转入账号<br/>
-     * 线下渠道时 填写 线下转账账号<br/>
-     * 第三方交易是 填写 PayConfigId
      */
     @Column(name = "TO_ACCOUNT", nullable = false)
     private String to;
@@ -54,7 +67,7 @@ public class Transaction extends BaseBusEntity {
     /**
      * 交易渠道
      */
-    @Column(name = "CHANNEL", nullable = false)
+    @Column(name = "CHANNEL")
     @Enumerated(EnumType.STRING)
     private TxChannel channel;
     /**
@@ -64,6 +77,11 @@ public class Transaction extends BaseBusEntity {
     @Enumerated(EnumType.STRING)
     private TxStatus status;
     /**
+     * 状态文本
+     */
+    @Column(name = "STATUS_TEXT", nullable = false)
+    private String statusText;
+    /**
      * 备注
      */
     @Column(name = "NOTES")
@@ -71,7 +89,7 @@ public class Transaction extends BaseBusEntity {
     /**
      * 交易项目(转账/提现等)
      */
-    @Column(name = "PROJECT", length = 500)
+    @Column(name = "PROJECT", length = 500, updatable = false)
     @Convert(converter = ProjectConverter.class)
     private Project project;
     /**
@@ -80,6 +98,12 @@ public class Transaction extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
+    @ApiModelProperty("支付记录")
+    @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<Payment> payments = new ArrayList<Payment>();
+    @ApiModelProperty("退款记录")
+    @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
+    private List<Refund> refunds = new ArrayList<>();
 
     public String getSn() {
         return sn;
@@ -145,6 +169,30 @@ public class Transaction extends BaseBusEntity {
         this.project = project;
     }
 
+    public String getStatusText() {
+        return statusText;
+    }
+
+    public void setStatusText(String statusText) {
+        this.statusText = statusText;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
+    }
+
+    public List<Refund> getRefunds() {
+        return refunds;
+    }
+
+    public void setRefunds(List<Refund> refunds) {
+        this.refunds = refunds;
+    }
+
     @JsonAnyGetter
     public Properties getProperties() {
         if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(PayConfig.class, "properties")) {
@@ -169,6 +217,18 @@ public class Transaction extends BaseBusEntity {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    public String getUnionId() {
+        return unionId;
+    }
+
+    public void setUnionId(String unionId) {
+        this.unionId = unionId;
+    }
+
+    public static String generateUnionid(String projectKey,String orderKey){
+        return projectKey + ">" + orderKey;
     }
 
 }

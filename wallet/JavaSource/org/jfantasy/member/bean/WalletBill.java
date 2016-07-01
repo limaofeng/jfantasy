@@ -3,6 +3,7 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.member.bean.enums.BillStatus;
 import org.jfantasy.member.bean.enums.BillType;
 
 import javax.persistence.*;
@@ -33,7 +34,14 @@ public class WalletBill extends BaseBusEntity {
      * 账单类型(收入/支出)
      */
     @Column(name = "TYPE", nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
     private BillType type;
+    /**
+     * 账单状态
+     */
+    @Column(name = "STATUS", nullable = false, updatable = false)
+    @Enumerated(EnumType.STRING)
+    private BillStatus status;
     /**
      * 交易项目
      */
@@ -51,10 +59,16 @@ public class WalletBill extends BaseBusEntity {
     @Temporal(TemporalType.TIMESTAMP)
     private Date tradeTime;
     /**
-     * 备注
+     * 摘要
      */
-    @Column(name = "NOTES", length = 500, nullable = false, updatable = false)
-    private String notes;
+    @Column(name = "SUMMARY", nullable = false, updatable = false)
+    private String summary;
+    /**
+     * 钱包
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "WALLET_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_BILL_WALLET"))
+    private Wallet wallet;
 
     public BillType getType() {
         return type;
@@ -104,11 +118,27 @@ public class WalletBill extends BaseBusEntity {
         this.tradeTime = tradeTime;
     }
 
-    public String getNotes() {
-        return notes;
+    public String getSummary() {
+        return summary;
     }
 
-    public void setNotes(String notes) {
-        this.notes = notes;
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public BillStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(BillStatus status) {
+        this.status = status;
+    }
+
+    public Wallet getWallet() {
+        return wallet;
+    }
+
+    public void setWallet(Wallet wallet) {
+        this.wallet = wallet;
     }
 }

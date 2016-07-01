@@ -8,10 +8,12 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful.POST;
+import org.jfantasy.member.bean.Comment;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.MemberDetails;
-import org.jfantasy.member.rest.form.LoginForm;
+import org.jfantasy.member.rest.models.LoginForm;
 import org.jfantasy.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +29,10 @@ public class MemberController {
 
     @Autowired
     private MemberService memberService;
+    @Autowired
+    private CommentController commentController;
+    @Autowired
+    private ReceiverController receiverController;
 
     @JsonIgnoreProperties(
             value = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
@@ -91,6 +97,22 @@ public class MemberController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody Long... id) {
         this.memberService.delete(id);
+    }
+
+    @ApiOperation(value = "查询会员评论", notes = "返回会员的会员评论")
+    @RequestMapping(value = "/{memid}/comments", method = RequestMethod.GET)
+    @ResponseBody
+    public Pager<ResultResourceSupport> comments(@PathVariable("memid") Long memberId, Pager<Comment> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQS_member.id", memberId.toString()));
+        return this.commentController.search(pager, filters);
+    }
+
+    @ApiOperation(value = "查询会员收货地址", notes = "返回会员的会员评论")
+    @RequestMapping(value = "/{memid}/receivers", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ResultResourceSupport> receivers(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQS_member.id", memberId.toString()));
+        return this.receiverController.search(filters);
     }
 
 }

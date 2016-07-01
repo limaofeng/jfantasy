@@ -19,7 +19,7 @@ import java.util.Date;
  * @since 2013-12-5 上午9:22:39
  */
 @Entity
-@Table(name = "REFUND")
+@Table(name = "PAY_REFUND")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Refund extends BaseBusEntity {
 
@@ -87,6 +87,13 @@ public class Refund extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE", updatable = false), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN", updatable = false)})
     private Order order;
+    /**
+     * 交易记录
+     */
+    @ApiModelProperty("交易记录")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TXN_SN", referencedColumnName = "SN")
+    private Transaction transaction;
 
     public String getSn() {
         return sn;
@@ -205,4 +212,11 @@ public class Refund extends BaseBusEntity {
         return this.getOrder().getKey();
     }
 
+    public Transaction getTransaction() {
+        return transaction;
+    }
+
+    public void setTransaction(Transaction transaction) {
+        this.transaction = transaction;
+    }
 }

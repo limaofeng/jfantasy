@@ -18,12 +18,10 @@ import java.util.List;
 @ApiModel("评论表")
 @Entity
 @Table(name = "MEM_COMMENT")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "forComment", "replyComments", "member"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "forComment"})
 public class Comment extends BaseBusEntity {
 
     private static final long serialVersionUID = 8413023474799399082L;
-
-    public static final int DEFAULT_COMMENT_LIST_PAGE_SIZE = 12;// 商品评论默认每页显示数
 
     @Id
     @Column(name = "ID", updatable = false)
@@ -52,7 +50,7 @@ public class Comment extends BaseBusEntity {
     private String targetType;
     @ApiModelProperty(value = "评论目标ID", notes = "评论目标ID,(如商品、医生等)")
     @Column(name = "TARGET_ID", nullable = false)
-    private Long targetId;
+    private String targetId;
     @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
     @Column(name = "PATH", nullable = false, length = 1000)
     private String path;
@@ -133,11 +131,11 @@ public class Comment extends BaseBusEntity {
         this.targetType = targetType;
     }
 
-    public Long getTargetId() {
+    public String getTargetId() {
         return targetId;
     }
 
-    public void setTargetId(Long targetId) {
+    public void setTargetId(String targetId) {
         this.targetId = targetId;
     }
 

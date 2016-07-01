@@ -12,7 +12,6 @@ import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.dao.PaymentDao;
-import org.jfantasy.pay.dao.PaymentLogDao;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.event.PayStatusEvent;
 import org.jfantasy.pay.event.context.PayStatus;
@@ -44,8 +43,6 @@ public class PaymentService {
     private PayConfigService payConfigService;
     @Autowired(required = false)
     private PayProductConfiguration payProductConfiguration;
-    @Autowired
-    private PaymentLogDao paymentLogDao;
     @Autowired
     private ApplicationContext applicationContext;
 
@@ -106,12 +103,8 @@ public class PaymentService {
 
         this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(),payment,order)));
         //保存交易日志
-        paymentLogDao.save(payment, "创建" + payment.getPayConfigName() + " 交易");
+//        paymentLogDao.save(payment, "创建" + payment.getPayConfigName() + " 交易");
         return payment;
-    }
-
-    public void log(Payment payment, String notes) {
-        paymentLogDao.save(payment, notes);
     }
 
     public List<Payment> find(Criterion... criterions) {
@@ -125,8 +118,6 @@ public class PaymentService {
      */
     public void save(Payment payment) {
         this.paymentDao.save(payment);
-        //保存交易日志
-        paymentLogDao.save(payment, "创建" + payment.getPayConfigName() + " 交易");
     }
 
     /**
@@ -145,7 +136,6 @@ public class PaymentService {
             payment.setTradeNo(tradeNo);
         }
         this.paymentDao.save(payment);
-        this.paymentLogDao.save(payment, "付款" + payment.getStatus().value());
     }
 
 

@@ -1,6 +1,6 @@
 package org.jfantasy.pay.bean.enums;
 
-public enum  AccountType {
+public enum AccountType {
     /**
      * 个人账户
      */
@@ -8,5 +8,9 @@ public enum  AccountType {
     /**
      * 企业账户
      */
-    enterprise
+    enterprise,
+    /**
+     * 平台账号
+     */
+    platform
 }

@@ -73,7 +73,7 @@ public class PayConfigController {
 
     @RequestMapping(value = "/{id}/payproduct", method = RequestMethod.POST)
     @ResponseBody
-    public PayProduct test(@PathVariable("id") Long id) throws IOException, PayException {
+    public PayProduct payproduct(@PathVariable("id") Long id) throws IOException, PayException {
         return this.payProductConfiguration.loadPayProduct(this.configService.get(id).getPayProductId());
     }
 

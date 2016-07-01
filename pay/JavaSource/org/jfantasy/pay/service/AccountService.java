@@ -3,6 +3,8 @@ package org.jfantasy.pay.service;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.security.SpringSecurityUtils;
+import org.jfantasy.oauth.userdetails.OAuthUserDetails;
 import org.jfantasy.pay.bean.Account;
 import org.jfantasy.pay.bean.enums.AccountType;
 import org.jfantasy.pay.dao.AccountDao;
@@ -32,4 +34,30 @@ public class AccountService {
     public void create(Account account) {
         this.accountDao.save(account);
     }
+
+    public Account get(String id) {
+        return this.accountDao.get(id);
+    }
+
+    /**
+     * 获取平台账号
+     *
+     * @return account
+     */
+    public Account platform() {
+        return this.accountDao.findUnique(Restrictions.eq("type", AccountType.platform));
+    }
+
+    /**
+     * 获取当前用户对应的账号信息
+     *
+     * @return account
+     */
+    public Account findUniqueByCurrentUser() {
+        OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
+        assert user != null;
+        String key = user.getKey();
+        return this.accountDao.findUnique(Restrictions.eq("owner", key));
+    }
+
 }

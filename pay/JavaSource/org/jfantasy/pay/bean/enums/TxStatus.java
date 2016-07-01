@@ -5,9 +5,9 @@ package org.jfantasy.pay.bean.enums;
  */
 public enum TxStatus {
     /**
-     * 申请
+     * 未处理
      */
-    apply,
+    unprocessed,
     /**
      * 处理中
      */
@@ -17,7 +17,7 @@ public enum TxStatus {
      */
     success,
     /**
-     * 失败
+     * 关闭
      */
-    failure;
+    close;
 }
