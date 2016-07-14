@@ -7,11 +7,11 @@ public enum CardBatchStatus {
     /**
      * 设计
      */
-    Draft,
+    draft,
     /**
      * 制作中
      */
-    Make,
+    make,
     /**
      * 已发行
      */
@@ -19,5 +19,5 @@ public enum CardBatchStatus {
     /**
      * 已取消
      */
-    Canceled
+    canceled
 }

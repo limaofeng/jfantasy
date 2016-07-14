@@ -3,6 +3,7 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.pay.bean.converter.ExtraServiceConverter;
 import org.jfantasy.pay.bean.enums.CardStatus;
 import org.jfantasy.pay.bean.enums.Usage;
 
@@ -70,6 +71,12 @@ public class Card extends BaseBusEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "DESTROY_TIME")
     private Date destroyTime;
+    /**
+     * 附加服务
+     */
+    @Column(name = "EXTRAS", length = 1000)
+    @Convert(converter = ExtraServiceConverter.class)
+    private ExtraService[] extras;
 
     public String getNo() {
         return no;
@@ -137,6 +144,14 @@ public class Card extends BaseBusEntity {
 
     public CardDesign getDesign() {
         return design;
+    }
+
+    public ExtraService[] getExtras() {
+        return extras;
+    }
+
+    public void setExtras(ExtraService[] extras) {
+        this.extras = extras;
     }
 
     public void setDesign(CardDesign design) {

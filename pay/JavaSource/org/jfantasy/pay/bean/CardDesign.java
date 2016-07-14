@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.converter.ExtraServiceConverter;
+import org.jfantasy.pay.bean.converter.StylesConverter;
 import org.jfantasy.pay.bean.enums.Usage;
 
 import javax.persistence.*;
@@ -46,7 +47,8 @@ public class CardDesign extends BaseBusEntity {
      * 卡牌样式(包含封面、等数据)
      */
     @Column(name = "STYLES", length = 200)
-    private String styles;
+    @Convert(converter = StylesConverter.class)
+    private Styles styles;
     /**
      * 说明
      */
@@ -99,11 +101,11 @@ public class CardDesign extends BaseBusEntity {
         this.amount = amount;
     }
 
-    public String getStyles() {
+    public Styles getStyles() {
         return styles;
     }
 
-    public void setStyles(String styles) {
+    public void setStyles(Styles styles) {
         this.styles = styles;
     }
 

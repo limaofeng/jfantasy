@@ -1,18 +1,27 @@
 package org.jfantasy.pay.service;
 
 
+import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.RestException;
+import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardBatch;
 import org.jfantasy.pay.bean.CardDesign;
+import org.jfantasy.pay.bean.CardType;
 import org.jfantasy.pay.bean.enums.CardBatchStatus;
+import org.jfantasy.pay.bean.enums.CardStatus;
+import org.jfantasy.pay.bean.enums.Usage;
 import org.jfantasy.pay.dao.CardBatchDao;
+import org.jfantasy.pay.dao.CardDao;
 import org.jfantasy.pay.dao.CardDesignDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -22,6 +31,8 @@ public class CardBatchService {
     private CardDesignDao cardDesignDao;
     @Autowired
     private CardBatchDao cardBatchDao;
+    @Autowired
+    private CardDao cardDao;
 
     public Pager<CardBatch> findPager(Pager<CardBatch> pager, List<PropertyFilter> filters) {
         return cardBatchDao.findPager(pager, filters);
@@ -39,16 +50,69 @@ public class CardBatchService {
         CardDesign design = cardDesignDao.get(batch.getCardDesign().getKey());
         batch.setCardType(design.getCardType());
         batch.setCardDesign(design);
-        batch.setStatus(CardBatchStatus.Draft);
+        batch.setStatus(CardBatchStatus.draft);
         return this.cardBatchDao.save(batch);
     }
 
+    @Transactional
     public CardBatch update(CardBatch batch) {
-        if (batch.getStatus() != CardBatchStatus.Draft) {
+        if (batch.getStatus() != CardBatchStatus.draft) {
             throw new RestException("只有草拟中的批次可以修改信息");
         }
         this.cardBatchDao.update(batch);
         return batch;
     }
 
+    @Transactional
+    public List<Card> make(String id, String notes) {
+        CardBatch batch = this.cardBatchDao.get(id);
+        if (batch.getStatus() != CardBatchStatus.draft) {
+            throw new RestException("生成卡片失败!");
+        }
+        CardDesign design = batch.getCardDesign();
+        CardType type = batch.getCardType();
+        BigDecimal amount = design.getAmount();
+        Usage usage = design.getUsage();
+        List<Card> cards = new ArrayList<>();
+        for (int i = 1, length = batch.getQuantity(); i <= length; i++) {
+            Card card = new Card();
+            card.setNo(batch.getNo() + StringUtil.addZeroLeft(i + "", 4));//TODO 卡号生成规则
+            card.setSecret("123456");//TODO 密码生成规则
+            card.setStatus(CardStatus.sleep);
+            card.setBatch(batch);
+            card.setType(type);
+            card.setUsage(usage);
+            card.setDesign(design);
+            card.setAmount(amount);
+            card.setExtras(design.getExtras());
+            cards.add(this.cardDao.save(card));
+        }
+        batch.setStatus(CardBatchStatus.make);
+        return cards;
+    }
+
+    @Transactional
+    public CardBatch release(String id, String notes) {
+        CardBatch batch = this.cardBatchDao.get(id);
+        if (batch.getStatus() != CardBatchStatus.make) {
+            throw new RestException("激活卡片失败!");
+        }
+        for (Card card : this.cardDao.find(Restrictions.eq("batch.no", id))) {
+            card.setStatus(CardStatus.activated);
+        }
+        batch.setStatus(CardBatchStatus.released);
+        return this.cardBatchDao.save(batch);
+    }
+
+    public CardBatch cancel(String id, String notes) {
+        CardBatch batch = this.cardBatchDao.get(id);
+        if (batch.getStatus() == CardBatchStatus.released) {
+            throw new RestException("卡已经发布,不能取消");
+        }
+        for (Card card : this.cardDao.find(Restrictions.eq("batch.no", id))) {
+            card.setStatus(CardStatus.invalid);
+        }
+        batch.setStatus(CardBatchStatus.canceled);
+        return this.cardBatchDao.save(batch);
+    }
 }

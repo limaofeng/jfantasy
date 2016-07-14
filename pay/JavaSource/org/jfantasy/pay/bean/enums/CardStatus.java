@@ -7,21 +7,21 @@ public enum CardStatus {
     /**
      * 休眠(不能使用)
      */
-    Sleep,
+    sleep,
     /**
      * 已激活(可以正常使用)
      */
-    Activated,
+    activated,
     /**
      * 已使用(被充值、或者绑定到用户)
      */
-    Used,
+    used,
     /**
      * 已过期(超出使用期限)
      */
-    Expired,
+    expired,
     /**
      * 已失效(因为部分原因、比如取消发行、损坏等)
      */
-    Invalid
+    invalid
 }
