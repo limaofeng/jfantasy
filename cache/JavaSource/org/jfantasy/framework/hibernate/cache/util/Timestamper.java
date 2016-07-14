@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public final class Timestamper {
 
-    public static final int BIN_DIGITS = Integer.getInteger("org.jfantasy.framework.hibernate.cache.redis.util.Timestamper.shift", 12);
+    private static final int BIN_DIGITS = Integer.getInteger("org.jfantasy.framework.hibernate.cache.redis.util.Timestamper.shift", 12);
 
     public static final int ONE_MS = 1 << BIN_DIGITS;
 

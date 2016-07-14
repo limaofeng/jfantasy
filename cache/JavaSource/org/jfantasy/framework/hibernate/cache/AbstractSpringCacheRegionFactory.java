@@ -20,7 +20,7 @@ abstract class AbstractSpringCacheRegionFactory implements RegionFactory {
 
     protected Settings settings;
 
-    protected final SpringCacheAccessStrategyFactory accessStrategyFactory = new NonstopAccessStrategyFactory(new SpringCacheAccessStrategyFactoryImpl());
+    private final SpringCacheAccessStrategyFactory accessStrategyFactory = new NonstopAccessStrategyFactory(new SpringCacheAccessStrategyFactoryImpl());
 
     @Override
     public boolean isMinimalPutsEnabledByDefault() {

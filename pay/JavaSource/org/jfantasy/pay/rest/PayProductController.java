@@ -7,7 +7,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.product.PayProductSupport;
@@ -30,7 +30,7 @@ public class PayProductController {
     @Autowired
     private PayConfigController payConfigController;
 
-    @JsonIgnoreProperties(allow = {@AllowProperty(pojo = PayProductSupport.class, name = {"id", "name"})})
+    @JsonResultFilter(allow = {@AllowProperty(pojo = PayProductSupport.class, name = {"id", "name"})})
     @ApiOperation(value = "获取支付产品", notes = "通过该接口, 可以获取支持的支付产品列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -45,7 +45,7 @@ public class PayProductController {
         return assembler.toResource(payProductConfiguration.loadPayProduct(id));
     }
 
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = PayConfig.class, name = {"properties"})})
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = PayConfig.class, name = {"properties"}))
     @ApiOperation(value = "适用于该支付产品的支付配置", notes = "查看产品的支付配置信息")
     @RequestMapping(value = "/{id}/payconfigs", method = RequestMethod.GET)
     @ResponseBody

@@ -5,7 +5,6 @@ dependencies {
     compile project(':jfantasy-core')
     compile project(':jfantasy-cache')
     compile project(':jfantasy-filestore')
-    compile project(':jfantasy-common')
     compile project(':jfantasy-member')
     compile project(':jfantasy-security')
     compile project(':jfantasy-oauth-api')

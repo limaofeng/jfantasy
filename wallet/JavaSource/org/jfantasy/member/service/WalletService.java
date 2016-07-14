@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Wallet;
@@ -30,6 +31,10 @@ public class WalletService {
     @Autowired
     private MemberDao memberDao;
 
+    private Wallet newWallet(String account, BigDecimal amount) {
+        return newWallet(null, account, amount);
+    }
+
     /**
      * 创建 用户钱包
      *
@@ -38,7 +43,7 @@ public class WalletService {
      * @param amount  资金余额(应该与账号一致)
      * @return Wallet
      */
-    public Wallet newWallet(Member member, String account, BigDecimal amount) {
+    private Wallet newWallet(Member member, String account, BigDecimal amount) {
         Wallet wallet = new Wallet();
         wallet.setMember(member);
         wallet.setAccount(account);
@@ -48,6 +53,10 @@ public class WalletService {
         return walletDao.insert(wallet);
     }
 
+    public Wallet getWalletByMember(Long memberId) {
+        return this.walletDao.findUnique(Restrictions.eq("member.id", memberId));
+    }
+
     public Wallet getWallet(Long memberId) {
         return this.walletDao.findUnique(Restrictions.eq("id", memberId));
     }
@@ -55,17 +64,46 @@ public class WalletService {
     private Wallet getWallet(String account) {
         Wallet wallet = this.walletDao.findUnique(Restrictions.eq("account", account));
         if (wallet == null) {
-            wallet = new Wallet();
-            wallet.setAmount(BigDecimal.ZERO);
-            wallet.setAccount(account);
-            wallet.setIncome(BigDecimal.ZERO);
-            wallet = this.walletDao.save(wallet);
+            return newWallet(account, BigDecimal.ZERO);
         }
         return wallet;
     }
 
     public Pager<Wallet> findPager(Pager<Wallet> pager, List<PropertyFilter> filters) {
         return this.walletDao.findPager(pager, filters);
+    }
+
+    public Wallet saveOrUpdateWallet(JsonNode account) {
+        String account_sn = account.get("sn").asText();
+        BigDecimal account_amount = account.get("amount").decimalValue();
+        String account_type = account.get("type").asText();
+        String account_owner = account.get("owner").asText();
+
+        Wallet wallet = this.walletDao.findUnique(Restrictions.eq("account", account_sn));
+        if (wallet == null) {
+            switch (account_type) {
+                case "personal":
+                    String username = account_owner.replaceAll("^[^:]+:", "");
+                    Member member = memberDao.findUnique(Restrictions.eq("username", username));
+                    if (member == null) {
+                        throw new RestException("用户不存在!");
+                    }
+                    return newWallet(member, account_sn, account_amount);
+                case "platform":
+                case "enterprise":
+                    return newWallet(account_sn, account_amount);
+            }
+        } else {
+            return updateWallet(wallet.getId(), account_amount);
+        }
+        throw new RestException("创建账号失败!");
+    }
+
+    private Wallet updateWallet(Long id, BigDecimal amount) {
+        Wallet wallet = this.walletDao.get(id);
+        wallet.setAmount(amount);
+        this.walletDao.update(wallet);
+        return wallet;
     }
 
     public void saveOrUpdateBill(JsonNode transaction) {
@@ -116,4 +154,5 @@ public class WalletService {
     public Pager<WalletBill> findBillPager(Pager<WalletBill> pager, List<PropertyFilter> filters) {
         return this.walletBillDao.findPager(pager, filters);
     }
+
 }

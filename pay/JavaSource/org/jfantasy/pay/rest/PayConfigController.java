@@ -6,7 +6,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
@@ -44,7 +44,7 @@ public class PayConfigController {
     @Autowired
     private RefundController refundController;
 
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = PayConfig.class, name = {"properties"})})
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = PayConfig.class, name = {"properties"}))
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<PayConfig> pager, List<PropertyFilter> filters) {
@@ -90,8 +90,8 @@ public class PayConfigController {
         this.configService.delete(id);
     }
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
             allow = @AllowProperty(pojo = Order.class, name = {"type", "subject", "sn"})
     )
     @ApiOperation("支付配置对应的支付记录")
@@ -102,8 +102,8 @@ public class PayConfigController {
         return paymentController.search(pager, filters);
     }
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Refund.class, name = {"payConfig", "orderKey"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Refund.class, name = {"payConfig", "orderKey"}),
             allow = {
                     @AllowProperty(pojo = Order.class, name = {"type", "subject", "sn"}),
                     @AllowProperty(pojo = Payment.class, name = {"totalAmount", "payConfigName", "sn", "status"})
@@ -116,6 +116,5 @@ public class PayConfigController {
         filters.add(new PropertyFilter("EQL_payConfig.id", id));
         return refundController.search(pager, filters);
     }
-
 
 }

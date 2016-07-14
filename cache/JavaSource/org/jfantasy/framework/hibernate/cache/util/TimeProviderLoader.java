@@ -11,7 +11,7 @@ final class TimeProviderLoader {
     private TimeProviderLoader() {
     }
 
-    public static synchronized SlewClock.TimeProvider getTimeProvider() {
+    static synchronized SlewClock.TimeProvider getTimeProvider() {
         return timeProvider;
     }
 

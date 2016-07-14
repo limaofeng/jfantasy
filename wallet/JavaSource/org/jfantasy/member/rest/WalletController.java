@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Wallet;
@@ -32,7 +32,7 @@ public class WalletController {
     @Autowired
     private WalletBillController walletBillController;
 
-    @JsonIgnoreProperties(allow = @AllowProperty(pojo = Member.class, name = {"id", "username", "nickName"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = Member.class, name = {"id", "username", "nickName"}))
     @ApiOperation(value = "钱包列表", notes = "查询所有的钱包")
     @RequestMapping(method = RequestMethod.GET)
     public Pager<ResultResourceSupport> search(Pager<Wallet> pager, List<PropertyFilter> filters) {

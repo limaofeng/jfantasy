@@ -20,6 +20,9 @@ public class User extends BaseBusEntity {
 
     private static final long serialVersionUID = 5507435998232223911L;
 
+    @Transient
+    private String code;
+
     public User() {
     }
 
@@ -272,5 +275,13 @@ public class User extends BaseBusEntity {
 
     public void setUserType(String userType) {
         this.userType = userType;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
+    }
+
+    public String getCode() {
+        return code;
     }
 }

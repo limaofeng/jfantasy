@@ -33,13 +33,13 @@ public class Log extends BaseBusEntity {
     /**
      * 订单ID
      */
-    @ApiModelProperty("订单详情")
+    @ApiModelProperty("详情")
     @Column(name = "ORDER_KEY",length = 30)
     private String orderKey;
     /**
-     * 支付状态
+     * 状态
      */
-    @ApiModelProperty("支付状态")
+    @ApiModelProperty("状态")
     @Column(name = "STATUS", nullable = false, updatable = false)
     private String status;
     /**

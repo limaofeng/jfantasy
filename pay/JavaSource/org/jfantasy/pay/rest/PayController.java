@@ -3,7 +3,7 @@ package org.jfantasy.pay.rest;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
@@ -36,7 +36,7 @@ public class PayController {
         return payService.pay(payForm.getPayconfigId(), payForm.getPayType(), payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayer(), payForm.getProperties());
     }*/
 
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})})
+    @JsonResultFilter(ignore = {@IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})})
     @ApiOperation("支付退款")
     @RequestMapping(value = "/{sn}/refund", method = RequestMethod.POST)
     @ResponseBody
@@ -44,7 +44,7 @@ public class PayController {
         return payService.refund(sn, refundForm.getAmount(), refundForm.getRemark());
     }
 
-    @JsonIgnoreProperties({
+    @JsonResultFilter(ignore = {
             @IgnoreProperty(pojo = Order.class, name = {"payConfig"}),
             @IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig"}),
             @IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})

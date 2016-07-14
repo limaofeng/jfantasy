@@ -7,7 +7,7 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
@@ -57,7 +57,7 @@ public class TransactionController {
 
     @ApiOperation("创建交易")
     @RequestMapping(method = RequestMethod.POST)
-    @JsonIgnoreProperties(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
     @ResponseBody
     public ResultResourceSupport save(Transaction transaction) {
         transaction.setProject(this.projectService.get(transaction.getProject().getKey()));
@@ -67,7 +67,7 @@ public class TransactionController {
     //transactionService.transfer(tx.getFrom(), tx.getTo(), tx.getAmount(), tx.getNotes());
     @ApiOperation("获取交易详情")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    @JsonIgnoreProperties(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String sn) {
         return transform(get(sn));
@@ -75,7 +75,7 @@ public class TransactionController {
 
     @ApiOperation("获取交易日志")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/logs")
-    @JsonIgnoreProperties(@IgnoreProperty(pojo = Log.class, name = {"id"}))
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Log.class, name = {"id"}))
     @ResponseBody
     public List<Log> logs(@PathVariable("id") String sn){
         return logService.logs(Transaction.class,sn);
@@ -98,7 +98,7 @@ public class TransactionController {
     }
 
     private ResultResourceSupport transform(Transaction transaction) {
-        ResultResourceSupport<Transaction> resource = assembler.toResource(transaction);
+        ResultResourceSupport resource = assembler.toResource(transaction);
         OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
 
         if (transaction.getProject().getType() == ProjectType.order) {

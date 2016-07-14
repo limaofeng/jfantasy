@@ -6,6 +6,8 @@ import io.swagger.annotations.ApiParam;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.security.bean.Menu;
 import org.jfantasy.security.bean.Permission;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.service.PermissionService;
@@ -18,7 +20,7 @@ import java.util.List;
 
 @Api(value = "security-roles", description = "角色")
 @RestController
-@RequestMapping("/security/roles")
+@RequestMapping("/roles")
 public class RoleController {
 
     @Autowired
@@ -65,6 +67,25 @@ public class RoleController {
         this.roleService.delete(codes);
     }
 
+    @ApiOperation(value = "返回角色的授权菜单", response = String[].class)
+    @RequestMapping(value = "/{code}/menus", method = {RequestMethod.GET})
+    @ResponseBody
+    public String[] menus(@PathVariable("code") String code) {
+        return ObjectUtil.toFieldArray(get(code).getMenus(), "id", String.class);
+    }
+
+    @ApiOperation(value = "更新角色菜单权限", notes = "返回角色对应的菜单授权", response = String[].class)
+    @RequestMapping(value = "/{code}/menus", method = {RequestMethod.PUT})
+    @ResponseBody
+    public String[] menus(@PathVariable("code") String code, @RequestBody String[] menuIds) {
+        Role role = this.roleService.get(code);
+        role.getMenus().clear();
+        for (String menuId : menuIds) {
+            role.getMenus().add(new Menu(menuId));
+        }
+        return ObjectUtil.toFieldArray(this.roleService.save(role).getMenus(), "id", String.class);
+    }
+
     @ApiOperation(value = "返回角色权限", notes = "返回角色对应的操作权限", response = Permission[].class)
     @RequestMapping(value = "/{code}/permissions", method = {RequestMethod.GET})
     @ResponseBody
@@ -77,6 +98,10 @@ public class RoleController {
     @ResponseBody
     public List<Permission> permissions(@PathVariable("code") String code, @RequestBody Long... permissionId) {
         throw new RuntimeException("该方法未实现!");
+    }
+
+    private Role get(String code) {
+        return this.roleService.get(code);
     }
 
 }

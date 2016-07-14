@@ -7,13 +7,13 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful.POST;
 import org.jfantasy.member.bean.Comment;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.MemberDetails;
-import org.jfantasy.member.rest.models.LoginForm;
+import org.jfantasy.member.rest.models.assembler.MemberResourceAssembler;
 import org.jfantasy.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +27,8 @@ import java.util.List;
 @RequestMapping("/members")
 public class MemberController {
 
+    public static MemberResourceAssembler assembler = new MemberResourceAssembler();
+
     @Autowired
     private MemberService memberService;
     @Autowired
@@ -34,30 +36,15 @@ public class MemberController {
     @Autowired
     private ReceiverController receiverController;
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
             allow = @AllowProperty(pojo = MemberDetails.class, name = {"name", "sex", "birthday", "avatar"})
     )
     @ApiOperation(value = "查询会员信息", notes = "通过 filters 可以过滤数据<br/>本接口支持 <br/> X-Page-Fields、X-Result-Fields、X-Expend-Fields 功能", response = Member[].class)
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<Member> search(@ApiParam(hidden = true) Pager<Member> pager, @ApiParam(value = "筛选条件", name = "filters") List<PropertyFilter> filters) {
-        return this.memberService.findPager(pager, filters);
-    }
-
-    @ApiOperation(value = "会员登录", notes = "会员登录接口")
-    @RequestMapping(value = "/{username}/login", method = RequestMethod.POST)
-    @ResponseBody
-    public Member login(@PathVariable("username") String username, @RequestBody LoginForm loginForm) {
-        return this.memberService.login(username, loginForm.getPassword());
-    }
-
-    @ApiOperation(value = "会员登出", notes = "会员登出接口")
-    @RequestMapping(value = "/{username}/logout", method = RequestMethod.GET)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(@PathVariable("username") String username) {
-        this.memberService.logout(username);
+    public Pager<ResultResourceSupport> search(@ApiParam(hidden = true) Pager<Member> pager, @ApiParam(value = "筛选条件", name = "filters") List<PropertyFilter> filters) {
+        return assembler.toResources(this.memberService.findPager(pager, filters));
     }
 
     @ApiOperation(value = "会员注册", notes = "会员注册接口")

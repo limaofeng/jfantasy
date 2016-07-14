@@ -26,8 +26,13 @@ public class Account extends BaseBusEntity {
     /**
      * 账户余额
      */
-    @Column(name = "AMOUNT", nullable = false, updatable = false, precision = 15, scale = 2)
+    @Column(name = "AMOUNT", nullable = false,precision = 15, scale = 2)
     private BigDecimal amount;
+    /**
+     * 可用积分
+     */
+    @Column(name = "POINTS", nullable = false)
+    private Long points;
     /**
      * 所有者
      */
@@ -64,6 +69,14 @@ public class Account extends BaseBusEntity {
 
     public void setOwner(String owner) {
         this.owner = owner;
+    }
+
+    public Long getPoints() {
+        return points;
+    }
+
+    public void setPoints(Long points) {
+        this.points = points;
     }
 
 }

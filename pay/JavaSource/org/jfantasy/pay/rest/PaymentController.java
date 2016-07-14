@@ -6,7 +6,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Order;
@@ -34,8 +34,8 @@ public class PaymentController {
     @Autowired
     private OrderController orderController;
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
             allow = @AllowProperty(pojo = Order.class, name = {"type", "subject", "sn"})
     )
     @ApiOperation("查询支付记录")
@@ -59,8 +59,8 @@ public class PaymentController {
         return payConfigController.view(get(sn).getPayConfig().getId());
     }
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
             allow = {@AllowProperty(pojo = PayConfig.class, name = {"id", "name"}),
                     @AllowProperty(pojo = Payment.class, name = {"id", "name"})}
     )

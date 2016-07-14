@@ -46,11 +46,10 @@ public class Wallet extends BaseBusEntity {
     private String account;
     @OneToMany(mappedBy="wallet", fetch = FetchType.LAZY)
     private List<WalletBill> bills;
-
     /**
-     * 积分
+     * 有效的积分
      */
-    @Transient
+    @Column(name = "POINTS", nullable = false)
     private Long points;
 
     public Long getId() {

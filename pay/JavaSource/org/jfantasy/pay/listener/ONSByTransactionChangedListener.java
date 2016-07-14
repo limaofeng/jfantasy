@@ -26,7 +26,7 @@ public class ONSByTransactionChangedListener implements ApplicationListener<Tran
     @Override
     public void onApplicationEvent(TransactionChangedEvent event) {
         Transaction transaction = event.getTransaction();
-        Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_TRANSACTION, PayAutoConfiguration.ONS_TAGS_TRANSACTION_KEY, JSON.serialize(transaction).getBytes());
+        Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_PAY, PayAutoConfiguration.ONS_TAGS_ACCOUNT_KEY, JSON.serialize(transaction).getBytes());
         producer.send(msg);
     }
 

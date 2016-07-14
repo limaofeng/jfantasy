@@ -1,15 +1,16 @@
 package org.jfantasy.security.bean.enums;
 
 public enum MenuType {
-    url("链接"), menu("菜单"), javascript("脚本"), other("其他");
+    menu("菜单"), operation("操作");
 
     private String value;
 
-    private MenuType(String value) {
+    MenuType(String value) {
         this.value = value;
     }
 
     public String getValue() {
         return this.value;
     }
+
 }

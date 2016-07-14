@@ -69,6 +69,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 //        // 自定义登录页面
 //        http.csrf().disable().formLogin().loginPage("/login").failureUrl("/login?error=1").loginProcessingUrl("/login").usernameParameter("username").passwordParameter("password").permitAll();
 
+        http.formLogin().disable();
+//        http.openidLogin().disable();
+        http.logout().disable();
+
 //        // 自定义注销
 //        http.logout().logoutUrl("/logout").logoutSuccessUrl("/login").invalidateHttpSession(true);
 

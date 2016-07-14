@@ -6,7 +6,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.*;
 import org.jfantasy.pay.order.entity.OrderItem;
@@ -39,8 +39,8 @@ public class OrderController {
     @Autowired
     private AccountService accountService;
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
             allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "name"})
     )
     @RequestMapping(method = RequestMethod.GET)
@@ -49,8 +49,8 @@ public class OrderController {
         return assembler.toResources(orderService.findPager(pager, filters));
     }
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
             allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "name"})
     )
     @ApiOperation("获取订单信息")
@@ -60,7 +60,7 @@ public class OrderController {
         return assembler.toResource(orderService.get(OrderKey.newInstance(key)));
     }
 
-    @JsonIgnoreProperties(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
     @ApiOperation(value = "创建订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
     @RequestMapping(value = "/{id}/transactions", method = RequestMethod.POST)
     @ResponseBody
@@ -79,7 +79,7 @@ public class OrderController {
         return transactionController.save(transaction);
     }
 
-    @JsonIgnoreProperties(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
     @ApiOperation(value = "获取订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
     @RequestMapping(value = "/{id}/transactions", method = RequestMethod.GET)
     @ResponseBody
@@ -88,8 +88,8 @@ public class OrderController {
         return transactionController.seach(new Pager<Transaction>(), filters).getPageItems();
     }
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
             allow = @AllowProperty(pojo = Order.class, name = {"key", "subject"})
     )
     @ApiOperation("获取订单信息的付款信息")
@@ -103,7 +103,7 @@ public class OrderController {
         return paymentController.search(new Pager<Payment>(), filters);
     }
 
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"})})
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
     @ApiOperation("获取订单信息的付款信息")
     @RequestMapping(value = "/{id}/refunds", method = RequestMethod.GET)
     @ResponseBody

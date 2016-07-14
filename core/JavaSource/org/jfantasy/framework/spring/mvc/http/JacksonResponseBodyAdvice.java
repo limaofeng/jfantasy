@@ -7,10 +7,11 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.http.jsonfilter.ExpendFieldsBeanPropertyFilter;
 import org.jfantasy.framework.spring.mvc.http.jsonfilter.ResultFieldsBeanPropertyFilter;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.Order;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseBodyAdvice;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * 支持 REST 接口的响应头设置 <br/>
@@ -34,7 +36,7 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Order(1)
 @ControllerAdvice
-public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
+public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     private final static Log LOGGER = LogFactory.getLog(JacksonResponseBodyAdvice.class);
 
@@ -43,22 +45,27 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
     public final static String X_Result_Fields = "X-Result-Fields";
     public final static String X_Expend_Fields = "X-Expend-Fields";
 
+    private ThreadLocal<Class> responseBody = new ThreadLocal<>();
+
     @Override
     public boolean supports(MethodParameter methodParameter, Class<? extends HttpMessageConverter<?>> converterType) {
         Class returnType = methodParameter.getMethod().getReturnType();
         boolean supports = Object.class.isAssignableFrom(returnType);
-        if(supports) {
-            JsonIgnoreProperties jsonIgnoreProperties = methodParameter.getMethod().getAnnotation(JsonIgnoreProperties.class);
-            if (jsonIgnoreProperties != null && !ThreadJacksonMixInHolder.isContainsMixIn()) {
-                ThreadJacksonMixInHolder mixInHolder = ThreadJacksonMixInHolder.getMixInHolder();
-                AllowProperty[] allowProperties = jsonIgnoreProperties.allow();
-                IgnoreProperty[] ignoreProperties = jsonIgnoreProperties.value();
-                for(AllowProperty property : allowProperties){
-                    mixInHolder.addAllowPropertyNames(property.pojo(),property.name());
+        if (supports) {
+            JsonResultFilter jsonResultFilter = methodParameter.getMethod().getAnnotation(JsonResultFilter.class);
+            if (jsonResultFilter != null) {
+                if (!ThreadJacksonMixInHolder.isContainsMixIn()) {
+                    ThreadJacksonMixInHolder mixInHolder = ThreadJacksonMixInHolder.getMixInHolder();
+                    AllowProperty[] allowProperties = jsonResultFilter.allow();
+                    IgnoreProperty[] ignoreProperties = jsonResultFilter.ignore();
+                    for (AllowProperty property : allowProperties) {
+                        mixInHolder.addAllowPropertyNames(property.pojo(), property.name());
+                    }
+                    for (IgnoreProperty property : ignoreProperties) {
+                        mixInHolder.addIgnorePropertyNames(property.pojo(), property.name());
+                    }
                 }
-                for(IgnoreProperty property : ignoreProperties){
-                    mixInHolder.addIgnorePropertyNames(property.pojo(), property.name());
-                }
+                responseBody.set(jsonResultFilter.value());
             }
         }
         return supports;
@@ -67,18 +74,29 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object>{
     @Override
     public Object beforeBodyWrite(Object obj, MethodParameter methodParameter, MediaType mediaType, Class<? extends HttpMessageConverter<?>> converterType, ServerHttpRequest serverHttpRequest, ServerHttpResponse serverHttpResponse) {
         Object returnValue = obj;
+
+        Class bodyType = ObjectUtil.defaultValue(responseBody.get(), Object.class);
+        responseBody.set(null);
+
         HttpServletRequest request = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest();
         if (mediaType.isCompatibleWith(MediaTypes.HAL_JSON) || mediaType.isCompatibleWith(MediaType.APPLICATION_JSON)) {
             Class returnType = methodParameter.getMethod().getReturnType();
 
-            if (Pager.class.isAssignableFrom(returnType) && !"true".equalsIgnoreCase(request.getHeader(X_Page_Fields))) {
+            if (!ObjectUtil.defaultValue(getHeaderAsBoolean(request, X_Page_Fields), !List.class.isAssignableFrom(bodyType)) && Pager.class.isAssignableFrom(returnType)) {
                 returnValue = ((Pager) returnValue).getPageItems();
             }
+
             MappingJacksonValue mappingJacksonValue = new MappingJacksonValue(returnValue);
             mappingJacksonValue.setFilters(ThreadJacksonMixInHolder.getMixInHolder().getFilterProvider());
             return mappingJacksonValue;
         }
+        responseBody.set(Object.class);
         return obj;
+    }
+
+    private Boolean getHeaderAsBoolean(HttpServletRequest request, String name) {
+        String value = request.getHeader(name);
+        return value != null ? Boolean.valueOf(value) : null;
     }
 
 

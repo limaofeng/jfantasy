@@ -7,7 +7,6 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.security.bean.databind.MenuDeserializer;
 import org.jfantasy.security.bean.databind.MenuSerializer;
@@ -27,14 +26,12 @@ public class Menu extends BaseBusEntity {
 
     private static final long serialVersionUID = -3361634609328758218L;
 
-    public static final String PATH_SEPARATOR = ",";// 树路径分隔符
+    public static final String PATH_SEPARATOR = "/";// 树路径分隔符
 
     @ApiModelProperty("ID")
     @Id
-    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
-    private Long id;
+    @Column(name = "ID", nullable = false, updatable = false)
+    private String id;
     /**
      * 菜单名称
      */
@@ -106,15 +103,15 @@ public class Menu extends BaseBusEntity {
     public Menu() {
     }
 
-    public Menu(Long id) {
+    public Menu(String id) {
         this.id = id;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

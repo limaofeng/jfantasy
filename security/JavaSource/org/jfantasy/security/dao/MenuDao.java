@@ -5,6 +5,6 @@ import org.jfantasy.security.bean.Menu;
 import org.springframework.stereotype.Repository;
 
 @Repository("fantasy.auth.hibernate.MenuDao")
-public class MenuDao extends HibernateDao<Menu, Long>{
+public class MenuDao extends HibernateDao<Menu, String>{
 
 }

@@ -9,4 +9,7 @@ public class LoginEvent extends ApplicationEvent {
         super(user);
     }
 
+    public User getUser() {
+        return (User)this.getSource();
+    }
 }

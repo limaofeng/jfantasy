@@ -1,16 +1,16 @@
 package org.jfantasy.framework.util.common;
 
-import org.jfantasy.framework.error.IgnoreException;
-import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.jfantasy.framework.error.IgnoreException;
+import org.jfantasy.framework.util.regexp.RegexpUtil;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.regex.Matcher;
 
@@ -21,16 +21,12 @@ public class DateUtil {
     /**
      * 缓存的 SimpleDateFormat
      */
-    private static final ConcurrentMap<String, SimpleDateFormat> DATE_FORMAT_CACHE = new ConcurrentHashMap<String, SimpleDateFormat>();
+    private static final ConcurrentMap<String, DateFormatCache> DATE_FORMAT_CACHE = new ConcurrentHashMap<>();
 
     /**
      * 日期驱动接口 针对DateUtil.now()方法获取时间
      */
     private static DateDriver dateDriver = null;
-    /**
-     * SimpleDateFormat 访问锁
-     */
-    private static final ConcurrentMap<String, ReentrantLock> LOCKS = new ConcurrentHashMap<String, ReentrantLock>();
 
     static {
         /**
@@ -74,25 +70,41 @@ public class DateUtil {
         }
     }
 
+    private static DateFormatCache getDateFormat(String format, Locale locale) {
+        return getDateFormat(format, locale, null);
+    }
+
     /**
      * 获取 SimpleDateFormat 对象
      *
      * @param format 格式
      * @return DateFormat
      */
-    private static DateFormat getDateFormat(String format) {
-        if (!DATE_FORMAT_CACHE.containsKey(format)) {
+    private static DateFormatCache getDateFormat(String format, Locale locale, TimeZone zone) {
+        zone = ObjectUtil.defaultValue(zone, TimeZone.getDefault());
+        locale = ObjectUtil.defaultValue(locale, Locale.getDefault());
+        String key = zone.getID() + "->" + locale.toString() + "->" + format;
+        if (!DATE_FORMAT_CACHE.containsKey(key)) {
             if (LOG.isDebugEnabled()) {
-                LOG.debug("缓存日期格式:" + format);
+                LOG.debug("缓存日期格式:" + key);
             }
-            DATE_FORMAT_CACHE.put(format, new SimpleDateFormat(format));
-            LOCKS.put(format, new ReentrantLock());
+            SimpleDateFormat dateFormat = new SimpleDateFormat(format, locale);
+            dateFormat.setTimeZone(zone);
+            DATE_FORMAT_CACHE.put(key, new DateFormatCache(new ReentrantLock(), dateFormat));
         }
-        return DATE_FORMAT_CACHE.get(format);
+        return DATE_FORMAT_CACHE.get(key);
     }
 
     public static String format(String format) {
         return format(now(), format);
+    }
+
+    public static String format(String format, Locale locale) {
+        return format(now(), format, locale);
+    }
+
+    public static String format(String format, Locale locale, TimeZone zone) {
+        return format(now(), format, locale, zone);
     }
 
     /**
@@ -109,6 +121,14 @@ public class DateUtil {
         return format((Date) date, format);
     }
 
+    public static String format(Date date, String format) {
+        return format(date, format, Locale.getDefault());
+    }
+
+    public static String format(Date date, String format, Locale locale) {
+        return format(date, format, locale, null);
+    }
+
     /**
      * 格式化日期以字符串形式返回
      *
@@ -116,18 +136,19 @@ public class DateUtil {
      * @param format 格式
      * @return String
      */
-    public static String format(Date date, String format) {
+    public static String format(Date date, String format, Locale locale, TimeZone zone) {
         if (date == null) {
             return "";
         }
-        DateFormat dateFormat = getDateFormat(format);
-        LOCKS.get(format).lock();
+        DateFormatCache cache = getDateFormat(format, locale, zone);
+        cache.lock();
         try {
-            return dateFormat.format(date);
+            return cache.format(date);
         } finally {
-            LOCKS.get(format).unlock();
+            cache.unlock();
         }
     }
+
 
     public static String toDay(Date date) {
         return format(date, "yyyy-MM-dd");
@@ -145,17 +166,25 @@ public class DateUtil {
      * @return data
      */
     public static Date parse(String s, String format) {
+        return parse(s, format, null);
+    }
+
+    public static Date parse(String s, String format, Locale locale) {
+        return parse(s, format, locale, null);
+    }
+
+    public static Date parse(String s, String format, Locale locale, TimeZone zone) {
         if (s == null) {
             return null;
         }
-        DateFormat dateFormat = getDateFormat(format);
-        LOCKS.get(format).lock();
+        DateFormatCache cache = getDateFormat(format, locale, zone);
+        cache.lock();
         try {
-            return dateFormat.parse(s);
+            return cache.parse(s);
         } catch (ParseException e) {
             throw new IgnoreException(e.getMessage());
         } finally {
-            LOCKS.get(format).unlock();
+            cache.unlock();
         }
     }
 
@@ -287,7 +316,7 @@ public class DateUtil {
      *
      * @param big_   大的日期
      * @param small_ 小的日期
-     * @param field 比较日期字段
+     * @param field  比较日期字段
      * @return date
      */
     public static long interval(Date big_, Date small_, int field) {
@@ -411,7 +440,6 @@ public class DateUtil {
         calendar.setTime(small);
 
 
-
         do {
             num++;
             calendar.add(field, 1);
@@ -508,104 +536,6 @@ public class DateUtil {
         return gc.getTime();
     }
 
-    public static String ampm(Date date) {
-        int hours = getTimeField(date, Calendar.HOUR_OF_DAY);
-
-        if (hours <= 12) {
-            return "A";
-        }
-        return "P";
-    }
-
-    public static String ampm(Date startTime, Date endTime) {
-        String start = ampm(startTime);
-        String end = ampm(endTime);
-
-        if ("A".equalsIgnoreCase(start) && "A".equalsIgnoreCase(end)) {
-            return "A";
-        }
-        if ("P".equalsIgnoreCase(start) && "P".equalsIgnoreCase(end)) {
-            return "P";
-        }
-        return "N";
-    }
-
-    public static Date[] getTimeInterval(Date date, String ampm) {
-        Date startDate = (Date) date.clone();
-        Date endDate = (Date) date.clone();
-
-        if ("A".equals(ampm)) {
-            startDate = setTimeField(startDate, Calendar.HOUR_OF_DAY, 9);
-            endDate = setTimeField(endDate, Calendar.HOUR_OF_DAY, 12);
-        } else if ("P".equals(ampm)) {
-            startDate = setTimeField(startDate, Calendar.HOUR_OF_DAY, 12);
-            endDate = setTimeField(endDate, Calendar.HOUR_OF_DAY, 18);
-        } else if ("N".equals(ampm)) {
-            startDate = setTimeField(startDate, Calendar.HOUR_OF_DAY, 9);
-            endDate = setTimeField(endDate, Calendar.HOUR_OF_DAY, 18);
-        }
-
-        startDate = setTimeField(startDate, Calendar.MINUTE, 0);
-        endDate = setTimeField(endDate, Calendar.MINUTE, 0);
-        startDate = setTimeField(startDate, Calendar.SECOND, 0);
-        endDate = setTimeField(endDate, Calendar.SECOND, 0);
-
-        Date[] dates = new Date[2];
-        dates[0] = startDate;
-        dates[1] = endDate;
-
-        return dates;
-    }
-
-    public static String getChineseWeekName(Date date) {
-        int w = getTimeField(date, Calendar.DAY_OF_WEEK);
-        String cw = "";
-        switch (w) {
-            case 1:
-                cw = "星期日";
-                break;
-            case 2:
-                cw = "星期一";
-                break;
-            case 3:
-                cw = "星期二";
-                break;
-            case 4:
-                cw = "星期三";
-                break;
-            case 5:
-                cw = "星期四";
-                break;
-            case 6:
-                cw = "星期五";
-                break;
-            case 7:
-                cw = "星期六";
-                break;
-        }
-
-        return cw;
-    }
-
-    public static Date[] getDatesByMonth(Date date, int week) {
-        List<Date> dates = new ArrayList<Date>();
-        date = setTimeField(date, Calendar.DATE, 1);
-        int day = getTimeField(setTimeField(setTimeField(date, Calendar.MONTH, getTimeField(date, Calendar.MONTH) + 1), Calendar.DATE, 0), Calendar.DATE);
-        for (int i = 1; i <= day; i++) {
-            Date temp = setTimeField(date, Calendar.DATE, i);
-            if (getTimeField(temp, Calendar.DAY_OF_WEEK) == week) {
-                dates.add(temp);
-            }
-        }
-        return dates.toArray(new Date[dates.size()]);
-    }
-
-    static String[] monthChineses = new String[]{"一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"};
-
-    public static String getChineseMonthName(Date date) {
-        return monthChineses[getTimeField(date, Calendar.MONTH)];
-    }
-
     /**
      * 比较时间返回最小值
      *
@@ -677,6 +607,34 @@ public class DateUtil {
             return new Date();
         }
 
+    }
+
+    private static class DateFormatCache {
+
+        private SimpleDateFormat format;
+
+        private Lock lock;
+
+        public DateFormatCache(Lock lock, SimpleDateFormat format) {
+            this.lock = lock;
+            this.format = format;
+        }
+
+        public void lock() {
+            this.lock.lock();
+        }
+
+        public String format(Date date) {
+            return this.format.format(date);
+        }
+
+        public void unlock() {
+            this.lock.unlock();
+        }
+
+        public Date parse(String s) throws ParseException {
+            return this.format.parse(s);
+        }
     }
 
 }

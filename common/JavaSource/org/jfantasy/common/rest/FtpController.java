@@ -13,7 +13,7 @@ import java.util.List;
 
 @Api(value = "common-ftpconfigs", description = "FTP配置信息")
 @RestController
-@RequestMapping("/common/ftpconfigs")
+@RequestMapping("/ftp-configs")
 public class FtpController {
 
     @Autowired

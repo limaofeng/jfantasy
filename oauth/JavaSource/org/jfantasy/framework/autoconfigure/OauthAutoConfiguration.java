@@ -5,7 +5,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ComponentScan("org.jfantasy.oauth")
+@ComponentScan({"org.jfantasy.oauth", "org.jfantasy.auth", "org.jfantasy.user"})
 @EntityScan("org.jfantasy.oauth.bean")
 public class OAuthAutoConfiguration {
 }

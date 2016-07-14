@@ -6,7 +6,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
-import org.jfantasy.framework.jackson.annotation.JsonIgnoreProperties;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Order;
@@ -42,7 +42,7 @@ public class RefundController {
     @Autowired
     private PayConfigController payConfigController;
 
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"})})
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
     @ApiOperation("查询退款记录")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -50,7 +50,7 @@ public class RefundController {
         return assembler.toResources(refundService.findPager(pager, filters));
     }
 
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"})})
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
     @ApiOperation(value = "更新退款记录", notes = "该方法只能修改 退款状态 ")
     @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
     @ResponseBody
@@ -58,7 +58,7 @@ public class RefundController {
         return payService.refund(sn, form.getStatus(), form.getRemark());
     }
 
-    @JsonIgnoreProperties(allow = {
+    @JsonResultFilter(allow = {
             @AllowProperty(pojo = Order.class, name = {"key"}),
             @AllowProperty(pojo = Payment.class, name = {"sn", "totalAmount", "status"}),
             @AllowProperty(pojo = PayConfig.class, name = {"id"})
@@ -84,8 +84,8 @@ public class RefundController {
         this.refundService.delete(sns);
     }
 
-    @JsonIgnoreProperties(
-            value = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
             allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "name"})
     )
     @RequestMapping(value = "/{sn}/order", method = RequestMethod.GET)

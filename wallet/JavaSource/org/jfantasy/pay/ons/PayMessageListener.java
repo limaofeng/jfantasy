@@ -21,6 +21,9 @@ public class PayMessageListener implements MessageListener {
             case "transaction":
                 walletService.saveOrUpdateBill(JSON.deserialize(Arrays.toString(message.getBody())));
                 break;
+            case "account":
+                walletService.saveOrUpdateWallet(JSON.deserialize(Arrays.toString(message.getBody())));
+                break;
         }
         return Action.CommitMessage;
     }

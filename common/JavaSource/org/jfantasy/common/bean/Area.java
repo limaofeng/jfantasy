@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.jfantasy.common.bean.converter.AreaTagsConverter;
+import org.jfantasy.common.bean.enums.AreaTag;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -11,7 +13,7 @@ import java.util.List;
 
 @ApiModel("地区信息")
 @Entity
-@Table(name = "AREA")
+@Table(name = "SYS_AREA")
 @JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Area extends BaseBusEntity {
@@ -19,8 +21,9 @@ public class Area extends BaseBusEntity {
     private static final long serialVersionUID = -2158109459123036967L;
 
     public static final String PATH_SEPARATOR = ",";// 路径分隔符
+
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, length = 50)
+    @Column(name = "ID", nullable = false, updatable = false, length = 50)
     private String id;
     @ApiModelProperty("名称")
     @Column(name = "NAME", nullable = false)
@@ -31,6 +34,10 @@ public class Area extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @Column(name = "PATH", nullable = false, length = 3000)
     private String path;// 路径
+    @ApiModelProperty("标签")
+    @Column(name = "TAGS", nullable = false, length = 30)
+    @Convert(converter = AreaTagsConverter.class)
+    private AreaTag[] tags;
     @ApiModelProperty("层级")
     @Column(name = "LAYER", nullable = false)
     private Integer layer;// 层级
@@ -45,6 +52,14 @@ public class Area extends BaseBusEntity {
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort asc")
     private List<Area> children;// 下级地区
+
+    public Area() {
+    }
+
+    private Area(String id) {
+        this();
+        this.id = id;
+    }
 
     public String getName() {
         return name;
@@ -108,6 +123,22 @@ public class Area extends BaseBusEntity {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public AreaTag[] getTags() {
+        return tags;
+    }
+
+    public void setTags(AreaTag[] tags) {
+        this.tags = tags;
+    }
+
+    public void setParentId(String id) {
+        this.setParent(new Area(id));
+    }
+
+    public String getParentId() {
+        return this.parent != null ? this.parent.getId() : null;
     }
 
 }

@@ -15,11 +15,12 @@ import java.util.Properties;
 @EntityScan("org.jfantasy.pay.bean")
 public class PayAutoConfiguration {
 
-    public final static String ONS_TAGS_TRANSACTION = "transaction";
     public final static String ONS_TAGS_TRANSACTION_KEY = "transaction";
     public final static String ONS_TAGS_PAY = "pay";
     public final static String ONS_TAGS_PAY_PAYMENTKEY = "payment";
     public static final String ONS_TAGS_PAY_REFUNDKEY = "refund";
+    public static final String ONS_TAGS_ACCOUNT_KEY = "account";
+    public static final String ONS_TAGS_POINT_KEY = "point";
 
     @Bean
     public PayProductConfiguration paymentConfiguration() {

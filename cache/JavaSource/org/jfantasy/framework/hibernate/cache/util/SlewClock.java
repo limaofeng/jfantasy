@@ -3,7 +3,7 @@ package org.jfantasy.framework.hibernate.cache.util;
 import java.util.concurrent.atomic.AtomicLong;
 
 
-public class SlewClock {
+class SlewClock {
 
     private static final TimeProvider PROVIDER = TimeProviderLoader.getTimeProvider();
 
@@ -15,7 +15,7 @@ public class SlewClock {
 
     private static final AtomicLong CURRENT = new AtomicLong(getCurrentTime());
 
-    private static final VicariousThreadLocal<Long> OFFSET = new VicariousThreadLocal<Long>();
+    private static final VicariousThreadLocal<Long> OFFSET = new VicariousThreadLocal<>();
 
     private SlewClock() {
     }

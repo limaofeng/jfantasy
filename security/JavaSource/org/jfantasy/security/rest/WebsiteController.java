@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api(value = "system-websites", description = "站点信息")
 @RestController
-@RequestMapping("/system/websites")
+@RequestMapping("/websites")
 public class WebsiteController {
 
     @Autowired

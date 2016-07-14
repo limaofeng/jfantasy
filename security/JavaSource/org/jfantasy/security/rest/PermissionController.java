@@ -15,7 +15,7 @@ import java.util.List;
 
 @Api(value = "security-permissions", description = "权限")
 @RestController
-@RequestMapping("/security/permissions")
+@RequestMapping("/permissions")
 public class PermissionController {
 
     @Autowired

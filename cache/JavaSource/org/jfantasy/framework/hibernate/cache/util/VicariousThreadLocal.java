@@ -4,14 +4,14 @@ import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
 import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 
-public class VicariousThreadLocal<T> extends ThreadLocal<T> {
+class VicariousThreadLocal<T> extends ThreadLocal<T> {
 
-    private static final ThreadLocal<WeakReference<Thread>> weakThread = new ThreadLocal<WeakReference<Thread>>();
+    private static final ThreadLocal<WeakReference<Thread>> weakThread = new ThreadLocal<>();
 
-    static WeakReference<Thread> currentThreadRef() {
+    private static WeakReference<Thread> currentThreadRef() {
         WeakReference<Thread> ref = weakThread.get();
         if (ref == null) {
-            ref = new WeakReference<Thread>(Thread.currentThread());
+            ref = new WeakReference<>(Thread.currentThread());
             weakThread.set(ref);
         }
         return ref;
@@ -19,15 +19,15 @@ public class VicariousThreadLocal<T> extends ThreadLocal<T> {
 
     private static final Object UNINITIALISED = new Object();
 
-    private final ThreadLocal<WeakReference<Holder>> local = new ThreadLocal<WeakReference<Holder>>();
+    private final ThreadLocal<WeakReference<Holder>> local = new ThreadLocal<>();
 
     private volatile Holder strongRefs;
 
     private static final AtomicReferenceFieldUpdater<VicariousThreadLocal, Holder> strongRefsUpdater = AtomicReferenceFieldUpdater.newUpdater(VicariousThreadLocal.class, Holder.class, "strongRefs");
 
-    private final ReferenceQueue<Object> queue = new ReferenceQueue<Object>();
+    private final ReferenceQueue<Object> queue = new ReferenceQueue<>();
 
-    public VicariousThreadLocal() {
+    VicariousThreadLocal() {
     }
 
     @SuppressWarnings("unchecked")
@@ -37,6 +37,7 @@ public class VicariousThreadLocal<T> extends ThreadLocal<T> {
         WeakReference<Holder> ref = local.get();
         if (ref != null) {
             holder = ref.get();
+            assert holder != null;
             Object value = holder.value;
             if (value != UNINITIALISED) {
                 return (T) value;
@@ -52,15 +53,15 @@ public class VicariousThreadLocal<T> extends ThreadLocal<T> {
     @Override
     public void set(T value) {
         WeakReference<Holder> ref = local.get();
-        final Holder holder =
-                ref != null ? ref.get() : createHolder();
+        final Holder holder = ref != null ? ref.get() : createHolder();
+        assert holder != null;
         holder.value = value;
     }
 
     private Holder createHolder() {
         poll();
         Holder holder = new Holder(queue);
-        WeakReference<Holder> ref = new WeakReference<Holder>(holder);
+        WeakReference<Holder> ref = new WeakReference<>(holder);
 
         Holder old;
         do {
@@ -76,14 +77,16 @@ public class VicariousThreadLocal<T> extends ThreadLocal<T> {
     public void remove() {
         WeakReference<Holder> ref = local.get();
         if (ref != null) {
-            ref.get().value = UNINITIALISED;
+            Holder holder = ref.get();
+            assert holder != null;
+            holder.value = UNINITIALISED;
         }
     }
 
     /**
      * Check if any strong references need should be removed due to thread exit.
      */
-    public void poll() {
+    private void poll() {
         synchronized (queue) {
             // Remove queued references.
             // (Is this better inside or out?)

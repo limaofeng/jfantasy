@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Api(value = "common-hotkeywords", description = "热门关键词")
 @RestController
-@RequestMapping("/common/hotkeywords")
+@RequestMapping("/hotkeywords")
 public class HotKeywordsController {
 
     @Autowired

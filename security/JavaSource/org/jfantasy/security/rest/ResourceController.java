@@ -18,7 +18,7 @@ import java.util.List;
 
 @Api(value = "security-resources", description = "资源")
 @RestController
-@RequestMapping("/security/resources")
+@RequestMapping("/resources")
 public class ResourceController {
 
     @Autowired

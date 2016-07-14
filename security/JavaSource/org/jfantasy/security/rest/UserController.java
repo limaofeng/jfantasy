@@ -6,20 +6,27 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.User;
-import org.jfantasy.security.bean.UserDetails;
+import org.jfantasy.security.rest.models.assembler.UserDetailsResourceAssembler;
+import org.jfantasy.security.rest.models.assembler.UserResourceAssembler;
 import org.jfantasy.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.*;
 
 
 @Api(value = "security-users", description = " 用户 ")
 @RestController
-@RequestMapping("/security/users")
+@RequestMapping("/users")
 public class UserController {
+
+    public static UserResourceAssembler assembler = new UserResourceAssembler();
+    private UserDetailsResourceAssembler userDetailsResourceAssembler = new UserDetailsResourceAssembler();
 
     @Autowired
     private UserService userService;
@@ -27,43 +34,28 @@ public class UserController {
     @ApiOperation(value = "查询用户", notes = "通过该接口, 筛选后台用户")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<User> search(@ApiParam(value = "分页对象", name = "pager") Pager<User> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
-        return this.userService.findPager(pager, filters);
-    }
-
-    @ApiOperation(value = "用户登录", notes = "用户登录接口")
-    @RequestMapping(value = "/{username}/login", method = RequestMethod.POST)
-    @ResponseBody
-    public User login(@PathVariable("username") String username, @RequestBody String password) {
-        return this.userService.login(username, password);
-    }
-
-    @ApiOperation(value = "用户登出", notes = "用户登出接口")
-    @RequestMapping(value = "/{username}/logout", method = RequestMethod.GET)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void logout(@PathVariable("username") String username) {
-        this.userService.logout(username);
+    public Pager<ResultResourceSupport> search(@ApiParam(value = "分页对象", name = "pager") Pager<User> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
+        return assembler.toResources(this.userService.findPager(pager, filters));
     }
 
     @ApiOperation(value = "获取用户", notes = "通过该接口, 获取用户")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    public User view(@PathVariable("id") Long id) {
-        return this.userService.get(id);
+    public ResultResourceSupport view(@PathVariable("id") Long id) {
+        return assembler.toResource(this.userService.get(id));
     }
 
     @ApiOperation(value = "获取用户的详细信息", notes = "通过该接口, 获取详细信息")
     @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET)
-    public UserDetails profile(@PathVariable("id") Long id) {
-        return this.userService.get(id).getDetails();
+    public ResultResourceSupport profile(@PathVariable("id") Long id) {
+        return userDetailsResourceAssembler.toResource(this.userService.get(id).getDetails());
     }
 
     @ApiOperation(value = "添加用户", notes = "通过该接口, 添加用户")
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
-    public User create(@RequestBody User user) {
-        return this.userService.save(user);
+    public ResultResourceSupport create(@RequestBody User user) {
+        return assembler.toResource(this.userService.save(user));
     }
 
     @ApiOperation(value = "删除用户", notes = "通过该接口, 删除用户")
@@ -82,9 +74,24 @@ public class UserController {
 
     @ApiOperation(value = "更新用户", notes = "通过该接口, 更新用户")
     @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
-    public User update(@PathVariable("id") Long id, User user) {
+    public ResultResourceSupport update(@PathVariable("id") Long id, User user) {
         user.setId(id);
-        return this.userService.save(user);
+        return assembler.toResource(this.userService.save(user));
+    }
+
+    @ApiOperation(value = "获取用户授权的菜单信息")
+    @RequestMapping(value = "/{id}/menus", method = {RequestMethod.GET})
+    @ResponseBody
+    public List<String> menus(@PathVariable("id") Long id) {
+        Set<String> menuIds = new HashSet<>();
+        for (Role role : this.get(id).getRoles()) {
+            menuIds.addAll(Arrays.asList(ObjectUtil.toFieldArray(role.getMenus(), "id", String.class)));
+        }
+        return new ArrayList<>(menuIds);
+    }
+
+    private User get(Long id) {
+        return this.userService.get(id);
     }
 
 }

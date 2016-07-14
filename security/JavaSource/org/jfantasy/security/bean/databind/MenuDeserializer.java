@@ -15,6 +15,7 @@ public class MenuDeserializer extends JsonDeserializer<Menu> {
         if (StringUtil.isBlank(jp.getValueAsString())) {
             return null;
         }
-        return new Menu(jp.getValueAsLong());
+        return new Menu(jp.getValueAsString());
     }
+
 }

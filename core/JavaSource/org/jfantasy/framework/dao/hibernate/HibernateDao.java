@@ -44,7 +44,7 @@ import java.util.regex.Matcher;
  */
 public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     protected final static Log LOGGER = LogFactory.getLog(HibernateDao.class);
-    protected Log LOG = LogFactory.getLog(getClass());
+    protected Log LOG = LogFactory.getLog(ClassUtil.getRealClass(getClass()));
     protected SessionFactory sessionFactory;
     protected Class<T> entityClass;
     protected Class<PK> idClass;
@@ -52,8 +52,8 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     private final static String LOG_MESSAGE_NULL = "entity不能为空";
 
     public HibernateDao() {
-        this.entityClass = ReflectionUtils.getSuperClassGenricType(getClass());
-        this.idClass = ReflectionUtils.getSuperClassGenricType(getClass(), 1);
+        this.entityClass = ReflectionUtils.getSuperClassGenricType(ClassUtil.getRealClass(getClass()));
+        this.idClass = ReflectionUtils.getSuperClassGenricType(ClassUtil.getRealClass(getClass()), 1);
     }
 
     public Class<T> getEntityClass() {
@@ -367,7 +367,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      *
      * @param ids 通过主键删除
      */
-    public final void delete(PK... ids) {
+    public void delete(PK... ids) {
         for (PK id : ids) {
             T t = get(id);
             if (t == null) {

@@ -6,28 +6,22 @@ import org.jfantasy.common.bean.Area;
 import org.jfantasy.common.dao.AreaDao;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 @Transactional
-public class AreaService{
+public class AreaService {
 
     @Autowired
     private AreaDao areaDao;
 
-    @SuppressWarnings("unchecked")
-    @CacheEvict(value = {"fantasy.common.AreaService"}, allEntries = true)
     public Area save(Area area) {
         if (area.getParent() == null || StringUtil.isBlank(area.getParent().getId())) {// 如果新增在顶级
             area.setPath(area.getId());
@@ -37,7 +31,7 @@ public class AreaService{
         }
         area.setLayer(ObjectUtil.defaultValue(area.getPath().split(Area.PATH_SEPARATOR).length, 1) - 1);// 设置层级
         StringBuilder displayName = new StringBuilder();
-        List<Area> parentAreas = !area.getPath().contains(Area.PATH_SEPARATOR) ? Collections.EMPTY_LIST : this.areaDao.find(Restrictions.in("id", StringUtils.substringBeforeLast(area.getPath(), Area.PATH_SEPARATOR).split(Area.PATH_SEPARATOR)));
+        List<Area> parentAreas = !area.getPath().contains(Area.PATH_SEPARATOR) ? Collections.<Area>emptyList() : this.areaDao.find(Restrictions.in("id", StringUtils.substringBeforeLast(area.getPath(), Area.PATH_SEPARATOR).split(Area.PATH_SEPARATOR)));
         if (!parentAreas.isEmpty()) {
             for (Area parentArea : parentAreas) {
                 displayName.append(parentArea.getName());
@@ -62,58 +56,56 @@ public class AreaService{
     }
 
     /**
-     * 获取全部的地区
-     *
-     * @return
-     */
-    @Cacheable(value = "fantasy.common.AreaService", key = "'allAreas'")
-    public List<Area> allAreas() {
-        return this.areaDao.getAll();
-    }
-
-    /**
      * 分页
      *
-     * @param pager
-     * @param filters
-     * @return
+     * @param pager   分页对象
+     * @param filters 过滤条件
+     * @return Pager<Area>
      */
     public Pager<Area> findPager(Pager<Area> pager, List<PropertyFilter> filters) {
         return this.areaDao.findPager(pager, filters);
     }
 
-    @CacheEvict(value = {"fantasy.common.AreaService"}, allEntries = true)
     public void delete(String... ids) {
         for (String id : ids) {
+            Area area = this.areaDao.get(id);
+            if (area == null) {
+                continue;
+            }
+            Area parent = area.getParent();
+            //转移子集到本级节点
+            if (parent != null) {
+                for (Area cren : this.areaDao.find(Restrictions.eq("parent.id", id))) {
+                    this.move(cren.getId(), parent.getId());
+                }
+            }
+            //执行删除操作
             this.areaDao.delete(id);
         }
     }
 
-    /**
-     * 查询所有区域
-     *
-     * @return
-     */
-    public List<Area> find(List<PropertyFilter> filters) {
-        return this.areaDao.find(filters);
-    }
+    private void move(String id, String pid) {
+        Area area = this.areaDao.get(id);
+        Area parent = this.areaDao.get(pid);
 
-    /**
-     * 返回地区查询列表
-     *
-     * @return
-     */
-    public static List<Area> list(String parentId) {
-        AreaService areaService = SpringContextUtil.getBeanByType(AreaService.class);
-        List<Area> areas = new ArrayList<Area>();
-        for (Area area : areaService.allAreas()) {
-            if (StringUtil.isNotBlank(parentId) && area.getParent() != null && parentId.equals(area.getParent().getId())) {
-                areas.add(area);
-            } else if (StringUtil.isBlank(parentId) && StringUtil.isNull(area.getParent())) {
-                areas.add(area);
+        //重新 path / displayName / layer
+        area.setParent(parent);
+        area.setPath(parent.getPath() + Area.PATH_SEPARATOR + area.getId());// 设置path
+        area.setLayer(ObjectUtil.defaultValue(area.getPath().split(Area.PATH_SEPARATOR).length, 1) - 1);// 设置层级
+        // 设置完整地区名称
+        StringBuilder displayName = new StringBuilder();
+        List<Area> parentAreas = !area.getPath().contains(Area.PATH_SEPARATOR) ? Collections.<Area>emptyList() : this.areaDao.find(Restrictions.in("id", StringUtils.substringBeforeLast(area.getPath(), Area.PATH_SEPARATOR).split(Area.PATH_SEPARATOR)));
+        if (!parentAreas.isEmpty()) {
+            for (Area parentArea : parentAreas) {
+                displayName.append(parentArea.getName());
             }
         }
-        return areas;
+        displayName.append(area.getName());
+        area.setDisplayName(displayName.toString());
+
+        for (Area ch : this.areaDao.find(Restrictions.eq("parent.id", id))) {
+            this.move(ch.getId(), area.getId());
+        }
     }
 
 }
