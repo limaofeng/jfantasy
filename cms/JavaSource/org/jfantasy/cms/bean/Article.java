@@ -8,7 +8,9 @@ import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.cms.bean.databind.ContentDeserializer;
+import org.jfantasy.cms.bean.enums.ArticleStatus;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.StringsConverter;
 import org.jfantasy.framework.lucene.annotations.*;
 
 import javax.persistence.*;
@@ -51,6 +53,10 @@ public class Article extends BaseBusEntity {
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS",length = 20)
+    private ArticleStatus status;
     /**
      * 文章标题
      */
@@ -86,6 +92,13 @@ public class Article extends BaseBusEntity {
     @ApiModelProperty("作者")
     @Column(name = "AUTHOR")
     private String author;
+    /**
+     * 标签
+     */
+    @ApiModelProperty("标签")
+    @Column(name = "TAGS", length = 300)
+    @Convert(converter = StringsConverter.class)
+    private String[] tags;
     /**
      * 发布日期
      */
@@ -179,6 +192,22 @@ public class Article extends BaseBusEntity {
 
     public void setIssue(Boolean issue) {
         this.issue = issue;
+    }
+
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
+
+    public ArticleStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ArticleStatus status) {
+        this.status = status;
     }
 
     @Override

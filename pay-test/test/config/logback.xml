@@ -41,7 +41,7 @@
     <!-- hibernate日志输入 -->
     <logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="ERROR" />
     <logger name="org.hibernate.type.descriptor.sql.BasicExtractor" level="ERROR" />
-    <logger name="org.hibernate.SQL" level="ERROR" />
+    <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.engine.QueryParameters" level="ERROR" />
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="ERROR" />
     <logger name="org.jfantasy.framework" level="DEBUG"/>

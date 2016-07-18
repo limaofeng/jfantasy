@@ -5,7 +5,7 @@ package org.jfantasy.pay.bean.enums;
  */
 public enum CardBatchStatus {
     /**
-     * 设计
+     * 草稿
      */
     draft,
     /**

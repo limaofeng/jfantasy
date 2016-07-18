@@ -6,6 +6,7 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Comment;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.rest.MemberController;
+import org.springframework.hateoas.Link;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import java.util.ArrayList;
@@ -29,6 +30,7 @@ public class MemberResourceAssembler extends ResourceAssemblerSupport<Member, Re
         ResultResourceSupport resource = createResourceWithId(entity.getId(), entity);
         resource.add(linkTo(methodOn(MemberController.class).comments(entity.getId(), new Pager<Comment>(), new ArrayList<PropertyFilter>())).withRel("comments"));
         resource.add(linkTo(methodOn(MemberController.class).receivers(entity.getId(), new ArrayList<PropertyFilter>())).withRel("receivers"));
+        resource.add(new Link("/members/" + entity.getId() + "/level", "level"));
         return resource;
     }
 

@@ -36,7 +36,7 @@ public class MemberWalletController {
     private WalletController walletController;
 
     @ApiOperation(value = "用户钱包信息", notes = "返回钱包详情")
-    @RequestMapping(value = "/{memid}", method = RequestMethod.GET)
+    @RequestMapping(value = "/{memid}/wallet", method = RequestMethod.GET)
     public ResultResourceSupport view(@PathVariable("memid") Long id) {
         Wallet wallet = walletService.getWalletByMember(id);
         return walletController.view(wallet.getId());

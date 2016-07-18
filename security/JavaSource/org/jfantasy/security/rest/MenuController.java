@@ -48,8 +48,8 @@ public class MenuController {
     @ApiOperation(value = "批量删除菜单")
     @RequestMapping(method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void delete(@RequestBody String... id) {
-        this.menuService.delete(id);
+    public void delete(@RequestBody String... ids) {
+        this.menuService.delete(ids);
     }
 
     @ApiOperation(value = "添加菜单")

@@ -104,7 +104,8 @@ public class MemberDetails implements Serializable {
     /**
      * 会员等级
      */
-    private int level;
+    @Column(name = "LEVEL")
+    private Long level;
     /**
      * 用户头像
      */
@@ -226,11 +227,11 @@ public class MemberDetails implements Serializable {
         return this.avatar;
     }
 
-    public int getLevel() {
+    public Long getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(Long level) {
         this.level = level;
     }
 

@@ -16,7 +16,7 @@ import java.util.List;
 
 @Api(value = "cms-categorys", description = "文章分类接口")
 @RestController
-@RequestMapping("/cms/categorys")
+@RequestMapping("/categorys")
 public class ArticleCategoryController {
 
     @Autowired

@@ -4,12 +4,16 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.converter.ExtraServiceConverter;
 import org.jfantasy.pay.bean.converter.StylesConverter;
+import org.jfantasy.pay.bean.enums.CardDesignStatus;
 import org.jfantasy.pay.bean.enums.Usage;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "PAY_CARD_DESIGN")
@@ -38,6 +42,12 @@ public class CardDesign extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CARD_TYPE", updatable = false)
     private CardType cardType;
+    /**
+     * 会员卡设计状态
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "STATUS", length = 20, nullable = false)
+    private CardDesignStatus status;
     /**
      * 面额
      */
@@ -123,6 +133,56 @@ public class CardDesign extends BaseBusEntity {
 
     public void setExtras(ExtraService[] extras) {
         this.extras = extras;
+    }
+
+    public CardDesignStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(CardDesignStatus status) {
+        this.status = status;
+    }
+
+    @Transient
+    private List<Log> logs;
+
+    @Transient
+    @JsonProperty("publish_time")
+    public Date getPublishTime() {
+        if (this.logs == null) {
+            return null;
+        }
+        Log log = ObjectUtil.last(this.logs, "status", CardDesignStatus.publish.name());
+        if (log == null) {
+            return null;
+        }
+        return log.getLogTime();
+    }
+
+    @Transient
+    @JsonProperty("destroy_time")
+    public Date getDestroyTime() {
+        if (this.logs == null) {
+            return null;
+        }
+        Log log = ObjectUtil.find(logs, "status", CardDesignStatus.destroyed.name());
+        if (log == null) {
+            return null;
+        }
+        return log.getLogTime();
+    }
+
+    @Transient
+    public String getRule() {
+        return this.getCardType().getKey() + " " + this.getKey() + " XXXX XXXX";
+    }
+
+    public List<Log> getLogs() {
+        return logs;
+    }
+
+    public void setLogs(List<Log> logs) {
+        this.logs = logs;
     }
 
 }

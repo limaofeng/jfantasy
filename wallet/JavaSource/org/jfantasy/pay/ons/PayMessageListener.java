@@ -12,7 +12,7 @@ import java.util.Arrays;
 
 public class PayMessageListener implements MessageListener {
 
-    @Autowired
+    @Autowired(required = false)
     private WalletService walletService;
 
     @Override
@@ -23,6 +23,8 @@ public class PayMessageListener implements MessageListener {
                 break;
             case "account":
                 walletService.saveOrUpdateWallet(JSON.deserialize(Arrays.toString(message.getBody())));
+                break;
+            case "growth":
                 break;
         }
         return Action.CommitMessage;

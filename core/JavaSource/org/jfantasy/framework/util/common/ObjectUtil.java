@@ -284,8 +284,22 @@ public final class ObjectUtil {
         return null;
     }
 
+    public static <T> T last(List<T> list, String field, Object value) {
+        if (list == null) {
+            return null;
+        }
+        for (int i = list.size() - 1; i >= 0; i--) {
+            T t = list.get(i);
+            Object v = OgnlUtil.getInstance().getValue(field, t);
+            if (v == value || value.equals(v)) {
+                return t;
+            }
+        }
+        return null;
+    }
+
     public static <T> boolean exists(List<T> list, String field, Object value) {
-        return find(list,field,value) != null;
+        return find(list, field, value) != null;
     }
 
     public static <T> T find(List<T> list, Expression exper, Object value) {

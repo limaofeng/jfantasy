@@ -12,7 +12,7 @@ import java.util.List;
  * 钱包
  */
 @Entity
-@Table(name = "WALLET")
+@Table(name = "MEM_WALLET")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Wallet extends BaseBusEntity {
     /**
@@ -44,13 +44,18 @@ public class Wallet extends BaseBusEntity {
      */
     @Column(name = "ACCOUNT", nullable = false, updatable = false)
     private String account;
-    @OneToMany(mappedBy="wallet", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
     private List<WalletBill> bills;
     /**
      * 有效的积分
      */
     @Column(name = "POINTS", nullable = false)
     private Long points;
+    /**
+     * 成长值
+     */
+    @Column(name = "GROWTH", nullable = false)
+    private Long growth;
 
     public Long getId() {
         return id;
@@ -98,6 +103,22 @@ public class Wallet extends BaseBusEntity {
 
     public void setPoints(Long points) {
         this.points = points;
+    }
+
+    public Long getGrowth() {
+        return growth;
+    }
+
+    public void setGrowth(Long growth) {
+        this.growth = growth;
+    }
+
+    public List<WalletBill> getBills() {
+        return bills;
+    }
+
+    public void setBills(List<WalletBill> bills) {
+        this.bills = bills;
     }
 
 }

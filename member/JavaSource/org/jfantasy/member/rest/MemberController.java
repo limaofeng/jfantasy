@@ -47,15 +47,11 @@ public class MemberController {
         return assembler.toResources(this.memberService.findPager(pager, filters));
     }
 
-    @ApiOperation(value = "会员注册", notes = "会员注册接口")
-    @RequestMapping(value = "/{username}/register", method = RequestMethod.POST)
-    @ResponseBody
-    public Member register(@PathVariable("username") String username, @RequestBody Member member) {
-        member.setUsername(username);
-        return this.memberService.register(member);
-    }
-
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Member.class, name = {"password"})
+    )
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
     public Member view(@PathVariable("id") Long id) {
         return this.memberService.get(id);
     }
@@ -90,7 +86,7 @@ public class MemberController {
     @RequestMapping(value = "/{memid}/comments", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> comments(@PathVariable("memid") Long memberId, Pager<Comment> pager, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQS_member.id", memberId.toString()));
+        filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
         return this.commentController.search(pager, filters);
     }
 
@@ -98,7 +94,7 @@ public class MemberController {
     @RequestMapping(value = "/{memid}/receivers", method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> receivers(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQS_member.id", memberId.toString()));
+        filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
         return this.receiverController.search(filters);
     }
 

@@ -19,7 +19,6 @@ import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 import org.jfantasy.security.service.RoleService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -86,7 +85,7 @@ public class MemberService {
      * @param member 注册信息
      * @return Member
      */
-    public Member register(Member member) {
+    public Member save(Member member) {
         if (member.getDetails() == null) {// 初始化用户信息对象
             member.setDetails(new MemberDetails());
         }
@@ -138,11 +137,7 @@ public class MemberService {
      * @param member member
      * @return Member
      */
-    @CacheEvict(key = "'findUniqueByUsername' + #member.username ", value = "fantasy.security.memberService")
-    public Member save(Member member) {
-        if (member.getId() == null) {
-            return this.register(member);
-        }
+    public Member update(Member member) {
         if (StringUtil.isNotBlank(member.getPassword()) && !"******".equals(member.getPassword())) {
             Member m = this.memberDao.get(member.getId());
             if (!passwordEncoder.matches(m.getPassword(), member.getPassword())) {

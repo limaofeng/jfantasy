@@ -1,5 +1,6 @@
 package org.jfantasy.auth.rest;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.auth.rest.models.LoginForm;
 import org.jfantasy.auth.rest.models.LogoutForm;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 用于处理登陆及退出
  */
+@Api(value = "auth", description = "用户登录退出")
 @RestController
 public class AuthController {
 

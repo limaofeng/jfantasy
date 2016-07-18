@@ -4,10 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.AllowProperty;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
-import org.jfantasy.pay.bean.Card;
-import org.jfantasy.pay.bean.CardBatch;
-import org.jfantasy.pay.bean.CardDesign;
+import org.jfantasy.pay.bean.*;
+import org.jfantasy.pay.rest.models.LogForm;
 import org.jfantasy.pay.rest.models.assembler.CardDesignResourceAssembler;
 import org.jfantasy.pay.service.CardDesignService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +32,93 @@ public class CardDesignController {
     @Autowired
     private CardBatchController cardBatchController;
 
+    @JsonResultFilter(
+            ignore = {
+                    @IgnoreProperty(pojo = CardDesign.class, name = {"logs"})
+            },
+            allow = {
+                    @AllowProperty(pojo = CardType.class, name = {"key", "name"})
+            }
+    )
     @ApiOperation("查询会员卡设计")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<CardDesign> pager, List<PropertyFilter> filters) {
         return assembler.toResources(cardDesignService.findPager(pager, filters));
+    }
+
+    @JsonResultFilter(
+            allow = {
+                    @AllowProperty(pojo = CardType.class, name = {"key", "name"}),
+                    @AllowProperty(pojo = Log.class, name = {"status", "notes", "logTime"})
+            }
+    )
+    @ApiOperation("会员卡设计详情")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
+    @ResponseBody
+    public ResultResourceSupport view(@PathVariable("id") String id) {
+        return assembler.toResource(get(id));
+    }
+
+
+    @JsonResultFilter(
+            allow = {
+                    @AllowProperty(pojo = CardType.class, name = {"key", "name"})
+            }
+    )
+    @ApiOperation("添加卡设计")
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseBody
+    public ResultResourceSupport save(@RequestBody CardDesign design) {
+        return assembler.toResource(this.cardDesignService.save(design));
+    }
+
+    @JsonResultFilter(
+            allow = {
+                    @AllowProperty(pojo = CardType.class, name = {"key", "name"})
+            }
+    )
+    @ApiOperation("更新会员卡设计")
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody CardDesign batch) {
+        return assembler.toResource(this.cardDesignService.update(batch));
+    }
+
+    @JsonResultFilter(
+            allow = {
+                    @AllowProperty(pojo = CardType.class, name = {"key", "name"})
+            }
+    )
+    @ApiOperation("发布会员卡设计")
+    @RequestMapping(value = "/{id}/publish", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultResourceSupport publish(@PathVariable("id") String id, @RequestBody LogForm form) {
+        return assembler.toResource(this.cardDesignService.publish(id, form.getNotes()));
+    }
+
+    @JsonResultFilter(
+            allow = {
+                    @AllowProperty(pojo = CardType.class, name = {"key", "name"})
+            }
+    )
+    @ApiOperation("取消发布会员卡设计")
+    @RequestMapping(value = "/{id}/unpublish", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultResourceSupport unpublish(@PathVariable("id") String id, @RequestBody LogForm form) {
+        return assembler.toResource(this.cardDesignService.unpublish(id, form.getNotes()));
+    }
+
+    @JsonResultFilter(
+            allow = {
+                    @AllowProperty(pojo = CardType.class, name = {"key", "name"})
+            }
+    )
+    @ApiOperation("销毁会员卡设计")
+    @RequestMapping(value = "/{id}/destroy", method = RequestMethod.POST)
+    @ResponseBody
+    public ResultResourceSupport destroy(@PathVariable("id") String id, @RequestBody LogForm form) {
+        return assembler.toResource(this.cardDesignService.destroy(id, form.getNotes()));
     }
 
     @RequestMapping(value = "/{id}/cards", method = RequestMethod.GET)
@@ -49,27 +133,6 @@ public class CardDesignController {
     public Pager<ResultResourceSupport> batchs(@PathVariable("id") String id, Pager<CardBatch> pager, ArrayList<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQS_design.key", id));
         return cardBatchController.search(pager, filters);
-    }
-
-    @ApiOperation("会员卡设计详情")
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    @ResponseBody
-    public ResultResourceSupport view(@PathVariable("id") String id) {
-        return assembler.toResource(get(id));
-    }
-
-    @ApiOperation("新增会员卡设计")
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseBody
-    public ResultResourceSupport view(@RequestBody CardDesign design) {
-        return assembler.toResource(this.cardDesignService.save(design));
-    }
-
-    @ApiOperation("更新会员卡设计")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
-    @ResponseBody
-    public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody CardDesign batch) {
-        return assembler.toResource(this.cardDesignService.save(batch));
     }
 
     private CardDesign get(String id) {

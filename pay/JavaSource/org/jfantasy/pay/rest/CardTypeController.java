@@ -5,12 +5,15 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.spring.validation.RESTful.*;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardBatch;
 import org.jfantasy.pay.bean.CardType;
 import org.jfantasy.pay.rest.models.assembler.CardTypeResourceAssembler;
 import org.jfantasy.pay.service.CardTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,16 +49,23 @@ public class CardTypeController {
     @ApiOperation("添加会员卡类型")
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResultResourceSupport save(@RequestBody CardType type) {
+    public ResultResourceSupport save(@RequestBody @Validated(POST.class) CardType type) {
         return assembler.toResource(this.cardTypeService.save(type));
     }
 
     @ApiOperation("修改会员卡类型")
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     @ResponseBody
-    public ResultResourceSupport update(@PathVariable("id") String id,@RequestBody CardType type) {
+    public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody CardType type) {
         type.setKey(id);
         return assembler.toResource(this.cardTypeService.save(type));
+    }
+
+    @ApiOperation("删除会员卡类型")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") String id) {
+        this.cardTypeService.delete(id);
     }
 
     /**

@@ -1,7 +1,9 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.validator.constraints.NotEmpty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.validation.RESTful.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,10 +13,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "PAY_CARD_TYPE")
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class CardType extends BaseBusEntity{
+public class CardType extends BaseBusEntity {
     /**
      * 编码
      */
+    @NotEmpty(message = "编码 [Key] 必填", groups = {POST.class})
     @Id
     @Column(name = "CODE", updatable = false)
     private String key;

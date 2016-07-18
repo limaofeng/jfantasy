@@ -15,7 +15,7 @@ import java.util.List;
 
 @Api(value = "cms-banners", description = "轮播图接口")
 @RestController
-@RequestMapping("/cms/banners")
+@RequestMapping("/banners")
 public class BannerController {
 
     @Autowired

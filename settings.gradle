@@ -22,6 +22,7 @@ include ':jfantasy-oauth-api'
 include ':jfantasy-wallet'
 include ':jfantasy-weixin'
 include ':jfantasy-thirdparty'
+include ':jfantasy-mall'
 
 project(':jfantasy-core').projectDir = "$rootDir/core" as File
 project(':jfantasy-cache').projectDir = "$rootDir/cache" as File
