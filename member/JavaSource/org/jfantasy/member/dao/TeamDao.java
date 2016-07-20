@@ -1,7 +1,9 @@
 package org.jfantasy.member.dao;
 
-/**
- * Created by limaofeng on 16/7/18.
- */
-public class TeamDao {
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.member.bean.Team;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class TeamDao extends HibernateDao<Team,String>{
 }

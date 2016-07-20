@@ -3,6 +3,8 @@ package org.jfantasy.pay.rest.models.assembler;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Transaction;
+import org.jfantasy.pay.bean.enums.OwnerType;
+import org.jfantasy.pay.rest.LogController;
 import org.jfantasy.pay.rest.TransactionController;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
@@ -23,7 +25,7 @@ public class TransactionResourceAssembler extends ResourceAssemblerSupport<Trans
     @Override
     public ResultResourceSupport toResource(Transaction entity) {
         ResultResourceSupport resource = createResourceWithId(entity.getSn(), entity);
-        resource.add(linkTo(methodOn(TransactionController.class).logs(entity.getSn())).withRel("logs"));
+        resource.add(linkTo(methodOn(LogController.class).search(OwnerType.transaction,entity.getSn())).withRel("logs"));
         return resource;
     }
 

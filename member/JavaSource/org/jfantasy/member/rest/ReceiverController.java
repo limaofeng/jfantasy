@@ -44,12 +44,6 @@ public class ReceiverController {
         if (_receiver == null) {
             throw new NotFoundException("[id =" + id + "]对应的收货信息不存在");
         }
-        /*
-        if (!memberId.equals(_receiver.getMember().getId())) {
-            throw new ForbiddenException("[memid=" + memberId + "]不能修改该条收货记录信息,因为它不属于该会员");
-        }
-        receiver.setMember(new Member(memberId));
-        */
         receiver.setId(id);
         return assembler.toResource(this.receiverService.save(receiver));
     }
@@ -62,10 +56,6 @@ public class ReceiverController {
         if (receiver == null) {
             throw new NotFoundException("[id =" + id + "]对应的收货信息不存在");
         }
-        /*
-        if (!memberId.equals(receiver.getMember().getId())) {
-            throw new ForbiddenException("[memid=" + memberId + "]不能修改该条收货记录信息,因为它不属于该会员");
-        }*/
         this.receiverService.deltele(id);
     }
 

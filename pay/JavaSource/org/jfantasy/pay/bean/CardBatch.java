@@ -8,6 +8,7 @@ import org.jfantasy.pay.bean.enums.CardBatchStatus;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * 会员卡发行批次
@@ -64,6 +65,9 @@ public class CardBatch extends BaseBusEntity {
     @JsonProperty("release_notes")
     @Column(name = "RELEASE_NOTES", length = 3000, nullable = false)
     private String releaseNotes;
+
+    @Transient
+    private List<Log> logs;
 
     public String getNo() {
         return no;
@@ -129,4 +133,11 @@ public class CardBatch extends BaseBusEntity {
         this.cardDesign = cardDesign;
     }
 
+    public List<Log> getLogs() {
+        return logs;
+    }
+
+    public void setLogs(List<Log> logs) {
+        this.logs = logs;
+    }
 }

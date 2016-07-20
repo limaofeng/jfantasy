@@ -1,7 +1,9 @@
 package org.jfantasy.member.dao;
 
-/**
- * Created by limaofeng on 16/7/19.
- */
-public class InviteDao {
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.member.bean.Invite;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public class InviteDao extends HibernateDao<Invite, Long> {
 }

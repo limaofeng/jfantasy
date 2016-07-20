@@ -12,6 +12,7 @@ import org.jfantasy.pay.bean.CardDesign;
 import org.jfantasy.pay.bean.CardType;
 import org.jfantasy.pay.bean.enums.CardBatchStatus;
 import org.jfantasy.pay.bean.enums.CardStatus;
+import org.jfantasy.pay.bean.enums.OwnerType;
 import org.jfantasy.pay.bean.enums.Usage;
 import org.jfantasy.pay.dao.CardBatchDao;
 import org.jfantasy.pay.dao.CardDao;
@@ -33,13 +34,15 @@ public class CardBatchService {
     private CardBatchDao cardBatchDao;
     @Autowired
     private CardDao cardDao;
+    @Autowired
+    private LogService logService;
 
     public Pager<CardBatch> findPager(Pager<CardBatch> pager, List<PropertyFilter> filters) {
-        return cardBatchDao.findPager(pager, filters);
+        return loadLogs(cardBatchDao.findPager(pager, filters));
     }
 
     public CardBatch get(String id) {
-        return this.cardBatchDao.get(id);
+        return loadLogs(this.cardBatchDao.get(id));
     }
 
     @Transactional
@@ -88,6 +91,8 @@ public class CardBatchService {
             cards.add(this.cardDao.save(card));
         }
         batch.setStatus(CardBatchStatus.make);
+        //保存操作记录
+        this.logService.log(batch, notes);
         return cards;
     }
 
@@ -101,9 +106,12 @@ public class CardBatchService {
             card.setStatus(CardStatus.activated);
         }
         batch.setStatus(CardBatchStatus.released);
+        //保存操作记录
+        this.logService.log(batch, notes);
         return this.cardBatchDao.save(batch);
     }
 
+    @Transactional
     public CardBatch cancel(String id, String notes) {
         CardBatch batch = this.cardBatchDao.get(id);
         if (batch.getStatus() == CardBatchStatus.released) {
@@ -113,6 +121,26 @@ public class CardBatchService {
             card.setStatus(CardStatus.invalid);
         }
         batch.setStatus(CardBatchStatus.canceled);
+        //保存操作记录
+        this.logService.log(batch, notes);
         return this.cardBatchDao.save(batch);
     }
+
+    private Pager<CardBatch> loadLogs(Pager<CardBatch> pager) {
+        loadLogs(pager.getPageItems());
+        return pager;
+    }
+
+    private List<CardBatch> loadLogs(List<CardBatch> designs) {
+        for (CardBatch design : designs) {
+            this.loadLogs(design);
+        }
+        return designs;
+    }
+
+    private CardBatch loadLogs(CardBatch batch) {
+        batch.setLogs(this.logService.logs(OwnerType.card_batch, batch.getNo()));
+        return batch;
+    }
+
 }

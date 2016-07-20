@@ -5,7 +5,9 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardBatch;
+import org.jfantasy.pay.bean.enums.OwnerType;
 import org.jfantasy.pay.rest.CardBatchController;
+import org.jfantasy.pay.rest.LogController;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import java.util.ArrayList;
@@ -28,6 +30,7 @@ public class CardBatchResourceAssembler extends ResourceAssemblerSupport<CardBat
     public ResultResourceSupport toResource(CardBatch entity) {
         ResultResourceSupport resource = createResourceWithId(entity.getNo(), entity);
         resource.add(linkTo(methodOn(CardBatchController.class).cards(entity.getNo(), new Pager<Card>(), new ArrayList<PropertyFilter>())).withRel("cards"));
+        resource.add(linkTo(methodOn(LogController.class).search(OwnerType.card_batch, entity.getNo())).withRel("logs"));
         return resource;
     }
 

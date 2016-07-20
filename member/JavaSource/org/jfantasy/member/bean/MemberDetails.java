@@ -254,4 +254,8 @@ public class MemberDetails implements Serializable {
         return this.properties.getProperty(key);
     }
 
+    public void setProperties(Properties properties) {
+        this.properties = properties;
+    }
+
 }

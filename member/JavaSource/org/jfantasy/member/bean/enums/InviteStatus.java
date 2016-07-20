@@ -1,7 +1,12 @@
 package org.jfantasy.member.bean.enums;
 
-/**
- * Created by limaofeng on 16/7/19.
- */
-public class InviteStatus {
+public enum InviteStatus {
+    /**
+     * 未激活
+     */
+    unactivated,
+    /**
+     * 已激活
+     */
+    activated,
 }

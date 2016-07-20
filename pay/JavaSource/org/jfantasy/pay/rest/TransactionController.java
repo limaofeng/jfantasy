@@ -6,7 +6,6 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
-import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.spring.mvc.error.RestException;
@@ -14,7 +13,6 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.oauth.userdetails.OAuthUserDetails;
-import org.jfantasy.pay.bean.Log;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Transaction;
@@ -45,8 +43,6 @@ public class TransactionController {
     private ProjectService projectService;
     @Autowired
     private PayConfigService configService;
-    @Autowired
-    private LogService logService;
 
     @ApiOperation("查询交易记录")
     @RequestMapping(method = RequestMethod.GET)
@@ -71,14 +67,6 @@ public class TransactionController {
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String sn) {
         return transform(get(sn));
-    }
-
-    @ApiOperation("获取交易日志")
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}/logs")
-    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Log.class, name = {"id"}))
-    @ResponseBody
-    public List<Log> logs(@PathVariable("id") String sn){
-        return logService.logs(Transaction.class,sn);
     }
 
     @ApiOperation("获取支付表单进行支付")

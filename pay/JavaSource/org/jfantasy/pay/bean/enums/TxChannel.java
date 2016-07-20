@@ -9,7 +9,7 @@ public enum TxChannel {
      */
     offline,
     /**
-     * 内部转账
+     * 内部交易
      */
     internal,
     /**

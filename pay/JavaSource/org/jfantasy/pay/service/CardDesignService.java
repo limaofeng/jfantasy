@@ -5,6 +5,7 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.pay.bean.CardDesign;
 import org.jfantasy.pay.bean.enums.CardDesignStatus;
+import org.jfantasy.pay.bean.enums.OwnerType;
 import org.jfantasy.pay.dao.CardDesignDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -93,7 +94,7 @@ public class CardDesignService {
     }
 
     private CardDesign loadLogs(CardDesign design) {
-        design.setLogs(this.logService.logs(CardDesign.class, design.getKey()));
+        design.setLogs(this.logService.logs(OwnerType.card_design, design.getKey()));
         return design;
     }
 

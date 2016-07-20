@@ -8,6 +8,7 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Account;
 import org.jfantasy.pay.bean.Point;
 import org.jfantasy.pay.bean.Transaction;
+import org.jfantasy.pay.rest.models.ActivateForm;
 import org.jfantasy.pay.rest.models.assembler.AccountResourceAssembler;
 import org.jfantasy.pay.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +42,14 @@ public class AccountController {
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String id) {
         return assembler.toResource(get(id));
+    }
+
+
+    @ApiOperation("激活账户")
+    @RequestMapping(method = RequestMethod.GET, value = "/{id}/activate")
+    @ResponseBody
+    public ResultResourceSupport activate(@PathVariable("id") String sn, @RequestBody ActivateForm form) {
+        return assembler.toResource(this.accountService.activate(sn, form.getPassword()));
     }
 
     @ApiOperation("账户交易详情")

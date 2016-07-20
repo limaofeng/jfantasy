@@ -7,10 +7,12 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.member.bean.Card;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Wallet;
 import org.jfantasy.member.bean.WalletBill;
 import org.jfantasy.member.rest.models.assembler.WalletResourceAssembler;
+import org.jfantasy.member.service.CardService;
 import org.jfantasy.member.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,6 +31,8 @@ public class WalletController {
 
     @Autowired
     private WalletService walletService;
+    @Autowired
+    private CardService cardService;
     @Autowired
     private WalletBillController walletBillController;
 
@@ -50,6 +54,13 @@ public class WalletController {
     public Pager<ResultResourceSupport> bills(@PathVariable("walletid") String walletId, Pager<WalletBill> pager, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQL_wallet.id", walletId));
         return walletBillController.search(pager, filters);
+    }
+
+    @ApiOperation(value = "查询钱包中的卡片", notes = "账单列表")
+    @RequestMapping(value = "/{walletid}/cards", method = RequestMethod.GET)
+    public Pager<Card> cards(@PathVariable("walletid") String walletId, Pager<Card> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQL_wallet.id", walletId));
+        return cardService.findPager(pager, filters);
     }
 
 }

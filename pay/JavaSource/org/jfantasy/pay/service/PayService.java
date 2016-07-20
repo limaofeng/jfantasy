@@ -6,10 +6,7 @@ import org.hibernate.Hibernate;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.jfantasy.pay.bean.Order;
-import org.jfantasy.pay.bean.PayConfig;
-import org.jfantasy.pay.bean.Payment;
-import org.jfantasy.pay.bean.Refund;
+import org.jfantasy.pay.bean.*;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.event.PayNotifyEvent;
 import org.jfantasy.pay.event.PayRefundNotifyEvent;
@@ -244,6 +241,24 @@ public class PayService {
 
         //返回订单信息
         return result != null ? result : order;
+    }
+
+    @Autowired
+    private TransactionService transactionService;
+
+    /**
+     * 获取账户信息
+     *
+     * @param account  String
+     * @param password String
+     * @return
+     */
+    public Account load(String account, String password) {
+        return null;
+    }
+
+    public Transaction loadTransaction(String trx_no) {
+        return null;
     }
 
 }

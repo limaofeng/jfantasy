@@ -5,8 +5,10 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardDesign;
+import org.jfantasy.pay.bean.enums.OwnerType;
 import org.jfantasy.pay.rest.CardBatchController;
 import org.jfantasy.pay.rest.CardDesignController;
+import org.jfantasy.pay.rest.LogController;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import java.util.ArrayList;
@@ -29,6 +31,7 @@ public class CardDesignResourceAssembler extends ResourceAssemblerSupport<CardDe
     public ResultResourceSupport toResource(CardDesign entity) {
         ResultResourceSupport resource = createResourceWithId(entity.getKey(), entity);
         resource.add(linkTo(methodOn(CardBatchController.class).cards(entity.getKey(), new Pager<Card>(), new ArrayList<PropertyFilter>())).withRel("cards"));
+        resource.add(linkTo(methodOn(LogController.class).search(OwnerType.card_design, entity.getKey())).withRel("logs"));
         return resource;
     }
 

@@ -8,6 +8,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.log4j.MDC;
 import org.jfantasy.pay.bean.*;
+import org.jfantasy.pay.bean.enums.PayMethod;
 import org.jfantasy.pay.error.PayException;
 
 import java.util.LinkedHashMap;
@@ -24,6 +25,7 @@ public abstract class PayProductSupport implements PayProduct {
 
     protected String id;//支付产品ID
     protected String name;// 支付产品名称
+    protected PayMethod payMethod;
     protected String bargainorIdName;// 商户ID参数名称
     protected String summary;//产品摘要
     protected String description;// 支付产品描述
@@ -135,6 +137,14 @@ public abstract class PayProductSupport implements PayProduct {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public PayMethod getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(PayMethod payMethod) {
+        this.payMethod = payMethod;
     }
 
     @JsonAnyGetter

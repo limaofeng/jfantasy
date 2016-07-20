@@ -25,8 +25,6 @@ public class TransactionService {
     private TransactionDao transactionDao;
     @Autowired
     private ProjectDao projectDao;
-    @Autowired
-    private PayService payService;
 
     /**
      * 第三方支付业务
@@ -65,17 +63,7 @@ public class TransactionService {
      */
     @Transactional
     public Transaction transfer(String from, String to, BigDecimal amount, String notes) {
-        Transaction transaction = new Transaction();
-        transaction.setFrom(from);
-        transaction.setTo(to);
-        transaction.setAmount(amount);
-        transaction.setNotes(notes);
-        transaction.setStatus(TxStatus.unprocessed);
-        transaction.setChannel(TxChannel.internal);
-        transaction.setProject(projectDao.get("transfer"));
-        //保存交易日志
-        transaction = this.transactionDao.save(transaction);
-        return transaction;
+        return null;
     }
 
     public Transaction get(String sn) {

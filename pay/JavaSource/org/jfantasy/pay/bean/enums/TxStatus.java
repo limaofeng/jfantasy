@@ -19,5 +19,5 @@ public enum TxStatus {
     /**
      * 关闭
      */
-    close;
+    close
 }

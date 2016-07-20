@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Card;
@@ -33,6 +34,9 @@ public class CardBatchController {
     private CardController cardController;
 
     @JsonResultFilter(
+            ignore = {
+                    @IgnoreProperty(pojo = CardBatch.class, name = {"logs"})
+            },
             allow = {
                     @AllowProperty(pojo = CardType.class, name = {"key", "name"}),
                     @AllowProperty(pojo = CardDesign.class, name = {"key", "name", "amount", "extras"})
@@ -52,6 +56,11 @@ public class CardBatchController {
         return cardController.search(pager, filters);
     }
 
+    @JsonResultFilter(
+            ignore = {
+                    @IgnoreProperty(pojo = CardDesign.class, name = {"logs"})
+            }
+    )
     @ApiOperation("批次详情")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody

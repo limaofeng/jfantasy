@@ -1,5 +1,6 @@
 package org.jfantasy.pay.rest;
 
+import org.apache.commons.collections.map.HashedMap;
 import org.jfantasy.framework.httpclient.HttpClientUtil;
 import org.jfantasy.framework.httpclient.Response;
 import org.jfantasy.framework.jackson.JSON;
@@ -69,7 +70,7 @@ public class AlipayOpenController {
 
         Response response = HttpClientUtil.doPost(url,params);
 
-        Map<String,?> result = JSON.deserialize(response.getBody());
+        Map<String,?> result = JSON.deserialize(response.getBody(), HashedMap.class);
 
         System.out.println(result);
 

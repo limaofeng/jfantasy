@@ -1,7 +1,15 @@
 package org.jfantasy.pay.bean.enums;
 
 /**
- * Created by limaofeng on 16/7/19.
+ * 账户涨停
  */
-public class AccountStatus {
+public enum AccountStatus {
+    /**
+     * 未激活
+     */
+    unactivated,
+    /**
+     * 已激活
+     */
+    activated
 }

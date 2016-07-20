@@ -5,6 +5,7 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.hibernate.criterion.Criterion;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.dao.PayConfigDao;
+import org.jfantasy.pay.product.PayProductSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,6 +19,8 @@ public class PayConfigService {
 
     @Autowired
     private PayConfigDao payConfigDao;
+    @Autowired
+    private PayProductConfiguration payProductConfiguration;
 
     /**
      * findPager
@@ -49,7 +52,14 @@ public class PayConfigService {
      * @return {paymentConfig}
      */
     public PayConfig save(PayConfig config) {
+        PayProductSupport payProduct = payProductConfiguration.loadPayProduct(config.getPayProductId());
+        config.setPayMethod(payProduct.getPayMethod());
         return this.payConfigDao.save(config);
+    }
+
+    public PayConfig update(PayConfig config) {
+        this.payConfigDao.update(config);
+        return config;
     }
 
     /**

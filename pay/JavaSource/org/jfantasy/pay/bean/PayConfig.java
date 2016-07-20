@@ -8,6 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
+import org.jfantasy.pay.bean.enums.PayMethod;
 import org.jfantasy.pay.product.sign.Base64;
 
 import javax.persistence.*;
@@ -54,6 +55,12 @@ public class PayConfig extends BaseBusEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_CONFIG_TYPE", nullable = false, updatable = false)
     private PayConfigType payConfigType;
+    /**
+     * 支付方式
+     */
+    @Enumerated(EnumType.STRING)
+    @Column(name = "PAY_METHOD", nullable = false, updatable = false)
+    private PayMethod payMethod;
     /**
      * 支付方式名称
      */
@@ -283,6 +290,14 @@ public class PayConfig extends BaseBusEntity {
             return (T) Base64.decode(value.toString());
         }
         return tClass.cast(value);
+    }
+
+    public PayMethod getPayMethod() {
+        return payMethod;
+    }
+
+    public void setPayMethod(PayMethod payMethod) {
+        this.payMethod = payMethod;
     }
 
     public void setProperties(Properties properties) {

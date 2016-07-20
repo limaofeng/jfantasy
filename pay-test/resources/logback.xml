@@ -44,7 +44,7 @@
     <logger name="org.hibernate.SQL" level="DEBUG" />
     <logger name="org.hibernate.engine.QueryParameters" level="ERROR" />
     <logger name="org.hibernate.engine.query.HQLQueryPlan" level="ERROR" />
-    <logger name="org.jfantasy.framework" level="DEBUG"/>
+    <logger name="org.org.jfantasy.framework" level="DEBUG"/>
     <logger name="springfox.documentation.spring" level="ERROR"/>
 
     <root level="ERROR">

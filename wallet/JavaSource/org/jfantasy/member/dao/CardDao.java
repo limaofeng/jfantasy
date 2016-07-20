@@ -1,7 +1,9 @@
 package org.jfantasy.member.dao;
 
-/**
- * Created by limaofeng on 16/7/19.
- */
-public class CardDao {
+import org.jfantasy.framework.dao.hibernate.HibernateDao;
+import org.jfantasy.member.bean.Card;
+import org.springframework.stereotype.Repository;
+
+@Repository("mem.cardDao")
+public class CardDao extends HibernateDao<Card,Long> {
 }
