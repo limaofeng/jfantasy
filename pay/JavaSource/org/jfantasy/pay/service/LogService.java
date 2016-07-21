@@ -52,7 +52,7 @@ public class LogService {
     }
 
     public List<Log> logs(OwnerType type, String sn) {
-        return logDao.find(Restrictions.eq("ownerType", OwnerType.transaction), Restrictions.eq("ownerId", sn));
+        return logDao.find(Restrictions.eq("ownerType", type), Restrictions.eq("ownerId", sn));
     }
 
 }
