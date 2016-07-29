@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Entity(name = "wxUserInfo")
 @IdClass(UserKey.class)
 @Table(name = "WX_USER_INFO")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class User extends BaseBusEntity {
 
     public User() {

@@ -16,7 +16,7 @@ import javax.persistence.*;
 @ApiModel("微信公众账号")
 @Entity
 @Table(name = "WX_ACCOUNT")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Account extends BaseBusEntity implements AccountDetails {
 
