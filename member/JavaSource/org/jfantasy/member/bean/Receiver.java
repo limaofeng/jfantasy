@@ -75,7 +75,7 @@ public class Receiver extends BaseBusEntity {
      */
     @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
+    @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_MEM_RECEIVER_MEMBER"))
     private Member member;
 
     public Long getId() {

@@ -4,8 +4,11 @@ import org.hibernate.criterion.Criterion;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.LoginException;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.error.PasswordException;
+import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpCst;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
@@ -44,6 +47,7 @@ public class MemberService {
     private ApplicationContext applicationContext;
     @Autowired
     private PasswordEncoder passwordEncoder;
+
     /**
      * 列表查询
      *
@@ -86,24 +90,28 @@ public class MemberService {
      * @return Member
      */
     public Member save(Member member) {
-        if (member.getDetails() == null) {// 初始化用户信息对象
-            member.setDetails(new MemberDetails());
+        if (Member.MEMBER_TYPE_MEMBER.equals(member.getType())) {
+            MemberDetails details = ObjectUtil.defaultValue(member.getDetails(),new MemberDetails());
+            // 设置默认属性
+            details.setMailValid(false);
+            details.setMobileValid(false);
+            details.setLevel(0L);
+            // 如果用email注册
+            if (RegexpUtil.isMatch(member.getUsername(), RegexpCst.VALIDATOR_EMAIL)) {
+                details.setEmail(member.getUsername());
+            }
+            // 如果用手机注册
+            if (RegexpUtil.isMatch(member.getUsername(), RegexpCst.VALIDATOR_MOBILE)) {
+                details.setMobile(member.getUsername());
+            }
+            member.setDetails(details);
         }
-        // 设置默认属性
-        member.getDetails().setMailValid(false);
-        member.getDetails().setMobileValid(false);
+
         // 默认昵称与用户名一致
         if (StringUtil.isBlank(member.getNickName())) {
             member.setNickName(member.getUsername());
         }
-        // 如果用email注册
-        if (RegexpUtil.isMatch(member.getUsername(), RegexpCst.VALIDATOR_EMAIL)) {
-            member.getDetails().setEmail(member.getUsername());
-        }
-        // 如果用手机注册
-        if (RegexpUtil.isMatch(member.getUsername(), RegexpCst.VALIDATOR_MOBILE)) {
-            member.getDetails().setMobile(member.getUsername());
-        }
+
         // 初始化用户权限
         List<Role> roles = new ArrayList<Role>();
         Role defaultRole = roleService.get(DEFAULT_ROLE_CODE);
@@ -131,22 +139,30 @@ public class MemberService {
         return this.memberDao.findUnique(criterions);
     }
 
+    public Member changePassword(Long id, String oldPassword, String newPassword) {
+        Member member = this.memberDao.get(id);
+        if (member == null) {
+            throw new NotFoundException("用户不存在");
+        }
+        if (!member.isEnabled()) {
+            throw new ValidationException(201.1f, "用户已被禁用");
+        }
+        if (!passwordEncoder.matches(member.getPassword(), oldPassword)) {
+            throw new ValidationException(201.2f, "提供的旧密码不正确");
+        }
+        member.setPassword(passwordEncoder.encode(newPassword));
+        this.memberDao.update(member);
+        return member;
+    }
+
     /**
      * 保存对象
      *
      * @param member member
      * @return Member
      */
-    public Member update(Member member) {
-        if (StringUtil.isNotBlank(member.getPassword()) && !"******".equals(member.getPassword())) {
-            Member m = this.memberDao.get(member.getId());
-            if (!passwordEncoder.matches(m.getPassword(), member.getPassword())) {
-                member.setPassword(passwordEncoder.encode(member.getPassword()));
-            }
-        } else {
-            member.setPassword(null);
-        }
-        return this.memberDao.save(member);
+    public Member update(Member member, boolean patch) {
+        return this.memberDao.save(member, patch);
     }
 
     /**

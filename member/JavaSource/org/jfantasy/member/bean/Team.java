@@ -3,6 +3,7 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
@@ -25,6 +26,11 @@ public class Team extends BaseBusEntity {
     @Column(name = "CODE", nullable = false)
     private String key;
     /**
+     * 团队类型
+     */
+    @Column(name = "type", nullable = false)
+    private String type;
+    /**
      * 名称
      */
     @Column(name = "NAME", nullable = false, length = 20)
@@ -46,6 +52,26 @@ public class Team extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
+    /**
+     * 目标Id
+     */
+    @JsonProperty("target_id")
+    @Column(name = "TARGET_ID", length = 32)
+    private String targetId;
+    /**
+     * 目标类型
+     */
+    @JsonProperty("target_type")
+    @Column(name = "TARGET_TYPE", length = 10)
+    private String targetType;
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     public Team(String id) {
         this();
@@ -107,4 +133,21 @@ public class Team extends BaseBusEntity {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
 }

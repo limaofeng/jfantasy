@@ -1,8 +1,7 @@
 package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.ser.std.NullSerializer;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -29,11 +28,14 @@ import java.util.*;
 @ApiModel("会员信息")
 @Entity
 @Table(name = "MEM_MEMBER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "roles", "authorities"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "roles", "authorities", "details"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity {
 
-    @Null(message = "创建用户时,请不要传入ID", groups = {POST.class})
+    public static final String MEMBER_TYPE_MEMBER = "member";
+    public static final String MEMBER_TYPE_TEAM = "team";
+
+    @Null(groups = {POST.class})
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
@@ -42,21 +44,23 @@ public class Member extends BaseBusEntity {
     /**
      * 用户类型
      */
-    @Column(name = "MEMBER_TYPE", length = 20, nullable = false)
-    private String memberType;
+    @NotNull(groups = {POST.class})
+    @Column(name = "MEMBER_TYPE", length = 20, nullable = false, updatable = false)
+    private String type;
     /**
      * 用户登录名称
      */
-    @NotNull(message = "登录名称不能为空", groups = {POST.class, PUT.class})
-    @Length(min = 8, max = 20, message = "登录名称长度不合法,限制长度为 8-20 个字符", groups = {POST.class, PUT.class})
+    @NotNull(groups = {POST.class, PUT.class})
+    @Length(min = 8, max = 20, groups = {POST.class, PUT.class})
     @ApiModelProperty("登录名称")
     @Column(name = "USERNAME", length = 20, nullable = false, unique = true)
     private String username;
     /**
      * 登录密码
      */
+    @NotNull(groups = {POST.class})
     @ApiModelProperty("登录密码")
-    @JsonSerialize(using = NullSerializer.class)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "PASSWORD", length = 20, nullable = false)
     private String password;
     /**
@@ -75,30 +79,35 @@ public class Member extends BaseBusEntity {
      * 未过期
      */
     @ApiModelProperty("未过期")
+    @JsonProperty("non_expired")
     @Column(name = "NON_EXPIRED")
     private boolean accountNonExpired;
     /**
      * 未锁定
      */
     @ApiModelProperty("未锁定")
+    @JsonProperty("non_locked")
     @Column(name = "NON_LOCKED")
     private boolean accountNonLocked;
     /**
      * 未失效
      */
     @ApiModelProperty("未失效")
+    @JsonProperty("credentials_non_expired")
     @Column(name = "CREDENTIALS_NON_EXPIRED")
     private boolean credentialsNonExpired;
     /**
      * 锁定时间
      */
     @ApiModelProperty("锁定时间")
+    @JsonProperty("lock_time")
     @Column(name = "LOCK_TIME")
     private Date lockTime;
     /**
      * 最后登录时间
      */
     @ApiModelProperty("最后登录时间")
+    @JsonProperty("last_login_time")
     @Column(name = "LAST_LOGIN_TIME")
     private Date lastLoginTime;
     /**
@@ -122,6 +131,18 @@ public class Member extends BaseBusEntity {
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     private MemberDetails details;
+    /**
+     * 目标Id
+     */
+    @Column(name = "TARGET_ID", length = 20)
+    @JsonProperty("target_id")
+    private String targetId;
+    /**
+     * 目标类型
+     */
+    @Column(name = "TARGET_TYPE", length = 10)
+    @JsonProperty("target_type")
+    private String targetType;
     @Transient
     @ApiModelProperty(value = "授权码", notes = "用于 oauth 授权时使用,使用时限 10 分钟")
     private String code;
@@ -269,12 +290,28 @@ public class Member extends BaseBusEntity {
         this.code = code;
     }
 
-    public String getMemberType() {
-        return memberType;
+    public String getType() {
+        return type;
     }
 
-    public void setMemberType(String memberType) {
-        this.memberType = memberType;
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
     }
 
     @Override
