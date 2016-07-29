@@ -32,7 +32,7 @@ import java.util.*;
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity {
 
-    public static final String MEMBER_TYPE_MEMBER = "member";
+    public static final String MEMBER_TYPE_PERSONAL = "personal";
     public static final String MEMBER_TYPE_TEAM = "team";
 
     @Null(groups = {POST.class})

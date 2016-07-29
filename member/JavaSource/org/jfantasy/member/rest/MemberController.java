@@ -67,7 +67,7 @@ public class MemberController {
     @ResponseBody
     public ResultResourceSupport profile(HttpServletResponse response, @PathVariable("id") Long id) {
         Member member = get(id);
-        if (Member.MEMBER_TYPE_MEMBER.equals(member.getType())) {
+        if (Member.MEMBER_TYPE_PERSONAL.equals(member.getType())) {
             return profileAssembler.toResource(member.getDetails());
         }
         response.setStatus(307);

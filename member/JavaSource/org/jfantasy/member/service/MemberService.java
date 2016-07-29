@@ -90,7 +90,7 @@ public class MemberService {
      * @return Member
      */
     public Member save(Member member) {
-        if (Member.MEMBER_TYPE_MEMBER.equals(member.getType())) {
+        if (Member.MEMBER_TYPE_PERSONAL.equals(member.getType())) {
             MemberDetails details = ObjectUtil.defaultValue(member.getDetails(),new MemberDetails());
             // 设置默认属性
             details.setMailValid(false);
