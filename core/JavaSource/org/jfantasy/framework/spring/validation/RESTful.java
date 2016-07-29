@@ -13,4 +13,8 @@ public interface RESTful {
 
     interface GET {
     }
+
+    interface PATCH{
+    }
+
 }

@@ -20,6 +20,10 @@ public class BeanUtil {
         return ClassUtil.getValue(target, fieldName);
     }
 
+    public static <T> T copyProperties(T dest, Object orig, PropertyFilter filter) {
+        return null;
+    }
+
     public static <T> T copyProperties(T dest, Object orig, String... excludeProperties) {
         if (dest == null || orig == null) {
             return dest;
@@ -93,4 +97,25 @@ public class BeanUtil {
         }
         return null;
     }
+
+    public PropertyFilter exclude(String... properties) {
+        return null;
+    }
+
+    public PropertyFilter include(String... properties) {
+        return null;
+    }
+
+    private interface PropertyFilter {
+
+    }
+
+    private class IgnorePropertyFilter implements PropertyFilter {
+
+    }
+
+    private class AllowPropertyFilter implements PropertyFilter {
+
+    }
+
 }

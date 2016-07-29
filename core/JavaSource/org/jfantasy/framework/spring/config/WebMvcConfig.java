@@ -7,6 +7,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import org.hibernate.validator.HibernateValidator;
@@ -111,12 +112,14 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
 
     @Bean
     public ObjectMapper objectMapper() {
-        ObjectMapper objectMapper = applicationContext.getBean("_halObjectMapper",ObjectMapper.class);
+        ObjectMapper objectMapper = applicationContext.getBean("_halObjectMapper", ObjectMapper.class);
 
-        if(objectMapper == null){
+        if (objectMapper == null) {
             objectMapper = JSON.getObjectMapper();
-        }else {
-            JSON.register(JSON.DEFAULT_KEY,objectMapper
+        } else {
+            //TODO 与 JSON 中代码重复
+            JSON.register(JSON.DEFAULT_KEY, objectMapper
+                    .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
                     .setSerializationInclusion(JsonInclude.Include.NON_NULL)//为空的字段不序列化
                     .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)// 当找不到对应的序列化器时 忽略此字段
                     .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)// 允许非空字段
@@ -183,7 +186,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")
-                .allowedMethods("GET", "POST", "HEAD", "PUT", "DELETE", "OPTIONS")
+                .allowedMethods("GET", "POST", "HEAD", "PATCH", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("Accept", "Origin", "X-Requested-With", "Content-Type", "Last-Modified", "X-Page-Fields", "X-Result-Fields", "X-Expend-Fields")
                 .exposedHeaders("Set-Cookie")
                 .allowCredentials(true).maxAge(3600);

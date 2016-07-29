@@ -7,6 +7,7 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.ognl.OgnlUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
 import org.jfantasy.framework.util.web.context.ActionContext;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -399,6 +400,14 @@ public class WebUtil {
             parameter.put(entry.getKey(), entry.getValue()[0]);
         }
         return parameter;
+    }
+
+    public static boolean has(HttpServletRequest request, RequestMethod method) {
+        return hasMethod(request, method.name());
+    }
+
+    public static boolean hasMethod(HttpServletRequest request, String method) {
+        return method.equalsIgnoreCase(request.getMethod());
     }
 
     public static class UserAgent {

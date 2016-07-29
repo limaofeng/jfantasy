@@ -3,11 +3,18 @@ package org.jfantasy.framework.spring.mvc.http;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ErrorResponse {
-    private String message;
-    private List<Error> fieldErrors;
+class ErrorResponse {
 
-    public ErrorResponse(String message) {
+    private float code;
+    private String message;
+
+    private List<Error> errors;
+
+    ErrorResponse(){
+    }
+
+    ErrorResponse(float code, String message) {
+        this.code = code;
         this.message = message;
     }
 
@@ -15,15 +22,27 @@ public class ErrorResponse {
         return message;
     }
 
-    public void addFieldError(String name, String message) {
-        if (this.fieldErrors == null) {
-            this.fieldErrors = new ArrayList<Error>();
+    void addError(String name, String message) {
+        if (this.errors == null) {
+            this.errors = new ArrayList<>();
         }
-        this.fieldErrors.add(new Error(name, message));
+        this.errors.add(new Error(name, message));
     }
 
-    public List<Error> getFieldErrors() {
-        return fieldErrors;
+    public float getCode() {
+        return code;
+    }
+
+    public List<Error> getErrors() {
+        return errors;
+    }
+
+    public void setCode(float code) {
+        this.code = code;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

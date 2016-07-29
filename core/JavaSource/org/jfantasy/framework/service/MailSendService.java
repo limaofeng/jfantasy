@@ -16,6 +16,7 @@ import javax.mail.internet.MimeUtility;
 import javax.mail.util.ByteArrayDataSource;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -140,9 +141,7 @@ public class MailSendService implements InitializingBean {
             email.setSubject(title);
             email.setMsg(HandlebarsTemplateUtils.processTemplateIntoString(template,model));
             send(email);
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-        } catch (EmailException e) {
+        }  catch (EmailException e) {
             LOG.error(e.getMessage(), e);
         }
     }
@@ -177,8 +176,6 @@ public class MailSendService implements InitializingBean {
             email.setSubject(title);
             email.setContent(HandlebarsTemplateUtils.processTemplateIntoString(template, model), EmailConstants.TEXT_HTML);
             send(email);
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
         } catch (EmailException e) {
             LOG.error(e.getMessage(), e);
         }
@@ -205,8 +202,6 @@ public class MailSendService implements InitializingBean {
                 }
             }
             send(email);
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
         } catch (EmailException e) {
             LOG.error(e.getMessage(), e);
         }
@@ -239,6 +234,8 @@ public class MailSendService implements InitializingBean {
             }
             send(email);
         } catch (EmailException e) {
+            LOG.error(e.getMessage(), e);
+        } catch (UnsupportedEncodingException e) {
             LOG.error(e.getMessage(), e);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);

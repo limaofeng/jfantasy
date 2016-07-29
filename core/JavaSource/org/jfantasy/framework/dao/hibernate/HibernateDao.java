@@ -118,15 +118,34 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      * 更新对象
      *
      * @param entity 要更新的对象
+     * @param patch  是否为补丁模式
+     * @return T
      */
-    public void update(T entity) {
+    public T update(T entity, boolean patch) {
+        if (patch) {
+            Assert.notNull(entity, LOG_MESSAGE_NULL);
+            getSession().saveOrUpdate(entity = (mergeEntity(entity)));//NOSONAR
+            this.LOG.debug("save entity: " + entity);
+            return entity;
+        }
+        return this.update(entity);
+    }
+
+    /**
+     * 更新对象
+     *
+     * @param entity 要更新的对象
+     */
+    public T update(T entity) {
         Assert.notNull(entity, LOG_MESSAGE_NULL);
         try {
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
-            LOG.error(e.getMessage(), e);
+            LOG.debug(e.getMessage());
+            entity = this.merge(entity);
         }
         this.LOG.debug("update entity: " + entity);
+        return entity;
     }
 
     /**
@@ -1017,6 +1036,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         }
     }
 
+    @SuppressWarnings("unchecked")
     protected Criterion buildPropertyFilterCriterion(String propertyName, Object propertyValue, PropertyFilter.MatchType matchType) {
         Assert.hasText(propertyName, "propertyName不能为空");
         Criterion criterion = null;
@@ -1089,6 +1109,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         return countCriteriaResult(createCriteria(criterions));
     }
 
+    @SuppressWarnings("unchecked")
     public static Criterion sqlRestriction(Criterion criterion, String propertyNameSql) {
         if (criterion instanceof SimpleExpression) {
             Object value = ClassUtil.getValue(criterion, "value");
@@ -1145,5 +1166,41 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         c.setResultTransformer(new AliasToBeanResultTransformer(resultClass));
         return c.list();
     }
+
+    public Map findUnique(Criterion[] criterions, Projection[] projections) {
+        Criteria c = createCriteria(criterions);
+        ProjectionList projectionList = Projections.projectionList();
+        for (Projection projection : projections) {
+            projectionList.add(projection);
+        }
+        c.setProjection(projectionList);
+        c.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        return (Map) c.uniqueResult();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <C> List<C> find(Criterion[] criterions, Projection[] projections, Class<C> resultClass) {
+        Criteria c = createCriteria(criterions);
+        ProjectionList projectionList = Projections.projectionList();
+        for (Projection projection : projections) {
+            projectionList.add(projection);
+        }
+        c.setProjection(projectionList);
+        c.setResultTransformer(new AliasToBeanResultTransformer(resultClass));
+        return c.list();
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<Map> find(Criterion[] criterions, Projection[] projections) {
+        Criteria c = createCriteria(criterions);
+        ProjectionList projectionList = Projections.projectionList();
+        for (Projection projection : projections) {
+            projectionList.add(projection);
+        }
+        c.setProjection(projectionList);
+        c.setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);
+        return c.list();
+    }
+
 
 }

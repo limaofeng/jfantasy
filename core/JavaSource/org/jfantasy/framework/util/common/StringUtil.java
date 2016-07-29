@@ -662,6 +662,14 @@ public abstract class StringUtil {
         return StringEscapeUtils.escapeCsv(result);
     }
 
+    public static String[] tokenizeToStringArray(String[] tokenizes) {
+        List<String> strs = new ArrayList<>(tokenizes.length);
+        for (String tokenize : tokenizes) {
+            strs.addAll(Arrays.asList(tokenizeToStringArray(tokenize)));
+        }
+        return strs.toArray(new String[strs.size()]);
+    }
+
     public static String[] tokenizeToStringArray(String tokenize) {
         return tokenizeToStringArray(tokenize, ",; \t\n");
     }

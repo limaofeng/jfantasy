@@ -768,7 +768,7 @@ public final class ImageUtil {
      * @param in 输入流
      * @return {String}
      */
-    public static String getImage(InputStream in) {// 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
+    public static String base64(InputStream in) {// 将图片文件转化为字节数组字符串，并对其进行Base64编码处理
         try {
             byte[] data = new byte[in.available()];// 读取图片字节数组
             in.read(data);

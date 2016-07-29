@@ -1,5 +1,6 @@
 package org.jfantasy.framework.httpclient;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -82,8 +83,8 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getBody() throws IOException {
-        return getBody(getContentEncoding());
+    public String text() throws IOException {
+        return text(getContentEncoding());
     }
 
     /**
@@ -93,8 +94,8 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getBody(boolean pretty) throws IOException {
-        return getBody(getContentEncoding(), pretty);
+    public String text(boolean pretty) throws IOException {
+        return text(getContentEncoding(), pretty);
     }
 
     /**
@@ -104,8 +105,8 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getBody(String charset) throws IOException {
-        return this.getBody(charset, false);
+    public String text(String charset) throws IOException {
+        return this.text(charset, false);
     }
 
     /**
@@ -116,7 +117,7 @@ public class Response {
      * @return text
      * @throws IOException
      */
-    public String getBody(String charset, boolean pretty) throws IOException {
+    public String text(String charset, boolean pretty) throws IOException {
         InputStream intemp = new ByteArrayInputStream(cache().toByteArray());
         BufferedReader reader = null;
         StringBuilder html = new StringBuilder();
@@ -137,8 +138,13 @@ public class Response {
         return html.toString();
     }
 
-    public <T> T getBody(Class<T> clazz) throws IOException {
-        return getBody(clazz, "utf-8");
+    public JsonNode json() throws IOException {
+        return JSON.deserialize(text("utf-8"));
+    }
+
+
+    public <T> T json(Class<T> clazz) throws IOException {
+        return json(clazz, "utf-8");
     }
 
     /**
@@ -150,8 +156,8 @@ public class Response {
      * @return T
      * @throws IOException
      */
-    public <T> T getBody(Class<T> clazz, String charset) throws IOException {
-        return JSON.deserialize(getBody(charset), clazz);
+    public <T> T json(Class<T> clazz, String charset) throws IOException {
+        return JSON.deserialize(text(charset), clazz);
     }
 
     /**
@@ -239,7 +245,7 @@ public class Response {
      * @throws IOException
      */
     public void write(OutputStream out) throws IOException {
-        InputStream intemp = getInputStream();
+        InputStream intemp = getBody();
         try {
             byte[] buf = new byte[1024];
             int num;
@@ -323,7 +329,7 @@ public class Response {
      * @return InputStream
      * @throws IOException
      */
-    public InputStream getInputStream() throws IOException {
+    public InputStream getBody() throws IOException {
         return this.out != null ? new ByteArrayInputStream(cache().toByteArray()) : this.in;
     }
 

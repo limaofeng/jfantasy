@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "TEST_ARTICLE")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "category", "content", "target"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "keywords", "category", "content", "target"})
 public class Article extends BaseBusEntity {
 
     @Id

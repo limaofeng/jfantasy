@@ -135,6 +135,10 @@ public class PropertyFilter {
         return this.propertyValue;
     }
 
+    public <T> T getPropertyValue(T o) {
+        return (T) getPropertyValue(o.getClass());
+    }
+
     public <T> T getPropertyValue(Class<T> clazz) {
         if (this.getPropertyType().isAssignableFrom(Enum.class)) {
             AtomicReference<Class> enumClass = new AtomicReference<Class>(clazz.isArray() ? clazz.getComponentType() : clazz);

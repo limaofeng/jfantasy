@@ -1,5 +1,6 @@
 package org.jfantasy.framework.dao;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @MappedSuperclass
 public abstract class BaseBusEntity implements Serializable {
+    public final static String BASE_FIELDS = "creator,create_time,modifier,modify_time";
     /**
      * 创建人
      */
@@ -20,16 +22,11 @@ public abstract class BaseBusEntity implements Serializable {
     /**
      * 创建时间
      */
+    @JsonProperty("create_time")
     @ApiModelProperty(hidden = true)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false, name = "CREATE_TIME")
     private Date createTime;
-    /**
-     * 创建人应用ID
-
-    @ApiModelProperty(hidden = true)
-    @Column(updatable = false, name = "APPID")
-    private Long appId;*/
     /**
      * 最后修改人
      */
@@ -39,6 +36,7 @@ public abstract class BaseBusEntity implements Serializable {
     /**
      * 最后修改时间
      */
+    @JsonProperty("modify_time")
     @ApiModelProperty(hidden = true)
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "MODIFY_TIME")

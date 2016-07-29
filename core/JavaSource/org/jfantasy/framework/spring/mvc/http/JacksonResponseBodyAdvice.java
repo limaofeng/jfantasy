@@ -59,10 +59,10 @@ public class JacksonResponseBodyAdvice implements ResponseBodyAdvice<Object> {
                     AllowProperty[] allowProperties = jsonResultFilter.allow();
                     IgnoreProperty[] ignoreProperties = jsonResultFilter.ignore();
                     for (AllowProperty property : allowProperties) {
-                        mixInHolder.addAllowPropertyNames(property.pojo(), property.name());
+                        mixInHolder.addAllowPropertyNames(property.pojo(), StringUtil.tokenizeToStringArray(property.name()));
                     }
                     for (IgnoreProperty property : ignoreProperties) {
-                        mixInHolder.addIgnorePropertyNames(property.pojo(), property.name());
+                        mixInHolder.addIgnorePropertyNames(property.pojo(), StringUtil.tokenizeToStringArray(property.name()));
                     }
                 }
                 responseBody.set(jsonResultFilter.value());

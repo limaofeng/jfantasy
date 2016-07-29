@@ -72,7 +72,7 @@ public class ThreadJacksonMixInHolder {
             this.objectMapper.addMixIn(mixInSource.getTarget(), mixInSource.getMixIn());
         }
         if (!this.ignorePropertyNames.containsKey(mixInSource.getFilterName())) {
-            this.ignorePropertyNames.put(mixInSource.getFilterName(), new HashSet<String>(Arrays.asList(names)));
+            this.ignorePropertyNames.put(mixInSource.getFilterName(), new HashSet<>(Arrays.asList(names)));
         } else {
             this.ignorePropertyNames.get(mixInSource.getFilterName()).addAll(Arrays.asList(names));
         }

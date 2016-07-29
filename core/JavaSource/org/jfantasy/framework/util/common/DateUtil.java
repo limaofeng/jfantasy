@@ -581,6 +581,35 @@ public class DateUtil {
         return dateDriver.getTime();
     }
 
+    public static int age(Date birthDay) {
+        Calendar cal = Calendar.getInstance();
+        if (cal.before(birthDay)) {
+            throw new IllegalArgumentException("出生时间大于当前时间!");
+        }
+        int yearNow = cal.get(Calendar.YEAR);
+        int monthNow = cal.get(Calendar.MONTH) + 1;//注意此处，如果不加1的话计算结果是错误的
+        int dayOfMonthNow = cal.get(Calendar.DAY_OF_MONTH);
+        cal.setTime(birthDay);
+
+        int yearBirth = cal.get(Calendar.YEAR);
+        int monthBirth = cal.get(Calendar.MONTH);
+        int dayOfMonthBirth = cal.get(Calendar.DAY_OF_MONTH);
+
+        int age = yearNow - yearBirth;
+        if (monthNow <= monthBirth) {
+            if (monthNow == monthBirth) {
+                //monthNow==monthBirth
+                if (dayOfMonthNow < dayOfMonthBirth) {
+                    age--;
+                }
+            } else {
+                //monthNow>monthBirth
+                age--;
+            }
+        }
+        return age;
+    }
+
     /**
      * 为DateUtil.now提供的时间启动接口
      *
@@ -589,9 +618,7 @@ public class DateUtil {
      * @since 2013-3-27 上午10:07:48
      */
     public static interface DateDriver {
-
         Date getTime();
-
     }
 
     /**
@@ -637,4 +664,34 @@ public class DateUtil {
         }
     }
 
+    public static Date set(Date date, FieldValue... details) {
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTime(date);
+        for (FieldValue d : details) {
+            gc.set(d.getField(), d.getValue());
+        }
+        return gc.getTime();
+    }
+
+    public static FieldValue fieldValue(int field, int value){
+        return new FieldValue(field,value);
+    }
+
+    public static class FieldValue {
+        private int field;
+        private int value;
+
+        public FieldValue(int field, int value) {
+            this.field = field;
+            this.value = value;
+        }
+
+        public int getField() {
+            return field;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
 }
