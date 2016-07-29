@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.archives.bean.enums.Sex;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.DateUtil;
 
@@ -47,12 +48,12 @@ public class Person extends BaseBusEntity {
     @ApiModelProperty("性别")
     @Enumerated(EnumType.STRING)
     @Column(name = "SEX", length = 10)
-    private String sex;
+    private Sex sex;
     /**
      * 用户分支属性
      */
     @ApiModelProperty(hidden = true)
-    @OneToMany(mappedBy = "record", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private List<Feature> features;
 
     public Long getId() {
@@ -103,11 +104,11 @@ public class Person extends BaseBusEntity {
         this.birthday = birthday;
     }
 
-    public String getSex() {
+    public Sex getSex() {
         return sex;
     }
 
-    public void setSex(String sex) {
+    public void setSex(Sex sex) {
         this.sex = sex;
     }
 

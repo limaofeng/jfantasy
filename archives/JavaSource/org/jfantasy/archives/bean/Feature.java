@@ -41,6 +41,13 @@ public class Feature extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
+    /**
+     * 对应的档案
+     */
+    @ApiModelProperty(hidden = true)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "PERSON_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ARCH_DOCUMENT_PERSON"))
+    private Person person;
 
     @JsonAnyGetter
     public Properties getProperties() {
@@ -92,4 +99,11 @@ public class Feature extends BaseBusEntity {
         this.properties = properties;
     }
 
+    public Person getPerson() {
+        return person;
+    }
+
+    public void setPerson(Person person) {
+        this.person = person;
+    }
 }

@@ -8,6 +8,8 @@ import org.jfantasy.archives.rest.models.assembler.PersonResourceAssembler;
 import org.jfantasy.archives.service.PersonService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,7 @@ public class PersonController {
     @Autowired
     private RecordController recordController;
 
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Person.class, name = {"records", "features"}))
     @ApiOperation(value = "人员信息列表", notes = "人员信息列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -63,6 +66,7 @@ public class PersonController {
         this.personService.deltele(id);
     }
 
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Record.class, name = {"documents", Record.BASE_FIELDS}))
     @ApiOperation(value = "查看人员的档案信息")
     @RequestMapping(value = "/{id}/records", method = RequestMethod.GET)
     public Pager<ResultResourceSupport> records(@PathVariable("id") Long id, Pager<Record> pager, List<PropertyFilter> filters) {

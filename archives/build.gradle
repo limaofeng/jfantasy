@@ -1,0 +1,5 @@
+description = ' 档案管理 '
+dependencies {
+    compile project(':jfantasy-core')
+    testCompile 'org.springframework.boot:spring-boot-starter-test:1.3.3.RELEASE'
+}

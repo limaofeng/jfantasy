@@ -1,6 +1,7 @@
 package org.jfantasy.archives.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -10,6 +11,7 @@ import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
 import javax.validation.constraints.Null;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -43,6 +45,25 @@ public class Record extends BaseBusEntity {
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "record", fetch = FetchType.LAZY)
     private List<Document> documents;
+    /**
+     * 显示时间
+     */
+    @JsonProperty("display_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(updatable = false, name = "DISPLAY_TIME")
+    private Date displayTime;
+    /**
+     * 标题
+     */
+    @ApiModelProperty("标题")
+    @Column(name = "TITLE", length = 100)
+    private String title;
+    /**
+     * 摘要
+     */
+    @ApiModelProperty("摘要")
+    @Column(name = "SUMMARY", length = 200)
+    private String summary;
 
     public Long getId() {
         return id;
@@ -74,6 +95,30 @@ public class Record extends BaseBusEntity {
 
     public void setPerson(Person person) {
         this.person = person;
+    }
+
+    public Date getDisplayTime() {
+        return displayTime;
+    }
+
+    public void setDisplayTime(Date displayTime) {
+        this.displayTime = displayTime;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 
 }
