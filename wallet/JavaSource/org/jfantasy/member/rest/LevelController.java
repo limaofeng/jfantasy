@@ -2,8 +2,10 @@ package org.jfantasy.member.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Level;
@@ -23,13 +25,14 @@ import java.util.List;
 @RestController
 public class LevelController {
 
-    private MemberService memberService = new MemberService();
     private LevelResourceAssembler assembler = new LevelResourceAssembler();
 
     @Autowired
     private LevelService levelService;
     @Autowired
     private WalletService walletService;
+    @Autowired
+    private MemberService memberService;
 
     @JsonResultFilter(List.class)
     @ApiOperation(value = "会员等级")
@@ -40,6 +43,8 @@ public class LevelController {
 
     @ApiOperation(value = "添加等级")
     @RequestMapping(value = "/levels", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public ResultResourceSupport save(@RequestBody Level level) {
         return assembler.toResource(levelService.save(level));
     }
@@ -58,6 +63,7 @@ public class LevelController {
         levelService.delete(id);
     }
 
+    @JsonResultFilter(allow = @AllowProperty(pojo = BaseBusEntity.class, name = {""}))
     @ApiOperation(value = "用户的会员等级")
     @RequestMapping(value = "/members/{memid}/level", method = RequestMethod.GET)
     @ResponseBody

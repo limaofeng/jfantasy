@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MEM_WALLET")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Wallet extends BaseBusEntity {
     /**
      * 钱包ID
@@ -44,6 +44,9 @@ public class Wallet extends BaseBusEntity {
      */
     @Column(name = "ACCOUNT", nullable = false, updatable = false)
     private String account;
+    /**
+     * 账单记录
+     */
     @OneToMany(mappedBy = "wallet", fetch = FetchType.LAZY)
     private List<WalletBill> bills;
     /**

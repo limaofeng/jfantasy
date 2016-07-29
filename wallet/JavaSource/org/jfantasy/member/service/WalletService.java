@@ -1,10 +1,19 @@
 package org.jfantasy.member.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.http.entity.ContentType;
+import org.apache.http.entity.StringEntity;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.httpclient.HttpClientUtil;
+import org.jfantasy.framework.httpclient.Request;
+import org.jfantasy.framework.httpclient.Response;
+import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.spring.mvc.error.RestException;
+import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Wallet;
@@ -14,15 +23,19 @@ import org.jfantasy.member.bean.enums.BillType;
 import org.jfantasy.member.dao.MemberDao;
 import org.jfantasy.member.dao.WalletBillDao;
 import org.jfantasy.member.dao.WalletDao;
+import org.jfantasy.oauth.userdetails.enums.Scope;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class WalletService {
+
+    private final static Log LOG = LogFactory.getLog(WalletService.class);
 
     @Autowired
     private WalletDao walletDao;
@@ -53,12 +66,56 @@ public class WalletService {
         return walletDao.insert(wallet);
     }
 
-    public Wallet getWalletByMember(Long memberId) {
-        return this.walletDao.findUnique(Restrictions.eq("member.id", memberId));
+    @Transactional
+    public Wallet save(Long memberId) {
+        Wallet wallet = this.walletDao.findUnique(Restrictions.eq("member.id", memberId));
+        if (wallet == null) {
+            Member member = memberDao.get(memberId);
+            String owner = Scope.member + ":" + member.getUsername();
+            //1、检查账号信息
+            try {
+                Response response = HttpClientUtil.doGet("http://localhost:8080/accounts?EQS_owner=" + owner);
+                if (response.getStatusCode() != 200) {
+                    throw new ValidationException(203.1f, "检查账号出错");
+                }
+                JsonNode node = response.json().get("items");
+                JsonNode account = node.get(0);
+                if (account == null) {
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("type", "personal");
+                    data.put("owner", owner);
+                    Request request = new Request(new StringEntity(JSON.serialize(data), ContentType.APPLICATION_JSON));
+                    response = HttpClientUtil.doPost("http://localhost:8080/accounts", request);
+                    if (response.getStatusCode() != 201) {
+                        throw new ValidationException(203.2f, "创建账号出错");
+                    }
+                    account = response.json();
+                }
+                wallet = new Wallet();
+                wallet.setMember(member);
+                wallet.setAccount(account.get("sn").asText());
+                wallet.setAmount(BigDecimal.valueOf(account.get("amount").asDouble()));
+                wallet.setIncome(BigDecimal.ZERO);
+                wallet.setGrowth(0L);
+                wallet.setPoints(0L);
+                wallet.setBills(Collections.<WalletBill>emptyList());
+                this.walletDao.save(wallet);
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+                throw new ValidationException(203.3f, "网络问题!");
+            }
+
+        }
+        return wallet;
     }
 
-    public Wallet getWallet(Long memberId) {
-        return this.walletDao.findUnique(Restrictions.eq("id", memberId));
+    @Transactional
+    public Wallet getWalletByMember(Long memberId) {
+        return this.save(memberId);
+    }
+
+    public Wallet getWallet(Long id) {
+        return this.walletDao.findUnique(Restrictions.eq("id", id));
     }
 
     private Wallet getWallet(String account) {
@@ -73,6 +130,7 @@ public class WalletService {
         return this.walletDao.findPager(pager, filters);
     }
 
+    @Transactional
     public Wallet saveOrUpdateWallet(JsonNode account) {
         String account_sn = account.get("sn").asText();
         BigDecimal account_amount = account.get("amount").decimalValue();
@@ -106,6 +164,7 @@ public class WalletService {
         return wallet;
     }
 
+    @Transactional
     public void saveOrUpdateBill(JsonNode transaction) {
         //获取并初始化账户
         Wallet from = this.getWallet(transaction.get("from").asText());

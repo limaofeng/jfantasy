@@ -8,7 +8,7 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "MEM_EXP")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Exp extends BaseBusEntity {
 
     @Id

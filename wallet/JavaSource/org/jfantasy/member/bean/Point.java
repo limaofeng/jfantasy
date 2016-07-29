@@ -11,7 +11,7 @@ import javax.persistence.*;
  */
 @Entity(name = "MemPoint")
 @Table(name = "MEM_POINTS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "pointDetails"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "pointDetails"})
 public class Point extends BaseBusEntity {
 
     private static final long serialVersionUID = -2242726270536854841L;

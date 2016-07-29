@@ -2,9 +2,12 @@ package org.jfantasy.member.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Card;
@@ -26,6 +29,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/wallets")
 public class WalletController {
+
+    private static Log LOG = LogFactory.getLog(WalletController.class);
 
     private WalletResourceAssembler assembler = new WalletResourceAssembler();
 
@@ -50,17 +55,21 @@ public class WalletController {
     }
 
     @ApiOperation(value = "查询钱包中的账单信息", notes = "账单列表")
-    @RequestMapping(value = "/{walletid}/bills", method = RequestMethod.GET)
-    public Pager<ResultResourceSupport> bills(@PathVariable("walletid") String walletId, Pager<WalletBill> pager, List<PropertyFilter> filters) {
+    @RequestMapping(value = "/{id}/bills", method = RequestMethod.GET)
+    public Pager<ResultResourceSupport> bills(@PathVariable("id") String walletId, Pager<WalletBill> pager, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQL_wallet.id", walletId));
         return walletBillController.search(pager, filters);
     }
 
-    @ApiOperation(value = "查询钱包中的卡片", notes = "账单列表")
-    @RequestMapping(value = "/{walletid}/cards", method = RequestMethod.GET)
-    public Pager<Card> cards(@PathVariable("walletid") String walletId, Pager<Card> pager, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQL_wallet.id", walletId));
-        return cardService.findPager(pager, filters);
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Card.class, name = Card.BASE_FIELDS))
+    @ApiOperation(value = "查询钱包中的卡片", notes = "卡列表")
+    @RequestMapping(value = "/{id}/cards", method = RequestMethod.GET)
+    public List<Card> cards(@PathVariable("id") Long walletId) {
+        return cardService.findByWallet(walletId);
+    }
+
+    private Wallet get(Long id) {
+        return this.walletService.getWallet(id);
     }
 
 }
