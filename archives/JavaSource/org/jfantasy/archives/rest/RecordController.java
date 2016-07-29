@@ -2,11 +2,14 @@ package org.jfantasy.archives.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.jfantasy.archives.bean.Person;
 import org.jfantasy.archives.bean.Record;
 import org.jfantasy.archives.rest.models.assembler.RecordResourceAssembler;
 import org.jfantasy.archives.service.RecordService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,7 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Person.class, name = {"person"}))
     @ApiOperation(value = "获取档案列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

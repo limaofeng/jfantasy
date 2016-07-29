@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "ARCH_DOCUMENT")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Document extends BaseBusEntity {
 
     @Id

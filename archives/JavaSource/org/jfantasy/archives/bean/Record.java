@@ -1,5 +1,7 @@
 package org.jfantasy.archives.bean;
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter;
+import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
@@ -7,12 +9,15 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
 import javax.validation.constraints.Null;
 import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 /**
  * 档案信息
@@ -21,7 +26,7 @@ import java.util.List;
 @Entity
 @Table(name = "ARCH_RECORD")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "person"})
 public class Record extends BaseBusEntity {
 
     @Null(message = "创建用户时,请不要传入ID", groups = {RESTful.POST.class})
@@ -39,6 +44,12 @@ public class Record extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PERSON_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ARCH_RECORD_PERSON"))
     private Person person;
+    /**
+     * 类型
+     */
+    @ApiModelProperty(value = "类型", notes = "用于区分不同的档案信息")
+    @Column(name = "TYPE", length = 10)
+    private String type;
     /**
      * 文档记录
      */
@@ -64,6 +75,15 @@ public class Record extends BaseBusEntity {
     @ApiModelProperty("摘要")
     @Column(name = "SUMMARY", length = 200)
     private String summary;
+    /**
+     * 扩展属性
+     */
+    @ApiModelProperty(hidden = true)
+    @Convert(converter = PropertiesConverter.class)
+    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
+    private Properties properties;
+    @Transient
+    private Long personId;
 
     public Long getId() {
         return id;
@@ -119,6 +139,42 @@ public class Record extends BaseBusEntity {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getPersonId() {
+        return personId;
+    }
+
+    public void setPersonId(Long personId) {
+        this.personId = personId;
+    }
+
+    @JsonAnySetter
+    public void set(String key, Object value) {
+        if (this.properties == null) {
+            this.properties = new Properties();
+        }
+        this.properties.put(key, value);
+    }
+
+    @JsonAnyGetter
+    public Properties getProperties() {
+        if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(Record.class, "properties")) {
+            return null;
+        }
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 
 }

@@ -20,7 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "ARCH_PERSON")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Person extends BaseBusEntity {
 
     @Id

@@ -17,7 +17,7 @@ import java.util.Properties;
 @Entity
 @Table(name = "ARCH_FEATURE")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Feature extends BaseBusEntity {
 
     @Id
