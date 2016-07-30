@@ -12,6 +12,7 @@ import org.hibernate.annotations.Parameter;
 import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.filestore.bean.converter.FileDetailConverter;
 import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
+import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.security.bean.enums.Sex;
 
 import javax.persistence.*;
@@ -29,7 +30,7 @@ import java.util.Properties;
 @ApiModel("会员详细信息")
 @Entity
 @Table(name = "MEM_MEMBER_DETAILS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "member"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "member"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class MemberDetails implements Serializable {
 
@@ -119,6 +120,7 @@ public class MemberDetails implements Serializable {
     private Member member;
 
     @ApiModelProperty(hidden = true)
+    @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
 

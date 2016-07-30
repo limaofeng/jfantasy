@@ -17,7 +17,7 @@ import java.util.Set;
 @ApiModel(value = "权限配置", description = "权限配置信息")
 @Entity
 @Table(name = "AUTH_PERMISSION")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "userGroups", "roles"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "userGroups", "roles"})
 public class Permission extends BaseBusEntity implements Cloneable {
 
     @ApiModelProperty("权限ID")

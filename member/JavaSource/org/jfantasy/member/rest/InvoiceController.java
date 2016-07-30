@@ -38,7 +38,7 @@ public class InvoiceController {
 
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = InvoiceItem.class, name = {"order_id"}),
-            allow = @AllowProperty(pojo = InvoiceOrder.class, name = {"orderSn", "orderType", "name"})
+            allow = @AllowProperty(pojo = InvoiceOrder.class, name = {"order_sn", "order_type", "name"})
     )
     @ApiOperation(value = "发票列表")
     @RequestMapping(method = RequestMethod.GET)

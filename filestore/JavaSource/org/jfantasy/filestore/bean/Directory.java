@@ -16,7 +16,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "FILE_DIRECTORY")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Directory extends BaseBusEntity {
 
     private static final long serialVersionUID = 8150927437017643578L;

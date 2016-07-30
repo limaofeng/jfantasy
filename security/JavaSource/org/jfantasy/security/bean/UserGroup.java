@@ -13,7 +13,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "AUTH_USERGROUP")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menus", "permissions", "roles", "permissions"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "menus", "permissions", "roles", "permissions"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserGroup extends BaseBusEntity {
 

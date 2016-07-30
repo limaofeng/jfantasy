@@ -40,10 +40,10 @@ public class ONSProducerPayRefundListener extends PayRefundListener {
         details.setOrderKey(OrderKey.newInstance(refund.getOrder().getType(), refund.getOrder().getSn()));
         details.setPayConfigId(refund.getPayConfig().getId());
 
-        if(TestOrderService.ORDER_TYPE.equals(order.getType())){
-            TestOrderService.getInstance().on(details.getOrderKey(),details,details.getMemo());
-        }else {
-            Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_PAY, PayAutoConfiguration.ONS_TAGS_PAY_REFUNDKEY, JSON.serialize(details).getBytes());
+        if (TestOrderService.ORDER_TYPE.equals(order.getType())) {
+            TestOrderService.getInstance().on(details.getOrderKey(), details, details.getMemo());
+        } else {
+            Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_PAY_REFUNDKEY, details.getSn(), JSON.serialize(details).getBytes());
             producer.send(msg);
         }
     }

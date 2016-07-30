@@ -23,6 +23,7 @@ import org.jfantasy.pay.rest.models.assembler.TransactionResourceAssembler;
 import org.jfantasy.pay.service.*;
 import org.jfantasy.pay.service.vo.ToPayment;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Iterator;
@@ -54,6 +55,7 @@ public class TransactionController {
     @ApiOperation("创建交易")
     @RequestMapping(method = RequestMethod.POST)
     @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport save(Transaction transaction) {
         transaction.setProject(this.projectService.get(transaction.getProject().getKey()));

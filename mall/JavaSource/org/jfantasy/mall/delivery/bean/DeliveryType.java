@@ -27,7 +27,7 @@ import java.util.List;
 @Table(name = "MALL_DELIVERY_TYPE")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "shippings", "reships", "corp"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "shippings", "reships", "corp"})
 public class DeliveryType extends BaseBusEntity {
 
     private static final long serialVersionUID = 5873163245980853245L;

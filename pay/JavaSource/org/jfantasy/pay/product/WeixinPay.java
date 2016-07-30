@@ -166,7 +166,7 @@ public class Weixinpay extends PayProductSupport {
             Response response = HttpClientUtil.doPost(urls.getRefundUrl(), request);
 
             //解析数据
-            data = xmlToMap(response.getBody());
+            data = xmlToMap(response.text());
             //判断业务处理是否成功
             if (!"SUCCESS".equalsIgnoreCase(data.get("return_code"))) {
                 throw new RestException(data.get("return_msg"));
@@ -232,7 +232,7 @@ public class Weixinpay extends PayProductSupport {
             Response response = HttpClientUtil.doPost(urls.getUnifiedorderUrl(), new Request(new StringEntity(WebUtil.transformCoding(mapToXml(data), "utf-8", "ISO8859-1"), ContentType.TEXT_XML)));
 
             //解析数据
-            data = xmlToMap(response.getBody());
+            data = xmlToMap(response.text());
 
             //判断业务处理是否成功
             if (!"SUCCESS".equalsIgnoreCase(data.get("return_code"))) {
@@ -277,7 +277,7 @@ public class Weixinpay extends PayProductSupport {
             Response response = HttpClientUtil.doPost("https://api.mch.weixin.qq.com/pay/orderquery", new Request(new StringEntity(WebUtil.transformCoding(mapToXml(data), "utf-8", "ISO8859-1"), ContentType.TEXT_XML)));
             LOG.debug("微信端响应:" + response.getBody());
             //解析数据
-            data = xmlToMap(response.getBody());
+            data = xmlToMap(response.text());
 
             //判断业务处理是否成功
             if (!"SUCCESS".equalsIgnoreCase(data.get("result_code"))) {
@@ -324,7 +324,7 @@ public class Weixinpay extends PayProductSupport {
 
             Response response = HttpClientUtil.doPost(urls.getCloseorderUrl(), new Request(new StringEntity(mapToXml(data), ContentType.TEXT_XML)));
             //解析数据
-            data = xmlToMap(response.getBody());
+            data = xmlToMap(response.text());
             //判断业务处理是否成功
             if (!"SUCCESS".equalsIgnoreCase(data.get("return_code"))) {
                 throw new RestException(data.get("return_msg"));
@@ -349,7 +349,7 @@ public class Weixinpay extends PayProductSupport {
         }
     }
 
-    private static Map<String, String> xmlToMap(String xml) {
+    public static Map<String, String> xmlToMap(String xml) {
         Map<String, String> data = new TreeMap<>();
         //解析数据
         XmlElement xmlElement = XMLReader.reader(new ByteArrayInputStream(xml.getBytes()));
@@ -383,7 +383,7 @@ public class Weixinpay extends PayProductSupport {
 
     private static final String NONCE_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
 
-    private static String generateNonceString(int length) {
+    public static String generateNonceString(int length) {
         int maxPos = NONCE_CHARS.length();
         String noceStr = "";
         for (int i = 0; i < length; i++) {

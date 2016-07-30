@@ -14,7 +14,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_ORG_RELATION", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORG_DIMENSION_ID", "ORG_ID"})})
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parent","children"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "parent","children"})
 public class OrgRelation extends BaseBusEntity {
 
     public static enum Type {

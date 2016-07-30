@@ -8,6 +8,7 @@ import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+
 import java.util.Properties;
 
 @ComponentScan("org.jfantasy.pay")
@@ -21,6 +22,7 @@ public class PayAutoConfiguration {
     public static final String ONS_TAGS_PAY_REFUNDKEY = "refund";
     public static final String ONS_TAGS_ACCOUNT_KEY = "account";
     public static final String ONS_TAGS_POINT_KEY = "point";
+    public static final String ONS_TAGS_CARDBIND_KEY = "card_bind";
 
     @Bean
     public PayProductConfiguration paymentConfiguration() {
@@ -32,15 +34,45 @@ public class PayAutoConfiguration {
     @Value("${aliyun.ons.pay.secretKey}")
     private String secretKey;
 
-    @Bean(initMethod = "start",destroyMethod = "shutdown")
-    public ProducerBean payProducer(@Value("${aliyun.ons.pay.producerId:PID-PAY}")  String producerId){
+    /**
+     * 发布者
+     */
+    @Bean(initMethod = "start", destroyMethod = "shutdown")
+    public ProducerBean payProducer(@Value("${aliyun.ons.pay.producerId:PID-PAY}") String producerId) {
         ProducerBean producerBean = new ProducerBean();
         Properties properties = new Properties();
-        properties.setProperty(PropertyKeyConst.ProducerId,producerId);
-        properties.setProperty(PropertyKeyConst.AccessKey,accessKey);
-        properties.setProperty(PropertyKeyConst.SecretKey,secretKey);
+        properties.setProperty(PropertyKeyConst.ProducerId, producerId);
+        properties.setProperty(PropertyKeyConst.AccessKey, accessKey);
+        properties.setProperty(PropertyKeyConst.SecretKey, secretKey);
         producerBean.setProperties(properties);
         return producerBean;
     }
+
+    /**
+     * 订阅者
+     *
+     * @return
+
+    @Bean(initMethod = "start", destroyMethod = "shutdown")
+    public ConsumerBean consumer() {
+        ConsumerBean consumerBean = new ConsumerBean();
+        Properties properties = new Properties();
+        properties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
+        properties.setProperty(PropertyKeyConst.AccessKey, accessKey);
+        properties.setProperty(PropertyKeyConst.SecretKey, secretKey);
+        consumerBean.setProperties(properties);
+        Map<Subscription, MessageListener> subscriptionTable = new HashMap<>();
+        Subscription key = new Subscription();
+        key.setTopic(topicId);
+        key.setExpression("pay");
+        subscriptionTable.put(key, payMessageListener());
+        consumerBean.setSubscriptionTable(subscriptionTable);
+        return consumerBean;
+    }
+
+    @Bean
+    public PayMessageListener payMessageListener() {
+        return new PayMessageListener();
+    }*/
 
 }

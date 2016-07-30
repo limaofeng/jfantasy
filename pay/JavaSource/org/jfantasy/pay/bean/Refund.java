@@ -20,7 +20,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "PAY_REFUND")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Refund extends BaseBusEntity {
 
     private static final long serialVersionUID = -2533117666249761057L;

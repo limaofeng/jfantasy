@@ -1,22 +1,25 @@
 package org.jfantasy.archives.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.StringUtil;
 
 import javax.persistence.*;
 
 /**
  * 文档,文件 。 没有固定的结构。只做单独的文件存储
  */
-@ApiModel(" 人员信息 ")
+@ApiModel(" 文档信息 ")
 @Entity
 @Table(name = "ARCH_DOCUMENT")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "record"})
 public class Document extends BaseBusEntity {
 
     @Id
@@ -44,19 +47,21 @@ public class Document extends BaseBusEntity {
      * 数据类型
      */
     @ApiModelProperty("数据类型")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @Column(name = "DATA_TYPE", length = 30)
     private String dataType;
     /**
      * 数据存储
      */
-    @Column(name = "DATA_VALUE", columnDefinition = "MediumBlob")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Column(name = "DATA_VALUE", columnDefinition = "TEXT")
     private String dataValue;
     /**
      * 对应的档案
      */
     @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PERSON_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ARCH_DOCUMENT_PERSON"))
+    @JoinColumn(name = "RECORD_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ARCH_DOCUMENT_RECORD"))
     private Record record;
 
     public Long getId() {
@@ -113,5 +118,17 @@ public class Document extends BaseBusEntity {
 
     public void setDataValue(String dataValue) {
         this.dataValue = dataValue;
+    }
+
+    @Transient
+    public Object getData() {
+        if (StringUtil.isBlank(this.dataType) || StringUtil.isBlank(this.dataValue)) {
+            return null;
+        }
+        switch (this.dataType) {
+            case "json":
+                return JSON.deserialize(this.dataValue);
+        }
+        return null;
     }
 }

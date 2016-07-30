@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SWP_PAGE", uniqueConstraints = {@UniqueConstraint(name = "UNIQUE_PAGE", columnNames = {"PATH", "WEBSITE_ID"})})
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "datas"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "datas"})
 public class Page extends BaseBusEntity {
 
     private static final long serialVersionUID = 8032849785819496211L;

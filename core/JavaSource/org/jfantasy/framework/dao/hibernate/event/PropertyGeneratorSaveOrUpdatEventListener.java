@@ -33,7 +33,7 @@ public class PropertyGeneratorSaveOrUpdatEventListener extends DefaultSaveOrUpda
         final Object object = event.getObject();
         final Serializable requestedId = event.getRequestedId();
         if (requestedId != null && object instanceof HibernateProxy) {
-            ((HibernateProxy) object).gethibernate_lazy_initializer().setIdentifier(requestedId);
+            ((HibernateProxy) object).getHibernateLazyInitializer().setIdentifier(requestedId);
         }
         if (!reassociateIfUninitializedProxy(object, source)) {
             final Object entity = source.getPersistenceContext().unproxyAndReassociate(object);

@@ -36,7 +36,7 @@ public class WalletAutoConfiguration {
         Map<Subscription, MessageListener> subscriptionTable = new HashMap<>();
         Subscription key = new Subscription();
         key.setTopic(topicId);
-        key.setExpression("transaction");
+        key.setExpression("*");
         subscriptionTable.put(key, payMessageListener());
         consumerBean.setSubscriptionTable(subscriptionTable);
         return consumerBean;

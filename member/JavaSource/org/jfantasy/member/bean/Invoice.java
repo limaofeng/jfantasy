@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MEM_INVOICE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Invoice extends BaseBusEntity {
 
     @Null(groups = {RESTful.POST.class})

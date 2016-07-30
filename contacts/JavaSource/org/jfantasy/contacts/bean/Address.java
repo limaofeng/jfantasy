@@ -13,7 +13,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  */
 @Entity
 @Table(name = "CONTACTS_ADDRESS")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Address extends BaseBusEntity {
 
     private static final long serialVersionUID = -1954479745916107049L;

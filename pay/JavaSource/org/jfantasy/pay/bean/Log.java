@@ -11,7 +11,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "PAY_LOG", uniqueConstraints = {@UniqueConstraint(columnNames = {"OWNER_TYPE", "OWNER_ID"})})
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "creator", "createTime", "modifier", "modifyTime"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "creator", "createTime", "modifier", "modifyTime"})
 public class Log extends BaseBusEntity {
 
     @Id
@@ -37,11 +37,11 @@ public class Log extends BaseBusEntity {
     @Column(name = "ORDER_KEY",length = 30)
     private String orderKey;
     /**
-     * 状态
+     * 动作
      */
-    @ApiModelProperty("状态")
-    @Column(name = "STATUS", nullable = false, updatable = false)
-    private String status;
+    @ApiModelProperty("动作")
+    @Column(name = "ACTION", nullable = false, updatable = false)
+    private String action;
     /**
      * 备注
      */
@@ -80,12 +80,12 @@ public class Log extends BaseBusEntity {
         this.orderKey = orderKey;
     }
 
-    public String getStatus() {
-        return status;
+    public String getAction() {
+        return action;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setAction(String action) {
+        this.action = action;
     }
 
     public String getNotes() {

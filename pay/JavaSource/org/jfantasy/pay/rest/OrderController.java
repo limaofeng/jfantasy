@@ -16,6 +16,7 @@ import org.jfantasy.pay.rest.models.assembler.OrderResourceAssembler;
 import org.jfantasy.pay.service.AccountService;
 import org.jfantasy.pay.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -63,6 +64,7 @@ public class OrderController {
     @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
     @ApiOperation(value = "创建订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
     @RequestMapping(value = "/{id}/transactions", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport transaction(@PathVariable("id") String key, @RequestBody OrderTransaction orderTransaction) {
         String from = accountService.findUniqueByCurrentUser().getSn();

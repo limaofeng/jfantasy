@@ -18,7 +18,7 @@ import java.util.List;
 @ApiModel("评论表")
 @Entity
 @Table(name = "MEM_COMMENT")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "forComment"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "forComment"})
 public class Comment extends BaseBusEntity {
 
     private static final long serialVersionUID = 8413023474799399082L;

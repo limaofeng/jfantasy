@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 
 import javax.persistence.*;
@@ -16,7 +17,7 @@ import java.util.Properties;
  */
 @Entity
 @Table(name = "MEM_TEAM")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Team extends BaseBusEntity {
 
     /**
@@ -50,6 +51,7 @@ public class Team extends BaseBusEntity {
      * 扩展属性
      */
     @ApiModelProperty(hidden = true)
+    @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
     /**

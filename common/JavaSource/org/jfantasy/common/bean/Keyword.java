@@ -24,7 +24,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "KEYWORDS")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Keyword extends BaseBusEntity {
 
     private static final long serialVersionUID = 3340627269786275436L;

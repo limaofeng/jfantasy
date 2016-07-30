@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "MEM_INVOICE_ITEM")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "invoice", "id"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "invoice", "id"})
 public class InvoiceItem extends BaseBusEntity {
 
     @Id

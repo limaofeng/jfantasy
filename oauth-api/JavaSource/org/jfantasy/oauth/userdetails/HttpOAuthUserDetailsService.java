@@ -26,7 +26,7 @@ public class HttpOAuthUserDetailsService implements UserDetailsService {
             if (response.getStatusCode() != HttpStatus.OK.value()) {
                 throw new UsernameNotFoundException(" Token Invalid ");
             }
-            return response.getBody(OAuthUserDetails.class);
+            return response.json(OAuthUserDetails.class);
         } catch (IOException e) {
             throw new UsernameNotFoundException(" Token Invalid ");
         }

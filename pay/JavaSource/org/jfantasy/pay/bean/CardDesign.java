@@ -17,11 +17,11 @@ import java.util.List;
 
 @Entity
 @Table(name = "PAY_CARD_DESIGN")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class CardDesign extends BaseBusEntity {
 
     @Id
-    @Column(name = "CODE", updatable = false)
+    @Column(name = "CODE", nullable = false , updatable = false)
     private String key;
     /**
      * 会员卡名称
@@ -40,7 +40,7 @@ public class CardDesign extends BaseBusEntity {
      */
     @JsonProperty("card_type")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CARD_TYPE", updatable = false)
+    @JoinColumn(name = "CARD_TYPE", updatable = false, foreignKey = @ForeignKey(name = "FK_CARD_DESIGN_TYPE"))
     private CardType cardType;
     /**
      * 会员卡设计状态
@@ -152,7 +152,7 @@ public class CardDesign extends BaseBusEntity {
         if (this.logs == null) {
             return null;
         }
-        Log log = ObjectUtil.last(this.logs, "status", CardDesignStatus.publish.name());
+        Log log = ObjectUtil.last(this.logs, "action", CardDesignStatus.publish.name());
         if (log == null) {
             return null;
         }
@@ -165,7 +165,7 @@ public class CardDesign extends BaseBusEntity {
         if (this.logs == null) {
             return null;
         }
-        Log log = ObjectUtil.find(logs, "status", CardDesignStatus.destroyed.name());
+        Log log = ObjectUtil.find(logs, "action", CardDesignStatus.destroyed.name());
         if (log == null) {
             return null;
         }
@@ -174,6 +174,9 @@ public class CardDesign extends BaseBusEntity {
 
     @Transient
     public String getRule() {
+        if (this.getCardType() == null) {
+            return null;
+        }
         return this.getCardType().getKey() + " " + this.getKey() + " XXXX XXXX";
     }
 

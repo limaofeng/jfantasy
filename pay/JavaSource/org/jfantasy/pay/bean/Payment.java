@@ -23,7 +23,7 @@ import java.util.Date;
 @ApiModel(value = "支付记录")
 @Entity
 @Table(name = "PAY_PAYMENT", uniqueConstraints = {@UniqueConstraint(columnNames = {"PAY_CONFIG_ID", "ORDER_TYPE", "ORDER_SN", "PAY_STATUS"})})
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Payment extends BaseBusEntity {
 
     private static final long serialVersionUID = 6404772131152718534L;

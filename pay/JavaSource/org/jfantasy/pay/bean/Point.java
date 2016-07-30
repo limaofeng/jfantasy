@@ -13,7 +13,7 @@ import java.util.Date;
 @ApiModel(value = "积分记录")
 @Entity
 @Table(name = "PAY_POINT")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Point extends BaseBusEntity {
 
     @Id

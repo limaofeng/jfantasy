@@ -22,7 +22,7 @@ import java.util.List;
 @Table(name = "MALL_BRAND")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "logoImageStore", "goods", "goodsCategories"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "introduction", "logoImageStore", "goods", "goodsCategories"})
 public class Brand extends BaseBusEntity {
 
     private static final long serialVersionUID = -6109590619136943215L;

@@ -8,8 +8,6 @@ import org.jfantasy.pay.ons.PayMessageListener;
 import org.jfantasy.pay.order.OrderProcessor;
 import org.jfantasy.pay.order.OrderServiceRegistry;
 import org.jfantasy.pay.order.OrderServiceRegistryRunner;
-import org.jfantasy.rpc.client.NettyClientFactory;
-import org.jfantasy.rpc.proxy.RpcProxyFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,14 +30,16 @@ public class PayClientAutoConfiguration {
 
     @Bean(name = "orderServiceRegistry")
     public OrderServiceRegistry buildOrderServiceRegistry() {
-        RpcProxyFactory rpcProxyFactory = new RpcProxyFactory(new NettyClientFactory(host, port));
-        return rpcProxyFactory.proxyBean(OrderServiceRegistry.class, 10000);
+        //RpcProxyFactory rpcProxyFactory = new RpcProxyFactory(new NettyClientFactory(host, port));
+        //rpcProxyFactory.proxyBean(OrderServiceRegistry.class, 10000);
+        return null;
     }
 
     @Bean(name = "orderProcessor")
     public OrderProcessor buildOrderProcessor() {
-        RpcProxyFactory rpcProxyFactory = new RpcProxyFactory(new NettyClientFactory(host, port));
-        return rpcProxyFactory.proxyBean(OrderProcessor.class, 10000);
+        //RpcProxyFactory rpcProxyFactory = new RpcProxyFactory(new NettyClientFactory(host, port));
+        //return rpcProxyFactory.proxyBean(OrderProcessor.class, 10000);
+        return null;
     }
 
     @Value("${aliyun.ons.pay.consumerId}")

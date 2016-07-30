@@ -12,14 +12,14 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "PAY_CARD_TYPE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class CardType extends BaseBusEntity {
     /**
      * 编码
      */
     @NotEmpty(message = "编码 [Key] 必填", groups = {POST.class})
     @Id
-    @Column(name = "CODE", updatable = false)
+    @Column(name = "CODE", nullable = false, updatable = false)
     private String key;
     /**
      * 名称

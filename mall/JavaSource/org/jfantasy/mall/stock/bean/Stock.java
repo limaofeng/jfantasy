@@ -15,7 +15,7 @@ import org.jfantasy.mall.goods.bean.Product;
 @Entity
 @Table(name = "MALL_STOCK")
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({ "hibernateLazyInitializer"})
+@JsonIgnoreProperties({ "hibernate_lazy_initializer"})
 public class Stock extends BaseBusEntity{
 
 	private static final long serialVersionUID = 3220895257066557468L;

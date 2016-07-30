@@ -16,7 +16,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "PAY_CARD")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Card extends BaseBusEntity {
     /**
      * 卡号
@@ -34,20 +34,20 @@ public class Card extends BaseBusEntity {
     /**
      * 会员卡类型
      */
-    @ManyToOne
-    @JoinColumn(name = "TYPE", updatable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TYPE", updatable = false, foreignKey = @ForeignKey(name = "FK_CARD_TYPE"))
     private CardType type;
     /**
      * 卡设计
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DESIGN")
+    @JoinColumn(name = "DESIGN", updatable = false, foreignKey = @ForeignKey(name = "FK_CARD_DESIGN"))
     private CardDesign design;
     /**
      * 批次
      */
-    @ManyToOne
-    @JoinColumn(name = "BATCH_NO")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "BATCH_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_CARD_BATCH"))
     private CardBatch batch;
     /**
      * 卡状态
@@ -58,7 +58,7 @@ public class Card extends BaseBusEntity {
     /**
      * 密钥
      */
-    @Column(name = "SECRET", length = 10)
+    @Column(name = "SECRET", updatable = false, length = 10)
     private String secret;
     /**
      * 金额
@@ -77,6 +77,14 @@ public class Card extends BaseBusEntity {
     @Column(name = "EXTRAS", length = 1000)
     @Convert(converter = ExtraServiceConverter.class)
     private ExtraService[] extras;
+    /**
+     * 所有者
+     */
+    @Column(name = "OWNER", length = 20)
+    private String owner;
+    @Version
+    @Column(name = "OPTLOCK")
+    private Integer version;
 
     public String getNo() {
         return no;
@@ -157,4 +165,21 @@ public class Card extends BaseBusEntity {
     public void setDesign(CardDesign design) {
         this.design = design;
     }
+
+    public String getOwner() {
+        return owner;
+    }
+
+    public void setOwner(String owner) {
+        this.owner = owner;
+    }
+
+    public Integer getVersion() {
+        return version;
+    }
+
+    public void setVersion(Integer version) {
+        this.version = version;
+    }
+
 }

@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "MEM_INVOICE_ORDER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "status"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "status"})
 public class InvoiceOrder extends BaseBusEntity {
 
     public enum InvoiceOrderStatus {

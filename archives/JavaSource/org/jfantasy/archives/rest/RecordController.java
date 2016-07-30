@@ -2,7 +2,6 @@ package org.jfantasy.archives.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.jfantasy.archives.bean.Person;
 import org.jfantasy.archives.bean.Record;
 import org.jfantasy.archives.rest.models.assembler.RecordResourceAssembler;
 import org.jfantasy.archives.service.RecordService;
@@ -29,7 +28,9 @@ public class RecordController {
     @Autowired
     private RecordService recordService;
 
-    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Person.class, name = {"person"}))
+    @JsonResultFilter(ignore = {
+            @IgnoreProperty(pojo = Record.class, name = {"documents", Record.BASE_FIELDS})
+    })
     @ApiOperation(value = "获取档案列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -45,6 +46,9 @@ public class RecordController {
         return assembler.toResource(this.recordService.save(record));
     }
 
+    @JsonResultFilter(ignore = {
+            @IgnoreProperty(pojo = Record.class, name = {Record.BASE_FIELDS})
+    })
     @ApiOperation(value = "获取档案详情")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody

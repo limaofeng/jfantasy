@@ -9,7 +9,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  */
 @Entity
 @Table(name = "SWP_PAGE_ITEM_DATA")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "pageItem"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "pageItem"})
 public class PageItemData extends BaseBusEntity {
 
     @Id

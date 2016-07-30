@@ -28,7 +28,7 @@ import java.util.Properties;
 @ApiModel("支付配置")
 @Entity
 @Table(name = "PAY_PAYCONFIG")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "payments", "refunds"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "payments", "refunds"})
 public class PayConfig extends BaseBusEntity {
 
     private static final long serialVersionUID = -7950849648189504426L;

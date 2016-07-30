@@ -25,7 +25,7 @@ import java.util.Properties;
  */
 @Entity
 @Table(name = "PAY_TRANSACTION")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "payments", "refunds", "unionId"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "payments", "refunds", "unionId"})
 public class Transaction extends BaseBusEntity {
 
     public final static String STAGE = "stage";

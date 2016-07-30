@@ -5,6 +5,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.spring.mvc.error.RestException;
+import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.oauth.userdetails.OAuthUserDetails;
 import org.jfantasy.pay.bean.Account;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -44,11 +46,6 @@ public class AccountService {
         return this.accountDao.findUnique(Restrictions.eq("type", type), Restrictions.eq("owner", owner));
     }
 
-    @Transactional
-    public void create(Account account) {
-        this.accountDao.save(account);
-    }
-
     public Account get(String id) {
         return this.accountDao.get(id);
     }
@@ -60,6 +57,26 @@ public class AccountService {
      */
     public Account platform() {
         return this.accountDao.findUnique(Restrictions.eq("type", AccountType.platform));
+    }
+
+    /**
+     * 创建账户
+     *
+     * @param type  账户类型
+     * @param owner 所有者
+     * @return Account
+     */
+    public Account save(AccountType type, String owner, String password) {
+        if (this.accountDao.count(Restrictions.eq("type", type), Restrictions.eq("owner", owner)) > 0) {
+            throw new ValidationException(103.1f, "账号存在,创建失败");
+        }
+        Account account = new Account();
+        account.setType(type);
+        account.setAmount(BigDecimal.ZERO);
+        account.setPoints(0L);
+        account.setOwner(owner);
+        account.setStatus(StringUtil.isBlank(password) ? AccountStatus.unactivated : AccountStatus.activated);
+        return this.accountDao.save(account);
     }
 
     /**
@@ -119,7 +136,7 @@ public class AccountService {
     }
 
     @Transactional
-    public Account activate(String no,String password) {
+    public Account activate(String no, String password) {
         Account account = this.accountDao.get(no);
         account.setPassword(passwordEncoder.encode(password));
         return null;

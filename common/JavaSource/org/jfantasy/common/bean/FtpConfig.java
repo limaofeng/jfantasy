@@ -20,7 +20,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "FTP_CONFIG")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class FtpConfig extends BaseBusEntity {
 
     private static final long serialVersionUID = 5513428236803813302L;

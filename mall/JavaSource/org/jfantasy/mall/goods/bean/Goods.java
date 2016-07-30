@@ -34,7 +34,7 @@ import java.util.List;
 @Persister(impl = DynaBeanEntityPersister.class)
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImages", "goodsParameterValues"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "introduction", "metaKeywords", "metaDescription", "favoriteMembers", "comments", "products", "goodsImages", "goodsParameterValues"})
 public class Goods extends BaseDynaBean {
 
     private static final long serialVersionUID = 7710250000511514557L;

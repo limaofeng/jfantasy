@@ -22,7 +22,7 @@ import javax.persistence.*;
 @ApiModel("收货地址信息")
 @Entity
 @Table(name = "MEM_RECEIVER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "areaStore", "member"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "areaStore", "member"})
 public class Receiver extends BaseBusEntity {
 
     private static final long serialVersionUID = 851367820092125804L;

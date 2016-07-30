@@ -18,7 +18,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "MALL_CART_ITEM")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "cart"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "cart"})
 public class CartItem extends BaseBusEntity {
 
     private static final long serialVersionUID = 8008780042070523210L;

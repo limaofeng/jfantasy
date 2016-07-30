@@ -13,8 +13,10 @@ import org.jfantasy.pay.rest.models.LogForm;
 import org.jfantasy.pay.rest.models.assembler.CardDesignResourceAssembler;
 import org.jfantasy.pay.service.CardDesignService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -68,6 +70,7 @@ public class CardDesignController {
     )
     @ApiOperation("添加卡设计")
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport save(@RequestBody CardDesign design) {
         return assembler.toResource(this.cardDesignService.save(design));
@@ -81,8 +84,9 @@ public class CardDesignController {
     @ApiOperation("更新会员卡设计")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
-    public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody CardDesign batch) {
-        return assembler.toResource(this.cardDesignService.update(batch));
+    public ResultResourceSupport update(@PathVariable("id") String id, HttpServletRequest request, @RequestBody CardDesign design) {
+        design.setKey(id);
+        return assembler.toResource(this.cardDesignService.update(design, RequestMethod.PATCH.name().equalsIgnoreCase(request.getMethod())));
     }
 
     @JsonResultFilter(

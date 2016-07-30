@@ -52,6 +52,10 @@ public class TransactionService {
         return transaction;
     }
 
+    public Transaction transaction(){
+        return null;
+    }
+
     /**
      * 转账
      *

@@ -10,9 +10,9 @@ include ':jfantasy-pay-client'
 include ':jfantasy-cms'
 include ':jfantasy-security'
 include ':jfantasy-member'
-include ':jfantasy-rpc-common'
-include ':jfantasy-rpc-server'
-include ':jfantasy-rpc-client'
+//include ':jfantasy-rpc-common'
+//include ':jfantasy-rpc-server'
+//include ':jfantasy-rpc-client'
 include ':jfantasy-system'
 include ':jfantasy-sms'
 include ':jfantasy-pay-test'
@@ -22,7 +22,8 @@ include ':jfantasy-oauth-api'
 include ':jfantasy-wallet'
 include ':jfantasy-weixin'
 include ':jfantasy-thirdparty'
-include ':jfantasy-mall'
+include ':jfantasy-archives'
+//include ':jfantasy-mall'
 
 project(':jfantasy-core').projectDir = "$rootDir/core" as File
 project(':jfantasy-cache').projectDir = "$rootDir/cache" as File
@@ -35,9 +36,9 @@ project(':jfantasy-pay-client').projectDir = "$rootDir/pay-client" as File
 project(':jfantasy-cms').projectDir = "$rootDir/cms" as File
 project(':jfantasy-security').projectDir = "$rootDir/security" as File
 project(':jfantasy-member').projectDir = "$rootDir/member" as File
-project(':jfantasy-rpc-common').projectDir = "$rootDir/rpc-common" as File
-project(':jfantasy-rpc-server').projectDir = "$rootDir/rpc-server" as File
-project(':jfantasy-rpc-client').projectDir = "$rootDir/rpc-client" as File
+//project(':jfantasy-rpc-common').projectDir = "$rootDir/rpc-common" as File
+//project(':jfantasy-rpc-server').projectDir = "$rootDir/rpc-server" as File
+//project(':jfantasy-rpc-client').projectDir = "$rootDir/rpc-client" as File
 project(':jfantasy-system').projectDir = "$rootDir/system" as File
 project(':jfantasy-sms').projectDir = "$rootDir/sms" as File
 project(':jfantasy-oauth').projectDir = "$rootDir/oauth" as File
@@ -45,5 +46,6 @@ project(':jfantasy-oauth-api').projectDir = "$rootDir/oauth-api" as File
 project(':jfantasy-wallet').projectDir = "$rootDir/wallet" as File
 project(':jfantasy-weixin').projectDir = "$rootDir/weixin" as File
 project(':jfantasy-thirdparty').projectDir = "$rootDir/thirdparty" as File
+project(':jfantasy-archives').projectDir = "$rootDir/archives" as File
 project(':jfantasy-pay-test').projectDir = "$rootDir/pay-test" as File
 project(':jfantasy-test').projectDir = "$rootDir/test" as File

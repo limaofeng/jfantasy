@@ -22,7 +22,7 @@ import java.util.Calendar;
  */
 @Entity
 @Table(name = "MALL_SALES", uniqueConstraints = {@UniqueConstraint(columnNames = {"TYPE", "SN", "TIME_UNIT", "TIME"})})
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer"})
 public class Sales extends BaseBusEntity {
     private static final long serialVersionUID = 5134293616045211706L;
 

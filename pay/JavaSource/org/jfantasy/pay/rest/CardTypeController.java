@@ -48,6 +48,7 @@ public class CardTypeController {
 
     @ApiOperation("添加会员卡类型")
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport save(@RequestBody @Validated(POST.class) CardType type) {
         return assembler.toResource(this.cardTypeService.save(type));

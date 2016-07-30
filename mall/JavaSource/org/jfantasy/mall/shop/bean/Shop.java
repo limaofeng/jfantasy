@@ -12,7 +12,7 @@ import org.jfantasy.framework.jackson.JSON;
 @Entity
 @Table(name = "MALL_SHOP")
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer"})
 public class Shop extends BaseBusEntity {
 
     @Id

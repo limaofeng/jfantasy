@@ -28,7 +28,7 @@ import javax.persistence.Entity;
 @Entity
 @Table(name = "CMS_ARTICLE")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "keywords", "category", "content", "target"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "keywords", "category", "content", "target"})
 public class Article extends BaseBusEntity {
 
     private static final long serialVersionUID = 3480217915594201004L;

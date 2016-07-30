@@ -135,6 +135,7 @@ public class ValidationCaptchaService {
         AtomicReference<Map<String, Object>> data = new AtomicReference<Map<String, Object>>(new HashMap<String, Object>());
         data.get().put("config", config);
         data.get().put("captcha", captcha);
+        data.get().put("code", captcha.getValue());
         boolean status = false;
         String content = "";
         try {

@@ -11,7 +11,7 @@ import javax.persistence.*;
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEPART", uniqueConstraints = {@UniqueConstraint(columnNames = {"ENTIRE_FILE_HASH", "PART_FILE_HASH"})})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class FilePart extends BaseBusEntity {
 
     @Id

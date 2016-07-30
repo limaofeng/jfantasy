@@ -202,7 +202,7 @@ public class AccessTokenService {
     private void retrieveUser(OAuthUserDetails userDetails, Member member) {
         userDetails.setId(member.getId());
         userDetails.setUsername(member.getUsername());
-        userDetails.setUserType(member.getMemberType());
+        userDetails.setUserType(member.getType());
         userDetails.setScope(Scope.member);
         userDetails.setNickName(member.getNickName());
 

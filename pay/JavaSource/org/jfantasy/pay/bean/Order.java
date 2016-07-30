@@ -19,7 +19,7 @@ import java.util.List;
 @Entity
 @IdClass(OrderKey.class)
 @Table(name = "PAY_ORDER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","details"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler","details"})
 public class Order extends BaseBusEntity {
 
     // 付款状态（未支付、部分支付、已支付、部分退款、全额退款）

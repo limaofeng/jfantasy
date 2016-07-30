@@ -14,7 +14,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "HOT_KEYWORDS", uniqueConstraints = {@UniqueConstraint(columnNames = {"TARGET_KEY", "KEYWORDS", "TIME_UNIT", "TIME"})})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class HotKeywords extends BaseBusEntity {
 
     private static final long serialVersionUID = 1060015917650774536L;

@@ -15,11 +15,13 @@ import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.member.bean.Card;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Wallet;
 import org.jfantasy.member.bean.WalletBill;
 import org.jfantasy.member.bean.enums.BillStatus;
 import org.jfantasy.member.bean.enums.BillType;
+import org.jfantasy.member.dao.CardDao;
 import org.jfantasy.member.dao.MemberDao;
 import org.jfantasy.member.dao.WalletBillDao;
 import org.jfantasy.member.dao.WalletDao;
@@ -43,6 +45,8 @@ public class WalletService {
     private WalletBillDao walletBillDao;
     @Autowired
     private MemberDao memberDao;
+    @Autowired
+    private CardDao cardDao;
 
     private Wallet newWallet(String account, BigDecimal amount) {
         return newWallet(null, account, amount);
@@ -67,10 +71,9 @@ public class WalletService {
     }
 
     @Transactional
-    public Wallet save(Long memberId) {
-        Wallet wallet = this.walletDao.findUnique(Restrictions.eq("member.id", memberId));
+    public Wallet save(Member member) {
+        Wallet wallet = this.walletDao.findUnique(Restrictions.eq("member", member));
         if (wallet == null) {
-            Member member = memberDao.get(memberId);
             String owner = Scope.member + ":" + member.getUsername();
             //1、检查账号信息
             try {
@@ -110,8 +113,19 @@ public class WalletService {
     }
 
     @Transactional
+    public Wallet getWalletByOwner(String owner) {
+        String[] asr = owner.split(":");
+        String username = asr[1];
+        switch (asr[0]) {
+            case "member":
+                return this.save(memberDao.findUnique(Restrictions.eq("username", username)));
+        }
+        return null;
+    }
+
+    @Transactional
     public Wallet getWalletByMember(Long memberId) {
-        return this.save(memberId);
+        return this.save(memberDao.get(memberId));
     }
 
     public Wallet getWallet(Long id) {
@@ -212,6 +226,13 @@ public class WalletService {
 
     public Pager<WalletBill> findBillPager(Pager<WalletBill> pager, List<PropertyFilter> filters) {
         return this.walletBillDao.findPager(pager, filters);
+    }
+
+    @Transactional
+    public void addCard(String owner, Card card) {
+        Wallet wallet = this.getWalletByOwner(owner);
+        card.setWallet(wallet);
+        this.cardDao.save(card);
     }
 
 }

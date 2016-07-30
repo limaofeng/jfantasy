@@ -20,7 +20,7 @@ import java.util.List;
 @ApiModel(value = "菜单")
 @Entity
 @Table(name = "AUTH_MENU")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "menuAuthoritie", "children"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "menuAuthoritie", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Menu extends BaseBusEntity {
 

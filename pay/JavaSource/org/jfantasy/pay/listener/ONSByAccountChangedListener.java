@@ -26,7 +26,7 @@ public class ONSByAccountChangedListener implements ApplicationListener<AccountC
     @Override
     public void onApplicationEvent(AccountChangedEvent event) {
         Account account = event.getAccount();
-        Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_PAY, PayAutoConfiguration.ONS_TAGS_TRANSACTION_KEY, JSON.serialize(account).getBytes());
+        Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_ACCOUNT_KEY, account.getSn(), JSON.serialize(account).getBytes());
         producer.send(msg);
     }
 

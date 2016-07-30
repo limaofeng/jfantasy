@@ -17,7 +17,7 @@ import java.util.List;
 @ApiModel("应用配置")
 @Entity
 @Table(name = "OAUTH_APP")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Application extends BaseBusEntity {
 
     @Id

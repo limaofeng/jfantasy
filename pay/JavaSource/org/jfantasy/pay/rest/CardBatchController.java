@@ -8,6 +8,7 @@ import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardBatch;
 import org.jfantasy.pay.bean.CardDesign;
@@ -18,6 +19,7 @@ import org.jfantasy.pay.service.CardBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,7 +66,7 @@ public class CardBatchController {
     @ApiOperation("批次详情")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
-    public ResultResourceSupport view(@PathVariable("id") String id) {
+    public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(get(id));
     }
 
@@ -78,32 +80,33 @@ public class CardBatchController {
     @ApiOperation("制作卡")
     @RequestMapping(value = "/{id}/make", method = RequestMethod.POST)
     @ResponseBody
-    public List<ResultResourceSupport> make(@PathVariable("id") String id, @RequestBody LogForm form) {
+    public List<ResultResourceSupport> make(@PathVariable("id") Long id, @RequestBody LogForm form) {
         return CardController.assembler.toResources(this.cardBatchService.make(id, form.getNotes()));
     }
 
     @ApiOperation("正式发行卡")
     @RequestMapping(value = "/{id}/release", method = RequestMethod.POST)
     @ResponseBody
-    public ResultResourceSupport release(@PathVariable("id") String id, @RequestBody LogForm form) {
+    public ResultResourceSupport release(@PathVariable("id") Long id, @RequestBody LogForm form) {
         return assembler.toResource(this.cardBatchService.release(id, form.getNotes()));
     }
 
     @ApiOperation("取消发行")
     @RequestMapping(value = "/{id}/cancel", method = RequestMethod.POST)
     @ResponseBody
-    public ResultResourceSupport cancel(@PathVariable("id") String id, @RequestBody LogForm form) {
+    public ResultResourceSupport cancel(@PathVariable("id") Long id, @RequestBody LogForm form) {
         return assembler.toResource(this.cardBatchService.cancel(id, form.getNotes()));
     }
 
     @ApiOperation("更新批次")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     @ResponseBody
-    public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody CardBatch batch) {
-        return assembler.toResource(this.cardBatchService.update(batch));
+    public ResultResourceSupport update(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody CardBatch batch) {
+        batch.setId(id);
+        return assembler.toResource(this.cardBatchService.update(batch,  WebUtil.has(request,RequestMethod.PATCH)));
     }
 
-    private CardBatch get(String id) {
+    private CardBatch get(Long id) {
         return cardBatchService.get(id);
     }
 

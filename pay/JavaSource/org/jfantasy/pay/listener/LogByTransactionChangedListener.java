@@ -1,5 +1,7 @@
 package org.jfantasy.pay.listener;
 
+import org.jfantasy.pay.bean.Transaction;
+import org.jfantasy.pay.bean.enums.OwnerType;
 import org.jfantasy.pay.event.TransactionChangedEvent;
 import org.jfantasy.pay.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +19,8 @@ public class LogByTransactionChangedListener implements ApplicationListener<Tran
 
     @Override
     public void onApplicationEvent(TransactionChangedEvent event) {
-        logService.log(event.getTransaction());
+        Transaction transaction = event.getTransaction();
+        logService.log(OwnerType.transaction,transaction.getSn(),transaction.getStatus().name(),transaction.getNotes());
     }
 
 }

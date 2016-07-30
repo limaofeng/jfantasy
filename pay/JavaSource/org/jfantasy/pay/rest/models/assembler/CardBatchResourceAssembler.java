@@ -30,7 +30,7 @@ public class CardBatchResourceAssembler extends ResourceAssemblerSupport<CardBat
     public ResultResourceSupport toResource(CardBatch entity) {
         ResultResourceSupport resource = createResourceWithId(entity.getNo(), entity);
         resource.add(linkTo(methodOn(CardBatchController.class).cards(entity.getNo(), new Pager<Card>(), new ArrayList<PropertyFilter>())).withRel("cards"));
-        resource.add(linkTo(methodOn(LogController.class).search(OwnerType.card_batch, entity.getNo())).withRel("logs"));
+        resource.add(linkTo(methodOn(LogController.class).search(OwnerType.card_batch, entity.getId().toString())).withRel("logs"));
         return resource;
     }
 

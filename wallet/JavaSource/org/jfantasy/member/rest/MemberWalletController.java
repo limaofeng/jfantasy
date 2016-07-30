@@ -65,6 +65,7 @@ public class MemberWalletController {
         return walletAssembler.toResource(walletService.getWalletByMember(user.getId()));
     }
 
+     /*
     @ApiOperation(
             value = "用户创建钱包",
             notes = "必须通过用户授权访问",
@@ -80,7 +81,7 @@ public class MemberWalletController {
             throw new RestException(401, "没有权限访问接口");
         }
         return walletAssembler.toResource(walletService.save(user.getId()));
-    }
+    }*/
 
     @ApiOperation(value = "用户积分信息")
     @RequestMapping(value = "/point-details", method = RequestMethod.GET)

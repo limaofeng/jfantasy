@@ -39,10 +39,10 @@ public class ONSProducerPayListener extends PayListener {
         details.setOrderKey(OrderKey.newInstance(payment.getOrder().getType(), payment.getOrder().getSn()));
         details.setPayConfigId(payment.getPayConfig().getId());
 
-        if(TestOrderService.ORDER_TYPE.equals(order.getType())){
-            TestOrderService.getInstance().on(details.getOrderKey(),details,details.getMemo());
-        }else {
-            Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_PAY, PayAutoConfiguration.ONS_TAGS_PAY_PAYMENTKEY, JSON.serialize(details).getBytes());
+        if (TestOrderService.ORDER_TYPE.equals(order.getType())) {
+            TestOrderService.getInstance().on(details.getOrderKey(), details, details.getMemo());
+        } else {
+            Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_PAY_PAYMENTKEY, details.getSn(), JSON.serialize(details).getBytes());
             producer.send(msg);
         }
     }

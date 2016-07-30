@@ -8,10 +8,8 @@ import org.jfantasy.pay.bean.OrderServer;
 import org.jfantasy.pay.rest.models.OrderServerForm;
 import org.jfantasy.pay.service.OrderServerService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,6 +30,7 @@ public class OrderServerController {
 
     @ApiOperation("保存订单服务")
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public OrderServer create(OrderServerForm form){
         return orderServerService.save(form.getCallType(),form.getUrl(),form.getDescription(),form.getProperties());

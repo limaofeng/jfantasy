@@ -23,7 +23,7 @@ import java.util.List;
 @ApiModel(value = "资源", description = "每个访问链接、方法、类，都可以抽象为一个资源")
 @Entity
 @Table(name = "AUTH_RESOURCE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parentResources", "userGroups", "roles"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "parentResources", "userGroups", "roles"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Resource extends BaseBusEntity implements Cloneable {
 

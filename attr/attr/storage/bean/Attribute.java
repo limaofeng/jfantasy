@@ -18,7 +18,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "ATTR_ATTRIBUTE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","version"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler","version"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Attribute extends BaseBusEntity {
 

@@ -46,7 +46,7 @@ public class Feature extends BaseBusEntity {
      */
     @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "PERSON_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ARCH_DOCUMENT_PERSON"))
+    @JoinColumn(name = "PERSON_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ARCH_FEATURE_PERSON"))
     private Person person;
 
     @JsonAnyGetter

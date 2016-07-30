@@ -1,6 +1,8 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.enums.AccountStatus;
 import org.jfantasy.pay.bean.enums.AccountType;
@@ -10,13 +12,15 @@ import java.math.BigDecimal;
 
 @Entity
 @Table(name = "PAY_ACCOUNT")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "password", "version"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "password", "version"})
 public class Account extends BaseBusEntity {
     /**
      * 编号
      */
     @Id
     @Column(name = "ID", updatable = false)
+    @GeneratedValue(generator = "serialnumber")
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "#StringUtil.addZeroLeft(#SequenceInfo.nextValue('PAY-ACCOUNT-SN' + #DateUtil.format('yyyyMMdd')), 8)")})
     private String sn;
     /**
      * 账号类型

@@ -14,7 +14,7 @@ import java.util.List;
 @ApiModel("地区信息")
 @Entity
 @Table(name = "SYS_AREA")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
+@JsonIgnoreProperties(value = {"hibernate_lazy_initializer", "handler", "creator", "createTime", "modifier", "modifyTime", "parent", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Area extends BaseBusEntity {
 

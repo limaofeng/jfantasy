@@ -1,5 +1,6 @@
 package org.jfantasy.archives.service;
 
+import org.jfantasy.archives.bean.Document;
 import org.jfantasy.archives.bean.Record;
 import org.jfantasy.archives.dao.RecordDao;
 import org.jfantasy.framework.dao.Pager;
@@ -27,6 +28,9 @@ public class RecordService {
     @Transactional
     public Record save(Record record) {
         record.setNo("编号规则未定");
+        for (Document document : record.getDocuments()) {
+            document.setRecord(record);
+        }
         return this.recordDao.save(record);
     }
 

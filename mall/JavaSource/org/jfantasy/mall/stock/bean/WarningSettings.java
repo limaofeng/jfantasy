@@ -21,7 +21,7 @@ import org.jfantasy.framework.dao.BaseBusEntity;
  */
 @Entity
 @Table(name = "MALL_WARNING_SETTINGS")
-@JsonIgnoreProperties({ "hibernateLazyInitializer" })
+@JsonIgnoreProperties({ "hibernate_lazy_initializer" })
 public class WarningSettings extends BaseBusEntity {
 
 	private static final long serialVersionUID = 5481431980082539446L;

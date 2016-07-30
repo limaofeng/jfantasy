@@ -128,7 +128,7 @@ public class Unionpay extends PayProductSupport {
             }
 
             //验签
-            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);// 将返回结果转换为map
+            Map<String, String> result = SignUtil.parseQuery(response.text(), true);// 将返回结果转换为map
             result.put("signature", result.get("signature").replaceAll(" ", "+"));
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {//验证签名
                 throw new PayException("验证签名失败");
@@ -220,7 +220,7 @@ public class Unionpay extends PayProductSupport {
                 throw new IOException("请求失败:" + response.getStatusCode() + "\t" + response.getBody());
             }
             //验签
-            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);// 将返回结果转换为map
+            Map<String, String> result = SignUtil.parseQuery(response.text(), true);// 将返回结果转换为map
 
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {//验证签名
                 throw new PayException("验证签名失败");
@@ -296,13 +296,13 @@ public class Unionpay extends PayProductSupport {
 
             Response response = HttpClientUtil.doPost(urls.getQueryTransUrl(), data);
 
-            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);
+            Map<String, String> result = SignUtil.parseQuery(response.text(), true);
 
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
             }
 
-            return response.getBody();
+            return response.text();
 
         } catch (IOException e) {
 

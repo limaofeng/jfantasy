@@ -10,6 +10,7 @@ import org.jfantasy.security.service.MenuService;
 import org.jfantasy.system.bean.Website;
 import org.jfantasy.system.service.WebsiteService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -31,6 +32,7 @@ public class WebsiteController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Website create(@RequestBody Website website) {
         return this.websiteService.save(website);

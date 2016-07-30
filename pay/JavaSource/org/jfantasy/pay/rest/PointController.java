@@ -13,6 +13,7 @@ import org.jfantasy.pay.rest.models.PointForm;
 import org.jfantasy.pay.rest.models.assembler.PointResourceAssembler;
 import org.jfantasy.pay.service.PointService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,6 +39,7 @@ public class PointController {
     @JsonResultFilter(allow = @AllowProperty(pojo = Account.class, name = {"sn", "type"}))
     @ApiOperation(value = "提交积分记录", notes = "消费与新增积分")
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport save(Point point) {
         return assembler.toResource(pointService.save(point));

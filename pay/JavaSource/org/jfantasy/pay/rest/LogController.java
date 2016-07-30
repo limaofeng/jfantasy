@@ -1,6 +1,8 @@
 package org.jfantasy.pay.rest;
 
 import io.swagger.annotations.Api;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.pay.bean.Log;
 import org.jfantasy.pay.bean.enums.OwnerType;
 import org.jfantasy.pay.service.LogService;
@@ -20,6 +22,11 @@ public class LogController {
     @Autowired
     private LogService logService;
 
+    @JsonResultFilter(
+            ignore = {
+                    @IgnoreProperty(pojo = Log.class, name = {"id", "ownerType", "ownerId"})
+            }
+    )
     @RequestMapping(value = "/{type}-{sn}", method = RequestMethod.GET)
     @ResponseBody
     public List<Log> search(@PathVariable("type") OwnerType type, @PathVariable("sn") String sn) {

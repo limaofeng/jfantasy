@@ -18,7 +18,7 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_BANNER")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Banner extends BaseBusEntity {
 
     private static final long serialVersionUID = -5628208241667269397L;

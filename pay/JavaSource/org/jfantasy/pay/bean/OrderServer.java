@@ -17,7 +17,7 @@ import java.util.Properties;
 @ApiModel("订单服务")
 @Entity
 @Table(name = "PAY_ORDER_SERVER")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class OrderServer extends BaseBusEntity {
 
     /**

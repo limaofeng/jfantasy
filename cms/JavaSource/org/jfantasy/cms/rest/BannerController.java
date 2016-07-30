@@ -23,7 +23,8 @@ public class BannerController {
 
     @ApiOperation(value = "添加轮播图", notes = "添加轮播图", response = Banner.class)
     @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(value = HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
     public Banner create(@RequestBody Banner banner) {
         return bannerService.save(banner);
     }

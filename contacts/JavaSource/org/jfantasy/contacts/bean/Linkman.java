@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CONTACTS_LINKMAN")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "book", "groupIds"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "book", "groupIds"})
 public class Linkman extends BaseBusEntity {
 
     private static final long serialVersionUID = 6682544433375302625L;

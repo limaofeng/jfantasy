@@ -56,6 +56,13 @@ public class Person extends BaseBusEntity {
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private List<Feature> features;
 
+    public Person(Long id) {
+        this.id = id;
+    }
+
+    public Person() {
+    }
+
     public Long getId() {
         return id;
     }

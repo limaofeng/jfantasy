@@ -20,7 +20,7 @@ import org.jfantasy.mall.order.bean.OrderItem;
 @Table(name = "MALL_DELIVERY_ITEM")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class DeliveryItem extends BaseBusEntity {
 
     private static final long serialVersionUID = -6783787752984851646L;

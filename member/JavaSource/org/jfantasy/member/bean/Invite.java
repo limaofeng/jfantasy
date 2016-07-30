@@ -14,7 +14,7 @@ import java.util.Properties;
 
 @Entity
 @Table(name = "MEM_INVITE")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Invite extends BaseBusEntity {
 
     @Id

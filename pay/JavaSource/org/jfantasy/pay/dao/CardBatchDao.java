@@ -5,6 +5,6 @@ import org.jfantasy.pay.bean.CardBatch;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class CardBatchDao extends HibernateDao<CardBatch,String>{
+public class CardBatchDao extends HibernateDao<CardBatch,Long>{
 
 }

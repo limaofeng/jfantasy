@@ -17,7 +17,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "KEYWORDS")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Keywords extends BaseBusEntity {
 
     public enum Type {

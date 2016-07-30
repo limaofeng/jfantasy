@@ -10,6 +10,13 @@ public class Styles implements Serializable {
     private String bg_front;
     private String bg_back;
 
+    public Styles(){}
+
+    public Styles(String bg_front, String bg_back) {
+        this.bg_front = bg_front;
+        this.bg_back = bg_back;
+    }
+
     public String getBg_front() {
         return bg_front;
     }
@@ -25,4 +32,5 @@ public class Styles implements Serializable {
     public void setBg_back(String bg_back) {
         this.bg_back = bg_back;
     }
+
 }

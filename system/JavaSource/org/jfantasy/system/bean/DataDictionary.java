@@ -23,7 +23,7 @@ import java.util.List;
 @Entity
 @Table(name = "SYS_DD")
 @IdClass(DataDictionaryKey.class)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "parent", "children"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "parent", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DataDictionary extends BaseBusEntity {
 

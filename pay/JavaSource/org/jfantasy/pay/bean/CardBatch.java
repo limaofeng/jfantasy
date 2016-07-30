@@ -3,6 +3,7 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.enums.CardBatchStatus;
 
@@ -15,12 +16,17 @@ import java.util.List;
  */
 @Entity
 @Table(name = "PAY_CARD_BATCH")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class CardBatch extends BaseBusEntity {
 
-    @ApiModelProperty("批次号")
     @Id
-    @Column(name = "NUMBER", length = 20)
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    private Long id;
+
+    @ApiModelProperty("批次号")
+    @Column(name = "NUMBER", length = 20, unique = true)
     private String no;
     /**
      * 发行批次名称
@@ -32,14 +38,14 @@ public class CardBatch extends BaseBusEntity {
      */
     @JsonProperty("card_type")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CARD_TYPE", nullable = false)
+    @JoinColumn(name = "CARD_TYPE", nullable = false, foreignKey = @ForeignKey(name = "FK_CARD_TYPE_DESIGN"))
     private CardType cardType;
     /**
      * 卡设计
      */
     @JsonProperty("card_design")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "CARD_DESIGN", nullable = false)
+    @JoinColumn(name = "CARD_DESIGN", nullable = false, foreignKey = @ForeignKey(name = "FK_CARD_BATCH_DESIGN"))
     private CardDesign cardDesign;
     /**
      * 会员卡批次状态
@@ -139,5 +145,13 @@ public class CardBatch extends BaseBusEntity {
 
     public void setLogs(List<Log> logs) {
         this.logs = logs;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

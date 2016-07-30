@@ -10,7 +10,7 @@ import org.jfantasy.thirdparty.bean.enums.Platform;
 import javax.persistence.*;
 import java.util.Properties;
 
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "properties"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "properties"})
 public class User extends BaseBusEntity {
 
     @Id

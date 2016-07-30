@@ -22,7 +22,7 @@ import java.util.Date;
 @Table(name = "MALL_GOODS_NOTIFY")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class GoodsNotify extends BaseBusEntity {
 
 	private static final long serialVersionUID = 2814795887062166006L;

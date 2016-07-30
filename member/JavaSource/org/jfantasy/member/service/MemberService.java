@@ -3,9 +3,7 @@ package org.jfantasy.member.service;
 import org.hibernate.criterion.Criterion;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.spring.mvc.error.LoginException;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
-import org.jfantasy.framework.spring.mvc.error.PasswordException;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -69,13 +67,13 @@ public class MemberService {
     public Member login(String username, String password) {
         Member member = this.memberDao.findUniqueBy("username", username);
         if (member == null || !passwordEncoder.matches(member.getPassword(), password)) {
-            throw new PasswordException("用户名和密码错误");
+            throw new ValidationException(203.1f, "用户名和密码错误");
         }
         if (!member.isEnabled()) {
-            throw new LoginException("用户被禁用");
+            throw new ValidationException(203.1f, "用户被禁用");
         }
         if (!member.isAccountNonLocked()) {
-            throw new LoginException("用户被锁定");
+            throw new ValidationException(203.1f, "用户被锁定");
         }
         member.setLastLoginTime(DateUtil.now());
         this.memberDao.save(member);
@@ -91,7 +89,7 @@ public class MemberService {
      */
     public Member save(Member member) {
         if (Member.MEMBER_TYPE_PERSONAL.equals(member.getType())) {
-            MemberDetails details = ObjectUtil.defaultValue(member.getDetails(),new MemberDetails());
+            MemberDetails details = ObjectUtil.defaultValue(member.getDetails(), new MemberDetails());
             // 设置默认属性
             details.setMailValid(false);
             details.setMobileValid(false);

@@ -20,7 +20,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "FILE_MANAGER_CONFIG")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "folders", "fileDetails"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "folders", "fileDetails"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileManagerConfig extends BaseBusEntity {
 

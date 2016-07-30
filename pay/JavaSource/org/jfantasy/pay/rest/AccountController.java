@@ -8,10 +8,12 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.Account;
 import org.jfantasy.pay.bean.Point;
 import org.jfantasy.pay.bean.Transaction;
+import org.jfantasy.pay.rest.models.AccountForm;
 import org.jfantasy.pay.rest.models.ActivateForm;
 import org.jfantasy.pay.rest.models.assembler.AccountResourceAssembler;
 import org.jfantasy.pay.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -44,6 +46,13 @@ public class AccountController {
         return assembler.toResource(get(id));
     }
 
+    @ApiOperation("添加账户")
+    @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseBody
+    public ResultResourceSupport save(@RequestBody AccountForm form) {
+        return assembler.toResource(this.accountService.save(form.getType(),form.getOwner(),form.getPassword()));
+    }
 
     @ApiOperation("激活账户")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/activate")
@@ -67,6 +76,8 @@ public class AccountController {
         filters.add(new PropertyFilter("EQS_account.sn", sn));
         return pointController.search(pager, filters);
     }
+
+
 
     private Account get(String id) {
         return accountService.get(id);

@@ -1,8 +1,10 @@
 package org.jfantasy.pay.service;
 
+import org.hibernate.criterion.Criterion;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.RestException;
+import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.pay.bean.CardDesign;
 import org.jfantasy.pay.bean.enums.CardDesignStatus;
 import org.jfantasy.pay.bean.enums.OwnerType;
@@ -37,21 +39,20 @@ public class CardDesignService {
 
 
     @Transactional
-    public CardDesign update(CardDesign batch) {
-        this.cardDesignDao.update(batch);
-        return batch;
+    public CardDesign update(CardDesign batch, boolean patch) {
+        return this.cardDesignDao.update(batch, patch);
     }
 
     @Transactional
     public CardDesign publish(String id, String notes) {
         CardDesign design = this.cardDesignDao.get(id);
         if (design.getStatus() != CardDesignStatus.draft) {
-            throw new RestException("卡片发布失败!");
+            throw new ValidationException(105, "卡片发布失败!");
         }
         design.setStatus(CardDesignStatus.publish);
-        this.update(design);
+        this.cardDesignDao.update(design);
         //保存操作记录
-        this.logService.log(design, notes);
+        this.logService.log(OwnerType.card_design, design.getKey(), "publish", notes);
         return design;
     }
 
@@ -59,11 +60,10 @@ public class CardDesignService {
     public CardDesign unpublish(String id, String notes) {
         CardDesign design = this.cardDesignDao.get(id);
         if (design.getStatus() != CardDesignStatus.publish) {
-            throw new RestException("卡片取消发布失败!");
+            throw new ValidationException(106, "卡片取消发布失败!");
         }
-        design.setStatus(CardDesignStatus.unpublish);
         //保存操作记录
-        this.logService.log(design, notes);
+        this.logService.log(OwnerType.card_design, design.getKey(), "unpublish", notes);
         design.setStatus(CardDesignStatus.draft);
         this.cardDesignDao.update(design);
         return design;
@@ -75,9 +75,9 @@ public class CardDesignService {
             throw new RestException("卡片销毁失败!");
         }
         design.setStatus(CardDesignStatus.destroyed);
-        this.update(design);
+        this.cardDesignDao.update(design);
         //保存操作记录
-        this.logService.log(design, notes);
+        this.logService.log(OwnerType.card_design, design.getKey(), "destroyed", notes);
         return design;
     }
 
@@ -96,6 +96,10 @@ public class CardDesignService {
     private CardDesign loadLogs(CardDesign design) {
         design.setLogs(this.logService.logs(OwnerType.card_design, design.getKey()));
         return design;
+    }
+
+    public List<CardDesign> find(Criterion... criterions) {
+        return this.cardDesignDao.find(criterions);
     }
 
 }

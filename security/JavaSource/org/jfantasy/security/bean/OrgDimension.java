@@ -14,7 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "AUTH_ORG_DIMENSION")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler","website"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler","website"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class OrgDimension extends BaseBusEntity {
     /**

@@ -4,8 +4,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.auth.rest.models.LoginForm;
 import org.jfantasy.auth.rest.models.LogoutForm;
+import org.jfantasy.auth.rest.models.Scope;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.rest.MemberController;
@@ -15,6 +17,7 @@ import org.jfantasy.security.rest.UserController;
 import org.jfantasy.security.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -32,7 +35,10 @@ public class AuthController {
     @ApiOperation(value = "用户登录", notes = "用户登录接口")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @ResponseBody
-    public ResultResourceSupport login(@RequestBody LoginForm loginForm) {
+    public ResultResourceSupport login(@Validated(RESTful.POST.class) @RequestBody LoginForm loginForm) {
+        if (StringUtil.isBlank(loginForm.getUserType())) {
+            loginForm.setUserType(Scope.member == loginForm.getScope() ? Member.MEMBER_TYPE_PERSONAL : null);
+        }
         switch (loginForm.getScope()) {
             case user:
                 User user = this.userService.login(loginForm.getUsername(), loginForm.getPassword());
@@ -42,7 +48,7 @@ public class AuthController {
                 return UserController.assembler.toResource(user);
             case member:
                 Member member = memberService.login(loginForm.getUsername(), loginForm.getPassword());
-                if (StringUtil.isNotBlank(loginForm.getUserType()) && !loginForm.getUserType().equals(member.getMemberType())) {
+                if (StringUtil.isNotBlank(loginForm.getUserType()) && !loginForm.getUserType().equals(member.getType())) {
                     throw new RestException("UserType 不一致");
                 }
                 return MemberController.assembler.toResource(member);

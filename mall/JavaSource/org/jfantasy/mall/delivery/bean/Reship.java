@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 @Table(name = "MALL_DELIVERY_RESHIP")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Reship extends BaseBusEntity {
 
     private static final long serialVersionUID = 4439185740262484180L;

@@ -17,7 +17,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "CONTACTS_GROUP")
-@JsonIgnoreProperties( {"hibernateLazyInitializer", "handler", "book", "linkmans" })
+@JsonIgnoreProperties( {"hibernate_lazy_initializer", "handler", "book", "linkmans" })
 public class Group extends BaseBusEntity {
 
 	private static final long serialVersionUID = -5646654443086634257L;

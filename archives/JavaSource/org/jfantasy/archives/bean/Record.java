@@ -3,7 +3,6 @@ package org.jfantasy.archives.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -14,6 +13,7 @@ import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.util.Date;
 import java.util.List;
@@ -54,12 +54,11 @@ public class Record extends BaseBusEntity {
      * 文档记录
      */
     @ApiModelProperty(hidden = true)
-    @OneToMany(mappedBy = "record", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "record", fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private List<Document> documents;
     /**
      * 显示时间
      */
-    @JsonProperty("display_time")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(updatable = false, name = "DISPLAY_TIME")
     private Date displayTime;
@@ -82,8 +81,6 @@ public class Record extends BaseBusEntity {
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
-    @Transient
-    private Long personId;
 
     public Long getId() {
         return id;
@@ -149,12 +146,15 @@ public class Record extends BaseBusEntity {
         this.type = type;
     }
 
+    @Transient
+    @NotNull(groups = RESTful.POST.class)
     public Long getPersonId() {
-        return personId;
+        return this.getPerson() == null ? null : this.getPerson().getId();
     }
 
+    @Transient
     public void setPersonId(Long personId) {
-        this.personId = personId;
+        this.person = new Person(personId);
     }
 
     @JsonAnySetter

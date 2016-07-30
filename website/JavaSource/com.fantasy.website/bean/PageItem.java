@@ -11,7 +11,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SWP_PAGE_ITEM")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "page", "content"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "page", "content"})
 public class PageItem extends BaseBusEntity {
 
     private static final long serialVersionUID = 1157087271787049968L;

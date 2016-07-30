@@ -30,7 +30,7 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_ARTICLE_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "articles", "children", "articleVersion"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "articles", "children", "articleVersion"})
 public class ArticleCategory extends BaseBusEntity {
 
     private static final long serialVersionUID = -2207100604803274789L;

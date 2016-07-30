@@ -24,7 +24,7 @@ import java.math.BigDecimal;
 @Table(name = "MALL_ORDER_ITEM")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonFilter(JSON.CUSTOM_FILTER)
-@JsonIgnoreProperties({ "hibernateLazyInitializer", "handler", "memeo", "order" })
+@JsonIgnoreProperties({ "hibernate_lazy_initializer", "handler", "memeo", "order" })
 public class OrderItem extends BaseBusEntity {
 
 	private static final long serialVersionUID = 5030818078599298690L;

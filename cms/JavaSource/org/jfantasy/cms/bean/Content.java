@@ -24,7 +24,7 @@ import java.io.IOException;
 @Entity
 @Table(name = "CMS_CONTENT")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Content extends BaseBusEntity {
 
     private static final long serialVersionUID = -7570871629827875364L;

@@ -180,7 +180,7 @@ public class Chinapay extends PayProductSupport {
 
             Response response = HttpClientUtil.doPost(urls.getQueryTransUrl(), data);
 
-            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);
+            Map<String, String> result = SignUtil.parseQuery(response.text(), true);
 
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");
@@ -196,7 +196,7 @@ public class Chinapay extends PayProductSupport {
 
             payment.setTradeNo(result.get("AcqSeqId"));
             payment.setTradeTime(DateUtil.now());
-            return response.getBody();
+            return response.text();
 
         } catch (IOException e) {
 
@@ -240,7 +240,7 @@ public class Chinapay extends PayProductSupport {
 
             Response response = HttpClientUtil.doPost(url, data);
 
-            Map<String, String> result = SignUtil.parseQuery(response.getBody(), true);
+            Map<String, String> result = SignUtil.parseQuery(response.text(), true);
 
             if (!verify(result, CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert")))) {
                 throw new PayException("验证签名失败");

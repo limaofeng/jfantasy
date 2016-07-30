@@ -17,7 +17,7 @@ import java.util.Properties;
 @ApiModel("API 授权信息")
 @Entity
 @Table(name = "OAUTH_APIKEY")
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "application"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "application"})
 public class ApiKey extends BaseBusEntity {
     /**
      * 调用 api key

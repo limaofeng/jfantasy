@@ -19,7 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "SYS_WEBSITE")
-@JsonIgnoreProperties(value = {"hibernateLazyInitializer", "handler", "defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
+@JsonIgnoreProperties(value = {"hibernate_lazy_initializer", "handler", "defaultFileManager", "defaultUploadFileManager", "settings", "users", "rootMenu"})
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Website extends BaseBusEntity {
 
