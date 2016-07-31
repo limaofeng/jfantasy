@@ -1,7 +1,7 @@
 /pay/test/config/certs/*.pfx
 /pay/test/config/certs/*.cer
 /javaweb/WebContent/WEB-INF/index
-*.class
+.vscode
 .idea
 .gradle
 # Package Files #
@@ -9,11 +9,11 @@
 *.war
 *.ear
 *.iml
+*.class
 target
-LOG_PATH_IS_UNDEFINED/
-*/**/LOG_PATH_IS_UNDEFINED/
-*/build
-
+classes
+build
+LOG_PATH_IS_UNDEFINED
 api-docs/node_modules
 rebel.xml
 rebel-remote.xml
