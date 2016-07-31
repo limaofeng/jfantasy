@@ -34,4 +34,10 @@ public class RecordService {
         return this.recordDao.save(record);
     }
 
+    @Transactional
+    public void delete(Long... ids) {
+        for (Long id : ids) {
+            this.recordDao.delete(id);
+        }
+    }
 }

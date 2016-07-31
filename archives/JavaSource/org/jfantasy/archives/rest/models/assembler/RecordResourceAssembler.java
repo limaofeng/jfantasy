@@ -1,5 +1,6 @@
 package org.jfantasy.archives.rest.models.assembler;
 
+import org.jfantasy.archives.bean.Document;
 import org.jfantasy.archives.bean.Record;
 import org.jfantasy.archives.rest.RecordController;
 import org.jfantasy.framework.dao.Pager;
@@ -14,7 +15,11 @@ public class RecordResourceAssembler extends ResourceAssemblerSupport<Record, Re
 
     @Override
     protected ResultResourceSupport<Record> instantiateResource(Record entity) {
-        return new ResultResourceSupport<>(entity);
+        ResultResourceSupport<Record> resource = new ResultResourceSupport<>(entity);
+        for (Document document : entity.getDocuments()) {
+            resource.set(document.getCode(), document.getData());
+        }
+        return resource;
     }
 
     @Override

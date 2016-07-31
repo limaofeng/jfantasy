@@ -38,6 +38,9 @@ public class RecordController {
         return assembler.toResources(recordService.findPager(pager, filters));
     }
 
+    @JsonResultFilter(ignore = {
+            @IgnoreProperty(pojo = Record.class, name = {"documents", Record.BASE_FIELDS})
+    })
     @ApiOperation(value = "添加档案")
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,8 +49,15 @@ public class RecordController {
         return assembler.toResource(this.recordService.save(record));
     }
 
+    @ApiOperation(value = "删除档案")
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id") Long id) {
+        this.recordService.delete(id);
+    }
+
     @JsonResultFilter(ignore = {
-            @IgnoreProperty(pojo = Record.class, name = {Record.BASE_FIELDS})
+            @IgnoreProperty(pojo = Record.class, name = {"documents", Record.BASE_FIELDS})
     })
     @ApiOperation(value = "获取档案详情")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
