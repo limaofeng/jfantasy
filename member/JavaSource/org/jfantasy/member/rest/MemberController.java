@@ -13,11 +13,13 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.member.bean.Comment;
+import org.jfantasy.member.bean.Favorite;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.MemberDetails;
 import org.jfantasy.member.rest.models.PasswordForm;
 import org.jfantasy.member.rest.models.assembler.MemberResourceAssembler;
 import org.jfantasy.member.rest.models.assembler.ProfileResourceAssembler;
+import org.jfantasy.member.service.FavoriteService;
 import org.jfantasy.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +43,8 @@ public class MemberController {
     private CommentController commentController;
     @Autowired
     private ReceiverController receiverController;
+    @Autowired
+    private FavoriteService favoriteService;
 
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
@@ -57,6 +61,13 @@ public class MemberController {
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(get(id));
+    }
+
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Favorite.class, name = {"member", "member_id"}))
+    @RequestMapping(value = "/{id}/favorites", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Favorite> favorites(@PathVariable("id") Long id, @RequestParam(value = "type") String type) {
+        return this.favoriteService.findByMemberId(id, type);
     }
 
     @JsonResultFilter(

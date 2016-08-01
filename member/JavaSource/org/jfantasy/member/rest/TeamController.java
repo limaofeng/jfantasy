@@ -4,15 +4,24 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.AllowProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.Invite;
+import org.jfantasy.member.bean.Tag;
 import org.jfantasy.member.bean.Team;
+import org.jfantasy.member.bean.TeamMember;
+import org.jfantasy.member.rest.models.TagForm;
 import org.jfantasy.member.rest.models.assembler.TeamResourceAssembler;
 import org.jfantasy.member.service.InviteService;
+import org.jfantasy.member.service.TagService;
+import org.jfantasy.member.service.TeamMemberService;
 import org.jfantasy.member.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +37,10 @@ public class TeamController {
     private TeamService teamService;
     @Autowired
     private InviteService inviteService;
+    @Autowired
+    private TagService tagService;
+    @Autowired
+    private TeamMemberService teamMemberService;
 
     @ApiOperation(value = "团队列表", notes = "团队列表")
     @RequestMapping(method = RequestMethod.GET)
@@ -62,19 +75,58 @@ public class TeamController {
         this.teamService.deltele(id);
     }
 
-    @ApiOperation(value = "邀请列表", notes = "邀请列表")
-    @RequestMapping(value = "/{teamid}/invites", method = RequestMethod.GET)
+    @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
+    @ApiOperation(value = "获取团队标签")
+    @RequestMapping(value = "/{id}/tags", method = RequestMethod.GET)
+    public List<Tag> tags(@PathVariable("id") String id, @RequestParam("type") String type) {
+        return this.tagService.find("team", id, type);
+    }
+
+    @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
+    @ApiOperation(value = "添加团队标签")
+    @RequestMapping(value = "/{id}/tags", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Pager<ResultResourceSupport> invites(@PathVariable("teamid") String teamid, Pager<Invite> pager, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQS_team.key", teamid));
+    public Tag tags(@PathVariable("id") String id, @Validated(RESTful.POST.class) @RequestBody TagForm from) {
+        return this.tagService.save("team", id, from.getName(), from.getType());
+    }
+
+    @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
+    @ApiOperation(value = "修改团队标签")
+    @RequestMapping(value = "/{id}/tags/{tagid}", method = RequestMethod.PUT)
+    @ResponseBody
+    public Tag tags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid, @Validated(RESTful.POST.class) @RequestBody TagForm from) {
+        return this.tagService.update("team", id, tagid, from.getName());
+    }
+
+    @ApiOperation(value = "删除团队标签")
+    @RequestMapping(value = "/{id}/tags/{tagid}", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void deleteTags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid) {
+        this.tagService.delete("team", id, tagid);
+    }
+
+    @ApiOperation(value = "邀请列表", notes = "邀请列表")
+    @RequestMapping(value = "/{id}/invites", method = RequestMethod.GET)
+    @ResponseBody
+    public Pager<ResultResourceSupport> invites(@PathVariable("id") String id, Pager<Invite> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQS_team.key", id));
         return InviteController.assembler.toResources(this.inviteService.findPager(pager, filters));
     }
 
     @ApiOperation(value = "批量邀请", notes = "批量邀请")
-    @RequestMapping(value = "/{teamid}/invites", method = RequestMethod.POST)
+    @RequestMapping(value = "/{id}/invites", method = RequestMethod.POST)
     @ResponseBody
-    public List<ResultResourceSupport> invites(@PathVariable("teamid") String teamid, @RequestBody List<Invite> invites) {
-        return InviteController.assembler.toResources(inviteService.save(teamid, invites));
+    public List<ResultResourceSupport> invites(@PathVariable("id") String id, @RequestBody List<Invite> invites) {
+        return InviteController.assembler.toResources(inviteService.save(id, invites));
+    }
+
+    @ApiOperation(value = "团队成员列表")
+    @RequestMapping(value = "/{id}/member", method = RequestMethod.GET)
+    @ResponseBody
+    public Pager<ResultResourceSupport> members(@PathVariable("id") String id, Pager<TeamMember> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQS_team.key", id));
+        return TeamMemberController.assembler.toResources(this.teamMemberService.findPager(pager, filters));
     }
 
     private Team get(String id) {

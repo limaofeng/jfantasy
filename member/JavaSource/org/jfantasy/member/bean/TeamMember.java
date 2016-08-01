@@ -7,16 +7,20 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.StringsConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.member.bean.enums.InviteStatus;
 
 import javax.persistence.*;
 import java.util.Properties;
 
+/**
+ * 团队成员
+ */
 @Entity
-@Table(name = "MEM_INVITE")
+@Table(name = "MEM_TEAM_MEMBER")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
-public class Invite extends BaseBusEntity {
+public class TeamMember extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
@@ -52,14 +56,12 @@ public class Invite extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TEAM_ID", foreignKey = @ForeignKey(name = "FK_INVITE_TEAM"))
     private Team team;
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
+    /**
+     * 标签
+     */
+    @Convert(converter = StringsConverter.class)
+    @Column(name = "TAGS", length = 2000)
+    private String[] tags;
 
     public Long getId() {
         return id;
@@ -93,6 +95,14 @@ public class Invite extends BaseBusEntity {
         this.member = member;
     }
 
+    public Team getTeam() {
+        return team;
+    }
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
+
     public void setProperties(Properties properties) {
         this.properties = properties;
     }
@@ -119,4 +129,11 @@ public class Invite extends BaseBusEntity {
         return this.properties.getProperty(key);
     }
 
+    public String[] getTags() {
+        return tags;
+    }
+
+    public void setTags(String[] tags) {
+        this.tags = tags;
+    }
 }
