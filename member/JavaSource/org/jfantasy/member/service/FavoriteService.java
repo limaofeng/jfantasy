@@ -20,8 +20,14 @@ public class FavoriteService {
     }
 
     @Transactional
-    public Favorite save(Favorite favorite) {
-        return this.favoriteDao.save(favorite);
+    public Favorite save(Long memberId, String type, String targetType, String targetId, boolean watch) {
+        Favorite favorite = this.findUnique(memberId, type, targetType, targetId);
+        if (watch && favorite != null) {
+            return this.favoriteDao.save(favorite);
+        } else if (favorite != null) {
+            this.delete(favorite.getId());
+        }
+        return favorite;
     }
 
     public void delete(Long... ids) {
@@ -30,4 +36,19 @@ public class FavoriteService {
         }
     }
 
+    /**
+     * 查询收藏信息
+     *
+     * @param memberId   用户ID
+     * @param type       收藏类型
+     * @param targetType 收藏对象类型
+     * @param targetId   收藏对象ID
+     * @return Favorite
+     */
+    public Favorite findUnique(Long memberId, String type, String targetType, String targetId) {
+        return this.favoriteDao.findUnique(Restrictions.eq("member.id", memberId),
+                Restrictions.eq("type", type),
+                Restrictions.eq("targetType", targetType),
+                Restrictions.eq("targetId", targetId));
+    }
 }

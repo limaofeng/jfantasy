@@ -4,24 +4,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.jackson.annotation.AllowProperty;
-import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
-import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.Invite;
-import org.jfantasy.member.bean.Tag;
 import org.jfantasy.member.bean.Team;
 import org.jfantasy.member.bean.TeamMember;
-import org.jfantasy.member.rest.models.TagForm;
 import org.jfantasy.member.rest.models.assembler.TeamResourceAssembler;
 import org.jfantasy.member.service.InviteService;
-import org.jfantasy.member.service.TagService;
 import org.jfantasy.member.service.TeamMemberService;
 import org.jfantasy.member.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +30,6 @@ public class TeamController {
     private TeamService teamService;
     @Autowired
     private InviteService inviteService;
-    @Autowired
-    private TagService tagService;
     @Autowired
     private TeamMemberService teamMemberService;
 
@@ -75,36 +66,7 @@ public class TeamController {
         this.teamService.deltele(id);
     }
 
-    @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "获取团队标签")
-    @RequestMapping(value = "/{id}/tags", method = RequestMethod.GET)
-    public List<Tag> tags(@PathVariable("id") String id, @RequestParam("type") String type) {
-        return this.tagService.find("team", id, type);
-    }
 
-    @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "添加团队标签")
-    @RequestMapping(value = "/{id}/tags", method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public Tag tags(@PathVariable("id") String id, @Validated(RESTful.POST.class) @RequestBody TagForm from) {
-        return this.tagService.save("team", id, from.getName(), from.getType());
-    }
-
-    @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "修改团队标签")
-    @RequestMapping(value = "/{id}/tags/{tagid}", method = RequestMethod.PUT)
-    @ResponseBody
-    public Tag tags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid, @Validated(RESTful.POST.class) @RequestBody TagForm from) {
-        return this.tagService.update("team", id, tagid, from.getName());
-    }
-
-    @ApiOperation(value = "删除团队标签")
-    @RequestMapping(value = "/{id}/tags/{tagid}", method = RequestMethod.DELETE)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteTags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid) {
-        this.tagService.delete("team", id, tagid);
-    }
 
     @ApiOperation(value = "邀请列表", notes = "邀请列表")
     @RequestMapping(value = "/{id}/invites", method = RequestMethod.GET)

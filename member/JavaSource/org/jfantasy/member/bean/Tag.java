@@ -15,7 +15,7 @@ public class Tag extends BaseBusEntity {
 
     @Null(groups = {RESTful.POST.class})
     @Id
-    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;

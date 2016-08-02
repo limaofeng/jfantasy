@@ -37,6 +37,7 @@ public class MemberController {
 
     public static MemberResourceAssembler assembler = new MemberResourceAssembler();
     public static ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
+
     @Autowired
     private MemberService memberService;
     @Autowired

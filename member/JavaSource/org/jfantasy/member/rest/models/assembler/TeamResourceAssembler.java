@@ -6,6 +6,7 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Invite;
 import org.jfantasy.member.bean.Team;
 import org.jfantasy.member.rest.TeamController;
+import org.jfantasy.member.rest.TeamTagController;
 import org.springframework.hateoas.mvc.ResourceAssemblerSupport;
 
 import java.util.ArrayList;
@@ -28,6 +29,7 @@ public class TeamResourceAssembler extends ResourceAssemblerSupport<Team, Result
     public ResultResourceSupport toResource(Team entity) {
         ResultResourceSupport resource = createResourceWithId(entity.getKey(), entity);
         resource.add(linkTo(methodOn(TeamController.class).invites(entity.getKey(), new Pager<Invite>(), new ArrayList<PropertyFilter>())).withRel("invites"));
+        resource.add(linkTo(methodOn(TeamTagController.class).tags(entity.getKey(), "")).withRel("tags"));
         return resource;
     }
 

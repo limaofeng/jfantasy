@@ -21,26 +21,26 @@ public class TeamMemberController {
     @Autowired
     private TeamMemberService teamMemberService;
 
-    @ApiOperation(value = "查看团队", notes = "查看团队")
+    @ApiOperation(value = "查看团队成员", notes = "查看团队成员")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(this.get(id));
     }
 
-    @ApiOperation(value = "添加团队", notes = "添加团队")
+    @ApiOperation(value = "添加团队成员", notes = "添加团队成员")
     @RequestMapping(method = RequestMethod.POST)
     public ResultResourceSupport create(@RequestBody TeamMember member) {
         return assembler.toResource(this.teamMemberService.save(member));
     }
 
-    @ApiOperation(value = "更新团队", notes = "更新团队地址")
+    @ApiOperation(value = "更新团队成员", notes = "更新团队成员地址")
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody TeamMember member) {
         member.setId(id);
         return assembler.toResource(this.teamMemberService.update(member));
     }
 
-    @ApiOperation(value = "删除团队", notes = "删除团队")
+    @ApiOperation(value = "删除团队成员", notes = "删除团队成员")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {

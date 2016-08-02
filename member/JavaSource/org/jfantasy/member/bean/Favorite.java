@@ -22,13 +22,13 @@ import javax.validation.constraints.Null;
  */
 @ApiModel("用户收藏")
 @Entity
-@Table(name = "MEM_FAVORITE")
+@Table(name = "MEM_FAVORITE",uniqueConstraints = {@UniqueConstraint(name = "U_MEM_FAVORITE",columnNames = {"TYPE","TARGET_TYPE","TARGET_ID","MEMBER_ID"})})
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "forComment"})
 public class Favorite extends BaseBusEntity {
 
     @Null(groups = RESTful.POST.class)
     @Id
-    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
@@ -44,7 +44,6 @@ public class Favorite extends BaseBusEntity {
     @ApiModelProperty("目标ID")
     @Column(name = "TARGET_ID", nullable = false)
     private String targetId;
-    @Null(groups = RESTful.POST.class)
     @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
