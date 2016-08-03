@@ -50,7 +50,7 @@ public class ArticleController {
     }
 
     @ApiOperation(value = "更新文章", notes = "通过该接口, 更新文章")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public Article update(@PathVariable("id") Long id, @RequestBody Article article) {
         article.setId(id);
         return this.cmsService.save(article);

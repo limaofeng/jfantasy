@@ -51,7 +51,7 @@ public class PermissionController {
     }
 
     @ApiOperation(value = "更新权限", notes = "更新权限")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH})
     @ResponseBody
     public Permission update(@PathVariable("id") Long id, @RequestBody Permission permission) {
         permission.setId(id);

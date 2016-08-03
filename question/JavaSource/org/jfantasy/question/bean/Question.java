@@ -1,13 +1,12 @@
 package org.jfantasy.question.bean;
 
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.member.bean.Member;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.member.bean.Member;
 
-import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 

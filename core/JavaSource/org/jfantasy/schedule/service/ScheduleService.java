@@ -474,6 +474,14 @@ public class ScheduleService {
         }
     }
 
+    public void clear(){
+        try {
+            this.scheduler.clear();
+        } catch (SchedulerException e) {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
     public List<JobDetail> jobs() {
         List<JobDetail> jobDetails = new ArrayList<JobDetail>();
         for (JobKey jobKey : this.getJobKeys()) {
@@ -488,4 +496,9 @@ public class ScheduleService {
         }
         return jobDetails;
     }
+
+    public ListenerManager getListenerManager() throws SchedulerException {
+        return this.scheduler.getListenerManager();
+    }
+
 }

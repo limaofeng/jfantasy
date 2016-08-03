@@ -48,7 +48,7 @@ public class RoleController {
         return roleService.save(role);
     }
 
-    @RequestMapping(value = "/{code}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{code}", method = {RequestMethod.PATCH})
     @ResponseBody
     public Role update(@PathVariable("code") String code, @RequestBody Role role) {
         role.setCode(code);
@@ -75,7 +75,7 @@ public class RoleController {
     }
 
     @ApiOperation(value = "更新角色菜单权限", notes = "返回角色对应的菜单授权", response = String[].class)
-    @RequestMapping(value = "/{code}/menus", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{code}/menus", method = {RequestMethod.PATCH})
     @ResponseBody
     public String[] menus(@PathVariable("code") String code, @RequestBody String[] menuIds) {
         Role role = this.roleService.get(code);

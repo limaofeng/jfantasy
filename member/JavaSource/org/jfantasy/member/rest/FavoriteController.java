@@ -24,8 +24,9 @@ public class FavoriteController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public Favorite save(@Validated(RESTful.POST.class) @RequestBody FavoriteForm form) {
-        return favoriteService.save(form.getMemberId(), form.getType(), form.getTargetType(), form.getTargetId(), form.isWatch());
+    public FavoriteForm save(@Validated(RESTful.POST.class) @RequestBody FavoriteForm form) {
+        favoriteService.save(form.getMemberId(), form.getType(), form.getTargetType(), form.getTargetId(), form.isWatch());
+        return form;
     }
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = Favorite.class, name = {"member"}))

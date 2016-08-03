@@ -27,8 +27,7 @@ public class TeamService {
 
     @Transactional
     public Team update(Team team) {
-        this.teamDao.update(team);
-        return team;
+        return this.teamDao.update(team, true);
     }
 
     @Transactional

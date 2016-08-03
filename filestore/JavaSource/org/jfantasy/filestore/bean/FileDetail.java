@@ -1,6 +1,7 @@
 package org.jfantasy.filestore.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
@@ -18,7 +19,7 @@ import javax.persistence.*;
 @Entity
 @IdClass(FileDetailKey.class)
 @Table(name = "FILE_FILEDETAIL")
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "folder", "realPath"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "folder", "real_path", "file_manager_id", "md5"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class FileDetail extends BaseBusEntity implements Cloneable {
 
@@ -28,6 +29,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
      * 虚拟文件路径
      */
     @ApiModelProperty(value = "文件访问路径")
+    @JsonProperty("path")
     @Id
     private String absolutePath;
     @ApiModelProperty(hidden = true)
@@ -36,6 +38,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
     /**
      * 文件名称
      */
+    @JsonProperty("name")
     @ApiModelProperty(value = "文件名")
     @Column(name = "FILE_NAME", length = 150)
     private String fileName;
@@ -227,6 +230,7 @@ public class FileDetail extends BaseBusEntity implements Cloneable {
     }
 
     @Transient
+    @JsonProperty("key")
     public String getFileDetailKey() {
         return FileDetailKey.newInstance(this.absolutePath, this.fileManagerId).toString();
     }

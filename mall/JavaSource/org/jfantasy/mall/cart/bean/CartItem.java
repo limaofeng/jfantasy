@@ -1,12 +1,11 @@
 package org.jfantasy.mall.cart.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.mall.goods.bean.Product;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.mall.goods.bean.Product;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
 /**

@@ -30,7 +30,7 @@ public class BannerController {
     }
 
     @ApiOperation(value = "更新轮播图", notes = "更新轮播图信息", response = Banner.class)
-    @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{key}", method = RequestMethod.PATCH)
     @ResponseBody
     public Banner update(@PathVariable("key") String key,@RequestBody Banner banner) {
         banner.setKey(key);

@@ -1,11 +1,10 @@
 package org.jfantasy.mall.cart.bean;
 
-import org.jfantasy.framework.dao.BaseBusEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.jfantasy.framework.dao.BaseBusEntity;
 
-import javax.persistence.*;
 import java.util.List;
 
 /**

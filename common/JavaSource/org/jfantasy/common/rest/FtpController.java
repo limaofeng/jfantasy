@@ -56,7 +56,7 @@ public class FtpController {
     }
 
     @ApiOperation(value = "更新FTP配置")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseBody
     public FtpConfig update(@PathVariable("id") Long id, @RequestBody FtpConfig ftpConfig) {
         ftpConfig.setId(id);

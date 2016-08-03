@@ -6,6 +6,7 @@ import org.jfantasy.member.bean.TeamMember;
 import org.jfantasy.member.dao.TeamMemberDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,11 +28,13 @@ public class TeamMemberService {
         this.teamMemberDao.delete(ids);
     }
 
+    @Transactional
     public TeamMember update(TeamMember member) {
-        return null;
+        return this.teamMemberDao.update(member, true);
     }
 
+    @Transactional
     public TeamMember save(TeamMember member) {
-        return null;
+        return this.teamMemberDao.save(member);
     }
 }

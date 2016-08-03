@@ -6,6 +6,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.Invite;
 import org.jfantasy.member.bean.Team;
 import org.jfantasy.member.bean.TeamMember;
@@ -15,6 +16,7 @@ import org.jfantasy.member.service.TeamMemberService;
 import org.jfantasy.member.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -48,12 +50,12 @@ public class TeamController {
 
     @ApiOperation(value = "添加团队", notes = "添加团队")
     @RequestMapping(method = RequestMethod.POST)
-    public ResultResourceSupport create(@RequestBody Team team) {
+    public ResultResourceSupport create(@Validated(RESTful.POST.class) @RequestBody Team team) {
         return assembler.toResource(this.teamService.save(team));
     }
 
     @ApiOperation(value = "更新团队", notes = "更新团队地址")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody Team team) {
         team.setKey(id);
         return assembler.toResource(this.teamService.update(team));

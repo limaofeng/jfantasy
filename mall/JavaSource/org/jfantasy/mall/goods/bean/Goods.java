@@ -17,7 +17,6 @@ import org.jfantasy.mall.shop.bean.Shop;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.system.util.SettingUtil;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 

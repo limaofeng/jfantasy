@@ -8,8 +8,10 @@ import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
+import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Properties;
 
 /**
@@ -23,17 +25,20 @@ public class Team extends BaseBusEntity {
     /**
      * 团队
      */
+    @NotNull(groups = RESTful.POST.class)
     @Id
     @Column(name = "CODE", nullable = false)
     private String key;
     /**
      * 团队类型
      */
+    @NotNull(groups = RESTful.POST.class)
     @Column(name = "type", nullable = false)
     private String type;
     /**
      * 名称
      */
+    @NotNull(groups = RESTful.POST.class)
     @Column(name = "NAME", nullable = false, length = 20)
     private String name;
     /**

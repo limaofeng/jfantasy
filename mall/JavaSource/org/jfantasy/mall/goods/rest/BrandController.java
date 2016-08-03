@@ -48,7 +48,7 @@ public class BrandController {
         return this.brandService.save(brand);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseBody
     public Brand update(@PathVariable("id") Long id, @RequestBody Brand brand) {
         brand.setId(id);

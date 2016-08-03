@@ -63,7 +63,7 @@ public class ResourceController {
     }
 
     @ApiOperation(value = "更新资源", notes = "通过该接口, 更新资源信息")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH})
     @ResponseBody
     public Resource update(@PathVariable("id") Long id, @RequestBody Resource resource) {
         resource.setId(id);

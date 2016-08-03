@@ -65,7 +65,7 @@ public class DESPlus {
             this.decryptCipher = Cipher.getInstance("DES");
             this.decryptCipher.init(2, key);
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error(e.getMessage());
         }
 
 
@@ -82,7 +82,7 @@ public class DESPlus {
             }
             return byteArr2HexStr(encrypt(strIn.getBytes()));
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error(e.getMessage());
             return "";
         }
     }
@@ -95,7 +95,7 @@ public class DESPlus {
         try {
             return new String(decrypt(hexStr2ByteArr(strIn)));
         } catch (Exception e) {
-            LOG.error(e.getMessage(), e);
+            LOG.error(e.getMessage());
             return "";
         }
     }

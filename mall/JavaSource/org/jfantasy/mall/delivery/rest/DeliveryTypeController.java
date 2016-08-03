@@ -43,7 +43,7 @@ public class DeliveryTypeController {
     }
 
     @ApiOperation(value = "更新配送方式", notes = "通过该接口, 更新配送方式")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public DeliveryType update(@PathVariable("id") Long id, @RequestBody DeliveryType type) {
         type.setId(id);
         return this.deliveryTypeService.save(type);

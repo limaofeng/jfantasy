@@ -38,7 +38,7 @@ public class WebsiteController {
         return this.websiteService.save(website);
     }
 
-    @RequestMapping(value = "/{key}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{key}", method = RequestMethod.PATCH)
     @ResponseBody
     public Website create(@PathVariable("key") String key, @RequestBody Website website) {
         website.setKey(key);

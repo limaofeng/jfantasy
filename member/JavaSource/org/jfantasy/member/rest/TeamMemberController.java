@@ -34,7 +34,7 @@ public class TeamMemberController {
     }
 
     @ApiOperation(value = "更新团队成员", notes = "更新团队成员地址")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody TeamMember member) {
         member.setId(id);
         return assembler.toResource(this.teamMemberService.update(member));

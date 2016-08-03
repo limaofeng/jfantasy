@@ -43,7 +43,7 @@ public class ExpressController {
     }
 
     @ApiOperation(value = "更新快递公司", notes = "通过该接口, 更新快递公司")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public Express update(@PathVariable("id") String id, @RequestBody Express express) {
         express.setId(id);
         return this.expressService.save(express);

@@ -38,7 +38,7 @@ public class ReceiverController {
     }
 
     @ApiOperation(value = "更新收货地址", notes = "更新会员的收货地址")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody Receiver receiver) {
         Receiver _receiver = this.receiverService.get(id);
         if (_receiver == null) {

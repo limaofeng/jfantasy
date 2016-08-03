@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "更新用户", notes = "通过该接口, 更新用户")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH})
     public ResultResourceSupport update(@PathVariable("id") Long id, User user) {
         user.setId(id);
         return assembler.toResource(this.userService.save(user));

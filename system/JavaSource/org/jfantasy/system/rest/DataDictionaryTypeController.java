@@ -30,7 +30,7 @@ public class DataDictionaryTypeController {
         return this.dataDictionaryService.save(ddt);
     }
 
-    @RequestMapping(method = RequestMethod.PUT)
+    @RequestMapping(method = RequestMethod.PATCH)
     @ResponseBody
     public DataDictionaryType update(@RequestBody DataDictionaryType ddt) {
         return this.dataDictionaryService.save(ddt);

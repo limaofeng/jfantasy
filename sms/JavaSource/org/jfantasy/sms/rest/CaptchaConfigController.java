@@ -42,7 +42,7 @@ public class CaptchaConfigController {
     }
 
     @ApiOperation(value = "更新手机验证码配置", notes = "通过该接口, 更新手机验证码配置")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public CaptchaConfig update(@PathVariable("id") String id, @RequestBody CaptchaConfig config) {
         config.setId(id);
         return this.captchaConfigService.save(config);

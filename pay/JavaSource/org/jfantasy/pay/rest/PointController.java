@@ -47,7 +47,7 @@ public class PointController {
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Account.class, name = {"sn", "type"}))
     @ApiOperation(value = "更新积分记录", notes = "该方法只能修改 积分状态 ")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseBody
     public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody PointForm form) {
         return assembler.toResource(pointService.update(id, form.getStatus(), form.getRemark()));

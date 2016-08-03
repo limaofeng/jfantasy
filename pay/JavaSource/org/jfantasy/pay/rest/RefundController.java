@@ -52,7 +52,7 @@ public class RefundController {
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
     @ApiOperation(value = "更新退款记录", notes = "该方法只能修改 退款状态 ")
-    @RequestMapping(value = "/{sn}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{sn}", method = RequestMethod.PATCH)
     @ResponseBody
     public ToRefund update(@PathVariable("sn") String sn, @RequestBody RefundForm01 form) {
         return payService.refund(sn, form.getStatus(), form.getRemark());

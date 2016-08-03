@@ -44,7 +44,7 @@ public class AccountController {
     }
 
     @ApiOperation(value = "更新微信公众账号", notes = "通过该接口, 更新微信公众账号")
-    @RequestMapping(value = "/{appid}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{appid}", method = RequestMethod.PATCH)
     @ResponseBody
     public Account update(@PathVariable("appid") String appid, @RequestBody Account account) {
         account.setAppId(appid);

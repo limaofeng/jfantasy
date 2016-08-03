@@ -1,6 +1,5 @@
 package org.jfantasy.cms.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -12,7 +11,6 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.cms.bean.databind.ArticleCategoryDeserializer;
 import org.jfantasy.cms.bean.databind.ArticleCategorySerializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.lucene.annotations.IndexEmbedBy;
 import org.jfantasy.framework.lucene.annotations.IndexProperty;
 
@@ -30,7 +28,7 @@ import java.util.List;
 @Entity
 @Table(name = "CMS_ARTICLE_CATEGORY")
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "articles", "children", "articleVersion"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "articles", "children"})
 public class ArticleCategory extends BaseBusEntity {
 
     private static final long serialVersionUID = -2207100604803274789L;

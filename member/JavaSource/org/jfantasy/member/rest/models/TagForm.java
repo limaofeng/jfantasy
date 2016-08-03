@@ -7,10 +7,10 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 
 public class TagForm {
-    @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
+    @NotNull(groups = {RESTful.POST.class, RESTful.PATCH.class})
     private String name;
-    @Null(groups = RESTful.PUT.class)
-    @NotNull(groups = {RESTful.POST.class})
+    @Null(groups = RESTful.PATCH.class)
+    @NotNull(groups = RESTful.POST.class)
     private String type;
 
     public String getName() {

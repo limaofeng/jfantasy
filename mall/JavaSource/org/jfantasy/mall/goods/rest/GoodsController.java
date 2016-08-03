@@ -52,7 +52,7 @@ public class GoodsController {
         return goodsService.save(goods);
     }
 
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseBody
     public Goods update(@PathVariable("id") Long id, @RequestBody Goods goods) {
         goods.setId(id);

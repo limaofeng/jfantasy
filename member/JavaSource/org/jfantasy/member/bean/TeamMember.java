@@ -9,9 +9,12 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.dao.hibernate.converter.StringsConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.enums.InviteStatus;
+import org.jfantasy.security.bean.enums.Sex;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Properties;
 
 /**
@@ -33,6 +36,41 @@ public class TeamMember extends BaseBusEntity {
     @Column(name = "NAME")
     private String name;
     /**
+     * 性别
+     */
+    @Column(name = "SEX")
+    private Sex sex;
+    /**
+     * 邮箱
+     */
+    @Column(name = "EMAIL")
+    private String email;
+    /**
+     * 电话
+     */
+    @Column(name = "MOBILE")
+    private String mobile;
+    /**
+     * 身份证
+     */
+    @Column(name = "ID_CARD")
+    private String idCard;
+    /**
+     * 岗位
+     */
+    @Column(name = "POSITION")
+    private String position;
+    /**
+     * 部门
+     */
+    @Column(name = "DEPT")
+    private String dept;
+    /**
+     * 备注
+     */
+    @Column(name = "NOTES")
+    private String notes;
+    /**
      * 状态
      */
     @Enumerated(EnumType.STRING)
@@ -41,8 +79,9 @@ public class TeamMember extends BaseBusEntity {
     /**
      * 用户
      */
-    @Column(name = "member")
-    private String member;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member")
+    private Member member;
     /**
      * 动态属性
      */
@@ -87,11 +126,11 @@ public class TeamMember extends BaseBusEntity {
         this.status = status;
     }
 
-    public String getMember() {
+    public Member getMember() {
         return member;
     }
 
-    public void setMember(String member) {
+    public void setMember(Member member) {
         this.member = member;
     }
 
@@ -135,5 +174,83 @@ public class TeamMember extends BaseBusEntity {
 
     public void setTags(String[] tags) {
         this.tags = tags;
+    }
+
+    public Sex getSex() {
+        return sex;
+    }
+
+    public void setSex(Sex sex) {
+        this.sex = sex;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
+    }
+
+    public String getIdCard() {
+        return idCard;
+    }
+
+    public void setIdCard(String idCard) {
+        this.idCard = idCard;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
+    }
+
+    public String getDept() {
+        return dept;
+    }
+
+    public void setDept(String dept) {
+        this.dept = dept;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    @Transient
+    @NotNull(groups = RESTful.POST.class)
+    public String getTeamId() {
+        return this.team == null ? null : this.team.getKey();
+    }
+
+    public void setTeamId(String id) {
+        this.team = new Team();
+        this.team.setKey(id);
+    }
+
+    @Transient
+    @NotNull(groups = RESTful.POST.class)
+    public Long getMemberId() {
+        return this.member == null ? null : this.member.getId();
+    }
+
+    public void setMemberId(Long id) {
+        this.member = new Member();
+        this.member.setId(id);
     }
 }

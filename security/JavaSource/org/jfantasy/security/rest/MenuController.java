@@ -61,7 +61,7 @@ public class MenuController {
     }
 
     @ApiOperation(value = "更新菜单")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH})
     @ResponseBody
     public Menu update(@PathVariable("id") String id, @RequestBody Menu menu) {
         menu.setId(id);

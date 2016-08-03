@@ -50,7 +50,7 @@ public class LevelController {
     }
 
     @ApiOperation(value = "修改等级")
-    @RequestMapping(value = "/levels/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/levels/{id}", method = RequestMethod.PATCH)
     public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody Level level) {
         level.setId(id);
         return assembler.toResource(levelService.update(level));

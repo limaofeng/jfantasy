@@ -13,7 +13,7 @@ import java.util.List;
 
 @ApiModel("通用分页对象")
 @Alias("Pager")
-@JsonIgnoreProperties(value = {"orders", "first", "orderBySetted"})
+@JsonIgnoreProperties(value = {"orders", "first", "order_by_setted"})
 public class Pager<T> implements Serializable {
     /**
      * 排序 - 升序

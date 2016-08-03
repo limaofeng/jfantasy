@@ -43,9 +43,9 @@ public class TeamTagController {
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
     @ApiOperation(value = "修改团队标签")
-    @RequestMapping(value = "/{tagid}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{tagid}", method = RequestMethod.PATCH)
     @ResponseBody
-    public Tag tags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid, @Validated(RESTful.POST.class) @RequestBody TagForm from) {
+    public Tag tags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid, @Validated(RESTful.PATCH.class) @RequestBody TagForm from) {
         return this.tagService.update(TAG_TYPE_TEAM, id, tagid, from.getName());
     }
 

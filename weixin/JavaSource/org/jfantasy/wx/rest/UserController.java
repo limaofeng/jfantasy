@@ -60,7 +60,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "获取微信粉丝", notes = "通过粉丝ID获取关注的用户信息")
-    @RequestMapping(value = "/{openid}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{openid}", method = RequestMethod.PATCH)
     @ResponseBody
     public User update(@PathVariable("appid") String appid, @PathVariable String openid, @RequestBody User user) throws WeiXinException, IOException {
         user.setAppId(appid);

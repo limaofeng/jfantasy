@@ -22,7 +22,7 @@ import javax.validation.constraints.Null;
  */
 @ApiModel("用户收藏")
 @Entity
-@Table(name = "MEM_FAVORITE",uniqueConstraints = {@UniqueConstraint(name = "U_MEM_FAVORITE",columnNames = {"TYPE","TARGET_TYPE","TARGET_ID","MEMBER_ID"})})
+@Table(name = "MEM_FAVORITE",uniqueConstraints = {@UniqueConstraint(name = "UK_MEM_FAVORITE",columnNames = {"TYPE","TARGET_TYPE","TARGET_ID","MEMBER_ID"})})
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "forComment"})
 public class Favorite extends BaseBusEntity {
 

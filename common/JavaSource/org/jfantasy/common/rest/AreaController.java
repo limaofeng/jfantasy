@@ -71,7 +71,7 @@ public class AreaController {
     }
 
     @ApiOperation(value = "更新地区")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     @ResponseBody
     public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody Area area) {
         area.setId(id);

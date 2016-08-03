@@ -43,7 +43,7 @@ public class DeliveryCorpController {
     }
 
     @ApiOperation(value = "更新物流公司", notes = "通过该接口, 更新物流公司")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public DeliveryCorp update(@PathVariable("id") Long id, @RequestBody DeliveryCorp corp) {
         corp.setId(id);
         return this.deliveryCorpService.save(corp);

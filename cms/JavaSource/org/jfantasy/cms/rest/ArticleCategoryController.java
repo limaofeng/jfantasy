@@ -60,7 +60,7 @@ public class ArticleCategoryController {
     }
 
     @ApiOperation(value = "更新文章分类", notes = "通过该接口, 更新文章分类", response = ArticleCategory.class)
-    @RequestMapping(value = "/{code}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{code}", method = RequestMethod.PATCH)
     @ResponseBody
     public ArticleCategory update(@PathVariable("code") String code, @RequestBody ArticleCategory category) {
         category.setCode(code);

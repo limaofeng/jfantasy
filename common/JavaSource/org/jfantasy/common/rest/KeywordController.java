@@ -75,7 +75,7 @@ public class KeywordController {
     }
 
     @ApiOperation(value = "更新关键词", notes = "通过该接口, 更新关键词")
-    @RequestMapping(value = "/{id}", method = {RequestMethod.PUT})
+    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public Keyword update(@PathVariable("id") Long id, @RequestBody Keyword keyword) {
         keyword.setId(id);
         return this.keywordService.save(keyword);

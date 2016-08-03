@@ -63,7 +63,7 @@ public class Image implements Comparable<Image> {
     }
 
     public int compareTo(Image image) {
-        if (image == null || image.getSort() == null || this.getSort() == null) {
+        if (image.getSort() == null || this.getSort() == null) {
             return -1;
         }
         return this.getSort().compareTo(image.getSort());

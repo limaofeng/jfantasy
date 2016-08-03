@@ -1,15 +1,10 @@
 package org.jfantasy.mall.stock.bean;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
-
 import org.jfantasy.framework.dao.BaseBusEntity;
+
+import javax.persistence.*;
 
 /**
  * 预警设置
