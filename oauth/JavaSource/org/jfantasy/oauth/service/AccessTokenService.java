@@ -60,6 +60,7 @@ public class AccessTokenService {
         accessToken.setAppId(appId);
         accessToken.setType(TokenType.bearer);
         accessToken.setGrantType(request.getGrantType());
+        accessToken.setRefreshToken(request.getRefreshToken());
         //TODO 后期可以改为单独配置的属性
         accessToken.setExpires(30 * 60 * 60);
         accessToken.setReExpires(40 * 60 * 60);
@@ -109,7 +110,7 @@ public class AccessTokenService {
                     throw new RestException(" apikey 与原值不匹配 ");
                 }
                 retrieveUser(userDetails, (OAuthUserDetails) hashOper.get(SecurityStorage.REFRESH_TOKEN_PREFIX + accessToken.getRefreshToken(), "user"));
-                redisTemplate.delete(SecurityStorage.AUTHORIZATION_CODE_PREFIX + accessToken.getRefreshToken());
+                redisTemplate.delete(SecurityStorage.REFRESH_TOKEN_PREFIX + accessToken.getRefreshToken());
                 break;
         }
 
@@ -123,7 +124,7 @@ public class AccessTokenService {
         redisTemplate.expire(redisAccessTokenKey, accessToken.getExpires(), TimeUnit.SECONDS);
 
         //保存 refreshtoken 到 redis
-        String redisRefreshTokenKey = SecurityStorage.REFRESH_TOKEN_PREFIX + accessToken.getKey();
+        String redisRefreshTokenKey = SecurityStorage.REFRESH_TOKEN_PREFIX + accessToken.getRefreshToken();
         hashOper.put(redisRefreshTokenKey, "token", accessToken);
         hashOper.put(redisRefreshTokenKey, "user", userDetails);
         redisTemplate.expire(redisRefreshTokenKey, accessToken.getReExpires(), TimeUnit.SECONDS);
