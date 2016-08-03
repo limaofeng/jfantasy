@@ -3,6 +3,7 @@ package org.jfantasy.member.service;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.member.bean.TeamMember;
+import org.jfantasy.member.bean.enums.InviteStatus;
 import org.jfantasy.member.dao.TeamMemberDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,7 @@ public class TeamMemberService {
 
     @Transactional
     public TeamMember save(TeamMember member) {
+        member.setStatus(InviteStatus.unactivated);
         return this.teamMemberDao.save(member);
     }
 }
