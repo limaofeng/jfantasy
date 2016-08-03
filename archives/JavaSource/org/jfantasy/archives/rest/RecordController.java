@@ -35,6 +35,10 @@ public class RecordController {
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Record> pager, List<PropertyFilter> filters) {
+        if(!pager.isOrderBySetted()) {
+            pager.setOrder(Pager.SORT_DESC);
+            pager.setOrderBy("displayTime");
+        }
         return assembler.toResources(recordService.findPager(pager, filters));
     }
 
