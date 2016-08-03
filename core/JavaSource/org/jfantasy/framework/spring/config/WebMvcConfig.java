@@ -45,6 +45,7 @@ import org.springframework.orm.hibernate4.support.OpenSessionInViewFilter;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.Validator;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.multipart.MultipartResolver;
@@ -60,7 +61,7 @@ import java.util.*;
 @EnableWebMvc
 @Configuration
 @ComponentScan(basePackages = {"org.jfantasy.*.rest"}, useDefaultFilters = false, includeFilters = {
-        @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {Controller.class})
+        @ComponentScan.Filter(type = FilterType.ANNOTATION, value = {RestController.class, Controller.class})
 })
 public class WebMvcConfig extends WebMvcConfigurerAdapter implements EnvironmentAware {
 

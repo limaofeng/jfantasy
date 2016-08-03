@@ -2,7 +2,6 @@ package org.jfantasy.framework.spring.mvc.method.annotation;
 
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.spring.mvc.error.RestException;
-import org.jfantasy.framework.spring.mvc.http.JacksonResponseBodyAdvice;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
@@ -96,22 +95,22 @@ public class PagerModelAttributeMethodProcessor extends FormModelMethodArgumentR
         for (Map.Entry<String, String> entry : getUriTemplateVariables(request).entrySet()) {
             String parameterName = entry.getKey();
             String value = entry.getValue();
-            if (isPagerModelAttribute(parameterName, getModelNames("true".equalsIgnoreCase(request.getHeader(JacksonResponseBodyAdvice.X_Page_Fields))))) {
+            if (isPagerModelAttribute(parameterName, getModelNames())) {//TODO "true".equalsIgnoreCase(request.getHeader(JacksonResponseBodyAdvice.X_Page_Fields)))
                 mockRequest.setParameter(parameterName, value);
             }
         }
         for (Map.Entry<String, String[]> entry : nativeRequest.getParameterMap().entrySet()) {
             String parameterName = entry.getKey();
             String[] value = entry.getValue();
-            if (isPagerModelAttribute(parameterName, getModelNames("true".equalsIgnoreCase(request.getHeader(JacksonResponseBodyAdvice.X_Page_Fields))))) {
+            if (isPagerModelAttribute(parameterName, getModelNames())) {//TODO "true".equalsIgnoreCase(request.getHeader(JacksonResponseBodyAdvice.X_Page_Fields))
                 mockRequest.setParameter(parameterName, value);
             }
         }
         return mockRequest;
     }
 
-    private String[] getModelNames(boolean page) {
-        return page ? new String[]{"page", "size", "per_page", "sort", "order"} : new String[]{"limit", "sort", "order"};
+    private String[] getModelNames() {
+        return new String[]{"page", "size", "per_page", "sort", "order","limit"};
     }
 
     private boolean isPagerModelAttribute(String parameterName, String[] modelNames) {
