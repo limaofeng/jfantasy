@@ -1,15 +1,14 @@
 package org.jfantasy.mall.goods.rest;
 
+import io.swagger.annotations.Api;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.mall.goods.bean.Brand;
 import org.jfantasy.mall.goods.bean.Goods;
 import org.jfantasy.mall.goods.service.BrandService;
 import org.jfantasy.mall.goods.service.GoodsService;
-import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
