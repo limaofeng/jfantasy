@@ -1,12 +1,3 @@
-#
-# Quartz seems to work best with the driver mm.mysql-2.0.7-bin.jar
-#
-# PLEASE consider using mysql with innodb tables to avoid locking issues
-#
-# In your Quartz properties file, you'll need to set
-# org.quartz.jobStore.driverDelegateClass = org.quartz.impl.jdbcjobstore.StdJDBCDelegate
-#
-
 DROP TABLE IF EXISTS qrtz_fired_triggers;
 DROP TABLE IF EXISTS qrtz_paused_trigger_grps;
 DROP TABLE IF EXISTS qrtz_scheduler_state;

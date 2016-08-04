@@ -2,6 +2,8 @@ package org.jfantasy.member.rest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.TeamMember;
@@ -27,8 +29,10 @@ public class TeamMemberController {
         return assembler.toResource(this.get(id));
     }
 
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = TeamMember.class,name = "team"))
     @ApiOperation(value = "添加团队成员", notes = "添加团队成员")
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     public ResultResourceSupport create(@RequestBody TeamMember member) {
         return assembler.toResource(this.teamMemberService.save(member));
     }

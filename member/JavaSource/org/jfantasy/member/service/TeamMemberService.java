@@ -25,6 +25,7 @@ public class TeamMemberService {
         return this.teamMemberDao.get(id);
     }
 
+    @Transactional
     public void deltele(Long... ids) {
         this.teamMemberDao.delete(ids);
     }
