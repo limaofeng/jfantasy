@@ -157,6 +157,16 @@ public class AccessTokenService {
         userDetails.setUserType(user.getUserType());
         userDetails.setScope(user.getScope());
         userDetails.setNickName(user.getNickName());
+
+        userDetails.setType(user.getType());
+        userDetails.setKey(user.getKey());
+
+        userDetails.setEnabled(user.isEnabled());
+        userDetails.setAccountNonExpired(user.isAccountNonExpired());
+        userDetails.setAccountNonLocked(user.isAccountNonLocked());
+        userDetails.setCredentialsNonExpired(user.isCredentialsNonExpired());
+
+        userDetails.setAuthorities(new ArrayList<>(user.getAuthorities()));
     }
 
     private void retrieveUser(OAuthUserDetails userDetails, ApiKey apiKey) {
