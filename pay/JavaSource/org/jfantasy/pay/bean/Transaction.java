@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.*;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.pay.bean.converter.ProjectConverter;
 import org.jfantasy.pay.bean.enums.TxChannel;
@@ -96,7 +97,8 @@ public class Transaction extends BaseBusEntity {
      * 扩展字段,用于存储不同项目的关联信息
      */
     @ApiModelProperty(hidden = true)
-    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
+    @Convert(converter = PropertiesConverter.class)
+    @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
     @ApiModelProperty("支付记录")
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})

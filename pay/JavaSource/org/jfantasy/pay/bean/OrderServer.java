@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.pay.order.entity.enums.CallType;
 
 import javax.persistence.*;
@@ -59,7 +60,8 @@ public class OrderServer extends BaseBusEntity {
      * 配置参数
      */
     @ApiModelProperty(hidden = true)
-    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
+    @Convert(converter = PropertiesConverter.class)
+    @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
     /**
      * 详细介绍

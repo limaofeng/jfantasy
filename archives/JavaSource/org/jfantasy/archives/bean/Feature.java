@@ -39,7 +39,7 @@ public class Feature extends BaseBusEntity {
      * 具体属性
      */
     @ApiModelProperty(hidden = true)
-    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
+    @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
     /**
      * 对应的档案
