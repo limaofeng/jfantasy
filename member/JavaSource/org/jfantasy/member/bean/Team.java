@@ -57,7 +57,7 @@ public class Team extends BaseBusEntity {
      */
     @ApiModelProperty(hidden = true)
     @Convert(converter = PropertiesConverter.class)
-    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
+    @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
     /**
      * 目标Id

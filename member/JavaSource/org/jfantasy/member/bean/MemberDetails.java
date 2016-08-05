@@ -121,7 +121,7 @@ public class MemberDetails implements Serializable {
 
     @ApiModelProperty(hidden = true)
     @Convert(converter = PropertiesConverter.class)
-    @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
+    @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
 
     public String getName() {

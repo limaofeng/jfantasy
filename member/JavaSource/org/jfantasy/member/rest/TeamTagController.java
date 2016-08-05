@@ -4,10 +4,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.Tag;
 import org.jfantasy.member.rest.models.TagForm;
 import org.jfantasy.member.service.TagService;
+import org.jfantasy.member.service.TeamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -24,11 +26,16 @@ public class TeamTagController {
 
     @Autowired
     private TagService tagService;
+    @Autowired
+    private TeamService teamService;
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
     @ApiOperation(value = "获取团队标签")
     @RequestMapping(method = RequestMethod.GET)
     public List<Tag> tags(@PathVariable("id") String id, @RequestParam("type") String type) {
+        if (teamService.get(id) == null) {
+            throw new NotFoundException(id + "不存在!");
+        }
         return this.tagService.find(TAG_TYPE_TEAM, id, type);
     }
 
@@ -38,6 +45,9 @@ public class TeamTagController {
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public Tag tags(@PathVariable("id") String id, @Validated(RESTful.POST.class) @RequestBody TagForm from) {
+        if (teamService.get(id) == null) {
+            throw new NotFoundException(id + "不存在!");
+        }
         return this.tagService.save(TAG_TYPE_TEAM, id, from.getName(), from.getType());
     }
 
