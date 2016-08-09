@@ -12,6 +12,7 @@ import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -19,7 +20,7 @@ import java.util.Properties;
  */
 @Entity
 @Table(name = "MEM_TEAM")
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler","team_members"})
 public class Team extends BaseBusEntity {
 
     /**
@@ -71,6 +72,11 @@ public class Team extends BaseBusEntity {
     @JsonProperty("target_type")
     @Column(name = "TARGET_TYPE", length = 10)
     private String targetType;
+    /**
+     * 团队成员
+     */
+    @OneToMany(mappedBy = "team", fetch = FetchType.LAZY)
+    private List<TeamMember> teamMembers;
 
     public String getType() {
         return type;
@@ -155,6 +161,14 @@ public class Team extends BaseBusEntity {
 
     public void setTargetType(String targetType) {
         this.targetType = targetType;
+    }
+
+    public List<TeamMember> getTeamMembers() {
+        return teamMembers;
+    }
+
+    public void setTeamMembers(List<TeamMember> teamMembers) {
+        this.teamMembers = teamMembers;
     }
 
 }

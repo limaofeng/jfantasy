@@ -7,6 +7,7 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.member.bean.Address;
 import org.jfantasy.member.bean.Invite;
 import org.jfantasy.member.bean.Team;
 import org.jfantasy.member.bean.TeamMember;
@@ -34,11 +35,14 @@ public class TeamController {
     private InviteService inviteService;
     @Autowired
     private TeamMemberService teamMemberService;
+    @Autowired
+    private AddressController addressController;
 
     @ApiOperation(value = "团队列表", notes = "团队列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<ResultResourceSupport> search(Pager<Team> pager, List<PropertyFilter> filters) {
+    public Pager<ResultResourceSupport> search(@RequestParam("type") String type, Pager<Team> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQS_type", type));
         return assembler.toResources(this.teamService.findPager(pager, filters));
     }
 
@@ -55,7 +59,7 @@ public class TeamController {
     }
 
     @ApiOperation(value = "更新团队", notes = "更新团队地址")
-    @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody Team team) {
         team.setKey(id);
         return assembler.toResource(this.teamService.update(team));
@@ -67,7 +71,6 @@ public class TeamController {
     public void delete(@PathVariable("id") String id) {
         this.teamService.deltele(id);
     }
-
 
 
     @ApiOperation(value = "邀请列表", notes = "邀请列表")
@@ -91,6 +94,15 @@ public class TeamController {
     public Pager<ResultResourceSupport> members(@PathVariable("id") String id, Pager<TeamMember> pager, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQS_team.key", id));
         return TeamMemberController.assembler.toResources(this.teamMemberService.findPager(pager, filters));
+    }
+
+    @ApiOperation(value = "团队地址列表")
+    @RequestMapping(value = "/{id}/addresses", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Address> addresses(@PathVariable("id") String id, Pager<Address> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQS_ownerType", "team"));
+        filters.add(new PropertyFilter("EQS_ownerId", get(id).getKey()));
+        return this.addressController.search(pager, filters).getPageItems();
     }
 
     private Team get(String id) {

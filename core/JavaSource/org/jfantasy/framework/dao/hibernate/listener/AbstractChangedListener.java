@@ -1,6 +1,7 @@
 package org.jfantasy.framework.dao.hibernate.listener;
 
 import org.hibernate.event.spi.PostInsertEvent;
+import org.hibernate.event.spi.PostInsertEventListener;
 import org.hibernate.event.spi.PostUpdateEvent;
 import org.hibernate.event.spi.PostUpdateEventListener;
 import org.hibernate.persister.entity.EntityPersister;
@@ -12,27 +13,47 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Arrays;
 
-public abstract class AbstractChangedListener<T> implements PostUpdateEventListener{
+public abstract class AbstractChangedListener<T> implements PostUpdateEventListener, PostInsertEventListener {
 
     private Class<T> entityClass;
 
-    protected AbstractChangedListener(){
+    protected AbstractChangedListener() {
         this.entityClass = ReflectionUtils.getSuperClassGenricType(getClass());
     }
 
-    protected boolean missing(PostInsertEvent event){
+    protected boolean missing(PostInsertEvent event) {
         return !event.getEntity().getClass().isAssignableFrom(entityClass);
     }
 
-    protected boolean missing(PostUpdateEvent event){
+    protected boolean missing(PostUpdateEvent event) {
         return !event.getEntity().getClass().isAssignableFrom(entityClass);
     }
 
-    public T getEntity(PostInsertEvent event){
+    @Override
+    public void onPostInsert(PostInsertEvent event) {
+        if (missing(event)) {
+            return;
+        }
+        onPostInsert(getEntity(event), event);
+    }
+
+    @Override
+    public void onPostUpdate(PostUpdateEvent event) {
+        if (missing(event)) {
+            return;
+        }
+        onPostUpdate(getEntity(event), event);
+    }
+
+    protected abstract void onPostInsert(T entity, PostInsertEvent event);
+
+    protected abstract void onPostUpdate(T entity, PostUpdateEvent event);
+
+    public T getEntity(PostInsertEvent event) {
         return entityClass.cast(event.getEntity());
     }
 
-    public T getEntity(PostUpdateEvent event){
+    public T getEntity(PostUpdateEvent event) {
         return entityClass.cast(event.getEntity());
     }
 
@@ -51,8 +72,8 @@ public abstract class AbstractChangedListener<T> implements PostUpdateEventListe
 
     private ApplicationContext applicationContext;
 
-    protected ApplicationContext getApplicationContext(){
-        if(applicationContext == null){
+    protected ApplicationContext getApplicationContext() {
+        if (applicationContext == null) {
             return this.applicationContext = SpringContextUtil.getApplicationContext();
         }
         return this.applicationContext;

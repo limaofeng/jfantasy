@@ -10,7 +10,7 @@ import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.dao.hibernate.converter.StringsConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
-import org.jfantasy.member.bean.enums.InviteStatus;
+import org.jfantasy.member.bean.enums.TeamMemberStatus;
 import org.jfantasy.security.bean.enums.Sex;
 
 import javax.persistence.*;
@@ -21,12 +21,12 @@ import java.util.Properties;
  * 团队成员
  */
 @Entity
-@Table(name = "MEM_TEAM_MEMBER")
+@Table(name = "MEM_TEAM_MEMBER", uniqueConstraints = @UniqueConstraint(name = "UK_TEAM_MEMBER", columnNames = {"MEMBER_ID", "TEAM_ID"}))
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class TeamMember extends BaseBusEntity {
 
     @Id
-    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
@@ -75,12 +75,12 @@ public class TeamMember extends BaseBusEntity {
      */
     @Enumerated(EnumType.STRING)
     @Column(name = "STATUS", nullable = false)
-    private InviteStatus status;
+    private TeamMemberStatus status;
     /**
      * 用户
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member")
+    @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_TEAM_MEMBER_MEMBER"))
     private Member member;
     /**
      * 动态属性
@@ -93,7 +93,7 @@ public class TeamMember extends BaseBusEntity {
      * 团队ID
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEAM_ID", foreignKey = @ForeignKey(name = "FK_INVITE_TEAM"))
+    @JoinColumn(name = "TEAM_ID", foreignKey = @ForeignKey(name = "FK_TEAM_MEMBER_TEAM"))
     private Team team;
     /**
      * 标签
@@ -118,11 +118,11 @@ public class TeamMember extends BaseBusEntity {
         this.name = name;
     }
 
-    public InviteStatus getStatus() {
+    public TeamMemberStatus getStatus() {
         return status;
     }
 
-    public void setStatus(InviteStatus status) {
+    public void setStatus(TeamMemberStatus status) {
         this.status = status;
     }
 

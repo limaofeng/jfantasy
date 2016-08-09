@@ -13,6 +13,9 @@ import org.jfantasy.member.bean.enums.InviteStatus;
 import javax.persistence.*;
 import java.util.Properties;
 
+/**
+ * 邀请
+ */
 @Entity
 @Table(name = "MEM_INVITE")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})

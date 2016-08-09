@@ -27,7 +27,9 @@ import java.util.*;
  */
 @ApiModel("会员信息")
 @Entity
-@Table(name = "MEM_MEMBER")
+@Table(name = "MEM_MEMBER", uniqueConstraints = {
+        @UniqueConstraint(name = "UK_MEMBER_TARGET", columnNames = {"TARGET_TYPE", "TARGET_ID"})
+})
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "user_groups", "roles", "authorities", "details"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity {

@@ -34,7 +34,7 @@ public class MemberResourceAssembler extends ResourceAssemblerSupport<Member, Re
         resource.add(linkTo(methodOn(MemberController.class).receivers(entity.getId(), new ArrayList<PropertyFilter>())).withRel("receivers"));
         resource.add(linkTo(methodOn(MemberController.class).favorites(entity.getId(), ":type")).withRel("favorites"));
         resource.add(new Link("/members/" + entity.getId() + "/level", "level"));
-        resource.add(linkTo(methodOn(MemberTagController.class).tags(entity.getId().toString(), ":type")).withRel("tags"));
+        resource.add(linkTo(methodOn(MemberTagController.class).tags(entity.getId(), ":type")).withRel("tags"));
         resource.add(linkTo(methodOn(FavoriteController.class).get(entity.getId(), ":type", ":target_type", ":target_id")).withRel("favorite/watch"));
         return resource;
     }

@@ -12,10 +12,8 @@ import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.util.web.WebUtil;
-import org.jfantasy.member.bean.Comment;
-import org.jfantasy.member.bean.Favorite;
-import org.jfantasy.member.bean.Member;
-import org.jfantasy.member.bean.MemberDetails;
+import org.jfantasy.member.bean.*;
+import org.jfantasy.member.bean.enums.InviteStatus;
 import org.jfantasy.member.rest.models.PasswordForm;
 import org.jfantasy.member.rest.models.assembler.MemberResourceAssembler;
 import org.jfantasy.member.rest.models.assembler.ProfileResourceAssembler;
@@ -36,7 +34,7 @@ import java.util.List;
 public class MemberController {
 
     public static MemberResourceAssembler assembler = new MemberResourceAssembler();
-    public static ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
+    private static ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
 
     @Autowired
     private MemberService memberService;
@@ -46,6 +44,8 @@ public class MemberController {
     private ReceiverController receiverController;
     @Autowired
     private FavoriteService favoriteService;
+    @Autowired
+    private TeamController teamController;
 
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
@@ -138,6 +138,15 @@ public class MemberController {
     public List<ResultResourceSupport> receivers(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
         return this.receiverController.search(filters);
+    }
+
+    @ApiOperation("查询会员的团队信息")
+    @RequestMapping(value = "/{memid}/teams", method = RequestMethod.GET)
+    @ResponseBody
+    public List<ResultResourceSupport> teams(@PathVariable("memid") Long memberId, @RequestParam("type") String type, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQL_teamMembers.member.id", memberId.toString()));//包含当前会员
+        filters.add(new PropertyFilter("EQL_teamMembers.status", InviteStatus.activated));//状态有效
+        return teamController.search(type, new Pager<Team>(1000), filters).getPageItems();
     }
 
 }

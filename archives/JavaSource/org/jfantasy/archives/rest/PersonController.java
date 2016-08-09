@@ -39,6 +39,7 @@ public class PersonController {
         return assembler.toResources(this.personService.findPager(pager, filters));
     }
 
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Person.class, name = {"records"}))
     @ApiOperation(value = "查看人员信息", notes = "查看人员信息")
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResultResourceSupport view(@PathVariable("id") Long id) {
@@ -52,6 +53,7 @@ public class PersonController {
         return assembler.toResource(this.personService.save(person));
     }
 
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Person.class, name = {"records"}))
     @ApiOperation(value = "更新人员信息", notes = "更新人员信息地址")
     @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH, RequestMethod.PUT})
     public ResultResourceSupport update(HttpServletRequest request, @PathVariable("id") Long id, @RequestBody Person person) {
