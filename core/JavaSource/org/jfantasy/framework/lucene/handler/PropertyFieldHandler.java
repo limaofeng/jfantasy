@@ -54,7 +54,7 @@ public class PropertyFieldHandler extends AbstractFieldHandler {
         Class<?> type = this.property.getPropertyType();
         String fieldName = this.prefix + this.property.getName();
         Fieldable f = null;
-        if (DataType.isString(type)) {
+        if (DataType.isString(type) || type.isEnum()) { //TODO 枚举使用字符串的方式处理
             f = new org.apache.lucene.document.Field(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO, analyze ? Field.Index.ANALYZED : Field.Index.NOT_ANALYZED);
         } else if ((DataType.isBoolean(type)) || (DataType.isBooleanObject(type))) {
             f = new org.apache.lucene.document.Field(fieldName, objValue.toString(), store ? Field.Store.YES : Field.Store.NO, Field.Index.NOT_ANALYZED);
