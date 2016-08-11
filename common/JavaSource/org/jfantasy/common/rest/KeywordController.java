@@ -8,7 +8,7 @@ import org.jfantasy.common.service.KeywordService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.lucene.BuguParser;
-import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -26,22 +26,13 @@ public class KeywordController {
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<Keyword> search(Pager<Keyword> pager, List<PropertyFilter> filters) {
+    public Pager<Keyword> search(@RequestParam(value = "type", required = false) String type, @RequestParam(value = "q", required = false) String query,Pager<Keyword> pager, List<PropertyFilter> filters) {
         List<Query> queries = new ArrayList<Query>();
-        PropertyFilter filter = ObjectUtil.find(filters, "filterName", "LIKES_text");
-        if (filter != null) {
-            String value = filter.getPropertyValue(String.class);
-            queries.add(BuguParser.parseWildcard(new String[]{"words","pinyin", "qpin"}, "*" + value + "*"));
+        if(StringUtil.isNotBlank(query)){
+            queries.add(BuguParser.parseWildcard(new String[]{"words","pinyin", "qpin"}, "*" + query + "*"));
         }
-
-        filter = ObjectUtil.find(filters, "filterName", "EQS_owner");
-        if (filter != null) {
-            queries.add(BuguParser.parseTermPrefix("owner", filter.getPropertyValue(String.class)));
-        }
-
-        filter = ObjectUtil.find(filters, "filterName", "EQS_type");
-        if (filter != null) {
-            queries.add(BuguParser.parseTerm("type", filter.getPropertyValue(String.class)));
+        if (StringUtil.isNotBlank(type)) {
+            queries.add(BuguParser.parseTerm("type", type));
         }
         return this.keywordService.search(pager, BuguParser.parse(queries.toArray(new Query[queries.size()])));
     }

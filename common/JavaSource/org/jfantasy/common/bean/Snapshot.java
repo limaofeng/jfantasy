@@ -21,7 +21,7 @@ import javax.persistence.*;
 public class Snapshot extends BaseBusEntity {
 
     @Id
-    @Column(name = "ID", insertable = true, updatable = false)
+    @Column(name = "ID", updatable = false)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
