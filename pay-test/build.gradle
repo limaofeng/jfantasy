@@ -5,9 +5,9 @@ sonarqube {
 }
 
 dependencies {
-//    compile project(':jfantasy-pay')
-    compile project(':jfantasy-oauth')
-    compile project(':jfantasy-wallet')
+    compile project(':jfantasy-pay')
+//    compile project(':jfantasy-oauth')
+//    compile project(':jfantasy-wallet')
 //    compile project(':jfantasy-cms')
 //    compile project(':jfantasy-archives')
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.5'

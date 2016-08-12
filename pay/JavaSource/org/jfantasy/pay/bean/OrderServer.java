@@ -54,7 +54,7 @@ public class OrderServer extends BaseBusEntity {
      */
     @ApiModelProperty("调用方式")
     @Enumerated(EnumType.STRING)
-    @Column(name = "PAYMENT_STATUS", length = 10, nullable = false)
+    @Column(name = "CALL_TYPE", length = 10, nullable = false)
     private CallType callType;
     /**
      * 配置参数

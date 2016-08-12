@@ -12,27 +12,15 @@ import java.io.IOException;
 /**
  * 终极乱码解决方法
  */
-public class CharacterEncodingFilter extends OncePerRequestFilter {
+public class ConversionCharacterEncodingFilter extends OncePerRequestFilter {
 
-    private String encoding;
-
-    private boolean forceEncoding = false;
-
-    public void setEncoding(String encoding) {
-        this.encoding = encoding;
-    }
-
-    public void setForceEncoding(boolean forceEncoding) {
-        this.forceEncoding = forceEncoding;
-    }
+    private final static String TRANSFORM = "ConversionCharacterEncodingFilter.transform";
 
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if ((this.encoding != null) && ((this.forceEncoding) || (request.getCharacterEncoding() == null))) {
-            request.setCharacterEncoding(this.encoding);
-            if (this.forceEncoding) {
-                response.setCharacterEncoding(this.encoding);
-            }
+        Boolean transform = (Boolean) request.getAttribute(TRANSFORM);
+        if (transform == null) {
             filterChain.doFilter(new CharacterEncodingRequestWrapper(request), response);
+            request.setAttribute(TRANSFORM, Boolean.TRUE);
         } else {
             filterChain.doFilter(request, response);
         }

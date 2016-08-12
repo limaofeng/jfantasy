@@ -70,7 +70,8 @@ public class OrderService {
             }
             order = this.save(orderDetails);
         } else {
-            orderDetails = orderServiceFactory.getOrderService(key.getType()).loadOrder(key);
+            orderDetails = new OrderDetails();//orderServiceFactory.getOrderService(key.getType()).loadOrder(key);
+            orderDetails.setPayment(true);
         }
         order.setDetails(orderDetails);
         return order;

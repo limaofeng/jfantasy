@@ -24,6 +24,7 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.PropertiesHelper;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.filter.ActionContextFilter;
+import org.jfantasy.framework.web.filter.ConversionCharacterEncodingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
@@ -194,11 +195,22 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     }
 
     @Bean
+    public FilterRegistrationBean conversionCharacterEncodingFilter() {
+        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
+        filterRegistrationBean.setFilter(new ConversionCharacterEncodingFilter());
+        filterRegistrationBean.setEnabled(true);
+        filterRegistrationBean.setOrder(200);
+        filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
+        filterRegistrationBean.addUrlPatterns("/*");
+        return filterRegistrationBean;
+    }
+
+    @Bean
     public FilterRegistrationBean actionContextFilter() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new ActionContextFilter());
         filterRegistrationBean.setEnabled(true);
-        filterRegistrationBean.setOrder(200);
+        filterRegistrationBean.setOrder(300);
         filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST);
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
@@ -210,7 +222,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
         filterRegistrationBean.setFilter(new OpenSessionInViewFilter());
         filterRegistrationBean.addInitParameter("flushMode", "COMMIT");
         filterRegistrationBean.setEnabled(true);
-        filterRegistrationBean.setOrder(300);
+        filterRegistrationBean.setOrder(400);
         filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE);
         filterRegistrationBean.addUrlPatterns("/*");
         return filterRegistrationBean;
@@ -220,7 +232,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     public FilterRegistrationBean filterRegistrationBean() {
         FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
         filterRegistrationBean.setFilter(new WebStatFilter());
-        filterRegistrationBean.setOrder(400);
+        filterRegistrationBean.setOrder(500);
         filterRegistrationBean.addUrlPatterns("/*");
         filterRegistrationBean.addInitParameter("exclusions", "*.js,*.gif,*.jpg,*.png,*.css,*.ico,/druid/*");
         return filterRegistrationBean;

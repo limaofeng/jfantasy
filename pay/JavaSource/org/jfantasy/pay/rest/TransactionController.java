@@ -65,7 +65,7 @@ public class TransactionController {
     //transactionService.transfer(tx.getFrom(), tx.getTo(), tx.getAmount(), tx.getNotes());
     @ApiOperation("获取交易详情")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms"}))
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String sn) {
         return transform(get(sn));
@@ -102,14 +102,14 @@ public class TransactionController {
                     List<PayConfig> payconfigs = configService.find();
                     Iterator<PayConfig> iterator = payconfigs.iterator();
 
-                    if(user != null) {
+//                    if(user != null) {
                         while (iterator.hasNext()) {
                             PayConfig payConfig = iterator.next();
-                            if (!payConfig.getPlatforms().contains(user.getPlatform())) {
+                            if (!payConfig.getPlatforms().contains("app")) {//user.getPlatform()
                                 iterator.remove();
                             }
                         }
-                    }
+//                    }
 
                     String payment_sn = transaction.get("payment_sn");
                     if (StringUtil.isNotBlank(payment_sn)) {

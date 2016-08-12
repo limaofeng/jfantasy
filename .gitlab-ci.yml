@@ -1,0 +1,11 @@
+image: java:openjdk-8-jdk
+
+before_script:
+  - chmod u+x ./gradlew
+
+build:
+  script:
+    - ./gradlew sonar -x test
+  artifacts:
+    paths:
+    - build/libs/

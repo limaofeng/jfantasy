@@ -61,7 +61,7 @@ public class OrderController {
         return assembler.toResource(orderService.get(OrderKey.newInstance(key)));
     }
 
-    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms"}))
     @ApiOperation(value = "创建订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
     @RequestMapping(value = "/{id}/transactions", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
