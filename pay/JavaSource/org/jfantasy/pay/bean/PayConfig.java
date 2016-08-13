@@ -3,6 +3,7 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
@@ -137,6 +138,7 @@ public class PayConfig extends BaseBusEntity {
      * 是否为默认
      */
     @Transient
+    @JsonProperty("default")
     private Boolean isDefault;
 
     public PayConfig() {

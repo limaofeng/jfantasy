@@ -25,6 +25,8 @@ include ':jfantasy-thirdparty'
 include ':jfantasy-archives'
 //include ':jfantasy-mall'
 
+include ':jfantasy-oauth-test'
+
 project(':jfantasy-core').projectDir = "$rootDir/core" as File
 project(':jfantasy-cache').projectDir = "$rootDir/cache" as File
 project(':jfantasy-filestore').projectDir = "$rootDir/filestore" as File
@@ -48,4 +50,5 @@ project(':jfantasy-weixin').projectDir = "$rootDir/weixin" as File
 project(':jfantasy-thirdparty').projectDir = "$rootDir/thirdparty" as File
 project(':jfantasy-archives').projectDir = "$rootDir/archives" as File
 project(':jfantasy-pay-test').projectDir = "$rootDir/pay-test" as File
+project(':jfantasy-oauth-test').projectDir = "$rootDir/oauth-test" as File
 project(':jfantasy-test').projectDir = "$rootDir/test" as File

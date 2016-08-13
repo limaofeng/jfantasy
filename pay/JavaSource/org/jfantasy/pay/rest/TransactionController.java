@@ -54,7 +54,7 @@ public class TransactionController {
 
     @ApiOperation("创建交易")
     @RequestMapping(method = RequestMethod.POST)
-    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms","default"}))
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport save(Transaction transaction) {
@@ -65,7 +65,7 @@ public class TransactionController {
     //transactionService.transfer(tx.getFrom(), tx.getTo(), tx.getAmount(), tx.getNotes());
     @ApiOperation("获取交易详情")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms","default"}))
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String sn) {
         return transform(get(sn));
@@ -117,6 +117,8 @@ public class TransactionController {
                         if (payment.getStatus() == PaymentStatus.ready) { // 加载支付方式
                             ObjectUtil.find(payconfigs, "payProductId", payment.getPayConfig().getPayProductId()).setDefault(true);
                         }
+                    }else if(!payconfigs.isEmpty()){
+                        payconfigs.get(0).setDefault(true);
                     }
                     resource.set("payconfigs", payconfigs);
                     break;
