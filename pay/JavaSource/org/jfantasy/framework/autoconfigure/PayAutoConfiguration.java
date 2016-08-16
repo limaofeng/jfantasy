@@ -37,8 +37,8 @@ public class PayAutoConfiguration {
     /**
      * 发布者
      */
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public ProducerBean payProducer(@Value("${aliyun.ons.pay.producerId:PID-PAY}") String producerId) {
+    @Bean(name = "pay.producer", initMethod = "start", destroyMethod = "shutdown")
+    public ProducerBean producer(@Value("${aliyun.ons.pay.producerId:PID-PAY}") String producerId) {
         ProducerBean producerBean = new ProducerBean();
         Properties properties = new Properties();
         properties.setProperty(PropertyKeyConst.ProducerId, producerId);
@@ -53,26 +53,25 @@ public class PayAutoConfiguration {
      *
      * @return
 
-    @Bean(initMethod = "start", destroyMethod = "shutdown")
-    public ConsumerBean consumer() {
-        ConsumerBean consumerBean = new ConsumerBean();
-        Properties properties = new Properties();
-        properties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
-        properties.setProperty(PropertyKeyConst.AccessKey, accessKey);
-        properties.setProperty(PropertyKeyConst.SecretKey, secretKey);
-        consumerBean.setProperties(properties);
-        Map<Subscription, MessageListener> subscriptionTable = new HashMap<>();
-        Subscription key = new Subscription();
-        key.setTopic(topicId);
-        key.setExpression("pay");
-        subscriptionTable.put(key, payMessageListener());
-        consumerBean.setSubscriptionTable(subscriptionTable);
-        return consumerBean;
-    }
+     @Bean(initMethod = "start", destroyMethod = "shutdown")
+     public ConsumerBean consumer() {
+     ConsumerBean consumerBean = new ConsumerBean();
+     Properties properties = new Properties();
+     properties.setProperty(PropertyKeyConst.ConsumerId, consumerId);
+     properties.setProperty(PropertyKeyConst.AccessKey, accessKey);
+     properties.setProperty(PropertyKeyConst.SecretKey, secretKey);
+     consumerBean.setProperties(properties);
+     Map<Subscription, MessageListener> subscriptionTable = new HashMap<>();
+     Subscription key = new Subscription();
+     key.setTopic(topicId);
+     key.setExpression("pay");
+     subscriptionTable.put(key, payMessageListener());
+     consumerBean.setSubscriptionTable(subscriptionTable);
+     return consumerBean;
+     }
 
-    @Bean
-    public PayMessageListener payMessageListener() {
-        return new PayMessageListener();
-    }*/
+     @Bean public PayMessageListener payMessageListener() {
+     return new PayMessageListener();
+     }*/
 
 }

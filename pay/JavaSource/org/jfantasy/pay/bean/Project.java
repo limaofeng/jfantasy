@@ -17,6 +17,7 @@ public class Project extends BaseBusEntity {
 
     public final static String ORDER_PAYMENT = "payment";
     public final static String ORDER_REFUND = "refund";
+    public final static String CARD_INPOUR = "card_inpour";
 
     /**
      * 编码

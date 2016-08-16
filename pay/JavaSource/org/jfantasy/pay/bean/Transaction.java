@@ -35,6 +35,9 @@ public class Transaction extends BaseBusEntity {
     public final static String ORDER_KEY = "order_key";
     public static final String ORDER_SUBJECT = "order_subject";
 
+    public final static String CARD_ID = "card_id";
+    public static final String CARD_SUBJECT = "card_subject";
+
     /**
      * 交易流水号
      */
@@ -51,9 +54,9 @@ public class Transaction extends BaseBusEntity {
     @Column(name = "UNION_ID", updatable = false, unique = true)
     private String unionId;
     /**
-     * 转出账号<br/>
+     * 转出账号<br/> 充值时,可以为空
      */
-    @Column(name = "FROM_ACCOUNT", nullable = false)
+    @Column(name = "FROM_ACCOUNT")
     private String from;
     /**
      * 转入账号<br/>
@@ -229,7 +232,7 @@ public class Transaction extends BaseBusEntity {
         this.unionId = unionId;
     }
 
-    public static String generateUnionid(String projectKey,String orderKey){
+    public static String generateUnionid(String projectKey, String orderKey) {
         return projectKey + ">" + orderKey;
     }
 

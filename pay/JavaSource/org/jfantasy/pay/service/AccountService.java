@@ -7,13 +7,13 @@ import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.pay.bean.Account;
+import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.Transaction;
 import org.jfantasy.pay.bean.enums.AccountStatus;
 import org.jfantasy.pay.bean.enums.AccountType;
 import org.jfantasy.pay.bean.enums.TxChannel;
 import org.jfantasy.pay.bean.enums.TxStatus;
 import org.jfantasy.pay.dao.AccountDao;
-import org.jfantasy.pay.dao.TransactionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
@@ -30,8 +30,8 @@ public class AccountService {
     @Autowired
     private AccountDao accountDao;
     @Autowired
-    private TransactionDao transactionDao;
-    @Autowired
+    private TransactionService transactionService;
+
     private PasswordEncoder passwordEncoder = new StandardPasswordEncoder();
 
     @Transactional
@@ -91,7 +91,7 @@ public class AccountService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void remit(String trx_no, String password) {
-        remit(transactionDao.get(trx_no), password);
+        remit(transactionService.get(trx_no), password);
     }
 
     /**
@@ -130,7 +130,7 @@ public class AccountService {
         this.accountDao.update(to);
         //更新交易状态
         transaction.setStatus(TxStatus.success);
-        transactionDao.save(transaction);
+        transactionService.save(transaction);
     }
 
     @Transactional
@@ -140,5 +140,19 @@ public class AccountService {
         return null;
     }
 
+    /**
+     * 绑卡记录交易
+     *
+     * @param card 卡
+     */
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void inpour(Card card) {
+        Account to = accountDao.findUnique(Restrictions.eq("owner", card.getOwner()));
+        //添加充值记录
+        transactionService.inpour(card, to.getSn());
+        //修改金额
+        to.setAmount(to.getAmount().add(card.getAmount()));
+        accountDao.save(to);
+    }
 
 }

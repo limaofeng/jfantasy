@@ -18,18 +18,25 @@ public class ProjectCommandLineRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if(projectService.get(Project.ORDER_PAYMENT) == null){
+        if (projectService.get(Project.ORDER_PAYMENT) == null) {
             Project project = new Project(Project.ORDER_PAYMENT);
             project.setName("订单支付");
             project.setDescription("业务订单的支付");
             project.setType(ProjectType.order);
             projectService.save(project);
         }
-        if(projectService.get(Project.ORDER_REFUND) == null){
+        if (projectService.get(Project.ORDER_REFUND) == null) {
             Project project = new Project(Project.ORDER_REFUND);
             project.setName("订单退款");
             project.setDescription("业务订单的退款");
             project.setType(ProjectType.order);
+            projectService.save(project);
+        }
+        if (projectService.get(Project.CARD_INPOUR) == null) {
+            Project project = new Project(Project.CARD_INPOUR);
+            project.setName("充值卡");
+            project.setDescription("充值卡");
+            project.setType(ProjectType.card);
             projectService.save(project);
         }
     }

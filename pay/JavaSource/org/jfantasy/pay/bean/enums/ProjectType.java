@@ -8,5 +8,9 @@ public enum ProjectType {
     /**
      * 转账
      */
-    transfer
+    transfer,
+    /**
+     * 卡
+     */
+    card
 }

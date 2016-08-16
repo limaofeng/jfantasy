@@ -1,6 +1,7 @@
 package org.jfantasy.pay.listener;
 
 import org.jfantasy.pay.bean.Card;
+import org.jfantasy.pay.bean.enums.Usage;
 import org.jfantasy.pay.event.CardBindEvent;
 import org.jfantasy.pay.service.AccountService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,11 @@ public class CardBindListener implements ApplicationListener<CardBindEvent> {
 
     @Override
     public void onApplicationEvent(CardBindEvent event) {
-        //TODO 卡充值逻辑
         Card card = event.getCard();
+        if(card.getUsage() != Usage.inpour){
+            return;
+        }
+        accountService.inpour(card);
     }
 
 }
