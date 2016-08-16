@@ -20,13 +20,17 @@ public class ONSByTransactionChangedListener implements ApplicationListener<Tran
     @Value("${aliyun.ons.pay.topicId:T-PAY}")
     private String topicId;
 
+    private final Producer producer;
+
     @Autowired
-    public Producer producer;
+    public ONSByTransactionChangedListener(Producer producer) {
+        this.producer = producer;
+    }
 
     @Override
     public void onApplicationEvent(TransactionChangedEvent event) {
         Transaction transaction = event.getTransaction();
-        Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_ACCOUNT_KEY, transaction.getSn(), JSON.serialize(transaction).getBytes());
+        Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_TRANSACTION_KEY, transaction.getSn(), JSON.serialize(transaction).getBytes());
         producer.send(msg);
     }
 

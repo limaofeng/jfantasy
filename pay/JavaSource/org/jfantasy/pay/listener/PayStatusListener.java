@@ -6,22 +6,11 @@ import org.jfantasy.pay.bean.enums.PayMethod;
 import org.jfantasy.pay.bean.enums.TxStatus;
 import org.jfantasy.pay.event.PayStatusEvent;
 import org.jfantasy.pay.event.context.PayStatus;
-import org.jfantasy.pay.service.AccountService;
-import org.jfantasy.pay.service.ProjectService;
-import org.jfantasy.pay.service.TransactionService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class PayStatusListener implements ApplicationListener<PayStatusEvent> {
-
-    @Autowired
-    private TransactionService transactionService;
-    @Autowired
-    private ProjectService projectService;
-    @Autowired
-    private AccountService accountService;
 
     @Override
     public void onApplicationEvent(PayStatusEvent event) {

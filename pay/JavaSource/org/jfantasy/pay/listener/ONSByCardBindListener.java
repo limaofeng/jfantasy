@@ -10,7 +10,6 @@ import org.jfantasy.framework.lucene.dao.hibernate.OpenSessionUtils;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardDesign;
 import org.jfantasy.pay.event.CardBindEvent;
-import org.jfantasy.pay.service.CardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
@@ -24,11 +23,13 @@ public class ONSByCardBindListener implements ApplicationListener<CardBindEvent>
 
     @Value("${aliyun.ons.pay.topicId:T-PAY}")
     private String topicId;
-    @Autowired
-    private CardService cardService;
+
+    private final Producer producer;
 
     @Autowired
-    public Producer producer;
+    public ONSByCardBindListener(Producer producer) {
+        this.producer = producer;
+    }
 
     @Override
     public void onApplicationEvent(CardBindEvent event) {

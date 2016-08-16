@@ -20,8 +20,12 @@ public class ONSByAccountChangedListener implements ApplicationListener<AccountC
     @Value("${aliyun.ons.pay.topicId:T-PAY}")
     private String topicId;
 
+    private final Producer producer;
+
     @Autowired
-    public Producer producer;
+    public ONSByAccountChangedListener(Producer producer) {
+        this.producer = producer;
+    }
 
     @Override
     public void onApplicationEvent(AccountChangedEvent event) {

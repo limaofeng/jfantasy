@@ -17,11 +17,11 @@ public class AccountConfiguration  implements CommandLineRunner {
     public void run(String... args) throws Exception {
         Account from = accountService.findUnique(AccountType.personal, "member:15921884771");
         if(from == null){
-            accountService.save(AccountType.personal,"member:15921884771");
+            accountService.save(AccountType.personal,"member:15921884771","");
         }
         Account to = accountService.findUnique(AccountType.enterprise, "shzbsg");
         if(to == null){
-            accountService.save(AccountType.enterprise,"shzbsg");
+            accountService.save(AccountType.enterprise,"shzbsg","");
         }
     }
 

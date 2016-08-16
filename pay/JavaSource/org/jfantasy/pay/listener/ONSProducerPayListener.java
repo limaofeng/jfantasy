@@ -24,8 +24,12 @@ public class ONSProducerPayListener extends PayListener {
     @Value("${aliyun.ons.pay.topicId:T-PAY}")
     private String topicId;
 
+    private final Producer producer;
+
     @Autowired
-    public Producer producer;
+    public ONSProducerPayListener(Producer producer) {
+        this.producer = producer;
+    }
 
     @Override
     public boolean supportsOrderType(String orderType) {

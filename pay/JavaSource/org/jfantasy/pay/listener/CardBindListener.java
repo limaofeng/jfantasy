@@ -13,8 +13,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class CardBindListener implements ApplicationListener<CardBindEvent> {
 
+    private final AccountService accountService;
+
     @Autowired
-    private AccountService accountService;
+    public CardBindListener(AccountService accountService) {
+        this.accountService = accountService;
+    }
 
     @Override
     public void onApplicationEvent(CardBindEvent event) {

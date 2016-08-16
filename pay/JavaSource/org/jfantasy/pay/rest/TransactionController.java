@@ -54,7 +54,7 @@ public class TransactionController {
 
     @ApiOperation("创建交易")
     @RequestMapping(method = RequestMethod.POST)
-    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms","default"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms", "default"}))
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport save(Transaction transaction) {
@@ -65,21 +65,22 @@ public class TransactionController {
     //transactionService.transfer(tx.getFrom(), tx.getTo(), tx.getAmount(), tx.getNotes());
     @ApiOperation("获取交易详情")
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
-    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms","default"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms", "default"}))
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String sn) {
         return transform(get(sn));
     }
 
     @ApiOperation("获取支付表单进行支付")
-    @RequestMapping(method = RequestMethod.GET, value = "/{id}/pay-form")
+    @RequestMapping(method = RequestMethod.POST, value = "/{id}/pay-form")
     @ResponseBody
+    @JsonResultFilter(allow = @AllowProperty(pojo = Payment.class, name = {"sn", "type", "pay_config_name", "total_amount", "payment_fee", "status", "source"}))
     public ToPayment payForm(@PathVariable("id") String sn, @RequestBody PayForm payForm) {
         Transaction transaction = get(sn);
-        if (transaction.getProject().getType() == ProjectType.order) {
+        if (transaction.getProject().getType() != ProjectType.order) {
             throw new RestException("项目类型为 order 才能调用支付接口");
         }
-        String orderKey = transaction.get("orderKey");
+        String orderKey = transaction.get("order_key");
         return payService.pay(payForm.getPayconfigId(), payForm.getPayType(), orderKey, payForm.getPayer(), payForm.getProperties());
     }
 
@@ -103,12 +104,12 @@ public class TransactionController {
                     Iterator<PayConfig> iterator = payconfigs.iterator();
 
 //                    if(user != null) {
-                        while (iterator.hasNext()) {
-                            PayConfig payConfig = iterator.next();
-                            if (!payConfig.getPlatforms().contains("app")) {//user.getPlatform()
-                                iterator.remove();
-                            }
+                    while (iterator.hasNext()) {
+                        PayConfig payConfig = iterator.next();
+                        if (!payConfig.getPlatforms().contains("app")) {//user.getPlatform()
+                            iterator.remove();
                         }
+                    }
 //                    }
 
                     String payment_sn = transaction.get("payment_sn");
@@ -117,7 +118,7 @@ public class TransactionController {
                         if (payment.getStatus() == PaymentStatus.ready) { // 加载支付方式
                             ObjectUtil.find(payconfigs, "payProductId", payment.getPayConfig().getPayProductId()).setDefault(true);
                         }
-                    }else if(!payconfigs.isEmpty()){
+                    } else if (!payconfigs.isEmpty()) {
                         payconfigs.get(0).setDefault(true);
                     }
                     resource.set("payconfigs", payconfigs);

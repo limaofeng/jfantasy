@@ -14,8 +14,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class LogByTransactionChangedListener implements ApplicationListener<TransactionChangedEvent> {
 
+    private final LogService logService;
+
     @Autowired
-    private LogService logService;
+    public LogByTransactionChangedListener(LogService logService) {
+        this.logService = logService;
+    }
 
     @Override
     public void onApplicationEvent(TransactionChangedEvent event) {

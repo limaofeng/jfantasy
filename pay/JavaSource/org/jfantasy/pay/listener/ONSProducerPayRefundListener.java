@@ -11,10 +11,9 @@ import org.jfantasy.pay.event.listener.PayRefundListener;
 import org.jfantasy.pay.order.TestOrderService;
 import org.jfantasy.pay.order.entity.OrderKey;
 import org.jfantasy.pay.order.entity.RefundDetails;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * 通过阿里云的ONS传递成功消息
@@ -25,8 +24,12 @@ public class ONSProducerPayRefundListener extends PayRefundListener {
     @Value("${aliyun.ons.pay.topicId}")
     private String topicId;
 
-    @Resource(name = "payProducer")
-    public Producer producer;
+    private final Producer producer;
+
+    @Autowired
+    public ONSProducerPayRefundListener(Producer producer) {
+        this.producer = producer;
+    }
 
     @Override
     public boolean supportsOrderType(String orderType) {

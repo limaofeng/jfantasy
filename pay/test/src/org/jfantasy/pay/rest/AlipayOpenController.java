@@ -70,7 +70,7 @@ public class AlipayOpenController {
 
         Response response = HttpClientUtil.doPost(url,params);
 
-        Map<String,?> result = JSON.deserialize(response.getBody(), HashedMap.class);
+        Map<String,?> result = JSON.deserialize(response.text(), HashedMap.class);
 
         System.out.println(result);
 
