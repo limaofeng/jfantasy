@@ -83,7 +83,7 @@ public class PropertyFilter {
         }
     }
 
-    public PropertyFilter(String filterName, String... value) {
+    public <T> PropertyFilter(String filterName, T... value) {
         this.initialize(filterName);
         if (!(MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType))) {
             throw new IgnoreException("有多个条件时,查询条件必须为 in 或者 not in ");

@@ -2,6 +2,7 @@ package org.jfantasy.framework.spring.mvc.method.annotation;
 
 import org.jfantasy.framework.spring.mvc.bind.annotation.FormModel;
 import org.jfantasy.framework.spring.mvc.util.MapWapper;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.core.annotation.AnnotationUtils;
@@ -62,8 +63,9 @@ public class FormModelMethodArgumentResolver implements HandlerMethodArgumentRes
         }
 
         target = binder.convertIfNecessary(binder.getTarget(), parameter.getParameterType());
-        mavContainer.addAttribute(name, target);
-
+        if(StringUtil.isNotBlank(name)) {
+            mavContainer.addAttribute(name, target);
+        }
         return target;
     }
 
