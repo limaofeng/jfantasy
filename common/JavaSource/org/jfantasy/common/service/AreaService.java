@@ -1,6 +1,7 @@
 package org.jfantasy.common.service;
 
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Hibernate;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.common.bean.Area;
 import org.jfantasy.common.dao.AreaDao;
@@ -52,7 +53,11 @@ public class AreaService {
     }
 
     public Area get(String id) {
-        return this.areaDao.get(id);
+        Area area = this.areaDao.get(id);
+        if(area != null){
+            Hibernate.initialize(area.getParent());
+        }
+        return area;
     }
 
     /**
