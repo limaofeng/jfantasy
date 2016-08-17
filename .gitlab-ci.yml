@@ -9,3 +9,5 @@ build:
   artifacts:
     paths:
     - build/libs/
+  tags:
+    - docker
