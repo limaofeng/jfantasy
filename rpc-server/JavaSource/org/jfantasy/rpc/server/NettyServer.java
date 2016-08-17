@@ -11,6 +11,7 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
 import io.netty.handler.codec.LengthFieldPrepender;
 import org.jfantasy.framework.util.common.ClassUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.rpc.annotation.ServiceExporter;
 import org.jfantasy.rpc.codec.RpcDecoder;
 import org.jfantasy.rpc.codec.RpcEncoder;
@@ -41,7 +42,7 @@ public class NettyServer implements ApplicationContextAware {
         this.port = port;
     }
 
-    public NettyServer(String host,int port) {
+    public NettyServer(String host, int port) {
         this.host = host;
         this.port = port;
     }
@@ -84,7 +85,7 @@ public class NettyServer implements ApplicationContextAware {
                     }
                 });
 
-        channel = serverBootstrap.bind(host, port).sync().channel();
+        channel = (StringUtil.isNotBlank(host) ? serverBootstrap.bind(host, port) : serverBootstrap.bind(port)).sync().channel();
 
         logger.info("NettyRPC server listening on port " + port + " and ready for connections...");
     }
