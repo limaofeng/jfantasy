@@ -5,11 +5,12 @@ import org.apache.commons.logging.LogFactory;
 import org.jfantasy.pay.order.OrderServiceRegistry;
 import org.jfantasy.pay.order.entity.enums.CallType;
 import org.jfantasy.pay.service.OrderServerService;
+import org.jfantasy.rpc.annotation.ServiceExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Properties;
 
-//@ServiceExporter(value = "rpcOrderServiceRegistry", targetInterface = OrderServiceRegistry.class)
+@ServiceExporter(value = "rpcOrderServiceRegistry", targetInterface = OrderServiceRegistry.class)
 public class RpcOrderServiceRegistry implements OrderServiceRegistry {
 
     private final static Log LOG = LogFactory.getLog(RpcOrderServiceRegistry.class);

@@ -32,7 +32,7 @@ public class OrderServerController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public OrderServer create(OrderServerForm form){
+    public OrderServer create(@RequestBody OrderServerForm form){
         return orderServerService.save(form.getCallType(),form.getUrl(),form.getDescription(),form.getProperties());
     }
 
