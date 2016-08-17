@@ -30,6 +30,10 @@ allprojects {
 
     task hello << { task -> println "I'm $task.project.name" }
 
+    task wrapper(type: Wrapper) {
+        gradleVersion = '2.0'
+    }
+
 }
 
 subprojects {

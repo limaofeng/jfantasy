@@ -5,6 +5,7 @@ before_script:
 
 build:
   script:
+    - gradle wrapper
     - ./gradlew sonar -x test
   artifacts:
     paths:
