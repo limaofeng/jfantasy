@@ -39,7 +39,7 @@ public class PayClientAutoConfiguration {
     }
 
     @Bean
-    @ConfigurationProperties(prefix = "netty.client")
+    @ConfigurationProperties(prefix = "netty.client.pay")
     public NettyClientSettings nettyClientSettings() {
         return new NettyClientSettings();
     }

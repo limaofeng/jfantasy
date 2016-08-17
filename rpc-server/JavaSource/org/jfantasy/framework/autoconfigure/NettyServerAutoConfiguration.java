@@ -10,7 +10,7 @@ import org.springframework.context.annotation.Configuration;
 public class NettyServerAutoConfiguration {
 
     @Bean
-    @ConfigurationProperties(prefix = "netty.local")
+    @ConfigurationProperties(prefix = "netty.server")
     public NettyLocalSettings nettyLocalSettings() {
         return new NettyLocalSettings();
     }

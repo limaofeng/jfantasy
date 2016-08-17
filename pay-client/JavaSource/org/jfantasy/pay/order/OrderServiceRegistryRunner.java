@@ -15,7 +15,7 @@ import java.util.Properties;
 public class OrderServiceRegistryRunner implements CommandLineRunner {
 
     @Bean
-    @ConfigurationProperties(prefix = "netty.local")
+    @ConfigurationProperties(prefix = "netty.server")
     public NettyLocalSettings nettyLocalSettings() {
         return new NettyLocalSettings();
     }
