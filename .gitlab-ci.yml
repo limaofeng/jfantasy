@@ -1,4 +1,4 @@
-image: java:openjdk-8-jdk
+image: index.docker.io/niaquinto/gradle
 
 before_script:
   - chmod u+x ./gradlew
