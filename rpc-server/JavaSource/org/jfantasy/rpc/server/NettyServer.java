@@ -19,7 +19,6 @@ import org.jfantasy.rpc.dto.RpcResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 
@@ -38,17 +37,20 @@ public class NettyServer implements ApplicationContextAware {
 
     private Map<String, Object> exportServiceMap = new HashMap<String, Object>();
 
-    @Value("${rpc.server.host:0.0.0.0}")
-    String host;
+    public NettyServer(int port) {
+        this.port = port;
+    }
 
-    @Value("${rpc.server.ioThreadNum:5}")
-    int ioThreadNum;
+    public NettyServer(String host,int port) {
+        this.host = host;
+        this.port = port;
+    }
+
+    private String host;
+    private int ioThreadNum;
     //内核为此套接口排队的最大连接个数，对于给定的监听套接口，内核要维护两个队列，未链接队列和已连接队列大小总和最大值
-    @Value("${rpc.server.backlog:1024}")
-    int backlog;
-
-    @Value("${rpc.server.port:9090}")
-    int port;
+    private int backlog = 1024;
+    private int port = 9090;
 
     /**
      * 启动

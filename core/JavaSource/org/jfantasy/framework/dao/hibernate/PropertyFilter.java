@@ -69,9 +69,13 @@ public class PropertyFilter {
 
     public PropertyFilter(String filterName, String value) {
         this.initialize(filterName);
+        this.setPropertyValue(value);
+    }
+
+    private void setPropertyValue(String value) {
         if (PropertyFilter.MatchType.BETWEEN.equals(this.matchType)) {
             Object array = ClassUtil.newInstance(this.propertyType, 2);
-            String[] tempArray = StringUtil.tokenizeToStringArray(value, "-~");
+            String[] tempArray = StringUtil.tokenizeToStringArray(value, "~");
             for (int i = 0; i < tempArray.length; i++) {
                 Array.set(array, i, ReflectionUtils.convertStringToObject(tempArray[i], this.propertyType));
             }
@@ -85,14 +89,18 @@ public class PropertyFilter {
 
     public <T> PropertyFilter(String filterName, T... value) {
         this.initialize(filterName);
-        if (!(MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType))) {
+        if (!(MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType)) && value.length > 0) {
             throw new IgnoreException("有多个条件时,查询条件必须为 in 或者 not in ");
         }
-        Object array = this.propertyType.isAssignableFrom(Enum.class) ? new String[value.length] : ClassUtil.newInstance(this.propertyType, Array.getLength(value));
-        for (int i = 0; i < Array.getLength(value); i++) {
-            Array.set(array, i, this.propertyType == Enum.class ? Array.get(value, i).toString() : ReflectionUtils.convertStringToObject(Array.get(value, i).toString(), this.propertyType));
+        if (MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType)) {
+            Object array = this.propertyType.isAssignableFrom(Enum.class) ? new String[value.length] : ClassUtil.newInstance(this.propertyType, Array.getLength(value));
+            for (int i = 0; i < Array.getLength(value); i++) {
+                Array.set(array, i, this.propertyType == Enum.class ? Array.get(value, i).toString() : ReflectionUtils.convertStringToObject(Array.get(value, i).toString(), this.propertyType));
+            }
+            this.propertyValue = array;
+        } else {
+            setPropertyValue(value[0].toString());
         }
-        this.propertyValue = array;
     }
 
     private void initialize(String filterName) {

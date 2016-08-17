@@ -15,7 +15,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "MEM_WALLET_BILL")
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "wallet"})
 public class WalletBill extends BaseBusEntity {
     /**
      * 流水号

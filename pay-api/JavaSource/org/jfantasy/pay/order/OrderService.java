@@ -8,7 +8,7 @@ import org.jfantasy.pay.order.entity.RefundDetails;
 
 /**
  * 支付订单接口<br/>
- * 服务接入放需要实现该接口
+ * 服务接入方需要实现该接口
  */
 public interface OrderService {
 
