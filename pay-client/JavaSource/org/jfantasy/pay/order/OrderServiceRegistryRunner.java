@@ -1,7 +1,7 @@
 package org.jfantasy.pay.order;
 
 
-import org.jfantasy.framework.autoconfigure.NettyLocalSettings;
+import org.jfantasy.rpc.config.NettyLocalSettings;
 import org.jfantasy.pay.order.entity.enums.CallType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;

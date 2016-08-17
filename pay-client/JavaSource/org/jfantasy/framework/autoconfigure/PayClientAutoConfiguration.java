@@ -9,6 +9,7 @@ import org.jfantasy.pay.order.OrderProcessor;
 import org.jfantasy.pay.order.OrderServiceRegistry;
 import org.jfantasy.pay.order.OrderServiceRegistryRunner;
 import org.jfantasy.rpc.client.NettyClientFactory;
+import org.jfantasy.rpc.config.NettyClientSettings;
 import org.jfantasy.rpc.proxy.RpcProxyFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

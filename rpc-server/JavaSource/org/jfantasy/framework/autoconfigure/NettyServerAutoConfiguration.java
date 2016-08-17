@@ -1,5 +1,6 @@
 package org.jfantasy.framework.autoconfigure;
 
+import org.jfantasy.rpc.config.NettyLocalSettings;
 import org.jfantasy.rpc.server.NettyServer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;

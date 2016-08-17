@@ -1,4 +1,4 @@
-package org.jfantasy.framework.autoconfigure;
+package org.jfantasy.rpc.config;
 
 public class NettyClientSettings {
     private String host;
