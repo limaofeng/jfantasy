@@ -33,8 +33,12 @@ public class InvoiceController {
 
     protected static InvoiceResourceAssembler assembler = new InvoiceResourceAssembler();
 
+    private final InvoiceService invoiceService;
+
     @Autowired
-    private InvoiceService invoiceService;
+    public InvoiceController(InvoiceService invoiceService) {
+        this.invoiceService = invoiceService;
+    }
 
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = InvoiceItem.class, name = {"order_id"}),

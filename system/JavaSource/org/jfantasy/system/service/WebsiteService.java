@@ -29,7 +29,6 @@ public class WebsiteService {
             Hibernate.initialize(setting);
         }
 //        Hibernate.initialize(website.getRootMenu());
-        Hibernate.initialize(website.getDefaultFileManager());
         return website;
     }
 

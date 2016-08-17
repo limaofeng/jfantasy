@@ -18,8 +18,12 @@ import java.util.List;
 @RequestMapping("/addresses")
 public class AddressController {
 
+    private final AddressService addressService;
+
     @Autowired
-    private AddressService addressService;
+    public AddressController(AddressService addressService) {
+        this.addressService = addressService;
+    }
 
     @ApiOperation("地址列表")
     @RequestMapping(method = RequestMethod.GET)
@@ -32,6 +36,12 @@ public class AddressController {
     @ResponseStatus(HttpStatus.CREATED)
     public Address create(@RequestBody Address address) {
         return this.addressService.save(address);
+    }
+
+    @ApiOperation("查看地址")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public Address view(@PathVariable("id") Long id) {
+        return get(id);
     }
 
     @ApiOperation("更新地址")

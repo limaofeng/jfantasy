@@ -14,8 +14,6 @@ import me.chanjar.weixin.cp.util.xml.XStreamTransformer;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.filestore.FileItem;
-import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.web.WebUtil;
@@ -460,24 +458,24 @@ public class WeiXinCpService implements WeiXinService {
     }
 
     @Override
-    public String mediaUpload(Media.Type mediaType, FileItem fileItem) throws WeiXinException {
+    public String mediaUpload(Media.Type mediaType, Object fileItem) throws WeiXinException {
         try {
-            WxMediaUploadResult uploadMediaRes = wxCpService.mediaUpload(mediaType.name(), WebUtil.getExtension(fileItem.getName()), fileItem.getInputStream());
+            WxMediaUploadResult uploadMediaRes = wxCpService.mediaUpload(mediaType.name(), null, null);//WebUtil.getExtension(fileItem.getName()), fileItem.getInputStream());
             return mediaType == Media.Type.thumb ? uploadMediaRes.getThumbMediaId() : uploadMediaRes.getMediaId();
         } catch (WxErrorException | IOException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
 
-    private LocalFileManager fileManager = new LocalFileManager(System.getProperty("java.io.tmpdir"));
+//    private LocalFileManager fileManager = new LocalFileManager(System.getProperty("java.io.tmpdir"));
 
-    public FileItem mediaDownload(String mediaId) throws WeiXinException {
+    public Object mediaDownload(String mediaId) throws WeiXinException {
         try {
             File file = wxCpService.mediaDownload(mediaId);
             if (file == null) {
                 return null;
             }
-            return fileManager.retrieveFileItem(file);
+            return null;//fileManager.retrieveFileItem(file);
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }

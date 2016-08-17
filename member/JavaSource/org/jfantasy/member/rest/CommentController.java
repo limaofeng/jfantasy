@@ -4,8 +4,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.jackson.annotation.AllowProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Comment;
+import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.rest.models.assembler.CommentResourceAssembler;
 import org.jfantasy.member.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,7 @@ public class CommentController {
     @Autowired
     private CommentService commentService;
 
+    @JsonResultFilter(allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"}))
     @ApiOperation(value = "查询评论", notes = "返回会员的会员评论")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -34,7 +38,11 @@ public class CommentController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResultResourceSupport save(@RequestBody Comment comment){
+    public ResultResourceSupport save(@RequestBody Comment comment) {
+        comment.setIp("");
+        comment.setUsername("username");
+        comment.setShow(true);
+        comment.setMember(null);
         return assembler.toResource(this.commentService.save(comment));
     }
 

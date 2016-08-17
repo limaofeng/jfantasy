@@ -1,7 +1,5 @@
 package org.jfantasy.wx.framework.message.content;
 
-import org.jfantasy.filestore.FileItem;
-
 /**
  * 微信图文消息
  */
@@ -35,7 +33,7 @@ public class Article {
      */
     private boolean showCoverPic;
 
-    public Article(String title, String content, FileItem fileItem) {
+    public Article(String title, String content, Object fileItem) {
         this.thumb = new Media(fileItem, Media.Type.thumb);
         this.title = title;
         this.content = content;

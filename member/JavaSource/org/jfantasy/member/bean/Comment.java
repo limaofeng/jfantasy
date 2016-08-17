@@ -33,18 +33,12 @@ public class Comment extends BaseBusEntity {
     @Lob
     @Column(name = "CONTENT", nullable = false)
     private String content;
-    @ApiModelProperty("联系方式")
-    @Column(name = "CONTACT", nullable = false)
-    private String contact;
     @ApiModelProperty("IP")
     @Column(name = "IP", nullable = false, length = 15)
     private String ip;
     @ApiModelProperty("是否显示")
     @Column(name = "IS_SHOW", nullable = false)
     private boolean show;
-    @ApiModelProperty("是否为管理员回复")
-    @Column(name = "ADMIN_REPLY", nullable = false)
-    private boolean adminReply;
     @ApiModelProperty(value = "评论目标类型", notes = "评论目标类型,(如商品、医生等)")
     @Column(name = "TARGET_TYPE", nullable = false)
     private String targetType;
@@ -91,14 +85,6 @@ public class Comment extends BaseBusEntity {
         this.content = content;
     }
 
-    public String getContact() {
-        return contact;
-    }
-
-    public void setContact(String contact) {
-        this.contact = contact;
-    }
-
     public String getIp() {
         return ip;
     }
@@ -113,14 +99,6 @@ public class Comment extends BaseBusEntity {
 
     public void setShow(boolean show) {
         this.show = show;
-    }
-
-    public boolean isAdminReply() {
-        return adminReply;
-    }
-
-    public void setAdminReply(boolean adminReply) {
-        this.adminReply = adminReply;
     }
 
     public String getTargetType() {

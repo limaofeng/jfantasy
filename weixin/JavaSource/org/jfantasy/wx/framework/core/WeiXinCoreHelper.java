@@ -1,6 +1,5 @@
 package org.jfantasy.wx.framework.core;
 
-import org.jfantasy.filestore.FileItem;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.message.WeiXinMessage;
 import org.jfantasy.wx.framework.message.content.*;
@@ -253,7 +252,7 @@ public interface WeiXinCoreHelper {
      * @param fileItem  要上传的文件
      * @return 媒体Id
      */
-    String mediaUpload(WeiXinSession session, Media.Type mediaType, FileItem fileItem) throws WeiXinException;
+    String mediaUpload(WeiXinSession session, Media.Type mediaType, Object fileItem) throws WeiXinException;
 
     /**
      * 媒体下载接口
@@ -263,7 +262,7 @@ public interface WeiXinCoreHelper {
      * @return FileItem
      * @throws WeiXinException
      */
-    FileItem mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException;
+    Object mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException;
 
     /**
      * 获取安全链接

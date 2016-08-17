@@ -7,9 +7,9 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.jfantasy.filestore.bean.Image;
-import org.jfantasy.filestore.bean.converter.ImageConverter;
-import org.jfantasy.filestore.bean.databind.ImageDeserializer;
+import org.jfantasy.filestore.Image;
+import org.jfantasy.filestore.converter.ImageConverter;
+import org.jfantasy.filestore.databind.ImageDeserializer;
 import org.jfantasy.security.bean.enums.Sex;
 
 import javax.persistence.*;
@@ -34,7 +34,7 @@ public class UserDetails implements Serializable {
 
     @ApiModelProperty(value = "用户ID")
     @Id
-    @Column(name = "USER_ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
+    @Column(name = "USER_ID", nullable = false, updatable = false, precision = 22, scale = 0)
     @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "user")})
     @GeneratedValue(generator = "pkGenerator")
     private Long userId;

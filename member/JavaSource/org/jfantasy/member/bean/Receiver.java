@@ -5,9 +5,9 @@ import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.common.bean.Area;
-import org.jfantasy.common.bean.converter.AreaConverter;
-import org.jfantasy.common.bean.databind.AreaDeserializer;
+import org.jfantasy.common.Area;
+import org.jfantasy.common.converter.AreaConverter;
+import org.jfantasy.common.databind.AreaDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;

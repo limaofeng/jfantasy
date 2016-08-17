@@ -3,7 +3,6 @@ package org.jfantasy.system.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.jfantasy.filestore.bean.FileManagerConfig;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -44,15 +43,13 @@ public class Website extends BaseBusEntity {
     /**
      * 网站对应的默认文件管理器(发布文章及日志)
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEFAULT_FILEMANAGER", nullable = false, foreignKey = @ForeignKey(name = "FK_WEBSITE_DEF_FMID"))
-    private FileManagerConfig defaultFileManager;
+    @Column(name = "DEFAULT_FILEMANAGER", nullable = false)
+    private String defaultFileManagerId;
     /**
      * 网站对应的默认上传文件管理器(发布文章及日志)
      */
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "DEFAULT_UPLOAD_FILEMANAGER", nullable = false, foreignKey = @ForeignKey(name = "FK_WEBSITE_DEF_UPLOAD_FMID"))
-    private FileManagerConfig defaultUploadFileManager;
+    @Column(name = "DEFAULT_UPLOAD_FILEMANAGER", nullable = false)
+    private String defaultUploadFileManagerId;
     /**
      * 菜单根
      */
@@ -89,14 +86,6 @@ public class Website extends BaseBusEntity {
         this.web = web;
     }
 
-    public FileManagerConfig getDefaultFileManager() {
-        return defaultFileManager;
-    }
-
-    public void setDefaultFileManager(FileManagerConfig defaultFileManager) {
-        this.defaultFileManager = defaultFileManager;
-    }
-
     public List<Setting> getSettings() {
         return settings;
     }
@@ -105,12 +94,20 @@ public class Website extends BaseBusEntity {
         this.settings = settings;
     }
 
-    public FileManagerConfig getDefaultUploadFileManager() {
-        return defaultUploadFileManager;
+    public String getDefaultFileManagerId() {
+        return defaultFileManagerId;
     }
 
-    public void setDefaultUploadFileManager(FileManagerConfig defaultUploadFileManager) {
-        this.defaultUploadFileManager = defaultUploadFileManager;
+    public void setDefaultFileManagerId(String defaultFileManagerId) {
+        this.defaultFileManagerId = defaultFileManagerId;
+    }
+
+    public String getDefaultUploadFileManagerId() {
+        return defaultUploadFileManagerId;
+    }
+
+    public void setDefaultUploadFileManagerId(String defaultUploadFileManagerId) {
+        this.defaultUploadFileManagerId = defaultUploadFileManagerId;
     }
 
     public Long getRootMenuId() {

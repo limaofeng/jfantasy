@@ -19,12 +19,9 @@ import me.chanjar.weixin.mp.bean.result.WxMpUserList;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.filestore.FileItem;
-import org.jfantasy.filestore.manager.LocalFileManager;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
-import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.security.bean.enums.Sex;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.message.*;
@@ -156,9 +153,9 @@ public class WeiXinMpService implements WeiXinService {
     }
 
     @Override
-    public String mediaUpload(Media.Type mediaType, FileItem fileItem) throws WeiXinException {
+    public String mediaUpload(Media.Type mediaType, Object fileItem) throws WeiXinException {
         try {
-            WxMediaUploadResult uploadMediaRes = this.wxMpService.mediaUpload(mediaType.name(), WebUtil.getExtension(fileItem.getName()), fileItem.getInputStream());
+            WxMediaUploadResult uploadMediaRes = this.wxMpService.mediaUpload(mediaType.name(), null, null);//WebUtil.getExtension(fileItem.getName()),fileItem.getInputStream()
             return mediaType == Media.Type.thumb ? uploadMediaRes.getThumbMediaId() : uploadMediaRes.getMediaId();
         } catch (WxErrorException | IOException e) {
             throw new WeiXinException(e.getMessage(), e);
@@ -174,7 +171,7 @@ public class WeiXinMpService implements WeiXinService {
             }
             //上传图片文件
             Media media = content.getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             if (toUsers.length == 1) {
                 this.wxMpService.customMessageSend(WxMpCustomMessage.IMAGE().toUser(toUsers[0]).mediaId(media.getId()).build());
             } else {
@@ -203,26 +200,26 @@ public class WeiXinMpService implements WeiXinService {
                     .build();
         } else if (message instanceof ImageMessage) {
             Media media = ((ImageMessage) message).getContent().getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             outMessage = WxMpXmlOutMessage.IMAGE().mediaId(media.getId()).fromUser(message.getFromUserName())
                     .toUser(message.getToUserName())
                     .build();
         } else if (message instanceof VoiceMessage) {
             Media media = ((VoiceMessage) message).getContent().getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             outMessage = WxMpXmlOutMessage.VOICE().mediaId(media.getId()).fromUser(message.getFromUserName())
                     .toUser(message.getToUserName())
                     .build();
         } else if (message instanceof VideoMessage) {
             Media media = ((VideoMessage) message).getContent().getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             outMessage = WxMpXmlOutMessage.VIDEO().mediaId(media.getId()).fromUser(message.getFromUserName())
                     .toUser(message.getToUserName())
                     .build();
         } else if (message instanceof MusicMessage) {
             Music music = ((MusicMessage) message).getContent();
             Media thumb = music.getThumb();
-            thumb.setId(this.mediaUpload(thumb.getType(), thumb.getFileItem()));
+            thumb.setId(this.mediaUpload(thumb.getType(), null));//thumb.getFileItem()
             outMessage = WxMpXmlOutMessage.MUSIC().musicUrl(music.getUrl()).hqMusicUrl(music.getHqUrl()).title(music.getTitle()).description(music.getDescription()).thumbMediaId(thumb.getId()).fromUser(message.getFromUserName())
                     .toUser(message.getToUserName())
                     .build();
@@ -261,7 +258,7 @@ public class WeiXinMpService implements WeiXinService {
             }
             //上传语言文件
             Media media = content.getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             if (toUsers.length == 1) {
                 wxMpService.customMessageSend(WxMpCustomMessage.VOICE().toUser(toUsers[0]).mediaId(media.getId()).build());
             } else {
@@ -283,7 +280,7 @@ public class WeiXinMpService implements WeiXinService {
         try {
             //上传语言文件
             Media media = content.getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             WxMpMassGroupMessage groupMessage = new WxMpMassGroupMessage();
             groupMessage.setMsgtype(WxConsts.MASS_MSG_VOICE);
             if (toGroup != -1) {
@@ -305,12 +302,12 @@ public class WeiXinMpService implements WeiXinService {
             }
             //上传视频
             Media media = content.getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             //发送消息
             if (toUsers.length == 1) {
                 //上传缩略图
                 Media thumb = content.getThumb();
-                thumb.setId(this.mediaUpload(thumb.getType(), thumb.getFileItem()));
+                thumb.setId(this.mediaUpload(thumb.getType(), null));//thumb.getFileItem()
                 VideoBuilder videoBuilder = WxMpCustomMessage.VIDEO().toUser(toUsers[0]).mediaId(media.getId()).thumbMediaId(thumb.getId());
                 if (StringUtil.isNotBlank(content.getTitle())) {
                     videoBuilder.title(content.getTitle());
@@ -343,7 +340,7 @@ public class WeiXinMpService implements WeiXinService {
         try {
             //上传视频
             Media media = content.getMedia();
-            media.setId(this.mediaUpload(media.getType(), media.getFileItem()));
+            media.setId(this.mediaUpload(media.getType(), null));//media.getFileItem()
             //发送消息
             WxMpMassVideo massVideo = new WxMpMassVideo();
             massVideo.setMediaId(media.getId());
@@ -367,7 +364,7 @@ public class WeiXinMpService implements WeiXinService {
         try {
             //上传缩略图
             Media thumb = content.getThumb();
-            thumb.setId(this.mediaUpload(thumb.getType(), thumb.getFileItem()));
+            thumb.setId(this.mediaUpload(thumb.getType(), null));//thumb.getFileItem()
             //发送消息
             MusicBuilder musicBuilder = WxMpCustomMessage.MUSIC().toUser(toUser).musicUrl(content.getUrl()).hqMusicUrl(content.getHqUrl()).thumbMediaId(thumb.getId());
             if (StringUtil.isNotBlank(content.getTitle())) {
@@ -706,19 +703,21 @@ public class WeiXinMpService implements WeiXinService {
         return Sex.unknown;
     }
 
+    /*
     private LocalFileManager fileManager = new LocalFileManager(System.getProperty("java.io.tmpdir"));
-
-    public FileItem mediaDownload(String mediaId) throws WeiXinException {
+    */
+    public Object mediaDownload(String mediaId) throws WeiXinException {
         try {
             File file = wxMpService.mediaDownload(mediaId);
             if (file == null) {
                 return null;
             }
-            return fileManager.retrieveFileItem(file);
+            return null;//fileManager.retrieveFileItem(file);
         } catch (WxErrorException e) {
             throw new WeiXinException(e.getMessage(), e);
         }
     }
+
 
     @Override
     public void refreshMenu(Menu... menus) throws WeiXinException {

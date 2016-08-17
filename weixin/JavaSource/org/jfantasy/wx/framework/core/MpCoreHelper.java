@@ -1,6 +1,5 @@
 package org.jfantasy.wx.framework.core;
 
-import org.jfantasy.filestore.FileItem;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.message.WeiXinMessage;
 import org.jfantasy.wx.framework.message.content.*;
@@ -162,11 +161,11 @@ public class MpCoreHelper implements WeiXinCoreHelper {
     }
 
     @Override
-    public String mediaUpload(WeiXinSession session, Media.Type mediaType, FileItem fileItem) throws WeiXinException {
+    public String mediaUpload(WeiXinSession session, Media.Type mediaType, Object fileItem) throws WeiXinException {
         return getWeiXinDetails(session.getId()).getWeiXinService().mediaUpload(mediaType, fileItem);
     }
 
-    public FileItem mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException {
+    public Object mediaDownload(WeiXinSession session, String mediaId) throws WeiXinException {
         return getWeiXinDetails(session.getId()).getWeiXinService().mediaDownload(mediaId);
     }
 

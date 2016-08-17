@@ -6,6 +6,7 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.hibernate.criterion.Restrictions;
+import org.jfantasy.framework.autoconfigure.ApiGatewaySettings;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.httpclient.HttpClientUtil;
@@ -47,6 +48,8 @@ public class WalletService {
     private MemberDao memberDao;
     @Autowired
     private CardDao cardDao;
+    @Autowired
+    private ApiGatewaySettings apiGatewaySettings;
 
     private Wallet newWallet(String account, BigDecimal amount) {
         return newWallet(null, account, amount);
@@ -71,13 +74,13 @@ public class WalletService {
     }
 
     @Transactional
-    public Wallet save(Member member) {
+    private Wallet save(Member member) {
         Wallet wallet = this.walletDao.findUnique(Restrictions.eq("member", member));
         if (wallet == null) {
             String owner = Scope.member + ":" + member.getUsername();
             //1、检查账号信息
             try {
-                Response response = HttpClientUtil.doGet("http://localhost:8080/accounts?EQS_owner=" + owner);
+                Response response = HttpClientUtil.doGet(apiGatewaySettings.getUrl() + "/accounts?EQS_owner=" + owner);
                 if (response.getStatusCode() != 200) {
                     throw new ValidationException(203.1f, "检查账号出错");
                 }
@@ -88,7 +91,7 @@ public class WalletService {
                     data.put("type", "personal");
                     data.put("owner", owner);
                     Request request = new Request(new StringEntity(JSON.serialize(data), ContentType.APPLICATION_JSON));
-                    response = HttpClientUtil.doPost("http://localhost:8080/accounts", request);
+                    response = HttpClientUtil.doPost(apiGatewaySettings.getUrl() + "/accounts", request);
                     if (response.getStatusCode() != 201) {
                         throw new ValidationException(203.2f, "创建账号出错");
                     }
@@ -107,13 +110,12 @@ public class WalletService {
                 LOG.error(e.getMessage(), e);
                 throw new ValidationException(203.3f, "网络问题!");
             }
-
         }
         return wallet;
     }
 
     @Transactional
-    public Wallet getWalletByOwner(String owner) {
+    private Wallet getWalletByOwner(String owner) {
         String[] asr = owner.split(":");
         String username = asr[1];
         switch (asr[0]) {

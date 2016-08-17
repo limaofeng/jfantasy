@@ -1,7 +1,5 @@
 package org.jfantasy.wx.framework.message.content;
 
-import org.jfantasy.filestore.FileItem;
-
 /**
  * 视频消息
  */
@@ -24,20 +22,20 @@ public class Video {
      */
     private Media media;
 
-    public Video(String title, String description, FileItem media) {
+    public Video(String title, String description, Object media) {
         this.title = title;
         this.description = description;
         this.media = new Media(media, Media.Type.video);
     }
 
-    public Video(String title, String description, FileItem media, FileItem thumb) {
+    public Video(String title, String description, Object media, Object thumb) {
         this.title = title;
         this.description = description;
         this.media = new Media(media, Media.Type.video);
         this.thumb = new Media(thumb, Media.Type.thumb);
     }
 
-    public Video(FileItem media, FileItem thumb) {
+    public Video(Object media, Object thumb) {
         this.media = new Media(media, Media.Type.video);
         this.thumb = new Media(thumb, Media.Type.thumb);
     }

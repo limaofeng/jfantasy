@@ -1,15 +1,13 @@
 package org.jfantasy.cms.bean;
 
-import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import org.apache.commons.beanutils.converters.FileConverter;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.converter.FileDetailConverter;
-import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
+import org.jfantasy.filestore.File;
+import org.jfantasy.filestore.databind.FileDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.jackson.JSON;
 
 import javax.persistence.*;
 
@@ -52,9 +50,9 @@ public class BannerItem extends BaseBusEntity {
      * 图片存储位置
      */
     @Column(name = "BANNER_IMAGE_STORE", length = 500)
-    @Convert(converter = FileDetailConverter.class)
-    @JsonDeserialize(using = FileDetailDeserializer.class)
-    private FileDetail bannerImage;
+    @Convert(converter = FileConverter.class)
+    @JsonDeserialize(using = FileDeserializer.class)
+    private File bannerImage;
     /**
      * 排序字段
      */
@@ -97,11 +95,11 @@ public class BannerItem extends BaseBusEntity {
         this.url = url;
     }
 
-    public void setBannerImage(FileDetail bannerImage) {
+    public void setBannerImage(File bannerImage) {
         this.bannerImage = bannerImage;
     }
 
-    public FileDetail getBannerImage() {
+    public File getBannerImage() {
         return this.bannerImage;
     }
 

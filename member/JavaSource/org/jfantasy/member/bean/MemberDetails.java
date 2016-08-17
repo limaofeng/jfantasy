@@ -9,9 +9,9 @@ import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.jfantasy.filestore.bean.FileDetail;
-import org.jfantasy.filestore.bean.converter.FileDetailConverter;
-import org.jfantasy.filestore.bean.databind.FileDetailDeserializer;
+import org.jfantasy.filestore.Image;
+import org.jfantasy.filestore.converter.ImageConverter;
+import org.jfantasy.filestore.databind.ImageDeserializer;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.security.bean.enums.Sex;
 
@@ -112,8 +112,8 @@ public class MemberDetails implements Serializable {
      */
     @ApiModelProperty(value = "用户头像", hidden = true)
     @Column(name = "AVATAR", length = 500)
-    @Convert(converter = FileDetailConverter.class)
-    private FileDetail avatar;
+    @Convert(converter = ImageConverter.class)
+    private Image avatar;
 
     @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
@@ -220,12 +220,12 @@ public class MemberDetails implements Serializable {
         this.mobileValid = mobileValid;
     }
 
-    @JsonDeserialize(using = FileDetailDeserializer.class)
-    public void setAvatar(FileDetail fileDetail) {
-        this.avatar = fileDetail;
+    @JsonDeserialize(using = ImageDeserializer.class)
+    public void setAvatar(Image image) {
+        this.avatar = image;
     }
 
-    public FileDetail getAvatar() {
+    public Image getAvatar() {
         return this.avatar;
     }
 

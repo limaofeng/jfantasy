@@ -102,7 +102,7 @@ public class MemberController {
     }
 
     @JsonResultFilter(
-            ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
+            ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "account_nonExpired", "accountNonLocked", "credentialsNonExpired"}),
             allow = @AllowProperty(pojo = MemberDetails.class, name = {"name", "sex", "birthday", "avatar"})
     )
     @RequestMapping(value = "/{id}/password", method = RequestMethod.PUT)

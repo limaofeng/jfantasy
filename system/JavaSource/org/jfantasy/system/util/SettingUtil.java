@@ -1,8 +1,6 @@
 package org.jfantasy.system.util;
 
 import org.htmlcleaner.TagNode;
-import org.jfantasy.filestore.FileManager;
-import org.jfantasy.filestore.service.FileManagerFactory;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -103,15 +101,6 @@ public class SettingUtil {
     @SuppressWarnings("unchecked")
     public static <T> T getValue(String key, Class<T> clazz) {
         return ClassUtil.newInstance(clazz, getValue(key));
-    }
-
-    public static FileManager getDefaultFileManager() {
-        return FileManagerFactory.getInstance().getFileManager("haolue-upload");
-    }
-
-    public static FileManager getDefaultUploadFileManager() {
-        //TODO 暂时写死,以后优化
-        return FileManagerFactory.getInstance().getFileManager("haolue-upload");
     }
 
     public static Long getRootMenuId() {

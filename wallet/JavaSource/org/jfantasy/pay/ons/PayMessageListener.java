@@ -7,7 +7,6 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.member.bean.Card;
-import org.jfantasy.member.service.CardService;
 import org.jfantasy.member.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -16,10 +15,8 @@ import java.util.Arrays;
 
 public class PayMessageListener implements MessageListener {
 
-    @Autowired(required = false)
+    @Autowired
     private WalletService walletService;
-    @Autowired(required = false)
-    private CardService cardService;
 
     @Override
     public Action consume(Message message, ConsumeContext context) {

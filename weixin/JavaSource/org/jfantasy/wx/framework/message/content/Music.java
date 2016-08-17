@@ -1,7 +1,5 @@
 package org.jfantasy.wx.framework.message.content;
 
-import org.jfantasy.filestore.FileItem;
-
 /**
  * 音乐消息
  */
@@ -27,13 +25,13 @@ public class Music {
      */
     private Media thumb;
 
-    public Music(String title, String description, String url, String hqUrl, FileItem thumb) {
+    public Music(String title, String description, String url, String hqUrl, Object thumb) {
         this(url, hqUrl, thumb);
         this.title = title;
         this.description = description;
     }
 
-    public Music(String url, String hqUrl, FileItem thumb) {
+    public Music(String url, String hqUrl, Object thumb) {
         this.url = url;
         this.hqUrl = hqUrl;
         this.thumb = new Media(thumb, Media.Type.thumb);

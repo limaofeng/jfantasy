@@ -1,7 +1,5 @@
 package org.jfantasy.wx.framework.message.content;
 
-import org.jfantasy.filestore.FileItem;
-
 /**
  * 语音消息
  */
@@ -22,7 +20,7 @@ public class Voice {
         this.recognition = recognition;
     }
 
-    public Voice(FileItem fileItem) {
+    public Voice(Object fileItem) {
         this.media = new Media(fileItem, Media.Type.voice);
     }
 

@@ -24,6 +24,11 @@
       "name": "spring.oauth.app.key",
       "type": "java.lang.String",
       "description": "Description for spring.oauth.app.key."
+    },
+    {
+      "name": "spring.apigateway.url",
+      "type": "java.lang.String",
+      "description": "Description for spring.apigateway.url."
     }
   ]
 }

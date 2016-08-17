@@ -1,6 +1,5 @@
 package org.jfantasy.wx.framework.message.content;
 
-import org.jfantasy.filestore.FileItem;
 
 /**
  * 图片消息对象
@@ -11,7 +10,7 @@ public class Image {
 
     private Media media;
 
-    public Image(FileItem fileItem) {
+    public Image(Object fileItem) {
         this.media = new Media(fileItem,Media.Type.image);
     }
 

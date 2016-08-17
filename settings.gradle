@@ -2,7 +2,6 @@ rootProject.name = 'jfantasy-framework'
 include ':jfantasy-core'
 include ':jfantasy-cache'
 include ':jfantasy-filestore'
-include ':jfantasy-filestore-api'
 include ':jfantasy-common'
 include ':jfantasy-pay-api'
 include ':jfantasy-pay'
@@ -24,13 +23,17 @@ include ':jfantasy-weixin'
 include ':jfantasy-thirdparty'
 include ':jfantasy-archives'
 //include ':jfantasy-mall'
+include ':jfantasy-invoice-sdk'
+include ':jfantasy-file-sdk'
+include ':jfantasy-common-sdk'
 
 include ':jfantasy-oauth-test'
+
+include ':jfantasy-aliyun-ons'
 
 project(':jfantasy-core').projectDir = "$rootDir/core" as File
 project(':jfantasy-cache').projectDir = "$rootDir/cache" as File
 project(':jfantasy-filestore').projectDir = "$rootDir/filestore" as File
-project(':jfantasy-filestore-api').projectDir = "$rootDir/filestore-api" as File
 project(':jfantasy-common').projectDir = "$rootDir/common" as File
 project(':jfantasy-pay-api').projectDir = "$rootDir/pay-api" as File
 project(':jfantasy-pay').projectDir = "$rootDir/pay" as File
@@ -52,3 +55,10 @@ project(':jfantasy-archives').projectDir = "$rootDir/archives" as File
 project(':jfantasy-pay-test').projectDir = "$rootDir/pay-test" as File
 project(':jfantasy-oauth-test').projectDir = "$rootDir/oauth-test" as File
 project(':jfantasy-test').projectDir = "$rootDir/test" as File
+// sdk list
+project(':jfantasy-invoice-sdk').projectDir = "$rootDir/invoice-sdk" as File
+project(':jfantasy-file-sdk').projectDir = "$rootDir/file-sdk" as File
+project(':jfantasy-common-sdk').projectDir = "$rootDir/common-sdk" as File
+
+project(':jfantasy-aliyun-ons').projectDir = "$rootDir/aliyun-ons" as File
+

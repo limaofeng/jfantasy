@@ -4,7 +4,7 @@ description = ' 权限控制中心 '
 dependencies {
     compile project(':jfantasy-core')
     compile project(':jfantasy-cache')
-    compile project(':jfantasy-filestore')
+//    compile project(':jfantasy-filestore')
     compile project(':jfantasy-member')
     compile project(':jfantasy-security')
     compile project(':jfantasy-oauth-api')

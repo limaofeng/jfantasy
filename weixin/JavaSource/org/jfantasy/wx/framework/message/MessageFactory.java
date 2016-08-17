@@ -4,10 +4,7 @@ import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.jfantasy.filestore.FileItem;
 import org.jfantasy.framework.util.cglib.CglibUtil;
-import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.wx.framework.core.WeiXinService;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.factory.WeiXinSessionUtils;
@@ -57,6 +54,7 @@ public class MessageFactory {
             public Object intercept(Object o, Method method, Object[] objects, MethodProxy methodProxy) throws Throwable {
                 try {
                     if ("getFileItem".equalsIgnoreCase(method.getName())) {
+                        /*
                         FileItem fileItem = (FileItem) methodProxy.invokeSuper(o, objects);
                         org.jfantasy.framework.util.reflect.MethodProxy _methodProxy = ClassUtil.getMethodProxy(Media.class, "getId");
                         if (_methodProxy == null) {
@@ -69,8 +67,8 @@ public class MessageFactory {
                                 return null;
                             }
                             _methodProxy.invoke(o, fileItem = weiXinService.mediaDownload(id));
-                        }
-                        return fileItem;
+                        }*/
+                        return null;
                     } else {
                         return methodProxy.invokeSuper(o, objects);
                     }

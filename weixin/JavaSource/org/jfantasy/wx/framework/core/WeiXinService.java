@@ -1,7 +1,6 @@
 package org.jfantasy.wx.framework.core;
 
 
-import org.jfantasy.filestore.FileItem;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.message.WeiXinMessage;
 import org.jfantasy.wx.framework.message.content.*;
@@ -29,7 +28,7 @@ public interface WeiXinService {
 
     void sendImageMessage(Image content, long toGroup) throws WeiXinException;
 
-    String mediaUpload(Media.Type mediaType, FileItem fileItem) throws WeiXinException;
+    String mediaUpload(Media.Type mediaType, Object fileItem) throws WeiXinException;
 
     void sendVoiceMessage(Voice content, String... toUsers) throws WeiXinException;
 
@@ -75,7 +74,8 @@ public interface WeiXinService {
 
     User getUser(String userId) throws WeiXinException;
 
-    FileItem mediaDownload(String mediaId) throws WeiXinException;
+    @Deprecated
+    Object mediaDownload(String mediaId) throws WeiXinException;
 
     void refreshMenu(Menu... menus) throws WeiXinException;
 

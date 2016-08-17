@@ -1,7 +1,5 @@
 package org.jfantasy.wx.framework.message.content;
 
-import org.jfantasy.filestore.FileItem;
-
 /**
  * 微信媒体消息
  */
@@ -35,7 +33,7 @@ public class Media {
 
     private String format;
 
-    private FileItem fileItem;
+    private Object fileItem;
 
     public Media() {
     }
@@ -49,7 +47,7 @@ public class Media {
         this.format = format;
     }
 
-    public Media(FileItem fileItem, Type type) {
+    public Media(Object fileItem, Type type) {
         this.fileItem = fileItem;
         this.type = type;
     }
@@ -70,7 +68,7 @@ public class Media {
         this.type = type;
     }
 
-    public FileItem getFileItem() {
+    public Object getFileItem() {
         return fileItem;
     }
 
@@ -82,7 +80,7 @@ public class Media {
         this.format = format;
     }
 
-    public void setFileItem(FileItem fileItem) {
+    public void setFileItem(Object fileItem) {
         this.fileItem = fileItem;
     }
 

@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "spring.apigateway.url",
+      "type": "java.lang.String",
+      "description": "Description for spring.apigateway.url."
+    }
+  ]
+}

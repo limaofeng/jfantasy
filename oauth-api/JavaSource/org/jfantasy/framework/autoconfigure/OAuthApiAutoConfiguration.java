@@ -16,7 +16,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 
 @Configuration
 @Import(SpringSecurityConfig.class)
-@EnableConfigurationProperties({RedisOAuthSettings.class, HttpOAuthSettings.class})
+@EnableConfigurationProperties({RedisOAuthSettings.class, HttpOAuthSettings.class, ApiGatewaySettings.class})
 public class OAuthApiAutoConfiguration {
 
     @Autowired
@@ -25,10 +25,10 @@ public class OAuthApiAutoConfiguration {
     private HttpOAuthSettings httpSettings;
 
     @Bean(name = "oauthRedisConnectionFactory")
-    public JedisConnectionFactory connectionFactory(){
+    public JedisConnectionFactory connectionFactory() {
         JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
         connectionFactory.setHostName(redisSettings.getHost());
-        if(StringUtil.isNotBlank(redisSettings.getPassword())) {
+        if (StringUtil.isNotBlank(redisSettings.getPassword())) {
             connectionFactory.setPassword(redisSettings.getPassword());
         }
         connectionFactory.setPort(redisSettings.getPort());
