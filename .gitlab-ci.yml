@@ -1,4 +1,4 @@
-image: qlik/gradle:latest
+image: java:openjdk-8-jdk
 
 before_script:
   - cd /usr/bin
