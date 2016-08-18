@@ -6,7 +6,7 @@ before_script:
       unzip gradle-2.12-all.zip && \
       ln -s gradle-2.12 gradle && \
       rm gradle-2.12-all.zip
-  - GRADLE_HOME /usr/bin/gradle && export PATH $PATH:$GRADLE_HOME/bin
+  - export GRADLE_HOME /usr/bin/gradle && export PATH $PATH:$GRADLE_HOME/bin
 
 build:
   script:
