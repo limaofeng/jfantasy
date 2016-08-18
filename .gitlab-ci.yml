@@ -1,12 +1,4 @@
-image: java:openjdk-8-jdk
-
-before_script:
-  - cd /usr/bin
-  - curl -sLO https://services.gradle.org/distributions/gradle-2.12-all.zip && \
-      unzip gradle-2.12-all.zip && \
-      ln -s gradle-2.12 gradle && \
-      rm gradle-2.12-all.zip
-  - export GRADLE_HOME /usr/bin/gradle && export PATH $PATH:$GRADLE_HOME/bin
+image: qlik/gradle:latest
 
 build:
   script:
