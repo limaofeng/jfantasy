@@ -9,6 +9,9 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.cms.bean.databind.ContentDeserializer;
 import org.jfantasy.cms.bean.enums.ArticleStatus;
+import org.jfantasy.filestore.Image;
+import org.jfantasy.filestore.converter.ImageConverter;
+import org.jfantasy.filestore.databind.ImageDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.StringsConverter;
 import org.jfantasy.framework.lucene.annotations.*;
@@ -122,6 +125,10 @@ public class Article extends BaseBusEntity {
     @Column(name = "ISSUE")
     private Boolean issue;
 
+    @Column(name = "COVER_IMAGE",length = 500)
+    @Convert(converter = ImageConverter.class)
+    private Image coverImage;
+
     public Long getId() {
         return id;
     }
@@ -208,6 +215,15 @@ public class Article extends BaseBusEntity {
 
     public void setStatus(ArticleStatus status) {
         this.status = status;
+    }
+
+    public Image getCoverImage() {
+        return coverImage;
+    }
+
+    @JsonDeserialize(using = ImageDeserializer.class)
+    public void setCoverImage(Image coverImage) {
+        this.coverImage = coverImage;
     }
 
     @Override

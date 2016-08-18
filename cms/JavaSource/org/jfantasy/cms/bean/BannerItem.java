@@ -2,11 +2,11 @@ package org.jfantasy.cms.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.apache.commons.beanutils.converters.FileConverter;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
-import org.jfantasy.filestore.File;
-import org.jfantasy.filestore.databind.FileDeserializer;
+import org.jfantasy.filestore.Image;
+import org.jfantasy.filestore.converter.ImageConverter;
+import org.jfantasy.filestore.databind.ImageDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -50,9 +50,9 @@ public class BannerItem extends BaseBusEntity {
      * 图片存储位置
      */
     @Column(name = "BANNER_IMAGE_STORE", length = 500)
-    @Convert(converter = FileConverter.class)
-    @JsonDeserialize(using = FileDeserializer.class)
-    private File bannerImage;
+    @Convert(converter = ImageConverter.class)
+    @JsonDeserialize(using = ImageDeserializer.class)
+    private Image bannerImage;
     /**
      * 排序字段
      */
@@ -95,11 +95,11 @@ public class BannerItem extends BaseBusEntity {
         this.url = url;
     }
 
-    public void setBannerImage(File bannerImage) {
+    public void setBannerImage(Image bannerImage) {
         this.bannerImage = bannerImage;
     }
 
-    public File getBannerImage() {
+    public Image getBannerImage() {
         return this.bannerImage;
     }
 
