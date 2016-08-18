@@ -1,9 +1,12 @@
 image: java:openjdk-8-jdk
 
 before_script:
-  - curl -s https://get.sdkman.io | bash
-  - sdk install gradle 3.0
-  - chmod u+x ./gradlew
+  - cd /usr/bin
+  - curl -sLO https://services.gradle.org/distributions/gradle-2.12-all.zip && \
+      unzip gradle-2.12-all.zip && \
+      ln -s gradle-2.12 gradle && \
+      rm gradle-2.12-all.zip
+  - GRADLE_HOME /usr/bin/gradle && export PATH $PATH:$GRADLE_HOME/bin
 
 build:
   script:
