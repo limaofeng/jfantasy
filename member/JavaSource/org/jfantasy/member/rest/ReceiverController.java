@@ -23,14 +23,28 @@ public class ReceiverController {
 
     private ReceiverResourceAssembler assembler = new ReceiverResourceAssembler();
 
+    private final ReceiverService receiverService;
+
     @Autowired
-    private ReceiverService receiverService;
+    public ReceiverController(ReceiverService receiverService) {
+        this.receiverService = receiverService;
+    }
 
     @ApiOperation(value = "查询收货地址", notes = "返回会员的收货地址")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> search(List<PropertyFilter> filters) {
         return assembler.toResources(this.receiverService.find(filters, "isDefault", "desc"));
+    }
+
+    @ApiOperation("查看收货地址")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    public ResultResourceSupport update(@PathVariable("id") Long id) {
+        Receiver _receiver = this.receiverService.get(id);
+        if (_receiver == null) {
+            throw new NotFoundException("[id =" + id + "]对应的收货信息不存在");
+        }
+        return assembler.toResource(_receiver);
     }
 
     @ApiOperation(value = "添加收货地址", notes = "添加会员收货地址")

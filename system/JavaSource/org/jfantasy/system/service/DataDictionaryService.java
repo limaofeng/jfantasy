@@ -6,6 +6,7 @@ import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.schedule.service.ScheduleService;
@@ -139,14 +140,38 @@ public class DataDictionaryService implements InitializingBean {
         return this.dataDictionaryDao.save(dataDictionary);
     }
 
+    public DataDictionary update(DataDictionary dataDictionary) {
+        return this.dataDictionaryDao.update(dataDictionary,true);
+    }
+
+    public List<DataDictionaryType> initEntity(DataDictionaryType dataDictionaryType) {
+        if (dataDictionaryType.getParent() == null || StringUtil.isBlank(dataDictionaryType.getParent().getCode())) {
+            dataDictionaryType.setLayer(0);
+            dataDictionaryType.setPath(dataDictionaryType.getCode() + DataDictionaryType.PATH_SEPARATOR);
+            return ObjectUtil.sort(dataDictionaryTypeDao.find(Restrictions.isNull("parent")), "sort", "asc");
+        } else {
+            DataDictionaryType parentCategory = this.dataDictionaryTypeDao.get(dataDictionaryType.getParent().getCode());
+            dataDictionaryType.setLayer(parentCategory.getLayer() + 1);
+            dataDictionaryType.setPath(parentCategory.getPath() + dataDictionaryType.getCode() + DataDictionaryType.PATH_SEPARATOR);// 设置path
+            return ObjectUtil.sort(dataDictionaryTypeDao.findBy("parent.code", parentCategory.getCode()), "sort", "asc");
+        }
+    }
+
     /**
      * 添加及更新配置项分类方法
      *
      * @param dataDictionaryType 数据字典分类
      */
     public DataDictionaryType save(DataDictionaryType dataDictionaryType) {
-        List<DataDictionaryType> types;
-        boolean root = false;
+        List<DataDictionaryType> types = initEntity(dataDictionaryType);
+        dataDictionaryType.setSort(types.size() + 1);
+        dataDictionaryType = this.dataDictionaryTypeDao.save(dataDictionaryType);
+        return dataDictionaryType;
+    }
+
+    public DataDictionaryType update(DataDictionaryType dataDictionaryType) {
+        List<DataDictionaryType> types = initEntity(dataDictionaryType);
+        boolean root = dataDictionaryType.getLayer() == 0;
         if (dataDictionaryType.getParent() == null || StringUtil.isBlank(dataDictionaryType.getParent().getCode())) {
             dataDictionaryType.setLayer(0);
             dataDictionaryType.setPath(dataDictionaryType.getCode() + DataDictionaryType.PATH_SEPARATOR);
@@ -158,43 +183,38 @@ public class DataDictionaryService implements InitializingBean {
             dataDictionaryType.setPath(parentCategory.getPath() + dataDictionaryType.getCode() + DataDictionaryType.PATH_SEPARATOR);// 设置path
             types = ObjectUtil.sort(dataDictionaryTypeDao.findBy("parent.code", parentCategory.getCode()), "sort", "asc");
         }
-        DataDictionaryType old = dataDictionaryType.getCode() != null ? this.dataDictionaryTypeDao.get(dataDictionaryType.getCode()) : null;
-        if (old != null) {// 更新数据
-            if (dataDictionaryType.getSort() != null && (ObjectUtil.find(types, "code", old.getCode()) == null || !old.getSort().equals(dataDictionaryType.getSort()))) {
-                if (ObjectUtil.find(types, "code", old.getCode()) == null) {// 移动了节点的层级
-                    int i = 0;
-                    for (DataDictionaryType m : ObjectUtil.sort((old.getParent() == null || StringUtil.isBlank(old.getParent().getCode())) ? dataDictionaryTypeDao.find(Restrictions.isNull("parent")) : dataDictionaryTypeDao.findBy("parent.code", old.getParent().getCode()), "sort", "asc")) {
-                        m.setSort(i++);
-                        this.dataDictionaryTypeDao.save(m);
-                    }
-                    types.add(dataDictionaryType.getSort() - 1, dataDictionaryType);
-                } else {
-                    DataDictionaryType t = ObjectUtil.remove(types, "code", old.getCode());
-                    if (types.size() >= dataDictionaryType.getSort()) {
-                        types.add(dataDictionaryType.getSort() - 1, t);
-                    } else {
-                        types.add(t);
-                    }
+        DataDictionaryType old = this.dataDictionaryTypeDao.get(dataDictionaryType.getCode());
+        if (dataDictionaryType.getSort() != null && (ObjectUtil.find(types, "code", old.getCode()) == null || !old.getSort().equals(dataDictionaryType.getSort()))) {
+            if (ObjectUtil.find(types, "code", old.getCode()) == null) {// 移动了节点的层级
+                int i = 0;
+                for (DataDictionaryType m : ObjectUtil.sort((old.getParent() == null || StringUtil.isBlank(old.getParent().getCode())) ? dataDictionaryTypeDao.find(Restrictions.isNull("parent")) : dataDictionaryTypeDao.findBy("parent.code", old.getParent().getCode()), "sort", "asc")) {
+                    m.setSort(i++);
+                    this.dataDictionaryTypeDao.update(m);
                 }
-                // 重新排序后更新新的位置
-                for (int i = 0; i < types.size(); i++) {
-                    DataDictionaryType m = types.get(i);
-                    if (m.getCode().equals(dataDictionaryType.getCode())) {
-                        continue;
-                    }
-                    m.setSort(i + 1);
-                    this.dataDictionaryTypeDao.save(m);
+                types.add(dataDictionaryType.getSort() - 1, dataDictionaryType);
+            } else {
+                DataDictionaryType t = ObjectUtil.remove(types, "code", old.getCode());
+                if (types.size() >= dataDictionaryType.getSort()) {
+                    types.add(dataDictionaryType.getSort() - 1, t);
+                } else {
+                    types.add(t);
                 }
             }
-        } else {// 新增数据
-            dataDictionaryType.setSort(types.size() + 1);
+            // 重新排序后更新新的位置
+            for (int i = 0; i < types.size(); i++) {
+                DataDictionaryType m = types.get(i);
+                if (m.getCode().equals(dataDictionaryType.getCode())) {
+                    continue;
+                }
+                m.setSort(i + 1);
+                this.dataDictionaryTypeDao.update(m);
+            }
         }
-        dataDictionaryType = this.dataDictionaryTypeDao.save(dataDictionaryType);
+        old = BeanUtil.copyProperties(old, dataDictionaryType, "children", "id");
         if (root) {
-            dataDictionaryType.setParent(null);
-            this.dataDictionaryTypeDao.update(dataDictionaryType);
+            old.setParent(null);
         }
-        return dataDictionaryType;
+        return this.dataDictionaryTypeDao.update(old);
     }
 
     /**
@@ -205,7 +225,7 @@ public class DataDictionaryService implements InitializingBean {
     public void delete(DataDictionaryKey... keys) {
         for (DataDictionaryKey key : keys) {
             DataDictionary dd = this.get(key);
-            if(dd == null){
+            if (dd == null) {
                 LOGGER.warn(" 数据字典项 key = " + key + " 不存在 , 请检查方法参数 !");
                 continue;
             }

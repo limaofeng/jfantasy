@@ -33,7 +33,7 @@ public class DataDictionaryTypeController {
     @RequestMapping(method = RequestMethod.PATCH)
     @ResponseBody
     public DataDictionaryType update(@RequestBody DataDictionaryType ddt) {
-        return this.dataDictionaryService.save(ddt);
+        return this.dataDictionaryService.update(ddt);
     }
 
     @ApiOperation(value = "获取数据字典分类", notes = "通过该接口, 可以获取 code 对应的字典分类信息。", response = DataDictionaryType.class)

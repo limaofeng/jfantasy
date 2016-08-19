@@ -6,6 +6,7 @@ import org.hibernate.criterion.Criterion;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.JSON;
+import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.OrderServer;
 import org.jfantasy.pay.dao.OrderServerDao;
 import org.jfantasy.pay.order.OrderServiceFactory;
@@ -33,9 +34,9 @@ public class OrderServerService {
         return this.orderServerDao.findPager(pager, filters);
     }
 
-    @Transactional(propagation = Propagation.NOT_SUPPORTED)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public OrderServer save(CallType callType, String type, String description, Properties props) {
-        OrderServer orderServer = new OrderServer();
+        OrderServer orderServer = ObjectUtil.defaultValue(this.orderServerDao.get(type),new OrderServer());
         orderServer.setCallType(callType);
         orderServer.setType(type);
         orderServer.setDescription(description);

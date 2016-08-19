@@ -95,10 +95,9 @@ public class Invoice extends BaseBusEntity {
     @JsonProperty("ship_address")
     @Column(name = "SHIP_ADDRESS", nullable = false)
     private String shipAddress;// 收货地址
-    @NotNull(groups = {RESTful.POST.class})
     @ApiModelProperty("手机人邮编")
     @JsonProperty("ship_zip_code")
-    @Column(name = "SHIP_ZIP_CODE", nullable = false)
+    @Column(name = "SHIP_ZIP_CODE")
     private String shipZipCode;// 收货邮编
     /*************************************/
     /*             开票方                */
@@ -115,8 +114,9 @@ public class Invoice extends BaseBusEntity {
     @NotNull(groups = {RESTful.POST.class})
     @OneToMany(mappedBy = "invoice", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private List<InvoiceItem> items;
+    @NotNull(groups = {RESTful.POST.class})
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_MEM_INVOICE_MEMBER"))
+    @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_MEM_INVOICE_MEMBER"))
     private Member member;
 
     public Invoice() {
@@ -269,4 +269,10 @@ public class Invoice extends BaseBusEntity {
     public void setMember(Member member) {
         this.member = member;
     }
+
+    @Transient
+    public void setMemberId(Long memberId) {
+        this.member = new Member(memberId);
+    }
+
 }

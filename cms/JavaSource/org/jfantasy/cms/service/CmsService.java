@@ -107,9 +107,6 @@ public class CmsService extends BuguSearcher<Article> {
         if (LOG.isDebugEnabled()) {
             LOG.debug("保存栏目 > " + JSON.serialize(category));
         }
-//        if (category.getArticleVersion() != null && !category.getArticleVersion().getAttributes().isEmpty()) {
-//            category.setArticleVersion(this.versionService.save(Article.class.getName(), category.getCode(), category.getArticleVersion().getAttributes()));
-//        }
         List<ArticleCategory> categories;
         boolean root = false;
         if (category.getParent() == null || StringUtil.isBlank(category.getParent().getCode())) {

@@ -56,7 +56,7 @@ public class DataDictionaryController {
     public DataDictionary update(@PathVariable("type") String type, @PathVariable("code") String code, @RequestBody DataDictionary dataDictionary) {
         dataDictionary.setCode(code);
         dataDictionary.setType(type);
-        return this.dataDictionaryService.save(dataDictionary);
+        return this.dataDictionaryService.update(dataDictionary);
     }
 
 }

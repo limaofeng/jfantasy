@@ -35,11 +35,10 @@ public class NettyClient implements IClient {
 
     private volatile boolean closed = false;
 
-//    @Value("${client.workerGroupThreads:5}")
-    int workerGroupThreads = 5;
+    private final static int workerGroupThreads = 5;
 
     public void connect(final InetSocketAddress socketAddress) {
-        try{
+        try {
             workerGroup = new NioEventLoopGroup(workerGroupThreads);
             bootstrap = new Bootstrap();
             bootstrap.group(workerGroup)
@@ -60,7 +59,7 @@ public class NettyClient implements IClient {
                                                 public void run() {
                                                     doConnect(socketAddress);
                                                 }
-                                            },1, TimeUnit.SECONDS);
+                                            }, 1, TimeUnit.SECONDS);
                                         }
                                     })
                                     //处理分包传输问题
@@ -72,13 +71,13 @@ public class NettyClient implements IClient {
                         }
                     });
             doConnect(socketAddress);
-        }catch (Exception e){
+        } catch (Exception e) {
             logger.error(e.getMessage(), e);
         }
     }
 
     private void doConnect(final InetSocketAddress socketAddress) {
-        logger.info("trying to connect server:{}",socketAddress);
+        logger.info("trying to connect server:{}", socketAddress);
         if (closed) {
             return;
         }
@@ -89,7 +88,7 @@ public class NettyClient implements IClient {
                 if (f.isSuccess()) {
                     logger.info("connected to {}", socketAddress);
                 } else {
-                    logger.info("connected to {} failed",socketAddress);
+                    logger.info("connected to {} failed", socketAddress);
                     f.channel().eventLoop().schedule(new Runnable() {
                         @Override
                         public void run() {
@@ -105,14 +104,14 @@ public class NettyClient implements IClient {
     }
 
     public RpcResponse syncSend(RpcRequest request) throws InterruptedException {
-        System.out.println("send request:"+request);
+        System.out.println("send request:" + request);
         channel.writeAndFlush(request).sync();
-        return clientRpcHandler.send(request,null);
+        return clientRpcHandler.send(request, null);
     }
 
-    public RpcResponse asyncSend(RpcRequest request,Pair<Long,TimeUnit> timeout) throws InterruptedException {
+    public RpcResponse asyncSend(RpcRequest request, Pair<Long, TimeUnit> timeout) throws InterruptedException {
         channel.writeAndFlush(request);
-        return clientRpcHandler.send(request,timeout);
+        return clientRpcHandler.send(request, timeout);
     }
 
     public InetSocketAddress getRemoteAddress() {

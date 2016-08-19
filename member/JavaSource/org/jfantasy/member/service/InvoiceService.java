@@ -32,7 +32,7 @@ public class InvoiceService {
     public Invoice save(Invoice invoice) {
         BigDecimal amount = BigDecimal.ZERO;
         for (InvoiceItem item : invoice.getItems()) {
-            InvoiceOrder order = invoiceOrderDao.get(item.getOrderId());
+            InvoiceOrder order = invoiceOrderDao.get(item.getOrder().getId());
             if (order == null) {
                 throw new ValidationException(102.1f, "订单信息不存在");
             }

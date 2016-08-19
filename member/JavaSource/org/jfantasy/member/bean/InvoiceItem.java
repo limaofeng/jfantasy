@@ -30,6 +30,7 @@ public class InvoiceItem extends BaseBusEntity {
     /**
      * 开票订单
      */
+    @NotNull(groups = {RESTful.POST.class})
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "INVOICE_ORDER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_ORDER_ITEM_ORDER"))
     private InvoiceOrder order;// 订单
@@ -51,19 +52,13 @@ public class InvoiceItem extends BaseBusEntity {
     }
 
     @JsonUnwrapped
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     public InvoiceOrder getOrder() {
         return order;
     }
 
     public void setOrder(InvoiceOrder order) {
         this.order = order;
-    }
-
-    @JsonProperty("order_id")
-    @Transient
-    @NotNull(groups = {RESTful.POST.class})
-    public Long getOrderId() {
-        return this.getOrder() != null ? this.order.getId() : null;
     }
 
     @JsonProperty("order_id")

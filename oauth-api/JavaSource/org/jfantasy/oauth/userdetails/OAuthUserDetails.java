@@ -94,6 +94,14 @@ public class OAuthUserDetails implements UserDetails {
      * 平台简码
      */
     private String platform;
+    /**
+     * 目标类型
+     */
+    private String targetType;
+    /**
+     * 目标ID
+     */
+    private String targetId;
 
     public void setType(Type type) {
         this.type = type;
@@ -228,5 +236,21 @@ public class OAuthUserDetails implements UserDetails {
 
     public String getPlatform() {
         return platform;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 }

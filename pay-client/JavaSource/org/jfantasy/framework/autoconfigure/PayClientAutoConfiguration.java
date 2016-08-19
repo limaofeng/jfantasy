@@ -56,13 +56,6 @@ public class PayClientAutoConfiguration {
         return rpcProxyFactory.proxyBean(OrderProcessor.class, 10000);
     }
 
-    @Value("${aliyun.ons.pay.consumerId}")
-    private String consumerId;
-    @Value("${aliyun.ons.pay.accessKey}")
-    private String accessKey;
-    @Value("${aliyun.ons.pay.secretKey}")
-    private String secretKey;
-
     @Bean(initMethod = "start", destroyMethod = "shutdown")
     public ConsumerBean consumer() {
         Map<Subscription, MessageListener> subscriptions = new HashMap<>();

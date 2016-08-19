@@ -39,12 +39,12 @@ public class WalletAutoConfiguration {
         Subscription key = new Subscription();
         key.setTopic(aliyunSettings().getTopicId());
         key.setExpression("*");
-        subscriptionTable.put(key, payMessageListener());
+        subscriptionTable.put(key, npayMessageListener());
         return aliyunConfiguration.consumer(aliyunSettings(),subscriptionTable);
     }
 
     @Bean
-    public PayMessageListener payMessageListener() {
+    public PayMessageListener npayMessageListener() {
         return new PayMessageListener();
     }
 

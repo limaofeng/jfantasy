@@ -36,16 +36,22 @@ public class MemberController {
     public static MemberResourceAssembler assembler = new MemberResourceAssembler();
     private static ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
 
+    private final MemberService memberService;
+    private final CommentController commentController;
+    private final ReceiverController receiverController;
+    private final FavoriteService favoriteService;
+    private final TeamController teamController;
+    private final InvoiceController invoiceController;
+
     @Autowired
-    private MemberService memberService;
-    @Autowired
-    private CommentController commentController;
-    @Autowired
-    private ReceiverController receiverController;
-    @Autowired
-    private FavoriteService favoriteService;
-    @Autowired
-    private TeamController teamController;
+    public MemberController(CommentController commentController, TeamController teamController, MemberService memberService, FavoriteService favoriteService, InvoiceController invoiceController, ReceiverController receiverController) {
+        this.commentController = commentController;
+        this.teamController = teamController;
+        this.memberService = memberService;
+        this.favoriteService = favoriteService;
+        this.invoiceController = invoiceController;
+        this.receiverController = receiverController;
+    }
 
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
@@ -138,6 +144,14 @@ public class MemberController {
     public List<ResultResourceSupport> receivers(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
         return this.receiverController.search(filters);
+    }
+
+    @ApiOperation("查询会员的开票信息")
+    @RequestMapping(value = "/{memid}/invoices", method = RequestMethod.GET)
+    @ResponseBody
+    public Pager<ResultResourceSupport> invoices(@PathVariable("memid") Long memberId, Pager<Invoice> pager,List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
+        return this.invoiceController.search(pager,filters);
     }
 
     @ApiOperation("查询会员的团队信息")

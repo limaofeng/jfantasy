@@ -58,7 +58,7 @@ public class Article extends BaseBusEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "STATUS",length = 20)
+    @Column(name = "STATUS", length = 20)
     private ArticleStatus status;
     /**
      * 文章标题
@@ -125,7 +125,7 @@ public class Article extends BaseBusEntity {
     @Column(name = "ISSUE")
     private Boolean issue;
 
-    @Column(name = "COVER_IMAGE",length = 500)
+    @Column(name = "COVER_IMAGE", length = 500)
     @Convert(converter = ImageConverter.class)
     private Image coverImage;
 
@@ -219,6 +219,15 @@ public class Article extends BaseBusEntity {
 
     public Image getCoverImage() {
         return coverImage;
+    }
+
+    public String getCategoryId() {
+        return this.category != null ? this.category.getCode() : null;
+    }
+
+    public void setCategoryId(String categoryId) {
+        this.category = new ArticleCategory();
+        this.category.setCode(categoryId);
     }
 
     @JsonDeserialize(using = ImageDeserializer.class)

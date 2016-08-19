@@ -95,7 +95,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
      */
     public T save(T entity, boolean merge) {
         Assert.notNull(entity, LOG_MESSAGE_NULL);
-        getSession().saveOrUpdate(merge ? entity = (mergeEntity(entity)) : entity);//NOSONAR
+        getSession().saveOrUpdate(merge ? entity = (clean(entity)) : entity);//NOSONAR
         this.LOG.debug("save entity: " + entity);
         return entity;
     }
@@ -124,7 +124,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
     public T update(T entity, boolean patch) {
         if (patch) {
             Assert.notNull(entity, LOG_MESSAGE_NULL);
-            getSession().saveOrUpdate(entity = (mergeEntity(entity)));//NOSONAR
+            getSession().saveOrUpdate(entity = (clean(entity)));//NOSONAR
             this.LOG.debug("save entity: " + entity);
             return entity;
         }

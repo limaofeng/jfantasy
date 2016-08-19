@@ -89,7 +89,7 @@ public class PropertyFilter {
 
     public <T> PropertyFilter(String filterName, T... value) {
         this.initialize(filterName);
-        if (!(MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType)) && value.length > 0) {
+        if (!(MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType)) && value.length > 1) {
             throw new IgnoreException("有多个条件时,查询条件必须为 in 或者 not in ");
         }
         if (MatchType.IN.equals(this.matchType) || MatchType.NOTIN.equals(this.matchType)) {

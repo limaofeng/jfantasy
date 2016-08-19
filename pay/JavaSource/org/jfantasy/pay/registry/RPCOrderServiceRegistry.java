@@ -1,7 +1,5 @@
 package org.jfantasy.pay.registry;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jfantasy.pay.order.OrderServiceRegistry;
 import org.jfantasy.pay.order.entity.enums.CallType;
 import org.jfantasy.pay.service.OrderServerService;
@@ -13,20 +11,25 @@ import java.util.Properties;
 @ServiceExporter(value = "rpcOrderServiceRegistry", targetInterface = OrderServiceRegistry.class)
 public class RpcOrderServiceRegistry implements OrderServiceRegistry {
 
-    private final static Log LOG = LogFactory.getLog(RpcOrderServiceRegistry.class);
+    private final OrderServerService orderServerService;
 
     @Autowired
-    private OrderServerService orderServerService;
-
-    @Override
-    public void register(CallType callType, String type, String description, Properties props) {
-        orderServerService.save(callType, type, description, props);
+    public RpcOrderServiceRegistry(OrderServerService orderServerService) {
+        this.orderServerService = orderServerService;
     }
 
     @Override
-    public void register(CallType callType, String[] types, String description, Properties props) {
+    public void register(String type, String host, int port) {
+        Properties props = new Properties();
+        props.setProperty("host", host);
+        props.put("port", String.valueOf(port));
+        orderServerService.save(CallType.rpc, type, "RPC", props);
+    }
+
+    @Override
+    public void register(String[] types, String host, int port) {
         for (String type : types) {
-            this.register(callType, type, description, props);
+            this.register(type, host, port);
         }
     }
 
