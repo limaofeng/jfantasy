@@ -1,5 +1,6 @@
 package org.jfantasy.cms.service;
 
+import org.hibernate.Hibernate;
 import org.jfantasy.cms.bean.Banner;
 import org.jfantasy.cms.bean.BannerItem;
 import org.jfantasy.cms.dao.BannerDao;
@@ -7,12 +8,10 @@ import org.jfantasy.cms.dao.BannerItemDao;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.Collections;
 import java.util.List;
@@ -40,6 +39,19 @@ public class BannerService {
     public Banner save(Banner banner) {
         List<BannerItem> bitems = banner.getBannerItems();// 传递过来的集合
         banner = bannerDao.save(banner);
+        if (bitems == null) {
+            bitems = Collections.emptyList();
+        }
+        for (BannerItem bnitem : bitems) {
+            bnitem.setBanner(banner);
+            bannerItemDao.save(bnitem);
+        }
+        return banner;
+    }
+
+    public Banner update(Banner banner, boolean patch) {
+        List<BannerItem> bitems = banner.getBannerItems();// 传递过来的集合
+        banner = bannerDao.save(banner, patch);
         List<BannerItem> banntiems = banner.getBannerItems();// 数据库中原来就有的集合
         if (bitems == null) {
             bitems = Collections.emptyList();
@@ -47,12 +59,14 @@ public class BannerService {
         if (banntiems == null) {
             banntiems = Collections.emptyList();
         }
-        for (BannerItem bnitem : bitems) {
-            bnitem.setBanner(banner);
-            bnitem = bannerItemDao.save(bnitem);
-            if (!banntiems.equals(bitems)) {// 添加时，这两个集合为同一个，所以不能做移除操作
-                ObjectUtil.remove(banntiems, "id", bnitem.getId());
+        for (BannerItem item : bitems) {
+            item.setBanner(banner);
+            if (ObjectUtil.exists(banntiems, "id", item.getId())) {
+                bannerItemDao.update(item);
+            } else {
+                bannerItemDao.save(item);
             }
+            ObjectUtil.remove(banntiems, "id", item.getId());
         }
         if (!banntiems.equals(bitems)) {// 添加时，这两个集合为同一个，所以不能做移除操作
             for (BannerItem bnitem : banntiems) {
@@ -60,7 +74,6 @@ public class BannerService {
             }
         }
         return banner;
-
     }
 
     public Banner get(String key) {

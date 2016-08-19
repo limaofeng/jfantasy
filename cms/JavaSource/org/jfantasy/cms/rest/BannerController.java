@@ -7,10 +7,12 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Api(value = "cms-banners", description = "轮播图接口")
@@ -30,11 +32,11 @@ public class BannerController {
     }
 
     @ApiOperation(value = "更新轮播图", notes = "更新轮播图信息", response = Banner.class)
-    @RequestMapping(value = "/{key}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/{key}", method = {RequestMethod.PATCH, RequestMethod.PUT})
     @ResponseBody
-    public Banner update(@PathVariable("key") String key,@RequestBody Banner banner) {
+    public Banner update(@PathVariable("key") String key, @RequestBody Banner banner, HttpServletRequest request) {
         banner.setKey(key);
-        return bannerService.save(banner);
+        return bannerService.update(banner, WebUtil.hasMethod(request,RequestMethod.PATCH.name()));
     }
 
     @ApiOperation(value = "获取轮播图", notes = "获取轮播图", response = Banner.class)
