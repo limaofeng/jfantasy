@@ -6,6 +6,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -23,14 +24,17 @@ public class PersonService {
         return this.personDao.get(id);
     }
 
+    @Transactional
     public Person save(Person person) {
-        return null;
+        return this.personDao.save(person);
     }
 
+    @Transactional
     public void deltele(Long id) {
-
+        this.personDao.delete(id);
     }
 
+    @Transactional
     public Person update(Person person, boolean patch) {
         return this.personDao.update(person, patch);
     }
