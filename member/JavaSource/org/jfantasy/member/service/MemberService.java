@@ -16,6 +16,7 @@ import org.jfantasy.member.dao.MemberDao;
 import org.jfantasy.member.event.LoginEvent;
 import org.jfantasy.member.event.LogoutEvent;
 import org.jfantasy.member.event.RegisterEvent;
+import org.jfantasy.member.service.vo.AuthType;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 import org.jfantasy.security.service.RoleService;
@@ -64,15 +65,21 @@ public class MemberService {
      * @param password 密码
      * @return Member
      */
-    public Member login(String username, String password) {
+    public Member login(AuthType type, String username, String password) {
         Member member = this.memberDao.findUniqueBy("username", username);
-        if (member == null || !passwordEncoder.matches(member.getPassword(), password)) {
-            throw new ValidationException(203.1f, "用户名和密码错误");
+        switch (type) {
+            case password:
+                if (member == null || !passwordEncoder.matches(member.getPassword(), password)) {
+                    throw new ValidationException(203.1f, "用户名和密码错误");
+                }
+                break;
+            case macode:
+                break;
         }
-        if (!member.isEnabled()) {
+        if (!member.getEnabled()) {
             throw new ValidationException(203.1f, "用户被禁用");
         }
-        if (!member.isAccountNonLocked()) {
+        if (!member.getAccountNonLocked()) {
             throw new ValidationException(203.1f, "用户被锁定");
         }
         member.setLastLoginTime(DateUtil.now());
@@ -120,6 +127,11 @@ public class MemberService {
         member.setUserGroups(new ArrayList<UserGroup>());
         // 保存用户
         applicationContext.publishEvent(new RegisterEvent(member = this.memberDao.save(member)));
+        //初始化用户状态
+        member.setEnabled(true);
+        member.setAccountNonLocked(true);
+        member.setAccountNonExpired(true);
+        member.setCredentialsNonExpired(true);
         return member;
     }
 
@@ -137,16 +149,22 @@ public class MemberService {
         return this.memberDao.findUnique(criterions);
     }
 
-    public Member changePassword(Long id, String oldPassword, String newPassword) {
+    public Member changePassword(Long id, AuthType type, String oldPassword, String newPassword) {
         Member member = this.memberDao.get(id);
         if (member == null) {
             throw new NotFoundException("用户不存在");
         }
-        if (!member.isEnabled()) {
+        if (!member.getEnabled()) {
             throw new ValidationException(201.1f, "用户已被禁用");
         }
-        if (!passwordEncoder.matches(member.getPassword(), oldPassword)) {
-            throw new ValidationException(201.2f, "提供的旧密码不正确");
+        switch (type) {
+            case password:
+                if (!passwordEncoder.matches(member.getPassword(), oldPassword)) {
+                    throw new ValidationException(201.2f, "提供的旧密码不正确");
+                }
+                break;
+            case macode:
+                break;
         }
         member.setPassword(passwordEncoder.encode(newPassword));
         this.memberDao.update(member);

@@ -108,7 +108,7 @@ public class MemberController {
     @RequestMapping(value = "/{id}/password", method = RequestMethod.PUT)
     @ResponseBody
     public ResultResourceSupport password(@PathVariable("id") Long id, @RequestBody PasswordForm form) {
-        return assembler.toResource(this.memberService.changePassword(id, form.getOldPassword(), form.getNewPassword()));
+        return assembler.toResource(this.memberService.changePassword(id, form.getType(), form.getOldPassword(), form.getNewPassword()));
     }
 
     @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH, RequestMethod.PUT})

@@ -9,9 +9,8 @@ import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.InvoiceOrder;
 import org.jfantasy.member.bean.Member;
-import org.jfantasy.member.rest.models.assembler.InvoiceOrderResourceAssembler;
-import org.jfantasy.member.service.InvoiceOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,18 +19,16 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Api(value = "invoice-orders", description = "开票订单")
+@Api(value = "members-iorders", description = "开票订单")
 @RestController
-@RequestMapping(value = "/iorders", produces = {APPLICATION_JSON_VALUE})
-public class InvoiceOrderController {
+@RequestMapping(value = "/members/{id}/iorders", produces = {APPLICATION_JSON_VALUE})
+public class MemberIOrderController {
 
-    protected static InvoiceOrderResourceAssembler assembler = new InvoiceOrderResourceAssembler();
-
-    private final InvoiceOrderService invoiceOrderService;
+    private final InvoiceOrderController controller;
 
     @Autowired
-    public InvoiceOrderController(InvoiceOrderService invoiceOrderService) {
-        this.invoiceOrderService = invoiceOrderService;
+    public MemberIOrderController(InvoiceOrderController controller) {
+        this.controller = controller;
     }
 
     @JsonResultFilter(
@@ -39,8 +36,10 @@ public class InvoiceOrderController {
     )
     @ApiOperation(value = "发票订单列表")
     @RequestMapping(method = RequestMethod.GET)
-    public Pager<ResultResourceSupport> search(Pager<InvoiceOrder> pager, List<PropertyFilter> filters) {
-        return assembler.toResources(this.invoiceOrderService.findPager(pager, filters));
+    public Pager<ResultResourceSupport> search(@PathVariable("id") Long id, Pager<InvoiceOrder> pager, List<PropertyFilter> filters) {
+        filters.add(new PropertyFilter("EQL_member.id",id));
+        filters.add(new PropertyFilter("EQE_status", InvoiceOrder.InvoiceOrderStatus.NONE));
+        return controller.search(pager, filters);
     }
 
 }

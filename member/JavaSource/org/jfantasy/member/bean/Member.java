@@ -10,6 +10,8 @@ import org.hibernate.validator.constraints.Length;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful.POST;
 import org.jfantasy.framework.spring.validation.RESTful.PUT;
+import org.jfantasy.framework.spring.validation.Use;
+import org.jfantasy.member.validators.UsernameCannotRepeatValidator;
 import org.jfantasy.security.bean.Role;
 import org.jfantasy.security.bean.UserGroup;
 
@@ -30,7 +32,7 @@ import java.util.*;
 @Table(name = "MEM_MEMBER", uniqueConstraints = {
         @UniqueConstraint(name = "UK_MEMBER_TARGET", columnNames = {"TARGET_TYPE", "TARGET_ID"})
 })
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "user_groups", "roles", "authorities", "details"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "user_groups", "roles", "authorities"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Member extends BaseBusEntity {
 
@@ -54,6 +56,7 @@ public class Member extends BaseBusEntity {
      */
     @NotNull(groups = {POST.class, PUT.class})
     @Length(min = 8, max = 20, groups = {POST.class, PUT.class})
+    @Use(vali = UsernameCannotRepeatValidator.class, groups = {POST.class})
     @ApiModelProperty("登录名称")
     @Column(name = "USERNAME", length = 20, nullable = false, unique = true)
     private String username;
@@ -75,29 +78,29 @@ public class Member extends BaseBusEntity {
      * 是否启用
      */
     @ApiModelProperty("是否启用")
-    @Column(name = "ENABLED")
-    private boolean enabled;
+    @Column(name = "ENABLED", nullable = false)
+    private Boolean enabled;
     /**
      * 未过期
      */
     @ApiModelProperty("未过期")
     @JsonProperty("non_expired")
-    @Column(name = "NON_EXPIRED")
-    private boolean accountNonExpired;
+    @Column(name = "NON_EXPIRED", nullable = false)
+    private Boolean accountNonExpired;
     /**
      * 未锁定
      */
     @ApiModelProperty("未锁定")
     @JsonProperty("non_locked")
-    @Column(name = "NON_LOCKED")
-    private boolean accountNonLocked;
+    @Column(name = "NON_LOCKED", nullable = false)
+    private Boolean accountNonLocked;
     /**
      * 未失效
      */
     @ApiModelProperty("未失效")
     @JsonProperty("credentials_non_expired")
-    @Column(name = "CREDENTIALS_NON_EXPIRED")
-    private boolean credentialsNonExpired;
+    @Column(name = "CREDENTIALS_NON_EXPIRED", nullable = false)
+    private Boolean credentialsNonExpired;
     /**
      * 锁定时间
      */
@@ -132,6 +135,7 @@ public class Member extends BaseBusEntity {
     @ApiModelProperty("会员详细信息")
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private MemberDetails details;
     /**
      * 目标Id
@@ -188,35 +192,35 @@ public class Member extends BaseBusEntity {
         this.nickName = nickName;
     }
 
-    public boolean isEnabled() {
+    public Boolean getEnabled() {
         return enabled;
     }
 
-    public void setEnabled(boolean enabled) {
+    public void setEnabled(Boolean enabled) {
         this.enabled = enabled;
     }
 
-    public boolean isAccountNonExpired() {
+    public Boolean getAccountNonExpired() {
         return accountNonExpired;
     }
 
-    public void setAccountNonExpired(boolean accountNonExpired) {
+    public void setAccountNonExpired(Boolean accountNonExpired) {
         this.accountNonExpired = accountNonExpired;
     }
 
-    public boolean isAccountNonLocked() {
+    public Boolean getAccountNonLocked() {
         return accountNonLocked;
     }
 
-    public void setAccountNonLocked(boolean accountNonLocked) {
+    public void setAccountNonLocked(Boolean accountNonLocked) {
         this.accountNonLocked = accountNonLocked;
     }
 
-    public boolean isCredentialsNonExpired() {
+    public Boolean getCredentialsNonExpired() {
         return credentialsNonExpired;
     }
 
-    public void setCredentialsNonExpired(boolean credentialsNonExpired) {
+    public void setCredentialsNonExpired(Boolean credentialsNonExpired) {
         this.credentialsNonExpired = credentialsNonExpired;
     }
 
