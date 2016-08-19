@@ -17,3 +17,6 @@ LOG_PATH_IS_UNDEFINED
 api-docs/node_modules
 rebel.xml
 rebel-remote.xml
+gradlew
+gradlew.bat
+Server.log
