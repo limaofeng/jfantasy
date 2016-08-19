@@ -9,6 +9,7 @@ import org.jfantasy.common.bean.enums.AreaTag;
 import org.jfantasy.framework.dao.hibernate.HibernateDao;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.util.common.ObjectUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -30,7 +31,10 @@ public class AreaDao extends HibernateDao<Area, String> {
         if (filter != null) {
             List<Criterion> predicates = new ArrayList<>();
             for (AreaTag tag : filter.getPropertyValue(AreaTag[].class)) {
-                predicates.add(Restrictions.sqlRestriction("{alias}.tags like ?", tag.name(), StringType.INSTANCE));
+                if(StringUtil.isBlank(tag.name())){
+                    continue;
+                }
+                predicates.add(Restrictions.sqlRestriction("{alias}.tags like ?", "%" + tag.name() + "%", StringType.INSTANCE));
             }
             criterions = ObjectUtil.join(criterions, Restrictions.or(predicates.toArray(new Criterion[predicates.size()])));
         }
