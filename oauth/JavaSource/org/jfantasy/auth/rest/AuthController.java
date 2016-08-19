@@ -47,7 +47,7 @@ public class AuthController {
                 }
                 return UserController.assembler.toResource(user);
             case member:
-                Member member = memberService.login(loginForm.getUsername(), loginForm.getPassword());
+                Member member = memberService.login(loginForm.getType(), loginForm.getUsername(), loginForm.getPassword());
                 if (StringUtil.isNotBlank(loginForm.getUserType()) && !loginForm.getUserType().equals(member.getType())) {
                     throw new RestException("UserType 不一致");
                 }

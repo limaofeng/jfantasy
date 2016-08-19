@@ -14,8 +14,12 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/oauth")
 public class OAuthController {
 
+    private final AccessTokenService accessTokenService;
+
     @Autowired
-    private AccessTokenService accessTokenService;
+    public OAuthController(AccessTokenService accessTokenService) {
+        this.accessTokenService = accessTokenService;
+    }
 
     @RequestMapping(value = "/user-details/{token}", method = RequestMethod.POST)
     @ResponseBody

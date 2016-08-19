@@ -4,12 +4,13 @@ package org.jfantasy.auth.rest.models;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.member.service.vo.AuthType;
 
 import javax.validation.constraints.NotNull;
 
 public class LoginForm {
     @ApiModelProperty("登录方式")
-    private LoginType type = LoginType.password;
+    private AuthType type = AuthType.password;
     @ApiModelProperty("用户类型")
     @JsonProperty("user_type")
     private String userType;
@@ -23,11 +24,11 @@ public class LoginForm {
     @NotNull(groups = RESTful.POST.class)
     private String password;
 
-    public LoginType getType() {
+    public AuthType getType() {
         return type;
     }
 
-    public void setType(LoginType type) {
+    public void setType(AuthType type) {
         this.type = type;
     }
 

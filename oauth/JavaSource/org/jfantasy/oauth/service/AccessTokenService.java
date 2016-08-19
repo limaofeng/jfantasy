@@ -4,6 +4,7 @@ import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.service.MemberService;
+import org.jfantasy.member.service.vo.AuthType;
 import org.jfantasy.oauth.bean.ApiKey;
 import org.jfantasy.oauth.bean.Application;
 import org.jfantasy.oauth.bean.enums.TokenType;
@@ -69,7 +70,7 @@ public class AccessTokenService {
         HashOperations hashOper = redisTemplate.opsForHash();
         SetOperations setOper = redisTemplate.opsForSet();
 
-        OAuthUserDetails userDetails = new OAuthUserDetails(appId, apiKey.getApplication().getName(), apiKey.getKey(), apiKey.getDescription(),apiKey.getPlatform());
+        OAuthUserDetails userDetails = new OAuthUserDetails(appId, apiKey.getApplication().getName(), apiKey.getKey(), apiKey.getDescription(), apiKey.getPlatform());
 
         String token = UUID.randomUUID().toString() + "_" + request.getGrantType() + "_" + apiKey.getKey();
 
@@ -96,7 +97,7 @@ public class AccessTokenService {
                         retrieveUser(userDetails, userService.login(request.getUsername(), request.getPassword()));
                         break;
                     case "member":
-                        retrieveUser(userDetails, memberService.login(request.getUsername(), request.getPassword()));
+                        retrieveUser(userDetails, memberService.login(AuthType.password, request.getUsername(), request.getPassword()));
                         break;
                 }
                 redisTemplate.delete(SecurityStorage.AUTHORIZATION_CODE_PREFIX + request.getCode());
@@ -167,6 +168,9 @@ public class AccessTokenService {
         userDetails.setCredentialsNonExpired(user.isCredentialsNonExpired());
 
         userDetails.setAuthorities(new ArrayList<>(user.getAuthorities()));
+
+        userDetails.setTargetType(user.getTargetType());
+        userDetails.setTargetId(user.getTargetId());
     }
 
     private void retrieveUser(OAuthUserDetails userDetails, ApiKey apiKey) {
@@ -220,16 +224,19 @@ public class AccessTokenService {
         userDetails.setType(OAuthUserDetails.Type.member);
         userDetails.setKey(OAuthUserDetails.Type.member.name() + ":" + member.getUsername());
 
-        userDetails.setEnabled(member.isEnabled());
-        userDetails.setAccountNonExpired(member.isAccountNonExpired());
-        userDetails.setAccountNonLocked(member.isAccountNonLocked());
-        userDetails.setCredentialsNonExpired(member.isCredentialsNonExpired());
+        userDetails.setEnabled(member.getEnabled());
+        userDetails.setAccountNonExpired(member.getAccountNonExpired());
+        userDetails.setAccountNonLocked(member.getAccountNonLocked());
+        userDetails.setCredentialsNonExpired(member.getCredentialsNonExpired());
 
         List<GrantedAuthority> authorities = new ArrayList<>();
         for (String authority : member.getAuthorities()) {
             authorities.add(new SimpleGrantedAuthority(authority));
         }
         userDetails.setAuthorities(authorities);
+
+        userDetails.setTargetType(member.getTargetType());
+        userDetails.setTargetId(member.getTargetId());
     }
 
 }
