@@ -5,11 +5,14 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.jfantasy.archives.bean.enums.Sex;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.util.common.DateUtil;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -30,21 +33,29 @@ public class Person extends BaseBusEntity {
     private Long id;
     @ApiModelProperty("编号")
     @Column(name = "NUMBER", unique = true, nullable = false, updatable = false, length = 30)
+    @GeneratedValue(generator = "serialnumber")
+    @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {
+        @Parameter(name = "expression", value = "'A' + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('ARCH_PERSON-NO'), 10)")
+    })
     private String no;
     @ApiModelProperty(value = "类型", notes = "用于分类不同的人员信息。")
+    @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @Column(name = "TYPE", length = 10)
     private String type;
     @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "person", fetch = FetchType.LAZY)
     private List<Record> records;
     /* 基本信息 */
+    @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @ApiModelProperty("名称")
     @Column(name = "NAME", length = 30)
     private String name;
+    @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @ApiModelProperty("生日")
     @Column(name = "BIRTHDAY")
     @Temporal(TemporalType.TIMESTAMP)
     private Date birthday;
+    @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @ApiModelProperty("性别")
     @Enumerated(EnumType.STRING)
     @Column(name = "SEX", length = 10)
