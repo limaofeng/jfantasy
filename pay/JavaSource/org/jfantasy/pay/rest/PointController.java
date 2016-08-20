@@ -25,8 +25,12 @@ public class PointController {
 
     private PointResourceAssembler assembler = new PointResourceAssembler();
 
+    private final PointService pointService;
+
     @Autowired
-    private PointService pointService;
+    public PointController(PointService pointService) {
+        this.pointService = pointService;
+    }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Account.class, name = {"sn", "type"}))
     @ApiOperation("积分查询")

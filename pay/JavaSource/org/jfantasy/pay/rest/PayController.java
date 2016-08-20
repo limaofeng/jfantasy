@@ -20,21 +20,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/pays")
 public class PayController {
 
-    @Autowired
-    private PayService payService;
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private RefundService refundService;
+    private final PayService payService;
+    private final PaymentService paymentService;
+    private final RefundService refundService;
 
-    /*
-    @JsonIgnoreProperties({@IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig"})})
-    @RequestMapping(method = RequestMethod.POST)
-    @ResponseStatus(HttpStatus.CREATED)
-    @ResponseBody
-    public ToPayment execute(@RequestBody PayForm payForm) throws PayException {
-        return payService.pay(payForm.getPayconfigId(), payForm.getPayType(), payForm.getOrderType(), payForm.getOrderSn(), payForm.getPayer(), payForm.getProperties());
-    }*/
+    @Autowired
+    public PayController(PayService payService, PaymentService paymentService, RefundService refundService) {
+        this.payService = payService;
+        this.paymentService = paymentService;
+        this.refundService = refundService;
+    }
 
     @JsonResultFilter(ignore = {@IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})})
     @ApiOperation("支付退款")

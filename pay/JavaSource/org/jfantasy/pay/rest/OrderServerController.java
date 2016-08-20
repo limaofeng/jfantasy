@@ -18,8 +18,12 @@ import java.util.List;
 @RequestMapping("/order-server")
 public class OrderServerController {
 
+    private final OrderServerService orderServerService;
+
     @Autowired
-    private OrderServerService orderServerService;
+    public OrderServerController(OrderServerService orderServerService) {
+        this.orderServerService = orderServerService;
+    }
 
     @ApiOperation("查询订单服务")
     @RequestMapping(method = RequestMethod.GET)

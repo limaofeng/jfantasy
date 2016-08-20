@@ -25,10 +25,14 @@ public class PayProductController {
 
     private PayProductResourceAssembler assembler = new PayProductResourceAssembler();
 
+    private final PayProductConfiguration payProductConfiguration;
+    private final PayConfigController payConfigController;
+
     @Autowired
-    private PayProductConfiguration payProductConfiguration;
-    @Autowired
-    private PayConfigController payConfigController;
+    public PayProductController(PayConfigController payConfigController, PayProductConfiguration payProductConfiguration) {
+        this.payConfigController = payConfigController;
+        this.payProductConfiguration = payProductConfiguration;
+    }
 
     @JsonResultFilter(allow = {@AllowProperty(pojo = PayProductSupport.class, name = {"id", "name"})})
     @ApiOperation(value = "获取支付产品", notes = "通过该接口, 可以获取支持的支付产品列表")

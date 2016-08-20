@@ -34,10 +34,14 @@ import java.util.TreeMap;
 @RequestMapping("/weixinpay/{appid}")
 public class WeixinPayController {
 
+    private final PayConfigService payConfigService;
+    private final PayService payService;
+
     @Autowired
-    private PayConfigService payConfigService;
-    @Autowired
-    private PayService payService;
+    public WeixinPayController(PayService payService, PayConfigService payConfigService) {
+        this.payService = payService;
+        this.payConfigService = payConfigService;
+    }
 
     /**
      * 生成扫码支付的二维码

@@ -36,14 +36,18 @@ public class TransactionController {
 
     private TransactionResourceAssembler assembler = new TransactionResourceAssembler();
 
+    private final TransactionService transactionService;
+    private final PayService payService;
+    private final ProjectService projectService;
+    private final PayConfigService configService;
+
     @Autowired
-    private TransactionService transactionService;
-    @Autowired
-    private PayService payService;
-    @Autowired
-    private ProjectService projectService;
-    @Autowired
-    private PayConfigService configService;
+    public TransactionController(PayConfigService configService, PayService payService, ProjectService projectService, TransactionService transactionService) {
+        this.configService = configService;
+        this.payService = payService;
+        this.projectService = projectService;
+        this.transactionService = transactionService;
+    }
 
     @ApiOperation("查询交易记录")
     @RequestMapping(method = RequestMethod.GET)

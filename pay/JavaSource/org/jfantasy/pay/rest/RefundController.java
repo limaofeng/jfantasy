@@ -31,16 +31,20 @@ public class RefundController {
 
     private RefundResourceAssembler assembler = new RefundResourceAssembler();
 
+    private final RefundService refundService;
+    private final PayService payService;
+    private final OrderController orderController;
+    private final PaymentController paymentController;
+    private final PayConfigController payConfigController;
+
     @Autowired
-    private RefundService refundService;
-    @Autowired
-    private PayService payService;
-    @Autowired
-    private OrderController orderController;
-    @Autowired
-    private PaymentController paymentController;
-    @Autowired
-    private PayConfigController payConfigController;
+    public RefundController(PaymentController paymentController, PayService payService, OrderController orderController, RefundService refundService, PayConfigController payConfigController) {
+        this.paymentController = paymentController;
+        this.payService = payService;
+        this.orderController = orderController;
+        this.refundService = refundService;
+        this.payConfigController = payConfigController;
+    }
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
     @ApiOperation("查询退款记录")

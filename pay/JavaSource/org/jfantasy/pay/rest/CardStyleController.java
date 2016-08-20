@@ -22,8 +22,12 @@ import java.util.List;
 @RequestMapping("/card-styles")
 public class CardStyleController {
 
+    private final CardDesignService cardDesignService;
+
     @Autowired
-    private CardDesignService cardDesignService;
+    public CardStyleController(CardDesignService cardDesignService) {
+        this.cardDesignService = cardDesignService;
+    }
 
     @ApiOperation("会员风格")
     @RequestMapping(method = RequestMethod.GET)

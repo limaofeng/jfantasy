@@ -33,10 +33,14 @@ public class CardBatchController {
 
     private CardBatchResourceAssembler assembler = new CardBatchResourceAssembler();
 
+    private final CardBatchService cardBatchService;
+    private final CardController cardController;
+
     @Autowired
-    private CardBatchService cardBatchService;
-    @Autowired
-    private CardController cardController;
+    public CardBatchController(CardController cardController, CardBatchService cardBatchService) {
+        this.cardController = cardController;
+        this.cardBatchService = cardBatchService;
+    }
 
     @JsonResultFilter(
             ignore = {

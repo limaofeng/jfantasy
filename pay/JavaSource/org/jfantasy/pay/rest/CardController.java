@@ -29,8 +29,12 @@ public class CardController {
 
     public static CardResourceAssembler assembler = new CardResourceAssembler();
 
+    private final CardService cardService;
+
     @Autowired
-    private CardService cardService;
+    public CardController(CardService cardService) {
+        this.cardService = cardService;
+    }
 
     @JsonResultFilter(
             allow = {
