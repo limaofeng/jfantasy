@@ -1,9 +1,9 @@
 package org.jfantasy.framework.dao.hibernate.listener;
 
+import org.hibernate.event.spi.PostCommitInsertEventListener;
+import org.hibernate.event.spi.PostCommitUpdateEventListener;
 import org.hibernate.event.spi.PostInsertEvent;
-import org.hibernate.event.spi.PostInsertEventListener;
 import org.hibernate.event.spi.PostUpdateEvent;
-import org.hibernate.event.spi.PostUpdateEventListener;
 import org.hibernate.persister.entity.EntityPersister;
 import org.jfantasy.framework.dao.hibernate.util.ReflectionUtils;
 import org.jfantasy.framework.spring.SpringContextUtil;
@@ -13,12 +13,18 @@ import org.springframework.context.ApplicationContext;
 
 import java.util.Arrays;
 
-public abstract class AbstractChangedListener<T> implements PostUpdateEventListener, PostInsertEventListener {
+public abstract class AbstractChangedListener<T> implements PostCommitUpdateEventListener, PostCommitInsertEventListener {
 
     private Class<T> entityClass;
 
     protected AbstractChangedListener() {
         this.entityClass = ReflectionUtils.getSuperClassGenricType(getClass());
+    }
+
+    public void onPostUpdateCommitFailed(PostUpdateEvent event){
+    }
+
+    public void onPostInsertCommitFailed(PostInsertEvent event){
     }
 
     protected boolean missing(PostInsertEvent event) {
