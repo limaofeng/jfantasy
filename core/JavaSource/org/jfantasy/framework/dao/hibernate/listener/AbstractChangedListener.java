@@ -73,7 +73,7 @@ public abstract class AbstractChangedListener<T> implements PostCommitUpdateEven
     protected boolean modify(PostUpdateEvent event, String property) {
         Arrays.binarySearch(event.getPersister().getPropertyNames(), property);
         int index = ObjectUtil.indexOf(event.getPersister().getPropertyNames(), property);
-        return index != -1 && event.getState()[index].equals(event.getOldState()[index]);
+        return index != -1 && !event.getState()[index].equals(event.getOldState()[index]);
     }
 
     private ApplicationContext applicationContext;

@@ -262,7 +262,7 @@ public class Weixinpay extends PayProductSupport {
      * @param payment 支付记录
      * @return PrePayment
      */
-    public Payment query(Payment payment) {
+    public PaymentStatus query(Payment payment) {
         try {
             PayConfig config = payment.getPayConfig();
             PayConfig paymentConfig = payment.getPayConfig();
@@ -290,6 +290,9 @@ public class Weixinpay extends PayProductSupport {
             }
             String tradeNo = data.get("transaction_id");
             String state = data.get("trade_state");
+            //记录支付流水
+            payment.setTradeNo(tradeNo);
+            //判断支付结果
             if ("SUCCESS".equalsIgnoreCase(state)) {//支付成功
                 payment.setStatus(PaymentStatus.success);
             } else if ("CLOSED".equalsIgnoreCase(state)) {//已关闭
@@ -298,7 +301,7 @@ public class Weixinpay extends PayProductSupport {
                 //支付失败 and 转入退款 and 已撤销
                 payment.setStatus(PaymentStatus.failure);
             }
-            return payment;
+            return payment.getStatus();
         } catch (IOException e) {
             throw new RestException("调用微信接口,网络错误!");
         } catch (PayException e) {
@@ -309,9 +312,9 @@ public class Weixinpay extends PayProductSupport {
     /**
      * 关闭订单 - 原交易单超时或者支付超时,需要关闭原支付单
      *
-     * @return boolean
+     * @param payment 支付对象
      */
-    public boolean closeorder(Payment payment) {
+    public void close(Payment payment) {
         PayConfig config = payment.getPayConfig();
         try {
             //组装数据
@@ -336,12 +339,10 @@ public class Weixinpay extends PayProductSupport {
             }
 
             if ("FAIL".equals(data.get("result_code"))) {
-                return false;
+                throw new PayException(data.get("return_msg"));
             }
 
             payment.setStatus(PaymentStatus.close);
-
-            return true;
         } catch (IOException e) {
             throw new RestException("调用微信接口,网络错误!");
         } catch (PayException e) {
