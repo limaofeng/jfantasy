@@ -18,10 +18,9 @@ public class TeamMemberInsertListener extends AbstractChangedListener<TeamMember
 
     @Override
     public void onPostUpdate(TeamMember member, PostUpdateEvent event) {
-        if (!modify(event, "status")) {
-            return;
+        if (modify(event, "status")) {
+            getApplicationContext().publishEvent(new TeamInviteEvent(member.getTeamId(), member.getMobile()));
         }
-        getApplicationContext().publishEvent(new TeamInviteEvent(member.getTeamId(), member.getMobile()));
     }
 
 }
