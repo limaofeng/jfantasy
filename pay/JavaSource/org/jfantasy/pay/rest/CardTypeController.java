@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
-import org.jfantasy.framework.spring.validation.RESTful.*;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardBatch;
 import org.jfantasy.pay.bean.CardType;
@@ -50,7 +50,7 @@ public class CardTypeController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResultResourceSupport save(@RequestBody @Validated(POST.class) CardType type) {
+    public ResultResourceSupport save(@Validated(RESTful.POST.class) @RequestBody CardType type) {
         return assembler.toResource(this.cardTypeService.save(type));
     }
 

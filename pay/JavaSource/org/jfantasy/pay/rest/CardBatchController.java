@@ -8,6 +8,7 @@ import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardBatch;
@@ -17,6 +18,8 @@ import org.jfantasy.pay.rest.models.LogForm;
 import org.jfantasy.pay.rest.models.assembler.CardBatchResourceAssembler;
 import org.jfantasy.pay.service.CardBatchService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -73,7 +76,8 @@ public class CardBatchController {
     @ApiOperation("新增批次")
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResultResourceSupport view(@RequestBody CardBatch batch) {
+    @ResponseStatus(HttpStatus.CREATED)
+    public ResultResourceSupport view(@Validated(RESTful.POST.class) @RequestBody CardBatch batch) {
         return assembler.toResource(this.cardBatchService.save(batch));
     }
 

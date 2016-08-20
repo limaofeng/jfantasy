@@ -4,11 +4,14 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.framework.spring.validation.Use;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.converter.ExtraServiceConverter;
 import org.jfantasy.pay.bean.converter.StylesConverter;
 import org.jfantasy.pay.bean.enums.CardDesignStatus;
 import org.jfantasy.pay.bean.enums.Usage;
+import org.jfantasy.pay.validators.CardDesignKeyCannotRepeatValidator;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -22,6 +25,7 @@ public class CardDesign extends BaseBusEntity {
 
     @Id
     @Column(name = "CODE", nullable = false , updatable = false)
+    @Use(vali = CardDesignKeyCannotRepeatValidator.class, groups = {RESTful.POST.class})
     private String key;
     /**
      * 会员卡名称

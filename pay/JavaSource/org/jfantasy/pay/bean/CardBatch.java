@@ -5,7 +5,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.framework.spring.validation.Use;
 import org.jfantasy.pay.bean.enums.CardBatchStatus;
+import org.jfantasy.pay.validators.CardBatchNoCannotRepeatValidator;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -27,6 +30,7 @@ public class CardBatch extends BaseBusEntity {
 
     @ApiModelProperty("批次号")
     @Column(name = "NUMBER", length = 20, unique = true)
+    @Use(vali = CardBatchNoCannotRepeatValidator.class, groups = {RESTful.POST.class})
     private String no;
     /**
      * 发行批次名称

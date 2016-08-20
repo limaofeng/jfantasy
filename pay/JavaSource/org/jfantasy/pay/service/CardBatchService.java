@@ -140,4 +140,8 @@ public class CardBatchService {
         return batch;
     }
 
+    public CardBatch findByNo(String no){
+        return this.cardBatchDao.findUnique(Restrictions.eq("no",no));
+    }
+
 }

@@ -3,7 +3,10 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.spring.validation.RESTful.*;
+import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.framework.spring.validation.RESTful.POST;
+import org.jfantasy.framework.spring.validation.Use;
+import org.jfantasy.pay.validators.CardTypeKeyCannotRepeatValidator;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -20,6 +23,7 @@ public class CardType extends BaseBusEntity {
     @NotEmpty(message = "编码 [Key] 必填", groups = {POST.class})
     @Id
     @Column(name = "CODE", nullable = false, updatable = false)
+    @Use(vali = CardTypeKeyCannotRepeatValidator.class, groups = {RESTful.POST.class})
     private String key;
     /**
      * 名称

@@ -8,12 +8,14 @@ import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.pay.bean.*;
 import org.jfantasy.pay.rest.models.LogForm;
 import org.jfantasy.pay.rest.models.assembler.CardDesignResourceAssembler;
 import org.jfantasy.pay.service.CardDesignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -72,7 +74,7 @@ public class CardDesignController {
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResultResourceSupport save(@RequestBody CardDesign design) {
+    public ResultResourceSupport save(@Validated(RESTful.POST.class) @RequestBody CardDesign design) {
         return assembler.toResource(this.cardDesignService.save(design));
     }
 
