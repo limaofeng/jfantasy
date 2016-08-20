@@ -19,12 +19,22 @@ import java.util.List;
 @Entity
 @IdClass(OrderKey.class)
 @Table(name = "PAY_ORDER")
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler","details"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "details"})
 public class Order extends BaseBusEntity {
 
     // 付款状态（未支付、部分支付、已支付、部分退款、全额退款）
     public enum PaymentStatus {
-        unpaid, partPayment, paid, partRefund, refunded
+        unpaid("未支付"), partPayment("部分支付"), paid("已支付"), partRefund("部分退款"), refunded("全额退款");
+
+        private String value;
+
+        PaymentStatus(String value) {
+            this.value = value;
+        }
+
+        public String getValue() {
+            return value;
+        }
     }
 
     @ApiModelProperty("编号")

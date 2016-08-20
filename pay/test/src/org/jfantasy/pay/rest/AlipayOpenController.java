@@ -60,9 +60,7 @@ public class AlipayOpenController {
                 "O6gK7gMBQZ+rQtQ=\n" +
                 "-----END PRIVATE KEY-----";
 
-        privateKey = privateKey.replaceAll("^-----BEGIN PRIVATE KEY-----","")
-                .replaceAll("-----END PRIVATE KEY-----$","")
-                .replaceAll("\n","");
+        privateKey = privateKey.replaceAll("^-----BEGIN PRIVATE KEY-----","").replaceAll("-----END PRIVATE KEY-----$","").replaceAll("\n","");
 
         String publicKey = "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDDI6d306Q8fIfCOaTXyiUeJHkrIvYISRcc73s3vF1ZT7XN8RNPwJxo8pWaJMmvyTn9N4HQ632qJBVHf8sxHi/fEsraprwCtzvzQETrNRwVxLO5jVmRGi60j8Ue1efIlzPXV9je9mkjzOmdssymZkh2QhUrCmZYI/FCEa3/cNMW0QIDAQAB";
 

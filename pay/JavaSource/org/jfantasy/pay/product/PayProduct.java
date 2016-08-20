@@ -4,6 +4,7 @@ import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 
 import java.util.Properties;
 
@@ -19,12 +20,9 @@ public interface PayProduct {
      * @param payment    支付记录
      * @param properties 额外属性(一般由调用端自定义)
      * @return String
-     * @throws PayException
+     * @throws PayException 支付异常
      */
     Object web(Payment payment, Order order, Properties properties) throws PayException;
-
-    //WAP支付
-    String wap();
 
     /**
      * app支付
@@ -41,7 +39,7 @@ public interface PayProduct {
      * @param payment 付款对象
      * @param result  通知内容
      * @return Payment
-     * @throws PayException
+     * @throws PayException 支付异常
      */
     Object payNotify(Payment payment, String result) throws PayException;
 
@@ -51,7 +49,7 @@ public interface PayProduct {
      * @param refund 退款对象
      * @param result 通知内容
      * @return Refund
-     * @throws PayException
+     * @throws PayException 支付异常
      */
     Object payNotify(Refund refund, String result) throws PayException;
 
@@ -62,6 +60,23 @@ public interface PayProduct {
      * @return String
      */
     String refund(Refund refund);
+
+    /**
+     * 查询支付状态
+     *
+     * @param payment 支付对象
+     * @return PaymentStatus
+     */
+    PaymentStatus query(Payment payment) throws PayException;
+
+    /**
+     * 关闭交易
+     *
+     * @param payment 支付对象
+     */
+    void close(Payment payment) throws PayException;
+
+    /*----------以下非业务方法---------------*/
 
     /**
      * 支付产品标示

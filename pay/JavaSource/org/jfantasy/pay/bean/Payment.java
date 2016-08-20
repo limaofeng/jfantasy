@@ -118,7 +118,7 @@ public class Payment extends BaseBusEntity {
      */
     @ApiModelProperty("交易记录")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TXN_SN", referencedColumnName = "SN")
+    @JoinColumn(name = "TXN_SN", nullable = false, referencedColumnName = "SN")
     private Transaction transaction;
     /**
      * 支付时间

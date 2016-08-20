@@ -3,10 +3,11 @@ package org.jfantasy.pay.service;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.hibernate.Hibernate;
-import org.jfantasy.framework.spring.mvc.error.RestException;
+import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.*;
+import org.jfantasy.pay.bean.enums.ProjectType;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.event.PayNotifyEvent;
 import org.jfantasy.pay.event.PayRefundNotifyEvent;
@@ -38,44 +39,68 @@ public class PayService {
 
     private final static Log LOG = LogFactory.getLog(PayService.class);
 
-    @Autowired
-    private PayProductConfiguration payProductConfiguration;
-    @Autowired
-    private PayConfigService payConfigService;
-    @Autowired
-    private PaymentService paymentService;
-    @Autowired
-    private RefundService refundService;
-    @Autowired
-    private OrderService orderService;
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final PayProductConfiguration payProductConfiguration;
+    private final PayConfigService payConfigService;
+    private final PaymentService paymentService;
+    private final RefundService refundService;
+    private final OrderService orderService;
+    private final ApplicationContext applicationContext;
 
+    @Autowired
+    public PayService(RefundService refundService, PaymentService paymentService, PayProductConfiguration payProductConfiguration, ApplicationContext applicationContext, PayConfigService payConfigService, OrderService orderService) {
+        this.refundService = refundService;
+        this.paymentService = paymentService;
+        this.payProductConfiguration = payProductConfiguration;
+        this.applicationContext = applicationContext;
+        this.payConfigService = payConfigService;
+        this.orderService = orderService;
+    }
+
+    /**
+     * 生成预支付单与web支付表单
+     *
+     * @param transaction 交易对象
+     * @param payConfigId 支付ID
+     * @param payType     支付类型
+     * @param payer       支付人
+     * @param properties  支付参数
+     * @return ToPayment
+     * @throws PayException 支付异常
+     */
     @Transactional
-    public ToPayment pay(Long payConfigId, PayType payType, String orderKey, String payer, Properties properties) throws PayException {
+    public ToPayment pay(Transaction transaction, Long payConfigId, PayType payType, String payer, Properties properties) throws PayException {
+        if (transaction.getProject().getType() != ProjectType.order) {
+            throw new ValidationException(000.0f, "项目类型为 order 才能调用支付接口");
+        }
+        String orderKey = transaction.get("order_key");
+        //验证业务订单
         OrderKey key = OrderKey.newInstance(orderKey);
         Order order = orderService.getOrder(key);
         OrderDetails orderDetails = order.getDetails();
+        if (order.getStatus() != Order.PaymentStatus.unpaid) {
+            throw new ValidationException(000.0f, "订单状态为[" + order.getStatus().getValue() + "],不满足付款的必要条件");
+        }
         if (!orderDetails.isPayment()) {
-            throw new RestException("业务系统异常,不能继续支付");
+            throw new ValidationException(000.0f, "业务系统异常,不能继续支付");
         }
         //获取支付配置
         PayConfig payConfig = payConfigService.get(payConfigId);
         //获取支付产品
         PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
         //开始支付,创建支付记录
-        Payment payment = paymentService.ready(order, payConfig, payProduct, payer);
-
+        Payment payment = paymentService.create(transaction, order, payConfig, payProduct, payer);
+        //克隆返回结果
         ToPayment toPayment = new ToPayment();
         BeanUtil.copyProperties(toPayment, payment, "status", "type");
         toPayment.setStatus(payment.getStatus());
         toPayment.setType(payment.getType());
+        //调用第三方支付产品
         if (PayType.web == payType) {
             toPayment.setSource(payProduct.web(payment, order, properties));
         } else if (PayType.app == payType) {
             toPayment.setSource(payProduct.app(payment, order, properties));
         }
-        //保存支付信息
+        //有可能调用支付产品时,修改了支付状态,保存支付信息
         paymentService.save(payment);
         return toPayment;
     }
@@ -145,8 +170,25 @@ public class PayService {
         }
     }
 
+    public boolean query(String sn){
+        Payment payment = this.paymentService.get(sn);
+        PayConfig payConfig = payment.getPayConfig();
+        //获取支付产品
+        PayProduct payProduct = payProductConfiguration.loadPayProduct(payConfig.getPayProductId());
+        payProduct.query(payment);
+        return false;
+    }
+
+    /**
+     * 支付通知
+     *
+     * @param sn   支付对象
+     * @param body 请求字符串
+     * @return Object
+     */
     @Transactional
-    public Object notify(Payment payment, String body) {
+    public Object paymentNotify(String sn, String body) {
+        Payment payment = this.paymentService.get(sn);
         PayConfig payConfig = payment.getPayConfig();
 
         //获取支付产品
@@ -198,9 +240,16 @@ public class PayService {
         return result != null ? result : order;
     }
 
+    /**
+     * 退款通知
+     *
+     * @param sn   退款订单
+     * @param body 请求字符串
+     * @return Object
+     */
     @Transactional
-    public Object notify(Refund refund, String body) {
-
+    public Object refundNotify(String sn, String body) {
+        Refund refund = this.refundService.get(sn);
         PayConfig payConfig = refund.getPayConfig();
 
         //获取支付产品
@@ -241,24 +290,6 @@ public class PayService {
 
         //返回订单信息
         return result != null ? result : order;
-    }
-
-    @Autowired
-    private TransactionService transactionService;
-
-    /**
-     * 获取账户信息
-     *
-     * @param account  String
-     * @param password String
-     * @return
-     */
-    public Account load(String account, String password) {
-        return null;
-    }
-
-    public Transaction loadTransaction(String trx_no) {
-        return null;
     }
 
 }

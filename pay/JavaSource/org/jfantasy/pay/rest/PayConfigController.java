@@ -33,20 +33,16 @@ public class PayConfigController {
 
     private PayConfigResourceAssembler assembler = new PayConfigResourceAssembler();
 
-    private final PayConfigService configService;
-    private final PaymentService paymentService;
-    private final PayProductConfiguration payProductConfiguration;
-    private final PaymentController paymentController;
-    private final RefundController refundController;
-
     @Autowired
-    public PayConfigController(PayProductConfiguration payProductConfiguration, RefundController refundController, PaymentService paymentService, PayConfigService configService, PaymentController paymentController) {
-        this.payProductConfiguration = payProductConfiguration;
-        this.refundController = refundController;
-        this.paymentService = paymentService;
-        this.configService = configService;
-        this.paymentController = paymentController;
-    }
+    private PayConfigService configService;
+    @Autowired
+    private PaymentService paymentService;
+    @Autowired
+    private PayProductConfiguration payProductConfiguration;
+    @Autowired
+    private PaymentController paymentController;
+    @Autowired
+    private RefundController refundController;
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = PayConfig.class, name = {"properties"}))
     @RequestMapping(method = RequestMethod.GET)

@@ -26,11 +26,11 @@ public class PayProductController {
     private PayProductResourceAssembler assembler = new PayProductResourceAssembler();
 
     private final PayProductConfiguration payProductConfiguration;
-    private final PayConfigController payConfigController;
+    @Autowired
+    private PayConfigController payConfigController;
 
     @Autowired
-    public PayProductController(PayConfigController payConfigController, PayProductConfiguration payProductConfiguration) {
-        this.payConfigController = payConfigController;
+    public PayProductController(PayProductConfiguration payProductConfiguration) {
         this.payProductConfiguration = payProductConfiguration;
     }
 

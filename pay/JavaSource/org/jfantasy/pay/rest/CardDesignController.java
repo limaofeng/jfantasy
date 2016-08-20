@@ -30,14 +30,14 @@ public class CardDesignController {
     private CardDesignResourceAssembler assembler = new CardDesignResourceAssembler();
 
     private final CardDesignService cardDesignService;
-    private final CardController cardController;
-    private final CardBatchController cardBatchController;
+    @Autowired
+    private CardController cardController;
+    @Autowired
+    private CardBatchController cardBatchController;
 
     @Autowired
-    public CardDesignController(CardDesignService cardDesignService, CardController cardController, CardBatchController cardBatchController) {
+    public CardDesignController(CardDesignService cardDesignService) {
         this.cardDesignService = cardDesignService;
-        this.cardController = cardController;
-        this.cardBatchController = cardBatchController;
     }
 
     @JsonResultFilter(

@@ -27,16 +27,12 @@ public class PaymentController {
 
     private PaymentResourceAssembler assembler = new PaymentResourceAssembler();
 
-    private final PaymentService paymentService;
-    private final PayConfigController payConfigController;
-    private final OrderController orderController;
-
     @Autowired
-    public PaymentController(PaymentService paymentService, OrderController orderController, PayConfigController payConfigController) {
-        this.paymentService = paymentService;
-        this.orderController = orderController;
-        this.payConfigController = payConfigController;
-    }
+    private PaymentService paymentService;
+    @Autowired
+    private PayConfigController payConfigController;
+    @Autowired
+    private OrderController orderController;
 
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),

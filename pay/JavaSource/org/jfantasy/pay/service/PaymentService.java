@@ -7,10 +7,12 @@ import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
+import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Transaction;
 import org.jfantasy.pay.dao.PaymentDao;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.event.PayStatusEvent;
@@ -22,6 +24,7 @@ import org.jfantasy.pay.product.PayProduct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -54,38 +57,30 @@ public class PaymentService {
      * @param payProduct 支付产品
      * @param payer      付款人
      * @return Payment
-     * @throws PayException
+     * @throws PayException 支付异常
      */
-    public Payment ready(Order order, PayConfig payConfig, PayProduct payProduct, String payer) throws PayException {
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public Payment create(Transaction transaction, Order order, PayConfig payConfig, PayProduct payProduct, String payer) throws PayException {
         //在线支付
         if (PayConfig.PayConfigType.online != payConfig.getPayConfigType()) {
-            throw new PayException("暂时只支持在线支付");
+            throw new ValidationException(000.0f, "暂时只支持在线支付");
         }
-
+        //判断交易历史
+        List<Payment> payments = this.paymentDao.find(Restrictions.eq("transaction.sn", transaction.getSn()));
+        if (ObjectUtil.exists(payments, "status", PaymentStatus.success)) {
+            throw new ValidationException(000.0f, "交易已经支付成功,请勿反复支付");
+        }
+        // 如果存在完成订单
+        Payment payment = ObjectUtil.find(payments, "payConfig.id", payConfig.getId());
+        if (payment != null) {//如果存在未完成的支付信息
+            return payment;
+        }
         //支付配置类型（线下支付、在线支付）
         PaymentType paymentType = PaymentType.online;
         BigDecimal paymentFee = BigDecimal.ZERO; //支付手续费
-
         BigDecimal amountPayable = order.getPayableFee();//应付金额（含支付手续费）
-
-        List<Payment> payments = this.paymentDao.find(Restrictions.eq("payConfig.id", payConfig.getId()), Restrictions.eq("order.type", order.getType()), Restrictions.eq("order.sn", order.getSn()));
-        // 如果存在完成订单
-        Payment payment = ObjectUtil.find(payments, "status", PaymentStatus.success);
-        if (payment != null && payment.getTotalAmount().subtract(payment.getPaymentFee()).compareTo(amountPayable) == 0) {//订单已支付完成
-            return payment;
-        }
-        payment = ObjectUtil.find(payments, "status", PaymentStatus.ready);
-        if (payment != null) {
-            if (amountPayable.compareTo(payment.getTotalAmount().subtract(payment.getPaymentFee())) == 0) {//如果存在未完成的支付信息
-                return payment;
-            } else {
-                this.close(payment.getSn());
-            }
-        }
-
+        //保存交易
         payment = new Payment();
-
-        //在线支付
         String bankName = payProduct.getName();
         String bankAccount = payConfig.getBargainorId();
         payment.setType(paymentType);
@@ -99,9 +94,9 @@ public class PaymentService {
         payment.setStatus(PaymentStatus.ready);
         payment.setPayConfig(payConfig);
         payment.setOrder(order);
+        payment.setTransaction(transaction);
         payment = this.paymentDao.save(payment);
-
-        this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(),payment,order)));
+        this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(), payment, order)));
         //保存交易日志
 //        paymentLogDao.save(payment, "创建" + payment.getPayConfigName() + " 交易");
         return payment;

@@ -158,7 +158,7 @@ public class Chinapay extends PayProductSupport {
         }
     }
 
-    public String query(Payment payment) {
+    public PaymentStatus query(Payment payment) {
         try {
             //支付配置
             PayConfig config = payment.getPayConfig();
@@ -196,7 +196,7 @@ public class Chinapay extends PayProductSupport {
 
             payment.setTradeNo(result.get("AcqSeqId"));
             payment.setTradeTime(DateUtil.now());
-            return response.text();
+            return null;//response.text();
 
         } catch (IOException e) {
 
@@ -204,6 +204,11 @@ public class Chinapay extends PayProductSupport {
             LOG.error(e.getMessage(), e);
             throw new PayException("支付过程发生错误，错误信息为:" + e.getMessage());
         }
+    }
+
+    @Override
+    public void close(Payment payment) throws PayException {
+
     }
 
     public String refund(Refund refund) {

@@ -7,6 +7,7 @@ import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
@@ -164,11 +165,6 @@ public class Yeepay extends PayProductSupport {
     }
 
     @Override
-    public String wap() {
-        return null;
-    }
-
-    @Override
     public Payment payNotify(Payment payment,  String result) throws PayException{
         return null;
     }
@@ -176,5 +172,15 @@ public class Yeepay extends PayProductSupport {
     @Override
     public Refund payNotify(Refund refund, String result) throws PayException {
         return null;
+    }
+
+    @Override
+    public PaymentStatus query(Payment payment) throws PayException {
+        return null;
+    }
+
+    @Override
+    public void close(Payment payment) throws PayException {
+
     }
 }

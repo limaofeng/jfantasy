@@ -17,7 +17,7 @@ public class PayProductConfiguration implements InitializingBean {
     /**
      * 所有支持的支付产品
      */
-    private List<PayProduct> payProducts = new ArrayList<PayProduct>();
+    private List<PayProduct> payProducts = new ArrayList<>();
 
     @SuppressWarnings("unchecked")
     public <T extends PayProduct> T loadPayProduct(String paymentProductId) {
@@ -43,7 +43,7 @@ public class PayProductConfiguration implements InitializingBean {
             alipay.setCurrencyTypes(new CurrencyType[]{CurrencyType.CNY});
             alipay.setLogoPath("/template/tocer/images/payment/alipay_direct_icon.gif");
             alipay.setDescription("支付宝即时交易，付款后立即到账，无预付/年费，单笔费率阶梯最低0.7%，无流量限制。 <a href=\"https://www.alipay.com/himalayas/practicality_customer.htm?customer_external_id=C4393933195131654818&market_type=from_agent_contract&pro_codes=61F99645EC0DC4380ADE569DD132AD7A\" target=\"_blank\"><span class=\"red\">立即申请</span></a>");
-            alipay.set(AlipayPayProductSupport.EXT_SELLER_EMAIL, ExtProperty.Builder.property(AlipayPayProductSupport.EXT_SELLER_EMAIL, "支付宝账号").build());
+            alipay.set(Alipay.EXT_SELLER_EMAIL, ExtProperty.Builder.property(Alipay.EXT_SELLER_EMAIL, "支付宝账号").build());
             this.payProducts.add(alipay);
         }
 

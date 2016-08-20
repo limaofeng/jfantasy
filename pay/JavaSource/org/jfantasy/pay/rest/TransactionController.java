@@ -8,7 +8,6 @@ import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.security.SpringSecurityUtils;
-import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -20,7 +19,10 @@ import org.jfantasy.pay.bean.enums.ProjectType;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.rest.models.PayForm;
 import org.jfantasy.pay.rest.models.assembler.TransactionResourceAssembler;
-import org.jfantasy.pay.service.*;
+import org.jfantasy.pay.service.PayConfigService;
+import org.jfantasy.pay.service.PayService;
+import org.jfantasy.pay.service.ProjectService;
+import org.jfantasy.pay.service.TransactionService;
 import org.jfantasy.pay.service.vo.ToPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -81,11 +83,7 @@ public class TransactionController {
     @JsonResultFilter(allow = @AllowProperty(pojo = Payment.class, name = {"sn", "type", "pay_config_name", "total_amount", "payment_fee", "status", "source"}))
     public ToPayment payForm(@PathVariable("id") String sn, @RequestBody PayForm payForm) {
         Transaction transaction = get(sn);
-        if (transaction.getProject().getType() != ProjectType.order) {
-            throw new RestException("项目类型为 order 才能调用支付接口");
-        }
-        String orderKey = transaction.get("order_key");
-        return payService.pay(payForm.getPayconfigId(), payForm.getPayType(), orderKey, payForm.getPayer(), payForm.getProperties());
+        return payService.pay(transaction,payForm.getPayconfigId(), payForm.getPayType(), payForm.getPayer(), payForm.getProperties());
     }
 
     private Transaction get(String id) {

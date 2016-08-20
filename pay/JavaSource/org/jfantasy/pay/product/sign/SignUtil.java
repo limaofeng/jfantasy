@@ -18,7 +18,7 @@ public class SignUtil {
     private static final Log LOG = LogFactory.getLog(SignUtil.class);
 
     public static String coverMapString(Map<String, String> data, String... ignoreFields) {
-        TreeMap<String, String> tree = new TreeMap<String, String>();
+        TreeMap<String, String> tree = new TreeMap<>();
         for (Map.Entry<String, String> entry : data.entrySet()) {
             if (ObjectUtil.exists(ignoreFields, entry.getKey())) {
                 continue;

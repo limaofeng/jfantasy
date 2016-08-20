@@ -29,20 +29,16 @@ public class OrderController {
 
     private OrderResourceAssembler assembler = new OrderResourceAssembler();
 
-    private final OrderService orderService;
-    private final PaymentController paymentController;
-    private final RefundController refundController;
-    private final TransactionController transactionController;
-    private final AccountService accountService;
-
     @Autowired
-    public OrderController(TransactionController transactionController, OrderService orderService, PaymentController paymentController, RefundController refundController, AccountService accountService) {
-        this.transactionController = transactionController;
-        this.orderService = orderService;
-        this.paymentController = paymentController;
-        this.refundController = refundController;
-        this.accountService = accountService;
-    }
+    private OrderService orderService;
+    @Autowired
+    private PaymentController paymentController;
+    @Autowired
+    private RefundController refundController;
+    @Autowired
+    private TransactionController transactionController;
+    @Autowired
+    private AccountService accountService;
 
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),

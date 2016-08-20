@@ -40,10 +40,6 @@ public abstract class PayProductSupport implements PayProduct {
         throw new PayException(this.getName() + " 的退款逻辑未实现");
     }
 
-    public String wap() {
-        throw new PayException(this.getName() + " 的 wap 支付未实现");
-    }
-
     @Override
     public Object app(Payment payment, Order order, Properties properties) throws PayException {
         throw new PayException(this.getName() + " 的 app 支付未实现");

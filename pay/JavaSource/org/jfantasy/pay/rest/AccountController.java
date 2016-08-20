@@ -25,16 +25,12 @@ public class AccountController {
 
     private AccountResourceAssembler assembler = new AccountResourceAssembler();
 
-    private final AccountService accountService;
-    private final TransactionController transactionController;
-    private final PointController pointController;
-
     @Autowired
-    public AccountController(AccountService accountService, PointController pointController, TransactionController transactionController) {
-        this.accountService = accountService;
-        this.pointController = pointController;
-        this.transactionController = transactionController;
-    }
+    private AccountService accountService;
+    @Autowired
+    private TransactionController transactionController;
+    @Autowired
+    private PointController pointController;
 
     @ApiOperation("查询账户")
     @RequestMapping(method = RequestMethod.GET)

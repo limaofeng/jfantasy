@@ -77,11 +77,6 @@ public class Unionpay extends PayProductSupport {
     }
 
     @Override
-    public String wap() {
-        return null;
-    }
-
-    @Override
     public Object app(Payment payment, Order order, Properties properties) throws PayException {
         //支付配置
         PayConfig config = payment.getPayConfig();
@@ -263,7 +258,7 @@ public class Unionpay extends PayProductSupport {
 
     }
 
-    public String query(Payment payment) {
+    public PaymentStatus query(Payment payment) {
         //请求地址集
         Urls urls = this.getUrls();
         try {
@@ -302,7 +297,7 @@ public class Unionpay extends PayProductSupport {
                 throw new PayException("验证签名失败");
             }
 
-            return response.text();
+            return null;//response.text();
 
         } catch (IOException e) {
 
@@ -310,6 +305,11 @@ public class Unionpay extends PayProductSupport {
             LOG.error(e.getMessage(), e);
             throw new PayException("支付过程发生错误，错误信息为:" + e.getMessage());
         }
+    }
+
+    @Override
+    public void close(Payment payment) throws PayException {
+
     }
 
     public void setDeployStatus(DeployStatus deployStatus) {

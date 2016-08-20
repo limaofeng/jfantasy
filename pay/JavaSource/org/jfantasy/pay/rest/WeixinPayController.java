@@ -18,6 +18,7 @@ import org.jfantasy.pay.product.PayType;
 import org.jfantasy.pay.product.Weixinpay;
 import org.jfantasy.pay.service.PayConfigService;
 import org.jfantasy.pay.service.PayService;
+import org.jfantasy.pay.service.TransactionService;
 import org.jfantasy.pay.service.vo.ToPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -36,11 +37,13 @@ public class WeixinPayController {
 
     private final PayConfigService payConfigService;
     private final PayService payService;
+    private final TransactionService transactionService;
 
     @Autowired
-    public WeixinPayController(PayService payService, PayConfigService payConfigService) {
+    public WeixinPayController(PayService payService, PayConfigService payConfigService, TransactionService transactionService) {
         this.payService = payService;
         this.payConfigService = payConfigService;
+        this.transactionService = transactionService;
     }
 
     /**
@@ -49,7 +52,7 @@ public class WeixinPayController {
     @ApiOperation(value = "微信扫码支付二维码")
     @RequestMapping(value = "/qrcode", method = RequestMethod.GET)
     @ResponseBody
-    public void qrcode(@PathVariable("appid") String appid, @RequestParam("orderKey") String orderKey, @RequestParam(value = "model", required = false) String model, HttpServletResponse response) throws WriterException, IOException {
+    public void qrcode(@PathVariable("appid") String appid, @RequestParam("tid") String transactionId, @RequestParam(value = "model", required = false) String model, HttpServletResponse response) throws WriterException, IOException {
         PayConfig config = payConfigService.findUnique(Restrictions.eq("payProductId", "weixinpay"), Restrictions.eq("sellerEmail", appid));
         if (config == null) {
             throw new RestException("该微信号未配置支付接口");
@@ -64,7 +67,7 @@ public class WeixinPayController {
             data.put("mch_id", config.getBargainorId());
             data.put("nonce_str", Weixinpay.generateNonceString(32));
             data.put("time_stamp", DateUtil.now().getTime() / 1000 + "");
-            data.put("product_id", orderKey);
+            data.put("product_id", transactionId);
 
             data.put("sign", Weixinpay.sign(data, config.getBargainorKey()));
 
@@ -72,9 +75,9 @@ public class WeixinPayController {
         } else {
             Properties prop = new Properties();
             prop.put("trade_type", "NATIVE");
-            prop.put("product_id", orderKey);
+            prop.put("product_id", transactionId);
 
-            ToPayment payment = payService.pay(config.getId(), PayType.web, orderKey, "", prop);
+            ToPayment payment = payService.pay(transactionService.get(transactionId), config.getId(), PayType.web, "", prop);
 
             url = (String) payment.getSource();
         }
@@ -106,8 +109,8 @@ public class WeixinPayController {
         prop.put("openid", data.get("openid"));
         prop.put("trade_type", "NATIVE");
         prop.put("product_id", data.get("product_id"));
-        String orderKey = data.get("product_id");
-        ToPayment payment = payService.pay(config.getId(), PayType.web, orderKey, "", prop);
+        String tid = data.get("product_id");
+        ToPayment payment = payService.pay(transactionService.get(tid), config.getId(), PayType.web, "", prop);
 
         return (String) payment.getSource();
     }

@@ -3,10 +3,11 @@ package org.jfantasy.pay.product;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.spring.SpringContextUtil;
-import org.jfantasy.framework.spring.mvc.error.RestException;
-import org.jfantasy.pay.bean.*;
-import org.jfantasy.pay.bean.enums.TxStatus;
+import org.jfantasy.pay.bean.Order;
+import org.jfantasy.pay.bean.Payment;
+import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.error.PayException;
+import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.service.AccountService;
 import org.jfantasy.pay.service.PayService;
 
@@ -46,7 +47,7 @@ public class Walletpay extends PayProductSupport {
         String password = properties.getProperty(PROPERTY_PASSWORD);
         String trx_no = properties.getProperty(PROPERTY_TRANSACTION);
 
-        payService().notify(payment, JSON.serialize(properties));
+//        payService().notify(payment, JSON.serialize(properties));
 
         //等待处理结果。
 
@@ -67,9 +68,9 @@ public class Walletpay extends PayProductSupport {
         String password = jsonNode.get("password").asText();
         accountService().remit(trx_no,password);
 
-        Transaction transaction = payService.loadTransaction(trx_no);
+//        Transaction transaction = payService.loadTransaction(trx_no);
         //修改状态,自动触发划账操作
-        transaction.setStatus(TxStatus.processing);
+//        transaction.setStatus(TxStatus.processing);
         //返回支付结果
         return payment;
     }
@@ -77,8 +78,17 @@ public class Walletpay extends PayProductSupport {
 
     @Override
     public String refund(Refund refund) {
-        payService().notify(refund, "");
         return "";
+    }
+
+    @Override
+    public PaymentStatus query(Payment payment) throws PayException {
+        return null;
+    }
+
+    @Override
+    public void close(Payment payment) throws PayException {
+
     }
 
     @Override

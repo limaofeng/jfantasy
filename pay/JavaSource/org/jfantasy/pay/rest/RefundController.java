@@ -33,17 +33,17 @@ public class RefundController {
 
     private final RefundService refundService;
     private final PayService payService;
-    private final OrderController orderController;
-    private final PaymentController paymentController;
-    private final PayConfigController payConfigController;
+    @Autowired
+    private OrderController orderController;
+    @Autowired
+    private PaymentController paymentController;
+    @Autowired
+    private PayConfigController payConfigController;
 
     @Autowired
-    public RefundController(PaymentController paymentController, PayService payService, OrderController orderController, RefundService refundService, PayConfigController payConfigController) {
-        this.paymentController = paymentController;
+    public RefundController( PayService payService, RefundService refundService) {
         this.payService = payService;
-        this.orderController = orderController;
         this.refundService = refundService;
-        this.payConfigController = payConfigController;
     }
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))

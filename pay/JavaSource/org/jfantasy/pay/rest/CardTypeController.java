@@ -26,14 +26,14 @@ public class CardTypeController {
     public static CardTypeResourceAssembler assembler = new CardTypeResourceAssembler();
 
     private final CardTypeService cardTypeService;
-    private final CardBatchController cardBatchController;
-    private final CardController cardController;
+    @Autowired
+    private CardBatchController cardBatchController;
+    @Autowired
+    private CardController cardController;
 
     @Autowired
-    public CardTypeController(CardController cardController, CardTypeService cardTypeService, CardBatchController cardBatchController) {
-        this.cardController = cardController;
+    public CardTypeController(CardTypeService cardTypeService) {
         this.cardTypeService = cardTypeService;
-        this.cardBatchController = cardBatchController;
     }
 
     @ApiOperation("全部会员卡类型")
