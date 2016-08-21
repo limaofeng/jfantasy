@@ -2,8 +2,7 @@ image: limaofeng/alpine-gradle
 
 build:
   script:
-    - gradle wrapper
-    - ./gradlew sonar -x test
+    - gradle sonar -x test
   artifacts:
     paths:
     - build/libs/
