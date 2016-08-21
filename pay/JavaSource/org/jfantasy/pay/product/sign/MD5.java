@@ -47,11 +47,9 @@ public class MD5 {
     }
 
     /**
-     * @param content
-     * @param charset
-     * @return
-     * @throws java.security.SignatureException
-     * @throws java.io.UnsupportedEncodingException
+     * @param content 字符串
+     * @param charset 编码格式
+     * @return byte[]
      */
     private static byte[] getContentBytes(String content, String charset) {
         if (charset == null || "".equals(charset)) {

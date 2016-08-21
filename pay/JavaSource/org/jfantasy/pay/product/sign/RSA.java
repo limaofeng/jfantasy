@@ -22,7 +22,7 @@ public class RSA {
 
     private final static Log LOG = LogFactory.getLog(RSA.class);
 
-    public static final String SIGN_ALGORITHMS = "SHA1WithRSA";
+    private static final String SIGN_ALGORITHMS = "SHA1WithRSA";
 
     /**
      * RSA签名
@@ -46,19 +46,7 @@ public class RSA {
             byte[] signed = signature.sign();
 
             return Base64.encode(signed);
-        } catch (NoSuchAlgorithmException e) {
-            LOG.error(e.getMessage(), e);
-            throw new IgnoreException(e.getMessage());
-        } catch (UnsupportedEncodingException e) {
-            LOG.error(e.getMessage(), e);
-            throw new IgnoreException(e.getMessage());
-        } catch (SignatureException e) {
-            LOG.error(e.getMessage(), e);
-            throw new IgnoreException(e.getMessage());
-        } catch (InvalidKeyException e) {
-            LOG.error(e.getMessage(), e);
-            throw new IgnoreException(e.getMessage());
-        } catch (InvalidKeySpecException e) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException | SignatureException | InvalidKeySpecException | InvalidKeyException e) {
             LOG.error(e.getMessage(), e);
             throw new IgnoreException(e.getMessage());
         }
@@ -87,15 +75,7 @@ public class RSA {
 
             return signature.verify(Base64.decode(sign));
 
-        } catch (NoSuchAlgorithmException e) {
-            LOG.error(e.getMessage(), e);
-        } catch (UnsupportedEncodingException e) {
-            LOG.error(e.getMessage(), e);
-        } catch (InvalidKeySpecException e) {
-            LOG.error(e.getMessage(), e);
-        } catch (InvalidKeyException e) {
-            LOG.error(e.getMessage(), e);
-        } catch (SignatureException e) {
+        } catch (NoSuchAlgorithmException | UnsupportedEncodingException | InvalidKeyException | InvalidKeySpecException | SignatureException e) {
             LOG.error(e.getMessage(), e);
         }
         return false;
@@ -144,7 +124,7 @@ public class RSA {
      * @param key 密钥字符串（经过base64编码）
      * @throws InvalidKeySpecException, NoSuchAlgorithmException
      */
-    public static PrivateKey getPrivateKey(String key) throws InvalidKeySpecException, NoSuchAlgorithmException {
+    private static PrivateKey getPrivateKey(String key) throws InvalidKeySpecException, NoSuchAlgorithmException {
         byte[] keyBytes;
         keyBytes = Base64.decode(key);
         PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(keyBytes);
