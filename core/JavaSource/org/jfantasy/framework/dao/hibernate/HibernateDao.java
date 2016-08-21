@@ -141,7 +141,7 @@ public abstract class HibernateDao<T, PK extends Serializable> {//NOSONAR
         try {
             getSession().update(entity);
         } catch (NonUniqueObjectException e) {
-            LOG.debug(e.getMessage());
+            LOG.info(e);
             entity = this.merge(entity);
         }
         this.LOG.debug("update entity: " + entity);
