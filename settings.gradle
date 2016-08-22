@@ -6,7 +6,6 @@ include ':jfantasy-common'
 include ':jfantasy-pay-api'
 include ':jfantasy-pay'
 include ':jfantasy-pay-client'
-include ':jfantasy-cms'
 include ':jfantasy-security'
 include ':jfantasy-member'
 include ':jfantasy-system'
@@ -38,7 +37,6 @@ project(':jfantasy-common').projectDir = "$rootDir/common" as File
 project(':jfantasy-pay-api').projectDir = "$rootDir/pay-api" as File
 project(':jfantasy-pay').projectDir = "$rootDir/pay" as File
 project(':jfantasy-pay-client').projectDir = "$rootDir/pay-client" as File
-project(':jfantasy-cms').projectDir = "$rootDir/cms" as File
 project(':jfantasy-security').projectDir = "$rootDir/security" as File
 project(':jfantasy-member').projectDir = "$rootDir/member" as File
 project(':jfantasy-system').projectDir = "$rootDir/system" as File

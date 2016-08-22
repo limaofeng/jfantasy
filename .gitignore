@@ -4,6 +4,7 @@
 .vscode
 .idea
 .gradle
+backup
 # Package Files #
 *.jar
 *.war
