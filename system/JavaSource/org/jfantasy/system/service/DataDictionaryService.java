@@ -53,14 +53,6 @@ public class DataDictionaryService implements InitializingBean {
         LOGGER.debug("添加用于生成 json 文件的 Job ");
     }
 
-    public List<DataDictionaryType> allTypes() {
-        return dataDictionaryTypeDao.getAll();
-    }
-
-    public List<DataDictionary> allDataDicts() {
-        return dataDictionaryDao.find(new Criterion[0], "sort", "asc");
-    }
-
     public DataDictionary get(DataDictionaryKey key) {
         return dataDictionaryDao.get(key);
     }
@@ -70,35 +62,8 @@ public class DataDictionaryService implements InitializingBean {
         return dataDictionaryDao.get(DataDictionaryKey.newInstance(array[1], array[0]));
     }
 
-    /**
-     * 查询配置项分类
-     *
-     * @param name     like查询
-     * @param showsize 返回结果条数，默认15条
-     * @return {list}
-     */
-    public List<DataDictionaryType> types(String name, int showsize) {
-        showsize = showsize == 0 ? 15 : showsize;
-        if (StringUtil.isBlank(name)) {
-            return dataDictionaryTypeDao.find(new Criterion[0], 0, showsize);
-        } else {
-            return dataDictionaryTypeDao.find(new Criterion[]{Restrictions.like("name", name)}, 0, showsize);
-        }
-    }
-
     public DataDictionaryType getDataDictionaryType(String code) {
         return dataDictionaryTypeDao.findUniqueBy("code", code);
-    }
-
-    /**
-     * 通过配置项分类及配置项CODE返回配置项
-     *
-     * @param type 类型
-     * @param code 配置项CODE，返回的List顺序与codes的顺序一致
-     * @return {DataDictionary}
-     */
-    public DataDictionary getUnique(String type, String code) {
-        return dataDictionaryDao.findUnique(Restrictions.eq("type", type), Restrictions.eq("code", code));
     }
 
     /**
@@ -141,10 +106,10 @@ public class DataDictionaryService implements InitializingBean {
     }
 
     public DataDictionary update(DataDictionary dataDictionary) {
-        return this.dataDictionaryDao.update(dataDictionary,true);
+        return this.dataDictionaryDao.update(dataDictionary);
     }
 
-    public List<DataDictionaryType> initEntity(DataDictionaryType dataDictionaryType) {
+    private List<DataDictionaryType> initEntity(DataDictionaryType dataDictionaryType) {
         if (dataDictionaryType.getParent() == null || StringUtil.isBlank(dataDictionaryType.getParent().getCode())) {
             dataDictionaryType.setLayer(0);
             dataDictionaryType.setPath(dataDictionaryType.getCode() + DataDictionaryType.PATH_SEPARATOR);
@@ -170,7 +135,7 @@ public class DataDictionaryService implements InitializingBean {
     }
 
     public DataDictionaryType update(DataDictionaryType dataDictionaryType) {
-        List<DataDictionaryType> types = initEntity(dataDictionaryType);
+        List<DataDictionaryType> types;
         boolean root = dataDictionaryType.getLayer() == 0;
         if (dataDictionaryType.getParent() == null || StringUtil.isBlank(dataDictionaryType.getParent().getCode())) {
             dataDictionaryType.setLayer(0);
@@ -234,7 +199,7 @@ public class DataDictionaryService implements InitializingBean {
     }
 
     public void delete(String... keys) {
-        List<DataDictionaryKey> dataDictionaryKeys = new ArrayList<DataDictionaryKey>();
+        List<DataDictionaryKey> dataDictionaryKeys = new ArrayList<>();
         for (String key : keys) {
             dataDictionaryKeys.add(new DataDictionaryKey(key));
         }

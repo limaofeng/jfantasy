@@ -51,7 +51,7 @@ public class DataDictionaryController {
     }
 
     @ApiOperation(value = "更新数据项", notes = "通过该接口, 可以更新新的数据项。", response = DataDictionary.class)
-    @RequestMapping(value = "/{type}:{code}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/{type}:{code}", method = RequestMethod.PUT)
     @ResponseBody
     public DataDictionary update(@PathVariable("type") String type, @PathVariable("code") String code, @RequestBody DataDictionary dataDictionary) {
         dataDictionary.setCode(code);

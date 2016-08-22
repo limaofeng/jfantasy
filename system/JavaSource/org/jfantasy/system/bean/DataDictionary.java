@@ -100,7 +100,7 @@ public class DataDictionary extends BaseBusEntity {
 
     @JsonDeserialize(using = DataDictionaryKeyDeserializer.class)
     public void setParentKey(DataDictionaryKey key) {
-        if(key == null){
+        if (key == null) {
             return;
         }
         this.parentKey = key;
