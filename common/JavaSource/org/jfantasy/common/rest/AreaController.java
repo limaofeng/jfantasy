@@ -7,7 +7,6 @@ import org.jfantasy.common.rest.models.assembler.AreaResourceAssembler;
 import org.jfantasy.common.service.AreaService;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +25,7 @@ public class AreaController {
     @Autowired
     private AreaService areaService;
 
-    @JsonResultFilter(value = List.class,ignore = {@IgnoreProperty(pojo = Area.class, name = {"order", "payment", "payConfig"})})
+    @JsonResultFilter(value = List.class)
     @ApiOperation(value = "查询地区", notes = "筛选地区，返回通用分页对象")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody

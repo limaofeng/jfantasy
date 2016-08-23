@@ -133,10 +133,12 @@ public class Area extends BaseBusEntity {
         this.tags = tags;
     }
 
+    @Transient
     public void setParentId(String id) {
         this.setParent(new Area(id));
     }
 
+    @Transient
     public String getParentId() {
         return this.parent != null ? this.parent.getId() : null;
     }
