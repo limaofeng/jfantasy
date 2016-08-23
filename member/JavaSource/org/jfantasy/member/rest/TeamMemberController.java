@@ -6,12 +6,15 @@ import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.member.bean.TeamMember;
 import org.jfantasy.member.rest.models.assembler.TeamMemberResourceAssembler;
 import org.jfantasy.member.service.TeamMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 @Api(value = "team", description = "团队成员")
 @RestController
@@ -39,9 +42,9 @@ public class TeamMemberController {
 
     @ApiOperation(value = "更新团队成员", notes = "更新团队成员地址")
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
-    public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody TeamMember member) {
+    public ResultResourceSupport update(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody TeamMember member) {
         member.setId(id);
-        return assembler.toResource(this.teamMemberService.update(member));
+        return assembler.toResource(this.teamMemberService.update(member, WebUtil.has(request,RequestMethod.PATCH)));
     }
 
     @ApiOperation(value = "删除团队成员", notes = "删除团队成员")

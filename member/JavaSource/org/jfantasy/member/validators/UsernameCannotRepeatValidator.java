@@ -9,8 +9,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class UsernameCannotRepeatValidator implements Validator<String> {
 
+    private final MemberService memberService;
+
     @Autowired
-    private MemberService memberService;
+    public UsernameCannotRepeatValidator(MemberService memberService) {
+        this.memberService = memberService;
+    }
 
     @Override
     public void validate(String value) throws ValidationException {

@@ -9,7 +9,6 @@ include ':jfantasy-pay-client'
 include ':jfantasy-security'
 include ':jfantasy-member'
 include ':jfantasy-system'
-include ':jfantasy-sms'
 include ':jfantasy-pay-test'
 include ':jfantasy-test'
 include ':jfantasy-oauth'
@@ -17,8 +16,6 @@ include ':jfantasy-oauth-api'
 include ':jfantasy-wallet'
 include ':jfantasy-weixin'
 include ':jfantasy-thirdparty'
-include ':jfantasy-archives'
-//include ':jfantasy-mall'
 include ':jfantasy-invoice-sdk'
 include ':jfantasy-file-sdk'
 include ':jfantasy-common-sdk'
@@ -40,13 +37,11 @@ project(':jfantasy-pay-client').projectDir = "$rootDir/pay-client" as File
 project(':jfantasy-security').projectDir = "$rootDir/security" as File
 project(':jfantasy-member').projectDir = "$rootDir/member" as File
 project(':jfantasy-system').projectDir = "$rootDir/system" as File
-project(':jfantasy-sms').projectDir = "$rootDir/sms" as File
 project(':jfantasy-oauth').projectDir = "$rootDir/oauth" as File
 project(':jfantasy-oauth-api').projectDir = "$rootDir/oauth-api" as File
 project(':jfantasy-wallet').projectDir = "$rootDir/wallet" as File
 project(':jfantasy-weixin').projectDir = "$rootDir/weixin" as File
 project(':jfantasy-thirdparty').projectDir = "$rootDir/thirdparty" as File
-project(':jfantasy-archives').projectDir = "$rootDir/archives" as File
 project(':jfantasy-pay-test').projectDir = "$rootDir/pay-test" as File
 project(':jfantasy-oauth-test').projectDir = "$rootDir/oauth-test" as File
 project(':jfantasy-test').projectDir = "$rootDir/test" as File

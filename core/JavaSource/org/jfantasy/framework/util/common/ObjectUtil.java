@@ -277,7 +277,7 @@ public final class ObjectUtil {
         }
         for (T t : list) {
             Object v = OgnlUtil.getInstance().getValue(field, t);
-            if (v == value || value.equals(v)) {
+            if (v == value || (value != null && value.equals(v))) {
                 return t;
             }
         }

@@ -73,7 +73,7 @@ public class PayServiceTest {
     @Test
     public void pay() throws Exception {
         PayConfig payConfig = payConfigService.findUnique(Restrictions.eq("payProductId", "alipay"));
-        ToPayment topayment = payService.pay(payConfig.getId(), PayType.web, "test:2016061300001", "limaofeng", new Properties());
+        ToPayment topayment = payService.pay(null,payConfig.getId(), PayType.web,  "limaofeng", new Properties());
 
         Payment payment = paymentService.get(topayment.getSn());
 

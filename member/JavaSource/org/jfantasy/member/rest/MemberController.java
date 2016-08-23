@@ -37,20 +37,20 @@ public class MemberController {
     private static ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
 
     private final MemberService memberService;
-    private final CommentController commentController;
-    private final ReceiverController receiverController;
     private final FavoriteService favoriteService;
-    private final TeamController teamController;
-    private final InvoiceController invoiceController;
+    @Autowired
+    private TeamController teamController;
+    @Autowired
+    private InvoiceController invoiceController;
+    @Autowired
+    private CommentController commentController;
+    @Autowired
+    private ReceiverController receiverController;
 
     @Autowired
-    public MemberController(CommentController commentController, TeamController teamController, MemberService memberService, FavoriteService favoriteService, InvoiceController invoiceController, ReceiverController receiverController) {
-        this.commentController = commentController;
-        this.teamController = teamController;
+    public MemberController(MemberService memberService, FavoriteService favoriteService) {
         this.memberService = memberService;
         this.favoriteService = favoriteService;
-        this.invoiceController = invoiceController;
-        this.receiverController = receiverController;
     }
 
     @JsonResultFilter(

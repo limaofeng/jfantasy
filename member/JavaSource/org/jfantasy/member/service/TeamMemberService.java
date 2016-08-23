@@ -42,8 +42,12 @@ public class TeamMemberService {
     }
 
     @Transactional
-    public TeamMember update(TeamMember member) {
-        return this.teamMemberDao.update(member, true);
+    public TeamMember update(TeamMember member, boolean patch) {
+        if (!patch) {
+            TeamMember oldMember = this.teamMemberDao.get(member.getId());
+            member = BeanUtil.copyProperties(oldMember, member, "id", "status", "member", "team");
+        }
+        return this.teamMemberDao.update(member, patch);
     }
 
     @Transactional

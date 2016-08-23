@@ -79,7 +79,7 @@ public class DataDictionaryType extends BaseBusEntity {
      * 上级数据字典
      */
     @ApiModelProperty("上级数据字典分类")
-    @JsonProperty("parentCode")
+    @JsonProperty("parent_id")
     @JsonSerialize(using = DataDictionaryTypeSerializer.class)
     @JsonDeserialize(using = DataDictionaryTypeDeserializer.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})

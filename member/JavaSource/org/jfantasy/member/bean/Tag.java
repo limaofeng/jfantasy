@@ -25,6 +25,11 @@ public class Tag extends BaseBusEntity {
     @Column(name = "NAME", nullable = false, length = 150)
     private String name;
     /**
+     * 合计数量<用于汇总标签分配的数量>
+     */
+    @Column(name = "TOTAL", nullable = false)
+    private Integer total;
+    /**
      * 类型
      */
     @Column(name = "TYPE", nullable = false, updatable = false, length = 50)
@@ -78,5 +83,13 @@ public class Tag extends BaseBusEntity {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Integer getTotal() {
+        return total;
+    }
+
+    public void setTotal(Integer total) {
+        this.total = total;
     }
 }

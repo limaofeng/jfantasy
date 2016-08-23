@@ -106,4 +106,13 @@ public class ApiKey extends BaseBusEntity {
     public void setPlatform(String platform) {
         this.platform = platform;
     }
+
+    @Override
+    public String toString() {
+        return "ApiKey{" +
+                "key='" + key + '\'' +
+                ", application=" + application +
+                ", platform='" + platform + '\'' +
+                '}';
+    }
 }

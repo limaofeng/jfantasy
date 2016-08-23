@@ -27,6 +27,7 @@ public class TagService {
         tag.setOwnerId(ownerId);
         tag.setType(type);
         tag.setName(name);
+        tag.setTotal(0);
         return this.tagDao.save(tag);
     }
 

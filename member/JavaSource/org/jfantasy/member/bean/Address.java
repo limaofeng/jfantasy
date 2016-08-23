@@ -40,12 +40,12 @@ public class Address extends BaseBusEntity {
     /**
      * 排班所有者类型
      */
-    @Column(name = "OWNER_TYPE", length = 20, nullable = false)
+    @Column(name = "OWNER_TYPE", length = 20, nullable = false, updatable = false)
     private String ownerType;
     /**
      * 排班所有者ID
      */
-    @Column(name = "OWNER_ID", length = 32, nullable = false)
+    @Column(name = "OWNER_ID", length = 32, nullable = false, updatable = false)
     private String ownerId;
 
     public Long getId() {

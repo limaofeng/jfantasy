@@ -96,14 +96,6 @@ public class DDUtils {
         return dataDictionary == null ? null : dataDictionary.getDescription();
     }
 
-    public static <T> T getValue(String key, Class<T> clazz) {
-        String value = getValue(key);
-        if (!ClassUtil.isBasicType(clazz)) {
-            throw new ClassCastException(value + " 不能正确的转换为 " + clazz);
-        }
-        return value == null ? null : (T) ClassUtil.newInstance(clazz.isPrimitive() ? ClassUtil.resolvePrimitiveIfNecessary(clazz) : clazz, value);
-    }
-
     /**
      * 获取字段项值
      *

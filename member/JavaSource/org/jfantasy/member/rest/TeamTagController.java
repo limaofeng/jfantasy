@@ -24,10 +24,14 @@ public class TeamTagController {
 
     private static final String TAG_TYPE_TEAM = "team";
 
+    private final TagService tagService;
+    private final TeamService teamService;
+
     @Autowired
-    private TagService tagService;
-    @Autowired
-    private TeamService teamService;
+    public TeamTagController(TagService tagService, TeamService teamService) {
+        this.tagService = tagService;
+        this.teamService = teamService;
+    }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
     @ApiOperation(value = "获取团队标签")
@@ -53,7 +57,7 @@ public class TeamTagController {
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
     @ApiOperation(value = "修改团队标签")
-    @RequestMapping(value = "/{tagid}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/{tagid}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     @ResponseBody
     public Tag tags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid, @Validated(RESTful.PATCH.class) @RequestBody TagForm from) {
         return this.tagService.update(TAG_TYPE_TEAM, id, tagid, from.getName());
