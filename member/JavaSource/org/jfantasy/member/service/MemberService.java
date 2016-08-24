@@ -118,7 +118,7 @@ public class MemberService {
         }
 
         // 初始化用户权限
-        List<Role> roles = new ArrayList<Role>();
+        List<Role> roles = new ArrayList<>();
         Role defaultRole = roleService.get(DEFAULT_ROLE_CODE);
         if (defaultRole != null) {
             roles.add(defaultRole);
@@ -142,7 +142,7 @@ public class MemberService {
     /**
      * 验证邮箱是否已被验证使用
      *
-     * @param criterions
+     * @param criterions 筛选条件
      * @return Member
      */
     public Member findUnique(Criterion... criterions) {

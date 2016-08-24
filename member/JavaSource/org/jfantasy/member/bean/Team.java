@@ -20,7 +20,7 @@ import java.util.Properties;
  */
 @Entity
 @Table(name = "MEM_TEAM")
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler","team_members"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "team_members"})
 public class Team extends BaseBusEntity {
 
     /**
@@ -64,13 +64,13 @@ public class Team extends BaseBusEntity {
      * 目标Id
      */
     @JsonProperty("target_id")
-    @Column(name = "TARGET_ID", length = 32)
+    @Column(name = "TARGET_ID", updatable = false, length = 32)
     private String targetId;
     /**
      * 目标类型
      */
     @JsonProperty("target_type")
-    @Column(name = "TARGET_TYPE", length = 10)
+    @Column(name = "TARGET_TYPE", updatable = false, length = 10)
     private String targetType;
     /**
      * 团队成员
@@ -121,6 +121,9 @@ public class Team extends BaseBusEntity {
 
     @JsonAnySetter
     public void set(String key, Object value) {
+        if (value == null) {
+            return;
+        }
         if (this.properties == null) {
             this.properties = new Properties();
         }

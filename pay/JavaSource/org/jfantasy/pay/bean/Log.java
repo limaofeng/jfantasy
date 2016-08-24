@@ -22,19 +22,19 @@ public class Log extends BaseBusEntity {
     /**
      * 所有者类型
      */
-    @Column(name = "OWNER_TYPE",length = 20)
+    @Column(name = "OWNER_TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     private OwnerType ownerType;
     /**
      * 所有者id
      */
-    @Column(name = "OWNER_ID",length = 30)
+    @Column(name = "OWNER_ID", updatable = false, length = 30)
     private String ownerId;
     /**
      * 订单ID
      */
     @ApiModelProperty("详情")
-    @Column(name = "ORDER_KEY",length = 30)
+    @Column(name = "ORDER_KEY", updatable = false, length = 30)
     private String orderKey;
     /**
      * 动作

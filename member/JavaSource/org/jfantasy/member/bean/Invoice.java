@@ -103,10 +103,10 @@ public class Invoice extends BaseBusEntity {
     /*             开票方                */
     /*************************************/
     @Null(groups = {RESTful.POST.class})
-    @Column(name = "TARGET_TYPE", length = 10)
+    @Column(name = "TARGET_TYPE", updatable = false, length = 10)
     private String targetType;
     @Null(groups = {RESTful.POST.class})
-    @Column(name = "TARGET_ID", length = 20)
+    @Column(name = "TARGET_ID", updatable = false, length = 20)
     private String targetId;
     /*************************************/
     /*             开票项目               */

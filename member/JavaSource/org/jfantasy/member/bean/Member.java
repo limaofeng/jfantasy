@@ -140,13 +140,13 @@ public class Member extends BaseBusEntity {
     /**
      * 目标Id
      */
-    @Column(name = "TARGET_ID", length = 20)
+    @Column(name = "TARGET_ID", updatable = false, length = 32)
     @JsonProperty("target_id")
     private String targetId;
     /**
      * 目标类型
      */
-    @Column(name = "TARGET_TYPE", length = 10)
+    @Column(name = "TARGET_TYPE", updatable = false, length = 10)
     @JsonProperty("target_type")
     private String targetType;
     @Transient

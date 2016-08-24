@@ -40,10 +40,10 @@ public class Comment extends BaseBusEntity {
     @Column(name = "IS_SHOW", nullable = false)
     private boolean show;
     @ApiModelProperty(value = "评论目标类型", notes = "评论目标类型,(如商品、医生等)")
-    @Column(name = "TARGET_TYPE", nullable = false)
+    @Column(name = "TARGET_TYPE", updatable = false, nullable = false)
     private String targetType;
     @ApiModelProperty(value = "评论目标ID", notes = "评论目标ID,(如商品、医生等)")
-    @Column(name = "TARGET_ID", nullable = false)
+    @Column(name = "TARGET_ID", updatable = false, nullable = false)
     private String targetId;
     @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
     @Column(name = "PATH", nullable = false, length = 1000)

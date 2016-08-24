@@ -37,12 +37,12 @@ public class Tag extends BaseBusEntity {
     /**
      * 所有者Id
      */
-    @Column(name = "OWNER_ID", length = 32)
+    @Column(name = "OWNER_ID", updatable = false, length = 32)
     private String ownerId;
     /**
      * 所有者类型
      */
-    @Column(name = "OWNER_TYPE", length = 10)
+    @Column(name = "OWNER_TYPE", updatable = false, length = 10)
     private String ownerType;
 
     public String getName() {

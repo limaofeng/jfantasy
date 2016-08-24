@@ -14,8 +14,12 @@ import java.util.UUID;
 @Component
 public class MemberAuthorizationCodeLoginListener implements ApplicationListener<LoginEvent> {
 
+    private final RedisTemplate redisTemplate;
+
     @Autowired
-    private RedisTemplate redisTemplate;
+    public MemberAuthorizationCodeLoginListener(RedisTemplate redisTemplate) {
+        this.redisTemplate = redisTemplate;
+    }
 
     @Override
     @SuppressWarnings("unchecked")
