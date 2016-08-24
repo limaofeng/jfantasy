@@ -15,7 +15,6 @@ public class ArticleServiceTest {
     @Autowired
     private ArticleService articleService;
 
-
     @Test
     public void testSave() {
         Article article = new Article();
