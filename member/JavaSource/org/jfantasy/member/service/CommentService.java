@@ -29,6 +29,13 @@ public class CommentService {
         return this.commentDao.get(id);
     }
 
+    public Comment updateShow(Long id, Boolean show) {
+        Comment comment = new Comment();
+        comment.setId(id);
+        comment.setShow(show);
+        return this.commentDao.update(comment, true);
+    }
+
     public void deltele(Long... ids) {
         for (Long id : ids) {
             this.commentDao.delete(id);

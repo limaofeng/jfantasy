@@ -31,10 +31,10 @@ public class Comment extends BaseBusEntity {
     private String username;
     @ApiModelProperty("内容")
     @Lob
-    @Column(name = "CONTENT", nullable = false)
+    @Column(name = "CONTENT", updatable = false, nullable = false)
     private String content;
     @ApiModelProperty("IP")
-    @Column(name = "IP", nullable = false, length = 15)
+    @Column(name = "IP", updatable = false, nullable = false, length = 15)
     private String ip;
     @ApiModelProperty("是否显示")
     @Column(name = "IS_SHOW", nullable = false)
@@ -46,11 +46,11 @@ public class Comment extends BaseBusEntity {
     @Column(name = "TARGET_ID", updatable = false, nullable = false)
     private String targetId;
     @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
-    @Column(name = "PATH", nullable = false, length = 1000)
+    @Column(name = "PATH", updatable = false, nullable = false, length = 1000)
     private String path;
     @ApiModelProperty(value = "上个评论")
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "FOR_COMMENT_ID", foreignKey = @ForeignKey(name = "FK_COMMENT_FOR_COMMENT"))
+    @JoinColumn(name = "FOR_COMMENT_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_COMMENT_FOR_COMMENT"))
     private Comment forComment;
     @ApiModelProperty(hidden = true, value = "回复")
     @OneToMany(mappedBy = "forComment", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
@@ -58,7 +58,7 @@ public class Comment extends BaseBusEntity {
     private List<Comment> replyComments;
     @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
+    @JoinColumn(name = "MEMBER_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
     private Member member;
 
     public Long getId() {

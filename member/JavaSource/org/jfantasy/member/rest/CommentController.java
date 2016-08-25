@@ -9,6 +9,7 @@ import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Comment;
 import org.jfantasy.member.bean.Member;
+import org.jfantasy.member.rest.models.CommentShowForm;
 import org.jfantasy.member.rest.models.assembler.CommentResourceAssembler;
 import org.jfantasy.member.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,12 @@ public class CommentController {
         comment.setShow(true);
         comment.setMember(null);
         return assembler.toResource(this.commentService.save(comment));
+    }
+
+    @RequestMapping(value = "/{id}/show", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody CommentShowForm form) {
+        return assembler.toResource(this.commentService.updateShow(id, form.isShow()));
     }
 
     @ApiOperation(value = "删除评论", notes = "删除会员会员评论")
