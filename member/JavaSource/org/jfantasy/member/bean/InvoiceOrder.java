@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 import java.math.BigDecimal;
 
 /**
@@ -74,6 +76,15 @@ public class InvoiceOrder extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_MEM_INVOICE_ORDER_MEMBER"))
     private Member member;
+    /*************************************/
+    /*             开票方                 */
+    /*************************************/
+    @Null(groups = {RESTful.POST.class})
+    @Column(name = "TARGET_TYPE", nullable = false, updatable = false, length = 10)
+    private String targetType;
+    @Null(groups = {RESTful.POST.class})
+    @Column(name = "TARGET_ID", nullable = false, updatable = false, length = 20)
+    private String targetId;
 
     public InvoiceOrder() {
     }
@@ -144,6 +155,22 @@ public class InvoiceOrder extends BaseBusEntity {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
     }
 
 }

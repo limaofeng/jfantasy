@@ -57,7 +57,7 @@ public class TeamMemberService {
         if (team == null) {
             throw new ValidationException(000.1f, "团队不存在");
         }
-        TeamMember teamMember = this.teamMemberDao.findUnique(Restrictions.eq("mobile", member.getMobile()), Restrictions.eq("team.id", member.getTeamId()));
+        TeamMember teamMember = this.teamMemberDao.findUnique(Restrictions.eq("mobile", member.getMobile()), Restrictions.eq("team.key", member.getTeamId()));
         if (teamMember != null) {
             if (teamMember.getStatus() != TeamMemberStatus.drop) {
                 throw new ValidationException(000.1f, "已经添加到团队,请勿重复添加");

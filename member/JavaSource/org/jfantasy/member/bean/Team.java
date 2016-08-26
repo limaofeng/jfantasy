@@ -9,6 +9,8 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.framework.spring.validation.Use;
+import org.jfantasy.member.validators.TeamIdCannotRepeatValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -27,6 +29,7 @@ public class Team extends BaseBusEntity {
      * 团队
      */
     @NotNull(groups = RESTful.POST.class)
+    @Use(vali = TeamIdCannotRepeatValidator.class, groups = {RESTful.POST.class})
     @Id
     @Column(name = "CODE", nullable = false)
     private String key;
