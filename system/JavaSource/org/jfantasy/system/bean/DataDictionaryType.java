@@ -22,7 +22,7 @@ import java.util.List;
 @ApiModel(value = "数据字典分类")
 @Entity
 @Table(name = "SYS_DD_TYPE")
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "dataDictionaries", "children"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "data_dictionaries", "children"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class DataDictionaryType extends BaseBusEntity {
 
