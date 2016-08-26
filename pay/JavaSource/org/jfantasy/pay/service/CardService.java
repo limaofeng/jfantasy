@@ -9,6 +9,7 @@ import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.pay.bean.Account;
 import org.jfantasy.pay.bean.Card;
+import org.jfantasy.pay.bean.enums.AccountType;
 import org.jfantasy.pay.bean.enums.CardStatus;
 import org.jfantasy.pay.bean.enums.OwnerType;
 import org.jfantasy.pay.dao.AccountDao;
@@ -35,6 +36,8 @@ public class CardService {
     private LogService logService;
     @Autowired
     private ApplicationContext applicationContext;
+    @Autowired
+    private AccountService accountService;
 
     public Card get(String id) {
         return this.cardDao.get(id);
@@ -54,13 +57,9 @@ public class CardService {
             throw new ValidationException(101.1f, "卡状态不正确");
         }
         Account account = this.accountDao.findUnique(Restrictions.eq("owner", owner));
-        if (account == null) {
-            throw new ValidationException(101.2f, "账号不存在!");
+        if (account == null) {//TODO 这里创建账号是否合适
+            accountService.save(AccountType.personal, owner, null);
         }
-        /*
-        if (account.getStatus() != AccountStatus.activated) {
-            throw new ValidationException(101.3f, "账号未激活!");
-        }*/
         if (!card.getSecret().equals(password)) {
             throw new ValidationException(101.4f, "密钥错误");
         }

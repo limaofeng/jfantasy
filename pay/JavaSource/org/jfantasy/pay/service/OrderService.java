@@ -46,6 +46,7 @@ public class OrderService {
         order.setTotalFee(details.getTotalFee());
         order.setStatus(Order.PaymentStatus.unpaid);
         order.setOrderItems(details.getOrderItems());
+        order.setMemberId(details.getMemberId());
         return this.orderDao.save(order);
     }
 
@@ -70,10 +71,14 @@ public class OrderService {
             }
             order = this.save(orderDetails);
         } else {
-            orderDetails = new OrderDetails();//orderServiceFactory.getOrderService(key.getType()).loadOrder(key);
-            orderDetails.setPayment(true);
+            orderDetails = orderServiceFactory.getOrderService(key.getType()).loadOrder(key);
         }
         order.setDetails(orderDetails);
         return order;
     }
+
+    public void update(Order order) {
+        this.orderDao.update(order);
+    }
+
 }

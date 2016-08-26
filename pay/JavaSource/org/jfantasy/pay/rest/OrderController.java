@@ -7,6 +7,7 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
+import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.pay.bean.*;
 import org.jfantasy.pay.order.entity.OrderItem;
@@ -58,7 +59,11 @@ public class OrderController {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String key) {
-        return assembler.toResource(orderService.get(OrderKey.newInstance(key)));
+        Order order = orderService.get(OrderKey.newInstance(key));
+        if(order == null){
+            throw new NotFoundException("[ID="+key+"]的订单不存在");
+        }
+        return assembler.toResource(order);
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms","default"}))

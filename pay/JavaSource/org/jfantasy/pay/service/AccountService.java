@@ -145,7 +145,6 @@ public class AccountService {
      *
      * @param card 卡
      */
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void inpour(Card card) {
         Account to = accountDao.findUnique(Restrictions.eq("owner", card.getOwner()));
         //添加充值记录

@@ -43,9 +43,9 @@ public class PayController {
     @ResponseBody
     public Object notify(@PathVariable("sn") String sn, @RequestBody String body) throws PayException {
         if (sn.startsWith("RP")) {
-            return payService.paymentNotify(sn, body);
-        } else if (sn.startsWith("P")) {
             return payService.refundNotify(sn, body);
+        } else if (sn.startsWith("P")) {
+            return payService.paymentNotify(sn, body);
         } else {
             throw new PayException("不能处理的订单");
         }

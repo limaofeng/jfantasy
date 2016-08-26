@@ -59,7 +59,7 @@ public class SignUtil {
                 }
                 if (!newVal.equals(val)) {
                     if ("signature".equals(key) || "sign".equals(key)) {
-                        newVal = newVal.replaceAll(" ", "+");
+                        newVal = newVal.replaceAll("%2B","+").replaceAll(" ", "+");
                     }
                     val = newVal;
                 }

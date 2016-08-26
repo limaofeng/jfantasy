@@ -78,9 +78,10 @@ public class TransactionService {
         transaction.setChannel(TxChannel.internal);
         transaction.setTo(to);
         transaction.set(Transaction.CARD_ID,card.getNo());
-        transaction.setUnionId(Transaction.generateUnionid(transaction.getProject().getKey(), card.getNo()));
         transaction.setProject(projectDao.get(Project.CARD_INPOUR));
+        transaction.setUnionId(Transaction.generateUnionid(transaction.getProject().getKey(), card.getNo()));
         transaction.setStatus(TxStatus.success);
+        transaction.setStatusText(TxStatus.success.name());
         return this.transactionDao.save(transaction);
     }
 

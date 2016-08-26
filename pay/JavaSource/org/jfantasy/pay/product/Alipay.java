@@ -192,7 +192,7 @@ public class Alipay extends PayProductSupport {
         }
 
         data.put("sign_type", "RSA");//签名方式
-        data.put("sign", sign(data, getPublicKey(config, data.get("sign_type"))));
+        data.put("sign", StringUtil.encodeURI(sign(data, getPrivateKey(config, data.get("sign_type"))),input_charset));
 
         return SignUtil.coverMapString(data);
     }
@@ -521,7 +521,7 @@ public class Alipay extends PayProductSupport {
             case "MD5":
                 return config.getBargainorKey();
             case "RSA":
-                return config.get("rsaPrivateKey", String.class).replaceAll("^-----BEGIN RSA PRIVATE KEY-----", "").replaceAll("-----END RSA PRIVATE KEY-----$", "").replaceAll("\n", "");
+                return config.get("rsaPrivateKey", String.class).replaceAll("[-]+[A-Z ]+[-]+", "").replaceAll("[\\n]", "");
             default:
                 throw new PayException("获取 PrivateKey 出错,不支持的加密方式:" + type);
         }
@@ -532,7 +532,7 @@ public class Alipay extends PayProductSupport {
             case "MD5":
                 return config.getBargainorKey();
             case "RSA":
-                return config.get("rsaPublicKey", String.class);
+                return config.get("rsaPublicKey", String.class).replaceAll("[-]+[A-Z ]+[-]+", "").replaceAll("[\\n]", "");
             default:
                 throw new PayException("获取 PublicKey 出错,不支持的加密方式:" + type);
         }

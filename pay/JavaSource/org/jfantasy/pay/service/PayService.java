@@ -170,7 +170,7 @@ public class PayService {
         }
     }
 
-    public boolean query(String sn){
+    public boolean query(String sn) {
         Payment payment = this.paymentService.get(sn);
         PayConfig payConfig = payment.getPayConfig();
         //获取支付产品
@@ -216,6 +216,8 @@ public class PayService {
                 break;
             case success:
                 order.setStatus(Order.PaymentStatus.paid);
+                order.setPaymentTime(payment.getTradeTime());
+                orderService.update(order);
                 break;
             case finished:
                 break;
@@ -272,7 +274,10 @@ public class PayService {
 
         // 更新订单状态
         if (refund.getStatus() == RefundStatus.success) {
-            order.setStatus(Order.PaymentStatus.refunded);
+            order.setStatus(order.getPayableFee().equals(refund.getTotalAmount()) ? Order.PaymentStatus.refunded : Order.PaymentStatus.partRefund);
+            order.setRefundAmount(refund.getTotalAmount());
+            order.setRefundTime(refund.getTradeTime());
+            orderService.update(order);
         }
 
         // 如果为完成 或者 初始状态 不触发事件

@@ -24,7 +24,7 @@ public class Order extends BaseBusEntity {
 
     // 付款状态（未支付、部分支付、已支付、部分退款、全额退款）
     public enum PaymentStatus {
-        unpaid("未支付"), partPayment("部分支付"), paid("已支付"), partRefund("部分退款"), refunded("全额退款");
+        unpaid("未支付"), /*partPayment("部分支付"),*/ paid("已支付"), partRefund("部分退款"), refunded("全额退款");
 
         private String value;
 
@@ -65,14 +65,32 @@ public class Order extends BaseBusEntity {
     private List<OrderItem> orderItems;
     @ApiModelProperty("支付记录")
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<Payment> payments = new ArrayList<Payment>();
+    private List<Payment> payments = new ArrayList<>();
     @ApiModelProperty("退款记录")
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
-    private List<Refund> refunds = new ArrayList<Refund>();
+    private List<Refund> refunds = new ArrayList<>();
+    /**
+     * 付款时间
+     */
     @ApiModelProperty("付款时间")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "PAYMENT_TIME")
     private Date paymentTime;
+    /**
+     * 退款时间
+     */
+    @ApiModelProperty("退款时间")
+    @Column(name = "REFUND_TIME")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date refundTime;
+    /**
+     * 退款金额
+     */
+    @ApiModelProperty("退款金额")
+    @Column(name = "refund_amount", precision = 15, scale = 2)
+    private BigDecimal refundAmount;
+    @Column(name = "MEMBER_ID", nullable = false, updatable = false)
+    private Long memberId;
 
     public String getSn() {
         return sn;
@@ -178,4 +196,27 @@ public class Order extends BaseBusEntity {
         return details;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
+    public Date getRefundTime() {
+        return refundTime;
+    }
+
+    public void setRefundTime(Date refundTime) {
+        this.refundTime = refundTime;
+    }
+
+    public BigDecimal getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(BigDecimal refundAmount) {
+        this.refundAmount = refundAmount;
+    }
 }

@@ -6,6 +6,7 @@ import org.jfantasy.pay.event.TransactionChangedEvent;
 import org.jfantasy.pay.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -22,6 +23,7 @@ public class LogByTransactionChangedListener implements ApplicationListener<Tran
     }
 
     @Override
+    @Async
     public void onApplicationEvent(TransactionChangedEvent event) {
         Transaction transaction = event.getTransaction();
         logService.log(OwnerType.transaction,transaction.getSn(),transaction.getStatus().name(),transaction.getNotes());
