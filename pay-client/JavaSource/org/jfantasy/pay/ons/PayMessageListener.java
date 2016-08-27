@@ -10,8 +10,6 @@ import org.jfantasy.pay.order.entity.PaymentDetails;
 import org.jfantasy.pay.order.entity.RefundDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Arrays;
-
 public class PayMessageListener implements MessageListener {
 
     @Autowired
@@ -19,14 +17,19 @@ public class PayMessageListener implements MessageListener {
 
     @Override
     public Action consume(Message message, ConsumeContext context) {
-        if ("payment".equals(message.getKey())) {
-            PaymentDetails details = JSON.deserialize(Arrays.toString(message.getBody()), PaymentDetails.class);
-            assert details != null;
-            orderService.on(details.getOrderKey(), details, details.getMemo());
-        } else if ("refund".equals(message.getKey())) {
-            RefundDetails details = JSON.deserialize(Arrays.toString(message.getBody()), RefundDetails.class);
-            assert details != null;
-            orderService.on(details.getOrderKey(), details, details.getMemo());
+        switch (message.getTag()) {
+            case "payment": {
+                PaymentDetails details = JSON.deserialize(new String(message.getBody()), PaymentDetails.class);
+                assert details != null;
+                orderService.on(details.getOrderKey(), details, details.getMemo());
+            }
+            break;
+            case "refund": {
+                RefundDetails details = JSON.deserialize(new String(message.getBody()), RefundDetails.class);
+                assert details != null;
+                orderService.on(details.getOrderKey(), details, details.getMemo());
+            }
+            break;
         }
         return Action.CommitMessage;
     }

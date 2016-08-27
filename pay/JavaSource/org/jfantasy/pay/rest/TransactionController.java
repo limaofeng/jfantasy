@@ -83,7 +83,7 @@ public class TransactionController {
     @JsonResultFilter(allow = @AllowProperty(pojo = Payment.class, name = {"sn", "type", "pay_config_name", "total_amount", "payment_fee", "status", "source"}))
     public ToPayment payForm(@PathVariable("id") String sn, @RequestBody PayForm payForm) {
         Transaction transaction = get(sn);
-        return payService.pay(transaction,payForm.getPayconfigId(), payForm.getPayType(), payForm.getPayer(), payForm.getProperties());
+        return payService.pay(transaction, payForm.getPayconfigId(), payForm.getPayType(), payForm.getPayer(), payForm.getProperties());
     }
 
     private Transaction get(String id) {
@@ -105,14 +105,14 @@ public class TransactionController {
                     List<PayConfig> payconfigs = configService.find();
                     Iterator<PayConfig> iterator = payconfigs.iterator();
 
-//                    if(user != null) {
-                    while (iterator.hasNext()) {
-                        PayConfig payConfig = iterator.next();
-                        if (!payConfig.getPlatforms().contains("app")) {//user.getPlatform()
-                            iterator.remove();
+                    if (user != null) {
+                        while (iterator.hasNext()) {
+                            PayConfig payConfig = iterator.next();
+                            if (!payConfig.getPlatforms().contains(user.getPlatform())) {
+                                iterator.remove();
+                            }
                         }
                     }
-//                    }
 
                     String payment_sn = transaction.get("payment_sn");
                     if (StringUtil.isNotBlank(payment_sn)) {

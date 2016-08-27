@@ -27,6 +27,8 @@ public class OrderDetails {
     private boolean payment;
     @ApiModelProperty("订单项")
     private List<OrderItem> orderItems;
+    @ApiModelProperty("订单关联的会员")
+    private Long memberId;
 
     public String getSn() {
         return sn;
@@ -92,9 +94,17 @@ public class OrderDetails {
         this.orderItems = orderItems;
     }
 
+    public Long getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(Long memberId) {
+        this.memberId = memberId;
+    }
+
     @Override
     public String toString() {
-        return "Order{" +
+        return "OrderDetails{" +
                 "sn='" + sn + '\'' +
                 ", type='" + type + '\'' +
                 ", subject='" + subject + '\'' +
@@ -103,7 +113,7 @@ public class OrderDetails {
                 ", payableFee=" + payableFee +
                 ", payment=" + payment +
                 ", orderItems=" + orderItems +
+                ", memberId=" + memberId +
                 '}';
     }
-
 }

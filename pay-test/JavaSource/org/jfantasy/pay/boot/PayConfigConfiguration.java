@@ -162,7 +162,7 @@ public class PayConfigConfiguration implements CommandLineRunner {
             payConfig.setPayFeeType(PayConfig.PayFeeType.fixed);
             payConfig.setPayFee(BigDecimal.ZERO);
             payConfig.setBargainorId("1332956301");
-            payConfig.setBargainorKey("x6wWLJLXuC4sRtgxpxJ3hjsdqsMof6wP");
+            payConfig.setBargainorKey("GfolpZtqsx8BubiI5pS5JDhxqUZqLVqa");
 
 
             ByteArrayOutputStream output = new ByteArrayOutputStream();
@@ -189,7 +189,7 @@ public class PayConfigConfiguration implements CommandLineRunner {
         payConfig.setBargainorKey("2s6pd34rf1u95t1hjlry13o1u13qxlbs");
         payConfig.set("sellerEmail", "shzbsg@126.com");
         //一些高级接口需要使用 RSA 或者 DSA 加密
-        payConfig.set("rsaPrivateKey", FileUtil.readFile(new File("/certs/rsa_private_key.pem")));//RSA 加密时的私钥
+        payConfig.set("rsaPrivateKey", FileUtil.readFile(new File("/certs/rsa_private_key_pkcs8.pem")));//RSA 加密时的私钥
         payConfig.set("rsaPublicKey", FileUtil.readFile(new File("/certs/rsa_public_key.pem")));//RSA 支付宝公钥
         payConfigService.save(payConfig);
     }
