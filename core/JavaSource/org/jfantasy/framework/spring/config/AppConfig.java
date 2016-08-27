@@ -28,8 +28,8 @@ import java.util.concurrent.Executor;
  * </p>
  */
 @Configuration
-@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableAsync
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 @Import({DaoConfig.class, QuartzConfig.class})
 public class AppConfig {
 

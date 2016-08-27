@@ -1,11 +1,13 @@
 package org.jfantasy.pay.service;
 
+import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.hibernate.criterion.Criterion;
 import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.dao.PayConfigDao;
 import org.jfantasy.pay.product.PayProductSupport;
+import org.jfantasy.pay.product.Weixinpay;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -81,6 +83,15 @@ public class PayConfigService {
         for (Long id : ids) {
             this.payConfigDao.delete(id);
         }
+    }
+
+    public PayConfig findByWeixin(String appid) {
+        for (PayConfig config : this.payConfigDao.find(Restrictions.eq("payProductId", "weixinpay"))) {
+            if (appid.equals(config.get(Weixinpay.EXT_APPID))) {
+                return config;
+            }
+        }
+        return null;
     }
 
 }

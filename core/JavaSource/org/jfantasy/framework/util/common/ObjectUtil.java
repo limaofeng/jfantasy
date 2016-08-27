@@ -481,7 +481,7 @@ public final class ObjectUtil {
         Object f1 = OgnlUtil.getInstance().getValue(orderField, o1);
         Object f2 = OgnlUtil.getInstance().getValue(orderField, o2);
         if (f1 == f2) {
-            return -1;
+            return 0;
         }
         if (f1 == null || f2 == null) {
             return -1;
@@ -492,10 +492,7 @@ public final class ObjectUtil {
         } else {
             Arrays.sort(ary);
         }
-        if (ary[0].equals(f1)) {
-            return -1;
-        }
-        return 1;
+        return ary[0].equals(f1) ? -1 : 1;
     }
 
     public static boolean isNull(Object object) {

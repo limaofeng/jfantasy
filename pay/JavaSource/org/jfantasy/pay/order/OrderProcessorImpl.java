@@ -12,12 +12,13 @@ import org.jfantasy.pay.order.entity.RefundDetails;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.service.PayService;
 import org.jfantasy.pay.service.PaymentService;
+import org.jfantasy.rpc.annotation.ServiceExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
 import java.util.List;
 
-//@ServiceExporter(targetInterface = OrderProcessor.class)
+@ServiceExporter(targetInterface = OrderProcessor.class)
 public class OrderProcessorImpl implements OrderProcessor {
 
     @Autowired

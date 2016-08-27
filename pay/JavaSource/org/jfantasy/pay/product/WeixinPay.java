@@ -46,6 +46,8 @@ public class Weixinpay extends PayProductSupport {
 
     private static Urls urls = new Urls();
 
+    public static final String EXT_APPID = "appid";
+
     static {
         urls.setUnifiedorderUrl("https://api.mch.weixin.qq.com/pay/unifiedorder");
         urls.setCloseorderUrl("https://api.mch.weixin.qq.com/pay/closeorder");

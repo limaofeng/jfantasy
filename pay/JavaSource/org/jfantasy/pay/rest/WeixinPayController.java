@@ -8,7 +8,6 @@ import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -53,7 +52,7 @@ public class WeixinPayController {
     @RequestMapping(value = "/qrcode", method = RequestMethod.GET)
     @ResponseBody
     public void qrcode(@PathVariable("appid") String appid, @RequestParam("tid") String transactionId, @RequestParam(value = "model", required = false) String model, HttpServletResponse response) throws WriterException, IOException {
-        PayConfig config = payConfigService.findUnique(Restrictions.eq("payProductId", "weixinpay"), Restrictions.eq("sellerEmail", appid));
+        PayConfig config = payConfigService.findByWeixin(appid);
         if (config == null) {
             throw new RestException("该微信号未配置支付接口");
         }
@@ -93,13 +92,12 @@ public class WeixinPayController {
     @RequestMapping(value = "/paycallback", method = RequestMethod.POST)
     @ResponseBody
     public String callback(@PathVariable("appid") String appid, @RequestBody String body) {
-        PayConfig config = payConfigService.findUnique(Restrictions.eq("payProductId", "weixinpay"), Restrictions.eq("sellerEmail", appid));
+        PayConfig config = payConfigService.findByWeixin(appid);
         if (config == null) {
             throw new RestException("该微信号未配置支付接口");
         }
 
         Map<String, String> data = Weixinpay.xmlToMap(body);
-
 
         if (!Weixinpay.verify(data, config.getBargainorKey())) {
             throw new RestException("签名错误");

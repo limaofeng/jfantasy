@@ -119,20 +119,20 @@ public class Alipay extends PayProductSupport {
             data.put("total_fee", RMB_YUAN_FORMAT.format(order.getPayableFee()));// 总金额（单位：元）
 
             //额外参数
-            if (StringUtil.isNotBlank(properties.getProperty("backUrl"))) {
-                data.put("return_url", properties.getProperty("backUrl"));//同步通知
-                LOG.debug("添加参数 return_url = " + properties.getProperty("MerPageUrl"));
+            if (StringUtil.isNotBlank(properties.getProperty("back_url"))) {
+                data.put("return_url", properties.getProperty("back_url"));//同步通知
+                LOG.debug("添加参数 return_url = " + properties.getProperty("back_url"));
             }
-            if (StringUtil.isNotBlank(properties.getProperty("showUrl"))) {
-                data.put("show_url", properties.getProperty("showUrl"));// 商品显示URL
-                LOG.debug("添加参数 show_url = " + properties.getProperty("showUrl"));
+            if (StringUtil.isNotBlank(properties.getProperty("show_url"))) {
+                data.put("show_url", properties.getProperty("show_url"));// 商品显示URL
+                LOG.debug("添加参数 show_url = " + properties.getProperty("show_url"));
             }
             if (StringUtil.isNotBlank(properties.getProperty("extra_common_param"))) {
                 data.put("extra_common_param", properties.getProperty("extra_common_param"));
                 LOG.debug("添加参数 extra_common_param = " + properties.getProperty("extra_common_param"));
             }
-            if (StringUtil.isNotBlank(properties.getProperty("bankNo"))) {
-                data.put("defaultbank", properties.getProperty("bankNo"));// 默认选择银行（当paymethod为bankPay时有效）
+            if (StringUtil.isNotBlank(properties.getProperty("bank_no"))) {
+                data.put("defaultbank", properties.getProperty("bank_no"));// 默认选择银行（当paymethod为bankPay时有效）
                 LOG.debug("添加参数 defaultbank = " + properties.getProperty("defaultbank"));
                 data.put("paymethod", "bankPay");// 默认支付方式（bankPay：网银、cartoon：卡通、directPay：余额、CASH：网点支付）
             } else {
