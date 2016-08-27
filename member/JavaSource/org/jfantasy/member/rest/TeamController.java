@@ -41,7 +41,7 @@ public class TeamController {
     @ApiOperation(value = "团队列表", notes = "团队列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<ResultResourceSupport> search(@RequestParam("type") String type, Pager<Team> pager, List<PropertyFilter> filters) {
+    public Pager<ResultResourceSupport> search(@RequestParam(value = "type", required = false) String type, Pager<Team> pager, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQS_type", type));
         return assembler.toResources(this.teamService.findPager(pager, filters));
     }

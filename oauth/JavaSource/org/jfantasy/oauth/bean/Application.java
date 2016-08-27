@@ -42,6 +42,12 @@ public class Application extends BaseBusEntity {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Role> roles;
 
+    public Application(){}
+
+    public Application(Long id) {
+        this.id = id;
+    }
+
     public Long getId() {
         return id;
     }

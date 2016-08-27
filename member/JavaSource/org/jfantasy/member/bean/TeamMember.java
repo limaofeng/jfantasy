@@ -93,7 +93,7 @@ public class TeamMember extends BaseBusEntity {
      * 团队ID
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEAM_ID", foreignKey = @ForeignKey(name = "FK_TEAM_MEMBER_TEAM"))
+    @JoinColumn(name = "TEAM_ID", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_TEAM_MEMBER_TEAM"))
     private Team team;
     /**
      * 标签

@@ -29,6 +29,7 @@ public class ApiKeyService {
         return this.apiKeyDao.get(apiKey);
     }
 
+    @Transactional(readOnly = true)
     public Pager<ApiKey> findPager(Pager<ApiKey> pager, List<PropertyFilter> filter) {
         return this.apiKeyDao.findPager(pager,filter);
     }
