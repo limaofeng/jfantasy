@@ -2,6 +2,7 @@ image: limaofeng/alpine-gradle
 
 build:
   script:
+    - cp -rf .gradle ~/gradle
     - gradle sonar -x test
   artifacts:
     paths:
