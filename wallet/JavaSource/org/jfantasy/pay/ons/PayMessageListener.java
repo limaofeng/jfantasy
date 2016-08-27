@@ -11,7 +11,6 @@ import org.jfantasy.member.service.WalletService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
 public class PayMessageListener implements MessageListener {
 
@@ -22,10 +21,10 @@ public class PayMessageListener implements MessageListener {
     public Action consume(Message message, ConsumeContext context) {
         switch (message.getTag()){
             case "transaction":
-                walletService.saveOrUpdateBill(JSON.deserialize(Arrays.toString(message.getBody())));
+                walletService.saveOrUpdateBill(JSON.deserialize(new String(message.getBody())));
                 break;
             case "account":
-                walletService.saveOrUpdateWallet(JSON.deserialize(Arrays.toString(message.getBody())));
+                walletService.saveOrUpdateWallet(JSON.deserialize(new String(message.getBody())));
                 break;
             case "growth":
                 break;
