@@ -1,12 +1,25 @@
 image: limaofeng/alpine-gradle
 
+before_script:
+  - cp -rf .gradle ~/.gradle
+  - echo 10.45.21.126 maven.zbsg.com.cn >> /etc/hosts
+
+stages:
+  - build
+  - test
+  - sonar
+  - deploy
+
 build:
   script:
-    - cp -rf .gradle ~/.gradle
-    - echo 10.45.21.126 maven.zbsg.com.cn >> /etc/hosts
-    - gradle sonar -x test
-  artifacts:
-    paths:
-    - build/libs/
+    - gradle clean classes -x test --debug
   tags:
     - docker
+
+sonar:
+  script:
+      - gradle sonar -x test --debug
+  tags:
+    - docker
+  only:
+    - tags
