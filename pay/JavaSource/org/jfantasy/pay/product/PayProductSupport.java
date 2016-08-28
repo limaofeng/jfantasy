@@ -21,6 +21,9 @@ import java.util.Properties;
 @JsonIgnoreProperties
 public abstract class PayProductSupport implements PayProduct {
 
+    static final String PROPERTIES_BACKURL = "back_url";
+    static final String PROPERTIES_SHOWURL = "show_url";
+
     protected final static Log LOG = LogFactory.getLog(PayProductSupport.class);
 
     protected String id;//支付产品ID

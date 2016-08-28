@@ -69,8 +69,8 @@ public class Chinapay extends PayProductSupport {
 
             //额外参数
             if (properties != null) {
-                if (StringUtil.isNotBlank(properties.getProperty("backUrl"))) {
-                    data.put("MerPageUrl", properties.getProperty("backUrl"));//同步通知
+                if (StringUtil.isNotBlank(properties.getProperty(PROPERTIES_BACKURL))) {
+                    data.put("MerPageUrl", properties.getProperty(PROPERTIES_BACKURL));//同步通知
                     LOG.debug("添加参数 MerPageUrl = " + data.get("MerPageUrl"));
                 }
             }

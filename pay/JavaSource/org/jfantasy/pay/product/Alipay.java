@@ -119,12 +119,12 @@ public class Alipay extends PayProductSupport {
             data.put("total_fee", RMB_YUAN_FORMAT.format(order.getPayableFee()));// 总金额（单位：元）
 
             //额外参数
-            if (StringUtil.isNotBlank(properties.getProperty("back_url"))) {
-                data.put("return_url", properties.getProperty("back_url"));//同步通知
-                LOG.debug("添加参数 return_url = " + properties.getProperty("back_url"));
+            if (StringUtil.isNotBlank(properties.getProperty(PROPERTIES_BACKURL))) {
+                data.put("return_url", properties.getProperty(PROPERTIES_BACKURL));//同步通知
+                LOG.debug("添加参数 return_url = " + properties.getProperty("return_url"));
             }
-            if (StringUtil.isNotBlank(properties.getProperty("show_url"))) {
-                data.put("show_url", properties.getProperty("show_url"));// 商品显示URL
+            if (StringUtil.isNotBlank(properties.getProperty(PROPERTIES_SHOWURL))) {
+                data.put("show_url", properties.getProperty(PROPERTIES_SHOWURL));// 商品显示URL
                 LOG.debug("添加参数 show_url = " + properties.getProperty("show_url"));
             }
             if (StringUtil.isNotBlank(properties.getProperty("extra_common_param"))) {
