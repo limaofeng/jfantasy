@@ -3,6 +3,7 @@ image: limaofeng/alpine-gradle
 build:
   script:
     - cp -rf .gradle ~/.gradle
+    - echo 10.45.21.126 maven.zbsg.com.cn >> /etc/hosts
     - gradle sonar -x test
   artifacts:
     paths:
