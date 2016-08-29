@@ -11,8 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 public class OrderMessageListener implements MessageListener {
 
+    private final InvoiceOrderService invoiceOrderService;
+
     @Autowired
-    private InvoiceOrderService invoiceOrderService;
+    public OrderMessageListener(InvoiceOrderService invoiceOrderService) {
+        this.invoiceOrderService = invoiceOrderService;
+    }
 
     @Override
     public Action consume(Message message, ConsumeContext context) {

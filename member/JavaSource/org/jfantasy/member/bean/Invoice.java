@@ -51,7 +51,6 @@ public class Invoice extends BaseBusEntity {
     /*************************************/
     /*          发票内容                  */
     /*************************************/
-    @NotNull(groups = {RESTful.POST.class})
     @ApiModelProperty("内容")
     @Column(name = "content", length = 200)
     private String content;
