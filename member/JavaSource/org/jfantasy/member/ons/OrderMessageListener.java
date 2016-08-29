@@ -7,16 +7,13 @@ import com.aliyun.openservices.ons.api.MessageListener;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.member.bean.InvoiceOrder;
 import org.jfantasy.member.service.InvoiceOrderService;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.annotation.Resource;
 
 public class OrderMessageListener implements MessageListener {
 
-    private final InvoiceOrderService invoiceOrderService;
-
-    @Autowired
-    public OrderMessageListener(InvoiceOrderService invoiceOrderService) {
-        this.invoiceOrderService = invoiceOrderService;
-    }
+    @Resource
+    private InvoiceOrderService invoiceOrderService;
 
     @Override
     public Action consume(Message message, ConsumeContext context) {
