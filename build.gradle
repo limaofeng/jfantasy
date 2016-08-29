@@ -1,6 +1,7 @@
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
         maven {
             url "http://maven.zbsg.com.cn/content/groups/public"
         }
