@@ -12,13 +12,13 @@ stages:
 
 build:
   script:
-    - gradle clean classes -x test --debug
+    - gradle clean classes -x test
   tags:
     - docker
 
 sonar:
   script:
-      - gradle sonar -x test --debug
+      - gradle sonar -x test
   tags:
     - docker
   only:
