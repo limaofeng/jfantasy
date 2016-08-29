@@ -157,6 +157,15 @@ public class InvoiceOrder extends BaseBusEntity {
         this.member = member;
     }
 
+    @Transient
+    public Long getMemberId() {
+        return member == null ? null : member.getId();
+    }
+
+    public void setMemberId(Long memberId) {
+        this.member = new Member(memberId);
+    }
+
     public String getTargetType() {
         return targetType;
     }

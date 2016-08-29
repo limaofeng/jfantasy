@@ -17,13 +17,13 @@ build:
   tags:
     - docker
 
-sonar:
-  script:
-      - gradle sonar -x test
-  tags:
-    - docker
-  only:
-    - tags
+#sonar:
+#  script:
+#      - gradle sonar -x test
+#  tags:
+#    - docker
+#  only:
+#    - tags
 
 deploy:
   script:

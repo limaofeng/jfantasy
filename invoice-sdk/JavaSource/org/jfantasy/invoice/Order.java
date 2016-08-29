@@ -25,6 +25,14 @@ public class Order {
      * 会员ID
      */
     private Long memberId;
+    /**
+     * 开票方类型
+     */
+    private String targetType;
+    /**
+     * 开票方ID
+     */
+    private String targetId;
 
     public String getOrderSn() {
         return orderSn;
@@ -73,4 +81,21 @@ public class Order {
     public void setMemberId(Long memberId) {
         this.memberId = memberId;
     }
+
+    public String getTargetType() {
+        return targetType;
+    }
+
+    public void setTargetType(String targetType) {
+        this.targetType = targetType;
+    }
+
+    public String getTargetId() {
+        return targetId;
+    }
+
+    public void setTargetId(String targetId) {
+        this.targetId = targetId;
+    }
+
 }
