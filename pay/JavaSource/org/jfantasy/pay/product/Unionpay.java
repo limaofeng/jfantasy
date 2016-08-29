@@ -142,13 +142,10 @@ public class Unionpay extends PayProductSupport {
         PublicKey publicKey = CertUtil.loadPublicKey(new RAMFileProxy(config, "validateCert"));
 
         try {
-            Map<String, String> data = result.startsWith("{") && result.endsWith("}") ? (Map<String, String>)JSON.deserialize(result,HashMap.class) : SignUtil.parseQuery(result, true);
+            Map<String, String> data = result.startsWith("{") && result.endsWith("}") ? (Map<String, String>) JSON.deserialize(result, HashMap.class) : SignUtil.parseQuery(result, true);
             //手机支付通知
             assert data != null;
             boolean isAppNotify = data.containsKey("sign");
-            if (!isAppNotify) {
-                data.put("signature", data.get("signature").replaceAll(" ", "+"));
-            }
             if (!(isAppNotify && verify(data.get("data"), data.get("sign"), publicKey) || verify(data, publicKey))) {//验证签名
                 throw new PayException("验证签名失败");
             }

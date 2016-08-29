@@ -19,6 +19,7 @@ import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.PropertiesHelper;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -45,6 +46,17 @@ public class DaoConfig implements TransactionManagementConfigurer {
 
     @Autowired(required = false)
     private EntityManagerFactory entityManagerFactory;
+    @Autowired
+    private ApplicationContext applicationContext;
+
+    private <T> T createListenerInstance(T bean) {
+        applicationContext.getAutowireCapableBeanFactory().autowireBean(bean);
+        return bean;
+    }
+
+    private <T> T createListenerInstance(Class<T> clazz) {
+        return clazz.cast(createListenerInstance(ClassUtil.newInstance(clazz)));
+    }
 
     @Bean(name = "sessionFactory")
     public SessionFactory sessionFactory() {
@@ -58,37 +70,36 @@ public class DaoConfig implements TransactionManagementConfigurer {
         identifierGeneratorFactory.register("fantasy-sequence", SequenceGenerator.class);
         identifierGeneratorFactory.register("serialnumber", SerialNumberGenerator.class);
 
-        registry.prependListeners(EventType.SAVE_UPDATE, new PropertyGeneratorSaveOrUpdatEventListener(identifierGeneratorFactory));
-        registry.prependListeners(EventType.PERSIST, new PropertyGeneratorPersistEventListener(identifierGeneratorFactory));
+        registry.prependListeners(EventType.SAVE_UPDATE, createListenerInstance(new PropertyGeneratorSaveOrUpdatEventListener(identifierGeneratorFactory)));
+        registry.prependListeners(EventType.PERSIST, createListenerInstance(new PropertyGeneratorPersistEventListener(identifierGeneratorFactory)));
 
-        registry.appendListeners(EventType.POST_INSERT, new EntityChangedEventListener());
+        registry.appendListeners(EventType.POST_INSERT, createListenerInstance(EntityChangedEventListener.class));
 
         for (String listeners : helper.getMergeProperty("spring.jpa.properties.hibernate.event.post-insert")) {
             for (String listener : StringUtil.tokenizeToStringArray(listeners)) {
-                registry.appendListeners(EventType.POST_INSERT, findListener(listener, PostInsertEventListener.class));
+                Class<PostInsertEventListener> clazz = ClassUtil.forName(listener);
+                registry.appendListeners(EventType.POST_INSERT, createListenerInstance(clazz));
             }
         }
 
         for (String listeners : helper.getMergeProperty("spring.jpa.properties.hibernate.event.post-update")) {
             for (String listener : StringUtil.tokenizeToStringArray(listeners)) {
-                registry.appendListeners(EventType.POST_UPDATE, findListener(listener, PostUpdateEventListener.class));
+                Class<PostUpdateEventListener> clazz = ClassUtil.forName(listener);
+                registry.appendListeners(EventType.POST_UPDATE, createListenerInstance(clazz));
             }
         }
 
         String[] postDeleteListeners = helper.getMergeProperty("spring.jpa.properties.hibernate.event.post-delete");
         for (String listeners : postDeleteListeners) {
             for (String listener : StringUtil.tokenizeToStringArray(listeners)) {
-                registry.appendListeners(EventType.POST_DELETE, findListener(listener, PostDeleteEventListener.class));
+                Class<PostDeleteEventListener> clazz = ClassUtil.forName(listener);
+                registry.appendListeners(EventType.POST_DELETE, createListenerInstance(clazz));
             }
         }
 
         LOG.debug(" SessionFactory 加载成功! ");
 
         return sessionFactory;
-    }
-
-    private <T> T findListener(String listenerClassName, Class<T> caseClass) {
-        return caseClass.cast(ClassUtil.newInstance(ClassUtil.forName(listenerClassName)));
     }
 
     @Bean(name = "dataSourceTransactionManager")
@@ -114,6 +125,5 @@ public class DaoConfig implements TransactionManagementConfigurer {
     public PlatformTransactionManager annotationDrivenTransactionManager() {
         return hibernateTransactionManager();
     }
-
 
 }

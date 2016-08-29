@@ -60,9 +60,7 @@ public class SignUtil {
                 if (!newVal.equals(val)) {
                     if ("Signature".equals(key)) {// chinapay
                         newVal = newVal.replaceAll("%2B", "+");
-                    } else if ("signature".equals(key)) {// unionpay
-                        newVal = newVal.replaceAll(" ", "+");
-                    } else if ("sign".equals(key)) {// alipay or weixinpay
+                    } else if ("signature".equals(key) || "sign".equals(key)) {// unionpay or alipay or weixinpay
                         newVal = newVal.replaceAll("%2B", "+").replaceAll(" ", "+");
                     }
                     val = newVal;

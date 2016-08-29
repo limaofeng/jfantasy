@@ -1,0 +1,9 @@
+{
+  "properties": [
+    {
+      "name": "paynotify.url",
+      "type": "java.lang.String",
+      "description": "Description for paynotify.url."
+    }
+  ]
+}

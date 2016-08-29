@@ -9,6 +9,11 @@
       "name": "spring.jackson.mixin.packages",
       "type": "java.lang.String",
       "description": "Description for spring.jackson.mixin.packages."
+    },
+    {
+      "name": "spring.datasource.filters",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.filters."
     }
   ]
 }
