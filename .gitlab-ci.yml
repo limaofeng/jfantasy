@@ -1,6 +1,9 @@
 image: limaofeng/alpine-gradle
 
 before_script:
+  - cp /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+  - echo "Asia/shanghai" > /etc/timezone
+  - export LANG="zh_CN.UTF-8"
   - cp -rf .gradle ~/.gradle
   - echo 10.45.21.126 maven.zbsg.com.cn >> /etc/hosts
 
