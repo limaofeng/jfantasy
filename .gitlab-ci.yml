@@ -24,3 +24,11 @@ sonar:
     - docker
   only:
     - tags
+
+deploy:
+  script:
+      - gradle upload -x test
+  tags:
+    - docker
+  only:
+    - tags

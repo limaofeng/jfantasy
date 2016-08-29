@@ -9,14 +9,13 @@ import org.jfantasy.pay.bean.PayConfig;
 import org.jfantasy.pay.service.PayConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 
-@Component
+//@Component
 public class PayConfigConfiguration implements CommandLineRunner {
 
     @Autowired
