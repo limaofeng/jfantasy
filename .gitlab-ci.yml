@@ -15,7 +15,7 @@ build:
   stage: build
   script:
     - env
-    - echo ${CI_BUILD_REF:0:8}
+    - gradle task hello
     - gradle clean classes -x test
 
 sonar:
