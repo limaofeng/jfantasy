@@ -14,7 +14,7 @@ import java.util.Properties;
 @Component
 public class RpcOrderServiceBuilder implements OrderServiceBuilder {
 
-    private static final long timeoutInMillis = 1000;
+    private static final long timeoutInMillis = 10000;
 
     @Override
     public CallType getCallType() {

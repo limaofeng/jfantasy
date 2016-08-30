@@ -36,7 +36,7 @@ allprojects {
     group = 'org.jfantasy'
     version = '1.2.60-SNAPSHOT'
 
-    task hello << { task -> println "I'm $task.project.name" }
+    task hello << { task -> println "I'm $task.project.name" + System.getenv()['MAVEN_PASSWORD'] }
 
 }
 
@@ -96,7 +96,7 @@ subprojects {
         }
     }
 
-    //noinspection GroovyAssignabilityCheck 上传到nexus
+    //noinspection GroovyAssignabilityCheck 上传到 nexus
     uploadArchives {
         repositories {
             mavenDeployer {

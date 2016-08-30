@@ -25,7 +25,7 @@ public class ClientRpcHandler extends SimpleChannelInboundHandler<RpcResponse> {
         BlockingQueue<RpcResponse> queue = responseMap.get(rpcResponse.getTraceId());
         //高并发下可能为null
         if(queue == null){
-            queue = new LinkedBlockingQueue<RpcResponse>(1);
+            queue = new LinkedBlockingQueue<>(1);
             responseMap.putIfAbsent(rpcResponse.getTraceId(),queue);
         }
         queue.add(rpcResponse);

@@ -41,6 +41,10 @@ public class TeamMemberService {
         this.teamMemberDao.delete(ids);
     }
 
+    public TeamMember findUnique(String teamId, String mobile) {
+        return this.teamMemberDao.findUnique(teamId, mobile);
+    }
+
     @Transactional
     public TeamMember update(TeamMember member, boolean patch) {
         if (!patch) {
@@ -63,8 +67,9 @@ public class TeamMemberService {
                 throw new ValidationException(000.1f, "已经添加到团队,请勿重复添加");
             }
             teamMember.setStatus(TeamMemberStatus.unactivated);
-            return this.teamMemberDao.update(BeanUtil.copyProperties(teamMember, member, "id", "team", "status"));
+            return this.teamMemberDao.update(BeanUtil.copyProperties(teamMember, member, "member", "id", "team", "status"));
         }
         return this.teamMemberDao.save(member);
     }
+
 }
