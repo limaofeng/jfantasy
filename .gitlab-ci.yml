@@ -8,27 +8,23 @@ before_script:
 stages:
   - build
   - test
-  - sonar
+#  - sonar
   - deploy
 
 build:
+  stage: build
   script:
     - gradle clean classes -x test
-  tags:
-    - docker
 
-#sonar:
-#  script:
-#      - gradle sonar -x test
-#  tags:
-#    - docker
-#  only:
-#    - tags
+sonar:
+  script:
+      - gradle sonar -x test
+  only:
+    - tags
 
 deploy:
+  stage: deploy
   script:
       - gradle upload -x test
-  tags:
-    - docker
   only:
     - tags
