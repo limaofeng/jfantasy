@@ -13,7 +13,7 @@ import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.member.bean.*;
-import org.jfantasy.member.bean.enums.InviteStatus;
+import org.jfantasy.member.bean.enums.TeamMemberStatus;
 import org.jfantasy.member.rest.models.PasswordForm;
 import org.jfantasy.member.rest.models.assembler.MemberResourceAssembler;
 import org.jfantasy.member.rest.models.assembler.ProfileResourceAssembler;
@@ -162,7 +162,7 @@ public class MemberController {
     @ResponseBody
     public List<ResultResourceSupport> teams(@PathVariable("memid") Long memberId, @RequestParam(value = "type", required = false) String type, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQL_teamMembers.member.id", memberId.toString()));//包含当前会员
-        filters.add(new PropertyFilter("EQL_teamMembers.status", InviteStatus.activated));//状态有效
+        filters.add(new PropertyFilter("EQE_teamMembers.status", TeamMemberStatus.activated));//状态有效
         return teamController.search(type, new Pager<Team>(1000), filters).getPageItems();
     }
 

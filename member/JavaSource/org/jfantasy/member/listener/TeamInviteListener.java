@@ -2,6 +2,7 @@ package org.jfantasy.member.listener;
 
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.TeamMember;
+import org.jfantasy.member.bean.enums.TeamMemberStatus;
 import org.jfantasy.member.event.TeamInviteEvent;
 import org.jfantasy.member.service.MemberService;
 import org.jfantasy.member.service.TeamMemberService;
@@ -30,6 +31,7 @@ public class TeamInviteListener implements ApplicationListener<TeamInviteEvent> 
         TeamMember teamMember = teamMemberService.findUnique(event.getMobile(), event.getMobile());
         if (member != null && teamMember != null) {
             teamMember.setMember(member);
+            teamMember.setStatus(TeamMemberStatus.activated);
             teamMemberService.update(teamMember, true);
         }
     }
