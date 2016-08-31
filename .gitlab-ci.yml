@@ -14,7 +14,6 @@ stages:
 build:
   stage: build
   script:
-    - gradle task hello
     - gradle clean classes -x test
 
 #sonar:
