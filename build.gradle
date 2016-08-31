@@ -28,7 +28,7 @@ allprojects {
     group = 'org.jfantasy'
     version = '1.2.60-SNAPSHOT'
 
-    task hello << { task -> println "I'm $task.project.name" }
+    task hello << { task -> println "I'm $task.project.name $CI_BUILD_TAG" + System.getenv()['CI_BUILD_TAG'] }
 
 }
 
