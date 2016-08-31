@@ -4,8 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -18,7 +20,7 @@ import java.util.List;
 @ApiModel("评论表")
 @Entity
 @Table(name = "MEM_COMMENT")
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "forComment"})
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "for_comment"})
 public class Comment extends BaseBusEntity {
 
     private static final long serialVersionUID = 8413023474799399082L;
@@ -29,6 +31,7 @@ public class Comment extends BaseBusEntity {
     @ApiModelProperty("用户名")
     @Column(name = "USERNAME")
     private String username;
+    @NotNull(groups = RESTful.POST.class)
     @ApiModelProperty("内容")
     @Lob
     @Column(name = "CONTENT", updatable = false, nullable = false)
@@ -39,9 +42,11 @@ public class Comment extends BaseBusEntity {
     @ApiModelProperty("是否显示")
     @Column(name = "IS_SHOW", nullable = false)
     private boolean show;
+    @NotNull(groups = RESTful.POST.class)
     @ApiModelProperty(value = "评论目标类型", notes = "评论目标类型,(如商品、医生等)")
     @Column(name = "TARGET_TYPE", updatable = false, nullable = false)
     private String targetType;
+    @NotNull(groups = RESTful.POST.class)
     @ApiModelProperty(value = "评论目标ID", notes = "评论目标ID,(如商品、医生等)")
     @Column(name = "TARGET_ID", updatable = false, nullable = false)
     private String targetId;
@@ -57,6 +62,7 @@ public class Comment extends BaseBusEntity {
     @OrderBy("createTime asc")
     private List<Comment> replyComments;
     @ApiModelProperty(hidden = true)
+    @NotNull(groups = RESTful.POST.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "MEMBER_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
     private Member member;
@@ -141,6 +147,16 @@ public class Comment extends BaseBusEntity {
         this.replyComments = replyComments;
     }
 
+    @Transient
+    public Long getMemberId() {
+        return this.member != null ? this.getMember().getId() : null;
+    }
+
+    @Transient
+    public void setMemberId(Long memberId) {
+        this.member = new Member(memberId);
+    }
+
     public Member getMember() {
         return member;
     }
@@ -148,4 +164,5 @@ public class Comment extends BaseBusEntity {
     public void setMember(Member member) {
         this.member = member;
     }
+
 }

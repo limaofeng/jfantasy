@@ -130,6 +130,9 @@ public class MemberController {
         this.memberService.delete(id);
     }
 
+    @JsonResultFilter(
+            ignore = @IgnoreProperty(pojo = Comment.class, name = {"member"})
+    )
     @ApiOperation(value = "查询会员评论", notes = "返回会员的会员评论")
     @RequestMapping(value = "/{memid}/comments", method = RequestMethod.GET)
     @ResponseBody

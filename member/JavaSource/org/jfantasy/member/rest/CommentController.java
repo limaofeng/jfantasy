@@ -7,6 +7,8 @@ import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
+import org.jfantasy.framework.spring.validation.RESTful;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.jfantasy.member.bean.Comment;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.rest.models.CommentShowForm;
@@ -14,8 +16,10 @@ import org.jfantasy.member.rest.models.assembler.CommentResourceAssembler;
 import org.jfantasy.member.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Api(value = "comments", description = "评论")
@@ -39,11 +43,8 @@ public class CommentController {
 
     @RequestMapping(method = RequestMethod.POST)
     @ResponseBody
-    public ResultResourceSupport save(@RequestBody Comment comment) {
-        comment.setIp("");
-        comment.setUsername("username");
-        comment.setShow(true);
-        comment.setMember(null);
+    public ResultResourceSupport save(HttpServletRequest request, @Validated(RESTful.POST.class) @RequestBody Comment comment) {
+        comment.setIp(WebUtil.getRealIpAddress(request));
         return assembler.toResource(this.commentService.save(comment));
     }
 

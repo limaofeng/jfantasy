@@ -3,7 +3,9 @@ package org.jfantasy.member.service;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.member.bean.Comment;
+import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.dao.CommentDao;
+import org.jfantasy.member.dao.MemberDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,8 +18,13 @@ public class CommentService {
 
     @Autowired
     private CommentDao commentDao;
+    @Autowired
+    private MemberDao memberDao;
 
     public Comment save(Comment comment) {
+        Member member = memberDao.get(comment.getId());
+        comment.setUsername(member.getUsername());
+        comment.setShow(true);
         return commentDao.save(comment);
     }
 
