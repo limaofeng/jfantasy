@@ -16,11 +16,11 @@ build:
   script:
     - gradle clean classes -x test
 
-sonar:
-  script:
-      - gradle sonar -x test
-  only:
-    - tags
+#sonar:
+#  script:
+#      - gradle sonar -x test
+#  only:
+#    - tags
 
 deploy:
   stage: deploy
