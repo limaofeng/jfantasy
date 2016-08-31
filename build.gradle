@@ -28,7 +28,7 @@ allprojects {
     group = 'org.jfantasy'
     version = '1.2.60-SNAPSHOT'
 
-    task hello << { task -> println "I'm $task.project.name $MAVEN_PASSWORD" + System.getenv()['CI_BUILD_REF_NAME'] }
+    task hello << { task -> println "I'm $task.project.name ${System.getenv()['CI_BUILD_REF_NAME']}" + System.getenv()['CI_BUILD_REF_NAME'] }
 
 }
 
