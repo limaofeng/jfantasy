@@ -22,7 +22,7 @@ public class CommentService {
     private MemberDao memberDao;
 
     public Comment save(Comment comment) {
-        Member member = memberDao.get(comment.getId());
+        Member member = memberDao.get(comment.getMemberId());
         comment.setUsername(member.getUsername());
         comment.setShow(true);
         return commentDao.save(comment);

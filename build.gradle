@@ -26,9 +26,9 @@ allprojects {
     apply plugin: 'maven'
 
     group = 'org.jfantasy'
-    version = '1.2.60-SNAPSHOT'
+    version = System.getenv()['CI_BUILD_TAG'] // Gitlab 集成时, 使用 Tag 作为版本号
 
-    task hello << { task -> println "I'm $task.project.name ${System.getenv()['CI_BUILD_REF_NAME']}" + System.getenv()['CI_BUILD_REF_NAME'] }
+    task hello << { task -> println "I'm $task.project.name" + System.getenv()['CI_BUILD_REF_NAME'] }
 
 }
 
