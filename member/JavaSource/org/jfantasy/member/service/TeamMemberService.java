@@ -42,7 +42,7 @@ public class TeamMemberService {
     }
 
     public TeamMember findUnique(String teamId, String mobile) {
-        return this.teamMemberDao.findUnique(teamId, mobile);
+        return this.teamMemberDao.findUnique(Restrictions.eq("mobile", mobile), Restrictions.eq("team.key", teamId));
     }
 
     @Transactional
