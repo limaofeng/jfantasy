@@ -208,7 +208,7 @@ public class DateUtil {
      * @param small 小时间
      * @return double
      */
-    public static double dayInterval(Date big, Date small) {
+    public static long dayInterval(Date big, Date small) {
         return interval(big, small, Calendar.DATE);
     }
 
@@ -338,30 +338,28 @@ public class DateUtil {
             case Calendar.YEAR:
                 smallCalendar.clear(Calendar.MONTH);
                 bigCalendar.clear(Calendar.MONTH);
-                break;
             case Calendar.MONTH:
                 smallCalendar.clear(Calendar.DATE);
                 bigCalendar.clear(Calendar.DATE);
-                break;
             case Calendar.DATE://NOSONAR
                 smallCalendar.clear(Calendar.HOUR);
                 smallCalendar.clear(Calendar.HOUR_OF_DAY);
                 bigCalendar.clear(Calendar.HOUR);
                 bigCalendar.clear(Calendar.HOUR_OF_DAY);
-                break;
             case Calendar.HOUR_OF_DAY:
                 smallCalendar.clear(Calendar.MINUTE);
                 bigCalendar.clear(Calendar.MINUTE);
-                break;
             case Calendar.MINUTE:
                 smallCalendar.clear(Calendar.SECOND);
                 bigCalendar.clear(Calendar.SECOND);
-                break;
             default:
                 smallCalendar.clear(Calendar.MILLISECOND);
                 bigCalendar.clear(Calendar.MILLISECOND);
         }
-        while (smallCalendar.before(bigCalendar)) {
+        if (smallCalendar.equals(bigCalendar)) {
+            return elapsed;
+        }
+        while (smallCalendar.before(bigCalendar)) {//如果循环过多是否有潜在的性能问题
             smallCalendar.add(field, 1);
             elapsed++;
         }
@@ -673,8 +671,8 @@ public class DateUtil {
         return gc.getTime();
     }
 
-    public static FieldValue fieldValue(int field, int value){
-        return new FieldValue(field,value);
+    public static FieldValue fieldValue(int field, int value) {
+        return new FieldValue(field, value);
     }
 
     public static class FieldValue {
