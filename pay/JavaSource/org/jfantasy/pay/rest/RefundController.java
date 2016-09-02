@@ -41,7 +41,7 @@ public class RefundController {
     private PayConfigController payConfigController;
 
     @Autowired
-    public RefundController( PayService payService, RefundService refundService) {
+    public RefundController(PayService payService, RefundService refundService) {
         this.payService = payService;
         this.refundService = refundService;
     }
@@ -63,9 +63,9 @@ public class RefundController {
     }
 
     @JsonResultFilter(allow = {
-            @AllowProperty(pojo = Order.class, name = {"key"}),
-            @AllowProperty(pojo = Payment.class, name = {"sn", "totalAmount", "status"}),
-            @AllowProperty(pojo = PayConfig.class, name = {"id"})
+            @AllowProperty(pojo = Order.class, name = {"key", "status", "type", "sn"}),
+            @AllowProperty(pojo = Payment.class, name = {"sn", "total_amount", "status"}),
+            @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name"})
     })
     @ApiOperation("获取退款记录")
     @RequestMapping(value = "/{sn}", method = RequestMethod.GET)
