@@ -46,7 +46,7 @@ public class RefundController {
         this.refundService = refundService;
     }
 
-    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "pay_config", "payment"}))
     @ApiOperation("查询退款记录")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -54,9 +54,9 @@ public class RefundController {
         return assembler.toResources(refundService.findPager(pager, filters));
     }
 
-    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
+    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "pay_config", "payment"}))
     @ApiOperation(value = "更新退款记录", notes = "该方法只能修改 退款状态 ")
-    @RequestMapping(value = "/{sn}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/{sn}/status", method = RequestMethod.PUT)
     @ResponseBody
     public ToRefund update(@PathVariable("sn") String sn, @RequestBody RefundForm01 form) {
         return payService.refund(sn, form.getStatus(), form.getRemark());
@@ -89,7 +89,7 @@ public class RefundController {
     }
 
     @JsonResultFilter(
-            ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
+            ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "order_items", "payments"}),
             allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "name"})
     )
     @RequestMapping(value = "/{sn}/order", method = RequestMethod.GET)

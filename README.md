@@ -10,7 +10,7 @@ jfantasy 整合了一些开源常用的java开发框架. 主要为了方便开�
     <repository>
         <id>jfantasy snapshot</id>
         <name>jfantasy snapshot</name>
-        <url>http://maven.jfantasy.org/content/repositories/snapshots/</url>
+        <url>http://maven.zbsg.com.cn/content/repositories/snapshots/</url>
     </repository>
 
     <dependency>
@@ -22,11 +22,11 @@ jfantasy 整合了一些开源常用的java开发框架. 主要为了方便开�
 
 主要功能及使用技术介绍
 -------------
->RESTful
->支付接口
->微信接口
->Hibernate
->Mybatis
+* spring boot
+* 支付接口(已集成 alipay、weixinpay、chinapay、unionpay)
+* weixin-java
+* hibernate
+* mybatis
 
 演示系统 RESTfull API 地址
 -------------
