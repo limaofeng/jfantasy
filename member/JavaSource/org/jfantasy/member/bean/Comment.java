@@ -3,6 +3,7 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful;
 
@@ -26,6 +27,8 @@ public class Comment extends BaseBusEntity {
     private static final long serialVersionUID = 8413023474799399082L;
 
     @Id
+    @GeneratedValue(generator = "fantasy-sequence")
+    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     @Column(name = "ID", updatable = false)
     private Long id;
     @ApiModelProperty("用户名")
