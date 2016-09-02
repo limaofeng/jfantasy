@@ -54,6 +54,13 @@ public class CommentController {
         return assembler.toResource(this.commentService.updateShow(id, form.isShow()));
     }
 
+    @ApiOperation(value = "查看评论")
+    @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ResultResourceSupport view(@PathVariable("id") Long id) {
+        return assembler.toResource(this.get(id));
+    }
+
     @ApiOperation(value = "删除评论", notes = "删除会员会员评论")
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
