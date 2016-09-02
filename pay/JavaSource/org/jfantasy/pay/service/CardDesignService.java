@@ -94,6 +94,9 @@ public class CardDesignService {
     }
 
     private CardDesign loadLogs(CardDesign design) {
+        if (design == null) {
+            return null;
+        }
         design.setLogs(this.logService.logs(OwnerType.card_design, design.getKey()));
         return design;
     }
