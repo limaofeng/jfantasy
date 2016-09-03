@@ -53,6 +53,15 @@ public class Comment extends BaseBusEntity {
     @ApiModelProperty(value = "评论目标ID", notes = "评论目标ID,(如商品、医生等)")
     @Column(name = "TARGET_ID", updatable = false, nullable = false)
     private String targetId;
+    /**
+     * target 描述目标不足时,使用 with 作为补充
+     * 比如: 每消费一次可以对店家评论一次
+     * target 为店家ID
+     * 但如何记录每次消费的ID
+     * 这时使用 with 作为补充
+     */
+    @Column(name = "WITH", updatable = false)
+    private String with;
     @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
     @Column(name = "PATH", updatable = false, nullable = false, length = 1000)
     private String path;
@@ -66,7 +75,7 @@ public class Comment extends BaseBusEntity {
     private List<Comment> replyComments;
     @ApiModelProperty(hidden = true)
     @NotNull(groups = RESTful.POST.class)
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "MEMBER_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
     private Member member;
 
@@ -166,6 +175,14 @@ public class Comment extends BaseBusEntity {
 
     public void setMember(Member member) {
         this.member = member;
+    }
+
+    public String getWith() {
+        return with;
+    }
+
+    public void setWith(String with) {
+        this.with = with;
     }
 
 }
