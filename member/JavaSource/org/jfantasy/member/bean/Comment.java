@@ -65,7 +65,7 @@ public class Comment extends BaseBusEntity {
      * 但如何记录每次消费的ID
      * 这时使用 with 作为补充
      */
-    @Column(name = "WITH", updatable = false)
+    @Column(name = "_WITH", updatable = false)
     private String with;
     @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
     @Column(name = "PATH", updatable = false, nullable = false, length = 1000)
