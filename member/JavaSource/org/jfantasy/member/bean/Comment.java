@@ -193,7 +193,7 @@ public class Comment extends BaseBusEntity {
 
     @JsonAnyGetter
     public Properties getProperties() {
-        if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(Invite.class, "properties")) {
+        if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(Comment.class, "properties")) {
             return null;
         }
         return properties;

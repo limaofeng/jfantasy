@@ -42,6 +42,7 @@ public class CommentController {
     }
 
     @RequestMapping(method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
     public ResultResourceSupport save(HttpServletRequest request, @Validated(RESTful.POST.class) @RequestBody Comment comment) {
         comment.setIp(WebUtil.getRealIpAddress(request));
