@@ -6,18 +6,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.engine.spi.SessionFactoryImplementor;
 import org.hibernate.event.service.spi.EventListenerRegistry;
 import org.hibernate.event.spi.EventType;
-import org.hibernate.event.spi.PostDeleteEventListener;
-import org.hibernate.event.spi.PostInsertEventListener;
-import org.hibernate.event.spi.PostUpdateEventListener;
 import org.hibernate.id.factory.spi.MutableIdentifierGeneratorFactory;
+import org.jfantasy.framework.dao.annotations.EventListener;
 import org.jfantasy.framework.dao.hibernate.event.PropertyGeneratorPersistEventListener;
 import org.jfantasy.framework.dao.hibernate.event.PropertyGeneratorSaveOrUpdatEventListener;
 import org.jfantasy.framework.dao.hibernate.generator.SequenceGenerator;
 import org.jfantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
 import org.jfantasy.framework.lucene.dao.hibernate.EntityChangedEventListener;
 import org.jfantasy.framework.util.common.ClassUtil;
-import org.jfantasy.framework.util.common.PropertiesHelper;
-import org.jfantasy.framework.util.common.StringUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
@@ -32,6 +28,7 @@ import org.springframework.transaction.annotation.TransactionManagementConfigure
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
+import java.util.Map;
 
 /**
  * Description: <数据源相关bean的注册>. <br>
@@ -60,10 +57,7 @@ public class DaoConfig implements TransactionManagementConfigurer {
 
     @Bean(name = "sessionFactory")
     public SessionFactory sessionFactory() {
-        PropertiesHelper helper = PropertiesHelper.load("application.properties");
-
         SessionFactoryImplementor sessionFactory = entityManagerFactory.unwrap(SessionFactoryImplementor.class);
-
         EventListenerRegistry registry = sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
 
         MutableIdentifierGeneratorFactory identifierGeneratorFactory = sessionFactory.getServiceRegistry().getService(MutableIdentifierGeneratorFactory.class);
@@ -75,30 +69,13 @@ public class DaoConfig implements TransactionManagementConfigurer {
 
         registry.appendListeners(EventType.POST_INSERT, createListenerInstance(EntityChangedEventListener.class));
 
-        for (String listeners : helper.getMergeProperty("spring.jpa.properties.hibernate.event.post-insert")) {
-            for (String listener : StringUtil.tokenizeToStringArray(listeners)) {
-                Class<PostInsertEventListener> clazz = ClassUtil.forName(listener);
-                registry.appendListeners(EventType.POST_INSERT, createListenerInstance(clazz));
+        //通过注解添加监听
+        for (Map.Entry<String, Object> entry : this.applicationContext.getBeansWithAnnotation(EventListener.class).entrySet()) {
+            for(String eventType : ClassUtil.getAnnotation(ClassUtil.getRealClass(entry.getValue()),EventListener.class).type()){
+                registry.appendListeners(EventType.resolveEventTypeByName(eventType),entry.getValue());
             }
         }
-
-        for (String listeners : helper.getMergeProperty("spring.jpa.properties.hibernate.event.post-update")) {
-            for (String listener : StringUtil.tokenizeToStringArray(listeners)) {
-                Class<PostUpdateEventListener> clazz = ClassUtil.forName(listener);
-                registry.appendListeners(EventType.POST_UPDATE, createListenerInstance(clazz));
-            }
-        }
-
-        String[] postDeleteListeners = helper.getMergeProperty("spring.jpa.properties.hibernate.event.post-delete");
-        for (String listeners : postDeleteListeners) {
-            for (String listener : StringUtil.tokenizeToStringArray(listeners)) {
-                Class<PostDeleteEventListener> clazz = ClassUtil.forName(listener);
-                registry.appendListeners(EventType.POST_DELETE, createListenerInstance(clazz));
-            }
-        }
-
         LOG.debug(" SessionFactory 加载成功! ");
-
         return sessionFactory;
     }
 

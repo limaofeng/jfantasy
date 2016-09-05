@@ -2,11 +2,14 @@ package org.jfantasy.pay.dao.listener;
 
 import org.hibernate.event.spi.PostInsertEvent;
 import org.hibernate.event.spi.PostUpdateEvent;
+import org.jfantasy.framework.dao.annotations.EventListener;
 import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.jfantasy.pay.bean.Account;
 import org.jfantasy.pay.event.AccountChangedEvent;
+import org.springframework.stereotype.Component;
 
-
+@Component
+@EventListener
 public class AccountChangedListener extends AbstractChangedListener<Account> {
 
     @Override

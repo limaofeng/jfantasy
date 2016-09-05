@@ -33,6 +33,7 @@ public class RefundController {
 
     private final RefundService refundService;
     private final PayService payService;
+
     @Autowired
     private OrderController orderController;
     @Autowired
@@ -46,7 +47,11 @@ public class RefundController {
         this.refundService = refundService;
     }
 
-    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "pay_config", "payment"}))
+    @JsonResultFilter(allow = {
+            @AllowProperty(pojo = Order.class, name = {"key", "status", "type", "sn"}),
+            @AllowProperty(pojo = Payment.class, name = {"sn", "total_amount", "status"}),
+            @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name"})
+    })
     @ApiOperation("查询退款记录")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -54,7 +59,11 @@ public class RefundController {
         return assembler.toResources(refundService.findPager(pager, filters));
     }
 
-    @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "pay_config", "payment"}))
+    @JsonResultFilter(allow = {
+            @AllowProperty(pojo = Order.class, name = {"key", "status", "type", "sn"}),
+            @AllowProperty(pojo = Payment.class, name = {"sn", "total_amount", "status"}),
+            @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name"})
+    })
     @ApiOperation(value = "更新退款记录", notes = "该方法只能修改 退款状态 ")
     @RequestMapping(value = "/{sn}/status", method = RequestMethod.PUT)
     @ResponseBody

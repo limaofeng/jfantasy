@@ -16,6 +16,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.jfantasy.framework.util.common.ObjectUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URLEncoder;
@@ -183,9 +184,9 @@ public class HttpClientUtil {
         private CloseableHttpResponse response;
         private InputStream inputStream;
 
-        public ResponseInputStream(CloseableHttpResponse response) throws IOException {
+        ResponseInputStream(CloseableHttpResponse response) throws IOException {
             this.response = response;
-            this.inputStream = response.getEntity().getContent();
+            this.inputStream = response.getEntity() == null ? new ByteArrayInputStream(new byte[0]) : response.getEntity().getContent();
         }
 
         public int read() throws IOException {

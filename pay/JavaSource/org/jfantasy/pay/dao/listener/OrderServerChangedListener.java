@@ -2,11 +2,15 @@ package org.jfantasy.pay.dao.listener;
 
 import org.hibernate.event.spi.PostInsertEvent;
 import org.hibernate.event.spi.PostUpdateEvent;
+import org.jfantasy.framework.dao.annotations.EventListener;
 import org.jfantasy.framework.dao.hibernate.listener.AbstractChangedListener;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.jfantasy.pay.bean.OrderServer;
 import org.jfantasy.pay.order.OrderServiceFactory;
+import org.springframework.stereotype.Component;
 
+@Component
+@EventListener
 public class OrderServerChangedListener extends AbstractChangedListener<OrderServer> {
 
     private OrderServiceFactory orderServiceFactory;
