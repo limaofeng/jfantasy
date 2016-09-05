@@ -1,4 +1,4 @@
-image: limaofeng/alpine-gradle
+image: limaofeng/gradle-alpine
 
 before_script:
   - export LANG="zh_CN.UTF-8"

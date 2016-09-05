@@ -3,7 +3,6 @@ package org.jfantasy.pay.rest.models;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
 
 @ApiModel("退款表单")
@@ -28,13 +27,6 @@ public class RefundForm01 {
 
     public void setRemark(String remark) {
         this.remark = remark;
-    }
-
-    public Refund toRefund(String sn) {
-        Refund refund = new Refund();
-        refund.setSn(sn);
-        refund.setStatus(status);
-        return refund;
     }
 
 }
