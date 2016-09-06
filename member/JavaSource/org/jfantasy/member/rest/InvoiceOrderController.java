@@ -12,9 +12,7 @@ import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.rest.models.assembler.InvoiceOrderResourceAssembler;
 import org.jfantasy.member.service.InvoiceOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -41,6 +39,15 @@ public class InvoiceOrderController {
     @RequestMapping(method = RequestMethod.GET)
     public Pager<ResultResourceSupport> search(Pager<InvoiceOrder> pager, List<PropertyFilter> filters) {
         return assembler.toResources(this.invoiceOrderService.findPager(pager, filters));
+    }
+
+    @JsonResultFilter(
+            allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"})
+    )
+    @ApiOperation(value = "添加发票接口")
+    @RequestMapping(method = RequestMethod.POST)
+    public ResultResourceSupport save(@RequestBody InvoiceOrder order) {
+        return assembler.toResource(this.invoiceOrderService.save(order));
     }
 
 }

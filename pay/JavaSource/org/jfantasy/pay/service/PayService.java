@@ -151,11 +151,7 @@ public class PayService {
                 toRefund.setSource(result);
                 if (refund.getStatus() != RefundStatus.ready) {//不为 ready 时,推送事件
                     PayContext context = new PayContext(refund, refund.getOrder());
-                    try {
-                        this.applicationContext.publishEvent(new PayRefundNotifyEvent(context));
-                    } catch (Exception e) {
-                        LOG.error(e.getMessage(), e);
-                    }
+                    this.applicationContext.publishEvent(new PayRefundNotifyEvent(context));
                 }
                 return toRefund;
             } else if (status == RefundStatus.close) {

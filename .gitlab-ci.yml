@@ -1,4 +1,4 @@
-image: limaofeng/alpine-gradle
+image: limaofeng/gradle-alpine
 
 before_script:
   - export LANG="zh_CN.UTF-8"
@@ -8,7 +8,6 @@ before_script:
 stages:
   - build
   - test
-  - sonar
   - deploy
 
 build:
@@ -17,6 +16,7 @@ build:
     - gradle clean classes -x test
 
 sonar:
+  stage: test
   script:
     - gradle sonar -x test
   only:

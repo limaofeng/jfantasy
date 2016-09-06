@@ -26,10 +26,11 @@ public class InvoiceOrderService {
     }
 
     @Transactional
-    public void save(InvoiceOrder order) {
-        if (this.invoiceOrderDao.findUnique(Restrictions.eq("orderType", order.getOrderType()), Restrictions.eq("orderSn", order.getOrderSn())) != null)
-            return;
-        this.invoiceOrderDao.save(order);
+    public InvoiceOrder save(InvoiceOrder order) {
+        InvoiceOrder invoiceOrder = this.invoiceOrderDao.findUnique(Restrictions.eq("orderType", order.getOrderType()), Restrictions.eq("orderSn", order.getOrderSn()));
+        if (invoiceOrder == null)
+            return this.invoiceOrderDao.save(order);
+        return invoiceOrder;
     }
 
 }
