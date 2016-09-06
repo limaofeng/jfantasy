@@ -3,6 +3,7 @@ package org.jfantasy.member.service;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
+import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.member.bean.Invoice;
 import org.jfantasy.member.bean.InvoiceItem;
 import org.jfantasy.member.bean.InvoiceOrder;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class InvoiceService {
@@ -25,11 +28,12 @@ public class InvoiceService {
     private InvoiceOrderDao invoiceOrderDao;
 
     public Pager<Invoice> findPager(Pager<Invoice> pager, List<PropertyFilter> filters) {
-        return this.invoiceDao.findPager(pager,filters);
+        return this.invoiceDao.findPager(pager, filters);
     }
 
     @Transactional
     public Invoice save(Invoice invoice) {
+        Map<String, Invoice> invoices = new HashMap<>();
         BigDecimal amount = BigDecimal.ZERO;
         for (InvoiceItem item : invoice.getItems()) {
             InvoiceOrder order = invoiceOrderDao.get(item.getOrder().getId());
@@ -39,24 +43,31 @@ public class InvoiceService {
             if (order.getStatus() != InvoiceOrder.InvoiceOrderStatus.NONE) {
                 throw new ValidationException(102.2f, "订单已经申请开票,不能重复申请");
             }
-            item.setInvoice(invoice);
+            //自动拆单逻辑
+            String targetKey = order.getTargetType() + ":" + order.getTargetId();
+            Invoice _invoice = invoices.get(targetKey);
+            if (_invoice == null) {
+                invoices.put(targetKey, _invoice = BeanUtil.copyProperties(new Invoice(), invoice));
+                _invoice.setTargetId(order.getTargetId());
+                _invoice.setTargetType(order.getTargetType());
+                _invoice.setAmount(BigDecimal.ZERO);
+            }
+            //设置发票
+            item.setInvoice(_invoice);
             item.setOrder(order);
-
             //更新订单状态
             order.setStatus(InvoiceOrder.InvoiceOrderStatus.IN_PROGRESS);
             this.invoiceOrderDao.save(order);
-
-            amount = amount.add(order.getInvoiceAmount());
+            //开票金额
+            _invoice.setAmount(_invoice.getAmount().add(order.getInvoiceAmount()));
         }
-        invoice.setAmount(amount.setScale(2, 0));
-        invoice.setStatus(InvoiceStatus.NONE);
-        //TODO 补全信息
-        /*
-        invoice.setTargetId();
-        invoice.setTargetType();
-        invoice.setMember();
-        */
-        return this.invoiceDao.save(invoice);
+        //保存发票
+        for (Map.Entry<String, Invoice> entry : invoices.entrySet()) {
+            invoice.setAmount(invoice.getAmount().setScale(2, 0));
+            invoice.setStatus(InvoiceStatus.NONE);
+            this.invoiceDao.save(invoice);
+        }
+        return invoice;
     }
 
     @Transactional
