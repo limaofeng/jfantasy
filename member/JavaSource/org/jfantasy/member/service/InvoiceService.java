@@ -34,7 +34,6 @@ public class InvoiceService {
     @Transactional
     public Invoice save(Invoice invoice) {
         Map<String, Invoice> invoices = new HashMap<>();
-        BigDecimal amount = BigDecimal.ZERO;
         for (InvoiceItem item : invoice.getItems()) {
             InvoiceOrder order = invoiceOrderDao.get(item.getOrder().getId());
             if (order == null) {
