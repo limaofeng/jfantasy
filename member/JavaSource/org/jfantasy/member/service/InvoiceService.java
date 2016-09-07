@@ -63,9 +63,10 @@ public class InvoiceService {
         }
         //保存发票
         for (Map.Entry<String, Invoice> entry : invoices.entrySet()) {
-            invoice.setAmount(invoice.getAmount().setScale(2, 0));
-            invoice.setStatus(InvoiceStatus.NONE);
-            this.invoiceDao.save(invoice);
+            Invoice _invoice = entry.getValue();
+            _invoice.setAmount(_invoice.getAmount().setScale(2, 0));
+            _invoice.setStatus(InvoiceStatus.NONE);
+            this.invoiceDao.save(invoice = _invoice);
         }
         return invoice;
     }

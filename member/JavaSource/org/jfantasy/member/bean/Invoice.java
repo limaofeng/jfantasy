@@ -2,9 +2,13 @@ package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.jfantasy.common.Area;
+import org.jfantasy.common.converter.AreaConverter;
+import org.jfantasy.common.databind.AreaDeserializer;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.enums.InvoiceStatus;
@@ -88,7 +92,9 @@ public class Invoice extends BaseBusEntity {
     @NotNull(groups = {RESTful.POST.class})
     @ApiModelProperty("收件人地区编码")
     @Column(name = "SHIP_AREA_STORE", nullable = false)
-    private String area;
+    @Convert(converter = AreaConverter.class)
+    @JsonDeserialize(using = AreaDeserializer.class)
+    private Area area;
     @NotNull(groups = {RESTful.POST.class})
     @ApiModelProperty("收件人地址")
     @JsonProperty("ship_address")
@@ -203,11 +209,11 @@ public class Invoice extends BaseBusEntity {
         this.shipTel = shipTel;
     }
 
-    public String getArea() {
+    public Area getArea() {
         return area;
     }
 
-    public void setArea(String area) {
+    public void setArea(Area area) {
         this.area = area;
     }
 

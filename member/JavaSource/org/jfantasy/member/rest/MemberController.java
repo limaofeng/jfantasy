@@ -149,6 +149,7 @@ public class MemberController {
         return this.receiverController.search(filters);
     }
 
+    @JsonResultFilter(allow = @AllowProperty(pojo = Member.class,name = {"id","nick_name"}))
     @ApiOperation("查询会员的开票信息")
     @RequestMapping(value = "/{memid}/invoices", method = RequestMethod.GET)
     @ResponseBody

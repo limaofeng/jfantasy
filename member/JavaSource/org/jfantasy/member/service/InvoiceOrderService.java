@@ -28,8 +28,10 @@ public class InvoiceOrderService {
     @Transactional
     public InvoiceOrder save(InvoiceOrder order) {
         InvoiceOrder invoiceOrder = this.invoiceOrderDao.findUnique(Restrictions.eq("orderType", order.getOrderType()), Restrictions.eq("orderSn", order.getOrderSn()));
-        if (invoiceOrder == null)
+        if (invoiceOrder == null) {
+            order.setStatus(InvoiceOrder.InvoiceOrderStatus.NONE);
             return this.invoiceOrderDao.save(order);
+        }
         return invoiceOrder;
     }
 
