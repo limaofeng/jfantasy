@@ -109,7 +109,7 @@ public class Unionpay extends PayProductSupport {
             data.put("currencyCode", "156");//境内商户固定 156 人民币
 
             //后台通知地址
-            data.put("backUrl", SettingUtil.getServerUrl() + "/pays/" + payment.getSn() + "/notify");
+            data.put("backUrl", paySettings.getUrl() + "/pays/" + payment.getSn() + "/notify");
 
             //添加签名
             data.put("certId", CertUtil.getCertId(keyStore));
@@ -199,7 +199,7 @@ public class Unionpay extends PayProductSupport {
             data.put("currencyCode", "156");                     //交易币种（境内商户一般是156 人民币）
             data.put("txnAmt", refund.getTotalAmount().multiply(BigDecimal.valueOf(100d)).intValue() + "");                          //****退货金额，单位分，不要带小数点。退货金额小于等于原消费金额，当小于的时候可以多次退货至退货累计金额等于原消费金额
             //data.put("reqReserved", "透传信息");                    //请求方保留域，透传字段（可以实现商户自定义参数的追踪）本交易的后台通知,对本交易的交易状态查询交易、对账文件中均会原样返回，商户可以按需上传，长度为1-1024个字节
-            data.put("backUrl", SettingUtil.getServerUrl() + "/pays/" + refund.getSn() + "/notify");               //后台通知地址，后台通知参数详见open.unionpay.com帮助中心 下载  产品接口规范  网关支付产品接口规范 退货交易 商户通知,其他说明同消费交易的后台通知
+            data.put("backUrl", paySettings.getUrl() + "/pays/" + refund.getSn() + "/notify");               //后台通知地址，后台通知参数详见open.unionpay.com帮助中心 下载  产品接口规范  网关支付产品接口规范 退货交易 商户通知,其他说明同消费交易的后台通知
 
             /***要调通交易以下字段必须修改***/
             data.put("origQryId", payment.getTradeNo());      //****原消费交易返回的的queryId，可以从消费交易后台通知接口中或者交易状态查询接口中获取

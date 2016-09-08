@@ -12,6 +12,9 @@ import java.util.Properties;
 
 @ApiModel("支付表单")
 public class PayForm implements Serializable {
+
+    private static final long serialVersionUID = -4051043375059966567L;
+
     @ApiModelProperty(value = "支付配置ID", required = true)
     private Long payconfigId;
     @ApiModelProperty(value = "支付类型", required = true)

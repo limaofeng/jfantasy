@@ -39,7 +39,7 @@ public class Pay99BillSupport extends PayProductSupport {
         String totalAmountString = String.format("%.2f", orderDetails.getPayableFee());
 
         String inputCharset = "1";// 字符集编码（1：UTF-8、2：GBK、3：GB2312）
-        String bgUrl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + payment.getSn();// 回调处理URL
+        String bgUrl = paySettings.getUrl() + RETURN_URL + "?paymentsn=" + payment.getSn();// 回调处理URL
         String version = "v2.0";// 网关版本
         String language = "1";// 显示语言种类（1：中文）
         String signType = "1";// 签名类型（1：MD5）

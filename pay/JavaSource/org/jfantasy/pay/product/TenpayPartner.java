@@ -47,12 +47,12 @@ public class TenpayPartner extends PayProductSupport {
         String mchDesc = "";// 订单描述
         String mchName = paymentSn;// 商品名称
         String mchPrice = totalAmountString;// 总金额（单位：分）
-        String mchReturl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String mchReturl = paySettings.getUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String mchType = "1";// 交易类型（1、实物交易、2、虚拟交易）
         String mchVno = paymentSn;// 交易号
         String needBuyerinfo = "2";// 是否需要填写物流信息（1：需要、2：不需要）
         String seller = paymentConfig.getBargainorId();// 商户号
-        String showUrl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 商品显示URL
+        String showUrl = paySettings.getUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 商品显示URL
         String transportDesc = "";// 物流方式说明
         String transportFee = "0";// 物流费用（单位：分）
         String version = "2";// 版本号

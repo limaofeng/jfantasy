@@ -2,9 +2,11 @@ package org.jfantasy.framework.autoconfigure;
 
 import com.aliyun.openservices.ons.api.bean.ProducerBean;
 import org.jfantasy.aliyun.AliyunSettings;
+import org.jfantasy.pay.product.PaySettings;
 import org.jfantasy.pay.service.PayProductConfiguration;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -15,6 +17,7 @@ import javax.annotation.Resource;
 @ComponentScan("org.jfantasy.pay")
 @Configuration
 @EntityScan("org.jfantasy.pay.bean")
+@EnableConfigurationProperties(PaySettings.class)
 public class PayAutoConfiguration {
 
     public final static String ONS_TAGS_TRANSACTION_KEY = "transaction";

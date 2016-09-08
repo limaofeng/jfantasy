@@ -45,7 +45,7 @@ public class Yeepay extends PayProductSupport {
         String p5Pid = paymentSn + ":商品名称";// 商品名称
         String p6Pcat = "";// 商品种类
         String p7Pdesc = paymentSn + ":商品描述";// 商品描述
-        String p8Url = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String p8Url = paySettings.getUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String p9SAF = "0";// 是否需要填写送货地址（1：是、0：否）
         String paMP = "shop" + "xx";// 商户数据
         String pdFrpId = "";// 支付通道编码

@@ -171,4 +171,10 @@ public abstract class PayProductSupport implements PayProduct {
         this.extPropertys.put(key, extProperty);
     }
 
+    protected PaySettings paySettings;
+
+    public void setPaySettings(PaySettings paySettings) {
+        this.paySettings = paySettings;
+    }
+
 }

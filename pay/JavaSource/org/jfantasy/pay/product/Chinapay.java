@@ -65,7 +65,7 @@ public class Chinapay extends PayProductSupport {
             data.put("TranTime", DateUtil.format(payment.getCreateTime(), "HHmmss"));//商户交易日期
             data.put("OrderAmt", payment.getTotalAmount().multiply(BigDecimal.valueOf(100d)).intValue() + "");//商户交易金额
             data.put("BusiType", "0001");//业务类型
-            data.put("MerBgUrl", SettingUtil.getServerUrl() + "/pays/" + payment.getSn() + "/notify");
+            data.put("MerBgUrl", paySettings.getUrl() + "/pays/" + payment.getSn() + "/notify");
 
             //额外参数
             if (properties != null) {
@@ -236,7 +236,7 @@ public class Chinapay extends PayProductSupport {
 
             data.put("TranType", "0401");//交易类型
             data.put("BusiType", "0001");//业务类型
-            data.put("MerBgUrl", SettingUtil.getServerUrl() + "/pays/" + refund.getSn() + "/notify");
+            data.put("MerBgUrl", paySettings.getUrl() + "/pays/" + refund.getSn() + "/notify");
 
             data.put("Signature", signature(data, keyStore, certPwd));//签名
 

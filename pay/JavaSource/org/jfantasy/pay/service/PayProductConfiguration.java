@@ -5,6 +5,7 @@ import org.jfantasy.pay.bean.ExtProperty;
 import org.jfantasy.pay.bean.enums.PayMethod;
 import org.jfantasy.pay.product.*;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +30,16 @@ public class PayProductConfiguration implements InitializingBean {
         return this.payProducts;
     }
 
+    @Autowired
+    private PaySettings paySettings;
+
     @Override
     public void afterPropertiesSet() {
 
         //支付宝即时交易
         if (!ObjectUtil.exists(this.payProducts, "id", "alipay")) {
             Alipay alipay = new Alipay();
+            alipay.setPaySettings(paySettings);
             alipay.setId("alipay");
             alipay.setName("支付宝");
             alipay.setPayMethod(PayMethod.thirdparty);
@@ -50,6 +55,7 @@ public class PayProductConfiguration implements InitializingBean {
         //银联电子支付
         if (!ObjectUtil.exists(this.payProducts, "id", "chinapay")) {
             Chinapay chinapay = new Chinapay();
+            chinapay.setPaySettings(paySettings);
             chinapay.setId("chinapay");
             chinapay.setName("银联电子支付");
             chinapay.setPayMethod(PayMethod.thirdparty);
@@ -64,6 +70,7 @@ public class PayProductConfiguration implements InitializingBean {
         //银联支付
         if (!ObjectUtil.exists(this.payProducts, "id", "unionpay")) {
             Unionpay unionpay = new Unionpay();
+            unionpay.setPaySettings(paySettings);
             unionpay.setId("unionpay");
             unionpay.setName("银联支付");
             unionpay.setPayMethod(PayMethod.thirdparty);
@@ -78,6 +85,7 @@ public class PayProductConfiguration implements InitializingBean {
         //微信支付
         if (!ObjectUtil.exists(this.payProducts, "id", "weixinpay")) {
             Weixinpay weixinpay = new Weixinpay();
+            weixinpay.setPaySettings(paySettings);
             weixinpay.setId("weixinpay");
             weixinpay.setName("微信支付");
             weixinpay.setPayMethod(PayMethod.thirdparty);
@@ -94,6 +102,7 @@ public class PayProductConfiguration implements InitializingBean {
         //钱包支付
         if (!ObjectUtil.exists(this.payProducts, "id", "weixinpay")) {
             Walletpay walletpay = new Walletpay();
+            walletpay.setPaySettings(paySettings);
             walletpay.setId("walletpay");
             walletpay.setName("钱包支付");
             walletpay.setPayMethod(PayMethod.wallet);

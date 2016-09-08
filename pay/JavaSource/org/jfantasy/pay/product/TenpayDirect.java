@@ -51,7 +51,7 @@ public class TenpayDirect extends PayProductSupport {
         String spBillno = paymentSn;// 支付编号
         String totalFee = totalAmountString;// 总金额（单位：分）
         String feeType = "1";// 支付币种（1：人民币）
-        String returnUrl = SettingUtil.getServerUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
+        String returnUrl = paySettings.getUrl() + RETURN_URL + "?paymentsn=" + paymentSn;// 回调处理URL
         String attach = "s" + "h" + "o" + "p" + "x" + "x";// 商户数据
         String spbillCreateIp = parameters.get("remoteAddr");// 客户IP
         String key = paymentConfig.getBargainorKey();// 密钥

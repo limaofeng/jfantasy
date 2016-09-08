@@ -224,7 +224,7 @@ public class Weixinpay extends PayProductSupport {
             if (StringUtil.isNotBlank(productid)) {
                 data.put("product_id", productid);
             }
-            data.put("notify_url", SettingUtil.getServerUrl() + "/pays/" + payment.getSn() + "/notify");
+            data.put("notify_url", paySettings.getUrl() + "/pays/" + payment.getSn() + "/notify");
             data.put("out_trade_no", payment.getSn());
             String[] serverIps = WebUtil.getServerIps();
             data.put("spbill_create_ip", serverIps.length == 0 ? "127.0.0.1" : serverIps[0]);

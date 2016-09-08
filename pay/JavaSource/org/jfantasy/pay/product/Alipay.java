@@ -105,7 +105,7 @@ public class Alipay extends PayProductSupport {
             data.put("service", "create_direct_pay_by_user");// 接口类型（create_direct_pay_by_user：即时交易）
             data.put("_input_charset", input_charset);//字符编码格式
             data.put("payment_type", "1");// 支付类型（固定值：1）
-            data.put("notify_url", SettingUtil.getServerUrl() + "/pays/" + payment.getSn() + "/notify");// 消息通知URL
+            data.put("notify_url", paySettings.getUrl() + "/pays/" + payment.getSn() + "/notify");// 消息通知URL
 
             //data.put("anti_phishing_key", "");防钓鱼时间戳
             //data.put("exter_invoke_ip", "");客户端的IP地址
@@ -166,7 +166,7 @@ public class Alipay extends PayProductSupport {
         data.put("service", "mobile.securitypay.pay");//接口名称
         data.put("partner", config.getBargainorId());//合作者身份ID
         data.put("_input_charset", input_charset);//参数编码字符集
-        data.put("notify_url", SettingUtil.getServerUrl() + "/pays/" + payment.getSn() + "/notify");//服务器异步通知页面路径
+        data.put("notify_url", paySettings.getUrl() + "/pays/" + payment.getSn() + "/notify");//服务器异步通知页面路径
 
         data.put("out_trade_no", payment.getSn());//商户网站唯一订单号
         data.put("subject", order.getSubject());//商品名称
@@ -261,7 +261,7 @@ public class Alipay extends PayProductSupport {
             data.put("partner", config.getBargainorId());
             data.put("_input_charset", input_charset);
             data.put("sign_type", "MD5");
-            data.put("notify_url", SettingUtil.getServerUrl() + "/pays/" + refund.getSn() + "/notify");
+            data.put("notify_url", paySettings.getUrl() + "/pays/" + refund.getSn() + "/notify");
             data.put("seller_email", config.get(EXT_SELLER_EMAIL, String.class));
             data.put("seller_user_id", config.getBargainorId());
             data.put("refund_date", DateUtil.format(refund.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));

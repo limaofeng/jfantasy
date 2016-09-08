@@ -32,6 +32,7 @@ import java.util.Hashtable;
 public class SpringCacheMessageLogger_$logger extends DelegatingBasicLogger implements Serializable, SpringCacheMessageLogger, CoreMessageLogger, BasicLogger {
 
     private final static long serialVersionUID = 1L;
+
     private final static String FQCN = SpringCacheMessageLogger_$logger.class.getName();
     private final static String jdbcAutoCommitFalseBreaksEjb3Spec = "HHH000144: %s = false breaks the EJB3 specification";
     private final static String illegalPropertyGetterArgument = "HHH000122: IllegalArgumentException in class: %s, getter method of property: %s";
