@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @EventListener
 public class PointChangedListener extends AbstractChangedListener<Point> {
 
+    private static final long serialVersionUID = -6602686718813126066L;
+
     @Override
     public void onPostInsert(Point point,PostInsertEvent event) {
         if (missing(event)) {

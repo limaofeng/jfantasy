@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 @EventListener
 public class OrderServerChangedListener extends AbstractChangedListener<OrderServer> {
 
+    private static final long serialVersionUID = 6697184909285106945L;
     private OrderServiceFactory orderServiceFactory;
 
     private OrderServiceFactory orderServerService() {

@@ -15,6 +15,8 @@ import java.util.Arrays;
 
 public abstract class AbstractChangedListener<T> implements PostCommitUpdateEventListener, PostCommitInsertEventListener {
 
+    private static final long serialVersionUID = -3358937507937580406L;
+
     private Class<T> entityClass;
 
     protected AbstractChangedListener() {

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @EventListener
 public class AccountChangedListener extends AbstractChangedListener<Account> {
 
+    private static final long serialVersionUID = 6923717125278747287L;
+
     @Override
     public void onPostInsert(Account account, PostInsertEvent event) {
         getApplicationContext().publishEvent(new AccountChangedEvent(account));

@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 @EventListener
 public class TransactionChangedListener extends AbstractChangedListener<Transaction> {
 
+    private static final long serialVersionUID = 6486933157808350841L;
+
     @Override
     public void onPostInsert(Transaction transaction, PostInsertEvent event) {
         getApplicationContext().publishEvent(new TransactionChangedEvent(transaction.getStatus(), transaction));
