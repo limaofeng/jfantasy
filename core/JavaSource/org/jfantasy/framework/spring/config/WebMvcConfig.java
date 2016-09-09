@@ -30,6 +30,7 @@ import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
 import org.springframework.boot.context.embedded.FilterRegistrationBean;
+import org.springframework.boot.context.embedded.MultipartConfigFactory;
 import org.springframework.boot.context.embedded.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -49,13 +50,12 @@ import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.support.XmlWebApplicationContext;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.web.multipart.MultipartResolver;
-import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.config.annotation.*;
 import org.springframework.web.servlet.i18n.CookieLocaleResolver;
 import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import javax.servlet.DispatcherType;
+import javax.servlet.MultipartConfigElement;
 import java.nio.charset.Charset;
 import java.util.*;
 
@@ -84,11 +84,9 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     @Override
     public void configureViewResolvers(ViewResolverRegistry registry) {
         MappingJackson2JsonView jackson2JsonView = new MappingJackson2JsonView();
-        jackson2JsonView.setJsonpParameterNames(new HashSet<String>() {
-            {
-                this.add("callback");
-            }
-        });
+        Set<String> parameterNames = new HashSet<>();
+        parameterNames.add("callback");
+        jackson2JsonView.setJsonpParameterNames(parameterNames);
         registry.enableContentNegotiation();
         super.configureViewResolvers(registry);
     }
@@ -99,10 +97,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     }
 
     @Bean
-    public MultipartResolver multipartResolver() {
-        CommonsMultipartResolver multipartResolver = new CommonsMultipartResolver();
-        multipartResolver.setMaxUploadSize(10485760);
-        return multipartResolver;
+    MultipartConfigElement multipartConfigElement() {
+        MultipartConfigFactory factory = new MultipartConfigFactory();
+        factory.setMaxFileSize(10485760);
+        return factory.createMultipartConfig();
     }
 
     private RelaxedPropertyResolver jacksonPropertyResolver;
@@ -242,19 +240,5 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     public ServletRegistrationBean druidServlet() {
         return new ServletRegistrationBean(new StatViewServlet(), "/druid/*");
     }
-
-    /*
-    @Bean
-    public FilterRegistrationBean fileFilterFilterRegistrationBean(@Qualifier("fileFilter") FileFilter fileFilter) {
-        PropertiesHelper propertiesHelper = PropertiesHelper.load("props/application.properties");
-        FilterRegistrationBean filterRegistrationBean = new FilterRegistrationBean();
-        filterRegistrationBean.setFilter(fileFilter);
-        filterRegistrationBean.setEnabled(true);
-        filterRegistrationBean.setOrder(3);
-        filterRegistrationBean.addInitParameter("allowHosts",propertiesHelper.getProperty("file.allowHosts", "static.jfantasy.org"));
-        filterRegistrationBean.setDispatcherTypes(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE);
-        filterRegistrationBean.addUrlPatterns("/*");
-        return filterRegistrationBean;
-    }*/
 
 }
