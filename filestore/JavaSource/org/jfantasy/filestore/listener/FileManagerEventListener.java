@@ -2,14 +2,18 @@ package org.jfantasy.filestore.listener;
 
 import org.jfantasy.filestore.bean.FileManagerConfig;
 import org.jfantasy.filestore.service.FileManagerFactory;
+import org.jfantasy.framework.dao.annotations.EventListener;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.hibernate.event.spi.*;
 import org.hibernate.persister.entity.EntityPersister;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 
+@Component
+@EventListener(type = {"post-insert", "post-update", "post-delete"})
 public class FileManagerEventListener implements PostInsertEventListener, PostUpdateEventListener, PostDeleteEventListener {
 
     private static final long serialVersionUID = 1082020263270806626L;

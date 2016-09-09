@@ -13,11 +13,11 @@ public class StringsConverter implements AttributeConverter<String[], String> {
         if (attribute == null) {
             return null;
         }
-        StringBuilder builder = new StringBuilder();
-        for(String tag : attribute){
-            builder.append(tag).append(";");
+        StringBuilder builder = new StringBuilder("$");
+        for (String tag : attribute) {
+            builder.append(tag).append("$");
         }
-        return builder.toString().replaceAll(";$","");
+        return builder.toString();
     }
 
     @Override
@@ -26,7 +26,10 @@ public class StringsConverter implements AttributeConverter<String[], String> {
             return null;
         }
         List<String> tags = new ArrayList<>();
-        for(String str : StringUtil.tokenizeToStringArray(dbData,";")){
+        for (String str : StringUtil.tokenizeToStringArray(dbData, "$")) {
+            if (StringUtil.isBlank(str)) {
+                continue;
+            }
             tags.add(str);
         }
         return tags.toArray(new String[tags.size()]);
