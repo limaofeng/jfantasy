@@ -69,7 +69,7 @@ public class FileController {
     @RequestMapping(value = "/{mid}:{path}", method = RequestMethod.GET)
     @ResponseBody
     public FileDetail view(@PathVariable("mid") String mid, @PathVariable("path") String path) {
-        return fileService.get(FileDetailKey.newInstance(path, mid));
+        return fileService.get(FileDetailKey.newInstance(path.replaceAll("-", "/"), mid));
     }
 
 }
