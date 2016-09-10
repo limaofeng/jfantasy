@@ -65,5 +65,11 @@ public class FileController {
         return data;
     }
 
+    @ApiOperation("查询文件信息")
+    @RequestMapping(value = "/{mid}:{path}", method = RequestMethod.GET)
+    @ResponseBody
+    public FileDetail view(@PathVariable("mid") String mid, @PathVariable("path") String path) {
+        return fileService.get(FileDetailKey.newInstance(path, mid));
+    }
 
 }

@@ -29,6 +29,8 @@ import java.util.Properties;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "payments", "refunds", "unionId"})
 public class Transaction extends BaseBusEntity {
 
+    private static final long serialVersionUID = 3296031463173407900L;
+
     public final static String STAGE = "stage";
     public final static String STAGE_PAYMENT = "stage_payment";
     public final static String STAGE_REFUND = "stage_refund";

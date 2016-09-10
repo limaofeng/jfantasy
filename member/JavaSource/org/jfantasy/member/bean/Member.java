@@ -39,6 +39,8 @@ public class Member extends BaseBusEntity {
     public static final String MEMBER_TYPE_PERSONAL = "personal";
     public static final String MEMBER_TYPE_TEAM = "team";
 
+    private static final long serialVersionUID = -4479116155241989100L;
+
     @Null(groups = {POST.class})
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)

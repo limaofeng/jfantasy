@@ -60,10 +60,10 @@ public class TransactionController {
 
     @ApiOperation("创建交易")
     @RequestMapping(method = RequestMethod.POST)
-    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms", "default"}))
+    @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms", "default"}))
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
-    public ResultResourceSupport save(Transaction transaction) {
+    public ResultResourceSupport save(@RequestBody Transaction transaction) {
         transaction.setProject(this.projectService.get(transaction.getProject().getKey()));
         return transform(transactionService.save(transaction));
     }
@@ -94,6 +94,10 @@ public class TransactionController {
         ResultResourceSupport resource = assembler.toResource(transaction);
         OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
 
+        if (user == null) {
+            return resource;
+        }
+
         if (transaction.getProject().getType() == ProjectType.order) {
             switch (transaction.get(Transaction.STAGE)) {
                 case Transaction.STAGE_PAYMENT:
@@ -105,12 +109,10 @@ public class TransactionController {
                     List<PayConfig> payconfigs = configService.find();
                     Iterator<PayConfig> iterator = payconfigs.iterator();
 
-                    if (user != null) {
-                        while (iterator.hasNext()) {
-                            PayConfig payConfig = iterator.next();
-                            if (!payConfig.getPlatforms().contains(user.getPlatform())) {
-                                iterator.remove();
-                            }
+                    while (iterator.hasNext()) {
+                        PayConfig payConfig = iterator.next();
+                        if (!payConfig.getPlatforms().contains(user.getPlatform())) {
+                            iterator.remove();
                         }
                     }
 
