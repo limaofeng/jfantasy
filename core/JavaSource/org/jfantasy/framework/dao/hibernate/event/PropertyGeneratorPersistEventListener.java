@@ -12,6 +12,8 @@ import java.util.Map;
 
 public class PropertyGeneratorPersistEventListener extends DefaultPersistEventListener {
 
+    private static final long serialVersionUID = 6221651283085589379L;
+
     private IdentifierGeneratorFactory identifierGeneratorFactory;
 
     public PropertyGeneratorPersistEventListener(IdentifierGeneratorFactory identifierGeneratorFactory){
