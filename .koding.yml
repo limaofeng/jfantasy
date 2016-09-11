@@ -1,0 +1,26 @@
+provider:
+  aws:
+    access_key: '${var.aws_access_key}'
+    secret_key: '${var.aws_secret_key}'
+resource:
+  aws_instance:
+    framework-vm:
+      instance_type: t2.nano
+      user_data: |-
+
+        # Created by GitLab UI for :>
+
+        echo _KD_NOTIFY_@Installing Base packages...@
+
+        apt-get update -y
+        apt-get install git -y
+
+        echo _KD_NOTIFY_@Cloning framework...@
+
+        export KODING_USER=${var.koding_user_username}
+        export REPO_URL=http://git.zbsg.com.cn/${var.koding_queryString_repo}.git
+        export BRANCH=${var.koding_queryString_branch}
+
+        sudo -i -u $KODING_USER git clone $REPO_URL -b $BRANCH
+
+        echo _KD_NOTIFY_@framework cloned.@
