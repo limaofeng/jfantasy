@@ -10,6 +10,11 @@ public class FileDetailKey implements Serializable {
 
     private static final long serialVersionUID = -483649311695334839L;
 
+    public static FileDetailKey newInstance(String key) {
+        String[] ars = key.split(":");
+        return new FileDetailKey(ars[0], ars[1]);
+    }
+
     public static FileDetailKey newInstance(String absolutePath, String fileManagerId) {
         return new FileDetailKey(absolutePath, fileManagerId);
     }

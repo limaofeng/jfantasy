@@ -1,6 +1,9 @@
 package org.jfantasy.filestore.rest;
 
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.jfantasy.filestore.bean.FileDetail;
 import org.jfantasy.filestore.bean.FileDetailKey;
 import org.jfantasy.filestore.bean.FilePart;
@@ -8,10 +11,6 @@ import org.jfantasy.filestore.service.FilePartService;
 import org.jfantasy.filestore.service.FileService;
 import org.jfantasy.filestore.service.FileUploadService;
 import org.jfantasy.framework.util.common.ObjectUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -68,10 +67,10 @@ public class FileController {
     }
 
     @ApiOperation("查询文件信息")
-    @RequestMapping(value = "/{mid}:{path}", method = RequestMethod.GET)
+    @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public FileDetail view(HttpServletRequest request,@PathVariable("mid") String mid, @PathVariable("path") String path) {
-        return fileService.get(FileDetailKey.newInstance(path.replaceAll("-", "/").concat(".").concat(WebUtil.getExtension(request)), mid));
+    public FileDetail view(HttpServletRequest request,@RequestParam("key") String key) {
+        return fileService.get(FileDetailKey.newInstance(key));
     }
 
 }
