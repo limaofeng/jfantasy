@@ -53,7 +53,7 @@ public class TransactionService {
         return transaction;
     }
 
-    public Transaction transaction(){
+    public Transaction transaction() {
         return null;
     }
 
@@ -72,12 +72,12 @@ public class TransactionService {
     }
 
     @Transactional
-    public Transaction inpour(Card card,String to) {
+    public Transaction inpour(Card card, String to) {
         Transaction transaction = new Transaction();
         transaction.setAmount(card.getAmount());
         transaction.setChannel(TxChannel.internal);
         transaction.setTo(to);
-        transaction.set(Transaction.CARD_ID,card.getNo());
+        transaction.set(Transaction.CARD_ID, card.getNo());
         transaction.setProject(projectDao.get(Project.CARD_INPOUR));
         transaction.setUnionId(Transaction.generateUnionid(transaction.getProject().getKey(), card.getNo()));
         transaction.setStatus(TxStatus.success);
@@ -95,6 +95,7 @@ public class TransactionService {
 
     @Transactional
     public Transaction save(Transaction transaction) {
+        Project project = transaction.getProject();
         String key = transaction.get(Transaction.ORDER_KEY);
         String unionid = Transaction.generateUnionid(transaction.getProject().getKey(), key);
         Transaction src = this.transactionDao.findUnique(Restrictions.eq("unionId", unionid));
@@ -102,8 +103,12 @@ public class TransactionService {
             return src;
         }
         transaction.setUnionId(unionid);
-        if (transaction.getProject().getType() == ProjectType.order) {
-            transaction.set("stage", Transaction.STAGE_PAYMENT);
+        switch (project.getType()) {
+            case order:
+                transaction.set("stage", Transaction.STAGE_PAYMENT);
+                break;
+            case transfer:
+                break;
         }
         transaction.setStatus(TxStatus.unprocessed);
         transaction.setStatusText(transaction.getProject().getType() == ProjectType.order ? "等待付款" : "待处理");

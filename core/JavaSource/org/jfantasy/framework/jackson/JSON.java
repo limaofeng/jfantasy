@@ -21,8 +21,8 @@ public class JSON {
     private static final Log LOG = LogFactory.getLog(JSON.class);
 
     public static final String DEFAULT_KEY = "default";
-    public static final String UNICODE_KEY = "unicode";
-    private static final ConcurrentHashMap<String, ObjectMapper> OBJECT_MAPPER_CACHE = new ConcurrentHashMap<String, ObjectMapper>();
+    private static final String UNICODE_KEY = "unicode";
+    private static final ConcurrentHashMap<String, ObjectMapper> OBJECT_MAPPER_CACHE = new ConcurrentHashMap<>();
 
     static {
         //默认

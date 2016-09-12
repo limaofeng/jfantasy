@@ -125,28 +125,18 @@ public class MemberService {
         }
         member.setRoles(roles);
         member.setUserGroups(new ArrayList<UserGroup>());
-        // 保存用户
-        applicationContext.publishEvent(new RegisterEvent(member = this.memberDao.save(member)));
         //初始化用户状态
         member.setEnabled(true);
         member.setAccountNonLocked(true);
         member.setAccountNonExpired(true);
         member.setCredentialsNonExpired(true);
+        // 保存用户
+        applicationContext.publishEvent(new RegisterEvent(member = this.memberDao.save(member)));
         return member;
     }
 
     public List<Member> find(Criterion... criterions) {
         return this.memberDao.find(criterions);
-    }
-
-    /**
-     * 验证邮箱是否已被验证使用
-     *
-     * @param criterions 筛选条件
-     * @return Member
-     */
-    public Member findUnique(Criterion... criterions) {
-        return this.memberDao.findUnique(criterions);
     }
 
     public Member changePassword(Long id, AuthType type, String oldPassword, String newPassword) {

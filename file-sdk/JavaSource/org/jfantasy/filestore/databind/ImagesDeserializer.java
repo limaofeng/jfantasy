@@ -36,7 +36,7 @@ public class ImagesDeserializer extends JsonDeserializer<Image[]> {
     private Image getFile(String key) {
         ApiGatewaySettings apiGatewaySettings = SpringContextUtil.getBeanByType(ApiGatewaySettings.class);
         assert apiGatewaySettings != null;
-        return RESTful.restTemplate.getForObject(apiGatewaySettings.getUrl() + "/files/" + key, Image.class);
+        return RESTful.restTemplate.getForObject(apiGatewaySettings.getUrl() + "/files/" + key.replaceAll("[/]","-"), Image.class);
     }
 
 }

@@ -5,6 +5,8 @@ import org.springframework.context.ApplicationEvent;
 
 public class LoginEvent extends ApplicationEvent {
 
+    private static final long serialVersionUID = 6898330034162058699L;
+
     public LoginEvent(Member member) {
         super(member);
     }

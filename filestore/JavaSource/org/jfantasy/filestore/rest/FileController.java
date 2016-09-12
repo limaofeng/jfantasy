@@ -11,10 +11,12 @@ import org.jfantasy.framework.util.common.ObjectUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.jfantasy.framework.util.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -68,8 +70,8 @@ public class FileController {
     @ApiOperation("查询文件信息")
     @RequestMapping(value = "/{mid}:{path}", method = RequestMethod.GET)
     @ResponseBody
-    public FileDetail view(@PathVariable("mid") String mid, @PathVariable("path") String path) {
-        return fileService.get(FileDetailKey.newInstance(path.replaceAll("-", "/"), mid));
+    public FileDetail view(HttpServletRequest request,@PathVariable("mid") String mid, @PathVariable("path") String path) {
+        return fileService.get(FileDetailKey.newInstance(path.replaceAll("-", "/").concat(".").concat(WebUtil.getExtension(request)), mid));
     }
 
 }

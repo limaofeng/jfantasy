@@ -19,6 +19,8 @@ public class Project extends BaseBusEntity {
     public final static String ORDER_REFUND = "refund";
     public final static String CARD_INPOUR = "card_inpour";
 
+    private static final long serialVersionUID = -2461534613032864306L;
+
     /**
      * 编码
      */

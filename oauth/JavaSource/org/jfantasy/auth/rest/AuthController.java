@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiOperation;
 import org.jfantasy.auth.rest.models.LoginForm;
 import org.jfantasy.auth.rest.models.LogoutForm;
 import org.jfantasy.auth.rest.models.Scope;
+import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
+import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.framework.spring.validation.RESTful;
@@ -34,6 +36,9 @@ public class AuthController {
 
     @ApiOperation(value = "用户登录", notes = "用户登录接口")
     @RequestMapping(value = "/login", method = RequestMethod.POST)
+    @JsonResultFilter(ignore = {
+            @IgnoreProperty(pojo = Member.class, name = {Member.BASE_FIELDS})
+    })
     @ResponseBody
     public ResultResourceSupport login(@Validated(RESTful.POST.class) @RequestBody LoginForm loginForm) {
         if (StringUtil.isBlank(loginForm.getUserType())) {

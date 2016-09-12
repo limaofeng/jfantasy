@@ -26,7 +26,7 @@ public class FileDeserializer extends JsonDeserializer<File> {
     private File getFile(String key) {
         ApiGatewaySettings apiGatewaySettings = SpringContextUtil.getBeanByType(ApiGatewaySettings.class);
         assert apiGatewaySettings != null;
-        return RESTful.restTemplate.getForObject(apiGatewaySettings.getUrl() + "/files/" + key, File.class);
+        return RESTful.restTemplate.getForObject(apiGatewaySettings.getUrl() + "/files/" + key.replaceAll("[/]","-"), File.class);
     }
 
 }

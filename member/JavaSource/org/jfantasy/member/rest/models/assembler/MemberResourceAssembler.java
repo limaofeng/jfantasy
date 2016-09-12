@@ -44,4 +44,5 @@ public class MemberResourceAssembler extends ResourceAssemblerSupport<Member, Re
         _pager.setPageItems(this.toResources(pager.getPageItems()));
         return _pager;
     }
+
 }

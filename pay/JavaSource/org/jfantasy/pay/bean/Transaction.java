@@ -3,19 +3,18 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.*;
+import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.pay.bean.converter.ProjectConverter;
+import org.jfantasy.pay.bean.databind.ProjectDeserializer;
 import org.jfantasy.pay.bean.enums.TxChannel;
 import org.jfantasy.pay.bean.enums.TxStatus;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
-import javax.persistence.Table;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -97,6 +96,7 @@ public class Transaction extends BaseBusEntity {
      */
     @Column(name = "PROJECT", length = 500, updatable = false)
     @Convert(converter = ProjectConverter.class)
+    @JsonDeserialize(using = ProjectDeserializer.class)
     private Project project;
     /**
      * 扩展字段,用于存储不同项目的关联信息
