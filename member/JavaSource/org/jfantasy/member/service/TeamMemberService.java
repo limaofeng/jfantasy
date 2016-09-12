@@ -1,5 +1,6 @@
 package org.jfantasy.member.service;
 
+import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
@@ -72,4 +73,7 @@ public class TeamMemberService {
         return this.teamMemberDao.save(member);
     }
 
+    public List<TeamMember> find(Criterion... criterions) {
+        return this.teamMemberDao.find(criterions);
+    }
 }
