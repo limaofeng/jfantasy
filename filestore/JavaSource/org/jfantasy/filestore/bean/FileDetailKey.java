@@ -12,7 +12,7 @@ public class FileDetailKey implements Serializable {
 
     public static FileDetailKey newInstance(String key) {
         String[] ars = key.split(":");
-        return new FileDetailKey(ars[0], ars[1]);
+        return new FileDetailKey(ars[1], ars[0]);
     }
 
     public static FileDetailKey newInstance(String absolutePath, String fileManagerId) {
