@@ -1,6 +1,11 @@
 package org.jfantasy.filestore;
 
-public class File {
+import java.io.Serializable;
+
+public class File implements Serializable {
+
+    private static final long serialVersionUID = 3358657505888892201L;
+
     private String path;
     private String name;
     private String ext;
