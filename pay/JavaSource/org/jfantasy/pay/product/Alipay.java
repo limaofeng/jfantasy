@@ -430,7 +430,7 @@ public class Alipay extends PayProductSupport {
             }
             if ("1".equals(data.get("success_num"))) {
                 refund.setStatus(RefundStatus.success);
-                refund.setTradeTime(DateUtil.parse(data.get("notify_time"), "yyyy-MM-dd HH:mm:dd"));
+                refund.setTradeTime(DateUtil.parse(data.get("notify_time"), "yyyy-MM-dd HH:mm:ss"));
                 return "success";
             }
         }
