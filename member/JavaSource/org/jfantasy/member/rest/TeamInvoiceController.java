@@ -51,8 +51,8 @@ public class TeamInvoiceController {
         if (team == null) {
             throw new NotFoundException("[teamid = " + teamId + "]不存在");
         }
-        filters.add(new PropertyFilter("EQS_targetType", team.getTargetType()));
-        filters.add(new PropertyFilter("EQS_targetId", team.getTargetId()));
+        filters.add(new PropertyFilter("EQS_targetType", "team"));
+        filters.add(new PropertyFilter("EQS_targetId", teamId));
         return assembler.toResources(this.invoiceService.findPager(pager, filters));
     }
 
