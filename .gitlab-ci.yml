@@ -3,7 +3,7 @@ image: limaofeng/gradle-alpine
 before_script:
   - export LANG="zh_CN.UTF-8"
   - cp -rf .gradle ~/.gradle
-#  - echo 10.45.21.126 maven.zbsg.com.cn >> /etc/hosts
+  - echo 10.45.21.126 maven.zbsg.com.cn >> /etc/hosts
 
 stages:
   - build
