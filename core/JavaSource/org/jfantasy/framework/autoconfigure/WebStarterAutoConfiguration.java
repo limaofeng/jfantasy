@@ -8,6 +8,6 @@ import org.springframework.context.annotation.Import;
 @Configuration
 @ComponentScan("org.jfantasy.framework.spring.mvc")
 @Import(WebMvcConfig.class)
-public class TomcatAutoConfiguration {
+public class WebStarterAutoConfiguration {
 
 }

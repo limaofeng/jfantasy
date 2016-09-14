@@ -141,7 +141,7 @@ public class PayConfigConfiguration implements CommandLineRunner {
             StreamUtil.copyThenClose(new FileInputStream(encryptCert), output);
 
             payConfig.set("appid", "wx4f4c272139cbad14");//使用该字段存储appid
-            payConfig.set("encryptCert", encryptCert);//双向认证时需要用到的证书
+            payConfig.set("encryptCert", output.toByteArray());//双向认证时需要用到的证书
             payConfigService.save(payConfig);
         } catch (IOException e) {
             System.err.println(e.getMessage());
@@ -168,7 +168,7 @@ public class PayConfigConfiguration implements CommandLineRunner {
             StreamUtil.copyThenClose(new FileInputStream(encryptCert), output);
 
             payConfig.set("appid", "wx958ba7d1684203b3");//appid
-            payConfig.set("encryptCert", encryptCert);//双向认证时需要用到的证书
+            payConfig.set("encryptCert", output.toByteArray());//双向认证时需要用到的证书
 
             payConfigService.save(payConfig);
         } catch (IOException e) {
