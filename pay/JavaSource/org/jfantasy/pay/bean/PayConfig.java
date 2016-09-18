@@ -140,6 +140,8 @@ public class PayConfig extends BaseBusEntity {
     @Transient
     @JsonProperty("default")
     private Boolean isDefault;
+    @Transient
+    private Boolean disabled;
 
     public PayConfig() {
     }
@@ -320,5 +322,13 @@ public class PayConfig extends BaseBusEntity {
 
     public void setPlatforms(String platforms) {
         this.platforms = platforms;
+    }
+
+    public Boolean getDisabled() {
+        return disabled;
+    }
+
+    public void setDisabled(Boolean disabled) {
+        this.disabled = disabled;
     }
 }

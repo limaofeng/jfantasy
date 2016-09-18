@@ -19,10 +19,7 @@ import org.jfantasy.pay.bean.enums.ProjectType;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.rest.models.PayForm;
 import org.jfantasy.pay.rest.models.assembler.TransactionResourceAssembler;
-import org.jfantasy.pay.service.PayConfigService;
-import org.jfantasy.pay.service.PayService;
-import org.jfantasy.pay.service.ProjectService;
-import org.jfantasy.pay.service.TransactionService;
+import org.jfantasy.pay.service.*;
 import org.jfantasy.pay.service.vo.ToPayment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,13 +39,15 @@ public class TransactionController {
     private final PayService payService;
     private final ProjectService projectService;
     private final PayConfigService configService;
+    private final AccountService accountService;
 
     @Autowired
-    public TransactionController(PayConfigService configService, PayService payService, ProjectService projectService, TransactionService transactionService) {
+    public TransactionController(PayConfigService configService, PayService payService, ProjectService projectService, TransactionService transactionService,AccountService accountService) {
         this.configService = configService;
         this.payService = payService;
         this.projectService = projectService;
         this.transactionService = transactionService;
+        this.accountService = accountService;
     }
 
     @ApiOperation("查询交易记录")
@@ -109,13 +108,21 @@ public class TransactionController {
                     List<PayConfig> payconfigs = configService.find();
                     Iterator<PayConfig> iterator = payconfigs.iterator();
 
+                    // 按平台过滤掉不能使用的支付方式
                     while (iterator.hasNext()) {
                         PayConfig payConfig = iterator.next();
                         if (!payConfig.getPlatforms().contains(user.getPlatform())) {
                             iterator.remove();
                         }
                     }
-
+                    // 判断余额支付，金额是否可以支付
+                    PayConfig payConfig = ObjectUtil.find(payconfigs,"payProductId","walletpay");
+                    if (payConfig != null && accountService.get(transaction.getFrom()).getAmount().compareTo(transaction.getAmount()) < 0) {
+                        payconfigs.remove(payConfig);
+                        payConfig.setDisabled(true);
+                        payconfigs.add(payConfig);
+                    }
+                    // 设置默认支付方式
                     String payment_sn = transaction.get("payment_sn");
                     if (StringUtil.isNotBlank(payment_sn)) {
                         Payment payment = ObjectUtil.find(transaction.getPayments(), "sn", payment_sn);
