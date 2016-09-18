@@ -39,7 +39,7 @@ public class FileUploadService {
         return !(StringUtil.isBlank(entireFileHash) || StringUtil.isBlank(partFileHash)) && !(StringUtil.isBlank(entireFileName) || StringUtil.isBlank(entireFileDir)) && !(ObjectUtil.isNull(total) || StringUtil.isNull(index));
     }
 
-    private FileDetail uploadPart(FilePart part,FilePart filePart,List<FilePart> fileParts,String contentType, String entireFileName, String entireFileDir, String entireFileHash,Integer total,FileManager fileManager) throws IOException {
+    private FileDetail uploadPart(FilePart part, FilePart filePart, List<FilePart> fileParts, String contentType, String entireFileName, String entireFileDir, String entireFileHash, Integer total, FileManager fileManager) throws IOException {
         FileDetail fileDetail = null;
         try {
             if (part == null) {
@@ -118,7 +118,7 @@ public class FileUploadService {
                 //查询上传的片段
                 List<FilePart> fileParts = filePartService.find(entireFileHash);
                 FilePart part = ObjectUtil.remove(fileParts, "index", 0);
-                FileDetail entireFileDetail = this.uploadPart(part,filePart,fileParts,contentType,entireFileName,entireFileDir,entireFileHash,total,fileManager);
+                FileDetail entireFileDetail = this.uploadPart(part, filePart, fileParts, contentType, entireFileName, entireFileDir, entireFileHash, total, fileManager);
                 if (entireFileDetail != null) {
                     fileDetail = entireFileDetail;
                 }
@@ -178,7 +178,7 @@ public class FileUploadService {
                 //查询上传的片段
                 List<FilePart> fileParts = filePartService.find(entireFileHash);
                 FilePart part = ObjectUtil.remove(fileParts, "index", 0);
-                FileDetail entireFileDetail = this.uploadPart(part,filePart,fileParts,contentType,entireFileName,entireFileDir,entireFileHash,total,fileManager);
+                FileDetail entireFileDetail = this.uploadPart(part, filePart, fileParts, contentType, entireFileName, entireFileDir, entireFileHash, total, fileManager);
                 if (entireFileDetail != null) {
                     fileDetail = entireFileDetail;
                 }
@@ -213,7 +213,7 @@ public class FileUploadService {
         }
     }
 
-    private Map<String, String> extensions(){
+    private Map<String, String> extensions() {
         return new HashMap<String, String>() {
             {
                 this.put("image/jpeg", "jpg");
@@ -226,13 +226,15 @@ public class FileUploadService {
 
     private FileDetail upload(InputStream input, String contentType, String fileName, long size, String dir) throws IOException {
         Directory directory = this.fileService.getDirectory(dir);
-        //获取文件Md5码
+        // 设置 mask
+        input.mark((int) size + 1);
+        // 获取文件Md5码
         String md5 = DigestUtils.md5DigestAsHex(input);// 获取文件MD5
 
         input.reset();
         String mimeType = FileUtil.getMimeType(input);
 
-        //通过 mimeType 纠正后缀名
+        // 通过 mimeType 纠正后缀名
         Map<String, String> extensions = extensions();
 
         // 获取虚拟目录
