@@ -229,14 +229,12 @@ public class FileUploadService {
         // 设置 mask
         input.mark((int) size + 1);
         // 获取文件Md5码
-        String md5 = DigestUtils.md5DigestAsHex(input);// 获取文件MD5
-
+        String md5 = DigestUtils.md5DigestAsHex(input);
+        // 获取MimeType
         input.reset();
         String mimeType = FileUtil.getMimeType(input);
-
         // 通过 mimeType 纠正后缀名
         Map<String, String> extensions = extensions();
-
         // 获取虚拟目录
         String absolutePath = directory.getDirPath() + separator + DateUtil.format("yyyyMMdd") + separator + StringUtil.hexTo64("0" + UUID.randomUUID().toString().replaceAll("-", "")) + "." + StringUtil.defaultValue(extensions.get(mimeType), WebUtil.getExtension(fileName));
         // 文件类型
