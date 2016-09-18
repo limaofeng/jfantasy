@@ -42,7 +42,7 @@ public class TransactionController {
     private final AccountService accountService;
 
     @Autowired
-    public TransactionController(PayConfigService configService, PayService payService, ProjectService projectService, TransactionService transactionService,AccountService accountService) {
+    public TransactionController(PayConfigService configService, PayService payService, ProjectService projectService, TransactionService transactionService, AccountService accountService) {
         this.configService = configService;
         this.payService = payService;
         this.projectService = projectService;
@@ -116,7 +116,7 @@ public class TransactionController {
                         }
                     }
                     // 判断余额支付，金额是否可以支付
-                    PayConfig payConfig = ObjectUtil.find(payconfigs,"payProductId","walletpay");
+                    PayConfig payConfig = ObjectUtil.find(payconfigs, "payProductId", "walletpay");
                     if (payConfig != null && accountService.get(transaction.getFrom()).getAmount().compareTo(transaction.getAmount()) < 0) {
                         payconfigs.remove(payConfig);
                         payConfig.setDisabled(true);
@@ -127,7 +127,10 @@ public class TransactionController {
                     if (StringUtil.isNotBlank(payment_sn)) {
                         Payment payment = ObjectUtil.find(transaction.getPayments(), "sn", payment_sn);
                         if (payment.getStatus() == PaymentStatus.ready) { // 加载支付方式
-                            ObjectUtil.find(payconfigs, "payProductId", payment.getPayConfig().getPayProductId()).setDefault(true);
+                            payConfig = ObjectUtil.find(payconfigs, "payProductId", payment.getPayConfig().getPayProductId());
+                            if (payConfig.getDisabled() != Boolean.TRUE) {
+                                payConfig.setDefault(true);
+                            }
                         }
                     } else if (!payconfigs.isEmpty()) {
                         payconfigs.get(0).setDefault(true);
