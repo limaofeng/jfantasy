@@ -92,7 +92,8 @@ public class AccountService {
         OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
         assert user != null;
         String key = user.getKey();
-        return this.accountDao.findUnique(Restrictions.eq("owner",key));
+        Account account = this.accountDao.findUnique(Restrictions.eq("owner", key));
+        return account == null ? save(AccountType.personal, key, "") : account;
     }
 
     @Transactional
