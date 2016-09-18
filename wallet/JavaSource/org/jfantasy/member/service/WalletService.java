@@ -16,6 +16,7 @@ import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.DateUtil;
+import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.member.bean.Card;
 import org.jfantasy.member.bean.Member;
 import org.jfantasy.member.bean.Wallet;
@@ -186,8 +187,8 @@ public class WalletService {
     @Transactional
     public void saveOrUpdateBill(JsonNode transaction) {
         //获取并初始化账户
-        Wallet from = this.getWallet(transaction.get("from").asText());
-        Wallet to = this.getWallet(transaction.get("to").asText());
+        Wallet from = StringUtil.isNotBlank(transaction.get("from")) ? this.getWallet(transaction.get("from").asText()) : null;
+        Wallet to = StringUtil.isNotBlank(transaction.get("to")) ? this.getWallet(transaction.get("to").asText()) : null;
 
         // 交易数据
         String tradeSn = transaction.get("sn").asText();
@@ -197,33 +198,37 @@ public class WalletService {
         Date tradeTime = DateUtil.parse(transaction.get("create_time").asText());
         String project = transaction.get("project").get("key").asText();
 
-        WalletBill bill = this.walletBillDao.findUnique(Restrictions.eq("wallet.id", from.getId()), Restrictions.eq("tradeNo", tradeSn));
-        if (bill == null) {//添加转出交易
-            bill = new WalletBill();
-            bill.setTradeNo(tradeSn);
-            bill.setType(BillType.out);
-            bill.setAmount(tradeAmount);
-            bill.setSummary(tradeNotes);
-            bill.setProject(project);
-            bill.setWallet(from);
+        if (from != null) {//添加转出交易
+            WalletBill bill = this.walletBillDao.findUnique(Restrictions.eq("wallet.id", from.getId()), Restrictions.eq("tradeNo", tradeSn));
+            if (bill == null) {
+                bill = new WalletBill();
+                bill.setTradeNo(tradeSn);
+                bill.setType(BillType.out);
+                bill.setAmount(tradeAmount);
+                bill.setSummary(tradeNotes);
+                bill.setProject(project);
+                bill.setWallet(from);
+            }
+            bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
+            bill.setTradeTime(tradeTime);
+            this.walletBillDao.save(bill);
         }
-        bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
-        bill.setTradeTime(tradeTime);
-        this.walletBillDao.save(bill);
 
-        bill = this.walletBillDao.findUnique(Restrictions.eq("wallet.id", to.getId()), Restrictions.eq("tradeNo", tradeSn));
-        if (bill == null) {//添加转入交易
-            bill = new WalletBill();
-            bill.setTradeNo(tradeSn);
-            bill.setType(BillType.in);
-            bill.setAmount(tradeAmount);
-            bill.setSummary(tradeNotes);
-            bill.setProject(project);
-            bill.setWallet(to);
+        if (to != null) {//添加转入交易
+            WalletBill bill = this.walletBillDao.findUnique(Restrictions.eq("wallet.id", to.getId()), Restrictions.eq("tradeNo", tradeSn));
+            if (bill == null) {
+                bill = new WalletBill();
+                bill.setTradeNo(tradeSn);
+                bill.setType(BillType.in);
+                bill.setAmount(tradeAmount);
+                bill.setSummary(tradeNotes);
+                bill.setProject(project);
+                bill.setWallet(to);
+            }
+            bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
+            bill.setTradeTime(tradeTime);
+            this.walletBillDao.save(bill);
         }
-        bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
-        bill.setTradeTime(tradeTime);
-        this.walletBillDao.save(bill);
     }
 
     public WalletBill getBill(Long id) {

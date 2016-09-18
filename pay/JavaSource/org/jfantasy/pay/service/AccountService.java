@@ -167,6 +167,7 @@ public class AccountService {
         transaction.setUnionId(Transaction.generateUnionid(transaction.getProject().getKey(), card.getNo()));
         transaction.setStatus(TxStatus.success);
         transaction.setStatusText(TxStatus.success.name());
+        transaction.setNotes("会员卡充值");
         this.transactionDao.save(transaction);
         //修改金额
         to.setAmount(to.getAmount().add(card.getAmount()));
