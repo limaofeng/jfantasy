@@ -23,8 +23,10 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class CardDesign extends BaseBusEntity {
 
+    private static final long serialVersionUID = -5567488365478801712L;
+
     @Id
-    @Column(name = "CODE", nullable = false , updatable = false)
+    @Column(name = "CODE", nullable = false, updatable = false)
     @Use(vali = CardDesignKeyCannotRepeatValidator.class, groups = {RESTful.POST.class})
     private String key;
     /**
@@ -37,7 +39,7 @@ public class CardDesign extends BaseBusEntity {
      * 会员卡使用方式
      */
     @Enumerated(EnumType.STRING)
-    @Column(name = "_USAGE", length = 20, updatable = false)
+    @Column(name = "_USAGE", length = 20, nullable = false, updatable = false)
     private Usage usage;
     /**
      * 会员卡类型
