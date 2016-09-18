@@ -69,6 +69,9 @@ public class WalletService {
         wallet.setAccount(account);
         wallet.setAmount(amount);
         wallet.setIncome(BigDecimal.ZERO);
+        //初始化积分与成长值
+        wallet.setGrowth(0L);
+        wallet.setPoints(0L);
         //初始化账单 并 计算收益
         return walletDao.insert(wallet);
     }
@@ -191,7 +194,7 @@ public class WalletService {
         BigDecimal tradeAmount = transaction.get("amount").decimalValue();
         String tradeNotes = transaction.get("notes").asText();
         String tradeStatus = transaction.get("status").asText();
-        Date tradeTime = DateUtil.parse(transaction.get("createTime").asText());
+        Date tradeTime = DateUtil.parse(transaction.get("create_time").asText());
         String project = transaction.get("project").get("key").asText();
 
         WalletBill bill = this.walletBillDao.findUnique(Restrictions.eq("wallet.id", from.getId()), Restrictions.eq("tradeNo", tradeSn));
@@ -201,11 +204,12 @@ public class WalletService {
             bill.setType(BillType.out);
             bill.setAmount(tradeAmount);
             bill.setSummary(tradeNotes);
-            bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
-            bill.setTradeTime(tradeTime);
             bill.setProject(project);
-            this.walletBillDao.save(bill);
+            bill.setWallet(from);
         }
+        bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
+        bill.setTradeTime(tradeTime);
+        this.walletBillDao.save(bill);
 
         bill = this.walletBillDao.findUnique(Restrictions.eq("wallet.id", to.getId()), Restrictions.eq("tradeNo", tradeSn));
         if (bill == null) {//添加转入交易
@@ -214,12 +218,12 @@ public class WalletService {
             bill.setType(BillType.in);
             bill.setAmount(tradeAmount);
             bill.setSummary(tradeNotes);
-            bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
-            bill.setTradeTime(tradeTime);
             bill.setProject(project);
-            this.walletBillDao.save(bill);
+            bill.setWallet(to);
         }
-
+        bill.setStatus(BillStatus.getStatusByTradeStatus(tradeStatus));
+        bill.setTradeTime(tradeTime);
+        this.walletBillDao.save(bill);
     }
 
     public WalletBill getBill(Long id) {

@@ -36,6 +36,7 @@ public class SwaggerAutoConfiguration implements EnvironmentAware {
     private final Logger LOG = LoggerFactory.getLogger(SwaggerAutoConfiguration.class);
     private static final String DEFAULT_INCLUDE_PATTERN = "/.*";
     private static Set<Class<?>> excludes = new HashSet<Class<?>>() {
+        private static final long serialVersionUID = -25359758379153662L;
         {
             this.add(BasicErrorController.class);
             this.add(HalJsonMvcEndpoint.class);
@@ -58,7 +59,7 @@ public class SwaggerAutoConfiguration implements EnvironmentAware {
 
     @Override
     public void setEnvironment(Environment environment) {
-        this.propertyResolver = new RelaxedPropertyResolver(environment, "spring.swagger.");
+        this.propertyResolver = new RelaxedPropertyResolver(environment, "springfox.documentation.swagger.");
     }
 
     @Bean

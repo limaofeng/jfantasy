@@ -21,6 +21,7 @@ import java.util.Properties;
 @JsonIgnoreProperties
 public abstract class PayProductSupport implements PayProduct {
 
+    public static String PROPERTY_TRANSACTION = "transaction";
     static final String PROPERTIES_BACKURL = "back_url";
     static final String PROPERTIES_SHOWURL = "show_url";
 

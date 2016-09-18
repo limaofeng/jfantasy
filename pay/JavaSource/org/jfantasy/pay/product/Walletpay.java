@@ -1,10 +1,11 @@
 package org.jfantasy.pay.product;
 
-import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.spring.SpringContextUtil;
+import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.pay.bean.Order;
 import org.jfantasy.pay.bean.Payment;
 import org.jfantasy.pay.bean.Refund;
+import org.jfantasy.pay.bean.Transaction;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.service.AccountService;
@@ -16,10 +17,6 @@ import java.util.Properties;
  * 钱包支付
  */
 public class Walletpay extends PayProductSupport {
-
-    private static String PROPERTY_ACCOUNT = "account";
-    private static String PROPERTY_PASSWORD = "password";
-    private static String PROPERTY_TRANSACTION = "transaction";
 
     private AccountService accountService;
 
@@ -41,17 +38,18 @@ public class Walletpay extends PayProductSupport {
 
     @Override
     public Object web(Payment payment, Order order, Properties properties) throws PayException {
-        return this.transaction(payment,order,properties);
+        return this.transaction(payment, order, properties);
     }
 
     public Object transaction(Payment payment, Order order, Properties properties) {
         //获取支付账户 与 支付密码
+        String PROPERTY_PASSWORD = "password";
         String password = properties.getProperty(PROPERTY_PASSWORD);
-        String trx_no = properties.getProperty(PROPERTY_TRANSACTION);
+        Transaction transaction = (Transaction) properties.get(PROPERTY_TRANSACTION);
         //进行划账操作
-        this.accountService().remit(trx_no, password);
+        this.accountService().remit(transaction.getSn(), password);
         //触发通知
-        return this.payService().paymentNotify(payment.getSn(), JSON.serialize(properties));
+        return this.payService().paymentNotify(payment.getSn(), "");
     }
 
     @Override
@@ -61,6 +59,9 @@ public class Walletpay extends PayProductSupport {
 
     @Override
     public Object payNotify(Payment payment, String result) throws PayException {
+        payment.setTradeNo(payment.getTransaction().getSn());
+        payment.setTradeTime(DateUtil.now());
+        payment.setStatus(PaymentStatus.success);
         return "success";
     }
 

@@ -246,7 +246,7 @@ public class PayConfig extends BaseBusEntity {
 
     @JsonAnyGetter
     public Properties getProperties() {
-        if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(PayConfig.class, "properties")) {
+        if (properties == null || ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(PayConfig.class, "properties")) {
             return null;
         }
         if (ThreadJacksonMixInHolder.isContainsMixIn()) {

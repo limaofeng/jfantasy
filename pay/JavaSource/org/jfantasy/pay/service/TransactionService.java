@@ -3,7 +3,6 @@ package org.jfantasy.pay.service;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
-import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.Project;
 import org.jfantasy.pay.bean.Transaction;
 import org.jfantasy.pay.bean.enums.ProjectType;
@@ -57,20 +56,6 @@ public class TransactionService {
         return null;
     }
 
-    @Transactional
-    Transaction inpour(Card card, String to) {
-        Transaction transaction = new Transaction();
-        transaction.setAmount(card.getAmount());
-        transaction.setChannel(TxChannel.internal);
-        transaction.setTo(to);
-        transaction.set(Transaction.CARD_ID, card.getNo());
-        transaction.setProject(projectDao.get(Project.CARD_INPOUR));
-        transaction.setUnionId(Transaction.generateUnionid(transaction.getProject().getKey(), card.getNo()));
-        transaction.setStatus(TxStatus.success);
-        transaction.setStatusText(TxStatus.success.name());
-        return this.transactionDao.save(transaction);
-    }
-
     public Transaction get(String sn) {
         return transactionDao.get(sn);
     }
@@ -88,6 +73,7 @@ public class TransactionService {
         if (src != null) {
             return src;
         }
+        // 设置额外参数
         transaction.setUnionId(unionid);
         switch (project.getType()) {
             case order:
@@ -101,4 +87,8 @@ public class TransactionService {
         return this.transactionDao.save(transaction);
     }
 
+    @Transactional
+    public void update(Transaction transaction) {
+        this.transactionDao.update(transaction);
+    }
 }

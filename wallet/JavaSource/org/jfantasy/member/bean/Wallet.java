@@ -45,7 +45,7 @@ public class Wallet extends BaseBusEntity {
     /**
      * 资金账户
      */
-    @Column(name = "ACCOUNT", nullable = false, updatable = false)
+    @Column(name = "ACCOUNT", nullable = false, updatable = false, unique = true)
     private String account;
     /**
      * 账单记录

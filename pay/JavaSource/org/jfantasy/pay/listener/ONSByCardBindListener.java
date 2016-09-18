@@ -3,6 +3,7 @@ package org.jfantasy.pay.listener;
 import com.aliyun.openservices.ons.api.Message;
 import com.aliyun.openservices.ons.api.Producer;
 import org.hibernate.Session;
+import org.jfantasy.aliyun.AliyunSettings;
 import org.jfantasy.framework.autoconfigure.PayAutoConfiguration;
 import org.jfantasy.framework.jackson.JSON;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
@@ -11,10 +12,11 @@ import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.CardDesign;
 import org.jfantasy.pay.event.CardBindEvent;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
 
 /**
  * 发送消息 - 阿里云
@@ -22,8 +24,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class ONSByCardBindListener implements ApplicationListener<CardBindEvent> {
 
-    @Value("${aliyun.ons.pay.topicId:T-PAY}")
-    private String topicId;
+    @Resource(name = "pay.aliyunSettings")
+    private AliyunSettings aliyunSettings;
 
     private final Producer producer;
 
@@ -41,7 +43,7 @@ public class ONSByCardBindListener implements ApplicationListener<CardBindEvent>
             ThreadJacksonMixInHolder holder = ThreadJacksonMixInHolder.getMixInHolder();
             holder.addAllowPropertyNames(CardDesign.class, "styles", "extras");
             holder.addIgnorePropertyNames(Card.class, "type","batch", Card.BASE_FIELDS);
-            Message msg = new Message(topicId, PayAutoConfiguration.ONS_TAGS_CARDBIND_KEY, card.getNo(), JSON.serialize(card).getBytes());
+            Message msg = new Message(aliyunSettings.getTopicId(), PayAutoConfiguration.ONS_TAGS_CARDBIND_KEY, card.getNo(), JSON.serialize(card).getBytes());
             producer.send(msg);
         } finally {
             OpenSessionUtils.closeSession(session);

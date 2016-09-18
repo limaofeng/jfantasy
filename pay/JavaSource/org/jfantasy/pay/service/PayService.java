@@ -7,7 +7,10 @@ import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.pay.bean.*;
+import org.jfantasy.pay.bean.enums.PayMethod;
 import org.jfantasy.pay.bean.enums.ProjectType;
+import org.jfantasy.pay.bean.enums.TxChannel;
+import org.jfantasy.pay.bean.enums.TxStatus;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.event.PayNotifyEvent;
 import org.jfantasy.pay.event.PayRefundNotifyEvent;
@@ -21,6 +24,7 @@ import org.jfantasy.pay.order.entity.enums.PaymentType;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.product.PayProduct;
 import org.jfantasy.pay.product.PayType;
+import org.jfantasy.pay.product.Walletpay;
 import org.jfantasy.pay.service.vo.ToPayment;
 import org.jfantasy.pay.service.vo.ToRefund;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,16 +48,18 @@ public class PayService {
     private final PaymentService paymentService;
     private final RefundService refundService;
     private final OrderService orderService;
+    private final TransactionService transactionService;
     private final ApplicationContext applicationContext;
 
     @Autowired
-    public PayService(RefundService refundService, PaymentService paymentService, PayProductConfiguration payProductConfiguration, ApplicationContext applicationContext, PayConfigService payConfigService, OrderService orderService) {
+    public PayService(RefundService refundService, PaymentService paymentService, PayProductConfiguration payProductConfiguration, ApplicationContext applicationContext, PayConfigService payConfigService, OrderService orderService, TransactionService transactionService) {
         this.refundService = refundService;
         this.paymentService = paymentService;
         this.payProductConfiguration = payProductConfiguration;
         this.applicationContext = applicationContext;
         this.payConfigService = payConfigService;
         this.orderService = orderService;
+        this.transactionService = transactionService;
     }
 
     /**
@@ -72,6 +78,9 @@ public class PayService {
         if (transaction.getProject().getType() != ProjectType.order) {
             throw new ValidationException(000.0f, "项目类型为 order 才能调用支付接口");
         }
+        // 设置 Trx 到 properties 中
+        properties.put(Walletpay.PROPERTY_TRANSACTION, transaction);
+        //获取订单信息
         String orderKey = transaction.get("order_key");
         //验证业务订单
         OrderKey key = OrderKey.newInstance(orderKey);
@@ -94,14 +103,18 @@ public class PayService {
         BeanUtil.copyProperties(toPayment, payment, "status", "type");
         toPayment.setStatus(payment.getStatus());
         toPayment.setType(payment.getType());
+        //设置交易的渠道
+        transaction.setChannel(payConfig.getPayMethod() == PayMethod.thirdparty ? TxChannel.thirdparty : TxChannel.internal);
         //调用第三方支付产品
         if (PayType.web == payType) {
             toPayment.setSource(payProduct.web(payment, order, properties));
         } else if (PayType.app == payType) {
             toPayment.setSource(payProduct.app(payment, order, properties));
         }
-        //有可能调用支付产品时,修改了支付状态,保存支付信息
-        paymentService.save(payment);
+        if (payConfig.getPayMethod() == PayMethod.thirdparty) {
+            //有可能调用支付产品时,修改了支付状态,保存支付信息
+            paymentService.save(payment);
+        }
         return toPayment;
     }
 
@@ -185,6 +198,7 @@ public class PayService {
     @Transactional
     public Object paymentNotify(String sn, String body) {
         Payment payment = this.paymentService.get(sn);
+        Transaction transaction = payment.getTransaction();
         PayConfig payConfig = payment.getPayConfig();
 
         //获取支付产品
@@ -206,11 +220,15 @@ public class PayService {
         paymentService.save(payment);
         this.applicationContext.publishEvent(new PayStatusEvent(new PayStatus(payment.getStatus(), payment, order)));
 
-        // 更新订单状态
         switch (payment.getStatus()) {
             case close:
                 break;
             case success:
+                // 更新交易状态
+                transaction.setChannel(payConfig.getPayMethod() == PayMethod.thirdparty ? TxChannel.thirdparty : TxChannel.internal);
+                transaction.setStatus(TxStatus.success);
+                transactionService.update(transaction);
+                // 更新订单状态
                 order.setStatus(Order.PaymentStatus.paid);
                 order.setPaymentTime(payment.getTradeTime());
                 orderService.update(order);
@@ -233,7 +251,6 @@ public class PayService {
         } catch (Exception e) {
             LOG.error(e.getMessage(), e);
         }
-
         //返回订单信息
         return result != null ? result : order;
     }

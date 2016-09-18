@@ -10,17 +10,19 @@ import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.oauth.userdetails.OAuthUserDetails;
 import org.jfantasy.pay.bean.Account;
 import org.jfantasy.pay.bean.Card;
+import org.jfantasy.pay.bean.Project;
 import org.jfantasy.pay.bean.Transaction;
 import org.jfantasy.pay.bean.enums.AccountStatus;
 import org.jfantasy.pay.bean.enums.AccountType;
 import org.jfantasy.pay.bean.enums.TxChannel;
 import org.jfantasy.pay.bean.enums.TxStatus;
 import org.jfantasy.pay.dao.AccountDao;
+import org.jfantasy.pay.dao.ProjectDao;
+import org.jfantasy.pay.dao.TransactionDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.crypto.password.StandardPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
@@ -32,7 +34,9 @@ public class AccountService {
     @Autowired
     private AccountDao accountDao;
     @Autowired
-    private TransactionService transactionService;
+    private TransactionDao transactionDao;
+    @Autowired
+    private ProjectDao projectDao;
 
     private PasswordEncoder passwordEncoder = new StandardPasswordEncoder();
 
@@ -91,9 +95,9 @@ public class AccountService {
         return this.accountDao.findUnique(Restrictions.eq("owner",key));
     }
 
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    @Transactional
     public Transaction remit(String trx_no, String password) {
-        return remit(transactionService.get(trx_no), password);
+        return remit(transactionDao.get(trx_no), password);
     }
 
     /**
@@ -111,6 +115,7 @@ public class AccountService {
         }
         if (transaction.getChannel() == TxChannel.internal) {//需要计算转出账户
             Account from = this.accountDao.get(transaction.getFrom());
+            /*
             if (from.getStatus() != AccountStatus.activated) {
                 throw new RestException("账户未激活不能进行付款操作");
             }
@@ -120,6 +125,7 @@ public class AccountService {
             if (!passwordEncoder.matches(from.getPassword(), password)) {
                 throw new RestException("支付密码错误");
             }
+            */
             if (from.getAmount().compareTo(transaction.getAmount()) < 0) {
                 throw new RestException("账户余额不足,支付失败");
             }
@@ -132,7 +138,7 @@ public class AccountService {
         this.accountDao.update(to);
         //更新交易状态
         transaction.setStatus(TxStatus.success);
-        return transactionService.save(transaction);
+        return transactionDao.save(transaction);
     }
 
     @Transactional
@@ -147,10 +153,20 @@ public class AccountService {
      *
      * @param card 卡
      */
+    @Transactional
     public void inpour(Card card) {
         Account to = accountDao.findUnique(Restrictions.eq("owner", card.getOwner()));
         //添加充值记录
-        transactionService.inpour(card, to.getSn());
+        Transaction transaction = new Transaction();
+        transaction.setAmount(card.getAmount());
+        transaction.setChannel(TxChannel.internal);
+        transaction.setTo(to.getSn());
+        transaction.set(Transaction.CARD_ID, card.getNo());
+        transaction.setProject(projectDao.get(Project.CARD_INPOUR));
+        transaction.setUnionId(Transaction.generateUnionid(transaction.getProject().getKey(), card.getNo()));
+        transaction.setStatus(TxStatus.success);
+        transaction.setStatusText(TxStatus.success.name());
+        this.transactionDao.save(transaction);
         //修改金额
         to.setAmount(to.getAmount().add(card.getAmount()));
         accountDao.save(to);
