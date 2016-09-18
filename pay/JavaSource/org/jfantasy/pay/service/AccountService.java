@@ -3,9 +3,11 @@ package org.jfantasy.pay.service;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
+import org.jfantasy.framework.security.SpringSecurityUtils;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
 import org.jfantasy.framework.util.common.StringUtil;
+import org.jfantasy.oauth.userdetails.OAuthUserDetails;
 import org.jfantasy.pay.bean.Account;
 import org.jfantasy.pay.bean.Card;
 import org.jfantasy.pay.bean.Transaction;
@@ -83,15 +85,15 @@ public class AccountService {
      * @return account
      */
     public Account findUniqueByCurrentUser() {
-//        OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
-//        assert user != null;
-//        String key = user.getKey();
-        return this.accountDao.findUnique(Restrictions.eq("owner", "member:15921884771"));
+        OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
+        assert user != null;
+        String key = user.getKey();
+        return this.accountDao.findUnique(Restrictions.eq("owner",key));
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void remit(String trx_no, String password) {
-        remit(transactionService.get(trx_no), password);
+    public Transaction remit(String trx_no, String password) {
+        return remit(transactionService.get(trx_no), password);
     }
 
     /**
@@ -100,7 +102,7 @@ public class AccountService {
      * @param transaction 如果为 internal 内部付款需呀提供支付密码
      * @param password    支付密码
      */
-    private void remit(Transaction transaction, String password) {
+    private Transaction remit(Transaction transaction, String password) {
         if (transaction.getStatus() == TxStatus.close) {
             throw new RestException("交易已经关闭,不能划账");
         }
@@ -130,14 +132,14 @@ public class AccountService {
         this.accountDao.update(to);
         //更新交易状态
         transaction.setStatus(TxStatus.success);
-        transactionService.save(transaction);
+        return transactionService.save(transaction);
     }
 
     @Transactional
     public Account activate(String no, String password) {
         Account account = this.accountDao.get(no);
         account.setPassword(passwordEncoder.encode(password));
-        return null;
+        return this.accountDao.save(account);
     }
 
     /**

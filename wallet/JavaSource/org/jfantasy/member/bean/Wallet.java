@@ -15,6 +15,9 @@ import java.util.List;
 @Table(name = "MEM_WALLET")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Wallet extends BaseBusEntity {
+
+    private static final long serialVersionUID = -841277262755651990L;
+
     /**
      * 钱包ID
      */

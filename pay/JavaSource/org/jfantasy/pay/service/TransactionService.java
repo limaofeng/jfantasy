@@ -57,22 +57,8 @@ public class TransactionService {
         return null;
     }
 
-    /**
-     * 转账
-     *
-     * @param from   转出
-     * @param to     转入
-     * @param amount 金额
-     * @param notes  备注
-     * @return Transaction
-     */
     @Transactional
-    public Transaction transfer(String from, String to, BigDecimal amount, String notes) {
-        return null;
-    }
-
-    @Transactional
-    public Transaction inpour(Card card, String to) {
+    Transaction inpour(Card card, String to) {
         Transaction transaction = new Transaction();
         transaction.setAmount(card.getAmount());
         transaction.setChannel(TxChannel.internal);

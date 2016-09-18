@@ -35,7 +35,6 @@ public class PayProductConfiguration implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() {
-
         //支付宝即时交易
         if (!ObjectUtil.exists(this.payProducts, "id", "alipay")) {
             Alipay alipay = new Alipay();
@@ -100,7 +99,7 @@ public class PayProductConfiguration implements InitializingBean {
         }
 
         //钱包支付
-        if (!ObjectUtil.exists(this.payProducts, "id", "weixinpay")) {
+        if (!ObjectUtil.exists(this.payProducts, "id", "walletpay")) {
             Walletpay walletpay = new Walletpay();
             walletpay.setPaySettings(paySettings);
             walletpay.setId("walletpay");
