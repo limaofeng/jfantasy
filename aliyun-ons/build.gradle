@@ -7,5 +7,5 @@ sonarqube {
 dependencies {
     compile project(':jfantasy-core')
     compile "com.aliyun.openservices:ons-client:1.2.1"
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.3.3.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
 }

@@ -4,5 +4,5 @@ description = ' Netty RPC 协议服务端实现 '
 dependencies {
     compile project(':jfantasy-core')
     compile project(':jfantasy-rpc-common')
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.3.3.RELEASE'
+    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
 }
