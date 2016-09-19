@@ -1,12 +1,11 @@
 package org.jfantasy.framework.hibernate.cache;
 
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
-import org.hibernate.cfg.Settings;
 import org.jfantasy.framework.spring.SpringContextUtil;
 import org.springframework.cache.CacheManager;
 
 import java.util.Properties;
-
 
 public class SpringCacheRegionFactory extends AbstractSpringCacheRegionFactory {
 
@@ -24,7 +23,7 @@ public class SpringCacheRegionFactory extends AbstractSpringCacheRegionFactory {
     }
 
     @Override
-    public void start(Settings settings, Properties properties) throws CacheException {
+    public void start(SessionFactoryOptions settings, Properties properties) throws CacheException {
         this.settings = settings;
         if (manager == null) {
             manager = SpringContextUtil.getBean(properties.getProperty(SPRING_CACHEMANAGER, DEFAULT_SPRING_CACHEMANAGER), CacheManager.class);

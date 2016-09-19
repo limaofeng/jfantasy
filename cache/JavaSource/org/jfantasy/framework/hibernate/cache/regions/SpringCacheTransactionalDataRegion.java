@@ -1,27 +1,27 @@
 package org.jfantasy.framework.hibernate.cache.regions;
 
 import org.jfantasy.framework.hibernate.cache.strategy.SpringCacheAccessStrategyFactory;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.CacheDataDescription;
 import org.hibernate.cache.spi.TransactionalDataRegion;
-import org.hibernate.cfg.Settings;
 import org.springframework.cache.Cache;
 
 import java.util.Properties;
 
 public class SpringCacheTransactionalDataRegion extends SpringCacheDataRegion implements TransactionalDataRegion {
 
-    private final Settings settings;
+    private final SessionFactoryOptions settings;
 
     protected final CacheDataDescription metadata;
 
-    SpringCacheTransactionalDataRegion(SpringCacheAccessStrategyFactory accessStrategyFactory, Cache cache, Settings settings, CacheDataDescription metadata, Properties properties) {
+    SpringCacheTransactionalDataRegion(SpringCacheAccessStrategyFactory accessStrategyFactory, Cache cache, SessionFactoryOptions settings, CacheDataDescription metadata, Properties properties) {
         super(accessStrategyFactory, cache, properties);
         this.settings = settings;
         this.metadata = metadata;
     }
 
-    public Settings getSettings() {
+    public SessionFactoryOptions getSettings() {
         return settings;
     }
 

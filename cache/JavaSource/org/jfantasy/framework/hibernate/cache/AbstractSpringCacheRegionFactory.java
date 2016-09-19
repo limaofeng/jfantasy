@@ -1,14 +1,14 @@
 package org.jfantasy.framework.hibernate.cache;
 
+import org.hibernate.boot.spi.SessionFactoryOptions;
+import org.hibernate.cache.CacheException;
+import org.hibernate.cache.spi.*;
+import org.hibernate.cache.spi.access.AccessType;
 import org.jfantasy.framework.hibernate.cache.regions.*;
 import org.jfantasy.framework.hibernate.cache.strategy.NonstopAccessStrategyFactory;
 import org.jfantasy.framework.hibernate.cache.strategy.SpringCacheAccessStrategyFactory;
 import org.jfantasy.framework.hibernate.cache.strategy.SpringCacheAccessStrategyFactoryImpl;
 import org.jfantasy.framework.hibernate.cache.util.Timestamper;
-import org.hibernate.cache.CacheException;
-import org.hibernate.cache.spi.*;
-import org.hibernate.cache.spi.access.AccessType;
-import org.hibernate.cfg.Settings;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 
@@ -16,9 +16,11 @@ import java.util.Properties;
 
 abstract class AbstractSpringCacheRegionFactory implements RegionFactory {
 
+    private static final long serialVersionUID = -4703807378849600952L;
+
     protected volatile CacheManager manager;
 
-    protected Settings settings;
+    protected SessionFactoryOptions settings;
 
     private final SpringCacheAccessStrategyFactory accessStrategyFactory = new NonstopAccessStrategyFactory(new SpringCacheAccessStrategyFactoryImpl());
 

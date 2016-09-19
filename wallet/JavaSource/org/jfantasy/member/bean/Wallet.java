@@ -30,7 +30,7 @@ public class Wallet extends BaseBusEntity {
      * 会员
      */
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_WALLET_MEMBER_MID"))
+    @JoinColumn(name = "MEMBER_ID", unique = true, updatable = false, foreignKey = @ForeignKey(name = "FK_WALLET_MEMBER_MID"))
     private Member member;
     /**
      * 账户余额

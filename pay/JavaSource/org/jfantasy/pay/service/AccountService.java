@@ -97,8 +97,18 @@ public class AccountService {
     }
 
     @Transactional
-    public Transaction remit(String trx_no, String password) {
-        return remit(transactionDao.get(trx_no), password);
+    public Transaction transfer(String trx_no, String password, String notes) {
+        return transfer(transactionDao.get(trx_no), password, notes);
+    }
+
+    @Transactional
+    public Transaction refund(String original_trx_no, BigDecimal amount, String notes) {
+        //创建退款交易
+        Transaction transaction = new Transaction();
+
+        Account from = this.get(transaction.getFrom());
+        //进行退款操作
+        return transfer(transaction, from.getPassword(), notes);
     }
 
     /**
@@ -107,7 +117,7 @@ public class AccountService {
      * @param transaction 如果为 internal 内部付款需呀提供支付密码
      * @param password    支付密码
      */
-    private Transaction remit(Transaction transaction, String password) {
+    private Transaction transfer(Transaction transaction, String password, String notes) {
         if (transaction.getStatus() == TxStatus.close) {
             throw new RestException("交易已经关闭,不能划账");
         }
@@ -139,6 +149,7 @@ public class AccountService {
         this.accountDao.update(to);
         //更新交易状态
         transaction.setStatus(TxStatus.success);
+        transaction.setNotes(notes);
         return transactionDao.save(transaction);
     }
 

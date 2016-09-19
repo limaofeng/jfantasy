@@ -21,10 +21,14 @@ import java.util.Properties;
 @Service
 public class TransactionService {
 
+    private final TransactionDao transactionDao;
+    private final ProjectDao projectDao;
+
     @Autowired
-    private TransactionDao transactionDao;
-    @Autowired
-    private ProjectDao projectDao;
+    public TransactionService(TransactionDao transactionDao, ProjectDao projectDao) {
+        this.transactionDao = transactionDao;
+        this.projectDao = projectDao;
+    }
 
     /**
      * 第三方支付业务

@@ -8,6 +8,7 @@ import org.jfantasy.pay.bean.Refund;
 import org.jfantasy.pay.bean.Transaction;
 import org.jfantasy.pay.error.PayException;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
+import org.jfantasy.pay.order.entity.enums.RefundStatus;
 import org.jfantasy.pay.service.AccountService;
 import org.jfantasy.pay.service.PayService;
 
@@ -47,7 +48,7 @@ public class Walletpay extends PayProductSupport {
         String password = properties.getProperty(PROPERTY_PASSWORD);
         Transaction transaction = (Transaction) properties.get(PROPERTY_TRANSACTION);
         //进行划账操作
-        this.accountService().remit(transaction.getSn(), password);
+        this.accountService().transfer(transaction.getSn(), password, transaction.getNotes());
         //触发通知
         return this.payService().paymentNotify(payment.getSn(), "");
     }
@@ -66,8 +67,15 @@ public class Walletpay extends PayProductSupport {
     }
 
     @Override
-    public String refund(Refund refund) {
-        return "";
+    public Object refund(Refund refund) {
+        refund.setStatus(RefundStatus.success);
+        this.accountService().refund(refund.getPayment().getTransaction().getSn(), refund.getTotalAmount(), "退款");
+        return this.payService().refundNotify(refund.getSn(), "");
+    }
+
+    @Override
+    public Object payNotify(Refund refund, String result) throws PayException {
+        return "success";
     }
 
     @Override
@@ -78,11 +86,6 @@ public class Walletpay extends PayProductSupport {
     @Override
     public void close(Payment payment) throws PayException {
 
-    }
-
-    @Override
-    public Object payNotify(Refund refund, String result) throws PayException {
-        return super.payNotify(refund, result);
     }
 
 }

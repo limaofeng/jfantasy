@@ -3,6 +3,5 @@
 description = ' 第三方开放平台集成'
 dependencies {
     compile project(':jfantasy-member')
-    testCompile project(':jfantasy-test')
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
 }

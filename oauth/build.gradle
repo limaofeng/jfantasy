@@ -7,6 +7,5 @@ dependencies {
     compile project(':jfantasy-member')
     compile project(':jfantasy-security')
     compile project(':jfantasy-oauth-api')
-    testCompile project(':jfantasy-test')
     testCompile 'org.springframework.boot:spring-boot-starter-test:1.4.0.RELEASE'
 }

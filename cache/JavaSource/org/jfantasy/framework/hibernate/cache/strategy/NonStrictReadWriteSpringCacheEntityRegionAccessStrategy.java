@@ -1,16 +1,30 @@
 package org.jfantasy.framework.hibernate.cache.strategy;
 
 import org.jfantasy.framework.hibernate.cache.regions.SpringCacheEntityRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
-import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 public class NonStrictReadWriteSpringCacheEntityRegionAccessStrategy extends AbstractSpringCacheAccessStrategy<SpringCacheEntityRegion> implements EntityRegionAccessStrategy {
 
-    public NonStrictReadWriteSpringCacheEntityRegionAccessStrategy(SpringCacheEntityRegion region, Settings settings) {
+    public NonStrictReadWriteSpringCacheEntityRegionAccessStrategy(SpringCacheEntityRegion region, SessionFactoryOptions settings) {
         super(region, settings);
+    }
+
+    @Override
+    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor factory, String tenantIdentifier) {
+        return DefaultCacheKeysFactory.createEntityKey( id, persister, factory, tenantIdentifier );
+    }
+
+    @Override
+    public Object getCacheKeyId(Object cacheKey) {
+        return DefaultCacheKeysFactory.getEntityId(cacheKey);
     }
 
     @Override
@@ -19,12 +33,12 @@ public class NonStrictReadWriteSpringCacheEntityRegionAccessStrategy extends Abs
     }
 
     @Override
-    public Object get(Object key, long txTimestamp) throws CacheException {
+    public Object get(SessionImplementor session, Object key, long txTimestamp) throws CacheException {
         return region().get(key);
     }
 
     @Override
-    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException {
+    public boolean putFromLoad(SessionImplementor session, Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException {
         if (minimalPutOverride && region().contains(key)) {
             return false;
         } else {
@@ -34,39 +48,41 @@ public class NonStrictReadWriteSpringCacheEntityRegionAccessStrategy extends Abs
     }
 
     @Override
-    public SoftLock lockItem(Object key, Object version) throws CacheException {
+    public SoftLock lockItem(SessionImplementor session, Object key, Object version) throws CacheException {
         return null;
     }
 
     @Override
-    public void unlockItem(Object key, SoftLock lock) throws CacheException {
+    public void unlockItem(SessionImplementor session, Object key, SoftLock lock) throws CacheException {
         region().remove(key);
     }
 
     @Override
-    public boolean insert(Object key, Object value, Object version) throws CacheException {
+    public boolean insert(SessionImplementor session, Object key, Object value, Object version) throws CacheException {
         return false;
     }
 
     @Override
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException {
+    public boolean afterInsert(SessionImplementor session, Object key, Object value, Object version) throws CacheException {
         return false;
     }
 
     @Override
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
-        remove(key);
+    public boolean update(SessionImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
+        remove(session, key);
         return false;
     }
 
     @Override
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
-        unlockItem(key, lock);
+    public boolean afterUpdate(SessionImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
+        unlockItem(session, key, lock);
         return false;
     }
 
     @Override
-    public void remove(Object key) throws CacheException {
+    public void remove(SessionImplementor session, Object key) throws CacheException {
         region().remove(key);
     }
+
+
 }

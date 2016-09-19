@@ -1,9 +1,13 @@
 package org.jfantasy.framework.hibernate.cache.nonstop;
 
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.EntityRegion;
 import org.hibernate.cache.spi.access.EntityRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
+import org.hibernate.engine.spi.SessionFactoryImplementor;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAccessStrategy {
     private final EntityRegionAccessStrategy actualStrategy;
@@ -15,14 +19,24 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
+    public Object generateCacheKey(Object id, EntityPersister persister, SessionFactoryImplementor factory, String tenantIdentifier) {
+        return DefaultCacheKeysFactory.createEntityKey(id, persister, factory, tenantIdentifier);
+    }
+
+    @Override
+    public Object getCacheKeyId(Object cacheKey) {
+        return DefaultCacheKeysFactory.getEntityId(cacheKey);
+    }
+
+    @Override
     public EntityRegion getRegion() {
         return actualStrategy.getRegion();
     }
 
     @Override
-    public boolean afterInsert(Object key, Object value, Object version) throws CacheException {
+    public boolean afterInsert(SessionImplementor session, Object key, Object value, Object version) throws CacheException {
         try {
-            return actualStrategy.afterInsert(key, value, version);
+            return actualStrategy.afterInsert(session, key, value, version);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return false;
@@ -30,9 +44,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public boolean afterUpdate(Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
+    public boolean afterUpdate(SessionImplementor session, Object key, Object value, Object currentVersion, Object previousVersion, SoftLock lock) throws CacheException {
         try {
-            return actualStrategy.afterUpdate(key, value, currentVersion, previousVersion, lock);
+            return actualStrategy.afterUpdate(session, key, value, currentVersion, previousVersion, lock);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return false;
@@ -58,9 +72,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public Object get(Object key, long txTimestamp) throws CacheException {
+    public Object get(SessionImplementor session, Object key, long txTimestamp) throws CacheException {
         try {
-            return actualStrategy.get(key, txTimestamp);
+            return actualStrategy.get(session, key, txTimestamp);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return null;
@@ -68,9 +82,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public boolean insert(Object key, Object value, Object version) throws CacheException {
+    public boolean insert(SessionImplementor session, Object key, Object value, Object version) throws CacheException {
         try {
-            return actualStrategy.insert(key, value, version);
+            return actualStrategy.insert(session, key, value, version);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return false;
@@ -78,9 +92,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public SoftLock lockItem(Object key, Object version) throws CacheException {
+    public SoftLock lockItem(SessionImplementor session, Object key, Object version) throws CacheException {
         try {
-            return actualStrategy.lockItem(key, version);
+            return actualStrategy.lockItem(session, key, version);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return null;
@@ -98,9 +112,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException {
+    public boolean putFromLoad(SessionImplementor session, Object key, Object value, long txTimestamp, Object version, boolean minimalPutOverride) throws CacheException {
         try {
-            return actualStrategy.putFromLoad(key, value, txTimestamp, version, minimalPutOverride);
+            return actualStrategy.putFromLoad(session, key, value, txTimestamp, version, minimalPutOverride);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return false;
@@ -108,9 +122,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public boolean putFromLoad(Object key, Object value, long txTimestamp, Object version) throws CacheException {
+    public boolean putFromLoad(SessionImplementor session, Object key, Object value, long txTimestamp, Object version) throws CacheException {
         try {
-            return actualStrategy.putFromLoad(key, value, txTimestamp, version);
+            return actualStrategy.putFromLoad(session, key, value, txTimestamp, version);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return false;
@@ -118,9 +132,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public void remove(Object key) throws CacheException {
+    public void remove(SessionImplementor session, Object key) throws CacheException {
         try {
-            actualStrategy.remove(key);
+            actualStrategy.remove(session, key);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
         }
@@ -136,9 +150,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public void unlockItem(Object key, SoftLock lock) throws CacheException {
+    public void unlockItem(SessionImplementor session, Object key, SoftLock lock) throws CacheException {
         try {
-            actualStrategy.unlockItem(key, lock);
+            actualStrategy.unlockItem(session, key, lock);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
         }
@@ -154,9 +168,9 @@ public class NonstopAwareEntityRegionAccessStrategy implements EntityRegionAcces
     }
 
     @Override
-    public boolean update(Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
+    public boolean update(SessionImplementor session, Object key, Object value, Object currentVersion, Object previousVersion) throws CacheException {
         try {
-            return actualStrategy.update(key, value, currentVersion, previousVersion);
+            return actualStrategy.update(session, key, value, currentVersion, previousVersion);
         } catch (NonStopCacheException nonStopCacheException) {
             hibernateNonstopExceptionHandler.handleNonstopCacheException(nonStopCacheException);
             return false;

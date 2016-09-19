@@ -1,7 +1,5 @@
 package org.jfantasy.framework.dao.hibernate;
 
-import org.jfantasy.framework.dao.hibernate.util.TypeFactory;
-import org.jfantasy.framework.util.common.ClassUtil;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -9,12 +7,11 @@ import org.apache.commons.logging.LogFactory;
 import org.hibernate.HibernateException;
 import org.hibernate.PropertyNotFoundException;
 import org.hibernate.SQLQuery;
-import org.hibernate.property.ChainedPropertyAccessor;
-import org.hibernate.property.PropertyAccessor;
-import org.hibernate.property.PropertyAccessorFactory;
-import org.hibernate.property.Setter;
+import org.hibernate.property.access.spi.Setter;
 import org.hibernate.transform.ResultTransformer;
 import org.hibernate.type.Type;
+import org.jfantasy.framework.dao.hibernate.util.TypeFactory;
+import org.jfantasy.framework.util.common.ClassUtil;
 
 import javax.persistence.Column;
 import java.lang.reflect.Field;
@@ -28,9 +25,9 @@ import java.util.StringTokenizer;
  *
  * @author 李茂峰
  * @version 1.0
- * @功能描述
  * @since 2013-9-12 上午9:52:00
  */
+@Deprecated
 public class AliasToBeanResultTransformer implements ResultTransformer {
     private static final long serialVersionUID = -5199190581393587893L;
 
@@ -38,17 +35,17 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
 
     private final Class<?> resultClass;
     private Setter[] setters;
-    private PropertyAccessor propertyAccessor;
+//    private PropertyAccess propertyAccessor;
 
-    private Map<String, String> propertyNames = new HashMap<String, String>();
-    private Map<String, Type> propertyTypes = new HashMap<String, Type>();
+    private Map<String, String> propertyNames = new HashMap<>();
+    private Map<String, Type> propertyTypes = new HashMap<>();
 
     public AliasToBeanResultTransformer(Class<?> resultClass) {
         if (resultClass == null){
             throw new IllegalArgumentException("resultClass cannot be null");
         }
         this.resultClass = resultClass;
-        this.propertyAccessor = new ChainedPropertyAccessor(new PropertyAccessor[]{PropertyAccessorFactory.getPropertyAccessor(resultClass, null), PropertyAccessorFactory.getPropertyAccessor("field")});
+//        this.propertyAccessor = new ChainedPropertyAccessor(new PropertyAccessor[]{PropertyAccessorFactory.getPropertyAccessor(resultClass, null), PropertyAccessorFactory.getPropertyAccessor("field")});
 
         Field[] fields = ClassUtil.getDeclaredFields(resultClass, Column.class);
         for (Field field : fields) {
@@ -74,7 +71,7 @@ public class AliasToBeanResultTransformer implements ResultTransformer {
                     String alias = convertColumnToProperty(aliases[i]);
                     if (alias != null) {
                         try {
-                            setters[i] = propertyAccessor.getSetter(resultClass, alias);
+//                            setters[i] = propertyAccessor.getSetter(resultClass, alias);
                         } catch (PropertyNotFoundException e) {
                             LOGGER.error(e.getMessage(), e);
                         }

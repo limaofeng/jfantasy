@@ -13,8 +13,12 @@ import java.util.List;
 @Service
 public class LogService {
 
+    private final LogDao logDao;
+
     @Autowired
-    private LogDao logDao;
+    public LogService(LogDao logDao) {
+        this.logDao = logDao;
+    }
 
     @Transactional
     public void log(OwnerType type, Long id, String action, String notes) {
@@ -28,11 +32,11 @@ public class LogService {
         log.setOwnerId(id);
         log.setAction(action);
         log.setNotes(notes);
-        logDao.save(log);
+        this.logDao.save(log);
     }
 
     public List<Log> logs(OwnerType type, String sn) {
-        return logDao.find(Restrictions.eq("ownerType", type), Restrictions.eq("ownerId", sn));
+        return this.logDao.find(Restrictions.eq("ownerType", type), Restrictions.eq("ownerId", sn));
     }
 
 }

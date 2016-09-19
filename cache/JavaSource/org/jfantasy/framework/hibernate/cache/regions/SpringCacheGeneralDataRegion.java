@@ -4,6 +4,7 @@ import org.jfantasy.framework.hibernate.cache.log.SpringCacheMessageLogger;
 import org.jfantasy.framework.hibernate.cache.strategy.SpringCacheAccessStrategyFactory;
 import org.hibernate.cache.CacheException;
 import org.hibernate.cache.spi.GeneralDataRegion;
+import org.hibernate.engine.spi.SessionImplementor;
 import org.jboss.logging.Logger;
 import org.springframework.cache.Cache;
 
@@ -18,7 +19,7 @@ public class SpringCacheGeneralDataRegion extends SpringCacheDataRegion implemen
     }
 
     @Override
-    public Object get(Object key) throws CacheException {
+    public Object get(SessionImplementor session, Object key) throws CacheException {
         LOG.debugf("key: %s", key);
         if (key == null) {
             return null;
@@ -34,7 +35,7 @@ public class SpringCacheGeneralDataRegion extends SpringCacheDataRegion implemen
     }
 
     @Override
-    public void put(Object key, Object value) throws CacheException {
+    public void put(SessionImplementor session,Object key, Object value) throws CacheException {
         LOG.debugf("key: %s value: %s", key, value);
         try {
             getCache().put(key, value);

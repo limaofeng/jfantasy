@@ -18,6 +18,9 @@ import java.util.Date;
 @Table(name = "PAY_CARD")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Card extends BaseBusEntity {
+
+    private static final long serialVersionUID = 7353590331858523890L;
+
     /**
      * 卡号
      */

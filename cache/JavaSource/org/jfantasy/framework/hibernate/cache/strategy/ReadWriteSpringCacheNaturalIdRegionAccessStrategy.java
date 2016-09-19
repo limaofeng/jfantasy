@@ -1,15 +1,18 @@
 package org.jfantasy.framework.hibernate.cache.strategy;
 
 import org.jfantasy.framework.hibernate.cache.regions.SpringCacheNaturalIdRegion;
+import org.hibernate.boot.spi.SessionFactoryOptions;
 import org.hibernate.cache.CacheException;
+import org.hibernate.cache.internal.DefaultCacheKeysFactory;
 import org.hibernate.cache.spi.NaturalIdRegion;
 import org.hibernate.cache.spi.access.NaturalIdRegionAccessStrategy;
 import org.hibernate.cache.spi.access.SoftLock;
-import org.hibernate.cfg.Settings;
+import org.hibernate.engine.spi.SessionImplementor;
+import org.hibernate.persister.entity.EntityPersister;
 
 public class ReadWriteSpringCacheNaturalIdRegionAccessStrategy extends AbstractReadWriteSpringCacheAccessStrategy<SpringCacheNaturalIdRegion> implements NaturalIdRegionAccessStrategy {
 
-    public ReadWriteSpringCacheNaturalIdRegionAccessStrategy(SpringCacheNaturalIdRegion region, Settings settings) {
+    public ReadWriteSpringCacheNaturalIdRegionAccessStrategy(SpringCacheNaturalIdRegion region, SessionFactoryOptions settings) {
         super(region, settings);
     }
 
@@ -19,12 +22,12 @@ public class ReadWriteSpringCacheNaturalIdRegionAccessStrategy extends AbstractR
     }
 
     @Override
-    public boolean insert(Object key, Object value) throws CacheException {
+    public boolean insert(SessionImplementor session, Object key, Object value) throws CacheException {
         return false;
     }
 
     @Override
-    public boolean afterInsert(Object key, Object value) throws CacheException {
+    public boolean afterInsert(SessionImplementor session, Object key, Object value) throws CacheException {
         region().writeLock(key);
         try {
             final Lockable item = (Lockable) region().get(key);
@@ -40,12 +43,12 @@ public class ReadWriteSpringCacheNaturalIdRegionAccessStrategy extends AbstractR
     }
 
     @Override
-    public boolean update(Object key, Object value) throws CacheException {
+    public boolean update(SessionImplementor session, Object key, Object value) throws CacheException {
         return false;
     }
 
     @Override
-    public boolean afterUpdate(Object key, Object value, SoftLock lock) throws CacheException {
+    public boolean afterUpdate(SessionImplementor session, Object key, Object value, SoftLock lock) throws CacheException {
         region().writeLock(key);
         try {
             final Lockable item = (Lockable) region().get(key);
@@ -66,4 +69,15 @@ public class ReadWriteSpringCacheNaturalIdRegionAccessStrategy extends AbstractR
             region().writeUnlock(key);
         }
     }
+
+    @Override
+    public Object generateCacheKey(Object[] naturalIdValues, EntityPersister persister, SessionImplementor session) {
+        return DefaultCacheKeysFactory.createNaturalIdKey(naturalIdValues, persister, session);
+    }
+
+    @Override
+    public Object[] getNaturalIdValues(Object cacheKey) {
+        return DefaultCacheKeysFactory.getNaturalIdValues(cacheKey);
+    }
+
 }

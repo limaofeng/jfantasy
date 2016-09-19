@@ -2,5 +2,7 @@ description = ''
 dependencies {
     compile project(':jfantasy-core')
     compile 'org.springframework.boot:spring-boot-starter-redis:1.4.0.RELEASE'
+    compile "org.hibernate:hibernate-ehcache:5.0.9.Final"
+    provided "org.jboss.logging:jboss-logging-annotations:2.0.1.Final"
     testCompile 'org.springframework.boot:spring-boot-starter-test:1.4.0.RELEASE'
 }

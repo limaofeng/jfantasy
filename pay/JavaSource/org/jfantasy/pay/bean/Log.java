@@ -14,6 +14,8 @@ import java.util.Date;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "creator", "createTime", "modifier", "modifyTime"})
 public class Log extends BaseBusEntity {
 
+    private static final long serialVersionUID = 5304664083237571141L;
+
     @Id
     @Column(name = "ID", updatable = false)
     @GeneratedValue(generator = "fantasy-sequence")

@@ -1,5 +1,6 @@
 package org.jfantasy.framework.hibernate.cache.log;
 
+import org.hibernate.HibernateException;
 import org.hibernate.LockMode;
 import org.hibernate.cache.CacheException;
 import org.hibernate.dialect.Dialect;
@@ -2662,6 +2663,11 @@ public class SpringCacheMessageLogger_$logger extends DelegatingBasicLogger impl
         super.log.logf(FQCN, (org.jboss.logging.Logger.Level.INFO), null, tableNotFound$str(), arg0);
     }
 
+    @Override
+    public void multipleTablesFound(String name) {
+
+    }
+
     protected String tableNotFound$str() {
         return tableNotFound;
     }
@@ -3287,6 +3293,16 @@ public class SpringCacheMessageLogger_$logger extends DelegatingBasicLogger impl
         super.log.logf(FQCN, (org.jboss.logging.Logger.Level.DEBUG), null, creatingPooledLoOptimizer$str(), arg0, arg1);
     }
 
+    @Override
+    public void logBadHbmAttributeConverterType(String type, String exceptionMessage) {
+
+    }
+
+    @Override
+    public HibernateException usingStoppedClassLoaderService() {
+        return null;
+    }
+
     public final void logUnexpectedSessionInCollectionNotConnected(final java.lang.String arg0) {
         super.log.logf(FQCN, (org.jboss.logging.Logger.Level.WARN), null, logUnexpectedSessionInCollectionNotConnected$str(), arg0);
     }
@@ -3297,6 +3313,30 @@ public class SpringCacheMessageLogger_$logger extends DelegatingBasicLogger impl
 
     public final void logCannotUnsetUnexpectedSessionInCollection(final java.lang.String arg0) {
         super.log.logf(FQCN, (org.jboss.logging.Logger.Level.WARN), null, logCannotUnsetUnexpectedSessionInCollection$str(), arg0);
+    }
+
+    @Override
+    public void hikariProviderClassNotFound() {
+    }
+
+    @Override
+    public void cachedFileObsolete(File cachedFile) {
+
+    }
+
+    @Override
+    public String ambiguousPropertyMethods(String entityName, String oneMethodSig, String secondMethodSig) {
+        return null;
+    }
+
+    @Override
+    public void logCannotLocateIndexColumnInformation(String columnIdentifierText, String indexIdentifierText) {
+
+    }
+
+    @Override
+    public void executingImportScript(String scriptName) {
+
     }
 
     protected java.lang.String logCannotUnsetUnexpectedSessionInCollection$str() {
