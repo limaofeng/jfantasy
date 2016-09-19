@@ -35,6 +35,7 @@ public class FavoriteService {
         return favorite;
     }
 
+    @Transactional
     public void delete(Long... ids) {
         for (Long id : ids) {
             this.favoriteDao.delete(id);
