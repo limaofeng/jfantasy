@@ -84,8 +84,8 @@ public class RequestJsonParamMethodArgumentResolver extends AbstractNamedValueMe
                     MapType mapType = (MapType) getJavaType(HashMap.class);
 
                     if (type instanceof ParameterizedType) {
-                        mapType = (MapType) mapType.narrowKey((Class<?>) ((ParameterizedType) type).getActualTypeArguments()[0]);
-                        mapType = (MapType) mapType.narrowContentsBy((Class<?>) ((ParameterizedType) type).getActualTypeArguments()[1]);
+                        mapType = mapType.withKeyType((JavaType) ((ParameterizedType) type).getActualTypeArguments()[0]);
+                        mapType = (MapType) mapType.withContentType((JavaType) ((ParameterizedType) type).getActualTypeArguments()[1]);
                     }
                     jsonMap.setInnerMap(mapper.<Map>readValue(text, mapType));
                     return jsonMap;
@@ -95,7 +95,7 @@ public class RequestJsonParamMethodArgumentResolver extends AbstractNamedValueMe
 
 
                 if (Collection.class.isAssignableFrom(paramType)) {
-                    javaType = javaType.narrowContentsBy((Class<?>) ((ParameterizedType) type).getActualTypeArguments()[0]);
+                    javaType = javaType.withContentType((JavaType) ((ParameterizedType) type).getActualTypeArguments()[0]);
                 }
 
                 return mapper.readValue(paramValues[0], javaType);
