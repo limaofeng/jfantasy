@@ -19,7 +19,6 @@ import org.jfantasy.framework.jackson.serializer.DateSerializer;
 import org.jfantasy.framework.spring.mvc.method.annotation.FormModelMethodArgumentResolver;
 import org.jfantasy.framework.spring.mvc.method.annotation.PagerModelAttributeMethodProcessor;
 import org.jfantasy.framework.spring.mvc.method.annotation.PropertyFilterModelAttributeMethodProcessor;
-import org.jfantasy.framework.spring.mvc.method.annotation.RequestJsonParamMethodArgumentResolver;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.PropertiesHelper;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -29,9 +28,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.boot.bind.RelaxedPropertyResolver;
-import org.springframework.boot.context.embedded.FilterRegistrationBean;
-import org.springframework.boot.context.embedded.MultipartConfigFactory;
-import org.springframework.boot.context.embedded.ServletRegistrationBean;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
+import org.springframework.boot.web.servlet.MultipartConfigFactory;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.EnvironmentAware;
@@ -66,6 +65,13 @@ import java.util.*;
 })
 public class WebMvcConfig extends WebMvcConfigurerAdapter implements EnvironmentAware {
 
+    private final ApplicationContext applicationContext;
+
+    @Autowired
+    public WebMvcConfig(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
     /**
      * <基于cookie的本地化资源处理器>. <br>
      *
@@ -97,7 +103,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     }
 
     @Bean
-    MultipartConfigElement multipartConfigElement() {
+    public MultipartConfigElement multipartConfigElement() {
         MultipartConfigFactory factory = new MultipartConfigFactory();
         factory.setMaxFileSize(10485760);
         return factory.createMultipartConfig();
@@ -119,7 +125,7 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
         } else {
             //TODO 与 JSON 中代码重复
             JSON.register(JSON.DEFAULT_KEY, objectMapper
-                    .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+                    .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                     .setSerializationInclusion(JsonInclude.Include.NON_NULL)//为空的字段不序列化
                     .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)// 当找不到对应的序列化器时 忽略此字段
                     .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)// 允许非空字段
@@ -158,14 +164,10 @@ public class WebMvcConfig extends WebMvcConfigurerAdapter implements Environment
     @Override
     public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
         argumentResolvers.add(new FormModelMethodArgumentResolver());
-        argumentResolvers.add(new RequestJsonParamMethodArgumentResolver());
         argumentResolvers.add(new PropertyFilterModelAttributeMethodProcessor());
         argumentResolvers.add(new PagerModelAttributeMethodProcessor());
         super.addArgumentResolvers(argumentResolvers);
     }
-
-    @Autowired
-    private ApplicationContext applicationContext;
 
     @Override
     public Validator getValidator() {

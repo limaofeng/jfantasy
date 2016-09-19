@@ -85,7 +85,7 @@ public class PropertyFilterModelAttributeMethodProcessor extends FormModelMethod
     }
 
     public static Map<String, String[]> parseQuery(String query) {
-        Map<String, String[]> params = new LinkedHashMap<String, String[]>();
+        Map<String, String[]> params = new LinkedHashMap<>();
         if (StringUtil.isBlank(query)) {
             return params;
         }
@@ -120,7 +120,7 @@ public class PropertyFilterModelAttributeMethodProcessor extends FormModelMethod
             if (matchType.isNone()) {
                 target.add(new PropertyFilter(paramName));
             } else if (matchType.isMulti()) {
-                List<String> _values = new ArrayList<String>();
+                List<String> _values = new ArrayList<>();
                 for(String val : values){
                     _values.addAll(Arrays.asList(StringUtil.tokenizeToStringArray(val)));
                 }
