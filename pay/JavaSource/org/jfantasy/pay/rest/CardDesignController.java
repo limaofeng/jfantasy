@@ -22,7 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(value = "card-types", description = "会员卡设计")
+/** 会员卡设计 **/
 @RestController
 @RequestMapping("/card-designs")
 public class CardDesignController {
@@ -48,7 +48,7 @@ public class CardDesignController {
                     @AllowProperty(pojo = CardType.class, name = {"key", "name"})
             }
     )
-    @ApiOperation("查询会员卡设计")
+    /** 查询会员卡设计 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<CardDesign> pager, List<PropertyFilter> filters) {
@@ -61,7 +61,7 @@ public class CardDesignController {
                     @AllowProperty(pojo = Log.class, name = {"status", "notes", "logTime"})
             }
     )
-    @ApiOperation("会员卡设计详情")
+    /** 会员卡设计详情 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String id) {
@@ -74,7 +74,7 @@ public class CardDesignController {
                     @AllowProperty(pojo = CardType.class, name = {"key", "name"})
             }
     )
-    @ApiOperation("添加卡设计")
+    /** 添加卡设计 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -87,7 +87,7 @@ public class CardDesignController {
                     @AllowProperty(pojo = CardType.class, name = {"key", "name"})
             }
     )
-    @ApiOperation("更新会员卡设计")
+    /** 更新会员卡设计 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     @ResponseBody
     public ResultResourceSupport update(@PathVariable("id") String id, HttpServletRequest request, @RequestBody CardDesign design) {
@@ -100,7 +100,7 @@ public class CardDesignController {
                     @AllowProperty(pojo = CardType.class, name = {"key", "name"})
             }
     )
-    @ApiOperation("发布会员卡设计")
+    /** 发布会员卡设计 **/
     @RequestMapping(value = "/{id}/publish", method = RequestMethod.POST)
     @ResponseBody
     public ResultResourceSupport publish(@PathVariable("id") String id, @RequestBody LogForm form) {
@@ -112,7 +112,7 @@ public class CardDesignController {
                     @AllowProperty(pojo = CardType.class, name = {"key", "name"})
             }
     )
-    @ApiOperation("取消发布会员卡设计")
+    /** 取消发布会员卡设计 **/
     @RequestMapping(value = "/{id}/unpublish", method = RequestMethod.POST)
     @ResponseBody
     public ResultResourceSupport unpublish(@PathVariable("id") String id, @RequestBody LogForm form) {
@@ -124,7 +124,7 @@ public class CardDesignController {
                     @AllowProperty(pojo = CardType.class, name = {"key", "name"})
             }
     )
-    @ApiOperation("销毁会员卡设计")
+    /** 销毁会员卡设计 **/
     @RequestMapping(value = "/{id}/destroy", method = RequestMethod.POST)
     @ResponseBody
     public ResultResourceSupport destroy(@PathVariable("id") String id, @RequestBody LogForm form) {

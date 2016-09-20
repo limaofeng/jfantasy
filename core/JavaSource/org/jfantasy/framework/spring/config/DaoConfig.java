@@ -19,7 +19,7 @@ import org.springframework.context.annotation.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.orm.hibernate4.HibernateTransactionManager;
+import org.springframework.orm.hibernate5.HibernateTransactionManager;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
@@ -35,15 +35,19 @@ import java.util.Map;
 @Configuration
 @EnableTransactionManagement(proxyTargetClass = true)
 @EnableJpaRepositories(transactionManagerRef = "jpaTransactionManager", includeFilters = {@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, value = {JpaRepository.class})}, basePackages = "org.jfantasy.*.dao")
-@Import({MyBatisConfig.class})
+@Import({DataSourceConfig.class,MyBatisConfig.class})
 public class DaoConfig implements TransactionManagementConfigurer {
 
     private static final Log LOG = LogFactory.getLog(DaoConfig.class);
 
+    private final EntityManagerFactory entityManagerFactory;
+    private final ApplicationContext applicationContext;
+
     @Autowired(required = false)
-    private EntityManagerFactory entityManagerFactory;
-    @Autowired
-    private ApplicationContext applicationContext;
+    public DaoConfig(EntityManagerFactory entityManagerFactory, ApplicationContext applicationContext) {
+        this.entityManagerFactory = entityManagerFactory;
+        this.applicationContext = applicationContext;
+    }
 
     private <T> T createListenerInstance(T bean) {
         applicationContext.getAutowireCapableBeanFactory().autowireBean(bean);

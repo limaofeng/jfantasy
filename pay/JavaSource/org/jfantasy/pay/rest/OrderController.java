@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(value = "orders", description = "订单")
+/** 订单 **/
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
@@ -55,7 +55,7 @@ public class OrderController {
             ignore = @IgnoreProperty(pojo = Order.class, name = {"refunds", "orderItems", "payments"}),
             allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "name"})
     )
-    @ApiOperation("获取订单信息")
+    /** 获取订单信息 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String key) {
@@ -67,7 +67,7 @@ public class OrderController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms","default"}))
-    @ApiOperation(value = "创建订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
+    /** 创建订单交易 - 该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录 **/
     @RequestMapping(value = "/{id}/transactions", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -87,7 +87,7 @@ public class OrderController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "payProductId", "name", "platforms"}))
-    @ApiOperation(value = "获取订单交易", notes = "该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录")
+    /** 获取订单交易 - 该接口会判断交易是否创建,如果没有交易记录会添加交易订单到交易记录 **/
     @RequestMapping(value = "/{id}/transactions", method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> transactions(@PathVariable("id") String key,List<PropertyFilter> filters) {
@@ -99,7 +99,7 @@ public class OrderController {
             ignore = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
             allow = @AllowProperty(pojo = Order.class, name = {"key", "subject"})
     )
-    @ApiOperation("获取订单信息的付款信息")
+    /** 获取订单信息的付款信息 **/
     @RequestMapping(value = "/{id}/payments", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> payments(@PathVariable("id") String id) {
@@ -111,7 +111,7 @@ public class OrderController {
     }
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = Refund.class, name = {"order", "payConfig", "payment"}))
-    @ApiOperation("获取订单信息的付款信息")
+    /** 获取订单信息的付款信息 **/
     @RequestMapping(value = "/{id}/refunds", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> refunds(@PathVariable("id") String id) {
@@ -122,7 +122,7 @@ public class OrderController {
         return refundController.search(new Pager<Refund>(), filters);
     }
 
-    @ApiOperation("获取订单信息的明细信息")
+    /** 获取订单信息的明细信息 **/
     @RequestMapping(value = "/{id}/items", method = RequestMethod.GET)
     @ResponseBody
     public List<OrderItem> items(@PathVariable("id") String id) {

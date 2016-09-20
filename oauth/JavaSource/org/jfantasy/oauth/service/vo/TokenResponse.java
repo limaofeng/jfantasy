@@ -1,7 +1,6 @@
 package org.jfantasy.oauth.service.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.oauth.bean.enums.TokenType;
 
 import java.util.Date;
@@ -18,24 +17,39 @@ public class TokenResponse {
         this.setTokenCreationTime(accessToken.getTokenCreationTime());
     }
 
-    @ApiModelProperty(name = "access_token", value = "访问令牌。通过该令牌调用需要授权类接口", required = true)
+    /**
+     * 访问令牌。通过该令牌调用需要授权类接口
+     */
     @JsonProperty("access_token")
     private String key;
-    @ApiModelProperty(name = "token_type", value = "表示令牌类型，该值大小写不敏感，必选项 ", required = true)
+    /**
+     * 表示令牌类型，该值大小写不敏感，必选项
+     */
     @JsonProperty("token_type")
     private TokenType type;
-    @ApiModelProperty(name = "expires_in", value = "访问令牌的有效时间，单位是秒。", required = true)
+    /**
+     * 访问令牌的有效时间，单位是秒。
+     */
     @JsonProperty(value = "expires_in")
     private long expires;
-    @ApiModelProperty(value = "权限范围", notes = "如果与客户端申请的范围一致，此项省略")
+    /**
+     * 权限范围<br/>
+     * 如果与客户端申请的范围一致，此项省略
+     */
     private String scope;
-    @ApiModelProperty(name = "refresh_token", value = "更新令牌，用来获取下一次的访问令牌", required = true)
+    /**
+     * 更新令牌，用来获取下一次的访问令牌
+     */
     @JsonProperty("refresh_token")
     private String refreshToken;
-    @ApiModelProperty(name = "re_expires_in", value = "刷新令牌的有效时间，单位是秒。", required = true)
+    /**
+     * 刷新令牌的有效时间，单位是秒。
+     */
     @JsonProperty("re_expires_in")
     private long reExpires;
-    @ApiModelProperty(name = "token_creation_time", value = "token 的创建时间。", required = true)
+    /**
+     * token 的创建时间。
+     */
     @JsonProperty("token_creation_time")
     private Date tokenCreationTime;
 

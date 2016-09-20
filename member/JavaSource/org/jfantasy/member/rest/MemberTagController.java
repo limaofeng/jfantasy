@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
@@ -18,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-@Api(value = "member-tags", description = "会员标签接口")
+/** 会员标签接口 **/
 @RestController
 @RequestMapping("/members/{id}/tags")
 public class MemberTagController {
@@ -31,7 +29,7 @@ public class MemberTagController {
     private MemberService memberService;
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "获取会员标签")
+    /** 获取会员标签 **/
     @RequestMapping(method = RequestMethod.GET)
     public List<Tag> tags(@PathVariable("id") Long id, @RequestParam("type") String type) {
         if (memberService.get(id) == null) {
@@ -41,7 +39,7 @@ public class MemberTagController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "添加会员标签")
+    /** 添加会员标签 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -53,7 +51,7 @@ public class MemberTagController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "修改会员标签")
+    /** 修改会员标签 **/
     @RequestMapping(value = "/{tagid}", method = RequestMethod.PATCH)
     @ResponseBody
     public Tag tags(@PathVariable("id") Long id, @PathVariable("tagid") Long tagid, @Validated(RESTful.PATCH.class) @RequestBody TagForm from) {
@@ -63,7 +61,7 @@ public class MemberTagController {
         return this.tagService.update(TAG_TYPE_MEMBER, id.toString(), tagid, from.getName());
     }
 
-    @ApiOperation(value = "删除会员标签")
+    /** 删除会员标签 **/
     @RequestMapping(value = "/{tagid}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTags(@PathVariable("id") Long id, @PathVariable("tagid") Long tagid) {

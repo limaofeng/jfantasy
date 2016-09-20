@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
@@ -19,7 +17,7 @@ import java.util.List;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-@Api(value = "members-iorders", description = "开票订单")
+/** 开票订单 **/
 @RestController
 @RequestMapping(value = "/members/{id}/iorders", produces = {APPLICATION_JSON_VALUE})
 public class MemberIOrderController {
@@ -34,7 +32,7 @@ public class MemberIOrderController {
     @JsonResultFilter(
             allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"})
     )
-    @ApiOperation(value = "发票订单列表")
+    /** 发票订单列表 **/
     @RequestMapping(method = RequestMethod.GET)
     public Pager<ResultResourceSupport> search(@PathVariable("id") Long id, Pager<InvoiceOrder> pager, List<PropertyFilter> filters) {
         filters.add(new PropertyFilter("EQL_member.id",id));

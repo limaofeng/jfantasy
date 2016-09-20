@@ -1,7 +1,6 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.enums.OwnerType;
@@ -35,13 +34,11 @@ public class Log extends BaseBusEntity {
     /**
      * 订单ID
      */
-    @ApiModelProperty("详情")
     @Column(name = "ORDER_KEY", updatable = false, length = 30)
     private String orderKey;
     /**
      * 动作
      */
-    @ApiModelProperty("动作")
     @Column(name = "ACTION", nullable = false, updatable = false)
     private String action;
     /**

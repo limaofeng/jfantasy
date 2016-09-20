@@ -13,8 +13,12 @@ import javax.persistence.*;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Level extends BaseBusEntity {
 
+    private static final long serialVersionUID = 475700154214667112L;
+
     @Id
     @Column(name = "ID", updatable = false)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
     /**
      * 等级名称

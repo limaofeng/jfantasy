@@ -1,8 +1,6 @@
 package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful;
 
@@ -17,6 +15,8 @@ import java.math.BigDecimal;
 @Table(name = "MEM_INVOICE_ORDER")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "status"})
 public class InvoiceOrder extends BaseBusEntity {
+
+    private static final long serialVersionUID = -5904526950993808065L;
 
     public enum InvoiceOrderStatus {
         /**
@@ -34,8 +34,8 @@ public class InvoiceOrder extends BaseBusEntity {
     }
 
     @Id
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "invoice_order_gen")
+    @TableGenerator(name = "invoice_order_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_invoice_order:id", valueColumnName = "gen_value")
     @Column(name = "ID", updatable = false)
     private Long id;
     /**
@@ -72,7 +72,6 @@ public class InvoiceOrder extends BaseBusEntity {
     /**
      * 订单对应的用户
      */
-    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "MEMBER_ID", foreignKey = @ForeignKey(name = "FK_MEM_INVOICE_ORDER_MEMBER"))
     private Member member;

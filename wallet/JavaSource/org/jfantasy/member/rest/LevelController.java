@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
@@ -21,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "level", description = "会员等级")
+/** 会员等级 **/
 @RestController
 public class LevelController {
 
@@ -35,13 +33,13 @@ public class LevelController {
     private MemberService memberService;
 
     @JsonResultFilter(List.class)
-    @ApiOperation(value = "会员等级")
+    /** 会员等级 **/
     @RequestMapping(value = "/levels", method = RequestMethod.GET)
     public Pager<ResultResourceSupport> search(Pager<Level> pager, List<PropertyFilter> filters) {
         return assembler.toResources(levelService.search(pager, filters));
     }
 
-    @ApiOperation(value = "添加等级")
+    /** 添加等级 **/
     @RequestMapping(value = "/levels", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -49,14 +47,14 @@ public class LevelController {
         return assembler.toResource(levelService.save(level));
     }
 
-    @ApiOperation(value = "修改等级")
+    /** 修改等级 **/
     @RequestMapping(value = "/levels/{id}", method = RequestMethod.PATCH)
     public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody Level level) {
         level.setId(id);
         return assembler.toResource(levelService.update(level));
     }
 
-    @ApiOperation(value = "删除等级")
+    /** 删除等级 **/
     @RequestMapping(value = "/levels/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void update(@PathVariable("id") Long id) {
@@ -64,7 +62,7 @@ public class LevelController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = BaseBusEntity.class, name = {""}))
-    @ApiOperation(value = "用户的会员等级")
+    /** 用户的会员等级 **/
     @RequestMapping(value = "/members/{memid}/level", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport level(@PathVariable("memid") Long id) {

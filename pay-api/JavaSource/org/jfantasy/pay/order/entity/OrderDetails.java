@@ -1,33 +1,47 @@
 package org.jfantasy.pay.order.entity;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.math.BigDecimal;
 import java.util.List;
 
 /**
  * 订单接口类
  */
-@ApiModel("订单详情")
 public class OrderDetails {
-    @ApiModelProperty("编号")
+    /**
+     * 编号
+     */
     private String sn;
-    @ApiModelProperty("订单类型")
+    /**
+     * 订单类型
+     */
     private String type;
-    @ApiModelProperty("订单摘要")
+    /**
+     * 订单摘要
+     */
     private String subject;
-    @ApiModelProperty("订单详情")
+    /**
+     * 订单详情
+     */
     private String Body;
-    @ApiModelProperty("订单总金额")
+    /**
+     * 订单总金额
+     */
     private BigDecimal totalFee;
-    @ApiModelProperty("订单应付金额")
+    /**
+     * 订单应付金额
+     */
     private BigDecimal payableFee;
-    @ApiModelProperty("订单是否可以进行支付")
+    /**
+     * 订单是否可以进行支付
+     */
     private boolean payment;
-    @ApiModelProperty("订单项")
+    /**
+     * 订单项
+     */
     private List<OrderItem> orderItems;
-    @ApiModelProperty("订单关联的会员")
+    /**
+     * 订单关联的会员
+     */
     private Long memberId;
 
     public String getSn() {

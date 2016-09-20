@@ -1,7 +1,6 @@
 package org.jfantasy.common.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -13,7 +12,6 @@ import javax.persistence.*;
  * 匹配规则，下单时间往后，第一个快照
  * 存快照规则。如果有订单关联商品。如果商品被修改。修改前存储快照
  */
-@ApiModel(value = "快照信息", description = "用于描述商品及文章的历史信息")
 @Entity
 @Table(name = "SNAPSHOT")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

@@ -21,30 +21,30 @@ import javax.persistence.*;
 public class Account extends BaseBusEntity implements AccountDetails {
 
     //开发者凭证
-    @ApiModelProperty("开发者凭证")
+    /** 开发者凭证 **/
     @Id
     @Column(name = "APP_ID", length = 200)
     private String appId;
     /**
      * 原始ID
      */
-    @ApiModelProperty("原始ID")
+    /** 原始ID **/
     @Column(name = "PRIMITIVE_ID", length = 200)
     private String primitiveId;
-    @ApiModelProperty("密钥")
+    /** 密钥 **/
     @Column(name = "APP_SECRET", length = 200)
     private String secret;
     /**
      * 公众号类型
      */
-    @ApiModelProperty("公众号类型")
+    /** 公众号类型 **/
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", length = 20)
     private Type type;
     /**
      * 公众号名称
      */
-    @ApiModelProperty("公众号名称")
+    /** 公众号名称 **/
     @Column(name = "NAME", length = 100)
     public String name;
     @ApiModelProperty(value = "token", notes = "微信服务器配置的token")

@@ -30,52 +30,52 @@ public class DataDictionary extends BaseBusEntity {
     /**
      * 代码
      */
-    @ApiModelProperty("代码")
+    /** 代码 **/
     @Id
     private String code;
     /**
      * 配置类别
      */
-    @ApiModelProperty("配置类别")
+    /** 配置类别 **/
     @Id
     private String type;
     /**
      * 名称
      */
-    @ApiModelProperty("名称")
+    /** 名称 **/
     @Column(name = "NAME", length = 50)
     private String name;
     /**
      * 排序字段
      */
-    @ApiModelProperty(hidden = true)
+    :
     @Column(name = "SORT")
     private Integer sort;
     /**
      * 描述
      */
-    @ApiModelProperty("描述")
+    /** 描述 **/
     @Column(name = "DESCRIPTION", length = 200)
     private String description;
     /**
      * 上级数据字典
      */
-    @ApiModelProperty("上级数据字典")
+    /** 上级数据字典 **/
     @ManyToOne(fetch = FetchType.LAZY, cascade = {javax.persistence.CascadeType.REFRESH})
     @JoinColumns(value = {@JoinColumn(name = "PCODE", referencedColumnName = "CODE"), @JoinColumn(name = "PTYPE", referencedColumnName = "TYPE")}, foreignKey = @ForeignKey(name = "FK_SYS_DD_PARENT"))
     private DataDictionary parent;
     /**
      * 下级数据字典
      */
-    @ApiModelProperty(hidden = true)
+    :
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     private List<DataDictionary> children;
     @Transient
-    @ApiModelProperty("KEY")
+    /** KEY **/
     private DataDictionaryKey key;
     @Transient
-    @ApiModelProperty("上级数据KEY")
+    /** 上级数据KEY **/
     private DataDictionaryKey parentKey;
 
     @JsonSerialize(using = DataDictionaryKeySerializer.class)

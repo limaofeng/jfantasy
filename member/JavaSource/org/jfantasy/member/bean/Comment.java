@@ -3,9 +3,6 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
@@ -23,53 +20,42 @@ import java.util.Properties;
  * @version 1.0
  * @since 2013-9-21 下午4:36:07
  */
-@ApiModel("评论表")
 @Entity
 @Table(name = "MEM_COMMENT")
+@TableGenerator(name = "comment_gen", table = "sys_sequence",pkColumnName = "gen_name",pkColumnValue = "mem_comment:id",valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "for_comment"})
 public class Comment extends BaseBusEntity {
 
     private static final long serialVersionUID = 8413023474799399082L;
 
     @Id
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "comment_gen")
     @Column(name = "ID", updatable = false)
     private Long id;
-    @ApiModelProperty("用户名")
     @Column(name = "USERNAME")
     private String username;
     @NotNull(groups = RESTful.POST.class)
-    @ApiModelProperty("内容")
     @Lob
     @Column(name = "CONTENT", updatable = false, nullable = false)
     private String content;
-    @ApiModelProperty("IP")
     @Column(name = "IP", updatable = false, nullable = false, length = 15)
     private String ip;
-    @ApiModelProperty("是否显示")
     @Column(name = "IS_SHOW", nullable = false)
     private boolean show;
     @NotNull(groups = RESTful.POST.class)
-    @ApiModelProperty(value = "评论目标类型", notes = "评论目标类型,(如商品、医生等)")
     @Column(name = "TARGET_TYPE", updatable = false, nullable = false)
     private String targetType;
     @NotNull(groups = RESTful.POST.class)
-    @ApiModelProperty(value = "评论目标ID", notes = "评论目标ID,(如商品、医生等)")
     @Column(name = "TARGET_ID", updatable = false, nullable = false)
     private String targetId;
-    @ApiModelProperty(value = "路径", notes = "该字段不需要手动维护")
     @Column(name = "PATH", updatable = false, nullable = false, length = 1000)
     private String path;
-    @ApiModelProperty(value = "上个评论")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "FOR_COMMENT_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_COMMENT_FOR_COMMENT"))
     private Comment forComment;
-    @ApiModelProperty(hidden = true, value = "回复")
     @OneToMany(mappedBy = "forComment", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("createTime asc")
     private List<Comment> replyComments;
-    @ApiModelProperty(hidden = true)
     @NotNull(groups = RESTful.POST.class)
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.REFRESH)
     @JoinColumn(name = "MEMBER_ID", updatable = false, nullable = false, foreignKey = @ForeignKey(name = "FK_SHIP_ADDRESS_MEMBER"))
@@ -77,7 +63,6 @@ public class Comment extends BaseBusEntity {
     /**
      * 扩展属性
      */
-    @ApiModelProperty(hidden = true)
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;

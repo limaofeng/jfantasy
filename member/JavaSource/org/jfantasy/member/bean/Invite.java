@@ -3,8 +3,6 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
@@ -18,13 +16,14 @@ import java.util.Properties;
  */
 @Entity
 @Table(name = "MEM_INVITE")
+@TableGenerator(name = "invite_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_invite:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Invite extends BaseBusEntity {
 
+    private static final long serialVersionUID = 4892269028206173172L;
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "invite_gen")
     private Long id;
     /**
      * 用户名称
@@ -45,7 +44,6 @@ public class Invite extends BaseBusEntity {
     /**
      * 动态属性
      */
-    @ApiModelProperty(hidden = true)
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;

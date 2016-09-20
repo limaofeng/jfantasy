@@ -3,8 +3,6 @@ package org.jfantasy.pay.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.pay.order.entity.enums.CallType;
@@ -15,7 +13,6 @@ import java.util.Properties;
 /**
  * 注册的订单服务器
  */
-@ApiModel("订单服务")
 @Entity
 @Table(name = "PAY_ORDER_SERVER")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
@@ -37,6 +34,7 @@ public class OrderServer extends BaseBusEntity {
      * 调用服务时,需要提供的身份信息
      */
     public final static String PROPS_TOKEN = "token";
+    private static final long serialVersionUID = 1314573695371668316L;
 
     /**
      * 服务的订单类型
@@ -52,21 +50,20 @@ public class OrderServer extends BaseBusEntity {
     /**
      * 调用方式
      */
-    @ApiModelProperty("调用方式")
+    /** 调用方式 **/
     @Enumerated(EnumType.STRING)
     @Column(name = "CALL_TYPE", length = 10, nullable = false)
     private CallType callType;
     /**
      * 配置参数
      */
-    @ApiModelProperty(hidden = true)
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
     /**
      * 详细介绍
      */
-    @ApiModelProperty("介绍")
+    /** 介绍 **/
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;
     /**

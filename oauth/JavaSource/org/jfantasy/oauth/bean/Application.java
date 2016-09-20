@@ -1,10 +1,7 @@
 package org.jfantasy.oauth.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.security.bean.Role;
 
@@ -14,16 +11,17 @@ import java.util.List;
 /**
  * 应用
  */
-@ApiModel("应用配置")
 @Entity
 @Table(name = "OAUTH_APP")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Application extends BaseBusEntity {
 
+    private static final long serialVersionUID = 5943657998408920009L;
+
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
     @Column(name = "NAME")
     private String name;
@@ -36,7 +34,6 @@ public class Application extends BaseBusEntity {
     /**
      * 用户对应的角色
      */
-    @ApiModelProperty(hidden = true)
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_ROLE_APP", joinColumns = @JoinColumn(name = "APP_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_APP_AID"))
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)

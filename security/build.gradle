@@ -4,5 +4,7 @@ description = '权限及认证中心'
 dependencies {
     compile project(':jfantasy-core')
     compile project(':jfantasy-file-sdk')
+    compile "org.springframework.security:spring-security-core:4.1.1.RELEASE"
+    compile "org.springframework.security:spring-security-web:4.1.1.RELEASE"
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
 }

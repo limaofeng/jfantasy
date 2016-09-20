@@ -1,7 +1,6 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.order.entity.enums.PaymentType;
@@ -48,7 +47,9 @@ public class Refund extends BaseBusEntity {
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", updatable = false, nullable = false)
     private PaymentType type;// 退款类型
-    @ApiModelProperty("退款状态")
+    /**
+     * 退款状态
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATUS", nullable = false)
     private RefundStatus status;
@@ -70,10 +71,11 @@ public class Refund extends BaseBusEntity {
     /**
      * 交易号（用于记录第三方交易的交易流水号）
      */
-    @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
     @Column(name = "TRADE_NO")
     private String tradeNo;
-    @ApiModelProperty(value = "交易时间", notes = "用于记录第三方交易的交易时间")
+    /**
+     * 交易时间 (用于记录第三方交易的交易时间)
+     */
     @Column(name = "TRADE_TIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tradeTime;
@@ -83,14 +85,14 @@ public class Refund extends BaseBusEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAYMENT_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_REFUND_PAYMENT"))
     private Payment payment;
-    @ApiModelProperty("订单详情")
+    /** 订单详情 **/
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE", updatable = false), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN", updatable = false)})
     private Order order;
     /**
      * 交易记录
      */
-    @ApiModelProperty("交易记录")
+    /** 交易记录 **/
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TXN_SN", referencedColumnName = "SN")
     private Transaction transaction;

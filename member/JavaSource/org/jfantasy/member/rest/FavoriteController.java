@@ -1,6 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.validation.RESTful;
@@ -12,7 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value = "favorites", description = "收藏夹")
+/** 收藏夹 **/
 @RestController
 @RequestMapping("/favorites")
 public class FavoriteController {

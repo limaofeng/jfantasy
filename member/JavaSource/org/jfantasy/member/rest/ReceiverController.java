@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "receiver", description = "收货地址")
+/** 收货地址 **/
 @RestController
 @RequestMapping("/receivers")
 public class ReceiverController {
@@ -30,14 +28,22 @@ public class ReceiverController {
         this.receiverService = receiverService;
     }
 
-    @ApiOperation(value = "查询收货地址", notes = "返回会员的收货地址")
+    /**
+     * 查询收货地址
+     * @param filters
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> search(List<PropertyFilter> filters) {
         return assembler.toResources(this.receiverService.find(filters, "isDefault", "desc"));
     }
 
-    @ApiOperation("查看收货地址")
+    /**
+     * 查看收货地址
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResultResourceSupport update(@PathVariable("id") Long id) {
         Receiver _receiver = this.receiverService.get(id);
@@ -47,13 +53,22 @@ public class ReceiverController {
         return assembler.toResource(_receiver);
     }
 
-    @ApiOperation(value = "添加收货地址", notes = "添加会员收货地址")
+    /**
+     * 添加收货地址
+     * @param receiver
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResultResourceSupport create(@Validated(RESTful.POST.class) @RequestBody Receiver receiver) {
         return assembler.toResource(this.receiverService.save(receiver));
     }
 
-    @ApiOperation(value = "更新收货地址", notes = "更新会员的收货地址")
+    /**
+     * 更新收货地址
+     * @param id
+     * @param receiver
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
     public ResultResourceSupport update(@PathVariable("id") Long id, @RequestBody Receiver receiver) {
         Receiver _receiver = this.receiverService.get(id);
@@ -64,7 +79,10 @@ public class ReceiverController {
         return assembler.toResource(this.receiverService.update(receiver));
     }
 
-    @ApiOperation(value = "删除收货地址", notes = "删除会员收货地址")
+    /**
+     * 删除收货地址
+     * @param id
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {

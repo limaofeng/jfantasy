@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "payproducts", description = "支付产品")
+/** 支付产品 **/
 @RestController
 @RequestMapping("/payproducts")
 public class PayProductController {
@@ -50,7 +50,7 @@ public class PayProductController {
     }
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = PayConfig.class, name = {"properties"}))
-    @ApiOperation(value = "适用于该支付产品的支付配置", notes = "查看产品的支付配置信息")
+    /** 适用于该支付产品的支付配置 - 查看产品的支付配置信息 **/
     @RequestMapping(value = "/{id}/payconfigs", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> payconfigs(@PathVariable("id") String id, Pager<PayConfig> pager, List<PropertyFilter> filters) {

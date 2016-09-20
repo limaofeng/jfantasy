@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * 操作日志
  */
-@Api(value = "logs", description = "日志")
+/** 日志 **/
 @RestController
 @RequestMapping("/logs")
 public class LogController {

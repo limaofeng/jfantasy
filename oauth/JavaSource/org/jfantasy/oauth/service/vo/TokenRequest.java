@@ -2,25 +2,43 @@ package org.jfantasy.oauth.service.vo;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.oauth.bean.enums.GrantType;
 
 public class TokenRequest {
-    @ApiModelProperty(name = "client_id", value = "客户端的ID", notes = "分配的 apiKey", required = true)
+    /**
+     * 客户端的ID<br/>
+     * 分配的 apiKey
+     */
     @JsonProperty("client_id")
     private String apiKey;
-    @ApiModelProperty(name = "grant_type", value = "授权模式", required = true)
+    /**
+     * 授权模式
+     */
     @JsonProperty("grant_type")
     private GrantType grantType;
-    @ApiModelProperty(value = "授权码", notes = "授权模式 为 授权码模式 时 必填")
+    /**
+     * 授权码<br/>
+     * 授权模式 为 授权码模式 时 必填
+     */
     private String code;
-    @ApiModelProperty(value = "用户名", notes = "授权模式 为 密码模式 时 必填")
+    /**
+     * 用户名<br/>
+     * 授权模式 为 密码模式 时 必填
+     */
     private String username;
-    @ApiModelProperty(value = "密码", notes = "授权模式 为 密码模式 时 必填")
+    /**
+     * 密码<br/>
+     * 授权模式 为 密码模式 时 必填
+     */
     private String password;
-    @ApiModelProperty("表示权限范围，可选项。")
+    /**
+     * 表示权限范围，可选项。
+     */
     private String scope;
-    @ApiModelProperty(name = "refresh_token",value = "更新令牌", notes = "授权模式 为 更新令牌模式 时 必填")
+    /**
+     * 更新令牌<br/>
+     * 授权模式 为 更新令牌模式 时 必填
+     */
     @JsonProperty("refresh_token")
     private String refreshToken;
 

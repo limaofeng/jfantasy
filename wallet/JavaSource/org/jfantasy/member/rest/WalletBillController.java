@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
@@ -19,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value = "bills", description = "账单")
+/** 账单 **/
 @RestController
 @RequestMapping("/bills")
 public class WalletBillController {
@@ -30,13 +28,13 @@ public class WalletBillController {
     private WalletService walletService;
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Wallet.class, name = {"id"}))
-    @ApiOperation(value = "获取账单信息", notes = "返回账单详情")
+    /** 获取账单信息 - 返回账单详情 **/
     @RequestMapping(method = RequestMethod.GET)
     public Pager<ResultResourceSupport> search(Pager<WalletBill> pager, List<PropertyFilter> filters) {
         return assembler.toResources(this.walletService.findBillPager(pager, filters));
     }
 
-    @ApiOperation(value = "获取账单信息", notes = "返回账单详情")
+    /** 获取账单信息 - 返回账单详情 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(this.walletService.getBill(id));

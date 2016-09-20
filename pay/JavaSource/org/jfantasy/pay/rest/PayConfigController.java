@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.List;
 
-@Api(value = "payconfigs", description = "支付配置")
+/** 支付配置 **/
 @RestController
 @RequestMapping("/payconfigs")
 public class PayConfigController {
@@ -83,7 +83,7 @@ public class PayConfigController {
         return this.paymentService.test(paymentConfigId, parameters);
     }
 
-    @ApiOperation("删除支付配置")
+    /** 删除支付配置 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
@@ -94,7 +94,7 @@ public class PayConfigController {
             ignore = @IgnoreProperty(pojo = Payment.class, name = {"payConfig", "orderKey"}),
             allow = @AllowProperty(pojo = Order.class, name = {"type", "subject", "sn"})
     )
-    @ApiOperation("支付配置对应的支付记录")
+    /** 支付配置对应的支付记录 **/
     @RequestMapping(value = "/{id}/payments", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> payments(@PathVariable("id") String id, Pager<Payment> pager, List<PropertyFilter> filters) {
@@ -109,7 +109,7 @@ public class PayConfigController {
                     @AllowProperty(pojo = Payment.class, name = {"totalAmount", "payConfigName", "sn", "status"})
             }
     )
-    @ApiOperation("支付配置对应的退款记录")
+    /** 支付配置对应的退款记录 **/
     @RequestMapping(value = "/{id}/refunds", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> refunds(@PathVariable("id") String id, Pager<Refund> pager, List<PropertyFilter> filters) {

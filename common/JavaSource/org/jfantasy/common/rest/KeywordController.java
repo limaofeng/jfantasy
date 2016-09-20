@@ -1,7 +1,5 @@
 package org.jfantasy.common.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.apache.lucene.search.Query;
 import org.jfantasy.common.bean.Keyword;
 import org.jfantasy.common.service.KeywordService;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(value = "keyword", description = "关键词接口")
+/** 关键词接口 **/
 @RestController
 @RequestMapping("/keywords")
 public class KeywordController {
@@ -37,13 +35,17 @@ public class KeywordController {
         return this.keywordService.search(pager, BuguParser.parse(queries.toArray(new Query[queries.size()])));
     }
 
-    @ApiOperation("查看关键词")
+    /** 查看关键词 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public Keyword view(@PathVariable("id") Long id) {
         return this.keywordService.get(id);
     }
 
-    @ApiOperation(value = "添加关键词", notes = "通过该接口, 添加关键词")
+    /**
+     * 添加关键词
+     * @param keyword
+     * @return
+     */
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -51,21 +53,32 @@ public class KeywordController {
         return this.keywordService.save(keyword.getType(), keyword.getWords());
     }
 
-    @ApiOperation(value = "删除关键词", notes = "通过该接口, 删除关键词")
+    /**
+     * 删除关键词
+     * @param id
+     */
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.keywordService.delete(id);
     }
 
-    @ApiOperation(value = "批量删除关键词", notes = "通过该接口, 批量删除关键词")
+    /**
+     * 批量删除关键词
+     * @param id
+     */
     @RequestMapping(method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody Long... id) {
         this.keywordService.delete(id);
     }
 
-    @ApiOperation(value = "更新关键词", notes = "通过该接口, 更新关键词")
+    /**
+     * 更新关键词
+     * @param id
+     * @param keyword
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public Keyword update(@PathVariable("id") Long id, @RequestBody Keyword keyword) {
         keyword.setId(id);

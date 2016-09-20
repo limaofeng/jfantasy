@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
 
-@Api(value = "weixin-pay", description = "微信支付接口")
+/** 微信支付接口 **/
 @RestController
 @RequestMapping("/weixinpay/{appid}")
 public class WeixinPayController {
@@ -48,7 +48,7 @@ public class WeixinPayController {
     /**
      * 生成扫码支付的二维码
      */
-    @ApiOperation(value = "微信扫码支付二维码")
+    /** 微信扫码支付二维码 **/
     @RequestMapping(value = "/qrcode", method = RequestMethod.GET)
     @ResponseBody
     public void qrcode(@PathVariable("appid") String appid, @RequestParam("tid") String transactionId, @RequestParam(value = "model", required = false) String model, HttpServletResponse response) throws WriterException, IOException {
@@ -88,7 +88,7 @@ public class WeixinPayController {
         MatrixToImageWriter.writeToStream(bitMatrix, "png", response.getOutputStream());
     }
 
-    @ApiOperation(value = "微信扫码回调接口,需要在微信平台中配置该接口")
+    /** 微信扫码回调接口,需要在微信平台中配置该接口 **/
     @RequestMapping(value = "/paycallback", method = RequestMethod.POST)
     @ResponseBody
     public String callback(@PathVariable("appid") String appid, @RequestBody String body) {

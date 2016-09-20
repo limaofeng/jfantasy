@@ -1,8 +1,6 @@
 package org.jfantasy.common.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.common.bean.converter.AreaTagsConverter;
 import org.jfantasy.common.bean.enums.AreaTag;
@@ -11,7 +9,6 @@ import org.jfantasy.framework.dao.BaseBusEntity;
 import javax.persistence.*;
 import java.util.List;
 
-@ApiModel("地区信息")
 @Entity
 @Table(name = "SYS_AREA")
 @JsonIgnoreProperties(value = {"hibernate_lazy_initializer", "handler", "creator", "create_time", "modifier", "modify_time", "parent", "children"})
@@ -25,30 +22,22 @@ public class Area extends BaseBusEntity {
     @Id
     @Column(name = "ID", nullable = false, updatable = false, length = 50)
     private String id;
-    @ApiModelProperty("名称")
     @Column(name = "NAME", nullable = false)
     private String name;// 名称
-    @ApiModelProperty("完整地区名称")
     @Column(name = "DISPLAY_NAME", nullable = false, length = 3000)
     private String displayName;// 完整地区名称
-    @ApiModelProperty(hidden = true)
     @Column(name = "PATH", nullable = false, length = 3000)
     private String path;// 路径
-    @ApiModelProperty("标签")
     @Column(name = "TAGS", nullable = false, length = 30)
     @Convert(converter = AreaTagsConverter.class)
     private AreaTag[] tags;
-    @ApiModelProperty("层级")
     @Column(name = "LAYER", nullable = false)
     private Integer layer;// 层级
-    @ApiModelProperty("排序")
     @Column(name = "SORT")
     private Integer sort;// 排序
     @ManyToOne(fetch = FetchType.LAZY)
-    @ApiModelProperty(hidden = true)
     @JoinColumn(name = "P_ID", foreignKey = @ForeignKey(name = "FK_AREA_PARENT"))
     private Area parent;// 上级地区
-    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort asc")
     private List<Area> children;// 下级地区

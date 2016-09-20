@@ -1,24 +1,14 @@
 package org.jfantasy.common;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
-@ApiModel("地区信息")
 public class Area {
 
     private String id;
-    @ApiModelProperty("名称")
     private String name;// 名称
-    @ApiModelProperty("完整地区名称")
     private String displayName;// 完整地区名称
-    @ApiModelProperty(hidden = true)
     private String path;// 路径
-    @ApiModelProperty("标签")
     private String[] tags;
-    @ApiModelProperty("层级")
     private Integer layer;// 层级
-    @ApiModelProperty("排序")
     private Integer sort;// 排序
 
     public Area() {

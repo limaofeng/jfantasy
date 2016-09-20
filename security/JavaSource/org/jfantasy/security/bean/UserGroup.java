@@ -3,7 +3,6 @@ package org.jfantasy.security.bean;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.ObjectUtil;
 
@@ -20,9 +19,9 @@ public class UserGroup extends BaseBusEntity {
     private static final long serialVersionUID = 7898475330929818969L;
 
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID", nullable = false, precision = 22, scale = 0)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
     /**
      * 用户组编码

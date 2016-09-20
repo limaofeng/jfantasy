@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "system-dds", description = "数据字典")
+/** 数据字典 **/
 @RestController
 @RequestMapping("/system/dds")
 public class DataDictionaryController {
@@ -22,14 +22,14 @@ public class DataDictionaryController {
     @Autowired
     private DataDictionaryService dataDictionaryService;
 
-    @ApiOperation(value = "删除数据字典", notes = "删除数据字典")
+    /** 删除数据字典 - 删除数据字典 **/
     @RequestMapping(value = "/{type}:{code}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("type") String type, @PathVariable("code") String code) {
         this.dataDictionaryService.delete(DataDictionaryKey.newInstance(code, type));
     }
 
-    @ApiOperation(value = "批量删除数据字典", notes = "删除数据字典")
+    /** 批量删除数据字典 - 删除数据字典 **/
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@RequestBody String... keys) {

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@Api(value = "weixin-accounts-users", description = "微信公众号粉丝管理接口")
+/** 微信公众号粉丝管理接口 **/
 @RestController("weixin.accountUserController")
 @RequestMapping("/weixin/accounts/{appid}/users")
 public class UserController {
@@ -24,7 +24,7 @@ public class UserController {
     @Autowired(required = false)
     private WeiXinSessionFactory weiXinSessionFactory;
 
-    @ApiOperation(value = "获取微信粉丝", notes = "通过粉丝ID获取关注的用户信息")
+    /** 获取微信粉丝 - 通过粉丝ID获取关注的用户信息 **/
     @RequestMapping(value = "/{openid}", method = RequestMethod.GET)
     @ResponseBody
     public User view(@PathVariable("appid") String appid, @PathVariable String openid, HttpServletResponse response) throws WeiXinException, IOException {
@@ -59,7 +59,7 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "获取微信粉丝", notes = "通过粉丝ID获取关注的用户信息")
+    /** 获取微信粉丝 - 通过粉丝ID获取关注的用户信息 **/
     @RequestMapping(value = "/{openid}", method = RequestMethod.PATCH)
     @ResponseBody
     public User update(@PathVariable("appid") String appid, @PathVariable String openid, @RequestBody User user) throws WeiXinException, IOException {

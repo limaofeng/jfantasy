@@ -3,7 +3,6 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jfantasy.common.Area;
@@ -24,16 +23,16 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MEM_INVOICE")
+@TableGenerator(name = "invoice_gen", table = "sys_sequence",pkColumnName = "gen_name",pkColumnValue = "mem_invoice:id",valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Invoice extends BaseBusEntity {
 
+    private static final long serialVersionUID = -4779393716963955860L;
     @Null(groups = {RESTful.POST.class})
     @Id
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "invoice_gen")
     @Column(name = "ID", updatable = false)
     private Long id;
-    @ApiModelProperty("编号")
     @GeneratedValue(generator = "serialnumber")
     @GenericGenerator(
             name = "serialnumber",
@@ -45,35 +44,28 @@ public class Invoice extends BaseBusEntity {
                     )})
     @Column(name = "NO", nullable = false, length = 20)
     private String no;
-    @ApiModelProperty("类型")
     @Column(name = "TYPE", length = 10)
     private String type;
     @Null(groups = {RESTful.POST.class})
-    @ApiModelProperty("状态")
     @Column(name = "STATUS", length = 10)
     private InvoiceStatus status;
     /*************************************/
     /*          发票内容                  */
     /*************************************/
-    @ApiModelProperty("内容")
     @Column(name = "content", length = 200)
     private String content;
     @NotNull(groups = {RESTful.POST.class})
-    @ApiModelProperty("抬头")
     @Column(name = "TITLE", length = 200)
     private String title;
     @Null(groups = {RESTful.POST.class})
-    @ApiModelProperty("金额")
     @Column(name = "AMOUNT", scale = 2, nullable = false)
     private BigDecimal amount;
     /*************************************/
     /*          物流信息                  */
     /*************************************/
-    @ApiModelProperty("物流公司")
     @Column(name = "LOGISTICS", length = 20)
     private String logistics;
     @JsonProperty("ship_no")
-    @ApiModelProperty("快递编号")
     @Column(name = "SHIP_NO", length = 20)
     private String shipNo;
     /*************************************/
@@ -81,26 +73,21 @@ public class Invoice extends BaseBusEntity {
     /*************************************/
     @NotNull(groups = {RESTful.POST.class})
     @JsonProperty("ship_name")
-    @ApiModelProperty("收货人姓名")
     @Column(name = "SHIP_NAME", nullable = false)
     private String shipName;
     @NotNull(groups = {RESTful.POST.class})
     @JsonProperty("ship_tel")
-    @ApiModelProperty("收件人联系电话")
     @Column(name = "SHIP_TEL", nullable = false)
     private String shipTel;
     @NotNull(groups = {RESTful.POST.class})
-    @ApiModelProperty("收件人地区编码")
     @Column(name = "SHIP_AREA_STORE", nullable = false)
     @Convert(converter = AreaConverter.class)
     @JsonDeserialize(using = AreaDeserializer.class)
     private Area area;
     @NotNull(groups = {RESTful.POST.class})
-    @ApiModelProperty("收件人地址")
     @JsonProperty("ship_address")
     @Column(name = "SHIP_ADDRESS", nullable = false)
     private String shipAddress;// 收货地址
-    @ApiModelProperty("手机人邮编")
     @JsonProperty("ship_zip_code")
     @Column(name = "SHIP_ZIP_CODE")
     private String shipZipCode;// 收货邮编

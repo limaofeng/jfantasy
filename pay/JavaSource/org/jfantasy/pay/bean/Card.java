@@ -1,7 +1,6 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.converter.ExtraServiceConverter;
 import org.jfantasy.pay.bean.enums.CardStatus;
@@ -24,7 +23,6 @@ public class Card extends BaseBusEntity {
     /**
      * 卡号
      */
-    @ApiModelProperty("编号")
     @Id
     @Column(name = "NUMBER", length = 20)
     private String no;

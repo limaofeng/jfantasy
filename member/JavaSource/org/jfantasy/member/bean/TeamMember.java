@@ -3,7 +3,6 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
@@ -12,6 +11,8 @@ import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.enums.TeamMemberStatus;
 import org.jfantasy.security.bean.enums.Sex;
+
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,13 +23,23 @@ import java.util.Properties;
  */
 @Entity
 @Table(name = "MEM_TEAM_MEMBER", uniqueConstraints = @UniqueConstraint(name = "UK_TEAM_MEMBER", columnNames = {"MEMBER_ID", "TEAM_ID"}))
+@GenericGenerator(name = "team_member_gen", strategy = "enhanced-table",
+        parameters = {
+                @Parameter(name = "table_name", value = "sys_sequence"),
+                @Parameter(name = "value_column_name", value = "gen_value"),
+                @Parameter(name = "segment_column_name", value = "gen_name"),
+                @Parameter(name = "segment_value", value = "mem_team_member:id"),
+                @Parameter(name = "increment_size", value = "10"),
+                @Parameter(name = "optimizer", value = "pooled-lo")
+        })
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class TeamMember extends BaseBusEntity {
 
+    private static final long serialVersionUID = -7880093458033934231L;
+
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "team_member_gen")
     private Long id;
     /**
      * 用户名称
@@ -85,7 +96,6 @@ public class TeamMember extends BaseBusEntity {
     /**
      * 动态属性
      */
-    @ApiModelProperty(hidden = true)
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;

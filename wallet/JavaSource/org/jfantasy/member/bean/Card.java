@@ -2,7 +2,6 @@ package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
 import org.jfantasy.member.bean.converter.CardStyleConverter;
@@ -17,10 +16,11 @@ import java.util.Properties;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "wallet"})
 public class Card extends BaseBusEntity {
 
+    private static final long serialVersionUID = -1463056313189743496L;
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
     /**
      * 卡号
@@ -32,7 +32,7 @@ public class Card extends BaseBusEntity {
      * 钱包
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "WALLET_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_BILL_WALLET"))
+    @JoinColumn(name = "WALLET_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_CARD_WALLET"))
     private Wallet wallet;
     /**
      * 卡片样式

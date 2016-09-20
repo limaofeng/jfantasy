@@ -2,8 +2,7 @@ package org.jfantasy.security.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import org.hibernate.annotations.GenericGenerator;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -36,9 +35,9 @@ public class OrgRelation extends BaseBusEntity {
      * 标示主键
      */
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
     /**
      * 组织机构
@@ -71,7 +70,7 @@ public class OrgRelation extends BaseBusEntity {
     /**
      * 下级关系
      */
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonInclude(content = JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     private List<OrgRelation> children;

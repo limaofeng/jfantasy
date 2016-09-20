@@ -2,7 +2,6 @@ package org.jfantasy.springboot.bean;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
@@ -37,7 +36,6 @@ public class Article extends BaseBusEntity {
     /**
      * 摘要
      */
-    @ApiModelProperty("摘要")
     @Column(name = "SUMMARY", length = 500)
     private String summary;
     /**

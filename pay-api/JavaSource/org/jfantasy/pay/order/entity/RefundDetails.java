@@ -1,6 +1,5 @@
 package org.jfantasy.pay.order.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.pay.order.entity.enums.PaymentType;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
 
@@ -25,56 +24,44 @@ public class RefundDetails implements Serializable {
     private OrderKey orderKey;
     private String sn;// 退款编号
     private PaymentType type;// 退款类型
-    @ApiModelProperty("退款状态")
-    private RefundStatus status;
+    private RefundStatus status;// 退款状态
     /**
      * 支付配置标示
      */
-    @ApiModelProperty("支付配置Id")
     private Long payConfigId;
-    @ApiModelProperty("支付配置名称")
     private String payConfigName;// 支付配置名称
-    @ApiModelProperty("退款银行名称")
     private String bankName;// 退款银行名称
-    @ApiModelProperty("退款银行账号")
     private String bankAccount;// 退款银行账号
-    @ApiModelProperty("退款金额")
     private BigDecimal totalAmount;// 退款金额
-    @ApiModelProperty("收款人")
     private String payee;// 收款人
-    @ApiModelProperty("备注")
     private String memo;// 备注
     /**
      * 交易号（用于记录第三方交易的交易流水号）
      */
-    @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
     private String tradeNo;
-    @ApiModelProperty(value = "支付时间",notes = "用于记录第三方交易的交易时间")
+    /**
+     * 支付时间(用于记录第三方交易的交易时间)
+     */
     private Date tradeTime;
     /**
      * 原支付交易
      */
-    @ApiModelProperty("原支付交易")
     private PaymentDetails payment;
     /**
      * 创建人
      */
-    @ApiModelProperty(hidden = true)
     private String creator;
     /**
      * 创建时间
      */
-    @ApiModelProperty(hidden = true)
     private Date createTime;
     /**
      * 最后修改人
      */
-    @ApiModelProperty(hidden = true)
     private String modifier;
     /**
      * 最后修改时间
      */
-    @ApiModelProperty(hidden = true)
     private Date modifyTime;
 
     public Date getCreateTime() {

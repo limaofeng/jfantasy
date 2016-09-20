@@ -1,7 +1,7 @@
 package org.jfantasy.security.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -78,7 +78,7 @@ public class Organization extends BaseBusEntity {
     @Transient
     private List<OrgHelpBean> orgHelpBeans;
 
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonInclude(content = JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "organization", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Job> jobs;
 

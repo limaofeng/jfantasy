@@ -1,14 +1,14 @@
 package org.jfantasy.oauth.service.vo;
 
-import io.swagger.annotations.ApiModel;
 import org.jfantasy.oauth.bean.enums.GrantType;
 import org.jfantasy.oauth.bean.enums.TokenType;
 
 import java.io.Serializable;
 import java.util.Date;
 
-@ApiModel("访问令牌")
 public class AccessToken implements Serializable{
+
+    private static final long serialVersionUID = -3121930431297681821L;
 
     private String key;
     /**

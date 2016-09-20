@@ -10,17 +10,17 @@ public class PrePayment {
     /**
      * 订单类型
      */
-    @ApiModelProperty("订单类型")
+    /** 订单类型 **/
     private String orderType;
     /**
      * 订单编号
      */
-    @ApiModelProperty("订单编号")
+    /** 订单编号 **/
     private String orderSn;
     /**
      * 支付记录流水
      */
-    @ApiModelProperty("支付流水")
+    /** 支付流水 **/
     private String sn;
     /**
      * 交易类型
@@ -30,33 +30,33 @@ public class PrePayment {
     /**
      * 微信粉丝ID
      */
-    @ApiModelProperty("微信粉丝ID")
+    /** 微信粉丝ID **/
     private String openid;
     /**
      * 时间戳，自1970年以来的秒数
      */
-    @ApiModelProperty("时间戳，自1970年以来的秒数")
+    /** 时间戳，自1970年以来的秒数 **/
     private long timeStamp;
     /**
      * 随机串
      */
-    @ApiModelProperty("随机串")
+    /** 随机串 **/
     private String nonceStr;
     /**
      * 订单详情扩展字符串
      */
-    @ApiModelProperty("订单详情扩展字符串")
+    /** 订单详情扩展字符串 **/
     @JsonProperty("package")
     private String _package;
     /**
      * 微信签名方式
      */
-    @ApiModelProperty("微信签名方式")
+    /** 微信签名方式 **/
     private String signType;
     /**
      * 微信签名
      */
-    @ApiModelProperty("微信签名")
+    /** 微信签名 **/
     private String paySign;
 
     public String getNonceStr() {

@@ -1,11 +1,8 @@
 package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful;
 
@@ -20,31 +17,27 @@ import javax.validation.constraints.Null;
  * @version 1.0
  * @since 2016-07-31 下午4:52:07
  */
-@ApiModel("用户收藏")
 @Entity
 @Table(name = "MEM_FAVORITE", uniqueConstraints = {@UniqueConstraint(name = "UK_MEM_FAVORITE", columnNames = {"TYPE", "TARGET_TYPE", "TARGET_ID", "MEMBER_ID"})})
+@TableGenerator(name = "favorite_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_favorite:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "forComment"})
 public class Favorite extends BaseBusEntity {
 
+    private static final long serialVersionUID = 4199979380982404252L;
     @Null(groups = RESTful.POST.class)
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "favorite_gen")
     private Long id;
     @NotNull(groups = RESTful.POST.class)
-    @ApiModelProperty("类型")
     @Column(name = "TYPE")
     private String type;
     @NotNull(groups = RESTful.POST.class)
-    @ApiModelProperty("目标类型")
     @Column(name = "TARGET_TYPE", updatable = false, nullable = false)
     private String targetType;
     @NotNull(groups = RESTful.POST.class)
-    @ApiModelProperty("目标ID")
     @Column(name = "TARGET_ID", updatable = false, nullable = false)
     private String targetId;
-    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "MEMBER_ID", nullable = false, foreignKey = @ForeignKey(name = "FK_FAVORITE_MEMBER"))
     private Member member;

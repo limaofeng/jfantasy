@@ -1,8 +1,5 @@
 package org.jfantasy.security.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.security.bean.Permission;
@@ -13,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "security-permissions", description = "权限")
 @RestController
 @RequestMapping("/permissions")
 public class PermissionController {
@@ -21,28 +17,45 @@ public class PermissionController {
     @Autowired
     private transient PermissionService permissionService;
 
-    @ApiOperation(value = "查询权限", notes = "筛选权限，返回通用分页对象")
+    /**
+     * 查询权限<br/>
+     * 筛选权限，返回通用分页对象
+     * @param pager 分页对象
+     * @param filters 过滤条件
+     * @return Pager<Permission>
+     */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<Permission> search(@ApiParam(value = "分页对象", name = "pager") Pager<Permission> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
+    public Pager<Permission> search(Pager<Permission> pager, List<PropertyFilter> filters) {
         return this.permissionService.findPager(pager, filters);
     }
 
-    @ApiOperation(value = "删除权限", notes = "通过权限ID,删除权限")
+    /**
+     * 删除权限<br/>
+     * 通过权限ID,删除权限
+     * @param id id
+     */
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.permissionService.delete(id);
     }
 
-    @ApiOperation(value = "批量删除权限", notes = "通过权限ID,删除权限")
+    /**
+     * 批量删除权限
+     * @param id
+     */
     @RequestMapping(method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody Long... id) {
         this.permissionService.delete(id);
     }
 
-    @ApiOperation(value = "添加权限", notes = "添加权限")
+    /**
+     * 添加权限
+     * @param permission
+     * @return
+     */
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -50,7 +63,12 @@ public class PermissionController {
         return permissionService.save(permission);
     }
 
-    @ApiOperation(value = "更新权限", notes = "更新权限")
+    /**
+     * 更新权限
+     * @param id
+     * @param permission
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH})
     @ResponseBody
     public Permission update(@PathVariable("id") Long id, @RequestBody Permission permission) {

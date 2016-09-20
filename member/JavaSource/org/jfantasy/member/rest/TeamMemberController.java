@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
@@ -16,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 
-@Api(value = "team", description = "团队成员")
+/** 团队成员 **/
 @RestController
 @RequestMapping("/team-members")
 public class TeamMemberController {
@@ -26,28 +24,28 @@ public class TeamMemberController {
     @Autowired
     private TeamMemberService teamMemberService;
 
-    @ApiOperation(value = "查看团队成员", notes = "查看团队成员")
+    /** 查看团队成员 - 查看团队成员 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(this.get(id));
     }
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = TeamMember.class,name = "team"))
-    @ApiOperation(value = "添加团队成员", notes = "添加团队成员")
+    /** 添加团队成员 - 添加团队成员 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     public ResultResourceSupport create(@RequestBody TeamMember member) {
         return assembler.toResource(this.teamMemberService.save(member));
     }
 
-    @ApiOperation(value = "更新团队成员", notes = "更新团队成员地址")
+    /** 更新团队成员 - 更新团队成员地址 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.PATCH)
     public ResultResourceSupport update(@PathVariable("id") Long id, HttpServletRequest request, @RequestBody TeamMember member) {
         member.setId(id);
         return assembler.toResource(this.teamMemberService.update(member, WebUtil.has(request,RequestMethod.PATCH)));
     }
 
-    @ApiOperation(value = "删除团队成员", notes = "删除团队成员")
+    /** 删除团队成员 - 删除团队成员 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {

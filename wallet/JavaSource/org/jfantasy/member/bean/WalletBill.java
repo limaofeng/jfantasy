@@ -1,7 +1,6 @@
 package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.member.bean.enums.BillStatus;
 import org.jfantasy.member.bean.enums.BillType;
@@ -15,15 +14,18 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "MEM_WALLET_BILL")
+@TableGenerator(name = "walletbill_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_wallet_bill:id", valueColumnName = "gen_value", allocationSize = 10)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "wallet"})
 public class WalletBill extends BaseBusEntity {
+
+    private static final long serialVersionUID = -8229079024927337837L;
+
     /**
      * 流水号
      */
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "walletbill_gen")
     private Long id;
     /**
      * 金额

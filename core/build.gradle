@@ -15,15 +15,12 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-hateoas:1.4.0.RELEASE") {
         exclude group: "org.springframework.boot", module: "spring-boot-starter-web"
     }
-    compile "org.springframework.security:spring-security-core:4.0.3.RELEASE"
-    compile "org.springframework.security:spring-security-web:4.0.3.RELEASE"
     compile "mysql:mysql-connector-java:5.1.22"
     compile "org.mybatis:mybatis:3.3.1"
     compile "org.mybatis:mybatis-spring:1.2.4"
     compile "org.quartz-scheduler:quartz:2.2.1"
     compile "org.quartz-scheduler:quartz-jobs:2.2.1"
     compile "commons-net:commons-net:3.3"
-    compile "io.springfox:springfox-swagger2:2.4.0"
     compile "org.apache.lucene:lucene-core:3.6.2"
     compile "org.apache.lucene:lucene-highlighter:3.6.2"
     compile "org.apache.lucene:lucene-queryparser:3.6.2"

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -27,7 +25,6 @@ import java.util.Properties;
  * @version 1.0
  * @since 2013-3-25 下午03:43:54
  */
-@ApiModel("会员详细信息")
 @Entity
 @Table(name = "MEM_MEMBER_DETAILS")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "member"})
@@ -44,62 +41,52 @@ public class MemberDetails implements Serializable {
     /**
      * 姓名
      */
-    @ApiModelProperty("姓名")
     @Column(name = "NAME", length = 20)
     private String name;
     /**
      * 性别
      */
-    @ApiModelProperty("性别")
     @Enumerated(EnumType.STRING)
     @Column(name = "SEX", length = 20)
     private Sex sex;
     /**
      * 生日
      */
-    @ApiModelProperty("生日")
     @Column(name = "BIRTHDAY")
     private Date birthday;
     /**
      * 移动电话
      */
-    @ApiModelProperty("移动电话")
     @Column(name = "MOBILE", length = 20)
     private String mobile;
     /**
      * 固定电话
      */
-    @ApiModelProperty("固定电话")
     @Column(name = "TEL", length = 20)
     private String tel;
     /**
      * E-mail
      */
-    @ApiModelProperty("E-mail")
     @Column(name = "EMAIL", length = 50)
     private String email;
     /**
      * 邮箱是否验证
      */
-    @ApiModelProperty("邮箱是否验证")
     @Column(name = "MAIL_VALID", nullable = false)
     private Boolean mailValid;
     /**
      * 手机号是否验证
      */
-    @ApiModelProperty("手机号是否验证")
     @Column(name = "MOBILE_VALID", nullable = false)
     private Boolean mobileValid;
     /**
      * 网址
      */
-    @ApiModelProperty("网址")
     @Column(name = "WEBSITE", length = 50)
     private String website;
     /**
      * 描述信息
      */
-    @ApiModelProperty("描述信息")
     @Column(name = "DESCRIPTION")
     private String description;
     /**
@@ -110,16 +97,13 @@ public class MemberDetails implements Serializable {
     /**
      * 用户头像
      */
-    @ApiModelProperty(value = "用户头像", hidden = true)
     @Column(name = "AVATAR", length = 500)
     @Convert(converter = ImageConverter.class)
     private Image avatar;
 
-    @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
     private Member member;
 
-    @ApiModelProperty(hidden = true)
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;

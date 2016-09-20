@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
@@ -22,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-@Api(value = "comments", description = "评论")
+/** 评论 **/
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
@@ -33,7 +31,7 @@ public class CommentController {
     private CommentService commentService;
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"}))
-    @ApiOperation(value = "查询评论", notes = "返回会员的会员评论")
+    /** 查询评论 - 返回会员的会员评论 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Comment> pager, List<PropertyFilter> filters) {
@@ -55,14 +53,14 @@ public class CommentController {
         return assembler.toResource(this.commentService.updateShow(id, form.isShow()));
     }
 
-    @ApiOperation(value = "查看评论")
+    /** 查看评论 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(this.get(id));
     }
 
-    @ApiOperation(value = "删除评论", notes = "删除会员会员评论")
+    /** 删除评论 - 删除会员会员评论 **/
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {

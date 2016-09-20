@@ -3,8 +3,6 @@ package org.jfantasy.oauth.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -14,11 +12,13 @@ import java.util.Properties;
 /**
  * API 授权
  */
-@ApiModel("API 授权信息")
 @Entity
 @Table(name = "OAUTH_APIKEY")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "application"})
 public class ApiKey extends BaseBusEntity {
+
+    private static final long serialVersionUID = 1169698154678310660L;
+
     /**
      * 调用 api key
      */
@@ -35,7 +35,6 @@ public class ApiKey extends BaseBusEntity {
     /**
      * api 配置的一些额外信息
      */
-    @ApiModelProperty(hidden = true)
     @Column(name = "PROPERTIES", columnDefinition = "Blob")
     private Properties properties;
     /**

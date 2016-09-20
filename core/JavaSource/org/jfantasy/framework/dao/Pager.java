@@ -3,15 +3,18 @@ package org.jfantasy.framework.dao;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.apache.ibatis.type.Alias;
 import org.jfantasy.framework.util.common.StringUtil;
 
 import java.io.Serializable;
 import java.util.List;
 
-@ApiModel("通用分页对象")
+
+/**
+ * 通用分页对象
+ *
+ * @param <T>
+ */
 @Alias("Pager")
 @JsonIgnoreProperties(value = {"orders", "first", "order_by_setted"})
 public class Pager<T> implements Serializable {
@@ -28,43 +31,35 @@ public class Pager<T> implements Serializable {
     /**
      * 最大数据条数
      */
-    @ApiModelProperty(value = "最大数据条数", name = "count")
     @JsonProperty("count")
     private int totalCount = 0;
     /**
      * 每页显示的数据条数
      */
-    @ApiModelProperty(value = "每页显示的数据条数", name = "per_page")
     @JsonProperty("per_page")
     private int pageSize = 0;
     /**
      * 总页数
      */
-    @ApiModelProperty(value = "总页数", name = "total")
     @JsonProperty("total")
     private int totalPage = 1;
     /**
      * 当前页码
      */
-    @ApiModelProperty(value = "当前页码", name = "page")
     @JsonProperty("page")
     private int currentPage = 1;
     /**
      * 开始数据索引
      */
-    @ApiModelProperty(hidden = true)
     private int first = 0;
     /**
      * 排序字段
      */
-    @ApiModelProperty(value = "排序字段", name = "sort")
     @JsonProperty("sort")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String orderBy;
-    @ApiModelProperty(value = "排序方向", name = "order")
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private String order;
-    @ApiModelProperty(value = "返回的数据集", name = "items")
     @JsonProperty("items")
     private List<T> pageItems;
 
@@ -208,7 +203,11 @@ public class Pager<T> implements Serializable {
         this.order = order;
     }
 
-    @ApiModelProperty("是否启用排序")
+    /**
+     * 是否启用排序
+     *
+     * @return boolean
+     */
     public boolean isOrderBySetted() {
         return StringUtil.isNotBlank(this.getOrderBy()) && StringUtil.isNotBlank(this.getOrder());
     }

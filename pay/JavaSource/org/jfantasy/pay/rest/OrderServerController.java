@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "orders-server", description = "订单服务")
+/** 订单服务 **/
 @RestController
 @RequestMapping("/order-server")
 public class OrderServerController {
@@ -25,14 +25,14 @@ public class OrderServerController {
         this.orderServerService = orderServerService;
     }
 
-    @ApiOperation("查询订单服务")
+    /** 查询订单服务 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<OrderServer> search(Pager<OrderServer> pager, List<PropertyFilter> filters) {
         return orderServerService.findPager(pager, filters);
     }
 
-    @ApiOperation("保存订单服务")
+    /** 保存订单服务 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "system-websites", description = "站点信息")
+/** 站点信息 **/
 @RestController
 @RequestMapping("/websites")
 public class WebsiteController {

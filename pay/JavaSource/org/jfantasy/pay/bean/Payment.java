@@ -1,8 +1,6 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.jfantasy.framework.dao.BaseBusEntity;
@@ -20,7 +18,6 @@ import java.util.Date;
  * @version 1.0
  * @since 2013-12-5 上午9:22:59
  */
-@ApiModel(value = "支付记录")
 @Entity
 @Table(name = "PAY_PAYMENT", uniqueConstraints = {@UniqueConstraint(columnNames = {"PAY_CONFIG_ID", "ORDER_TYPE", "ORDER_SN", "PAY_STATUS"})})
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
@@ -32,7 +29,6 @@ public class Payment extends BaseBusEntity {
      * 支付编号
      */
     @Id
-    @ApiModelProperty("支付编号")
     @Column(name = "SN", updatable = false)
     @GeneratedValue(generator = "serialnumber")
     @GenericGenerator(name = "serialnumber", strategy = "serialnumber", parameters = {@Parameter(name = "expression", value = "'P' + #DateUtil.format('yyyyMMdd') + #StringUtil.addZeroLeft(#SequenceInfo.nextValue('PATMENT-SN' + #DateUtil.format('yyyyMMdd')), 5)")})
@@ -40,90 +36,76 @@ public class Payment extends BaseBusEntity {
     /**
      * 交易号（用于记录第三方交易的交易流水号）
      */
-    @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
     @Column(name = "TRADE_NO")
     private String tradeNo;
     /**
      * 支付类型
      */
-    @ApiModelProperty("支付类型")
     @Enumerated(EnumType.STRING)
     @Column(name = "TYPE", nullable = false, updatable = false)
     private PaymentType type;
     /**
      * 支付配置名称
      */
-    @ApiModelProperty("支付配置名称")
     @Column(name = "PAYMENT_CONFIG_NAME", nullable = false, updatable = false)
     private String payConfigName;
     /**
      * 收款银行名称
      */
-    @ApiModelProperty(value = "收款方名称", notes = "在线支付时为支付渠道名称")
     @Column(name = "BANK_NAME", updatable = false)
     private String bankName;
     /**
      * 收款银行账号
      */
-    @ApiModelProperty(value = "收款账号", notes = "在线支付时为第三方支付账户")
     @Column(name = "BANK_ACCOUNT", updatable = false)
     private String bankAccount;
     /**
      * 支付金额
      */
-    @ApiModelProperty("支付金额")
     @Column(name = "TOTAL_AMOUNT", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal totalAmount;
     /**
      * 支付手续费
      */
-    @ApiModelProperty("支付手续费")
     @Column(name = "PAYMENT_FEE", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal paymentFee;
     /**
      * 付款人
      */
-    @ApiModelProperty("付款人")
     @Column(name = "PAYER", updatable = false)
     private String payer;
     /**
      * 备注
      */
-    @ApiModelProperty("备注")
     @Column(name = "MEMO", updatable = false, length = 3000)
     private String memo;
     /**
      * 支付状态
      */
-    @ApiModelProperty("支付状态")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_STATUS", nullable = false)
     private PaymentStatus status;
     /**
      * 支付方式
      */
-    @ApiModelProperty("支付方式")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "PAY_CONFIG_ID", foreignKey = @ForeignKey(name = "FK_PAYMENT_PAYMENT_CONFIG"))
     private PayConfig payConfig;
     /**
      * 订单详情
      */
-    @ApiModelProperty("订单详情")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumns(value = {@JoinColumn(name = "ORDER_TYPE", referencedColumnName = "TYPE"), @JoinColumn(name = "ORDER_SN", referencedColumnName = "SN")})
     private Order order;
     /**
      * 交易记录
      */
-    @ApiModelProperty("交易记录")
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "TXN_SN", nullable = false, referencedColumnName = "SN")
     private Transaction transaction;
     /**
      * 支付时间
      */
-    @ApiModelProperty(value = "支付时间", notes = "用于记录第三方交易的交易时间")
     @Column(name = "TRADE_TIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date tradeTime;

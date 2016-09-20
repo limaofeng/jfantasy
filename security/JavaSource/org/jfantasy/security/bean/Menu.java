@@ -1,11 +1,10 @@
 package org.jfantasy.security.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.security.bean.databind.MenuDeserializer;
@@ -17,7 +16,9 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import javax.persistence.*;
 import java.util.List;
 
-@ApiModel(value = "菜单")
+/**
+ * 菜单
+ */
 @Entity
 @Table(name = "AUTH_MENU")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "menuAuthoritie", "children"})
@@ -28,71 +29,60 @@ public class Menu extends BaseBusEntity {
 
     public static final String PATH_SEPARATOR = "/";// 树路径分隔符
 
-    @ApiModelProperty("ID")
     @Id
     @Column(name = "ID", nullable = false, updatable = false)
     private String id;
     /**
      * 菜单名称
      */
-    @ApiModelProperty("名称")
     @Column(name = "NAME", length = 200)
     private String name;
     /**
      * 树路径
      */
-    @ApiModelProperty("路径")
     @Column(name = "PATH", nullable = false, length = 200)
     private String path;
     /**
      * 菜单值
      */
-    @ApiModelProperty("值")
     @Column(name = "VALUE", length = 200)
     private String value;
     /**
      * 菜单类型
      */
-    @ApiModelProperty("类型")
     @Column(name = "TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     private MenuType type;
     /**
      * 菜单对应的图标
      */
-    @ApiModelProperty("图标")
     @Column(name = "ICON", length = 50)
     private String icon;
     /**
      * 菜单描述
      */
-    @ApiModelProperty("描述")
     @Column(name = "DESCRIPTION", length = 2000)
     private String description;
     /**
      * 层级
      */
-    @ApiModelProperty("层级")
     @Column(name = "LAYER", nullable = false)
     private Integer layer;
     /**
      * 排序字段
      */
-    @ApiModelProperty("排序字段")
     @Column(name = "SORT")
     private Integer sort;
     /**
      * 下级菜单
      */
-    @ApiModelProperty(hidden = true)
-    @JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
+    @JsonInclude(content = JsonInclude.Include.NON_NULL)
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     private List<Menu> children;
     /**
      * 上级菜单
      */
-    @ApiModelProperty("上级菜单")
     @JsonProperty("parentId")
     @JsonSerialize(using = MenuSerializer.class)
     @JsonDeserialize(using = MenuDeserializer.class)

@@ -28,7 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Iterator;
 import java.util.List;
 
-@Api(value = "transactions", description = "交易记录")
+/** 交易记录 **/
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
@@ -50,14 +50,14 @@ public class TransactionController {
         this.accountService = accountService;
     }
 
-    @ApiOperation("查询交易记录")
+    /** 查询交易记录 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> seach(Pager<Transaction> pager, List<PropertyFilter> filters) {
         return assembler.toResources(transactionService.findPager(pager, filters));
     }
 
-    @ApiOperation("创建交易")
+    /** 创建交易 **/
     @RequestMapping(method = RequestMethod.POST)
     @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms", "default"}))
     @ResponseStatus(HttpStatus.CREATED)
@@ -68,7 +68,7 @@ public class TransactionController {
     }
 
     //transactionService.transfer(tx.getFrom(), tx.getTo(), tx.getAmount(), tx.getNotes());
-    @ApiOperation("获取交易详情")
+    /** 获取交易详情 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @JsonResultFilter(allow = @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name", "platforms", "default"}))
     @ResponseBody
@@ -76,7 +76,7 @@ public class TransactionController {
         return transform(get(sn));
     }
 
-    @ApiOperation("获取支付表单进行支付")
+    /** 获取支付表单进行支付 **/
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/pay-form")
     @ResponseBody
     @JsonResultFilter(allow = @AllowProperty(pojo = Payment.class, name = {"sn", "type", "pay_config_name", "total_amount", "payment_fee", "status", "source"}))

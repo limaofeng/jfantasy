@@ -2,7 +2,6 @@ package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful;
@@ -22,13 +21,16 @@ import java.util.List;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class CardBatch extends BaseBusEntity {
 
+    private static final long serialVersionUID = -188799483821082297L;
+
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
     @GeneratedValue(generator = "fantasy-sequence")
     @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
     private Long id;
-
-    @ApiModelProperty("批次号")
+    /**
+     * 批次号
+     */
     @Column(name = "NUMBER", length = 20, unique = true)
     @Use(vali = CardBatchNoCannotRepeatValidator.class, groups = {RESTful.POST.class})
     private String no;

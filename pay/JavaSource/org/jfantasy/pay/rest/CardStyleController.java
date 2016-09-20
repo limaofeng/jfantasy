@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
-@Api(value = "card-styles", description = "会员风格")
+/** 会员风格 **/
 @RestController
 @RequestMapping("/card-styles")
 public class CardStyleController {
@@ -29,7 +29,7 @@ public class CardStyleController {
         this.cardDesignService = cardDesignService;
     }
 
-    @ApiOperation("会员风格")
+    /** 会员风格 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<CardStyle> search() {

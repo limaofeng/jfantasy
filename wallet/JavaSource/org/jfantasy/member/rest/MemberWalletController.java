@@ -1,9 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.Authorization;
-import io.swagger.annotations.AuthorizationScope;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
@@ -31,7 +27,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value = "wallets", description = "钱包接口")
+/** 钱包接口 **/
 @RestController
 public class MemberWalletController {
 
@@ -48,14 +44,11 @@ public class MemberWalletController {
     @Autowired
     private CardService cardService;
 
-    @ApiOperation(
-            value = "用户钱包信息",
-            notes = "必须通过用户授权访问",
-            authorizations =
-            @Authorization(value = "MEMBER",
-                    scopes = @AuthorizationScope(scope = "member", description = "会员")
-            )
-    )
+    /**
+     * 用户钱包信息<br/>
+     * 必须通过用户授权访问
+     * @return
+     */
     @RequestMapping(value = "/wallet", method = RequestMethod.GET)
     public ResultResourceSupport wallet() {
         OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
@@ -83,7 +76,7 @@ public class MemberWalletController {
         return walletAssembler.toResource(walletService.save(user.getId()));
     }*/
 
-    @ApiOperation(value = "用户积分信息")
+    /** 用户积分信息 **/
     @RequestMapping(value = "/point-details", method = RequestMethod.GET)
     public ResultResourceSupport pointDetails() {
         OAuthUserDetails user = SpringSecurityUtils.getCurrentUser(OAuthUserDetails.class);
@@ -97,7 +90,7 @@ public class MemberWalletController {
     }
 
     @JsonResultFilter(ignore = @IgnoreProperty(pojo = Wallet.class, name = {"member", "bills"}))
-    @ApiOperation(value = "用户钱包信息", notes = "返回钱包详情")
+    /** 用户钱包信息 - 返回钱包详情 **/
     @RequestMapping(value = "/members/{memid}/wallet", method = RequestMethod.GET)
     public ResultResourceSupport _view(@PathVariable("memid") Long id) {
         Wallet wallet = walletService.getWalletByMember(id);
@@ -109,7 +102,7 @@ public class MemberWalletController {
         return resource;
     }
 
-    @ApiOperation(value = "用户积分信息")
+    /** 用户积分信息 **/
     @RequestMapping(value = "/members/{memid}/point-details", method = RequestMethod.GET)
     public ResultResourceSupport _pointDetails(@PathVariable("memid") Long id) {
         PointDetails details = new PointDetails();
@@ -118,7 +111,7 @@ public class MemberWalletController {
         return assembler.toResource(details);
     }
 
-    @ApiOperation(value = "用户积分列表")
+    /** 用户积分列表 **/
     @RequestMapping(value = "/members/{memid}/points", method = RequestMethod.GET)
     public Pager<ResultResourceSupport> _points(@PathVariable("memid") Long id, Pager<Point> pager, List<PropertyFilter> filters) {
         Wallet wallet = walletService.getWalletByMember(id);

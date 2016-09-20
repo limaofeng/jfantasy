@@ -3,9 +3,6 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.common.Area;
 import org.jfantasy.common.converter.AreaConverter;
 import org.jfantasy.common.databind.AreaDeserializer;
@@ -22,7 +19,6 @@ import javax.validation.constraints.NotNull;
  * @version 1.0
  * @since 2013-9-16 下午4:16:02
  */
-@ApiModel("收货地址信息")
 @Entity
 @Table(name = "MEM_RECEIVER")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "areaStore", "member"})
@@ -32,21 +28,19 @@ public class Receiver extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
 
     /**
      * 收货人姓名
      */
-    @ApiModelProperty("收货人姓名")
     @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @Column(name = "NAME", length = 20, nullable = false)
     private String name;
     /**
      * 地区存储
      */
-    @ApiModelProperty(hidden = true)
     @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @Column(name = "AREA_STORE", length = 300, nullable = false)
     @Convert(converter = AreaConverter.class)
@@ -54,27 +48,23 @@ public class Receiver extends BaseBusEntity {
     /**
      * 收货地址
      */
-    @ApiModelProperty("收货地址")
     @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @Column(name = "ADDRESS", length = 200, nullable = false)
     private String address;
     /**
      * 邮政编码
      */
-    @ApiModelProperty("邮政编码")
     @Column(name = "ZIP_CODE", length = 200)
     private String zipCode;
     /**
      * 手机
      */
-    @ApiModelProperty("手机")
     @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @Column(name = "MOBILE", length = 200, nullable = false)
     private String mobile;
     /**
      * 是否为默认地址
      */
-    @ApiModelProperty("是否为默认地址")
     @JsonProperty("default")
     @NotNull(groups = {RESTful.POST.class, RESTful.PUT.class})
     @Column(name = "IS_DEFAULT", nullable = false)
@@ -82,9 +72,8 @@ public class Receiver extends BaseBusEntity {
     /**
      * 地址对应的用户信息
      */
-    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH})
-    @JoinColumn(name = "MEMBER_ID", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_MEM_RECEIVER_MEMBER"))
+    @JoinColumn(name = "MEMBER_ID", nullable = false, updatable = false, foreignKey = @ForeignKey(name = "FK_RECEIVER_MEMBER"))
     private Member member;
 
     public Long getId() {
@@ -148,7 +137,6 @@ public class Receiver extends BaseBusEntity {
      *
      * @return 地区信息
      */
-    @ApiModelProperty("地区存储")
     public Area getArea() {
         return this.area;
     }

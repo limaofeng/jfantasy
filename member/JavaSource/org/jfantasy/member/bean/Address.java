@@ -2,7 +2,6 @@ package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.common.Area;
 import org.jfantasy.common.converter.AreaConverter;
 import org.jfantasy.common.databind.AreaDeserializer;
@@ -15,9 +14,10 @@ import javax.persistence.*;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Address extends BaseBusEntity {
 
+    private static final long serialVersionUID = 1682664107868380251L;
     @Id
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "address_gen")
+    @TableGenerator(name = "address_gen", table = "sys_sequence",pkColumnName = "gen_name",pkColumnValue = "",valueColumnName = "gen_value")
     @Column(name = "ID", updatable = false)
     private Long id;
     /**

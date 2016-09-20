@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "system-ddts", description = "数据字典分类")
+/** 数据字典分类 **/
 @RestController
 @RequestMapping("/system/ddts")
 public class DataDictionaryTypeController {
@@ -50,7 +50,7 @@ public class DataDictionaryTypeController {
         return this.dataDictionaryService.findDataDictionaryTypePager(pager, filters);
     }
 
-    @ApiOperation(value = "删除数据字典分类", notes = "通过该接口删除数据字典分类")
+    /** 删除数据字典分类 - 通过该接口删除数据字典分类 **/
     @RequestMapping(value = "/{code}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("code") String code) {

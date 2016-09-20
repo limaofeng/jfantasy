@@ -98,28 +98,29 @@ public final class ObjectUtil {
     }
 
     public static <T> List<T> filter(List<T> list, String fieldName, Object... values) {
-        List<T> filter = new ArrayList<T>();
-        for (Object v : values) {
-            T t = find(list, fieldName, v);
-            if (t != null) {
+        List<T> filter = new ArrayList<>();
+        if (list == null) {
+            return null;
+        }
+        for (T t : list) {
+            if (ObjectUtil.exists(values, OgnlUtil.getInstance().getValue(fieldName, t))) {
                 filter.add(t);
             }
         }
         return filter;
     }
 
-    public static <T> T[] filter(T[] objs, String fieldName, Object[] values) {
+    public static <T> T[] filter(T[] objs, String fieldName, Object... values) {
         if (values.length == 1 && ClassUtil.isArray(Array.get(values, 0))) {
             values = (T[]) Array.get(values, 0);
         }
-        List<T> filter = new ArrayList<T>();
-        for (Object v : values) {
-            T t = find(objs, fieldName, v);
-            if (t != null) {
+        List<T> filter = new ArrayList<>();
+        for (T t : objs) {
+            if (ObjectUtil.exists(values, OgnlUtil.getInstance().getValue(fieldName, t))) {
                 filter.add(t);
             }
         }
-        return (T[]) filter.toArray(new Object[filter.size()]);
+        return (T[]) filter.toArray();
     }
 
     public static <T> List<T> filter(List<T> list, String spel) {
@@ -282,6 +283,10 @@ public final class ObjectUtil {
             }
         }
         return null;
+    }
+
+    public static <T> T first(List<T> list, String field, Object value) {
+        return find(list, field, value);
     }
 
     public static <T> T last(List<T> list, String field, Object value) {

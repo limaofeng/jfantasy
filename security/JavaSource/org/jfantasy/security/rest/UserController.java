@@ -1,9 +1,6 @@
 package org.jfantasy.security.rest;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
@@ -20,7 +17,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 
-@Api(value = "security-users", description = " 用户 ")
 @RestController
 @RequestMapping("/users")
 public class UserController {
@@ -31,26 +27,43 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @ApiOperation(value = "查询用户", notes = "通过该接口, 筛选后台用户")
+    /**
+     * 查询用户
+     * @param pager
+     * @param filters
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<ResultResourceSupport> search(@ApiParam(value = "分页对象", name = "pager") Pager<User> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
+    public Pager<ResultResourceSupport> search(Pager<User> pager,List<PropertyFilter> filters) {
         return assembler.toResources(this.userService.findPager(pager, filters));
     }
 
-    @ApiOperation(value = "获取用户", notes = "通过该接口, 获取用户")
+    /**
+     * 获取用户
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(this.userService.get(id));
     }
 
-    @ApiOperation(value = "获取用户的详细信息", notes = "通过该接口, 获取详细信息")
+    /**
+     * 获取用户的详细信息
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET)
     public ResultResourceSupport profile(@PathVariable("id") Long id) {
         return userDetailsResourceAssembler.toResource(this.userService.get(id).getDetails());
     }
 
-    @ApiOperation(value = "添加用户", notes = "通过该接口, 添加用户")
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
     @RequestMapping(method = {RequestMethod.POST})
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -58,28 +71,43 @@ public class UserController {
         return assembler.toResource(this.userService.save(user));
     }
 
-    @ApiOperation(value = "删除用户", notes = "通过该接口, 删除用户")
+    /**
+     * 删除用户
+     * @param id
+     */
     @RequestMapping(value = "/{id}", method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {
         this.userService.delete(id);
     }
 
-    @ApiOperation(value = "批量删除用户", notes = "通过该接口, 批量删除用户")
+    /**
+     * 批量删除用户
+     * @param id
+     */
     @RequestMapping(method = {RequestMethod.DELETE})
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@RequestBody Long... id) {
         this.userService.delete(id);
     }
 
-    @ApiOperation(value = "更新用户", notes = "通过该接口, 更新用户")
+    /**
+     * 更新用户
+     * @param id
+     * @param user
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = {RequestMethod.PATCH})
     public ResultResourceSupport update(@PathVariable("id") Long id, User user) {
         user.setId(id);
         return assembler.toResource(this.userService.save(user));
     }
 
-    @ApiOperation(value = "获取用户授权的菜单信息")
+    /**
+     * 获取用户授权的菜单信息
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}/menus", method = {RequestMethod.GET})
     @ResponseBody
     public List<String> menus(@PathVariable("id") Long id) {

@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.hateoas.ResultResourceSupport;
 import org.jfantasy.member.bean.Invite;
@@ -11,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value = "invite", description = "邀请")
 @RestController
 @RequestMapping("/invites")
 public class InviteController {
@@ -21,19 +18,30 @@ public class InviteController {
     @Autowired
     private InviteService inviteService;
 
-    @ApiOperation(value = "发起邀请", notes = "发起邀请")
+    /**
+     * 发起邀请
+     * @param invite
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST)
     public ResultResourceSupport create(@RequestBody Invite invite) {
         return assembler.toResource(this.inviteService.save(invite));
     }
 
-    @ApiOperation(value = "查看邀请", notes = "查看邀请")
+    /**
+     * 查看邀请
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(this.get(id));
     }
 
-    @ApiOperation(value = "删除邀请", notes = "删除邀请")
+    /**
+     * 删除邀请
+     * @param id
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {

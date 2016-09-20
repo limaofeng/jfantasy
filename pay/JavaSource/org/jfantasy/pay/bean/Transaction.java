@@ -101,14 +101,14 @@ public class Transaction extends BaseBusEntity {
     /**
      * 扩展字段,用于存储不同项目的关联信息
      */
-    @ApiModelProperty(hidden = true)
+    :
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
-    @ApiModelProperty("支付记录")
+    /** 支付记录 **/
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<Payment>();
-    @ApiModelProperty("退款记录")
+    /** 退款记录 **/
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<>();
 

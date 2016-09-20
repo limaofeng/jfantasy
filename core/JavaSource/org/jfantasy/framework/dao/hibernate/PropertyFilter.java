@@ -5,8 +5,6 @@ import org.jfantasy.framework.error.IgnoreException;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.jfantasy.framework.util.common.StringUtil;
 import org.jfantasy.framework.util.regexp.RegexpUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.util.Assert;
 
@@ -16,18 +14,30 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.concurrent.atomic.AtomicReference;
 
-@ApiModel("通用过滤器")
+/**
+ * 通用过滤器
+ */
 public class PropertyFilter {
     public static final String OR_SEPARATOR = "_OR_";
-    @ApiModelProperty("名称")
+    /**
+     * 名称
+     */
     private String[] propertyNames;
-    @ApiModelProperty("类型")
+    /**
+     * 类型
+     */
     private Class<?> propertyType;
-    @ApiModelProperty("值")
+    /**
+     * 值
+     */
     private Object propertyValue;
-    @ApiModelProperty("过滤类型")
+    /**
+     * 过滤类型
+     */
     private MatchType matchType;
-    @ApiModelProperty("完整表达式")
+    /**
+     * 完整表达式
+     */
     private String filterName;
 
     public PropertyFilter(String filterName) {

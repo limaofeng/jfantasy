@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "points", description = "积分")
+/** 积分 **/
 @RestController
 @RequestMapping("/points")
 public class PointController {
@@ -33,7 +33,7 @@ public class PointController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Account.class, name = {"sn", "type"}))
-    @ApiOperation("积分查询")
+    /** 积分查询 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Point> pager, List<PropertyFilter> filters) {
@@ -41,7 +41,7 @@ public class PointController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Account.class, name = {"sn", "type"}))
-    @ApiOperation(value = "提交积分记录", notes = "消费与新增积分")
+    /** 提交积分记录 - 消费与新增积分 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody

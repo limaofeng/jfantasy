@@ -1,8 +1,6 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.converter.OrderItemConverter;
 import org.jfantasy.pay.order.entity.OrderDetails;
@@ -15,7 +13,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@ApiModel("订单详情")
 @Entity
 @IdClass(OrderKey.class)
 @Table(name = "PAY_ORDER")
@@ -37,56 +34,73 @@ public class Order extends BaseBusEntity {
         }
     }
 
-    @ApiModelProperty("编号")
+    /**
+     * 编号
+     */
     @Id
     private String sn;
-    @ApiModelProperty("订单类型")
+    /**
+     * 订单类型
+     */
     @Id
     private String type;
-    @ApiModelProperty("支付状态")
+    /**
+     * 支付状态
+     */
     @Enumerated(EnumType.STRING)
     @Column(name = "PAYMENT_STATUS", length = 20, nullable = false)
     private PaymentStatus status;
-    @ApiModelProperty("订单摘要")
+    /**
+     * 订单摘要
+     */
     @Column(name = "subject", length = 250)
     private String subject;
-    @ApiModelProperty("订单详情")
+    /**
+     * 订单详情
+     */
     @Column(name = "Body", length = 500)
     private String Body;
-    @ApiModelProperty("订单总金额")
+    /**
+     * 订单总金额
+     */
     @Column(name = "TOTAL_FEE", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal totalFee;
-    @ApiModelProperty("订单应付金额")
+    /**
+     * 订单应付金额
+     */
     @Column(name = "PAYABLE_FEE", nullable = false, updatable = false, precision = 15, scale = 2)
     private BigDecimal payableFee;
-    @ApiModelProperty("订单项")
+    /**
+     * 订单项
+     */
     @Column(name = "ORDERITEM_STORE", length = 3000)
     @Convert(converter = OrderItemConverter.class)
     private List<OrderItem> orderItems;
-    @ApiModelProperty("支付记录")
+    /**
+     * 支付记录
+     */
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<>();
-    @ApiModelProperty("退款记录")
+    /**
+     * 退款记录
+     */
     @OneToMany(mappedBy = "order", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<>();
     /**
      * 付款时间
      */
-    @ApiModelProperty("付款时间")
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "PAYMENT_TIME")
     private Date paymentTime;
     /**
      * 退款时间
      */
-    @ApiModelProperty("退款时间")
     @Column(name = "REFUND_TIME")
     @Temporal(TemporalType.TIMESTAMP)
     private Date refundTime;
     /**
      * 退款金额
      */
-    @ApiModelProperty("退款金额")
     @Column(name = "refund_amount", precision = 15, scale = 2)
     private BigDecimal refundAmount;
     @Column(name = "MEMBER_ID", nullable = false, updatable = false)

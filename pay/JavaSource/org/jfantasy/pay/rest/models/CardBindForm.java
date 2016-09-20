@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModelProperty;
 
 public class CardBindForm {
 
-    @ApiModelProperty("密码")
+    /** 密码 **/
     private String password;
 
     public String getPassword() {

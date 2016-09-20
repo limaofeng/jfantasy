@@ -1,7 +1,5 @@
 package org.jfantasy.auth.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.auth.rest.models.LoginForm;
 import org.jfantasy.auth.rest.models.LogoutForm;
 import org.jfantasy.auth.rest.models.Scope;
@@ -25,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
 /**
  * 用于处理登陆及退出
  */
-@Api(value = "auth", description = "用户登录退出")
+/** 用户登录退出 **/
 @RestController
 public class AuthController {
 
@@ -34,7 +32,7 @@ public class AuthController {
     @Autowired
     private MemberService memberService;
 
-    @ApiOperation(value = "用户登录", notes = "用户登录接口")
+    /** 用户登录 - 用户登录接口 **/
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @JsonResultFilter(ignore = {
             @IgnoreProperty(pojo = Member.class, name = {Member.BASE_FIELDS})
@@ -62,7 +60,7 @@ public class AuthController {
         }
     }
 
-    @ApiOperation(value = "用户登出", notes = "用户登出接口")
+    /** 用户登出 - 用户登出接口 **/
     @RequestMapping(value = "/logout", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void logout(@RequestBody LogoutForm loginForm) {

@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
@@ -26,7 +24,6 @@ import java.util.Properties;
  * @version 1.0
  * @since 2013-12-5 上午9:22:49
  */
-@ApiModel("支付配置")
 @Entity
 @Table(name = "PAY_PAYCONFIG")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "payments", "refunds"})
@@ -52,7 +49,6 @@ public class PayConfig extends BaseBusEntity {
     /**
      * 支付配置类型
      */
-    @ApiModelProperty("支付配置类型")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_CONFIG_TYPE", nullable = false, updatable = false)
     private PayConfigType payConfigType;
@@ -65,68 +61,57 @@ public class PayConfig extends BaseBusEntity {
     /**
      * 支付方式名称
      */
-    @ApiModelProperty("支付方式名称")
     @Column(name = "NAME", nullable = false)
     private String name;
     /**
      * 支付产品标识
      */
-    @ApiModelProperty("支付产品标识")
     @Column(name = "PAY_PRODUCT_ID", updatable = false)
     private String payProductId;
     /**
      * 商家ID
      */
-    @ApiModelProperty("商家ID")
     @Column(name = "BARGAINOR_ID")
     private String bargainorId;
     /**
      * 商户私钥
      */
-    @ApiModelProperty("商户私钥")
     @Column(name = "BARGAINOR_KEY")
     private String bargainorKey;
     /**
      * 针对不同支付平台的额外属性
      */
-    @ApiModelProperty(hidden = true)
     @Column(name = "PROPERTIES", columnDefinition = "MediumBlob")
     private Properties properties;
     /**
      * 支付手续费类型
      */
-    @ApiModelProperty("支付手续费类型")
     @Enumerated(EnumType.STRING)
     @Column(name = "PAY_FEE_TYPE", nullable = false)
     private PayFeeType payFeeType;
     /**
      * 支付费用
      */
-    @ApiModelProperty("支付费用")
     @Column(name = "PAY_FEE", nullable = false, precision = 15, scale = 2)
     private BigDecimal payFee;
     /**
      * 介绍
      */
-    @ApiModelProperty("介绍")
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;
     /**
      * 排序
      */
-    @ApiModelProperty("排序")
     @Column(name = "SORT")
     private Integer sort;
     /**
      * 支付记录
      */
-    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<>();// 支付
     /**
      * 退款记录
      */
-    @ApiModelProperty(hidden = true)
     @OneToMany(mappedBy = "payConfig", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<>();// 退款
     /**

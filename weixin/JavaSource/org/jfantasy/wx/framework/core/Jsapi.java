@@ -20,15 +20,15 @@ public interface Jsapi {
 
     @ApiModel(value = "JS API 签名", description = "微信 JS API 签名")
     class Signature implements Serializable {
-        @ApiModelProperty("随机字符串")
+        /** 随机字符串 **/
         private String noncestr;
-        @ApiModelProperty("appid")
+        /** appid **/
         private String appid;
-        @ApiModelProperty("时间戳")
+        /** 时间戳 **/
         private long timestamp;
-        @ApiModelProperty("URL")
+        /** URL **/
         private String url;
-        @ApiModelProperty("签名串")
+        /** 签名串 **/
         private String signature;
 
         public Signature(String noncestr, String appid, long timestamp, String url, String signature) {

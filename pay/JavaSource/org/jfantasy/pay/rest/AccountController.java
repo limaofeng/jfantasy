@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "accounts", description = "账户")
+/** 账户 **/
 @RestController
 @RequestMapping("/accounts")
 public class AccountController {
@@ -32,21 +32,21 @@ public class AccountController {
     @Autowired
     private PointController pointController;
 
-    @ApiOperation("查询账户")
+    /** 查询账户 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Account> pager, List<PropertyFilter> filters) {
         return assembler.toResources(accountService.findPager(pager, filters));
     }
 
-    @ApiOperation("账户详情")
+    /** 账户详情 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String id) {
         return assembler.toResource(get(id));
     }
 
-    @ApiOperation("添加账户")
+    /** 添加账户 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -54,14 +54,14 @@ public class AccountController {
         return assembler.toResource(this.accountService.save(form.getType(),form.getOwner(),form.getPassword()));
     }
 
-    @ApiOperation("激活账户")
+    /** 激活账户 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/activate")
     @ResponseBody
     public ResultResourceSupport activate(@PathVariable("id") String sn, @RequestBody ActivateForm form) {
         return assembler.toResource(this.accountService.activate(sn, form.getPassword()));
     }
 
-    @ApiOperation("账户交易详情")
+    /** 账户交易详情 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/transactions")
     @ResponseBody
     public Pager<ResultResourceSupport> transactions(@PathVariable("id") String sn, Pager<Transaction> pager, List<PropertyFilter> filters) {
@@ -69,7 +69,7 @@ public class AccountController {
         return transactionController.seach(pager, filters);
     }
 
-    @ApiOperation("积分记录")
+    /** 积分记录 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}/points")
     @ResponseBody
     public Pager<ResultResourceSupport> points(@PathVariable("id") String sn, Pager<Point> pager, List<PropertyFilter> filters) {

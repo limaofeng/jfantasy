@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
@@ -17,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "team-tags", description = "团队标签接口")
+/** 团队标签接口 **/
 @RestController
 @RequestMapping("/teams/{id}/tags")
 public class TeamTagController {
@@ -34,7 +32,7 @@ public class TeamTagController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "获取团队标签")
+    /** 获取团队标签 **/
     @RequestMapping(method = RequestMethod.GET)
     public List<Tag> tags(@PathVariable("id") String id, @RequestParam("type") String type) {
         if (teamService.get(id) == null) {
@@ -44,7 +42,7 @@ public class TeamTagController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "添加团队标签")
+    /** 添加团队标签 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -56,14 +54,14 @@ public class TeamTagController {
     }
 
     @JsonResultFilter(allow = @AllowProperty(pojo = Tag.class, name = {"name", "id", "type"}))
-    @ApiOperation(value = "修改团队标签")
+    /** 修改团队标签 **/
     @RequestMapping(value = "/{tagid}", method = {RequestMethod.PUT, RequestMethod.PATCH})
     @ResponseBody
     public Tag tags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid, @Validated(RESTful.PATCH.class) @RequestBody TagForm from) {
         return this.tagService.update(TAG_TYPE_TEAM, id, tagid, from.getName());
     }
 
-    @ApiOperation(value = "删除团队标签")
+    /** 删除团队标签 **/
     @RequestMapping(value = "/{tagid}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteTags(@PathVariable("id") String id, @PathVariable("tagid") Long tagid) {

@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "refund", description = "退款记录")
+/** 退款记录 **/
 @RestController
 @RequestMapping("/refunds")
 public class RefundController {
@@ -52,7 +52,7 @@ public class RefundController {
             @AllowProperty(pojo = Payment.class, name = {"sn", "total_amount", "status"}),
             @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name"})
     })
-    @ApiOperation("查询退款记录")
+    /** 查询退款记录 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Refund> pager, List<PropertyFilter> filters) {
@@ -76,21 +76,21 @@ public class RefundController {
             @AllowProperty(pojo = Payment.class, name = {"sn", "total_amount", "status"}),
             @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name"})
     })
-    @ApiOperation("获取退款记录")
+    /** 获取退款记录 **/
     @RequestMapping(value = "/{sn}", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("sn") String sn) {
         return assembler.toResource(this.refundService.get(sn));
     }
 
-    @ApiOperation("删除退款记录")
+    /** 删除退款记录 **/
     @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("sn") String sn) {
         this.refundService.delete(sn);
     }
 
-    @ApiOperation("批量删除退款记录")
+    /** 批量删除退款记录 **/
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@RequestBody String... sns) {

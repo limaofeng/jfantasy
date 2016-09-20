@@ -16,7 +16,7 @@ public interface WeiXinMessage<T> {
      *
      * @return id
      */
-    @ApiModelProperty("消息id，64位整型")
+    /** 消息id，64位整型 **/
     Long getId();
 
     /**
@@ -24,7 +24,7 @@ public interface WeiXinMessage<T> {
      *
      * @return String
      */
-    @ApiModelProperty("发送方帐号（一个OpenID/微信原始ID）")
+    /** 发送方帐号（一个OpenID/微信原始ID） **/
     String getFromUserName();
 
     /**
@@ -32,7 +32,7 @@ public interface WeiXinMessage<T> {
      *
      * @return date
      */
-    @ApiModelProperty("消息创建时间")
+    /** 消息创建时间 **/
     Date getCreateTime();
 
     /**
@@ -48,7 +48,7 @@ public interface WeiXinMessage<T> {
      *
      * @return String
      */
-    @ApiModelProperty("接收方帐号（一个OpenID/微信原始ID）")
+    /** 接收方帐号（一个OpenID/微信原始ID） **/
     String getToUserName();
 
 }

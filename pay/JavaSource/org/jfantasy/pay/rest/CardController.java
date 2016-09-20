@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "cards", description = "会员卡")
+/** 会员卡 **/
 @RestController
 @RequestMapping("/cards")
 public class CardController {
@@ -43,14 +43,14 @@ public class CardController {
                     @AllowProperty(pojo = CardBatch.class, name = {"no"})
             }
     )
-    @ApiOperation("查询卡列表")
+    /** 查询卡列表 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Card> pager, List<PropertyFilter> filters) {
         return assembler.toResources(cardService.findPager(pager, filters));
     }
 
-    @ApiOperation("卡片详情")
+    /** 卡片详情 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String id) {
@@ -65,7 +65,7 @@ public class CardController {
                     @AllowProperty(pojo = CardBatch.class, name = {"no"})
             }
     )
-    @ApiOperation("卡片绑定")
+    /** 卡片绑定 **/
     @RequestMapping(method = RequestMethod.POST, value = "/{id}/bind")
     @ResponseBody
     public ResultResourceSupport bind(@PathVariable("id") String id, @RequestBody CardBindForm form) {

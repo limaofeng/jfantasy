@@ -1,7 +1,6 @@
 package org.jfantasy.member.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -11,10 +10,11 @@ import javax.persistence.*;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Exp extends BaseBusEntity {
 
+    private static final long serialVersionUID = -2729421248477743361L;
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
     /**
      * 经验值
@@ -29,7 +29,7 @@ public class Exp extends BaseBusEntity {
      * 钱包
      */
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "WALLET_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_BILL_WALLET"))
+    @JoinColumn(name = "WALLET_ID", updatable = false, foreignKey = @ForeignKey(name = "FK_EXP_WALLET"))
     private Wallet wallet;
 
     public Long getId() {

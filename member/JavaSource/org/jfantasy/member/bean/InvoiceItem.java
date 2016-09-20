@@ -4,7 +4,6 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful;
 
@@ -16,9 +15,10 @@ import javax.validation.constraints.NotNull;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "invoice", "id"})
 public class InvoiceItem extends BaseBusEntity {
 
+    private static final long serialVersionUID = -2533133703787196057L;
     @Id
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     @Column(name = "ID", updatable = false)
     private Long id;
     /**

@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-@Api(value = "weixin-messages", description = "微信消息推送接口")
+/** 微信消息推送接口 **/
 @RestController
 @RequestMapping("/weixin/accounts/{appid}/messages")
 public class MessageController {
@@ -28,7 +28,7 @@ public class MessageController {
     @Autowired
     private WeiXinSessionFactory weiXinSessionFactory;
 
-    @ApiOperation(value = "微信消息接口", notes = "接口接收微信公众平台推送的微信消息及事件,直接调用无效")
+    /** 微信消息接口 - 接口接收微信公众平台推送的微信消息及事件,直接调用无效 **/
     @ApiResponse(code = 200, message = "OK", response = WeiXinMessage.class)
     @RequestMapping(value = "/push", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody

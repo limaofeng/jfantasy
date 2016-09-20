@@ -11,9 +11,59 @@
       "description": "Description for spring.jackson.mixin.packages."
     },
     {
-      "name": "spring.datasource.filters",
+      "name": "spring.datasource.druid.filters",
       "type": "java.lang.String",
-      "description": "Description for spring.datasource.filters."
+      "description": "Description for spring.datasource.druid.filters."
+    },
+    {
+      "name": "spring.datasource.druid.max-active",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.max-active."
+    },
+    {
+      "name": "spring.datasource.druid.initial-size",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.initial-size."
+    },
+    {
+      "name": "spring.datasource.druid.min-idle",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.min-idle."
+    },
+    {
+      "name": "spring.datasource.druid.time-between-eviction-runs-millis",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.time-between-eviction-runs-millis."
+    },
+    {
+      "name": "spring.datasource.druid.max-wait",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.max-wait."
+    },
+    {
+      "name": "spring.datasource.druid.min-evictable-idle-time-millis",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.min-evictable-idle-time-millis."
+    },
+    {
+      "name": "spring.datasource.druid.validation-query",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.validation-query."
+    },
+    {
+      "name": "spring.datasource.druid.test-while-idle",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.test-while-idle."
+    },
+    {
+      "name": "spring.datasource.druid.test-on-borrow",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.test-on-borrow."
+    },
+    {
+      "name": "spring.datasource.druid.test-on-return",
+      "type": "java.lang.String",
+      "description": "Description for spring.datasource.druid.test-on-return."
     }
   ]
 }

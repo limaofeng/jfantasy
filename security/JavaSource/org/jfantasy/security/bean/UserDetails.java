@@ -2,8 +2,6 @@ package org.jfantasy.security.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -23,7 +21,6 @@ import java.util.Date;
  * @version 1.0
  * @since 2013-3-25 下午03:43:54
  */
-@ApiModel(value = "用户详细信息", description = "用户详细信息")
 @Entity
 @Table(name = "AUTH_USER_DETAILS")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "user", "avatar"})
@@ -32,7 +29,6 @@ public class UserDetails implements Serializable {
 
     private static final long serialVersionUID = -5738290484268799275L;
 
-    @ApiModelProperty(value = "用户ID")
     @Id
     @Column(name = "USER_ID", nullable = false, updatable = false, precision = 22, scale = 0)
     @GenericGenerator(name = "pkGenerator", strategy = "foreign", parameters = {@Parameter(name = "property", value = "user")})
@@ -42,61 +38,51 @@ public class UserDetails implements Serializable {
     /**
      * 姓名
      */
-    @ApiModelProperty(value = "姓名")
     @Column(name = "NAME", length = 20)
     private String name;
     /**
      * 性别
      */
-    @ApiModelProperty(value = "性别")
     @Enumerated(EnumType.STRING)
     @Column(name = "SEX", length = 20)
     private Sex sex;
     /**
      * 生日
      */
-    @ApiModelProperty(value = "生日")
     @Column(name = "BIRTHDAY")
     private Date birthday;
     /**
      * 移动电话
      */
-    @ApiModelProperty(value = "移动电话")
     @Column(name = "MOBILE", length = 20)
     private String mobile;
     /**
      * 固定电话
      */
-    @ApiModelProperty(value = "固定电话")
     @Column(name = "TEL", length = 20)
     private String tel;
     /**
      * E-mail
      */
-    @ApiModelProperty(value = "E-mail")
     @Column(name = "EMAIL", length = 50)
     private String email;
     /**
      * 网址
      */
-    @ApiModelProperty(value = "网址")
     @Column(name = "WEBSITE", length = 50)
     private String website;
     /**
      * 描述信息
      */
-    @ApiModelProperty(value = "描述")
     @Column(name = "DESCRIPTION")
     private String description;
     /**
      * 用户头像存储
      */
-    @ApiModelProperty(hidden = true)
     @Column(name = "AVATAR", length = 500)
     @Convert(converter = ImageConverter.class)
     private Image avatar;
 
-    @ApiModelProperty(hidden = true)
     @OneToOne(fetch = FetchType.LAZY, targetEntity = User.class, mappedBy = "details")
     private User user;
 

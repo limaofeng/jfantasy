@@ -1,20 +1,16 @@
 package org.jfantasy.member.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.enums.InvoiceStatus;
 
 import javax.validation.constraints.NotNull;
 
 public class InvoiceForm {
-    @ApiModelProperty("物流公司")
     private String logistics;
-    @ApiModelProperty("快递编号")
     @JsonProperty("ship_no")
     private String shipNo;
     @NotNull(groups = {RESTful.PATCH.class})
-    @ApiModelProperty("状态")
     private InvoiceStatus status;
 
     public String getLogistics() {

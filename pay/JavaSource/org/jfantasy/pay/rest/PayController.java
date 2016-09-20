@@ -13,7 +13,7 @@ import org.jfantasy.pay.service.PayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-@Api(value = "pay", description = "支付操作")
+/** 支付操作 **/
 @RestController
 @RequestMapping("/pays")
 public class PayController {
@@ -26,7 +26,7 @@ public class PayController {
     }
 
     @JsonResultFilter(ignore = {@IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})})
-    @ApiOperation("支付退款")
+    /** 支付退款 **/
     @RequestMapping(value = "/{sn}/refund", method = RequestMethod.POST)
     @ResponseBody
     public Refund refund(@PathVariable("sn") String sn, @RequestBody RefundForm refundForm) throws PayException {
@@ -38,7 +38,7 @@ public class PayController {
             @IgnoreProperty(pojo = Payment.class, name = {"order", "payConfig"}),
             @IgnoreProperty(pojo = Refund.class, name = {"order", "payment", "payConfig"})
     })
-    @ApiOperation(value = "支付通知", notes = "用于第三方支付通知系统")
+    /** 支付通知 - 用于第三方支付通知系统 **/
     @RequestMapping(value = "/{sn}/notify", method = RequestMethod.POST)
     @ResponseBody
     public Object notify(@PathVariable("sn") String sn, @RequestBody String body) throws PayException {

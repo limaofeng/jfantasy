@@ -1,6 +1,5 @@
 package org.jfantasy.pay.order.entity;
 
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.pay.order.entity.enums.PaymentStatus;
 import org.jfantasy.pay.order.entity.enums.PaymentType;
 
@@ -22,85 +21,71 @@ public class PaymentDetails implements Serializable {
     /**
      * 支付编号
      */
-    @ApiModelProperty("支付编号")
     private String sn;
     /**
      * 交易号（用于记录第三方交易的交易流水号）
      */
-    @ApiModelProperty(value = "交易号", notes = "用于记录第三方交易的交易流水号")
     private String tradeNo;
-
-    @ApiModelProperty(value = "支付时间",notes = "用于记录第三方交易的交易时间")
+    /**
+     * 支付时间<br/>
+     * 用于记录第三方交易的交易时间
+     */
     private Date tradeTime;
     /**
      * 支付类型
      */
-    @ApiModelProperty("支付类型")
     private PaymentType type;
     /**
      * 支付配置标示
      */
-    @ApiModelProperty("支付配置Id")
     private Long payConfigId;
     /**
      * 支付配置名称
      */
-    @ApiModelProperty("支付配置名称")
     private String payConfigName;
     /**
      * 收款银行名称
      */
-    @ApiModelProperty("收款方名称")
     private String bankName;
     /**
      * 收款银行账号
      */
-    @ApiModelProperty("收款账号")
     private String bankAccount;
     /**
      * 支付金额
      */
-    @ApiModelProperty("支付金额")
     private BigDecimal totalAmount;
     /**
      * 支付手续费
      */
-    @ApiModelProperty("支付手续费")
     private BigDecimal paymentFee;
     /**
      * 付款人
      */
-    @ApiModelProperty("付款人")
     private String payer;
     /**
      * 备注
      */
-    @ApiModelProperty("备注")
     private String memo;
     /**
      * 支付状态
      */
-    @ApiModelProperty("支付状态")
     private PaymentStatus status;
     /**
      * 创建人
      */
-    @ApiModelProperty(hidden = true)
     private String creator;
     /**
      * 创建时间
      */
-    @ApiModelProperty(hidden = true)
     private Date createTime;
     /**
      * 最后修改人
      */
-    @ApiModelProperty(hidden = true)
     private String modifier;
     /**
      * 最后修改时间
      */
-    @ApiModelProperty(hidden = true)
     private Date modifyTime;
 
     private OrderKey orderKey;

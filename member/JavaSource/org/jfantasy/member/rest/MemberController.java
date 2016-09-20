@@ -1,8 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
@@ -28,7 +25,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
-@Api(value = "members", description = "会员接口")
+/**
+ * 会员接口
+ **/
 @RestController
 @RequestMapping("/members")
 public class MemberController {
@@ -57,10 +56,13 @@ public class MemberController {
             ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
             allow = @AllowProperty(pojo = MemberDetails.class, name = {"name", "sex", "birthday", "avatar"})
     )
-    @ApiOperation(value = "查询会员信息", notes = "通过 filters 可以过滤数据<br/>本接口支持 <br/> X-Page-Fields、X-Result-Fields、X-Expend-Fields 功能", response = Member[].class)
+    /**
+     * 查询会员信息<br/>
+     * 通过 filters 可以过滤数据<br/>本接口支持 <br/> X-Page-Fields、X-Result-Fields、X-Expend-Fields 功能
+     */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
-    public Pager<ResultResourceSupport> search(@ApiParam(hidden = true) Pager<Member> pager, @ApiParam(value = "筛选条件", name = "filters") List<PropertyFilter> filters) {
+    public Pager<ResultResourceSupport> search(Pager<Member> pager, List<PropertyFilter> filters) {
         return assembler.toResources(this.memberService.findPager(pager, filters));
     }
 
@@ -80,7 +82,9 @@ public class MemberController {
     @JsonResultFilter(
             allow = @AllowProperty(pojo = Member.class, name = {"id", "target_id", "target_type", "type", "username"})
     )
-    @ApiOperation(value = "获取用户的详细信息", notes = "通过该接口, 获取详细信息")
+    /**
+     * 获取用户的详细信息
+     */
     @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport profile(HttpServletResponse response, @PathVariable("id") Long id) {
@@ -133,7 +137,7 @@ public class MemberController {
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Comment.class, name = {"member"})
     )
-    @ApiOperation(value = "查询会员评论", notes = "返回会员的会员评论")
+    /** 查询会员评论 - 返回会员的会员评论 **/
     @RequestMapping(value = "/{memid}/comments", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> comments(@PathVariable("memid") Long memberId, Pager<Comment> pager, List<PropertyFilter> filters) {
@@ -141,7 +145,9 @@ public class MemberController {
         return this.commentController.search(pager, filters);
     }
 
-    @ApiOperation(value = "查询会员收货地址", notes = "返回会员的会员评论")
+    /**
+     * 查询会员收货地址 - 返回会员的会员评论
+     **/
     @RequestMapping(value = "/{memid}/receivers", method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> receivers(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
@@ -149,8 +155,8 @@ public class MemberController {
         return this.receiverController.search(filters);
     }
 
-    @JsonResultFilter(allow = @AllowProperty(pojo = Member.class,name = {"id","nick_name"}))
-    @ApiOperation("查询会员的开票信息")
+    @JsonResultFilter(allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"}))
+    /** 查询会员的开票信息 **/
     @RequestMapping(value = "/{memid}/invoices", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> invoices(@PathVariable("memid") Long memberId, Pager<Invoice> pager, List<PropertyFilter> filters) {
@@ -158,7 +164,9 @@ public class MemberController {
         return this.invoiceController.search(pager, filters);
     }
 
-    @ApiOperation("查询会员的团队信息")
+    /**
+     * 查询会员的团队信息
+     **/
     @RequestMapping(value = "/{memid}/teams", method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> teams(@PathVariable("memid") Long memberId, @RequestParam(value = "type", required = false) String type, List<PropertyFilter> filters) {

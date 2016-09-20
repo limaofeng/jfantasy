@@ -2,10 +2,7 @@ package org.jfantasy.security.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.security.bean.enums.ResourceType;
@@ -20,7 +17,6 @@ import java.util.List;
  * @version 1.0
  * @since 2014年4月23日 下午5:53:06
  */
-@ApiModel(value = "资源", description = "每个访问链接、方法、类，都可以抽象为一个资源")
 @Entity
 @Table(name = "AUTH_RESOURCE")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "parentResources", "userGroups", "roles"})
@@ -29,42 +25,36 @@ public class Resource extends BaseBusEntity implements Cloneable {
 
     private static final long serialVersionUID = -4031735792597359821L;
 
-    @ApiModelProperty("资源ID")
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = true, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID", nullable = false, precision = 22, scale = 0)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
     /**
      * 资源名称
      */
-    @ApiModelProperty("资源名称")
     @Column(name = "NAME")
     private String name;
     /**
      * 资源值
      */
-    @ApiModelProperty("资源值")
     @Column(name = "VALUE")
     @Lob
     private String value;
     /**
      * 资源类型
      */
-    @ApiModelProperty("资源类型")
     @Column(name = "TYPE", length = 20)
     @Enumerated(EnumType.STRING)
     private ResourceType type;
     /**
      * 是否启用
      */
-    @ApiModelProperty("是否启用")
     @Column(name = "ENABLED")
     private Boolean enabled;
     /**
      * 资源描述
      */
-    @ApiModelProperty("资源描述")
     @Column(name = "DESCRIPTION")
     private String description;
 

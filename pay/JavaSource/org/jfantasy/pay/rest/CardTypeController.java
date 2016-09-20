@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "card-types", description = "会员卡类型")
+/** 会员卡类型 **/
 @RestController
 @RequestMapping("/card-types")
 public class CardTypeController {
@@ -36,21 +36,21 @@ public class CardTypeController {
         this.cardTypeService = cardTypeService;
     }
 
-    @ApiOperation("全部会员卡类型")
+    /** 全部会员卡类型 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<CardType> pager, List<PropertyFilter> filters) {
         return assembler.toResources(cardTypeService.findPager(pager, filters));
     }
 
-    @ApiOperation("全部会员卡类型详情")
+    /** 全部会员卡类型详情 **/
     @RequestMapping(method = RequestMethod.GET, value = "/{id}")
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String id) {
         return assembler.toResource(get(id));
     }
 
-    @ApiOperation("添加会员卡类型")
+    /** 添加会员卡类型 **/
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.CREATED)
     @ResponseBody
@@ -58,7 +58,7 @@ public class CardTypeController {
         return assembler.toResource(this.cardTypeService.save(type));
     }
 
-    @ApiOperation("修改会员卡类型")
+    /** 修改会员卡类型 **/
     @RequestMapping(method = RequestMethod.PUT, value = "/{id}")
     @ResponseBody
     public ResultResourceSupport update(@PathVariable("id") String id, @RequestBody CardType type) {
@@ -66,7 +66,7 @@ public class CardTypeController {
         return assembler.toResource(this.cardTypeService.save(type));
     }
 
-    @ApiOperation("删除会员卡类型")
+    /** 删除会员卡类型 **/
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") String id) {

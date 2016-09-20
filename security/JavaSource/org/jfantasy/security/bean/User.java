@@ -1,17 +1,13 @@
 package org.jfantasy.security.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
 import java.util.*;
 
-@ApiModel(value = "用户信息", description = "用户登录信息")
 @Entity
 @Table(name = "AUTH_USER")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "roles", "userGroups", "website", "menus", "authorities"})
@@ -31,9 +27,9 @@ public class User extends BaseBusEntity {
     }
 
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
+    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
     private Long id;
 
     /**
@@ -90,7 +86,6 @@ public class User extends BaseBusEntity {
     /**
      * 用户对应的用户组
      */
-    @ApiModelProperty(hidden = true)
     @ManyToMany(targetEntity = UserGroup.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_USERGROUP_USER", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "USERGROUP_ID"), foreignKey = @ForeignKey(name = "FK_USERGROUP_USER_US"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -98,7 +93,6 @@ public class User extends BaseBusEntity {
     /**
      * 用户对应的角色
      */
-    @ApiModelProperty(hidden = true)
     @ManyToMany(targetEntity = Role.class, fetch = FetchType.LAZY)
     @JoinTable(name = "AUTH_ROLE_USER", joinColumns = @JoinColumn(name = "USER_ID"), inverseJoinColumns = @JoinColumn(name = "ROLE_CODE"), foreignKey = @ForeignKey(name = "FK_ROLE_USER_UID"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -106,7 +100,6 @@ public class User extends BaseBusEntity {
     /**
      * 用户详细信息
      */
-    @ApiModelProperty(value = "用户详细信息", notes = "用户详细信息")
     @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.ALL})
     @PrimaryKeyJoinColumn
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -115,7 +108,6 @@ public class User extends BaseBusEntity {
     /**
      * 对应的组织机构
      */
-    @ApiModelProperty(hidden = true)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ORGANIZATION_ID", foreignKey = @ForeignKey(name = "FK_ORGANIZATION_USER"))
     @Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
@@ -227,7 +219,6 @@ public class User extends BaseBusEntity {
     }
 
     @Transient
-    @ApiModelProperty(hidden = true)
     public String[] getAuthorities() {
         Set<String> authorities = new LinkedHashSet<>();
         for (UserGroup userGroup : this.getUserGroups()) {

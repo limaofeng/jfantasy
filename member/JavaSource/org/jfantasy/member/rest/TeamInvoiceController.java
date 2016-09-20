@@ -1,7 +1,5 @@
 package org.jfantasy.member.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
@@ -24,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-@Api(value = "team-invoices", description = "发票")
+/** 发票 **/
 @RestController
 @RequestMapping(value = "/teams/{id}/invoices")
 public class TeamInvoiceController {
@@ -44,7 +42,7 @@ public class TeamInvoiceController {
             ignore = @IgnoreProperty(pojo = InvoiceItem.class, name = {"order_id"}),
             allow = @AllowProperty(pojo = InvoiceOrder.class, name = {"order_sn", "order_type", "name"})
     )
-    @ApiOperation(value = "集团的发票申请列表")
+    /** 集团的发票申请列表 **/
     @RequestMapping(method = RequestMethod.GET)
     public Pager<ResultResourceSupport> search(@PathVariable("id") String teamId, Pager<Invoice> pager, List<PropertyFilter> filters) {
         Team team = this.teamService.get(teamId);

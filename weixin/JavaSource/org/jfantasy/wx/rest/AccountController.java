@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Api(value = "weixin-accounts", description = "微信公众账号")
+/** 微信公众账号 **/
 @RestController("weixin.accountController")
 @RequestMapping("/weixin/accounts")
 public class AccountController {
@@ -21,7 +21,7 @@ public class AccountController {
     @Autowired
     private AccountService accountService;
 
-    @ApiOperation(value = "查询微信公众账号", notes = "筛选微信公众账号，返回通用分页对象")
+    /** 查询微信公众账号 - 筛选微信公众账号，返回通用分页对象 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<Account> search(@ApiParam(value = "分页对象", name = "pager") Pager<Account> pager, @ApiParam(value = "过滤条件", name = "filters") List<PropertyFilter> filters) {
