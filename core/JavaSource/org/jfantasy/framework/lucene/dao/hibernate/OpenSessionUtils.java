@@ -12,16 +12,10 @@ import org.springframework.transaction.support.TransactionSynchronizationManager
 
 public class OpenSessionUtils {
 
-    public static boolean hasResource(SessionFactory sf) {
-        return TransactionSynchronizationManager.hasResource(sf);
-    }
+    private static SessionFactory sessionFactory;
 
-    public static boolean hasResource() {
-        return TransactionSynchronizationManager.hasResource(getSessionFactory());
-    }
-
-    public static SessionFactory getSessionFactory(){
-        return SpringContextUtil.getBeanByType(SessionFactory.class);
+    private static SessionFactory getSessionFactory() {
+        return sessionFactory != null ? sessionFactory : (sessionFactory = SpringContextUtil.getBeanByType(SessionFactory.class));
     }
 
     public static Session openSession() {
@@ -30,9 +24,10 @@ public class OpenSessionUtils {
 
     public static Session openSession(SessionFactory sf) {
         try {
-            Session session = sf.openSession();
+            Session session = sessionFactory.openSession();
             session.setFlushMode(FlushMode.MANUAL);
-            TransactionSynchronizationManager.bindResource(sf, new SessionHolder(session));
+            SessionHolder sessionHolder = new SessionHolder(session);
+            TransactionSynchronizationManager.bindResource(sf, sessionHolder);
             return session;
         } catch (HibernateException ex) {
             throw new DataAccessResourceFailureException("Could not open Hibernate Session", ex);
@@ -41,8 +36,8 @@ public class OpenSessionUtils {
 
     public static void closeSession(Session session) {
         SessionFactory sf = session.getSessionFactory();
-        SessionFactoryUtils.closeSession(session);
-        TransactionSynchronizationManager.unbindResource(sf);
+        SessionHolder sessionHolder = (SessionHolder) TransactionSynchronizationManager.unbindResource(sf);
+        SessionFactoryUtils.closeSession(sessionHolder.getSession());
     }
 
 }
