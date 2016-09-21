@@ -24,6 +24,8 @@ import java.util.Properties;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "team_members"})
 public class Team extends BaseBusEntity {
 
+    private static final long serialVersionUID = 4465203760129454882L;
+
     /**
      * 团队
      */

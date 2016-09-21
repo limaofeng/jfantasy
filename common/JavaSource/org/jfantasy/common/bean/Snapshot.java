@@ -2,7 +2,6 @@ package org.jfantasy.common.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -20,8 +19,8 @@ public class Snapshot extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "snapshot_gen")
+    @TableGenerator(name = "snapshot_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "snapshot:id", valueColumnName = "gen_value")
     private Long id;
 
     @Column(name = "TARGET_ID", nullable = false)

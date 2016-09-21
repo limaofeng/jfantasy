@@ -1,16 +1,20 @@
 package org.jfantasy.pay.rest.models;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.pay.order.entity.enums.RefundStatus;
 
-@ApiModel("退款表单")
+/**
+ * 退款表单
+ */
 public class RefundForm01 {
 
-    @ApiModelProperty(value = "退款状态", required = true)
+    /**
+     * 退款状态
+     */
     private RefundStatus status;
-    @ApiModelProperty(value = "备注")
+    /**
+     * 备注
+     */
     private String remark;
 
     public RefundStatus getStatus() {

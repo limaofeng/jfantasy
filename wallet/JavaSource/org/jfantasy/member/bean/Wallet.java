@@ -12,6 +12,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "MEM_WALLET")
+@TableGenerator(name = "wallet_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_wallet:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Wallet extends BaseBusEntity {
 
@@ -22,8 +23,7 @@ public class Wallet extends BaseBusEntity {
      */
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "wallet_gen")
     private Long id;
     /**
      * 会员

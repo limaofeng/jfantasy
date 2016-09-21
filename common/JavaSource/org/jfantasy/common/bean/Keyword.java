@@ -2,10 +2,12 @@ package org.jfantasy.common.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.github.stuxuhai.jpinyin.PinyinException;
 import com.github.stuxuhai.jpinyin.PinyinFormat;
 import com.github.stuxuhai.jpinyin.PinyinHelper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.lucene.annotations.IndexProperty;
 import org.jfantasy.framework.lucene.annotations.Indexed;
@@ -27,12 +29,14 @@ import javax.persistence.*;
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Keyword extends BaseBusEntity {
 
+    private static Log LOG = LogFactory.getLog(Keyword.class);
+
     private static final long serialVersionUID = 3340627269786275436L;
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "keywords_gen")
+    @TableGenerator(name = "keywords_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "keywords:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 类型
@@ -62,7 +66,7 @@ public class Keyword extends BaseBusEntity {
         this.owner = "public";
     }
 
-    public Keyword(String type, String keyword,String owner) {
+    public Keyword(String type, String keyword, String owner) {
         this.type = type;
         this.words = keyword;
         this.owner = owner;
@@ -112,7 +116,12 @@ public class Keyword extends BaseBusEntity {
         if (StringUtil.isBlank(this.getWords())) {
             return null;
         }
-        return PinyinHelper.getShortPinyin(this.getWords());
+        try {
+            return PinyinHelper.getShortPinyin(this.getWords());
+        } catch (PinyinException e) {
+            LOG.error(e);
+            return "";
+        }
     }
 
     /**
@@ -127,7 +136,12 @@ public class Keyword extends BaseBusEntity {
         if (StringUtil.isBlank(this.getWords())) {
             return null;
         }
-        return PinyinHelper.convertToPinyinString(this.getWords(), "", PinyinFormat.WITHOUT_TONE);
+        try {
+            return PinyinHelper.convertToPinyinString(this.getWords(), "", PinyinFormat.WITHOUT_TONE);
+        } catch (PinyinException e) {
+            LOG.error(e);
+            return "";
+        }
     }
 
 }

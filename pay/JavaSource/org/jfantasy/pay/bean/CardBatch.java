@@ -2,7 +2,6 @@ package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.spring.validation.Use;
@@ -25,8 +24,8 @@ public class CardBatch extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "card_batch_gen")
+    @TableGenerator(name = "card_batch_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "pay_card_batch:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 批次号

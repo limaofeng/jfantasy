@@ -2,9 +2,6 @@ package org.jfantasy.wx.framework.core;
 
 
 import org.jfantasy.wx.framework.exception.WeiXinException;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.io.Serializable;
 
 /**
@@ -18,8 +15,13 @@ public interface Jsapi {
 
     Signature signature(String url) throws WeiXinException;
 
-    @ApiModel(value = "JS API 签名", description = "微信 JS API 签名")
+    /**
+     * JS API 签名
+     */
     class Signature implements Serializable {
+
+        private static final long serialVersionUID = -6144963095625586529L;
+
         /** 随机字符串 **/
         private String noncestr;
         /** appid **/
@@ -31,7 +33,7 @@ public interface Jsapi {
         /** 签名串 **/
         private String signature;
 
-        public Signature(String noncestr, String appid, long timestamp, String url, String signature) {
+        Signature(String noncestr, String appid, long timestamp, String url, String signature) {
             this.noncestr = noncestr;
             this.appid = appid;
             this.timestamp = timestamp;

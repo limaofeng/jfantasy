@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.pay.bean.enums.PayMethod;
@@ -43,8 +42,8 @@ public class PayConfig extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "pay_config_gen")
+    @TableGenerator(name = "pay_config_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "pay_payconfig:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 支付配置类型

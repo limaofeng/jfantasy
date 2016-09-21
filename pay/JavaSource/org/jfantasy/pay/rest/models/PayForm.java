@@ -1,8 +1,6 @@
 package org.jfantasy.pay.rest.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.jfantasy.pay.product.Parameters;
 import org.jfantasy.pay.product.PayType;
 
@@ -10,18 +8,29 @@ import java.io.Serializable;
 import java.util.Map;
 import java.util.Properties;
 
-@ApiModel("支付表单")
+/**
+ * 支付表单
+ */
 public class PayForm implements Serializable {
 
     private static final long serialVersionUID = -4051043375059966567L;
 
-    @ApiModelProperty(value = "支付配置ID", required = true)
+    /**
+     * 支付配置ID
+     */
     private Long payconfigId;
-    @ApiModelProperty(value = "支付类型", required = true)
+    /**
+     * 支付类型
+     */
     private PayType payType;
-    @ApiModelProperty(value = "付款人")
+    /**
+     * 付款人
+     */
     private String payer;
-    @ApiModelProperty(value = "支付参数", notes = "支持的参数:{backUrl:'支付成功后的跳转地址'}")
+    /**
+     * 支付参数<br/>
+     * 支持的参数:{backUrl:'支付成功后的跳转地址'}
+     */
     private Parameters parameters;
 
     public Long getPayconfigId() {

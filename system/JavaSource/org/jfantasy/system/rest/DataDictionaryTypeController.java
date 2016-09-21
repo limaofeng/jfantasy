@@ -1,7 +1,5 @@
 package org.jfantasy.system.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
@@ -22,7 +20,12 @@ public class DataDictionaryTypeController {
     @Autowired
     private DataDictionaryService dataDictionaryService;
 
-    @ApiOperation(value = "添加数据字典分类", notes = "通过该接口, 可以添加新的数据字典分类。", response = DataDictionaryType.class)
+    /**
+     * 添加数据字典分类<br/>
+     * 通过该接口, 可以添加新的数据字典分类。
+     * @param ddt
+     * @return
+     */
     @RequestMapping(method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody
@@ -36,14 +39,25 @@ public class DataDictionaryTypeController {
         return this.dataDictionaryService.update(ddt);
     }
 
-    @ApiOperation(value = "获取数据字典分类", notes = "通过该接口, 可以获取 code 对应的字典分类信息。", response = DataDictionaryType.class)
+    /**
+     * 获取数据字典分类<br/>
+     * 通过该接口, 可以获取 code 对应的字典分类信息。
+     * @param code
+     * @return
+     */
     @RequestMapping(value = "/{code}", method = RequestMethod.GET)
     @ResponseBody
     public DataDictionaryType view(@PathVariable("code") String code) {
         return this.dataDictionaryService.getDataDictionaryType(code);
     }
 
-    @ApiOperation(value = "查询数据字典分类", notes = "通过该接口, 可以筛选需要的数据字典分类信息。", response = Pager.class)
+    /**
+     * 查询数据字典分类<br/>
+     * 通过该接口, 可以筛选需要的数据字典分类信息。
+     * @param pager
+     * @param filters
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<DataDictionaryType> search(Pager<DataDictionaryType> pager, List<PropertyFilter> filters) {
@@ -57,14 +71,25 @@ public class DataDictionaryTypeController {
         this.dataDictionaryService.deleteType(code);
     }
 
-    @ApiOperation(value = "获取数据字典分类下的字典项", notes = "通过该接口, 可以获取 code 对应的所有字典信息。", response = DataDictionaryType.class)
+    /**
+     * 获取数据字典分类下的字典项<br/>
+     * 通过该接口, 可以获取 code 对应的所有字典信息。
+     * @param code
+     * @return
+     */
     @RequestMapping(value = "/{code}/dds", method = RequestMethod.GET)
     @ResponseBody
     public List<DataDictionary> dds(@PathVariable("code") String code) {
         return this.dataDictionaryService.find(Restrictions.eq("type", code));
     }
 
-    @ApiOperation(value = "在数据字典分类下添加数据字典项", notes = "通过该接口, 可以添加新的数据项。", response = DataDictionary.class)
+    /**
+     * 在数据字典分类下添加数据字典项<br/>
+     * 通过该接口, 可以添加新的数据项。
+     * @param code
+     * @param dd
+     * @return
+     */
     @RequestMapping(value = "/{code}/dds", method = RequestMethod.POST)
     @ResponseStatus(value = HttpStatus.CREATED)
     @ResponseBody

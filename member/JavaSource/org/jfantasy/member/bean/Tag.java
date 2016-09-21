@@ -9,14 +9,16 @@ import javax.validation.constraints.Null;
 
 @Entity
 @Table(name = "MEM_TAG", uniqueConstraints = {@UniqueConstraint(name = "UN_MEM_TAG_NAMEORTYPE", columnNames = {"name", "type"})})
+@TableGenerator(name = "tag_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_tag:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Tag extends BaseBusEntity {
+
+    private static final long serialVersionUID = -5572944412170364049L;
 
     @Null(groups = {RESTful.POST.class})
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "tag_gen")
     private Long id;
     /**
      * 名称

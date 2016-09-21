@@ -6,10 +6,5 @@ sonarqube {
 
 dependencies {
     compile project(':jfantasy-pay')
-//    compile project(':jfantasy-oauth')
-//    compile project(':jfantasy-wallet')
-//    compile project(':jfantasy-cms')
-//    compile project(':jfantasy-archives')
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.5'
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
 }

@@ -47,9 +47,9 @@ spring:
           use_second_level_cache: false
           #region:
           #  factory_class: org.hibernate.cache.ehcache.EhCacheRegionFactory
-          ejb:
-            interceptor: org.jfantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor
-            identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
+        ejb:
+          interceptor: org.jfantasy.framework.dao.hibernate.interceptors.BusEntityInterceptor
+          identifier_generator_strategy_provider: org.jfantasy.framework.dao.hibernate.spi.CustomIdentifierGeneratorStrategyProvider
   thymeleaf:
     cache: false
   jackson:

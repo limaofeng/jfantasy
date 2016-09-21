@@ -1,7 +1,5 @@
 package org.jfantasy.pay.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.pay.bean.CardDesign;
 import org.jfantasy.pay.bean.Styles;

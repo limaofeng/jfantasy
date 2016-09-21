@@ -1,6 +1,5 @@
 package org.jfantasy.system.bean;
 
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -12,9 +11,9 @@ public class WebAccessLog extends BaseBusEntity {
     private static final long serialVersionUID = -8993535557174819747L;
 
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+    @GeneratedValue(generator = "web_access_log_gen")
+    @TableGenerator(name = "web_access_log_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "sys_web_access_log:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 访问的url

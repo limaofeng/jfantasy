@@ -1,8 +1,6 @@
 package org.jfantasy.pay.rest;
 
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
@@ -34,15 +32,23 @@ public class PayProductController {
         this.payProductConfiguration = payProductConfiguration;
     }
 
+    /**
+     * 获取支付产品<br/>
+     * @return 通过该接口, 可以获取支持的支付产品列表
+     */
     @JsonResultFilter(allow = {@AllowProperty(pojo = PayProductSupport.class, name = {"id", "name"})})
-    @ApiOperation(value = "获取支付产品", notes = "通过该接口, 可以获取支持的支付产品列表")
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> search() {
         return assembler.toResources(payProductConfiguration.getPayProducts());
     }
 
-    @ApiOperation(value = "支付产品详情", notes = "通过该接口, 可以获取支付产品详情")
+    /**
+     * 支付产品详情<br/>
+     * 通过该接口, 可以获取支付产品详情
+     * @param id
+     * @return
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") String id) {

@@ -10,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity(name = "MemPoint")
 @Table(name = "MEM_POINTS")
+@TableGenerator(name = "point_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_points:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "pointDetails"})
 public class Point extends BaseBusEntity {
 
@@ -53,8 +54,7 @@ public class Point extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "point_gen")
     private Long id;
 
     /**

@@ -13,6 +13,7 @@ import java.math.BigDecimal;
  */
 @Entity
 @Table(name = "MEM_INVOICE_ORDER")
+@TableGenerator(name = "invoice_order_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_invoice_order:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "status"})
 public class InvoiceOrder extends BaseBusEntity {
 
@@ -35,7 +36,6 @@ public class InvoiceOrder extends BaseBusEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.TABLE, generator = "invoice_order_gen")
-    @TableGenerator(name = "invoice_order_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_invoice_order:id", valueColumnName = "gen_value")
     @Column(name = "ID", updatable = false)
     private Long id;
     /**

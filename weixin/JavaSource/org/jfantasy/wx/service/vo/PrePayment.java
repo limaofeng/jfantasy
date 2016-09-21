@@ -1,7 +1,6 @@
 package org.jfantasy.wx.service.vo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModelProperty;
 
 /**
  * 微信预支付订单
@@ -9,54 +8,46 @@ import io.swagger.annotations.ApiModelProperty;
 public class PrePayment {
     /**
      * 订单类型
-     */
-    /** 订单类型 **/
+     **/
     private String orderType;
     /**
      * 订单编号
-     */
-    /** 订单编号 **/
+     **/
     private String orderSn;
     /**
      * 支付记录流水
      */
-    /** 支付流水 **/
     private String sn;
     /**
-     * 交易类型
+     * 交易类型<br/>
+     * 取值如下：JSAPI，NATIVE，APP，WAP,详细说明见微信官方文档<br/>
+     * 默认值为:JSAPI
      */
-    @ApiModelProperty(value = "交易类型", notes = "取值如下：JSAPI，NATIVE，APP，WAP,详细说明见微信官方文档")
     private String tradeType = "JSAPI";
     /**
      * 微信粉丝ID
-     */
-    /** 微信粉丝ID **/
+     **/
     private String openid;
     /**
      * 时间戳，自1970年以来的秒数
-     */
-    /** 时间戳，自1970年以来的秒数 **/
+     **/
     private long timeStamp;
     /**
      * 随机串
-     */
-    /** 随机串 **/
+     **/
     private String nonceStr;
     /**
      * 订单详情扩展字符串
-     */
-    /** 订单详情扩展字符串 **/
+     **/
     @JsonProperty("package")
     private String _package;
     /**
      * 微信签名方式
-     */
-    /** 微信签名方式 **/
+     **/
     private String signType;
     /**
      * 微信签名
-     */
-    /** 微信签名 **/
+     **/
     private String paySign;
 
     public String getNonceStr() {

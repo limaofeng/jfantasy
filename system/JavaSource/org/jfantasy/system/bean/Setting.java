@@ -1,7 +1,6 @@
 package org.jfantasy.system.bean;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -45,9 +44,9 @@ public class Setting extends BaseBusEntity {
     }
 
     @Id
-    @Column(name = "ID", nullable = false, insertable = true, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+    @GeneratedValue(generator = "setting_gen")
+    @TableGenerator(name = "setting_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "sys_setting:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 对应的站点

@@ -16,14 +16,14 @@ import java.util.Set;
  */
 @Entity
 @Table(name = "AUTH_PERMISSION")
+@TableGenerator(name = "permission_gen", table = "sys_sequence",pkColumnName = "gen_name",pkColumnValue = "auth_permission:id",valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "userGroups", "roles"})
 public class Permission extends BaseBusEntity implements Cloneable {
 
     private static final long serialVersionUID = 2224908963065749499L;
     @Id
     @Column(name = "ID", nullable = false, precision = 22)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "permission_gen")
     private Long id;
     /**
      * 权限名称

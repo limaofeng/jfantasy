@@ -1,7 +1,5 @@
 package org.jfantasy.pay.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.jackson.annotation.IgnoreProperty;
 import org.jfantasy.framework.jackson.annotation.JsonResultFilter;
 import org.jfantasy.pay.bean.Order;

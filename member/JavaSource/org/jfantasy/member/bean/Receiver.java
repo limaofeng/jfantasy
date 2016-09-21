@@ -21,6 +21,7 @@ import javax.validation.constraints.NotNull;
  */
 @Entity
 @Table(name = "MEM_RECEIVER")
+@TableGenerator(name = "receiver_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_receiver:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "areaStore", "member"})
 public class Receiver extends BaseBusEntity {
 
@@ -28,8 +29,7 @@ public class Receiver extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "receiver_gen")
     private Long id;
 
     /**

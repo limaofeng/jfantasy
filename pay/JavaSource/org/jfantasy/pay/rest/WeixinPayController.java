@@ -6,8 +6,6 @@ import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.common.BitMatrix;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.spring.mvc.error.RestException;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.StringUtil;

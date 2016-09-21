@@ -4,46 +4,48 @@ import org.jfantasy.wx.framework.event.WeiXinEventListener;
 import org.jfantasy.wx.framework.factory.WeiXinSessionFactoryBean;
 import org.jfantasy.wx.framework.message.EventMessage;
 import org.jfantasy.wx.listener.SubscribeListener;
-import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@org.springframework.context.annotation.Configuration
+@Configuration
 @ComponentScan(basePackages = {"org.jfantasy.wx"})
-public class WeixinConfig  implements ApplicationContextAware {
+public class WeixinConfig {
 
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
+
+    @Autowired
+    public WeixinConfig(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
 
     @Bean
-    public SubscribeListener subscribeListener(){
+    public SubscribeListener subscribeListener() {
         return new SubscribeListener();
     }
 
     @Bean
-    public WeiXinSessionFactoryBean weiXinSessionFactoryBean(){
+    public WeiXinSessionFactoryBean weiXinSessionFactoryBean() {
         WeiXinSessionFactoryBean weiXinSessionFactoryBean = new WeiXinSessionFactoryBean();
         weiXinSessionFactoryBean.setApplicationContext(applicationContext);
+
+        Map<EventMessage.EventType, List<WeiXinEventListener>> events = new HashMap<>();
+
+        List<WeiXinEventListener> weiXinEventListeners = new ArrayList<>();
+        weiXinEventListeners.add(subscribeListener());
+
+        events.put(EventMessage.EventType.subscribe, weiXinEventListeners);
         //关注时,记录粉丝信息
-        weiXinSessionFactoryBean.setEventListeners(new HashMap<EventMessage.EventType, List<WeiXinEventListener>>(){
-            {
-                this.put(EventMessage.EventType.subscribe,new ArrayList<WeiXinEventListener>(){
-                    {
-                        this.add(subscribeListener());
-                    }
-                });
-            }
-        });
+        weiXinSessionFactoryBean.setEventListeners(events);
+
         return weiXinSessionFactoryBean;
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext = applicationContext;
-    }
 }

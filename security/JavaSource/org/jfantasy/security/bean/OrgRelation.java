@@ -13,8 +13,11 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_ORG_RELATION", uniqueConstraints = {@UniqueConstraint(columnNames = {"ORG_DIMENSION_ID", "ORG_ID"})})
-@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "parent","children"})
+@TableGenerator(name = "org_relation_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "auth_org_relation:id", valueColumnName = "gen_value")
+@JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "parent", "children"})
 public class OrgRelation extends BaseBusEntity {
+
+    private static final long serialVersionUID = 219808238045265659L;
 
     public static enum Type {
         /**
@@ -35,9 +38,8 @@ public class OrgRelation extends BaseBusEntity {
      * 标示主键
      */
     @Id
-    @Column(name = "ID", nullable = false, updatable = false, precision = 22, scale = 0)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "org_relation_gen")
     private Long id;
     /**
      * 组织机构

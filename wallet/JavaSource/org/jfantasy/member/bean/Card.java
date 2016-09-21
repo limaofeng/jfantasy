@@ -13,14 +13,14 @@ import java.util.Properties;
 
 @Entity(name = "mem.Card")
 @Table(name = "MEM_CARD")
+@TableGenerator(name = "card_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_card:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "wallet"})
 public class Card extends BaseBusEntity {
 
     private static final long serialVersionUID = -1463056313189743496L;
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "card_gen")
     private Long id;
     /**
      * 卡号

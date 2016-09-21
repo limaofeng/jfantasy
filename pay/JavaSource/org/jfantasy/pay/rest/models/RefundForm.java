@@ -1,17 +1,20 @@
 package org.jfantasy.pay.rest.models;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.math.BigDecimal;
 
-@ApiModel("退款表单")
+/**
+ * 退款表单
+ */
 public class RefundForm {
 
-    @ApiModelProperty(value = "退款金额", required = true)
+    /**
+     * 退款金额
+     */
     private BigDecimal amount;
-    @ApiModelProperty(value = "备注")
+    /**
+     * 备注
+     */
     private String remark;
 
     public BigDecimal getAmount() {

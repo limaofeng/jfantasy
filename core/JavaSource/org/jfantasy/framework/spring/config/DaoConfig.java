@@ -10,8 +10,6 @@ import org.hibernate.id.factory.spi.MutableIdentifierGeneratorFactory;
 import org.jfantasy.framework.dao.annotations.EventListener;
 import org.jfantasy.framework.dao.hibernate.event.PropertyGeneratorPersistEventListener;
 import org.jfantasy.framework.dao.hibernate.event.PropertyGeneratorSaveOrUpdatEventListener;
-import org.jfantasy.framework.dao.hibernate.generator.SequenceGenerator;
-import org.jfantasy.framework.dao.hibernate.generator.SerialNumberGenerator;
 import org.jfantasy.framework.util.common.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -64,8 +62,10 @@ public class DaoConfig implements TransactionManagementConfigurer {
         EventListenerRegistry registry = sessionFactory.getServiceRegistry().getService(EventListenerRegistry.class);
 
         MutableIdentifierGeneratorFactory identifierGeneratorFactory = sessionFactory.getServiceRegistry().getService(MutableIdentifierGeneratorFactory.class);
+        /*
         identifierGeneratorFactory.register("fantasy-sequence", SequenceGenerator.class);
         identifierGeneratorFactory.register("serialnumber", SerialNumberGenerator.class);
+        */
         // 默认监听器
         registry.prependListeners(EventType.SAVE_UPDATE, createListenerInstance(new PropertyGeneratorSaveOrUpdatEventListener(identifierGeneratorFactory)));
         registry.prependListeners(EventType.PERSIST, createListenerInstance(new PropertyGeneratorPersistEventListener(identifierGeneratorFactory)));

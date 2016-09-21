@@ -1,8 +1,6 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import io.swagger.annotations.ApiModel;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.enums.PointStatus;
 import org.jfantasy.pay.bean.enums.PointType;
@@ -10,16 +8,17 @@ import org.jfantasy.pay.bean.enums.PointType;
 import javax.persistence.*;
 import java.util.Date;
 
-@ApiModel(value = "积分记录")
 @Entity
 @Table(name = "PAY_POINT")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Point extends BaseBusEntity {
 
+    private static final long serialVersionUID = -1042566187886657733L;
+
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "pay_point_gen")
+    @TableGenerator(name = "pay_point_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "pay_point:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 积分类型

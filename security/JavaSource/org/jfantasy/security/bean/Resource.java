@@ -19,6 +19,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "AUTH_RESOURCE")
+@TableGenerator(name = "resource_gen", table = "sys_sequence",pkColumnName = "gen_name",pkColumnValue = "auth_resource:id",valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "parentResources", "userGroups", "roles"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Resource extends BaseBusEntity implements Cloneable {
@@ -27,8 +28,7 @@ public class Resource extends BaseBusEntity implements Cloneable {
 
     @Id
     @Column(name = "ID", nullable = false, precision = 22, scale = 0)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "resource_gen")
     private Long id;
     /**
      * 资源名称

@@ -14,6 +14,9 @@ import java.math.BigDecimal;
 @Table(name = "PAY_ACCOUNT")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "password", "version"})
 public class Account extends BaseBusEntity {
+
+    private static final long serialVersionUID = -1002874805597096558L;
+
     /**
      * 编号
      */

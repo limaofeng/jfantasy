@@ -12,13 +12,13 @@ import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "MEM_INVOICE_ITEM")
+@TableGenerator(name = "invoice_item_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_invoice_item:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "invoice", "id"})
 public class InvoiceItem extends BaseBusEntity {
 
     private static final long serialVersionUID = -2533133703787196057L;
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "invoice_item_gen")
     @Column(name = "ID", updatable = false)
     private Long id;
     /**

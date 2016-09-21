@@ -2,7 +2,6 @@ package org.jfantasy.common.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.common.bean.enums.TimeUnit;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
@@ -13,6 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "HOT_KEYWORDS", uniqueConstraints = {@UniqueConstraint(columnNames = {"TARGET_KEY", "KEYWORDS", "TIME_UNIT", "TIME"})})
+@TableGenerator(name = "hot_keywords_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "hot_keywords:id", valueColumnName = "gen_value")
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class HotKeywords extends BaseBusEntity {
@@ -20,9 +20,8 @@ public class HotKeywords extends BaseBusEntity {
     private static final long serialVersionUID = 1060015917650774536L;
 
     @Id
-    @Column(name = "ID", insertable = true, updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID", updatable = false)
+    @GeneratedValue(generator = "hot_keywords_gen")
     private Long id;
     /**
      * 功能唯一标识

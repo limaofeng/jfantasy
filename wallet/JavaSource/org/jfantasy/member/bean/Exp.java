@@ -7,14 +7,14 @@ import javax.persistence.*;
 
 @Entity
 @Table(name = "MEM_EXP")
+@TableGenerator(name = "exp_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_exp:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Exp extends BaseBusEntity {
 
     private static final long serialVersionUID = -2729421248477743361L;
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "exp_gen")
     private Long id;
     /**
      * 经验值

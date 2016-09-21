@@ -9,7 +9,6 @@ dependencies {
     compile project(':jfantasy-pay-api')
     compile project(':jfantasy-aliyun-ons')
     compile project(':jfantasy-rpc-client')
-    compile 'com.fasterxml.jackson.core:jackson-databind:2.6.5'
     compile "com.aliyun.openservices:ons-client:1.2.1"
     testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '1.4.0.RELEASE'
 }

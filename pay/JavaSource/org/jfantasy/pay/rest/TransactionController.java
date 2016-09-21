@@ -1,7 +1,5 @@
 package org.jfantasy.pay.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;

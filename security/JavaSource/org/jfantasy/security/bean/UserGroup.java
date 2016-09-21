@@ -12,6 +12,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "AUTH_USERGROUP")
+@TableGenerator(name = "user_group_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "auth_usergroup:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "menus", "permissions", "roles", "permissions"})
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class UserGroup extends BaseBusEntity {
@@ -19,9 +20,8 @@ public class UserGroup extends BaseBusEntity {
     private static final long serialVersionUID = 7898475330929818969L;
 
     @Id
-    @Column(name = "ID", nullable = false, precision = 22, scale = 0)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @Column(name = "ID", nullable = false, precision = 22)
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "user_group_gen")
     private Long id;
     /**
      * 用户组编码

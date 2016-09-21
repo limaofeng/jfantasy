@@ -3,8 +3,6 @@ package org.jfantasy.system.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.util.common.ObjectUtil;
@@ -19,7 +17,6 @@ import java.util.List;
  * <br/>
  * 该类为了取代Config.java
  */
-@ApiModel(value = "数据字典")
 @Entity
 @Table(name = "SYS_DD")
 @IdClass(DataDictionaryKey.class)
@@ -48,7 +45,6 @@ public class DataDictionary extends BaseBusEntity {
     /**
      * 排序字段
      */
-    :
     @Column(name = "SORT")
     private Integer sort;
     /**
@@ -67,7 +63,6 @@ public class DataDictionary extends BaseBusEntity {
     /**
      * 下级数据字典
      */
-    :
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     @OrderBy("sort ASC")
     private List<DataDictionary> children;

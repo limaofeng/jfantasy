@@ -1,14 +1,10 @@
 package org.jfantasy.wx.framework.message;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 import java.util.Date;
 
 /**
  * 微信消息接口
  */
-@ApiModel(value = "微信消息接口")
 public interface WeiXinMessage<T> {
 
     /**
@@ -16,15 +12,13 @@ public interface WeiXinMessage<T> {
      *
      * @return id
      */
-    /** 消息id，64位整型 **/
     Long getId();
 
     /**
-     * 发送方帐号（一个OpenID）
+     * 发送方帐号（一个OpenID/微信原始ID）
      *
      * @return String
      */
-    /** 发送方帐号（一个OpenID/微信原始ID） **/
     String getFromUserName();
 
     /**
@@ -32,7 +26,6 @@ public interface WeiXinMessage<T> {
      *
      * @return date
      */
-    /** 消息创建时间 **/
     Date getCreateTime();
 
     /**
@@ -40,15 +33,13 @@ public interface WeiXinMessage<T> {
      *
      * @return T
      */
-    @ApiModelProperty(value = "微信内容", dataType = "具体类型参考其实现类")
     T getContent();
 
     /**
-     * 开发者微信号 (微信原始ID)
+     * 接收方帐号（一个OpenID/微信原始ID）
      *
      * @return String
      */
-    /** 接收方帐号（一个OpenID/微信原始ID） **/
     String getToUserName();
 
 }

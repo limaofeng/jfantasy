@@ -6,8 +6,6 @@ import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.factory.WeiXinSessionFactory;
 import org.jfantasy.wx.framework.factory.WeiXinSessionUtils;
 import org.jfantasy.wx.service.UserService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +40,15 @@ public class UserController {
         }
     }
 
-    @ApiOperation(value = "通过 oauth2 code 获取微信粉丝", notes = "通过 oauth2 code 获取关注的用户信息")
+    /**
+     * 通过 oauth2 code 获取微信粉丝
+     * @param appid
+     * @param code
+     * @param response
+     * @return
+     * @throws WeiXinException
+     * @throws IOException
+     */
     @RequestMapping(value = "/{code}/oauth2", method = RequestMethod.GET)
     public User getUserByAuthorizedCode(@PathVariable("appid") String appid, @PathVariable("code") String code, HttpServletResponse response) throws WeiXinException, IOException {
         try {

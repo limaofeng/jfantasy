@@ -1,7 +1,6 @@
 package org.jfantasy.pay.bean;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.pay.bean.enums.OwnerType;
 
@@ -17,8 +16,8 @@ public class Log extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "log_gen")
+    @TableGenerator(name = "log_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "pay_log:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 所有者类型

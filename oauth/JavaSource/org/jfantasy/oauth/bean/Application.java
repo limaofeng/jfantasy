@@ -13,6 +13,7 @@ import java.util.List;
  */
 @Entity
 @Table(name = "OAUTH_APP")
+@TableGenerator(name = "app_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "oauth_app:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Application extends BaseBusEntity {
 
@@ -20,8 +21,7 @@ public class Application extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "app_gen")
     private Long id;
     @Column(name = "NAME")
     private String name;
@@ -39,7 +39,8 @@ public class Application extends BaseBusEntity {
     @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
     private List<Role> roles;
 
-    public Application(){}
+    public Application() {
+    }
 
     public Application(Long id) {
         this.id = id;

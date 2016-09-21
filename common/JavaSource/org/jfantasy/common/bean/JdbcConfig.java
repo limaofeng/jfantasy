@@ -1,7 +1,6 @@
 package org.jfantasy.common.bean;
 
 import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
@@ -34,9 +33,9 @@ public class JdbcConfig extends BaseBusEntity {
     }
 
     @Id
-    @Column(name = "ID", insertable = true, updatable = false)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @Column(name = "ID",updatable = false)
+    @GeneratedValue(generator = "jdbc_config_gen")
+    @TableGenerator(name = "jdbc_config_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "jdbc_config:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 数据库名称

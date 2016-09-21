@@ -3,20 +3,16 @@ package org.jfantasy.thirdparty.bean;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.thirdparty.bean.enums.Platform;
 
-import javax.persistence.*;
 import java.util.Properties;
 
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "properties"})
 public class User extends BaseBusEntity {
 
-    @Id
-    @Column(name = "ID", nullable = false, updatable = false, precision = 22)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    private static final long serialVersionUID = 4766200838709200330L;
+
     private Long id;
 
     private String key;
@@ -25,8 +21,6 @@ public class User extends BaseBusEntity {
     /**
      * 平台
      */
-    @Column(name = "PLATFORM")
-    @Enumerated(EnumType.STRING)
     private Platform platform;
 
     private Properties properties;

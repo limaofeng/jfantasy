@@ -19,8 +19,8 @@ public class Article extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", precision = 22)
-    @GeneratedValue(generator = "fantasy-sequence")
-    @GenericGenerator(name = "fantasy-sequence", strategy = "fantasy-sequence")
+    @GeneratedValue(generator = "test_article_gen")
+    @TableGenerator(name = "test_article_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "test_article:id", valueColumnName = "gen_value")
     private Long id;
     /**
      * 商品编号

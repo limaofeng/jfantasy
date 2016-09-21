@@ -1,7 +1,5 @@
 package org.jfantasy.pay.rest;
 
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.jackson.annotation.AllowProperty;
@@ -24,7 +22,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-/** 退款记录 **/
+/**
+ * 退款记录
+ **/
 @RestController
 @RequestMapping("/refunds")
 public class RefundController {
@@ -59,12 +59,19 @@ public class RefundController {
         return assembler.toResources(refundService.findPager(pager, filters));
     }
 
+    /**
+     * 更新退款记录<br/>
+     * 该方法只能修改 退款状态
+     *
+     * @param sn
+     * @param form
+     * @return
+     */
     @JsonResultFilter(allow = {
             @AllowProperty(pojo = Order.class, name = {"key", "status", "type", "sn"}),
             @AllowProperty(pojo = Payment.class, name = {"sn", "total_amount", "status"}),
             @AllowProperty(pojo = PayConfig.class, name = {"id", "pay_product_id", "name"})
     })
-    @ApiOperation(value = "更新退款记录", notes = "该方法只能修改 退款状态 ")
     @RequestMapping(value = "/{sn}/status", method = RequestMethod.PUT)
     @ResponseBody
     public ToRefund update(@PathVariable("sn") String sn, @RequestBody RefundForm01 form) {
@@ -83,14 +90,18 @@ public class RefundController {
         return assembler.toResource(this.refundService.get(sn));
     }
 
-    /** 删除退款记录 **/
+    /**
+     * 删除退款记录
+     **/
     @RequestMapping(value = "/{sn}", method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("sn") String sn) {
         this.refundService.delete(sn);
     }
 
-    /** 批量删除退款记录 **/
+    /**
+     * 批量删除退款记录
+     **/
     @RequestMapping(method = RequestMethod.DELETE)
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void delete(@RequestBody String... sns) {

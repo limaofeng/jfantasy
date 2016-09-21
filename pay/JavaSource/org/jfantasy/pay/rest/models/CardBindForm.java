@@ -1,7 +1,5 @@
 package org.jfantasy.pay.rest.models;
 
-import io.swagger.annotations.ApiModelProperty;
-
 public class CardBindForm {
 
     /** 密码 **/

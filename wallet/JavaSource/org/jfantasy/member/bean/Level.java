@@ -10,6 +10,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "MEM_LEVEL")
+@TableGenerator(name = "level_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_level:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler"})
 public class Level extends BaseBusEntity {
 
@@ -17,8 +18,7 @@ public class Level extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(strategy = GenerationType.TABLE, generator = "test:id")
-    @TableGenerator(name = "test:id", table = "sys_sequence",pkColumnName = "gen_name",valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "level_gen")
     private Long id;
     /**
      * 等级名称

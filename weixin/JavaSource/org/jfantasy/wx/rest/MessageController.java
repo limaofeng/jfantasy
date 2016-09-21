@@ -1,17 +1,14 @@
 package org.jfantasy.wx.rest;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jfantasy.wx.framework.core.WeiXinCoreHelper;
 import org.jfantasy.wx.framework.exception.WeiXinException;
 import org.jfantasy.wx.framework.factory.WeiXinSessionFactory;
 import org.jfantasy.wx.framework.factory.WeiXinSessionUtils;
 import org.jfantasy.wx.framework.message.WeiXinMessage;
 import org.jfantasy.wx.framework.session.WeiXinSession;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +26,6 @@ public class MessageController {
     private WeiXinSessionFactory weiXinSessionFactory;
 
     /** 微信消息接口 - 接口接收微信公众平台推送的微信消息及事件,直接调用无效 **/
-    @ApiResponse(code = 200, message = "OK", response = WeiXinMessage.class)
     @RequestMapping(value = "/push", method = {RequestMethod.GET, RequestMethod.POST})
     @ResponseBody
     public String push(@PathVariable("appid") String appid, HttpServletRequest request) throws IOException {

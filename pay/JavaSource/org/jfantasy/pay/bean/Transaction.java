@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import io.swagger.annotations.ApiModelProperty;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
@@ -101,7 +100,6 @@ public class Transaction extends BaseBusEntity {
     /**
      * 扩展字段,用于存储不同项目的关联信息
      */
-    :
     @Convert(converter = PropertiesConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
