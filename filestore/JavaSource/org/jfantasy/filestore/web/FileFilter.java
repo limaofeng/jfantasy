@@ -184,6 +184,7 @@ public class FileFilter extends GenericFilterBean {
         } else {
             if (ServletUtils.checkIfModifiedSince(request, response, fileItem.lastModified().getTime())) {
                 try {
+                    response.setHeader("Content-Type", fileItem.getContentType());
                     StreamUtil.copy(fileItem.getInputStream(), response.getOutputStream());
                 } catch (FileNotFoundException e) {
                     logger.error(e.getMessage(),e);
