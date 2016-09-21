@@ -45,7 +45,7 @@ public class RpcProxy implements InvocationHandler {
 
         if (method.getDeclaringClass() != this.targetInterface) {
             LOG.error("Invalid invoke to " + method.toString());
-            return null;
+            return method.invoke(this, args);
         }
 
         RpcResponse response;
