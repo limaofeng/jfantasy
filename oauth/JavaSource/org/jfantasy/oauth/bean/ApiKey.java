@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 
 import javax.persistence.*;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class ApiKey extends BaseBusEntity {
      * api 配置的一些额外信息
      */
     @Column(name = "PROPERTIES", columnDefinition = "Blob")
+    @Convert(converter = MapConverter.class)
     private Map<String,Object> properties;
     /**
      * 对应的应用
