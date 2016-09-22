@@ -15,7 +15,8 @@ import org.jfantasy.security.bean.enums.Sex;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 团队成员
@@ -97,7 +98,7 @@ public class TeamMember extends BaseBusEntity {
      */
     @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Properties properties;
+    private Map<String,String> properties;
     /**
      * 团队ID
      */
@@ -151,12 +152,12 @@ public class TeamMember extends BaseBusEntity {
         this.team = team;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String,String> properties) {
         this.properties = properties;
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String,String> getProperties() {
         if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(Invite.class, "properties")) {
             return null;
         }
@@ -166,7 +167,7 @@ public class TeamMember extends BaseBusEntity {
     @JsonAnySetter
     public void set(String key, String value) {
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap<>();
         }
         this.properties.put(key, value);
     }
@@ -174,7 +175,7 @@ public class TeamMember extends BaseBusEntity {
     @Transient
     public String get(String key) {
         if (this.properties == null) return null;
-        return this.properties.getProperty(key);
+        return this.properties.get(key);
     }
 
     public String[] getTags() {

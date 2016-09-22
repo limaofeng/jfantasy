@@ -9,7 +9,7 @@ import org.jfantasy.member.bean.converter.CardStyleConverter;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Date;
-import java.util.Properties;
+import java.util.Map;
 
 @Entity(name = "mem.Card")
 @Table(name = "MEM_CARD")
@@ -50,7 +50,7 @@ public class Card extends BaseBusEntity {
      */
     @Column(name = "EXTRAS", length = 2000)
     @Convert(converter = MapConverter.class)
-    private Properties extras;
+    private Map<String,Object> extras;
 
     public Long getId() {
         return id;
@@ -92,11 +92,11 @@ public class Card extends BaseBusEntity {
         this.amount = amount;
     }
 
-    public Properties getExtras() {
+    public Map<String,Object> getExtras() {
         return extras;
     }
 
-    public void setExtras(Properties extras) {
+    public void setExtras(Map<String,Object> extras) {
         this.extras = extras;
     }
 
