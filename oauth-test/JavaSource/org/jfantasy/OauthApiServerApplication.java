@@ -10,6 +10,10 @@ import org.springframework.context.annotation.Configuration;
 @EnableAutoConfiguration(exclude = {WebSocketAutoConfiguration.class, JmxAutoConfiguration.class})
 public class OauthApiServerApplication {
 
+    private OauthApiServerApplication() {
+        throw new IllegalAccessError("Utility class");
+    }
+
     public static void main(String[] args) {
         SpringApplication.run(OauthApiServerApplication.class, args);
     }
