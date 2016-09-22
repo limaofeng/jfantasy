@@ -20,13 +20,20 @@ import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
 public class RefundService {
 
+    private static final String REFUND_FIELDS_STATUS = "status";
+
+    private final RefundDao refundDao;
+
     @Autowired
-    private RefundDao refundDao;
+    public RefundService(RefundDao refundDao) {
+        this.refundDao = refundDao;
+    }
 
     public Refund get(String sn) {
         return this.refundDao.get(sn);
@@ -46,30 +53,26 @@ public class RefundService {
      * @return Refund
      */
     Refund ready(Payment payment, BigDecimal amount, String remark) {
-        if (amount.scale() != 2) {
-            amount = amount.setScale(2, BigDecimal.ROUND_DOWN);
-        }
         if (payment.getStatus() != PaymentStatus.success) {
             throw new PayException("原交易[" + payment.getSn() + "]未支付成功,不能发起退款操作");
         }
         List<Refund> refunds = this.refundDao.find(Restrictions.eq("payment.sn", payment.getSn()));
-        Refund refund = ObjectUtil.find(refunds, "status", RefundStatus.wait);
+        Refund refund = ObjectUtil.find(refunds, REFUND_FIELDS_STATUS, RefundStatus.wait);
         try {
             if (refund != null) {//存在等待中的退单
                 return refund;
             }
-            final BigDecimal famount = amount;
-            refund = ObjectUtil.find(refunds, SpELUtil.getExpression(" status == #value.get('status') and totalAmount.equals(#value.get('amount')) "), new HashMap<String, Object>() {
-                {
-                    this.put("status", RefundStatus.ready);
-                    this.put("amount", famount);
-                }
-            });//存在相同的退单
+
+            Map<String, Object> data = new HashMap<>();
+            data.put("status", RefundStatus.ready);
+            data.put("amount", amount);
+
+            refund = ObjectUtil.find(refunds, SpELUtil.getExpression(" status == #value.get('status') and totalAmount.equals(#value.get('amount')) "), data);//存在相同的退单
             if (refund != null) {
                 return refund;
             }
             BigDecimal totalRefunded = BigDecimal.ZERO;
-            for (Refund _refund : ObjectUtil.filter(refunds, "status", RefundStatus.success)) {
+            for (Refund _refund : ObjectUtil.filter(refunds, REFUND_FIELDS_STATUS, RefundStatus.success)) {
                 totalRefunded = totalRefunded.add(_refund.getTotalAmount());
             }
             totalRefunded = totalRefunded.add(amount);
@@ -82,12 +85,10 @@ public class RefundService {
             refund = this.refundDao.save(refund);
             return refund;
         } finally {
-            for (Refund _refund : ObjectUtil.filter(refunds, "status", RefundStatus.ready)) {//将其余订单设置为失败
-                assert refund != null;
-                if (_refund.getSn().equals(refund.getSn())) {
-                    continue;
+            for (Refund _refund : ObjectUtil.filter(refunds, REFUND_FIELDS_STATUS, RefundStatus.ready)) {//将其余订单设置为失败
+                if (refund != null && !_refund.getSn().equals(refund.getSn())) {
+                    this.close(_refund);
                 }
-                this.close(_refund);
             }
         }
     }

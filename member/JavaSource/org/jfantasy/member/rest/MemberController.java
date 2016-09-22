@@ -32,7 +32,9 @@ import java.util.List;
 @RequestMapping("/members")
 public class MemberController {
 
-    public static MemberResourceAssembler assembler = new MemberResourceAssembler();
+    private static final String FILTERS_EQ_MEMBER_ID = "EQL_member.id";
+
+    private static MemberResourceAssembler assembler = new MemberResourceAssembler();
     private static ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
 
     private final MemberService memberService;
@@ -52,20 +54,30 @@ public class MemberController {
         this.favoriteService = favoriteService;
     }
 
+    /**
+     * 查询会员信息<br/>
+     * 通过 filters 可以过滤数据<br/>本接口支持 <br/> X-Page-Fields、X-Result-Fields、X-Expend-Fields 功能
+     *
+     * @param pager   翻页对象
+     * @param filters 筛选
+     * @return Pager<ResultResourceSupport>
+     */
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Member.class, name = {"password", "enabled", "accountNonExpired", "accountNonLocked", "credentialsNonExpired"}),
             allow = @AllowProperty(pojo = MemberDetails.class, name = {"name", "sex", "birthday", "avatar"})
     )
-    /**
-     * 查询会员信息<br/>
-     * 通过 filters 可以过滤数据<br/>本接口支持 <br/> X-Page-Fields、X-Result-Fields、X-Expend-Fields 功能
-     */
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Member> pager, List<PropertyFilter> filters) {
         return assembler.toResources(this.memberService.findPager(pager, filters));
     }
 
+    /**
+     * 会员详情
+     *
+     * @param id KEY
+     * @return Member
+     */
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") Long id) {
@@ -105,7 +117,7 @@ public class MemberController {
     )
     @RequestMapping(value = "/{id}/profile", method = RequestMethod.PUT)
     @ResponseBody
-    public ResultResourceSupport profile(HttpServletResponse response, @PathVariable("id") Long id,@RequestBody MemberDetails details) {
+    public ResultResourceSupport profile(HttpServletResponse response, @PathVariable("id") Long id, @RequestBody MemberDetails details) {
         Member member = get(id);
         if (Member.MEMBER_TYPE_PERSONAL.equals(member.getType())) {
             details.setMemberId(id);
@@ -156,10 +168,10 @@ public class MemberController {
     /**
      * 查询会员评论 - 返回会员的会员评论
      *
-     * @param memberId
-     * @param pager
-     * @param filters
-     * @return
+     * @param memberId 会员ID
+     * @param pager    分页
+     * @param filters  筛选
+     * @return Pager<Comment>
      */
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Comment.class, name = {"member"})
@@ -167,37 +179,37 @@ public class MemberController {
     @RequestMapping(value = "/{memid}/comments", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> comments(@PathVariable("memid") Long memberId, Pager<Comment> pager, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
+        filters.add(new PropertyFilter(FILTERS_EQ_MEMBER_ID, memberId.toString()));
         return this.commentController.search(pager, filters);
     }
 
     /**
      * 查询会员收货地址 - 返回会员的会员评论
      *
-     * @param memberId
-     * @param filters
-     * @return
+     * @param memberId 会员ID
+     * @param filters  筛选
+     * @return List<Receiver>
      */
     @RequestMapping(value = "/{memid}/receivers", method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> receivers(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
+        filters.add(new PropertyFilter(FILTERS_EQ_MEMBER_ID, memberId.toString()));
         return this.receiverController.search(filters);
     }
 
     /**
      * 查询会员的开票信息
      *
-     * @param memberId
-     * @param pager
-     * @param filters
-     * @return
+     * @param memberId 会员ID
+     * @param pager    分页对象
+     * @param filters  筛选
+     * @return Pager<ResultResourceSupport>
      */
     @JsonResultFilter(allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"}))
     @RequestMapping(value = "/{memid}/invoices", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> invoices(@PathVariable("memid") Long memberId, Pager<Invoice> pager, List<PropertyFilter> filters) {
-        filters.add(new PropertyFilter("EQL_member.id", memberId.toString()));
+        filters.add(new PropertyFilter(FILTERS_EQ_MEMBER_ID, memberId.toString()));
         return this.invoiceController.search(pager, filters);
     }
 
@@ -205,10 +217,10 @@ public class MemberController {
     /**
      * 查询会员的团队信息
      *
-     * @param memberId
-     * @param type
-     * @param filters
-     * @return
+     * @param memberId 会员id
+     * @param type     团队类型
+     * @param filters  筛选
+     * @return List<ResultResourceSupport>
      */
     @RequestMapping(value = "/{memid}/teams", method = RequestMethod.GET)
     @ResponseBody

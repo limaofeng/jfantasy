@@ -128,7 +128,7 @@ public class PayService {
      */
     @Transactional
     public Refund refund(String paymentSn, BigDecimal amount, String remark) {
-        Refund refund = refundService.ready(paymentService.get(paymentSn), amount, remark);
+        Refund refund = refundService.ready(paymentService.get(paymentSn), amount.scale() != 2 ?  amount.setScale(2, BigDecimal.ROUND_DOWN) : amount, remark);
         Hibernate.initialize(refund.getPayConfig());
         Hibernate.initialize(refund.getOrder());
         return refund;

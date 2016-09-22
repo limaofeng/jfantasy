@@ -5,31 +5,21 @@ import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,ApplicationContextAware {
+public class SpringContextUtil {
 
     private static BeanDefinitionRegistry registry;
-    private static ConfigurableListableBeanFactory beanFactory;
 
-    @Override
-    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+    public static void setRegistry(BeanDefinitionRegistry registry) {
         SpringContextUtil.registry = registry;
-    }
-
-    @Override
-    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-        SpringContextUtil.beanFactory = beanFactory;
     }
 
     public enum AutoType {
@@ -50,15 +40,17 @@ public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,Ap
 
     private static final Log LOGGER = LogFactory.getLog(SpringContextUtil.class);
 
-    private static ApplicationContext applicationContext; // Spring应用上下文环境
+    /**
+     * Spring应用上下文环境
+     */
+    private static ApplicationContext applicationContext;
 
     /**
      * 实现ApplicationContextAware接口的回调方法，设置上下文环境
      *
      * @param applicationContext applicationContext
-     * @throws BeansException
      */
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public static void setApplicationContext(ApplicationContext applicationContext) {
         LOGGER.debug(applicationContext);
         if (ObjectUtil.isNull(SpringContextUtil.applicationContext)) {
             SpringContextUtil.applicationContext = applicationContext;
@@ -77,19 +69,18 @@ public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,Ap
      *
      * @param name beanId
      * @return Object 一个以所给名字注册的bean的实例
-     * @throws BeansException
      */
     public static synchronized <T> T getBean(String name) {
         try {
             return (T) applicationContext.getBean(name);
         } catch (NoSuchBeanDefinitionException e) {
             if (LOGGER.isErrorEnabled()) {
-                LOGGER.error("{Bean:" + name + "}没有找到!", e);
+                LOGGER.error("BeanName:" + name + "没有找到!", e);
             }
             return null;
         } catch (BeansException e) {
             if (LOGGER.isErrorEnabled()) {
-                LOGGER.error("{Bean:" + name + "}没有找到!", e);
+                LOGGER.error("BeanName:" + name + "没有找到!", e);
             }
             throw e;
         }
@@ -101,7 +92,6 @@ public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,Ap
      * @param name         bean注册名
      * @param requiredType 返回对象类型
      * @return Object 返回requiredType类型对象
-     * @throws BeansException
      */
     public static synchronized <T> T getBean(String name, Class<T> requiredType) {
         try {
@@ -217,7 +207,7 @@ public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,Ap
             return applicationContext.getResources(pattern);
         } catch (IOException e) {
             LOGGER.error(e);
-            return null;
+            return new Resource[0];
         }
     }
 
@@ -225,7 +215,7 @@ public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,Ap
         return applicationContext != null;
     }
 
-    public void destroy() throws Exception {
+    public void destroy() {
         cleanApplicationContext();
     }
 
