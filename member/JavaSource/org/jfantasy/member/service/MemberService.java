@@ -5,6 +5,7 @@ import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
 import org.jfantasy.framework.spring.mvc.error.NotFoundException;
 import org.jfantasy.framework.spring.mvc.error.ValidationException;
+import org.jfantasy.framework.util.common.BeanUtil;
 import org.jfantasy.framework.util.common.DateUtil;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.jfantasy.framework.util.common.StringUtil;
@@ -133,6 +134,13 @@ public class MemberService {
         // 保存用户
         applicationContext.publishEvent(new RegisterEvent(member = this.memberDao.save(member)));
         return member;
+    }
+
+    public MemberDetails update(MemberDetails details) {
+        Member member = this.memberDao.get(details.getMemberId());
+        BeanUtil.copyProperties(member.getDetails(), details, "memberId");
+        this.memberDao.update(member);
+        return member.getDetails();
     }
 
     public List<Member> find(Criterion... criterions) {

@@ -79,18 +79,36 @@ public class MemberController {
         return this.favoriteService.findByMemberId(id, type);
     }
 
+    /**
+     * 获取用户的详细信息
+     *
+     * @param response HttpServletResponse
+     * @param id       id
+     * @return ResultResourceSupport
+     */
     @JsonResultFilter(
             allow = @AllowProperty(pojo = Member.class, name = {"id", "target_id", "target_type", "type", "username"})
     )
-    /**
-     * 获取用户的详细信息
-     */
     @RequestMapping(value = "/{id}/profile", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport profile(HttpServletResponse response, @PathVariable("id") Long id) {
         Member member = get(id);
         if (Member.MEMBER_TYPE_PERSONAL.equals(member.getType())) {
             return profileAssembler.toResource(member.getDetails());
+        }
+        response.setStatus(307);
+        return assembler.toResource(member);
+    }
+
+    @JsonResultFilter(
+            allow = @AllowProperty(pojo = Member.class, name = {"id", "target_id", "target_type", "type", "username"})
+    )
+    @RequestMapping(value = "/{id}/profile", method = RequestMethod.PUT)
+    @ResponseBody
+    public ResultResourceSupport profile(HttpServletResponse response, @PathVariable("id") Long id,@RequestBody MemberDetails details) {
+        Member member = get(id);
+        if (Member.MEMBER_TYPE_PERSONAL.equals(member.getType())) {
+            return profileAssembler.toResource(memberService.update(details));
         }
         response.setStatus(307);
         return assembler.toResource(member);
@@ -134,10 +152,17 @@ public class MemberController {
         this.memberService.delete(id);
     }
 
+    /**
+     * 查询会员评论 - 返回会员的会员评论
+     *
+     * @param memberId
+     * @param pager
+     * @param filters
+     * @return
+     */
     @JsonResultFilter(
             ignore = @IgnoreProperty(pojo = Comment.class, name = {"member"})
     )
-    /** 查询会员评论 - 返回会员的会员评论 **/
     @RequestMapping(value = "/{memid}/comments", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> comments(@PathVariable("memid") Long memberId, Pager<Comment> pager, List<PropertyFilter> filters) {
@@ -147,7 +172,11 @@ public class MemberController {
 
     /**
      * 查询会员收货地址 - 返回会员的会员评论
-     **/
+     *
+     * @param memberId
+     * @param filters
+     * @return
+     */
     @RequestMapping(value = "/{memid}/receivers", method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> receivers(@PathVariable("memid") Long memberId, List<PropertyFilter> filters) {
@@ -155,8 +184,15 @@ public class MemberController {
         return this.receiverController.search(filters);
     }
 
+    /**
+     * 查询会员的开票信息
+     *
+     * @param memberId
+     * @param pager
+     * @param filters
+     * @return
+     */
     @JsonResultFilter(allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"}))
-    /** 查询会员的开票信息 **/
     @RequestMapping(value = "/{memid}/invoices", method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> invoices(@PathVariable("memid") Long memberId, Pager<Invoice> pager, List<PropertyFilter> filters) {
@@ -164,9 +200,15 @@ public class MemberController {
         return this.invoiceController.search(pager, filters);
     }
 
+
     /**
      * 查询会员的团队信息
-     **/
+     *
+     * @param memberId
+     * @param type
+     * @param filters
+     * @return
+     */
     @RequestMapping(value = "/{memid}/teams", method = RequestMethod.GET)
     @ResponseBody
     public List<ResultResourceSupport> teams(@PathVariable("memid") Long memberId, @RequestParam(value = "type", required = false) String type, List<PropertyFilter> filters) {
