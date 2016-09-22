@@ -103,11 +103,15 @@ public class Transaction extends BaseBusEntity {
      */
     @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Map<String,Object> properties;
-    /** 支付记录 **/
+    private Map<String, Object> properties;
+    /**
+     * 支付记录
+     **/
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<Payment>();
-    /** 退款记录 **/
+    /**
+     * 退款记录
+     **/
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Refund> refunds = new ArrayList<>();
 
@@ -200,7 +204,7 @@ public class Transaction extends BaseBusEntity {
     }
 
     @JsonAnyGetter
-    public Map<String,Object> getProperties() {
+    public Map<String, Object> getProperties() {
         if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(PayConfig.class, "properties")) {
             return null;
         }
@@ -221,7 +225,7 @@ public class Transaction extends BaseBusEntity {
         return this.properties.get(key).toString();
     }
 
-    public void setProperties(Map<String,Object> properties) {
+    public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
     }
 

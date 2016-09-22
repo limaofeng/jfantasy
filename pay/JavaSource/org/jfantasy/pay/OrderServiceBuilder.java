@@ -4,12 +4,12 @@ package org.jfantasy.pay;
 import org.jfantasy.pay.order.OrderService;
 import org.jfantasy.pay.order.entity.enums.CallType;
 
-import java.util.Properties;
+import java.util.Map;
 
 public interface OrderServiceBuilder<T extends OrderService> {
 
     CallType getCallType();
 
-    T build(Properties props);
+    T build(Map props);
 
 }

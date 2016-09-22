@@ -16,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 @Service
 public class TransactionService {
@@ -41,7 +41,7 @@ public class TransactionService {
      * @return Transaction
      */
     @Transactional
-    public Transaction thirdparty(Project project, String from, String to, BigDecimal amount, String notes, Properties properties) {
+    public Transaction thirdparty(Project project, String from, String to, BigDecimal amount, String notes, Map<String,Object> properties) {
         Transaction transaction = new Transaction();
         transaction.setFrom(from);
         transaction.setTo(to);

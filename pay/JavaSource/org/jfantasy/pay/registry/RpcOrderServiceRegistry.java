@@ -6,7 +6,8 @@ import org.jfantasy.pay.service.OrderServerService;
 import org.jfantasy.rpc.annotation.ServiceExporter;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 @ServiceExporter(value = "rpcOrderServiceRegistry", targetInterface = OrderServiceRegistry.class)
 public class RpcOrderServiceRegistry implements OrderServiceRegistry {
@@ -20,8 +21,8 @@ public class RpcOrderServiceRegistry implements OrderServiceRegistry {
 
     @Override
     public void register(String type, String host, int port) {
-        Properties props = new Properties();
-        props.setProperty("host", host);
+        Map<String,Object> props = new HashMap<>();
+        props.put("host", host);
         props.put("port", String.valueOf(port));
         orderServerService.save(CallType.rpc, type, "RPC", props);
     }

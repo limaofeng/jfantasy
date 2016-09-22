@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 @Service
 public class OrderServerService {
@@ -35,7 +35,7 @@ public class OrderServerService {
     }
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public OrderServer save(CallType callType, String type, String description, Properties props) {
+    public OrderServer save(CallType callType, String type, String description, Map<String,Object> props) {
         OrderServer orderServer = ObjectUtil.defaultValue(this.orderServerDao.get(type),new OrderServer());
         orderServer.setCallType(callType);
         orderServer.setType(type);
