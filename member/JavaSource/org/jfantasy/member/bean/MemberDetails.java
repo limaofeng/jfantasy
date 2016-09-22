@@ -237,7 +237,9 @@ public class MemberDetails implements Serializable {
 
     @Transient
     public String get(String key) {
-        if (this.properties == null || !this.properties.containsKey(key)) return null;
+        if (this.properties == null || !this.properties.containsKey(key)){
+            return null;
+        } 
         return this.properties.get(key).toString();
     }
 
