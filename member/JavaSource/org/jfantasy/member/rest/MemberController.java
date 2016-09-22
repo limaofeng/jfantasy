@@ -108,6 +108,7 @@ public class MemberController {
     public ResultResourceSupport profile(HttpServletResponse response, @PathVariable("id") Long id,@RequestBody MemberDetails details) {
         Member member = get(id);
         if (Member.MEMBER_TYPE_PERSONAL.equals(member.getType())) {
+            details.setMemberId(id);
             return profileAssembler.toResource(memberService.update(details));
         }
         response.setStatus(307);
