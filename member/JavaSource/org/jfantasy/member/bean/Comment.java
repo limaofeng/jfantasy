@@ -4,14 +4,15 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * 评论表
@@ -22,7 +23,7 @@ import java.util.Properties;
  */
 @Entity
 @Table(name = "MEM_COMMENT")
-@TableGenerator(name = "comment_gen", table = "sys_sequence",pkColumnName = "gen_name",pkColumnValue = "mem_comment:id",valueColumnName = "gen_value")
+@TableGenerator(name = "comment_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "mem_comment:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "for_comment"})
 public class Comment extends BaseBusEntity {
 
@@ -63,9 +64,9 @@ public class Comment extends BaseBusEntity {
     /**
      * 扩展属性
      */
-    @Convert(converter = PropertiesConverter.class)
+    @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Properties properties;
+    private Map<String, Object> properties;
 
     public Long getId() {
         return id;
@@ -171,20 +172,20 @@ public class Comment extends BaseBusEntity {
             return;
         }
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap<>();
         }
         this.properties.put(key, value);
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String, Object> getProperties() {
         if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(Comment.class, "properties")) {
             return null;
         }
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String, Object> properties) {
         this.properties = properties;
     }
 

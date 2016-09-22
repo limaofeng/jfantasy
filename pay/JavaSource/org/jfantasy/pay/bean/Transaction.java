@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.pay.bean.converter.ProjectConverter;
 import org.jfantasy.pay.bean.databind.ProjectDeserializer;
@@ -16,8 +16,9 @@ import org.jfantasy.pay.bean.enums.TxStatus;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * 交易表
@@ -100,9 +101,9 @@ public class Transaction extends BaseBusEntity {
     /**
      * 扩展字段,用于存储不同项目的关联信息
      */
-    @Convert(converter = PropertiesConverter.class)
+    @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Properties properties;
+    private Map<String,Object> properties;
     /** 支付记录 **/
     @OneToMany(mappedBy = "transaction", fetch = FetchType.LAZY, cascade = {CascadeType.REMOVE})
     private List<Payment> payments = new ArrayList<Payment>();
@@ -199,7 +200,7 @@ public class Transaction extends BaseBusEntity {
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String,Object> getProperties() {
         if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(PayConfig.class, "properties")) {
             return null;
         }
@@ -209,18 +210,18 @@ public class Transaction extends BaseBusEntity {
     @JsonAnySetter
     public void set(String key, String value) {
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap<>();
         }
-        this.properties.setProperty(key, value);
+        this.properties.put(key, value);
     }
 
     @Transient
     public String get(String key) {
-        if (this.properties == null) return null;
-        return this.properties.getProperty(key);
+        if (this.properties == null || !this.properties.containsKey(key)) return null;
+        return this.properties.get(key).toString();
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String,Object> properties) {
         this.properties = properties;
     }
 

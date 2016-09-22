@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.framework.spring.validation.Use;
@@ -13,8 +13,9 @@ import org.jfantasy.member.validators.TeamIdCannotRepeatValidator;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
 /**
  * 团队/小组
@@ -60,9 +61,9 @@ public class Team extends BaseBusEntity {
     /**
      * 扩展属性
      */
-    @Convert(converter = PropertiesConverter.class)
+    @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Properties properties;
+    private Map<String,Object> properties;
     /**
      * 目标Id
      */
@@ -128,20 +129,20 @@ public class Team extends BaseBusEntity {
             return;
         }
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap<>();
         }
         this.properties.put(key, value);
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String,Object> getProperties() {
         if (ThreadJacksonMixInHolder.getMixInHolder().isIgnoreProperty(Invite.class, "properties")) {
             return null;
         }
         return properties;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String,Object> properties) {
         this.properties = properties;
     }
 

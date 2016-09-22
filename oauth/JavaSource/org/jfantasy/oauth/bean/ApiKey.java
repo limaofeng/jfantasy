@@ -7,7 +7,8 @@ import org.hibernate.annotations.GenericGenerator;
 import org.jfantasy.framework.dao.BaseBusEntity;
 
 import javax.persistence.*;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * API 授权
@@ -36,7 +37,7 @@ public class ApiKey extends BaseBusEntity {
      * api 配置的一些额外信息
      */
     @Column(name = "PROPERTIES", columnDefinition = "Blob")
-    private Properties properties;
+    private Map<String,Object> properties;
     /**
      * 对应的应用
      */
@@ -58,14 +59,14 @@ public class ApiKey extends BaseBusEntity {
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String,Object> getProperties() {
         return properties;
     }
 
     @JsonAnySetter
     public void set(String key, Object value) {
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap();
         }
         this.properties.put(key, value);
     }
@@ -86,7 +87,7 @@ public class ApiKey extends BaseBusEntity {
         this.description = description;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String,Object> properties) {
         this.properties = properties;
     }
 

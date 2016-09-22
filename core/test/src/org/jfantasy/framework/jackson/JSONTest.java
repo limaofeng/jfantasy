@@ -20,10 +20,7 @@ import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.UUID;
+import java.util.*;
 
 public class JSONTest {
 
@@ -34,12 +31,12 @@ public class JSONTest {
 
     @Before
     public void setUp() throws Exception {
-        article = TestDataBuilder.build(Article.class,"JSONTest");
+        article = TestDataBuilder.build(Article.class, "JSONTest");
         assert article != null;
         category = article.getCategory();
 
         ObjectMapper objectMapper = JSON.getObjectMapper();
-        ThreadJacksonMixInHolder.scan(Article.class,ArticleCategory.class);
+        ThreadJacksonMixInHolder.scan(Article.class, ArticleCategory.class);
         objectMapper.setMixIns(ThreadJacksonMixInHolder.getSourceMixins());
     }
 
@@ -51,11 +48,11 @@ public class JSONTest {
     @Test
     public void serialize() throws Exception {
         ThreadJacksonMixInHolder holder = ThreadJacksonMixInHolder.getMixInHolder();
-        holder.addIgnorePropertyNames(Article.class,"category");
+        holder.addIgnorePropertyNames(Article.class, "category");
         LOG.debug(JSON.serialize(category));
 
         holder = ThreadJacksonMixInHolder.getMixInHolder();
-        holder.addIgnorePropertyNames(ArticleCategory.class,"articles");
+        holder.addIgnorePropertyNames(ArticleCategory.class, "articles");
         LOG.debug(JSON.serialize(article));
     }
 
@@ -77,7 +74,7 @@ public class JSONTest {
 
         LOG.debug(json);
 
-        if(objectMapper.findMixInClassFor(ArticleCategory.class) == null) {
+        if (objectMapper.findMixInClassFor(ArticleCategory.class) == null) {
             objectMapper = objectMapper.copy().addMixIn(ArticleCategory.class, CategoryFilterMixIn.class);
         }
 
@@ -128,45 +125,45 @@ public class JSONTest {
     }
 
     @Test
-    public void jsonAny(){
+    public void jsonAny() {
         Department department = new Department("技术部");
         department.setPm("test");
-        department.set("id","1");
+        department.set("id", "1");
+        department.set("age", 1);
         department.setUserName("limaofeng");
 
         String json = JSON.serialize(department);
         LOG.debug(json);
 
-        Assert.assertEquals("{\"name\":\"技术部\",\"projectManager\":\"test\",\"id\":\"1\"}",json);
+        Assert.assertEquals("{\"name\":\"技术部\",\"user_name\":\"limaofeng\",\"project_manager\":\"test\",\"id\":\"1\",\"age\":1}", json);
 
-        department = JSON.deserialize(json,Department.class);
+        department = JSON.deserialize(json, Department.class);
 
         assert department != null;
-        Assert.assertEquals(department.get("id"),"1");
+        Assert.assertEquals(department.get("id"), "1");
 
     }
-
 
 
     public static class TestDataBuilder {
 
         public static <T> T build(Class<T> clazz, String keywords) {
-            if(ArticleCategory.class.isAssignableFrom(clazz)){
+            if (ArticleCategory.class.isAssignableFrom(clazz)) {
                 ArticleCategory category = new ArticleCategory();
                 category.setCode("test");
                 category.setName("测试");
                 category.setLayer(0);
                 category.setArticles(new ArrayList<Article>());
-                return (T)category;
-            }else if(Article.class.isAssignableFrom(clazz)){
+                return (T) category;
+            } else if (Article.class.isAssignableFrom(clazz)) {
                 Article article = new Article();
-                article.setCategory(build(ArticleCategory.class,keywords));
+                article.setCategory(build(ArticleCategory.class, keywords));
                 article.setAuthor(keywords);
                 article.setTitle(keywords + " 测试");
                 article.setSummary(keywords + " Summary UUID = " + UUID.randomUUID());
                 article.setContent(new Content(keywords + " Content"));
                 article.getCategory().getArticles().add(article);
-                return (T)article;
+                return (T) article;
             }
             try {
                 return clazz.newInstance();
@@ -434,15 +431,16 @@ public class JSONTest {
         private String name;
         private String pm;
         private String userName;
-        private Properties otherProperties = new Properties(); //otherProperties用来存放Department中未定义的json字段
+        private Map<String,Object> otherProperties = new HashMap<>(); //otherProperties用来存放Department中未定义的json字段
+
         //指定json反序列化创建Department对象时调用此构造函数
         @JsonCreator
-        public Department(@JsonProperty("name") String name){
+        public Department(@JsonProperty("name") String name) {
             this.name = name;
         }
 
         //将company.json中projectManager字段关联到getPm方法
-        @JsonProperty("projectManager")
+        @JsonProperty("project_manager")
         public String getPm() {
             return pm;
         }
@@ -461,7 +459,7 @@ public class JSONTest {
 
         //得到所有Department中未定义的json字段的
         @JsonAnyGetter
-        public Properties any() {
+        public Map<String,Object> any() {
             return otherProperties;
         }
 
@@ -480,8 +478,6 @@ public class JSONTest {
     }
 
     public static class Content {
-
-        private static final long serialVersionUID = -7570871629827875364L;
 
         private Long id;
         /**

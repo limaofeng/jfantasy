@@ -6,7 +6,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.dao.BaseBusEntity;
 import org.jfantasy.thirdparty.bean.enums.Platform;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "properties"})
 public class User extends BaseBusEntity {
@@ -23,7 +24,7 @@ public class User extends BaseBusEntity {
      */
     private Platform platform;
 
-    private Properties properties;
+    private Map<String,Object> properties;
     /**
      * 关联的用户
      */
@@ -45,7 +46,7 @@ public class User extends BaseBusEntity {
         this.key = key;
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String,Object> properties) {
         this.properties = properties;
     }
 
@@ -74,14 +75,14 @@ public class User extends BaseBusEntity {
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String,Object> getProperties() {
         return this.properties;
     }
 
     @JsonAnySetter
     public void set(String key, Object value) {
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap<>();
         }
         this.properties.put(key, value);
     }

@@ -27,7 +27,7 @@ public class JSON {
     static {
         //默认
         register(DEFAULT_KEY, new ObjectMapper()
-                .setPropertyNamingStrategy(PropertyNamingStrategy.CAMEL_CASE_TO_LOWER_CASE_WITH_UNDERSCORES)
+                .setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE)
                 .setSerializationInclusion(JsonInclude.Include.NON_NULL)//为空的字段不序列化
                 .disable(SerializationFeature.FAIL_ON_EMPTY_BEANS)// 当找不到对应的序列化器时 忽略此字段
                 .enable(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES)// 允许非空字段

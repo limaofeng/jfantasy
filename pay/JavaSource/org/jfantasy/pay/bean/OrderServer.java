@@ -4,11 +4,12 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.pay.order.entity.enums.CallType;
 
 import javax.persistence.*;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 注册的订单服务器
@@ -34,8 +35,8 @@ public class OrderServer extends BaseBusEntity {
      * 调用服务时,需要提供的身份信息
      */
     public final static String PROPS_TOKEN = "token";
-    private static final long serialVersionUID = 1314573695371668316L;
 
+    private static final long serialVersionUID = 1314573695371668316L;
     /**
      * 服务的订单类型
      */
@@ -50,20 +51,18 @@ public class OrderServer extends BaseBusEntity {
     /**
      * 调用方式
      */
-    /** 调用方式 **/
     @Enumerated(EnumType.STRING)
     @Column(name = "CALL_TYPE", length = 10, nullable = false)
     private CallType callType;
     /**
      * 配置参数
      */
-    @Convert(converter = PropertiesConverter.class)
+    @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Properties properties;
+    private Map<String,Object> properties;
     /**
      * 详细介绍
      */
-    /** 介绍 **/
     @Column(name = "DESCRIPTION", length = 3000)
     private String description;
     /**
@@ -73,25 +72,25 @@ public class OrderServer extends BaseBusEntity {
     private boolean enabled;
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String,Object> getProperties() {
         return properties;
     }
 
     @JsonAnySetter
     public void set(String key, String value) {
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap<>();
         }
         this.properties.put(key, value);
     }
 
     @Transient
     public String get(String key) {
-        if (this.properties == null) return null;
-        return this.properties.getProperty(key);
+        if (this.properties == null || !this.properties.containsKey(key)) return null;
+        return this.properties.get(key).toString();
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String,Object> properties) {
         this.properties = properties;
     }
 

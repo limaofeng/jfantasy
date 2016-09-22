@@ -10,13 +10,14 @@ import org.hibernate.annotations.Parameter;
 import org.jfantasy.filestore.Image;
 import org.jfantasy.filestore.converter.ImageConverter;
 import org.jfantasy.filestore.databind.ImageDeserializer;
-import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.security.bean.enums.Sex;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 用户详细信息表
@@ -104,9 +105,9 @@ public class MemberDetails implements Serializable {
     @OneToOne(fetch = FetchType.LAZY, targetEntity = Member.class, mappedBy = "details")
     private Member member;
 
-    @Convert(converter = PropertiesConverter.class)
+    @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Properties properties;
+    private Map<String, Object> properties;
 
     public String getName() {
         return name;
@@ -222,25 +223,25 @@ public class MemberDetails implements Serializable {
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String, Object> getProperties() {
         return this.properties;
     }
 
     @JsonAnySetter
     public void set(String key, String value) {
         if (this.properties == null) {
-            this.properties = new Properties();
+            this.properties = new HashMap<>();
         }
         this.properties.put(key, value);
     }
 
     @Transient
     public String get(String key) {
-        if (this.properties == null) return null;
-        return this.properties.getProperty(key);
+        if (this.properties == null || !this.properties.containsKey(key)) return null;
+        return this.properties.get(key).toString();
     }
 
-    public void setProperties(Properties properties) {
+    public void setProperties(Map<String,Object> properties) {
         this.properties = properties;
     }
 

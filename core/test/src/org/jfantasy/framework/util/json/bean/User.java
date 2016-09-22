@@ -2,16 +2,16 @@ package org.jfantasy.framework.util.json.bean;
 
 import com.fasterxml.jackson.annotation.JsonFilter;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.google.common.collect.Sets;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 
 @JsonFilter("myFilter")
 public class User {
 	private String name;
 	private Date createDate;
-	private Set<Article> articles = Sets.newHashSet();
+	private Set<Article> articles = new HashSet<>();
 	private String username;
 	private boolean enabled;
 	private String nickName;

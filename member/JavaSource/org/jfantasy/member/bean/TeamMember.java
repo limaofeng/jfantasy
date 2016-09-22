@@ -4,15 +4,14 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.framework.dao.hibernate.converter.StringsConverter;
 import org.jfantasy.framework.jackson.ThreadJacksonMixInHolder;
 import org.jfantasy.framework.spring.validation.RESTful;
 import org.jfantasy.member.bean.enums.TeamMemberStatus;
 import org.jfantasy.security.bean.enums.Sex;
-
-import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -96,7 +95,7 @@ public class TeamMember extends BaseBusEntity {
     /**
      * 动态属性
      */
-    @Convert(converter = PropertiesConverter.class)
+    @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
     private Properties properties;
     /**

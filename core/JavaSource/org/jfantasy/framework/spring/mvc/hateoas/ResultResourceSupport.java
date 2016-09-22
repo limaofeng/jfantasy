@@ -6,12 +6,13 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 import org.springframework.hateoas.ResourceSupport;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 public class ResultResourceSupport<T> extends ResourceSupport {
 
     private T model;
-    private Properties properties = new Properties();
+    private Map<String,Object> properties = new HashMap<>();
 
     @JsonCreator
     public ResultResourceSupport(T model) {
@@ -19,7 +20,7 @@ public class ResultResourceSupport<T> extends ResourceSupport {
     }
 
     @JsonAnyGetter
-    public Properties getProperties() {
+    public Map<String,Object> getProperties() {
         return this.properties;
     }
 

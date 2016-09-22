@@ -3,7 +3,7 @@ package org.jfantasy.member.bean;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.jfantasy.framework.dao.BaseBusEntity;
-import org.jfantasy.framework.dao.hibernate.converter.PropertiesConverter;
+import org.jfantasy.framework.dao.hibernate.converter.MapConverter;
 import org.jfantasy.member.bean.converter.CardStyleConverter;
 
 import javax.persistence.*;
@@ -49,7 +49,7 @@ public class Card extends BaseBusEntity {
      * 附加服务
      */
     @Column(name = "EXTRAS", length = 2000)
-    @Convert(converter = PropertiesConverter.class)
+    @Convert(converter = MapConverter.class)
     private Properties extras;
 
     public Long getId() {
