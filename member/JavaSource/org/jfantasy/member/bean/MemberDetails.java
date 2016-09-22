@@ -107,7 +107,7 @@ public class MemberDetails implements Serializable {
 
     @Convert(converter = MapConverter.class)
     @Column(name = "PROPERTIES", columnDefinition = "Text")
-    private Map<String, Object> properties;
+    private Map<String, Serializable> properties;
 
     public String getName() {
         return name;
@@ -223,7 +223,7 @@ public class MemberDetails implements Serializable {
     }
 
     @JsonAnyGetter
-    public Map<String, Object> getProperties() {
+    public Map<String, Serializable> getProperties() {
         return this.properties;
     }
 
@@ -243,7 +243,7 @@ public class MemberDetails implements Serializable {
         return this.properties.get(key).toString();
     }
 
-    public void setProperties(Map<String,Object> properties) {
+    public void setProperties(Map<String,Serializable> properties) {
         this.properties = properties;
     }
 
