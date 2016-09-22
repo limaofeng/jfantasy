@@ -48,6 +48,8 @@ public class MemberService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    private SMSCodeEncoder smsCodeEncoder;
+
     /**
      * 列表查询
      *
@@ -75,6 +77,9 @@ public class MemberService {
                 }
                 break;
             case macode:
+                if (member == null || !smsCodeEncoder.matches(username, password)) {
+                    throw new ValidationException(203.1f, "短信验证失败!");
+                }
                 break;
         }
         if (!member.getEnabled()) {
@@ -217,6 +222,11 @@ public class MemberService {
      */
     public Member findUniqueByUsername(String username) {
         return this.memberDao.findUniqueBy("username", username);
+    }
+
+    @Autowired(required = false)
+    public void setSmsCodeEncoder(SMSCodeEncoder smsCodeEncoder) {
+        this.smsCodeEncoder = smsCodeEncoder;
     }
 
 }

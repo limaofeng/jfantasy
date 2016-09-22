@@ -32,7 +32,11 @@ public class AuthController {
     @Autowired
     private MemberService memberService;
 
-    /** 用户登录 - 用户登录接口 **/
+    /**
+     * 用户登录 - 用户登录接口
+     * @param loginForm
+     * @return
+     */
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     @JsonResultFilter(ignore = {
             @IgnoreProperty(pojo = Member.class, name = {Member.BASE_FIELDS})
