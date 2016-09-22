@@ -49,7 +49,7 @@
     <logger name="org.org.jfantasy.framework" level="DEBUG"/>
     <logger name="springfox.documentation.spring" level="ERROR"/>
 
-    <root level="ERROR">
+    <root level="DEBUG">
         <appender-ref ref="CONSOLE" />
         <appender-ref ref="INFO_FILE" />
         <appender-ref ref="ERROR_FILE" />

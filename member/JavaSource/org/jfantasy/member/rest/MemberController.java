@@ -34,18 +34,15 @@ public class MemberController {
 
     private static final String FILTERS_EQ_MEMBER_ID = "EQL_member.id";
 
-    private static MemberResourceAssembler assembler = new MemberResourceAssembler();
-    private static ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
+    public static final MemberResourceAssembler assembler = new MemberResourceAssembler();
+    private static final ProfileResourceAssembler profileAssembler = new ProfileResourceAssembler();
 
     private final MemberService memberService;
     private final FavoriteService favoriteService;
-    @Autowired
+
     private TeamController teamController;
-    @Autowired
     private InvoiceController invoiceController;
-    @Autowired
     private CommentController commentController;
-    @Autowired
     private ReceiverController receiverController;
 
     @Autowired
@@ -228,6 +225,26 @@ public class MemberController {
         filters.add(new PropertyFilter("EQL_teamMembers.member.id", memberId.toString()));//包含当前会员
         filters.add(new PropertyFilter("EQE_teamMembers.status", TeamMemberStatus.activated));//状态有效
         return teamController.search(type, new Pager<Team>(1000), filters).getPageItems();
+    }
+
+    @Autowired
+    public void setTeamController(TeamController teamController) {
+        this.teamController = teamController;
+    }
+
+    @Autowired
+    public void setInvoiceController(InvoiceController invoiceController) {
+        this.invoiceController = invoiceController;
+    }
+
+    @Autowired
+    public void setCommentController(CommentController commentController) {
+        this.commentController = commentController;
+    }
+
+    @Autowired
+    public void setReceiverController(ReceiverController receiverController) {
+        this.receiverController = receiverController;
     }
 
 }

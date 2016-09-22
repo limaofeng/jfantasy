@@ -31,14 +31,18 @@ public class TeamController {
 
     private TeamResourceAssembler assembler = new TeamResourceAssembler();
 
-    @Autowired
-    private TeamService teamService;
-    @Autowired
-    private InviteService inviteService;
-    @Autowired
-    private TeamMemberService teamMemberService;
-    @Autowired
+    private final TeamService teamService;
+    private final InviteService inviteService;
+    private final TeamMemberService teamMemberService;
     private AddressController addressController;
+
+    @Autowired
+    public TeamController(TeamService teamService, InviteService inviteService, TeamMemberService teamMemberService) {
+        this.teamService = teamService;
+        this.inviteService = inviteService;
+        this.teamMemberService = teamMemberService;
+    }
+
 
     /**
      * 团队列表 - 团队列表
@@ -137,6 +141,11 @@ public class TeamController {
             throw new NotFoundException("[id =" + id + "]对应的团队信息不存在");
         }
         return team;
+    }
+
+    @Autowired
+    public void setAddressController(AddressController addressController) {
+        this.addressController = addressController;
     }
 
 }

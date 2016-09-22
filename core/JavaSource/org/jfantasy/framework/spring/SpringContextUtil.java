@@ -5,18 +5,51 @@ import org.apache.commons.logging.LogFactory;
 import org.jfantasy.framework.util.common.ObjectUtil;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
+import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionBuilder;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
+import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SpringContextUtil {
+public class SpringContextUtil implements BeanDefinitionRegistryPostProcessor,ApplicationContextAware {
 
+    private static final Log LOGGER = LogFactory.getLog(SpringContextUtil.class);
+
+    /**
+     * Spring应用上下文环境
+     */
+    private static ApplicationContext applicationContext;
     private static BeanDefinitionRegistry registry;
+    private static ConfigurableListableBeanFactory beanFactory;//NOSONAR
+
+    @Override
+    public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+        SpringContextUtil.registry = registry;//NOSONAR
+    }
+
+    @Override
+    public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
+        SpringContextUtil.beanFactory = beanFactory;//NOSONAR
+    }
+
+    /**
+     * 实现ApplicationContextAware接口的回调方法，设置上下文环境
+     *
+     * @param applicationContext applicationContext
+     */
+    @Override
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        LOGGER.debug(applicationContext);
+        if (ObjectUtil.isNull(SpringContextUtil.applicationContext)) {
+            SpringContextUtil.applicationContext = applicationContext;//NOSONAR
+        }
+    }
 
     public static void setRegistry(BeanDefinitionRegistry registry) {
         SpringContextUtil.registry = registry;
@@ -36,25 +69,6 @@ public class SpringContextUtil {
             return this.value;
         }
 
-    }
-
-    private static final Log LOGGER = LogFactory.getLog(SpringContextUtil.class);
-
-    /**
-     * Spring应用上下文环境
-     */
-    private static ApplicationContext applicationContext;
-
-    /**
-     * 实现ApplicationContextAware接口的回调方法，设置上下文环境
-     *
-     * @param applicationContext applicationContext
-     */
-    public static void setApplicationContext(ApplicationContext applicationContext) {
-        LOGGER.debug(applicationContext);
-        if (ObjectUtil.isNull(SpringContextUtil.applicationContext)) {
-            SpringContextUtil.applicationContext = applicationContext;
-        }
     }
 
     /**
