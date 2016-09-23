@@ -9,6 +9,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "PAY_LOG", uniqueConstraints = {@UniqueConstraint(columnNames = {"OWNER_TYPE", "OWNER_ID"})})
+@TableGenerator(name = "log_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "pay_log:id", valueColumnName = "gen_value")
 @JsonIgnoreProperties({"hibernate_lazy_initializer", "handler", "creator", "createTime", "modifier", "modifyTime"})
 public class Log extends BaseBusEntity {
 
@@ -16,8 +17,7 @@ public class Log extends BaseBusEntity {
 
     @Id
     @Column(name = "ID", updatable = false)
-    @GeneratedValue(generator = "log_gen")
-    @TableGenerator(name = "log_gen", table = "sys_sequence", pkColumnName = "gen_name", pkColumnValue = "pay_log:id", valueColumnName = "gen_value")
+    @GeneratedValue(strategy = GenerationType.TABLE, generator = "log_gen")
     private Long id;
     /**
      * 所有者类型

@@ -1,7 +1,5 @@
 package org.jfantasy.pay.service;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.hibernate.criterion.Restrictions;
 import org.jfantasy.framework.dao.Pager;
 import org.jfantasy.framework.dao.hibernate.PropertyFilter;
@@ -26,18 +24,18 @@ import java.util.List;
 @Service
 public class CardService {
 
-    private final static Log LOG = LogFactory.getLog(PayService.class);
+    private final CardDao cardDao;
+    private final AccountDao accountDao;
+
+    private LogService logService;
+    private ApplicationContext applicationContext;
+    private AccountService accountService;
 
     @Autowired
-    private CardDao cardDao;
-    @Autowired
-    private AccountDao accountDao;
-    @Autowired
-    private LogService logService;
-    @Autowired
-    private ApplicationContext applicationContext;
-    @Autowired
-    private AccountService accountService;
+    public CardService(CardDao cardDao, AccountDao accountDao) {
+        this.cardDao = cardDao;
+        this.accountDao = accountDao;
+    }
 
     public Card get(String id) {
         return this.cardDao.get(id);
@@ -57,7 +55,7 @@ public class CardService {
             throw new ValidationException(101.1f, "卡状态不正确");
         }
         Account account = this.accountDao.findUnique(Restrictions.eq("owner", owner));
-        if (account == null) {//TODO 这里创建账号是否合适
+        if (account == null) {//自动创建账号
             accountService.save(AccountType.personal, owner, null);
         }
         if (!card.getSecret().equals(password)) {
@@ -98,4 +96,20 @@ public class CardService {
             this.logService.log(OwnerType.card, card.getNo(), "invalid", "卡失效");
         }
     }
+
+    @Autowired
+    public void setLogService(LogService logService) {
+        this.logService = logService;
+    }
+
+    @Autowired
+    public void setApplicationContext(ApplicationContext applicationContext) {
+        this.applicationContext = applicationContext;
+    }
+
+    @Autowired
+    public void setAccountService(AccountService accountService) {
+        this.accountService = accountService;
+    }
+
 }
