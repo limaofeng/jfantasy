@@ -20,18 +20,30 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-/** 评论 **/
+/**
+ * 评论
+ */
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
 
     private CommentResourceAssembler assembler = new CommentResourceAssembler();
 
-    @Autowired
-    private CommentService commentService;
+    private final CommentService commentService;
 
+    @Autowired
+    public CommentController(CommentService commentService) {
+        this.commentService = commentService;
+    }
+
+    /**
+     * 查询评论 - 返回会员的会员评论
+     *
+     * @param pager   翻页对象
+     * @param filters 筛选
+     * @return Pager<Comment>
+     */
     @JsonResultFilter(allow = @AllowProperty(pojo = Member.class, name = {"id", "nick_name"}))
-    /** 查询评论 - 返回会员的会员评论 **/
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
     public Pager<ResultResourceSupport> search(Pager<Comment> pager, List<PropertyFilter> filters) {
@@ -53,14 +65,18 @@ public class CommentController {
         return assembler.toResource(this.commentService.updateShow(id, form.isShow()));
     }
 
-    /** 查看评论 **/
+    /**
+     * 查看评论
+     **/
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     @ResponseBody
     public ResultResourceSupport view(@PathVariable("id") Long id) {
         return assembler.toResource(this.get(id));
     }
 
-    /** 删除评论 - 删除会员会员评论 **/
+    /**
+     * 删除评论 - 删除会员会员评论
+     **/
     @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable("id") Long id) {

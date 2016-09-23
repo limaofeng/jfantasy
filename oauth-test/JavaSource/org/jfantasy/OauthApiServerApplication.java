@@ -6,13 +6,13 @@ import org.springframework.boot.autoconfigure.jmx.JmxAutoConfiguration;
 import org.springframework.boot.autoconfigure.websocket.WebSocketAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 
-//NOSONAR
+
 @Configuration
 @EnableAutoConfiguration(exclude = {WebSocketAutoConfiguration.class, JmxAutoConfiguration.class})
-public class OauthApiServerApplication {
+public class OauthApiServerApplication {//NOSONAR
 
     public static void main(String[] args) {
-        SpringApplication.run(OauthApiServerApplication.class, args);
+        SpringApplication.run(OauthApiServerApplication.class, args);//NOSONAR
     }
 
 }

@@ -14,7 +14,11 @@ public abstract class BaseBusEntity implements Serializable {
 
     private static final long serialVersionUID = -6543503526965322995L;
 
-    public final static String BASE_FIELDS = "creator,create_time,modifier,modify_time";
+    public static final String FIELDNAME_BY_CREATOR = "creator";
+    public static final String FIELDNAME_BY_CREATE_TIME = "create_time";
+    public static final String FIELDNAME_BY_MODIFIER = "modifier";
+    public static final String FIELDNAME_BY_MODIFY_TIME = "modify_time";
+    public static final String BASE_FIELDS = FIELDNAME_BY_CREATOR + "," + FIELDNAME_BY_CREATE_TIME + "," + FIELDNAME_BY_MODIFIER + "," + FIELDNAME_BY_MODIFY_TIME;
 
     /**
      * 创建人
