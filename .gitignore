@@ -1,6 +1,5 @@
-/pay/test/config/certs/*.pfx
-/pay/test/config/certs/*.cer
-/javaweb/WebContent/WEB-INF/index
+pay-test
+oauth-test
 .vscode
 .idea
 .gradle
